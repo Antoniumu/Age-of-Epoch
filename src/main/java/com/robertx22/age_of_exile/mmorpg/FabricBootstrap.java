@@ -74,6 +74,8 @@ public class FabricBootstrap {
         bus.post(new InterModEnqueueEvent());
         bus.post(new InterModProcessEvent());
 
+        com.robertx22.forge_compat.registries.PropertiesIdHelper.cleanupDataComponentInitializers();
+
         registerFabricHooks();
     }
 
