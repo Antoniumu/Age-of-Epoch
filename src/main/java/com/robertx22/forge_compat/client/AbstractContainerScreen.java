@@ -23,6 +23,12 @@ public abstract class AbstractContainerScreen<T extends AbstractContainerMenu>
 
     public final List<Button> buttons = new ArrayList<>();
     public final List<GuiEventListener> children = new ArrayList<>();
+    public int imageWidth = 176;
+    public int imageHeight = 166;
+    public int x = 0;
+    public int y = 0;
+    public int backgroundWidth = 176;
+    public int backgroundHeight = 166;
     private boolean superExtractedInFrame = false;
 
     public AbstractContainerScreen(T menu, Inventory inv, Component title) {
@@ -34,6 +40,12 @@ public abstract class AbstractContainerScreen<T extends AbstractContainerMenu>
         super.init();
         this.buttons.clear();
         this.children.clear();
+        this.leftPos = (this.width - this.imageWidth) / 2;
+        this.topPos = (this.height - this.imageHeight) / 2;
+        this.x = this.leftPos;
+        this.y = this.topPos;
+        this.backgroundWidth = this.imageWidth;
+        this.backgroundHeight = this.imageHeight;
     }
 
     protected <W extends GuiEventListener> W addButton(W widget) {
@@ -213,6 +225,18 @@ public abstract class AbstractContainerScreen<T extends AbstractContainerMenu>
 
     public static void blit(PoseStack matrices, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight) {
         AbstractGui.blit(matrices, x, y, (float) u, (float) v, width, height, textureWidth, textureHeight);
+    }
+
+    public static boolean hasShiftDown() {
+        return Minecraft.getInstance().hasShiftDown();
+    }
+
+    public static boolean hasControlDown() {
+        return Minecraft.getInstance().hasControlDown();
+    }
+
+    public static boolean hasAltDown() {
+        return Minecraft.getInstance().hasAltDown();
     }
 
     public static void bindTexture(Identifier id) {

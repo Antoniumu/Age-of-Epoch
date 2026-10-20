@@ -6,26 +6,26 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Compatibility bridge for the legacy 1.16.5 {@code AbstractGui} helper methods,
- * routed through Minecraft 26.3's {@link GuiGraphicsExtractor}.
- */
 public class AbstractGui {
 
     public static GuiGraphicsExtractor CURRENT_GRAPHICS;
-    public static Identifier CURRENT_TEXTURE;
+    public static Identifier BOUND_TEXTURE = Identifier.withDefaultNamespace("textures/gui/widgets.png");
     public static PoseStack CURRENT_POSE;
 
-    private static Method TOOLTIP_SEQ_METHOD;
-    private static boolean TOOLTIP_METHOD_SEARCHED = false;
+    public AbstractGui() {
+    }
+
+    public AbstractGui(Minecraft mc) {
+    }
 
     public static void setCurrentGraphics(GuiGraphicsExtractor g) {
         CURRENT_GRAPHICS = g;
@@ -44,11 +44,13 @@ public class AbstractGui {
     }
 
     public static void bindTexture(Identifier id) {
-        CURRENT_TEXTURE = id;
+        if (id != null) {
+            BOUND_TEXTURE = id;
+        }
     }
 
     public static Identifier currentTexture() {
-        return CURRENT_TEXTURE;
+        return BOUND_TEXTURE;
     }
 
     public static int opaqueColor(int color) {
@@ -89,6 +91,18 @@ public class AbstractGui {
     public void setBlitOffset(int offset) {
     }
 
+    public static void renderFakeItem(ItemStack stack, int x, int y) {
+        if (CURRENT_GRAPHICS != null && stack != null && !stack.isEmpty()) {
+            CURRENT_GRAPHICS.item(stack, x, y);
+        }
+    }
+
+    public static void renderItemDecorations(Font font, ItemStack stack, int x, int y) {
+        if (CURRENT_GRAPHICS != null && stack != null && !stack.isEmpty()) {
+            CURRENT_GRAPHICS.itemDecorations(font, stack, x, y);
+        }
+    }
+
     public static void fill(PoseStack matrices, int x1, int y1, int x2, int y2, int color) {
         GuiGraphicsExtractor g = CURRENT_GRAPHICS;
         if (g != null) {
@@ -101,7 +115,7 @@ public class AbstractGui {
         }
     }
 
-    protected void fillGradient(PoseStack matrices, int x1, int y1, int x2, int y2, int colorFrom, int colorTo) {
+    public void fillGradient(PoseStack matrices, int x1, int y1, int x2, int y2, int colorFrom, int colorTo) {
         GuiGraphicsExtractor g = CURRENT_GRAPHICS;
         if (g != null) {
             boolean pushed = pushPoseIfTransformed(g, matrices);
@@ -117,13 +131,21 @@ public class AbstractGui {
         blit(matrices, x, y, width, height, (float) u, (float) v, width, height, 256, 256);
     }
 
+    public static void blit(PoseStack matrices, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight) {
+        blit(matrices, x, y, width, height, u, v, width, height, textureWidth, textureHeight);
+    }
+
+    public static void blit(PoseStack matrices, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight) {
+        blit(matrices, x, y, width, height, (float) u, (float) v, width, height, textureWidth, textureHeight);
+    }
+
     public static void blit(PoseStack matrices, int x, int y, int z, float u, float v, int width, int height, int textureHeight, int textureWidth) {
         blit(matrices, x, y, width, height, u, v, width, height, textureWidth, textureHeight);
     }
 
     public static void blit(PoseStack matrices, int x, int y, int width, int height, float u, float v, int regionWidth, int regionHeight, int textureWidth, int textureHeight) {
         GuiGraphicsExtractor g = CURRENT_GRAPHICS;
-        Identifier tex = CURRENT_TEXTURE;
+        Identifier tex = BOUND_TEXTURE;
         if (g != null && tex != null) {
             boolean pushed = pushPoseIfTransformed(g, matrices);
             try {
@@ -134,8 +156,8 @@ public class AbstractGui {
         }
     }
 
-    public static void blit(PoseStack matrices, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight) {
-        blit(matrices, x, y, width, height, u, v, width, height, textureWidth, textureHeight);
+    public static void blit(PoseStack matrices, int x, int y, int width, int height, int u, int v, int regionWidth, int regionHeight, int textureWidth, int textureHeight) {
+        blit(matrices, x, y, width, height, (float) u, (float) v, regionWidth, regionHeight, textureWidth, textureHeight);
     }
 
     public static void drawCenteredString(PoseStack matrices, Font font, String text, int x, int y, int color) {
@@ -207,9 +229,9 @@ public class AbstractGui {
             } finally {
                 popPoseIfTransformed(g, pushed);
             }
-            return font.width(text);
+            return (int) x + font.width(text);
         }
-        return 0;
+        return (int) x;
     }
 
     public static int drawString(Font font, PoseStack matrices, Component text, float x, float y, int color) {
@@ -221,9 +243,9 @@ public class AbstractGui {
             } finally {
                 popPoseIfTransformed(g, pushed);
             }
-            return font.width(text);
+            return (int) x + font.width(text);
         }
-        return 0;
+        return (int) x;
     }
 
     public static int drawString(Font font, PoseStack matrices, FormattedCharSequence text, float x, float y, int color) {
@@ -235,9 +257,9 @@ public class AbstractGui {
             } finally {
                 popPoseIfTransformed(g, pushed);
             }
-            return font.width(text);
+            return (int) x + font.width(text);
         }
-        return 0;
+        return (int) x;
     }
 
     public static int drawShadow(Font font, PoseStack matrices, String text, float x, float y, int color) {
@@ -249,9 +271,9 @@ public class AbstractGui {
             } finally {
                 popPoseIfTransformed(g, pushed);
             }
-            return font.width(text);
+            return (int) x + font.width(text);
         }
-        return 0;
+        return (int) x;
     }
 
     public static int drawShadow(Font font, PoseStack matrices, Component text, float x, float y, int color) {
@@ -263,9 +285,9 @@ public class AbstractGui {
             } finally {
                 popPoseIfTransformed(g, pushed);
             }
-            return font.width(text);
+            return (int) x + font.width(text);
         }
-        return 0;
+        return (int) x;
     }
 
     public static int drawShadow(Font font, PoseStack matrices, FormattedCharSequence text, float x, float y, int color) {
@@ -277,9 +299,15 @@ public class AbstractGui {
             } finally {
                 popPoseIfTransformed(g, pushed);
             }
-            return font.width(text);
+            return (int) x + font.width(text);
         }
-        return 0;
+        return (int) x;
+    }
+
+    public static void drawWordWrap(Font font, FormattedText text, int x, int y, int maxWidth, int color) {
+        if (CURRENT_GRAPHICS != null && font != null && text != null) {
+            CURRENT_GRAPHICS.textWithWordWrap(font, text, x, y, maxWidth, opaqueColor(color), false);
+        }
     }
 
     public static void renderTooltip(PoseStack matrices, List<? extends FormattedCharSequence> lines, int mouseX, int mouseY) {
