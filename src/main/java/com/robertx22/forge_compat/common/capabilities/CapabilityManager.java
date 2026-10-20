@@ -24,20 +24,25 @@ public class CapabilityManager {
         factories.put(type, factory);
         // emulate Forge's @CapabilityInject field injection
         List<Class<?>> scan = new ArrayList<>();
-        scan.add(type);
-        for (Class<?> c : scan) {
+        Class<?> root = type.getDeclaringClass() == null ? type : type.getDeclaringClass();
+        scan.add(root);
+        if (root != type) {
+            scan.add(type);
+        }
+        for (int i = 0; i < scan.size(); i++) {
+            Class<?> c = scan.get(i);
+            if (c == null) continue;
             for (Class<?> inner : c.getDeclaredClasses()) {
-                scan.add(inner);
+                if (!scan.contains(inner)) {
+                    scan.add(inner);
+                }
             }
         }
-        scan.add(0, type.getDeclaringClass() == null ? type : type.getDeclaringClass());
         for (Class<?> c : scan) {
             if (c == null) continue;
             // auto-register @Mod.EventBusSubscriber inner classes (Forge did this implicitly)
-            for (Class<?> inner : c.getDeclaredClasses()) {
-                if (inner.isAnnotationPresent(com.robertx22.forge_compat.fml.common.Mod.EventBusSubscriber.class)) {
-                    com.robertx22.forge_compat.common.MinecraftForge.EVENT_BUS.register(inner);
-                }
+            if (c.isAnnotationPresent(com.robertx22.forge_compat.fml.common.Mod.EventBusSubscriber.class)) {
+                com.robertx22.forge_compat.common.MinecraftForge.EVENT_BUS.register(c);
             }
             for (Field f : c.getDeclaredFields()) {
                 CapabilityInject inject = f.getAnnotation(CapabilityInject.class);
