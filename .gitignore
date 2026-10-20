@@ -1,15 +1,54 @@
+# ─────────────────────────────────────────────────────────────
+# Age of Epoch — Age of Exile port (Minecraft 26.3 / Fabric)
+# ─────────────────────────────────────────────────────────────
+
+# ── Gradle ───────────────────────────────────────────────────
 .gradle/
+.gradle-home/
 build/
 out/
+
+# ── Minecraft / Fabric Loom ───────────────────────────────────
+# Loom-кэш и сгенерированные данные живут внутри .gradle/ и build/ (уже выше)
 run/
+logs/
+crash-reports/
+debug/
+saves/
+screenshots/
+resourcepacks/
+shaderpacks/
+*.log
+hs_err_pid*
+replay_pid*
+
+# ── IDE ──────────────────────────────────────────────────────
 .idea/
 *.iml
 *.ipr
 *.iws
 .vscode/
-.classpath
-.project
 .settings/
+.project
+.classpath
+.factorypath
 bin/
-logs/
+*.code-workspace
+
+# ── ОС ───────────────────────────────────────────────────────
 .DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Временные файлы ──────────────────────────────────────────
+*.tmp
+*.bak
+*.swp
+*~
+*.orig
+*.rej
+
+# ── Локальные настройки (не коммитим) ────────────────────────
+local.properties
+gradle-local.properties
+.env

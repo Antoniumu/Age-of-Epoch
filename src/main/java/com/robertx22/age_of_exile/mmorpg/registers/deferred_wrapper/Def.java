@@ -25,8 +25,8 @@ public class Def {
     }
 
     public static <T extends Item & IGUID> RegObj<T> item(Supplier<T> object) {
-        return item(object.get()
-            .GUID(), object);
+        T instance = object.get();
+        return item(instance.GUID(), () -> instance);
     }
     // todo not lazy
 

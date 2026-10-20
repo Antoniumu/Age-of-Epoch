@@ -25,7 +25,7 @@ public class SpellUtils {
 
         lightningboltentity.setVisualOnly(true);
 
-        SoundUtils.playSound(entity, SoundEvents.LIGHTNING_BOLT_IMPACT.value(), 1, 1);
+        SoundUtils.playSound(entity, SoundEvents.LIGHTNING_BOLT_IMPACT, 1, 1);
 
         addLightningBolt(((ServerLevel) entity.level()), lightningboltentity);
 

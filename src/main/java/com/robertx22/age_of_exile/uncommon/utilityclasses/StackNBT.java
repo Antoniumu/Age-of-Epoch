@@ -47,6 +47,10 @@ public class StackNBT {
         set(stack, tag);
     }
 
+    public static CompoundTag saveStack(ItemStack stack) {
+        return saveStack(stack, null);
+    }
+
     public static CompoundTag saveStack(ItemStack stack, CompoundTag tag) {
         if (tag == null) tag = new CompoundTag();
         if (stack == null || stack.isEmpty()) {

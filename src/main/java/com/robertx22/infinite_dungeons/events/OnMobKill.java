@@ -71,7 +71,7 @@ public class OnMobKill extends EventConsumer<ExileEvents.OnMobDeath> {
                                     ItemStack stack = new ItemStack(RandomUtils.weightedRandom(x.data.getDungeonLayout()
                                             .getGroup().coin_drops)
                                         .getCoinItem());
-                                    event.mob.spawnAtLocation(stack);
+                                    event.mob.spawnAtLocation((net.minecraft.server.level.ServerLevel) event.mob.level(), stack);
                                 }
                             });
 

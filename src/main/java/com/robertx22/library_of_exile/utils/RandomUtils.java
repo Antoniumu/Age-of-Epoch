@@ -77,6 +77,12 @@ public class RandomUtils {
 
     }
 
+    public static boolean roll(double chance, net.minecraft.util.RandomSource rand) {
+
+        double ranNum = rand.nextDouble() * 100;
+        return ranNum < chance;
+    }
+
     public static boolean roll(double chance, Random rand) {
 
         double ranNum = rand.nextDouble() * 100;

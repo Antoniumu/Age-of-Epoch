@@ -90,6 +90,14 @@ public class EventData {
         return bools.getOrDefault(id, false);
     }
 
+    public boolean getBooleanOr(String id, boolean def) {
+        return bools.getOrDefault(id, def);
+    }
+
+    public String getStringOr(String id, String def) {
+        return strings.getOrDefault(id, def);
+    }
+
     public void setBoolean(String id, Boolean bool) {
         tryFreezeErrorMessage();
 

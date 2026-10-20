@@ -114,7 +114,7 @@ public class StatSoulItem extends Item implements IGUID {
 
         if (data != null) {
             if (data.gear != null) {
-                data.gear.BuildTooltip(new TooltipContext(stack, tooltip, Load.Unit(ClientOnly.getPlayer())));
+                data.gear.BuildTooltip(new com.robertx22.age_of_exile.saveclasses.gearitem.gear_bases.TooltipContext(stack, tooltip, Load.Unit(ClientOnly.getPlayer())));
             } else {
                 tooltip.add(TooltipUtils.gearTier(data.tier));
                 if (data.canBeOnAnySlot()) {

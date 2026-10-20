@@ -4,6 +4,7 @@ import com.robertx22.forge_compat.common.MinecraftForge;
 import com.robertx22.forge_compat.event.entity.living.LivingDamageEvent;
 import com.robertx22.forge_compat.event.entity.living.LivingDeathEvent;
 import com.robertx22.forge_compat.event.entity.living.LivingHurtEvent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class LivingDamageBridgeMixin {
 
     @ModifyVariable(method = "actuallyHurt", at = @At("HEAD"), argsOnly = true, ordinal = 0)
-    private float ageOfEpoch$modifyDamage(float amount, DamageSource source) {
+    private float ageOfEpoch$modifyDamage(float amount, ServerLevel level, DamageSource source) {
         LivingEntity self = (LivingEntity) (Object) this;
         LivingEntity attacker = source.getEntity() instanceof LivingEntity le ? le : self;
         LivingHurtEvent hurt = new LivingHurtEvent(self, attacker, source, amount);

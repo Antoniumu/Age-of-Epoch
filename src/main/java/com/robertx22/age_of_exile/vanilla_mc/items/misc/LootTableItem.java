@@ -79,7 +79,7 @@ public class LootTableItem extends Item implements IAutoModel {
 
                 spawnEffects(world, player);
 
-                drops.forEach(x -> player.drop(x, false));
+                drops.forEach(x -> player.drop(x, false, net.minecraft.util.Prediction.SERVER_ONLY));
 
             } catch (Exception e) {
                 e.printStackTrace();

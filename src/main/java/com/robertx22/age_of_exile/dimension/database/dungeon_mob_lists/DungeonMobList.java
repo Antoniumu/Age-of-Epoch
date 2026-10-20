@@ -42,6 +42,11 @@ public class DungeonMobList implements JsonExileRegistry<DungeonMobList>, IAutoG
         return id;
     }
 
+    @Override
+    public int Weight() {
+        return 1000;
+    }
+
     public LivingEntity spawnBoss(ServerLevel world, BlockPos pos) {
         WeightedMobEntry random = RandomUtils.weightedRandom(bosses);
 

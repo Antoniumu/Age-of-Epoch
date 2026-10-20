@@ -99,7 +99,7 @@ public class ShopReward {
         IDExileEvents.ON_ITEM_GIVE.callEvents(event);
 
         if (player.addItem(stack) == false) {
-            player.spawnAtLocation(stack, 1F);
+            player.spawnAtLocation((net.minecraft.server.level.ServerLevel) player.level(), stack, 1F);
         }
 
         player.getInventory().setChanged();

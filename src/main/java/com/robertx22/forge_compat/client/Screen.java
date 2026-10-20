@@ -38,7 +38,7 @@ public abstract class Screen extends net.minecraft.client.gui.screens.Screen {
         } else if (widget instanceof Renderable && widget instanceof NarratableEntry) {
             this.addRenderableWidget((GuiEventListener & Renderable & NarratableEntry) widget);
         } else {
-            this.addWidget(widget);
+            this.addWidget((GuiEventListener & net.minecraft.client.gui.narration.NarratableEntry) widget);
         }
         return widget;
     }

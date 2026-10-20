@@ -47,8 +47,12 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
         if (type.ser == null) {
             return;
         }
-
-        Preconditions.checkNotNull(cachedBuf, type.id + " error, cachedbuf is null!!!");
+        if (cachedBuf == null) {
+            onAllDatapacksLoaded();
+        }
+        if (cachedBuf == null) {
+            return;
+        }
 
         if (type.ser instanceof IByteBuf) {
             Packets.sendToClient(player, new EfficientRegistryPacket(this.type, getList()));
@@ -62,6 +66,9 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
     }
 
     public void onAllDatapacksLoaded() {
+        if (map.isEmpty() && !serializables.isEmpty()) {
+            map.putAll(serializables);
+        }
 
         fromDatapacks = null;
         getFromDatapacks();
@@ -300,6 +307,7 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
                 id + " already exists as seriazable: " + entry.GUID());
         }
         this.serializables.put(entry.GUID(), entry);
+        this.map.putIfAbsent(entry.GUID(), entry);
 
     }
 

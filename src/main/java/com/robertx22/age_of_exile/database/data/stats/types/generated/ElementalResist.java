@@ -30,7 +30,7 @@ public class ElementalResist extends ElementalStat implements IUsableStat {
         this.is_perc = false;
         this.scaling = StatScaling.NORMAL;
 
-        this.format = element.com.robertx22.forge_compat.common.CompatChatFormatting.getName(format);
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(element.format);
         this.icon = element.icon;
         this.statEffect = new ElementalResistEffect();
 

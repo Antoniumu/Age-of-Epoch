@@ -50,7 +50,7 @@ public class CommonGearProducerItem extends AutoItem {
             PlayerUtils.giveItem(soulstack, user);
         }
 
-        return InteractionResult.SUCCESS);
+        return InteractionResult.SUCCESS;
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -21,13 +21,13 @@ public enum BonusRequirement {
     NIGHT("night", "Night Time") {
         @Override
         public boolean isAllowed(Level world, BlockPos pos) {
-            return (world.getDayTime() % 24000L) >= 12000L;
+            return (world.getOverworldClockTime() % 24000L) >= 12000L;
         }
     },
     DAY("day", "Day Time") {
         @Override
         public boolean isAllowed(Level world, BlockPos pos) {
-            return (world.getDayTime() % 24000L) < 12000L;
+            return (world.getOverworldClockTime() % 24000L) < 12000L;
         }
     },
     MOUNTAIN_BIOME("mountain_biome", "Mountain Biome") {

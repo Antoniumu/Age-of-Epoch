@@ -18,7 +18,7 @@ import java.util.List;
 public class ControlBlock extends Block implements EntityBlock {
 
     public ControlBlock() {
-        super(BlockBehaviour.Properties.of(Material.STONE)
+        super(BlockBehaviour.Properties.of()
             .noOcclusion()
             .lightLevel(x -> 15));
     }

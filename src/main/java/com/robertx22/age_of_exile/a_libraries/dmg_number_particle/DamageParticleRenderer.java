@@ -48,8 +48,8 @@ public class DamageParticleRenderer {
 
         matrix.pushPose();
         matrix.translate(x - camX, y - camY, z - camZ);
-        matrix.mulPose(new Quaternionf().rotationY((float) Math.toRadians(-camera.yRot())));
-        matrix.mulPose(new Quaternionf().rotationX((float) Math.toRadians(camera.xRot())));
+        matrix.mulPose(new org.joml.Matrix4f().rotationY((float) Math.toRadians(-camera.yRot())));
+        matrix.mulPose(new org.joml.Matrix4f().rotationX((float) Math.toRadians(camera.xRot())));
         matrix.scale(-scaleToGui, -scaleToGui, scaleToGui);
 
         RenderSystem.disableLighting();

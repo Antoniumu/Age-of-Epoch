@@ -57,7 +57,7 @@ public class ExilePotionEvent extends EffectEvent {
         int duration = (int) data.getNumber(EventData.EFFECT_DURATION_TICKS).number;
 
         if (effect.id.contains("35")) {
-            byte effectId = (byte) (MobEffect.getId(effect.getStatusEffect()) & 255);
+            byte effectId = (byte) (net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.getId(effect.getStatusEffect()) & 255);
 
             System.out.print(effectId);
         }

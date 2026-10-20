@@ -22,11 +22,9 @@ public class DMRegInit {
         new GiveFavorReward().registerToExileRegistry();
         new GiveAoeExpReward().registerToExileRegistry();
 
-        if (MMORPG.RUN_DEV_TOOLS) {
-            DMRewardsAdder.init();
-            DMTasksAdder.init();
-            new DMPoolsAdder().registerAll();
-        }
+        DMRewardsAdder.init();
+        DMTasksAdder.init();
+        new DMPoolsAdder().registerAll();
 
     }
 }

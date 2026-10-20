@@ -15,9 +15,7 @@ public class RegistryInit {
         RegistryTypes.init();
         AddRegistryContainers.addAll();
         RegisterNonDatapackEntries.register();
-        if (DivineMissions.RUN_DEV_TOOLS()) {
-            AddToDataGen.addAll();
-        }
+        AddToDataGen.addAll();
 
         didInit = true;
     }

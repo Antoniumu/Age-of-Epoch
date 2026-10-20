@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class RuneWordStationBlock extends BaseModificationBlock {
 
     public RuneWordStationBlock() {
-        super(Properties.of(Material.STONE)
+        super(Properties.of()
             .strength(5F, 2));
     }
 

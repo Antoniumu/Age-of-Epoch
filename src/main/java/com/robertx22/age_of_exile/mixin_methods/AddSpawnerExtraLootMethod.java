@@ -34,12 +34,12 @@ public class AddSpawnerExtraLootMethod {
             if (!context.hasParameter(LootContextParams.THIS_ENTITY)) {
                 return;
             }
-            if (context.getOptionalParameter(LootContextParams.BLOCK_STATE)
+            if (context.getOptional(LootContextParams.BLOCK_STATE)
                 .getBlock() != Blocks.SPAWNER) {
                 return;
             }
 
-            Entity en = context.getOptionalParameter(LootContextParams.THIS_ENTITY);
+            Entity en = context.getOptional(LootContextParams.THIS_ENTITY);
 
             Player player = null;
             if (en instanceof Player) {
@@ -49,15 +49,19 @@ public class AddSpawnerExtraLootMethod {
                 return;
             }
 
-            ItemStack stack = context.getOptionalParameter(LootContextParams.TOOL);
+            net.minecraft.world.item.ItemInstance tool = context.getOptional(LootContextParams.TOOL);
+            if (!(tool instanceof ItemStack stack)) {
+                return;
+            }
             if (stack.getEnchantments().entrySet().stream().anyMatch(e -> e.getKey().is(Enchantments.SILK_TOUCH))) {
                 return;
             }
 
-            Vec3 p = context.getOptionalParameter(LootContextParams.ORIGIN);
+            Vec3 p = context.getOptional(LootContextParams.ORIGIN);
             BlockPos pos = new BlockPos((int) p.x, (int) p.y, (int) p.z);
 
-            Load.favor(player)
+            Load.playerRPGData(player)
+                .favor
                 .addFavor(ServerContainer.get().FAVOR_GAIN_PER_SPAWNER_DESTROYED.get()
                     .floatValue());
 

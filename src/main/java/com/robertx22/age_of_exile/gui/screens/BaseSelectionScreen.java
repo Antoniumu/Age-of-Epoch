@@ -54,9 +54,11 @@ public class BaseSelectionScreen extends BaseScreen {
     HashMap<Button, PointData> originalButtonLocMap = new HashMap<>();
 
     @Override
-    protected <T extends Button> T addButton(T b) {
-        super.addButton(b);
-        originalButtonLocMap.put(b, new PointData(b.x, b.y));
+    protected <T extends net.minecraft.client.gui.components.events.GuiEventListener & net.minecraft.client.gui.components.Renderable & net.minecraft.client.gui.narration.NarratableEntry> T addRenderableWidget(T b) {
+        super.addRenderableWidget(b);
+        if (b instanceof net.minecraft.client.gui.components.AbstractWidget widget) {
+            originalButtonLocMap.put((Button) b, new PointData(widget.getX(), widget.getY()));
+        }
         return b;
     }
 

@@ -26,7 +26,7 @@ public class DungeonKeyItem extends Item {
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level world, Entity en, int num, boolean bool) {
+    public void inventoryTick(ItemStack stack, net.minecraft.server.level.ServerLevel world, Entity en, net.minecraft.world.entity.EquipmentSlot slot) {
         try {
             if (en.tickCount % 20 == 0) {
                 if (!StackNBT.has(stack)) {

@@ -30,7 +30,7 @@ public class AttackDamage extends ElementalStat {
         this.group = StatGroup.ELEMENTAL;
         this.statEffect = new Effect();
 
-        this.format = element.com.robertx22.forge_compat.common.CompatChatFormatting.getName(format);
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(element.format);
         this.icon = element.icon;
 
     }

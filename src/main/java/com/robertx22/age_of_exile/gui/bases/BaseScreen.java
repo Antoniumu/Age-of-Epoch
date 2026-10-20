@@ -38,7 +38,7 @@ public class BaseScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (KeybindsRegister.HUB_SCREEN_KEY.matches(com.mojang.blaze3d.platform.InputConstants.Type.KEYSYM.getOrCreate(keyCode))) {
+        if (KeybindsRegister.HUB_SCREEN_KEY.matches(com.mojang.blaze3d.platform.InputConstants.Type.KEYBOARD.getOrCreate(keyCode))) {
             Minecraft.getInstance().gui
                 .setScreen(null);
             OnKeyPress.cooldown = 5;

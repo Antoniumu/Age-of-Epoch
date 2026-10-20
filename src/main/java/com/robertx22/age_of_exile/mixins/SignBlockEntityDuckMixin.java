@@ -10,6 +10,6 @@ public abstract class SignBlockEntityDuckMixin implements SignDuck {
 
     @Override
     public Component[] getMessages() {
-        return ((SignBlockEntity) (Object) this).getFrontText().getMessages(false);
+        return ((SignBlockEntity) (Object) this).getText(net.minecraft.world.level.block.entity.SignTextSlot.FRONT).getMessages(false).toArray(new Component[0]);
     }
 }

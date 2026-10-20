@@ -22,7 +22,7 @@ public class PickDungeonButton extends ImageButton {
     public PickDungeonButton(PickDungeonScreen screen, DungeonLayout layout, int x, int y) {
         super(x, y, SIZE_X, SIZE_Y, 0, 0, 0, TEX, new IPressable() {
             @Override
-            public void onPress(Button button) {
+            public void onPress(net.minecraft.client.gui.components.Button button) {
                 screen.currentLayout = layout;
                 screen.init();
             }

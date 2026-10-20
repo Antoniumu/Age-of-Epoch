@@ -18,4 +18,14 @@ public class AbstractPool {
     public void add(Identifier child) {
         children.add(child);
     }
+
+    /** Returns this pool; kept so call sites written against the original builder API still compile. */
+    public AbstractPool build() {
+        return this;
+    }
+
+    /** Processor list of this pool; subclasses may narrow the return type. */
+    public Object processorList() {
+        return null;
+    }
 }

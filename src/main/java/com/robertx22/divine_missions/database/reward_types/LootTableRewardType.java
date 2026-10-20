@@ -49,7 +49,7 @@ public class LootTableRewardType extends RewardType {
             System.out.println(loottableId.toString() + " loot table dropped ZERO items!");
         }
 
-        drops.forEach(x -> player.getInventory().placeItemBackInInventory(x));
+        drops.forEach(x -> player.getInventory().placeItemBackInInventory(x, net.minecraft.util.Prediction.SERVER_ONLY));
     }
 
     @Override

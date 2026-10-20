@@ -1,15 +1,10 @@
 package com.robertx22.forge_compat.worldgen;
 
-import com.mojang.serialization.Codec;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 
 import java.util.function.Supplier;
 
-public class VillageConfig implements FeatureConfiguration {
-
-    public static final Codec<VillageConfig> CODEC =
-        Codec.unit(new VillageConfig(null, 0));
+public class VillageConfig {
 
     private final Supplier<StructureTemplatePool> startPool;
     private final int maxDepth;

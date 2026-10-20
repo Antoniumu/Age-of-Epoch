@@ -64,7 +64,7 @@ public class BackpackItem extends Item implements IAutoLocName, IAutoModel, ISha
 
         }
 
-        return InteractionResult.SUCCESS);
+        return InteractionResult.SUCCESS;
     }
 
     @OnlyIn(Dist.CLIENT)

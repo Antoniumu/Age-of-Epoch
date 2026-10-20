@@ -49,7 +49,8 @@ import top.theillusivec4.curios.api.SlotTypeMessage;
 public class MMORPG implements net.fabricmc.api.ModInitializer {
 
     // DISABLE WHEN PUBLIC BUILD
-    public static boolean RUN_DEV_TOOLS = true;
+    public static boolean RUN_DEV_TOOLS = false;
+    private static boolean initialized = false;
 
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel NETWORK = NetworkRegistry.newSimpleChannel(
@@ -61,11 +62,19 @@ public class MMORPG implements net.fabricmc.api.ModInitializer {
 
     @Override
     public void onInitialize() {
-        new MMORPG();
+        initMod();
         FabricBootstrap.finishInit();
     }
 
     public MMORPG() {
+        initMod();
+    }
+
+    private void initMod() {
+        if (initialized) {
+            return;
+        }
+        initialized = true;
 
         Watch watch = new Watch();
 
@@ -154,9 +163,7 @@ public class MMORPG implements net.fabricmc.api.ModInitializer {
         new CurrencyItems().registerAll();
         // need to happen after curerrency items are registered
 
-        if (MMORPG.RUN_DEV_TOOLS) {
-            GeneratedData.addAllObjectsToGenerate();
-        }
+        GeneratedData.addAllObjectsToGenerate();
 
         SlashCapabilities.register();
     }

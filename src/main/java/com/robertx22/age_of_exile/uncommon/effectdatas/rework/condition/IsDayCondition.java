@@ -13,7 +13,7 @@ public class IsDayCondition extends StatCondition {
 
     @Override
     public boolean can(EffectEvent event, EffectSides statSource, StatData data, Stat stat) {
-        return (event.source.level().getDayTime() % 24000L) < 12000L;
+        return (event.source.level().getOverworldClockTime() % 24000L) < 12000L;
     }
 
     @Override
