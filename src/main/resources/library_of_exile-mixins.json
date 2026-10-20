@@ -1,0 +1,18 @@
+{
+  "minVersion": "0.8",
+  "required": true,
+  "package": "com.robertx22.library_of_exile.mixins",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "ChestLootGenMixin",
+    "LivingEntityMixin",
+    "MobEntityMixin",
+    "PlayerManagerMixin",
+    "ServerPlayerMixin",
+    "ServerResourceManagerMixin",
+    "ServerWorldMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

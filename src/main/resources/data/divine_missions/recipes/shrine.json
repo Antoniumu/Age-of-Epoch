@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    " A ",
+    " C "
+  ],
+  "key": {  
+	"C": {
+      "item": "minecraft:gold_block"
+    }, 
+	"A": {
+      "item": "minecraft:crafting_table"
+    }, 
+	"B": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "item": "divine_missions:shrine"
+  }
+}

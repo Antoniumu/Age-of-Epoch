@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "mmorpg",
+  "version": "${version}",
+  "name": "Age of Exile (Age of Epoch port)",
+  "description": "Turns Minecraft into a hack and slash RPG! Port of Age of Exile to Minecraft 26.3 (Fabric).",
+  "authors": [
+    "mcrobertx22",
+    "Antoniumu (26.3 port)"
+  ],
+  "contact": {
+    "sources": "https://github.com/RobertSkalko/Age-of-Exile",
+    "issues": "https://github.com/RobertSkalko/Age-of-Exile/issues"
+  },
+  "license": "All rights reserved",
+  "icon": "assets/mmorpg/icon.png",
+  "entrypoints": {
+    "main": [
+      "com.robertx22.age_of_exile.mmorpg.MMORPG"
+    ],
+    "client": [
+      "com.robertx22.age_of_exile.mmorpg.init.ClientInit"
+    ]
+  },
+  "mixins": [
+    "mmorpg-mixins.json",
+    "library_of_exile-mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "fabric-api": ">=0.163.0",
+    "minecraft": "~26.3",
+    "java": ">=25"
+  }
+}

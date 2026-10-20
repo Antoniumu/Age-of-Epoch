@@ -1,0 +1,29 @@
+{
+  "minVersion": "0.8",
+  "required": true,
+  "package": "com.robertx22.age_of_exile.mixins",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "ArrowShootMixin",
+    "DisableMobSpawnsInDungeon",
+    "EntityNbtCapBridgeMixin",
+    "FallingBlockEntityMixin",
+    "ItemInteractionHook",
+    "LivingDamageBridgeMixin",
+    "LivingEntityMixin",
+    "LivingTickBridgeMixin",
+    "LootTableMixin",
+    "PlayerInventoryMixin",
+    "ServerPlayerEntityAccessor",
+    "SignBlockEntityDuckMixin",
+    "StopFireInDungeonMixin"
+  ],
+  "client": [
+    "ItemGlintMixin",
+    "ItemStackMixin",
+    "WorldRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

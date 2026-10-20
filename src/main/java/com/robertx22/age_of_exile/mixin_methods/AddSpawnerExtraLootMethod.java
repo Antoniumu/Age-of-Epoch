@@ -1,0 +1,74 @@
+package com.robertx22.age_of_exile.mixin_methods;
+
+import com.robertx22.age_of_exile.config.forge.ServerContainer;
+import com.robertx22.age_of_exile.loot.LootInfo;
+import com.robertx22.age_of_exile.loot.MasterLootGen;
+import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootContextParams;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.List;
+
+public class AddSpawnerExtraLootMethod {
+
+    public static void hookLoot(LootContext context, CallbackInfoReturnable<List<ItemStack>> ci) {
+
+        try {
+            if (!context.hasParam(LootContextParams.BLOCK_STATE)) {
+                return;
+            }
+            if (!context.hasParam(LootContextParams.TOOL)) {
+                return;
+            }
+            if (!context.hasParam(LootContextParams.ORIGIN)) {
+                return;
+            }
+            if (!context.hasParam(LootContextParams.THIS_ENTITY)) {
+                return;
+            }
+            if (context.getParamOrNull(LootContextParams.BLOCK_STATE)
+                .getBlock() != Blocks.SPAWNER) {
+                return;
+            }
+
+            Entity en = context.getParamOrNull(LootContextParams.THIS_ENTITY);
+
+            Player player = null;
+            if (en instanceof Player) {
+                player = (Player) en;
+            }
+            if (player == null) {
+                return;
+            }
+
+            ItemStack stack = context.getParamOrNull(LootContextParams.TOOL);
+            if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, stack) != 0) {
+                return;
+            }
+
+            Load.playerRPGData(player).favor.addFavor(ServerContainer.get().FAVOR_GAIN_PER_SPAWNER_DESTROYED.get()
+                .floatValue());
+
+            Vec3 p = context.getParamOrNull(LootContextParams.ORIGIN);
+            BlockPos pos = new BlockPos(p.x, p.y, p.z);
+
+            LootInfo info = LootInfo.ofSpawner(player, context.getLevel(), pos);
+            info.multi += 2;
+            List<ItemStack> list = MasterLootGen.generateLoot(info);
+
+            ci.getReturnValue()
+                .addAll(list);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
