@@ -1,4 +1,5 @@
 {
+  "_comment": "[CATEGORY]: MAIN - Основные элементы\n[CATEGORY]: ITEMS - Предметы\n[CATEGORY]: BLOCKS - Блоки\n[CATEGORY]: SPELLS - Спелл\n[CATEGORY]: EFFECTS - Эффекты\n[CATEGORY]: DEATH - Смерть\n[CATEGORY]: ENTITIES - Существа\n[CATEGORY]: ATTRIBUTES - Атрибуты\n[CATEGORY]: ENCHANTMENTS - Зачарования\n[CATEGORY]: QUESTS - Квест\n[CATEGORY]: KEYS - Ключи настроек\nNOTE: MOD AGE OF EXILE - PORT TO FABRIC 26.3. Русский перевод для настройки языка Minecraft на русский. Untranslated keys fallback to English.",
   "block.mmorpg.ore_block0": "Common Ore Block",
   "block.mmorpg.ore_block1": "Uncommon Ore Block",
   "block.mmorpg.ore_block2": "Rare Ore Block",
@@ -236,6 +237,7 @@
   "item.mmorpg.currency.stone_of_hope": "§cStone Of Hope",
   "item.mmorpg.currency.stone_of_hope.desc": "Transform any rarity gear into higher rarity.",
   "item.mmorpg.currency_bag": "Currency Bag",
+  "item.mmorpg.custom_crate": "Crate",
   "item.mmorpg.dim_shard.0": "Spiritual Dimensional Shard",
   "item.mmorpg.dim_shard.1": "Celestial Dimensional Shard",
   "item.mmorpg.dim_shard.2": "Empyrean Dimensional Shard",
@@ -461,6 +463,14 @@
   "item.mmorpg.locked_chest.2": "Empyrean Locked Chest",
   "item.mmorpg.locked_chest.3": "Angelic Locked Chest",
   "item.mmorpg.locked_chest.4": "Divine Locked Chest",
+  "item.mmorpg.loot_crate.common": "Common Item Loot Crate",
+  "item.mmorpg.loot_crate.ench_exp_bag": "Enchanting Experience Chest",
+  "item.mmorpg.loot_crate.gem": "Gem Loot Crate",
+  "item.mmorpg.loot_crate.magic": "Magic Item Loot Crate",
+  "item.mmorpg.loot_crate.rare": "Rare Item Loot Crate",
+  "item.mmorpg.loot_crate.relic": "Relic Item Loot Crate",
+  "item.mmorpg.loot_crate.rune": "Rune Loot Crate",
+  "item.mmorpg.loot_crate.unique": "Unique Item Loot Crate",
   "item.mmorpg.loot_table_chest": "Level Up Reward Bag",
   "item.mmorpg.lure.fish.0": "Spiritual Fish Lure",
   "item.mmorpg.lure.fish.1": "Celestial Fish Lure",
@@ -748,6 +758,5 @@
   "spell.desc.teleport": "Teleport yourself in the direction you're looking at.",
   "spell.desc.test_spell": "Throw out a ball of poison, dealing [calc:poisonball] §2✿ Nature§7 Damage",
   "spell.desc.the_hunt": "Gain Night vision and set all enemies around you to glow.",
-  "spell.desc.water_breath": "Give Water Breathing to allies around you.",
-  "_comment": "[CATEGORY]: MAIN - Основные элементы\n[CATEGORY]: ITEMS - Предметы\n[CATEGORY]: BLOCKS - Блоки\n[CATEGORY]: SPELLS - Спелл\n[CATEGORY]: EFFECTS - Эффекты\n[CATEGORY]: DEATH - Смерть\n[CATEGORY]: ENTITIES - Существа\n[CATEGORY]: ATTRIBUTES - Атрибуты\n[CATEGORY]: ENCHANTMENTS - Зачарования\n[CATEGORY]: QUESTS - Квест\n[CATEGORY]: KEYS - Ключи настроек\nNOTE: Этот файл содержит переведенные ключи мода Age of Exile для Minecraft 26.3 (Fabric). Непереведенные ключи будут автоматически падать back to English при русификации клиента. Данный мод переносит Age of Exile с 1.16.5 на Fabric 26.3."
+  "spell.desc.water_breath": "Give Water Breathing to allies around you."
 }
