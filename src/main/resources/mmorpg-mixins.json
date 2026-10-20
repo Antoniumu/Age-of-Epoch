@@ -9,6 +9,7 @@
     "DisableMobSpawnsInDungeon",
     "EntityNbtCapBridgeMixin",
     "FallingBlockEntityMixin",
+    "HolderReferenceComponentsMixin",
     "ItemInteractionHook",
     "ItemPropertiesIdMixin",
     "LivingDamageBridgeMixin",
