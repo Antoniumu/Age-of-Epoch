@@ -1,5 +1,5 @@
 {
-  "_comment": "[CATEGORY]: MAIN - Основные элементы\n[CATEGORY]: ITEMS - Предметы\n[CATEGORY]: BLOCKS - Блоки\n[CATEGORY]: SPELLS - Спелл\n[CATEGORY]: EFFECTS - Эффекты\n[CATEGORY]: DEATH - Смерть\n[CATEGORY]: ENTITIES - Существа\n[CATEGORY]: ATTRIBUTES - Атрибуты\n[CATEGORY]: ENCHANTMENTS - Зачарования\n[CATEGORY]: QUESTS - Квест\n[CATEGORY]: KEYS - Ключи настроек\nNOTE: MOD AGE OF EXILE - PORT TO FABRIC 26.3. Русский перевод для настройки языка Minecraft на русский. Untranslated keys fallback to English.",
+  "_comment": "[CATEGORY]: MAIN - Основные элементы\n[CATEGORY]: ITEMS - Предметы\n[CATEGORY]: BLOCKS - Блоки\n[CATEGORY]: SPELLS - Спелл\n[CATEGORY]: EFFECTS - Эффекты\n[CATEGORY]: DEATH - Смерть\n[CATEGORY]: ENTITIES - Существа\n[CATEGORY]: ATTRIBUTES - Атрибуты\n[CATEGORY]: ENCHANTMENTS - Зачарования\n[CATEGORY]: QUESTS - Квест\n[CATEGORY]: KEYS - Ключи настроек\nNOTE: MOD AGE OF EXILE - PORT TO FABRIC 26.3. Полный русский перевод для настройки языка Minecraft на русский. Untranslated keys fallback to English. Port from Forge 1.16.5 to Fabric 26.3 by Antoniumu.",
   "block.mmorpg.ore_block0": "Common Ore Block",
   "block.mmorpg.ore_block1": "Uncommon Ore Block",
   "block.mmorpg.ore_block2": "Rare Ore Block",
