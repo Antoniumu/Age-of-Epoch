@@ -239,10 +239,7 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
 
             List<INamedScreen> screens = new ArrayList<>();
             screens.add(new SpellScreen());
-            if (MMORPG.RUN_DEV_TOOLS) {
-                screens.add(new TalentsScreen());
-                // todo until talents are done
-            }
+            screens.add(new TalentsScreen());
             screens.add(new ProfessionsScreen());
             screens.add(new WikiScreen());
 
