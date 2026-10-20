@@ -32,8 +32,25 @@ public class EventBusImpl implements IEventBus {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Event> void addListener(EventPriority priority, Consumer<T> consumer) {
-        // Forge infers the event type from the consumer's erased signature; we accept all.
-        handlers.add(new Handler(priority, Event.class, (Event e) -> consumer.accept((T) e), false));
+        handlers.add(new Handler(priority, Event.class, (Event e) -> {
+            try {
+                consumer.accept((T) e);
+            } catch (ClassCastException ignored) {
+                // listener is for a different Event subtype
+            }
+        }, false));
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends Event> void addListener(EventPriority priority, Class<T> eventType, Consumer<T> consumer) {
+        Class<?> targetType = eventType != null ? eventType : Event.class;
+        handlers.add(new Handler(priority, targetType, (Event e) -> {
+            try {
+                consumer.accept((T) e);
+            } catch (ClassCastException ignored) {
+            }
+        }, false));
     }
 
     @Override

@@ -79,6 +79,9 @@ public class SimpleChannel {
                                     Function<FriendlyByteBuf, T> decoder,
                                     BiConsumer<T, Supplier<NetworkEvent.Context>> handler) {
         Identifier msgId = Identifier.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "/" + index);
+        if (byId.containsKey(msgId)) {
+            return;
+        }
         Registration reg = new Registration(messageType,
             (BiConsumer<Object, FriendlyByteBuf>) (BiConsumer<?, ?>) encoder,
             (Function<FriendlyByteBuf, Object>) decoder,
@@ -89,27 +92,33 @@ public class SimpleChannel {
         CustomPacketPayload.Type<MsgPayload> payloadType = new CustomPacketPayload.Type<>(msgId);
         try {
             PayloadTypeRegistry.clientboundPlay().register(payloadType, codecFor(payloadType, reg));
-        } catch (Exception ignored) {
+        } catch (Throwable ignored) {
         }
         try {
             PayloadTypeRegistry.serverboundPlay().register(payloadType, codecFor(payloadType, reg));
-        } catch (Exception ignored) {
+        } catch (Throwable ignored) {
         }
 
-        ServerPlayNetworking.registerGlobalReceiver(payloadType, (payload, context) -> {
-            FriendlyByteBuf buf = new FriendlyByteBuf(io.netty.buffer.Unpooled.wrappedBuffer(payload.data()));
-            Object msg = reg.decoder.apply(buf);
-            NetworkEvent.Context ctx = new NetworkEvent.Context(context.player(), null, false);
-            reg.handler.accept(msg, () -> ctx);
-            ctx.runWork();
-        });
-        ClientPlayNetworking.registerGlobalReceiver(payloadType, (payload, context) -> {
-            FriendlyByteBuf buf = new FriendlyByteBuf(io.netty.buffer.Unpooled.wrappedBuffer(payload.data()));
-            Object msg = reg.decoder.apply(buf);
-            NetworkEvent.Context ctx = new NetworkEvent.Context(null, null, true);
-            reg.handler.accept(msg, () -> ctx);
-            ctx.runWork();
-        });
+        try {
+            ServerPlayNetworking.registerGlobalReceiver(payloadType, (payload, context) -> {
+                FriendlyByteBuf buf = new FriendlyByteBuf(io.netty.buffer.Unpooled.wrappedBuffer(payload.data()));
+                Object msg = reg.decoder.apply(buf);
+                NetworkEvent.Context ctx = new NetworkEvent.Context(context.player(), null, false);
+                reg.handler.accept(msg, () -> ctx);
+                ctx.runWork();
+            });
+        } catch (Throwable ignored) {
+        }
+        try {
+            ClientPlayNetworking.registerGlobalReceiver(payloadType, (payload, context) -> {
+                FriendlyByteBuf buf = new FriendlyByteBuf(io.netty.buffer.Unpooled.wrappedBuffer(payload.data()));
+                Object msg = reg.decoder.apply(buf);
+                NetworkEvent.Context ctx = new NetworkEvent.Context(null, null, true);
+                reg.handler.accept(msg, () -> ctx);
+                ctx.runWork();
+            });
+        } catch (Throwable ignored) {
+        }
     }
 
     private static net.minecraft.network.codec.StreamCodec<RegistryFriendlyByteBuf, MsgPayload> codecFor(
