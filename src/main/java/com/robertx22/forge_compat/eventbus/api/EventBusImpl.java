@@ -1,0 +1,73 @@
+package com.robertx22.forge_compat.eventbus.api;
+
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
+
+public class EventBusImpl implements IEventBus {
+
+    private static final class Handler {
+        final EventPriority priority;
+        final Consumer<Event> consumer;
+        final Class<?> eventType;
+        final boolean receiveCanceled;
+
+        Handler(EventPriority priority, Class<?> eventType, Consumer<Event> consumer, boolean receiveCanceled) {
+            this.priority = priority;
+            this.eventType = eventType;
+            this.consumer = consumer;
+            this.receiveCanceled = receiveCanceled;
+        }
+    }
+
+    private final List<Handler> handlers = new CopyOnWriteArrayList<>();
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends Event> void addListener(Consumer<T> consumer) {
+        addListener(EventPriority.NORMAL, consumer);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends Event> void addListener(EventPriority priority, Consumer<T> consumer) {
+        // Forge infers the event type from the consumer's erased signature; we accept all.
+        handlers.add(new Handler(priority, Event.class, (Event e) -> consumer.accept((T) e), false));
+    }
+
+    @Override
+    public void register(Object target) {
+        Class<?> clazz = target instanceof Class ? (Class<?>) target : target.getClass();
+        for (Method m : clazz.getDeclaredMethods()) {
+            SubscribeEvent ann = m.getAnnotation(SubscribeEvent.class);
+            if (ann == null) continue;
+            if (m.getParameterCount() != 1) continue;
+            Class<?> eventType = m.getParameterTypes()[0];
+            if (!Event.class.isAssignableFrom(eventType)) continue;
+            m.setAccessible(true);
+            boolean isStatic = java.lang.reflect.Modifier.isStatic(m.getModifiers());
+            Object instance = isStatic ? null : target;
+            handlers.add(new Handler(ann.priority(), eventType, (Event e) -> {
+                try {
+                    m.invoke(instance, e);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }, ann.receiveCanceled()));
+        }
+    }
+
+    @Override
+    public boolean post(Event event) {
+        List<Handler> sorted = new ArrayList<>(handlers);
+        sorted.sort(Comparator.comparingInt(h -> h.priority.ordinal()));
+        for (Handler h : sorted) {
+            if (h.eventType.isInstance(event)) {
+                if (event.isCanceled() && !h.receiveCanceled) continue;
+                h.consumer.accept(event);
+            }
+        }
+        return event.isCanceled();
+    }
+}

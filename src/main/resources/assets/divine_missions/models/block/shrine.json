@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "divine_missions:block/respawn_anchor_top",
+    "bottom": "divine_missions:block/respawn_anchor_bottom",
+    "side": "divine_missions:block/respawn_anchor"
+  }
+}

@@ -1,0 +1,67 @@
+package com.robertx22.age_of_exile.capability;
+
+import com.robertx22.age_of_exile.mmorpg.SlashRef;
+import com.robertx22.library_of_exile.components.forge.BaseProvider;
+import com.robertx22.library_of_exile.components.forge.BaseStorage;
+import com.robertx22.library_of_exile.components.forge.ICommonCap;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.chunk.LevelChunk;
+import com.robertx22.forge_compat.common.capabilities.Capability;
+import com.robertx22.forge_compat.common.capabilities.CapabilityInject;
+import com.robertx22.forge_compat.event.AttachCapabilitiesEvent;
+import com.robertx22.forge_compat.eventbus.api.SubscribeEvent;
+import com.robertx22.forge_compat.fml.common.Mod;
+
+@Mod.EventBusSubscriber
+public class ChunkPopulatedCap implements ICommonCap {
+    public static final ResourceLocation RESOURCE = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "popchunk");
+
+    @Mod.EventBusSubscriber
+    public static class EventHandler {
+        @SubscribeEvent
+        public static void onEntityConstruct(AttachCapabilitiesEvent<LevelChunk> event) {
+            event.addCapability(RESOURCE, new Provider());
+        }
+    }
+
+    public static class Storage implements BaseStorage<ChunkPopulatedCap> {
+
+    }
+
+    public static class Provider extends BaseProvider<ChunkPopulatedCap, Integer> {
+        public Provider() {
+            super(0);
+        }
+
+        @Override
+        public ChunkPopulatedCap newDefaultImpl(Integer owner) {
+            return new ChunkPopulatedCap();
+        }
+
+        @Override
+        public Capability<ChunkPopulatedCap> dataInstance() {
+            return Data;
+        }
+    }
+
+    @CapabilityInject(ChunkPopulatedCap.class)
+    public static Capability<ChunkPopulatedCap> Data = null;
+
+    private static final String LOC = "b";
+
+    public boolean populated = false;
+
+    @Override
+    public void loadFromNBT(CompoundTag tag) {
+        this.populated = tag.getBoolean(LOC);
+    }
+
+    @Override
+    public CompoundTag saveToNBT() {
+        CompoundTag tag = new CompoundTag();
+        tag.putBoolean(LOC, populated);
+        return tag;
+    }
+
+}

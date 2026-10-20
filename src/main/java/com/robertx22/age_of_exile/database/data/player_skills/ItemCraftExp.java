@@ -1,0 +1,26 @@
+package com.robertx22.age_of_exile.database.data.player_skills;
+
+import net.minecraft.world.item.Item;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+public class ItemCraftExp {
+
+    public int exp = 0;
+    public String item_id = "";
+
+    public ItemCraftExp(int exp, Item item) {
+        this.exp = exp;
+        this.item_id = BuiltInRegistries.ITEM.getKey(item)
+            .toString();
+    }
+
+    public ItemCraftExp() {
+    }
+
+    public Item getItem() {
+        return BuiltInRegistries.ITEM.get(ResourceLocation.parse(item_id));
+    }
+
+}
