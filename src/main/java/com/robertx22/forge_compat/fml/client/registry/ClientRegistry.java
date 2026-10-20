@@ -5,6 +5,10 @@ import net.minecraft.client.KeyMapping;
 
 public class ClientRegistry {
     public static void registerKeyBinding(KeyMapping key) {
-        KeyMappingHelper.registerKeyMapping(key);
+        try {
+            KeyMappingHelper.registerKeyMapping(key);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 }
