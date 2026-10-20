@@ -72,9 +72,10 @@ public abstract class BaseModificationBlock extends OpaqueBlock implements Entit
         return true;
     }
 
+    @Override
     @Deprecated
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player,
-                                 InteractionHand hand, BlockHitResult ray) {
+    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player,
+                                       InteractionHand hand, BlockHitResult ray) {
         if (world.isClientSide()) {
             return InteractionResult.CONSUME;
         }

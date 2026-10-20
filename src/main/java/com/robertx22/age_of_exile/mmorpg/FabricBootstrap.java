@@ -108,6 +108,16 @@ public class FabricBootstrap {
 
                 @Override
                 public void onResourceManagerReload(ResourceManager resourceManager) {
+                    try {
+                        com.robertx22.library_of_exile.registry.ExileRegistryType.getAllInRegisterOrder()
+                            .forEach(type -> {
+                                if (type.getLoader() != null) {
+                                    type.getLoader().reloadSync(resourceManager);
+                                }
+                            });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     MinecraftForge.EVENT_BUS.post(new AddReloadListenerEvent());
                 }
             });
@@ -115,6 +125,13 @@ public class FabricBootstrap {
         // ---- player connection / lifecycle ----
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayer player = handler.player;
+            try {
+                com.robertx22.library_of_exile.events.base.ExileEvents.ON_PLAYER_LOGIN.callEvents(
+                    new com.robertx22.library_of_exile.events.base.ExileEvents.OnPlayerLogin(player)
+                );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             MinecraftForge.EVENT_BUS.post(new PlayerEvent.PlayerLoggedInEvent(player));
         });
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
@@ -126,8 +143,17 @@ public class FabricBootstrap {
         });
 
         // ---- entity join ----
-        ServerEntityEvents.ENTITY_LOAD.register((entity, world) ->
-            MinecraftForge.EVENT_BUS.post(new EntityJoinWorldEvent(entity, world)));
+        ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
+            if (entity instanceof LivingEntity living) {
+                try {
+                    com.robertx22.library_of_exile.components.EntityInfoComponent.get(living)
+                        .spawnInit(entity);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            MinecraftForge.EVENT_BUS.post(new EntityJoinWorldEvent(entity, world));
+        });
 
         // ---- ticks ----
         ServerTickEvents.START_SERVER_TICK.register(server ->

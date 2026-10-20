@@ -7,12 +7,9 @@
     "ChestLootGenMixin",
     "LivingEntityMixin",
     "MobEntityMixin",
-    "PlayerManagerMixin",
-    "ServerPlayerMixin",
-    "ServerResourceManagerMixin",
-    "ServerWorldMixin"
+    "ServerPlayerMixin"
   ],
   "injectors": {
-    "defaultRequire": 1
+    "defaultRequire": 0
   }
 }

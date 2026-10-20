@@ -59,7 +59,12 @@ public abstract class BaseDataPackLoader<T extends ExileRegistry> extends Simple
 
     static String ENABLED = "enabled";
 
+    public void reloadSync(ResourceManager manager) {
+        this.apply(this.prepare(manager, null), manager, null);
+    }
+
     @Override
+    @SuppressWarnings("unchecked")
     protected void apply(Map<Identifier, JsonElement> mapToLoad, ResourceManager manager, ProfilerFiller profilerIn) {
 
         try {
@@ -69,6 +74,12 @@ public abstract class BaseDataPackLoader<T extends ExileRegistry> extends Simple
             normal.min = 50000;
             reg.unregisterAllEntriesFromDatapacks();
 
+            for (Object s : reg.getSerializable()) {
+                if (s instanceof ExileRegistry entry) {
+                    reg.register(entry);
+                }
+            }
+
             mapToLoad.forEach((key, value) -> {
                 try {
                     JsonObject json = value
@@ -77,6 +88,7 @@ public abstract class BaseDataPackLoader<T extends ExileRegistry> extends Simple
                     if (!json.has(ENABLED) || json.get(ENABLED)
                         .getAsBoolean()) {
                         T object = serializer.apply(json);
+                        reg.unRegister(object);
                         object.registerToExileRegistry();
                     }
                 } catch (Exception exception) {

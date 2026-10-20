@@ -11,9 +11,7 @@ public class IDAddonRegInit {
 
         IDAddonEventRegister.register();
 
-        if (MMORPG.RUN_DEV_TOOLS) {
-            new IDAddonRewardListAdder().registerAll();
-            new IDAddonShopListsAdder().registerAll();
-        }
+        new IDAddonRewardListAdder().registerAll();
+        new IDAddonShopListsAdder().registerAll();
     }
 }

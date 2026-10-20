@@ -43,37 +43,37 @@ public class MenuScreensCompat {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static <M extends AbstractContainerMenu, U extends Screen & MenuAccess<M>> void register(MenuType<M> type, Factory<M, U> factory) {
-        init();
-
-        Object constructor = Proxy.newProxyInstance(MenuScreens.class.getClassLoader(), new Class<?>[]{constructorType}, (proxy, method, args) -> {
-            switch (method.getName()) {
-                case "create":
-                    return factory.create((M) args[0], (Inventory) args[1], (Component) args[2]);
-                case "fromPacket": {
-                    Component title = (Component) args[0];
-                    MenuType<?> menuType = (MenuType<?>) args[1];
-                    Minecraft minecraft = (Minecraft) args[2];
-                    int windowId = (Integer) args[3];
-                    Inventory inventory = minecraft.player.getInventory();
-                    M menu = (M) menuType.create(windowId, inventory);
-                    minecraft.setScreenAndShow(factory.create(menu, inventory, title));
-                    return null;
-                }
-                case "toString":
-                    return "mmorpg_screen_constructor";
-                case "hashCode":
-                    return System.identityHashCode(proxy);
-                case "equals":
-                    return proxy == args[0];
-                default:
-                    return null;
-            }
-        });
-
         try {
+            init();
+
+            Object constructor = Proxy.newProxyInstance(MenuScreens.class.getClassLoader(), new Class<?>[]{constructorType}, (proxy, method, args) -> {
+                switch (method.getName()) {
+                    case "create":
+                        return factory.create((M) args[0], (Inventory) args[1], (Component) args[2]);
+                    case "fromPacket": {
+                        Component title = (Component) args[0];
+                        MenuType<?> menuType = (MenuType<?>) args[1];
+                        Minecraft minecraft = (Minecraft) args[2];
+                        int windowId = (Integer) args[3];
+                        Inventory inventory = minecraft.player.getInventory();
+                        M menu = (M) menuType.create(windowId, inventory);
+                        minecraft.setScreenAndShow(factory.create(menu, inventory, title));
+                        return null;
+                    }
+                    case "toString":
+                        return "mmorpg_screen_constructor";
+                    case "hashCode":
+                        return System.identityHashCode(proxy);
+                    case "equals":
+                        return proxy == args[0];
+                    default:
+                        return null;
+                }
+            });
+
             registerMethod.invoke(null, type, constructor);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to register menu screen for " + type, e);
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
     }
 }

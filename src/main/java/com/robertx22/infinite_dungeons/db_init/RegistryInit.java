@@ -15,9 +15,7 @@ public class RegistryInit {
         RegistryTypes.init();
         AddRegistryContainers.addAll();
         RegisterNonDatapackEntries.register();
-        if (MainID.RUN_DEV_TOOLS()) {
-            AddToDataGen.addAll();
-        }
+        AddToDataGen.addAll();
 
         didInit = true;
     }

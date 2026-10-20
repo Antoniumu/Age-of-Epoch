@@ -30,7 +30,7 @@ public class PlayerInventoryMixin {
     @Final
     public Player player;
 
-    @Inject(method = "add(Lnet/minecraft/item/ItemStack;)Z", at = @At(value = "HEAD"))
+    @Inject(method = "add(Lnet/minecraft/world/item/ItemStack;)Z", at = @At(value = "HEAD"))
     private void hookonStackInserted(ItemStack stack, CallbackInfoReturnable<Boolean> ci) {
         try {
             Inventory inv = (Inventory) (Object) this;

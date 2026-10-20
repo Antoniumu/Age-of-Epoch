@@ -33,9 +33,10 @@ public class ShrineBlock extends Block {
         return items;
     }
 
+    @Override
     @Deprecated
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player,
-                                 InteractionHand hand, BlockHitResult ray) {
+    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player,
+                                       InteractionHand hand, BlockHitResult ray) {
         if (world.isClientSide()) {
 
             ClientOnly.openMissionsScreen();

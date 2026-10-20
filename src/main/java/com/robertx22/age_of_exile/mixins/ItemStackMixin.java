@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -45,7 +46,8 @@ public abstract class ItemStackMixin {
         }
     }
 
-    private void getTooltip(Player entity, TooltipFlag tooltipContext, CallbackInfoReturnable<List<Component>> list) {
+    @Inject(method = "getTooltipLines", at = @At("RETURN"))
+    private void getTooltip(Item.TooltipContext context, @Nullable Player entity, TooltipFlag tooltipContext, CallbackInfoReturnable<List<Component>> list) {
         ItemStack stack = (ItemStack) (Object) this;
         TooltipMethod.getTooltip(stack, entity, tooltipContext, list);
     }

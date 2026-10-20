@@ -11,7 +11,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,12 +20,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin implements LivingEntityAccesor {
 
-    @Shadow
-    public abstract float getVoicePitch();
-
     @Override
-    @Invoker("blockedByItem")
-    public abstract void myknockback(LivingEntity target);
+    public void myknockback(LivingEntity target) {
+        LivingEntity self = (LivingEntity) (Object) this;
+        target.knockback(0.5D, self.getX() - target.getX(), self.getZ() - target.getZ());
+    }
 
     @Override
     @Invoker("getHurtSound")
@@ -37,11 +35,12 @@ public abstract class LivingEntityMixin implements LivingEntityAccesor {
     public abstract float myGetHurtVolume();
 
     @Override
-    @Invoker("getVoicePitch")
-    public abstract float myGetHurtPitch();
+    public float myGetHurtPitch() {
+        return ((LivingEntity) (Object) this).getVoicePitch();
+    }
 
     @ModifyVariable(method = "heal(F)V", at = @At(value = "HEAD"), argsOnly = true, ordinal = 0)
-    public float reduceHealPerLevel(float amount, float arg) {
+    public float reduceHealPerLevel(float amount) {
         LivingEntity en = (LivingEntity) (Object) this;
         return HealthUtils.realToVanilla(en, amount);
     }
