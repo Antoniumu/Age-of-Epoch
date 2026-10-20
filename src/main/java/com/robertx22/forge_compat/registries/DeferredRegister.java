@@ -39,9 +39,22 @@ public class DeferredRegister<T> {
 
     @SuppressWarnings("unchecked")
     public synchronized <I extends T> RegistryObject<I> register(String name, Supplier<I> supplier) {
-        I value = supplier.get();
         Identifier id = Identifier.fromNamespaceAndPath(modid, name);
-        Registry.register((Registry<I>) registry, id, value);
+        if (registry != null && registry.containsKey(id)) {
+            I existing = (I) registry.getValue(id);
+            return new RegistryObject<>(id, existing);
+        }
+        PropertiesIdHelper.CURRENT_ID.set(id);
+        I value;
+        try {
+            value = supplier.get();
+        } finally {
+            PropertiesIdHelper.CURRENT_ID.remove();
+        }
+        PropertiesIdHelper.fixRegisteredDescriptionId(value, id);
+        if (registry != null) {
+            Registry.register((Registry<I>) registry, id, value);
+        }
         return new RegistryObject<>(id, value);
     }
 }

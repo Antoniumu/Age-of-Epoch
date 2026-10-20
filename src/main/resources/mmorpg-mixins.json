@@ -5,10 +5,12 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "ArrowShootMixin",
+    "BlockPropertiesIdMixin",
     "DisableMobSpawnsInDungeon",
     "EntityNbtCapBridgeMixin",
     "FallingBlockEntityMixin",
     "ItemInteractionHook",
+    "ItemPropertiesIdMixin",
     "LivingDamageBridgeMixin",
     "LivingEntityMixin",
     "LivingTickBridgeMixin",
@@ -19,11 +21,9 @@
     "StopFireInDungeonMixin"
   ],
   "client": [
-    "ItemGlintMixin",
-    "ItemStackMixin",
-    "WorldRendererMixin"
+    "ItemStackMixin"
   ],
   "injectors": {
-    "defaultRequire": 1
+    "defaultRequire": 0
   }
 }

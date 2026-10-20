@@ -80,6 +80,6 @@ public class ExileDBInit {
             .setIsDatapack());
 
         Database.addRegistry(new ExileRegistryContainer<>(ExileRegistryTypes.STAT, EmptyStat.getInstance()));
-        Database.addRegistry(new ExileRegistryContainer<>(ExileRegistryTypes.CURRENCY_ITEMS, new OrbOfTransmutationItem()));
+        Database.addRegistry(new ExileRegistryContainer<>(ExileRegistryTypes.CURRENCY_ITEMS, null));
     }
 }
