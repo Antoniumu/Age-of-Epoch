@@ -43,16 +43,16 @@ public class SlashItems {
 
     public static RegObj<CommonGearProducerItem> COMMON_SOUL_PRODUCE = Def.item(() -> new CommonGearProducerItem(), "common_soul_produce");
 
-    public static RegObj<StatSoulItem> STAT_SOUL = Def.item(() -> new StatSoulItem());
+    public static RegObj<StatSoulItem> STAT_SOUL = Def.item("stat_soul/stat_soul", () -> new StatSoulItem());
     public static RegObj<IdentifyTomeItem> IDENTIFY_TOME = Def.item(() -> new IdentifyTomeItem(), "identify_tome");
-    public static RegObj<RarityEssenceItem> RARITY_ESSENCE = Def.item(() -> new RarityEssenceItem());
-    public static RegObj<RarityUpgradeStone> RARITY_UPGRADE = Def.item(() -> new RarityUpgradeStone());
-    public static RegObj<LootCrateItem> LOOT_CRATE = Def.item(() -> new LootCrateItem());
-    public static RegObj<SourceOfStrengthItem> SOURCE_OF_STRENGTH = Def.item(() -> new SourceOfStrengthItem());
+    public static RegObj<RarityEssenceItem> RARITY_ESSENCE = Def.item("rarity/essence/base", () -> new RarityEssenceItem());
+    public static RegObj<RarityUpgradeStone> RARITY_UPGRADE = Def.item("rarity/upgrade_stone/base", () -> new RarityUpgradeStone());
+    public static RegObj<LootCrateItem> LOOT_CRATE = Def.item("loot_crate/default", () -> new LootCrateItem());
+    public static RegObj<SourceOfStrengthItem> SOURCE_OF_STRENGTH = Def.item("source_of_strength", () -> new SourceOfStrengthItem());
 
-    public static RegObj<ProjectileItem> FIREBALL = Def.item(() -> new ProjectileItem("fireball"));
-    public static RegObj<ProjectileItem> SNOWBALL = Def.item(() -> new ProjectileItem("snowball"));
-    public static RegObj<ProjectileItem> SLIMEBALL = Def.item(() -> new ProjectileItem("slimeball"));
+    public static RegObj<ProjectileItem> FIREBALL = Def.item("projectile/fireball", () -> new ProjectileItem("fireball"));
+    public static RegObj<ProjectileItem> SNOWBALL = Def.item("projectile/snowball", () -> new ProjectileItem("snowball"));
+    public static RegObj<ProjectileItem> SLIMEBALL = Def.item("projectile/slimeball", () -> new ProjectileItem("slimeball"));
 
     public static RegObj<EssencePaperItem> ESSENCE_PAPER = Def.item(() -> new EssencePaperItem(), "scroll/paper");
 
@@ -99,11 +99,11 @@ public class SlashItems {
     public static RegObj<Item> GOLDEN_ORB = Def.item(() -> new SimpleMatItem(), "mat/golden_orb");
     public static RegObj<Item> MYTHIC_ESSENCE = Def.item(() -> new SimpleMatItem(), "mat/mythic_essence");
 
-    public static RegObj<TalentResetPotion> RESET_ALL_PERKS = Def.item(() -> new TalentResetPotion());
-    public static RegObj<SingleTalentResetPotion> ADD_RESET_PERK_POINTS = Def.item(() -> new SingleTalentResetPotion());
-    public static RegObj<SpellResetPotion> RESET_SPELLS = Def.item(() -> new SpellResetPotion());
-    public static RegObj<ResetStatsPotion> RESET_STATS = Def.item(() -> new ResetStatsPotion());
-    public static RegObj<FunnyDeathPotion> DEATH_POTION = Def.item(() -> new FunnyDeathPotion());
+    public static RegObj<TalentResetPotion> RESET_ALL_PERKS = Def.item("potions/reset_all_perks", () -> new TalentResetPotion());
+    public static RegObj<SingleTalentResetPotion> ADD_RESET_PERK_POINTS = Def.item("potions/add_reset_perk_points", () -> new SingleTalentResetPotion());
+    public static RegObj<SpellResetPotion> RESET_SPELLS = Def.item("potions/reset_spells", () -> new SpellResetPotion());
+    public static RegObj<ResetStatsPotion> RESET_STATS = Def.item("potions/reset_stats", () -> new ResetStatsPotion());
+    public static RegObj<FunnyDeathPotion> DEATH_POTION = Def.item("potions/death_potion", () -> new FunnyDeathPotion());
 
     public static RegObj<BackpackItem> BACKPACK = Def.item(() -> new BackpackItem(), "backpack/normal");
     public static RegObj<MaterialBagItem> MATERIAL_POUCH = Def.item(() -> new MaterialBagItem(), "backpack/material_pouch");

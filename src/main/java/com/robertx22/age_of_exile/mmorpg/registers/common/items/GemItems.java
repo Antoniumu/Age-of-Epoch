@@ -18,9 +18,7 @@ public class GemItems {
         for (GemItem.GemType type : GemItem.GemType.values()) {
             for (GemItem.GemRank rank : GemItem.GemRank.values()) {
 
-                GemItem item = new GemItem(type, rank);
-
-                RegObj<GemItem> def = Def.item(() -> item);
+                RegObj<GemItem> def = Def.item("gems/" + type.id + "/" + rank.tier, () -> new GemItem(type, rank));
 
                 if (!MAP.containsKey(type)) {
                     MAP.put(type, new HashMap<>());

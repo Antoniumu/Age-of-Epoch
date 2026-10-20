@@ -22,11 +22,11 @@ public class ProfessionItems {
 
         for (SkillItemTier tier : SkillItemTier.values()) {
 
-            SMELTED_ESSENCE.put(tier, Def.item(() -> new SmeltedEssenceItem(tier)));
-            CONDENSED_ESSENCE_MAP.put(tier, Def.item(() -> new CondensedEssenceItem(tier)));
-            SALVAGED_ESSENCE_MAP.put(tier, Def.item(() -> new SalvagedDustItem("Tier " + tier.tier + " Purified Essence", tier, tier.levelRange, tier.repairDurab)));
+            SMELTED_ESSENCE.put(tier, Def.item("mat/smelted/" + tier.tier, () -> new SmeltedEssenceItem(tier)));
+            CONDENSED_ESSENCE_MAP.put(tier, Def.item("mat/condensed_salvage/c" + tier.tier, () -> new CondensedEssenceItem(tier)));
+            SALVAGED_ESSENCE_MAP.put(tier, Def.item("mat/salvage/salvage" + tier.tier, () -> new SalvagedDustItem("Tier " + tier.tier + " Purified Essence", tier, tier.levelRange, tier.repairDurab)));
 
-            STONE_TIER_MAP.put(tier, Def.item(() -> new MiningStoneItem(tier)));
+            STONE_TIER_MAP.put(tier, Def.item("stone/" + tier.tier, () -> new MiningStoneItem(tier)));
 
         }
 

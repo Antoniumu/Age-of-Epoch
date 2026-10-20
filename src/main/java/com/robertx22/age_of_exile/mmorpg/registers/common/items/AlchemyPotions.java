@@ -17,7 +17,10 @@ public class AlchemyPotions {
 
         for (SkillItemTier tier : SkillItemTier.values()) {
             for (PotionType type : PotionType.values()) {
-                POTIONS_MAP.put(ImmutablePair.of(tier, type), Def.item(() -> new AlchemyPotionItem(type, tier)));
+                POTIONS_MAP.put(
+                    ImmutablePair.of(tier, type),
+                    Def.item("alchemy/potion/" + type.id + "/" + tier.tier, () -> new AlchemyPotionItem(type, tier))
+                );
             }
         }
 
