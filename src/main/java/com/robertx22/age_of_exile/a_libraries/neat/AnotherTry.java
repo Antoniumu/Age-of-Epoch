@@ -7,7 +7,7 @@ import com.robertx22.forge_compat.client.event.RenderLivingEvent;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Camera;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.robertx22.forge_compat.client.MultiBufferSource;
 public class AnotherTry {
 
     public static void register() {

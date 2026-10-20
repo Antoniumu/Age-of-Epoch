@@ -9,7 +9,7 @@ import com.robertx22.library_of_exile.main.MyPacket;
 import com.robertx22.library_of_exile.packets.ExilePacketContext;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class TellServerToCastSpellPacket extends MyPacket<TellServerToCastSpellPacket> {
 
@@ -23,8 +23,8 @@ public class TellServerToCastSpellPacket extends MyPacket<TellServerToCastSpellP
     }
 
     @Override
-    public ResourceLocation getIdentifier() {
-        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "tell_server_castspell");
+    public Identifier getIdentifier() {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, "tell_server_castspell");
     }
 
     @Override
@@ -41,7 +41,7 @@ public class TellServerToCastSpellPacket extends MyPacket<TellServerToCastSpellP
 
         EntitySpellCap.ISpellsCap spells = Load.spells(player);
 
-        if (player.isBlocking() || player.swinging) {
+        if (player.isBlocking()) {
             return false;
         }
 

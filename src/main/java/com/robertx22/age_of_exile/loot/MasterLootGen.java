@@ -126,11 +126,13 @@ public class MasterLootGen {
                 GearRarity rar = Gear.Load(stack)
                     .getRarity();
                 if (rar.is_unique_item) {
-                    SoundUtils.ding(victim.level, victim.blockPosition());
+                    SoundUtils.ding(victim.level(), victim.blockPosition());
                 }
             }
 
-            victim.spawnAtLocation(stack, 1F);
+            if (victim.level() instanceof net.minecraft.server.level.ServerLevel sl) {
+                victim.spawnAtLocation(sl, stack, 1F);
+            }
         }
     }
 

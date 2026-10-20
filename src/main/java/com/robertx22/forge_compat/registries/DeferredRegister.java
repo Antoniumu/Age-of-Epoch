@@ -3,7 +3,7 @@ package com.robertx22.forge_compat.registries;
 import com.robertx22.forge_compat.eventbus.api.IEventBus;
 import com.robertx22.forge_compat.fml.RegistryObject;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public class DeferredRegister<T> {
     @SuppressWarnings("unchecked")
     public synchronized <I extends T> RegistryObject<I> register(String name, Supplier<I> supplier) {
         I value = supplier.get();
-        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(modid, name);
+        Identifier id = Identifier.fromNamespaceAndPath(modid, name);
         Registry.register((Registry<I>) registry, id, value);
         return new RegistryObject<>(id, value);
     }

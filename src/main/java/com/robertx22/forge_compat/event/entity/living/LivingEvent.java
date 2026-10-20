@@ -12,6 +12,8 @@ public class LivingEvent extends Event {
 
     public LivingEntity getEntityLiving() { return entityLiving; }
 
+    public LivingEntity getEntity() { return entityLiving; }
+
     public static class LivingUpdateEvent extends LivingEvent {
         public LivingUpdateEvent(LivingEntity entityLiving) {
             super(entityLiving);

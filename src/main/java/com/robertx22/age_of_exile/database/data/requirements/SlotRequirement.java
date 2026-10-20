@@ -130,11 +130,11 @@ public class SlotRequirement extends BaseRequirement<SlotRequirement> {
 
         List<Component> list = new ArrayList<>();
 
-        list.add(new SText(ChatFormatting.GREEN + "Allowed on: "));
+        list.add(net.minecraft.network.chat.Component.literal(ChatFormatting.GREEN + "Allowed on: "));
 
         List<BaseGearType> copy = new ArrayList<>(this.slots);
 
-        MutableComponent comp = new SText(ChatFormatting.RED + "");
+        MutableComponent comp = net.minecraft.network.chat.Component.literal(ChatFormatting.RED + "");
 
         List<BaseGearType> armors = ExileDB.GearTypes()
             .getFiltered(x -> x.family()
@@ -143,7 +143,7 @@ public class SlotRequirement extends BaseRequirement<SlotRequirement> {
             copy.removeIf(x -> x.family()
                 .equals(SlotFamily.Armor));
             comp.append(" ")
-                .append(new SText("All Armors"));
+                .append(net.minecraft.network.chat.Component.literal("All Armors"));
         }
 
         List<BaseGearType> weapons = ExileDB.GearTypes()
@@ -153,7 +153,7 @@ public class SlotRequirement extends BaseRequirement<SlotRequirement> {
             copy.removeIf(x -> x.family()
                 .equals(SlotFamily.Weapon));
             comp.append(" ")
-                .append(new SText("All Weapons"));
+                .append(net.minecraft.network.chat.Component.literal("All Weapons"));
         }
 
         List<BaseGearType> jewerly = ExileDB.GearTypes()
@@ -163,7 +163,7 @@ public class SlotRequirement extends BaseRequirement<SlotRequirement> {
             copy.removeIf(x -> x.family()
                 .equals(SlotFamily.Jewelry));
             comp.append(" ")
-                .append(new SText("All Jewerly"));
+                .append(net.minecraft.network.chat.Component.literal("All Jewerly"));
         }
         copy.forEach(x -> {
             comp.append(" ")

@@ -35,7 +35,7 @@ public class SummonProjectileAction extends SpellAction {
     @Override
     public void tryActivate(Collection<LivingEntity> targets, SpellCtx ctx, MapHolder data) {
 
-        Optional<EntityType<?>> projectile = EntityType.byString(data.get(MapField.PROJECTILE_ENTITY));
+        Optional<EntityType<?>> projectile = BuiltInRegistries.ENTITY_TYPE.getOptional(net.minecraft.resources.Identifier.parse(data.get(MapField.PROJECTILE_ENTITY)));
 
         PositionSource posSource = data.getOrDefault(PositionSource.CASTER);
         ShootWay shootWay = data.getOrDefault(ShootWay.FROM_PLAYER_VIEW);
@@ -60,8 +60,8 @@ public class SummonProjectileAction extends SpellAction {
             .floatValue();
 
         if (posSource == PositionSource.SOURCE_ENTITY) {
-            builder.pitch = ctx.sourceEntity.xRot;
-            builder.yaw = ctx.sourceEntity.yRot;
+            builder.pitch = ctx.sourceEntity.getXRot();
+            builder.yaw = ctx.sourceEntity.getYRot();
         }
         if (shootWay == ShootWay.DOWN) {
             builder.fallDown = true;

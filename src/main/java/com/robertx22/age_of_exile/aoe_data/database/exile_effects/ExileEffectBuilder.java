@@ -3,7 +3,7 @@ package com.robertx22.age_of_exile.aoe_data.database.exile_effects;
 import com.robertx22.age_of_exile.aoe_data.database.stats.base.EffectCtx;
 import com.robertx22.age_of_exile.database.data.StatModifier;
 import com.robertx22.age_of_exile.database.data.exile_effects.EffectTags;
-import com.robertx22.age_of_exile.database.data.exile_effects.MobEffectCategory;
+import com.robertx22.age_of_exile.database.data.exile_effects.EffectType;
 import com.robertx22.age_of_exile.database.data.exile_effects.ExileEffect;
 import com.robertx22.age_of_exile.database.data.exile_effects.VanillaStatData;
 import com.robertx22.age_of_exile.database.data.spells.components.Spell;
@@ -20,10 +20,10 @@ public class ExileEffectBuilder {
         b.effect.id = ctx.resourcePath;
         b.effect.locName = ctx.locname;
 
-        if (ctx.type == MobEffectCategory.beneficial) {
+        if (ctx.type == EffectType.beneficial) {
             b.addTags(EffectTags.positive);
         }
-        if (ctx.type == MobEffectCategory.negative) {
+        if (ctx.type == EffectType.negative) {
             b.addTags(EffectTags.negative);
         }
         return b;

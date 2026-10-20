@@ -9,7 +9,7 @@ public class ReputationBuilder {
 
         ReputationLevel rep = new ReputationLevel();
         rep.id = id;
-        rep.format = format.getName();
+        rep.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(format);
         rep.chance_for_higher_rar = higherRarChance;
         rep.rep_needed = needed;
         rep.rank = rank;

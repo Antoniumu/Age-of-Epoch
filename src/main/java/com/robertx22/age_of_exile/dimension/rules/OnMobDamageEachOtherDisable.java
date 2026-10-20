@@ -11,7 +11,7 @@ public class OnMobDamageEachOtherDisable {
 
         if (event.getAttackerEntity() instanceof Player == false || event.getAttackerEntity() == null) {
             if (event.getTargetEntity() instanceof Player == false) {
-                if (WorldUtils.isMapWorldClass(event.getTargetEntity().level)) {
+                if (WorldUtils.isMapWorldClass(event.getTargetEntity().level())) {
                     event.setAmount(0);
 
                     if (event.getAttackerEntity() instanceof Mob) {

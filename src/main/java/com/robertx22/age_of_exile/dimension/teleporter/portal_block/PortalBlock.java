@@ -15,7 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.core.BlockPos;
@@ -33,6 +33,10 @@ public class PortalBlock extends OpaqueBlock implements EntityBlock {
     }
 
     @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new PortalBlockEntity(pos, state);
+    }
+
     public BlockEntity newBlockEntity(BlockGetter world) {
         return new PortalBlockEntity();
     }
@@ -70,7 +74,7 @@ public class PortalBlock extends OpaqueBlock implements EntityBlock {
     public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         try {
 
-            if (world.isClientSide) {
+            if (world.isClientSide()) {
                 return;
             }
 
@@ -90,9 +94,9 @@ public class PortalBlock extends OpaqueBlock implements EntityBlock {
                         maps.maps.ticksinPortal = 0;
                         BlockPos p = Load.playerRPGData((Player) entity).maps.tel_pos.above();
 
-                        TeleportUtils.teleport((ServerPlayer) entity, p, ResourceLocation.parse(maps.maps.tp_b_dim));
+                        TeleportUtils.teleport((ServerPlayer) entity, p, Identifier.parse(maps.maps.tp_b_dim));
 
-                        SoundUtils.playSound(entity, SoundEvents.PORTAL_TRAVEL, world.random.nextFloat() * 0.4F + 0.8F, 0.25F);
+                        SoundUtils.playSound(entity, SoundEvents.PORTAL_TRAVEL, world.getRandom().nextFloat() * 0.4F + 0.8F, 0.25F);
                         return;
                     }
                 }
@@ -111,7 +115,7 @@ public class PortalBlock extends OpaqueBlock implements EntityBlock {
                             } else {
                                 maps.maps.ticksinPortal = 0;
                                 maps.maps.tel_pos = be.data.tpbackpos;
-                                maps.maps.tp_b_dim = VanillaReg.getId(entity.level)
+                                maps.maps.tp_b_dim = VanillaReg.getId(entity.level())
                                     .toString();
 
                                 TeleportUtils.teleport((ServerPlayer) entity, be.data.dungeonPos, be.data.dungeonType.DIMENSION_ID);

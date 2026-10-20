@@ -2,14 +2,14 @@ package com.robertx22.library_of_exile.main;
 
 import com.robertx22.library_of_exile.packets.ExilePacketContext;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import com.robertx22.forge_compat.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public abstract class MyPacket<T> {
 
-    public abstract ResourceLocation getIdentifier();
+    public abstract Identifier getIdentifier();
 
     public abstract void loadFromData(FriendlyByteBuf tag);
 

@@ -9,29 +9,29 @@ public class DungeonMobListAdder implements ExileRegistryInit {
     public void registerAll() {
 
         DungeonMobListBuilder.of("mossy")
-            .addMob(EntityType.SKELETON)
-            .addMob(EntityType.ZOMBIE)
-            .addMob(EntityType.PILLAGER, 200)
-            .addMob(EntityType.STRAY, 200)
-            .addMob(EntityType.WITCH, 50)
+            .addMob(net.minecraft.world.entity.EntityTypes.SKELETON)
+            .addMob(net.minecraft.world.entity.EntityTypes.ZOMBIE)
+            .addMob(net.minecraft.world.entity.EntityTypes.PILLAGER, 200)
+            .addMob(net.minecraft.world.entity.EntityTypes.STRAY, 200)
+            .addMob(net.minecraft.world.entity.EntityTypes.WITCH, 50)
 
-            .addBoss(EntityType.WITHER_SKELETON)
+            .addBoss(net.minecraft.world.entity.EntityTypes.WITHER_SKELETON)
             .build();
 
         DungeonMobListBuilder.of("undead")
-            .addMob(EntityType.SKELETON)
-            .addMob(EntityType.ZOMBIE)
-            .addMob(EntityType.STRAY, 200)
+            .addMob(net.minecraft.world.entity.EntityTypes.SKELETON)
+            .addMob(net.minecraft.world.entity.EntityTypes.ZOMBIE)
+            .addMob(net.minecraft.world.entity.EntityTypes.STRAY, 200)
 
-            .addBoss(EntityType.WITHER_SKELETON)
+            .addBoss(net.minecraft.world.entity.EntityTypes.WITHER_SKELETON)
             .build();
 
         DungeonMobListBuilder.of("nether")
-            .addMob(EntityType.WITHER_SKELETON)
-            .addMob(EntityType.BLAZE, 200)
-            .addMob(EntityType.MAGMA_CUBE, 50)
+            .addMob(net.minecraft.world.entity.EntityTypes.WITHER_SKELETON)
+            .addMob(net.minecraft.world.entity.EntityTypes.BLAZE, 200)
+            .addMob(net.minecraft.world.entity.EntityTypes.MAGMA_CUBE, 50)
 
-            .addBoss(EntityType.WITHER_SKELETON)
+            .addBoss(net.minecraft.world.entity.EntityTypes.WITHER_SKELETON)
             .build();
 
     }

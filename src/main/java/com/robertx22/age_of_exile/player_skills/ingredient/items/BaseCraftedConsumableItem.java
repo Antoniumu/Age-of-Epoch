@@ -18,7 +18,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import com.robertx22.forge_compat.api.distmarker.Dist;
 import com.robertx22.forge_compat.api.distmarker.OnlyIn;
@@ -37,10 +36,10 @@ public abstract class BaseCraftedConsumableItem extends AutoItem {
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level world, Player user, InteractionHand hand) {
+    public InteractionResult use(Level world, Player user, InteractionHand hand) {
         ItemStack itemStack = user.getItemInHand(hand);
         user.startUsingItem(hand);
-        return InteractionResult.success(itemStack);
+        return InteractionResult.SUCCESS;
     }
 
     @Override
@@ -53,7 +52,7 @@ public abstract class BaseCraftedConsumableItem extends AutoItem {
 
             if (data != null) {
                 if (!data.canEat(p)) {
-                    p.displayClientMessage(Component.literal("Not high enough level."), false);
+                    p.sendSystemMessage(Component.literal("Not high enough level."));
                     return stack;
                 }
 
@@ -73,15 +72,15 @@ public abstract class BaseCraftedConsumableItem extends AutoItem {
                         .build()
                         .forEach(x -> {
                             x.addEffect(new MobEffectInstance(
-                                SlashPotions.CRAFTED_CONSUMABLES_MAP.get(skill)
-                                    .get(), data.seconds * 20, 1));
+                                net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.wrapAsHolder(
+                                    SlashPotions.CRAFTED_CONSUMABLES_MAP.get(skill).get()), data.seconds * 20, 1));
                             Load.Unit(x).statusEffects.addConsumableEffect(skill, data);
                         });
 
                 } else {
                     p.addEffect(new MobEffectInstance(
-                        SlashPotions.CRAFTED_CONSUMABLES_MAP.get(skill)
-                            .get(), data.seconds * 20, 1));
+                        net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.wrapAsHolder(
+                            SlashPotions.CRAFTED_CONSUMABLES_MAP.get(skill).get()), data.seconds * 20, 1));
 
                     Load.Unit(p).statusEffects.addConsumableEffect(skill, data);
                 }
@@ -92,12 +91,10 @@ public abstract class BaseCraftedConsumableItem extends AutoItem {
         return stack;
     }
 
-    @Override
-    public int getUseDuration(ItemStack stack) {
+    @Override public int getUseDuration(ItemStack stack, net.minecraft.world.entity.LivingEntity entity) {
         return 40;
     }
 
-    @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
         try {

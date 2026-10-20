@@ -7,21 +7,21 @@ import com.robertx22.age_of_exile.gui.bases.INamedScreen;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.library_of_exile.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.resources.ResourceLocation;
+import com.robertx22.forge_compat.client.Screen;
+import com.robertx22.forge_compat.client.ImageButton;
+import net.minecraft.resources.Identifier;
 import net.minecraft.ChatFormatting;
 
 public class MainHubButton extends ImageButton {
 
     public static int xSize = 105;
     public static int ySize = 28;
-    public static ResourceLocation EXLAMATION_MARK_TEX = ResourceLocation.fromNamespaceAndPath(
+    public static Identifier EXLAMATION_MARK_TEX = Identifier.fromNamespaceAndPath(
         SlashRef.MODID, "textures/gui/main_hub/exclamation_mark.png");
 
     boolean shouldAlert = false;
 
-    static ResourceLocation buttonLoc = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/buttons.png");
+    static Identifier buttonLoc = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/buttons.png");
 
     INamedScreen screen;
 
@@ -31,7 +31,7 @@ public class MainHubButton extends ImageButton {
                 IContainerNamedScreen con = (IContainerNamedScreen) screen;
                 con.openContainer();
             } else {
-                Minecraft.getInstance()
+                Minecraft.getInstance().gui
                     .setScreen((Screen) screen);
             }
         });
@@ -59,8 +59,8 @@ public class MainHubButton extends ImageButton {
             .translate();
 
         if (isHovered()) {
-            Minecraft.getInstance().font.drawShadow(matrix,
-                str, this.x + 32, this.y + 9, ChatFormatting.GREEN.getColor());
+            com.robertx22.forge_compat.client.AbstractGui.drawShadow(Minecraft.getInstance().font, matrix,
+                str, this.x + 32, this.y + 9, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.GREEN));
         }
     }
 

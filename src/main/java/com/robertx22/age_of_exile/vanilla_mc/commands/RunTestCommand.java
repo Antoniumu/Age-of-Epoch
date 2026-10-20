@@ -15,7 +15,7 @@ public class RunTestCommand {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(
             literal(CommandRefs.ID)
-                .then(literal("runtest").requires(e -> e.hasPermission(2))
+                .then(literal("runtest").requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS))
                     .then(argument("test", StringArgumentType.string()).suggests(new CommandsSuggestions())
                         .executes(
                             ctx -> run(ctx.getSource()
@@ -26,7 +26,7 @@ public class RunTestCommand {
 
         CommandTests.run(test, player);
 
-        player.displayClientMessage(Component.literal("Test completed."), false);
+        player.sendSystemMessage(Component.literal("Test completed."));
 
         return 1;
     }

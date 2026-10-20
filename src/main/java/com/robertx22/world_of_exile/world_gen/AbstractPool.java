@@ -1,6 +1,6 @@
 package com.robertx22.world_of_exile.world_gen;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,14 +8,14 @@ import java.util.List;
 /** Compile-time stub of World of Exile's AbstractPool. */
 public class AbstractPool {
 
-    public final ResourceLocation id;
-    public final List<ResourceLocation> children = new ArrayList<>();
+    public final Identifier id;
+    public final List<Identifier> children = new ArrayList<>();
 
-    public AbstractPool(ResourceLocation id) {
+    public AbstractPool(Identifier id) {
         this.id = id;
     }
 
-    public void add(ResourceLocation child) {
+    public void add(Identifier child) {
         children.add(child);
     }
 }

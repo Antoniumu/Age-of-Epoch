@@ -11,12 +11,12 @@ import com.robertx22.library_of_exile.registry.ExileRegistryType;
 import com.robertx22.library_of_exile.registry.JsonExileRegistry;
 import com.robertx22.library_of_exile.registry.serialization.IByteBuf;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 
 public class EfficientRegistryPacket<T extends IByteBuf & JsonExileRegistry> extends MyPacket<EfficientRegistryPacket> {
-    public static ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Ref.MODID, "eff_reg");
+    public static Identifier ID = Identifier.fromNamespaceAndPath(Ref.MODID, "eff_reg");
     private List<T> items;
 
     ExileRegistryType type;
@@ -31,7 +31,7 @@ public class EfficientRegistryPacket<T extends IByteBuf & JsonExileRegistry> ext
     }
 
     @Override
-    public ResourceLocation getIdentifier() {
+    public Identifier getIdentifier() {
         return ID;
     }
 

@@ -17,7 +17,6 @@ import com.robertx22.library_of_exile.registry.IAutoGson;
 import com.robertx22.library_of_exile.registry.JsonExileRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.level.Level;
 
@@ -34,7 +33,7 @@ public class ExileEffect implements JsonExileRegistry<ExileEffect>, IAutoGson<Ex
 
     public String id;
     public String one_of_a_kind_id = "";
-    public MobEffectCategory type = MobEffectCategory.neutral;
+    public EffectType type = EffectType.neutral;
     public int max_stacks = 1;
 
     public transient String locName = "";
@@ -118,7 +117,7 @@ public class ExileEffect implements JsonExileRegistry<ExileEffect>, IAutoGson<Ex
             list.add(Words.Stats.locName()
                 .append(": ")
                 .withStyle(ChatFormatting.GREEN));
-            getExactStats(info.player.level, data).forEach(x -> {
+            getExactStats(info.player.level(), data).forEach(x -> {
                 list.addAll(x.GetTooltipString(info));
             });
         }

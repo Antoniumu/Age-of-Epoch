@@ -22,7 +22,7 @@ public class SoundAction extends SpellAction {
 
     @Override
     public void tryActivate(Collection<LivingEntity> targets, SpellCtx ctx, MapHolder data) {
-        if (!ctx.world.isClientSide) {
+        if (!ctx.world.isClientSide()) {
 
             float pitch = data.get(PITCH)
                 .floatValue();
@@ -32,6 +32,10 @@ public class SoundAction extends SpellAction {
 
             SoundUtils.playSound(ctx.world, ctx.pos, sound, volume, pitch);
         }
+    }
+
+    public MapHolder create(net.minecraft.core.Holder<SoundEvent> sound, Double volume, Double pitch) {
+        return create(sound.value(), volume, pitch);
     }
 
     public MapHolder create(SoundEvent sound, Double volume, Double pitch) {

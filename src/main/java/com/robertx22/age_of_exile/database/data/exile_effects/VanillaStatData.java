@@ -1,21 +1,26 @@
 package com.robertx22.age_of_exile.database.data.exile_effects;
 
 import com.robertx22.age_of_exile.uncommon.enumclasses.ModType;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.Registry;
 
 import java.util.UUID;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 public class VanillaStatData {
 
     float val;
     String uuid;
     String id;
     ModType type;
+
+    public static VanillaStatData create(Holder<Attribute> attri, float val, ModType type, UUID uuid) {
+        return create(attri.value(), val, type, uuid);
+    }
 
     public static VanillaStatData create(Attribute attri, float val, ModType type, UUID uuid) {
         VanillaStatData data = new VanillaStatData();
@@ -28,35 +33,36 @@ public class VanillaStatData {
     }
 
     public Attribute getAttribute() {
-        return BuiltInRegistries.ATTRIBUTE.get(ResourceLocation.parse(id));
+        return BuiltInRegistries.ATTRIBUTE.getValue(Identifier.parse(id));
+    }
+
+    public Holder<Attribute> getAttributeHolder() {
+        return BuiltInRegistries.ATTRIBUTE.wrapAsHolder(getAttribute());
     }
 
     public void applyVanillaStats(LivingEntity en, int stacks) {
-
-        AttributeModifier mod = new AttributeModifier(UUID.fromString(uuid), "", val * stacks, type.operation);
-        Attribute attri = getAttribute();
+        Identifier modId = Identifier.fromNamespaceAndPath("mmorpg", uuid);
+        AttributeModifier mod = new AttributeModifier(modId, val * stacks, type.operation);
+        Holder<Attribute> attri = getAttributeHolder();
 
         this.removeVanillaStats(en);
 
-        if (en.getAttribute(attri) != null) {
-            if (!en.getAttribute(attri)
-                .hasModifier(mod)) {
-                en.getAttribute(attri)
-                    .addTransientModifier(mod);
+        AttributeInstance inst = en.getAttribute(attri);
+        if (inst != null) {
+            if (!inst.hasModifier(modId)) {
+                inst.addTransientModifier(mod);
             }
         }
-
     }
 
     public void removeVanillaStats(LivingEntity en) {
-        AttributeModifier mod = new AttributeModifier(UUID.fromString(uuid), "", val, type.operation);
-        Attribute attri = getAttribute();
+        Identifier modId = Identifier.fromNamespaceAndPath("mmorpg", uuid);
+        Holder<Attribute> attri = getAttributeHolder();
 
-        if (en.getAttribute(attri) != null) {
-            if (en.getAttribute(attri)
-                .hasModifier(mod)) {
-                en.getAttribute(attri)
-                    .removeModifier(mod);
+        AttributeInstance inst = en.getAttribute(attri);
+        if (inst != null) {
+            if (inst.hasModifier(modId)) {
+                inst.removeModifier(modId);
             }
         }
     }

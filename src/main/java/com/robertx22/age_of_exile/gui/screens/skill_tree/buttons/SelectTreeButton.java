@@ -3,8 +3,8 @@ package com.robertx22.age_of_exile.gui.screens.skill_tree.buttons;
 import com.robertx22.age_of_exile.gui.screens.skill_tree.IMarkOnTop;
 import com.robertx22.age_of_exile.gui.screens.skill_tree.SkillTreeScreen;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.resources.ResourceLocation;
+import com.robertx22.forge_compat.client.ImageButton;
+import net.minecraft.resources.Identifier;
 
 public class SelectTreeButton extends ImageButton implements IMarkOnTop {
 
@@ -12,7 +12,7 @@ public class SelectTreeButton extends ImageButton implements IMarkOnTop {
         LEFT, RIGHT
     }
 
-    static ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skill_tree/left_right.png");
+    static Identifier ID = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skill_tree/left_right.png");
 
     public static int XSIZE = 14;
     public static int YSIZE = 22;

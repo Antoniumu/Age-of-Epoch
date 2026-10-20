@@ -1,16 +1,13 @@
 package com.robertx22.age_of_exile.player_skills.ingredient;
 
 import com.robertx22.age_of_exile.saveclasses.player_skills.PlayerSkillEnum;
-import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.interfaces.IAutoLocName;
 import com.robertx22.age_of_exile.vanilla_mc.potion_effects.IOneOfATypePotion;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeMap;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.core.Registry;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 public class ConsumablePotionEffect extends MobEffect implements IOneOfATypePotion, IAutoLocName {
 
     public PlayerSkillEnum profession;
@@ -21,20 +18,14 @@ public class ConsumablePotionEffect extends MobEffect implements IOneOfATypePoti
     }
 
     @Override
-    public void addAttributeModifiers(LivingEntity entity, AttributeMap attributes, int amplifier) {
-        Load.Unit(entity)
-            .forceRecalculateStats();
-        super.addAttributeModifiers(entity, attributes, amplifier);
+    public void addAttributeModifiers(AttributeMap attributes, int amplifier) {
+        super.addAttributeModifiers(attributes, amplifier);
     }
 
     @Override
-    public void removeAttributeModifiers(LivingEntity target, AttributeMap attributes,
-                                         int amplifier) {
-
+    public void removeAttributeModifiers(AttributeMap attributes) {
         try {
-            Load.Unit(target)
-                .forceRecalculateStats();
-            super.removeAttributeModifiers(target, attributes, amplifier);
+            super.removeAttributeModifiers(attributes);
         } catch (Exception e) {
             e.printStackTrace();
         }

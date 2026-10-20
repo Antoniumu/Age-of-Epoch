@@ -30,7 +30,7 @@ public class OnItemGivenEvent extends ExileEvent {
 
     public static boolean isProducer(ItemStack stack) {
         return StackNBT.has(stack) && StackNBT.getOrCreate(stack)
-            .getBoolean(IS_PRODUCER_BOOLEAN_TAG);
+            .getBooleanOr(IS_PRODUCER_BOOLEAN_TAG, false);
     }
 
     public boolean hasMobSource() {

@@ -9,5 +9,7 @@ public interface ICurioStacksHandler {
 
     interface IItemStackHandler {
         ItemStack getStackInSlot(int slot);
+
+        default void setStackInSlot(int slot, ItemStack stack) {}
     }
 }

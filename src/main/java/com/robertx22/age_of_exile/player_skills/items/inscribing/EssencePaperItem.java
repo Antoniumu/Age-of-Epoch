@@ -5,13 +5,13 @@ import com.robertx22.age_of_exile.database.data.currency.base.IShapelessRecipe;
 import com.robertx22.age_of_exile.mmorpg.registers.common.items.ProfessionItems;
 import com.robertx22.age_of_exile.player_skills.items.foods.SkillItemTier;
 import com.robertx22.age_of_exile.vanilla_mc.items.misc.AutoItem;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import com.robertx22.forge_compat.data.ShapelessRecipeBuilder;
 import net.minecraft.world.item.Items;
 
 public class EssencePaperItem extends AutoItem implements IShapelessRecipe {
 
     public EssencePaperItem() {
-        super(new Properties().tab(CreativeTabs.Professions));
+        super(new Properties());
     }
 
     @Override

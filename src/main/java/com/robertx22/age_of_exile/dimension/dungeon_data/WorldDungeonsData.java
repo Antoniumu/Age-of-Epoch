@@ -18,7 +18,7 @@ public class WorldDungeonsData {
 
     String keyOf(BlockPos pos) {
         ChunkPos cp = DungeonDimensionJigsawFeature.getSpawnChunkOf(pos);
-        String key = cp.x + "_" + cp.z;
+        String key = cp.x() + "_" + cp.z();
         return key;
     }
 

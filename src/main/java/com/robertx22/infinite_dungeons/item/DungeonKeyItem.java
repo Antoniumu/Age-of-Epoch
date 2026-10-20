@@ -14,14 +14,14 @@ import net.minecraft.world.level.Level;
 import com.robertx22.forge_compat.api.distmarker.Dist;
 import com.robertx22.forge_compat.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 import com.robertx22.age_of_exile.uncommon.utilityclasses.StackNBT;
 public class DungeonKeyItem extends Item {
 
     public DungeonKeyItem() {
-        super(new Properties().tab(MainID.ITEM_GROUP));
+        super(new Properties());
 
     }
 
@@ -65,7 +65,6 @@ public class DungeonKeyItem extends Item {
         return LoadSave.Load(KeyData.class, new KeyData(), StackNBT.getOrCreate(stack), "dungeon");
     }
 
-    @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> list, TooltipFlag flag) {
 

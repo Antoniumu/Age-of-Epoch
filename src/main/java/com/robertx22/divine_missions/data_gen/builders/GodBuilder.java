@@ -8,7 +8,7 @@ public class GodBuilder {
     public static God of(String id, ChatFormatting format) {
 
         God god = new God();
-        god.format = format.getName();
+        god.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(format);
 
         god.id = id;
 

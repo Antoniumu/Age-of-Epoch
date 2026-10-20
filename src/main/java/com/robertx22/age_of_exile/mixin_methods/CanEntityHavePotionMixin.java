@@ -1,15 +1,15 @@
 package com.robertx22.age_of_exile.mixin_methods;
 
 import com.robertx22.age_of_exile.vanilla_mc.potion_effects.IOneOfATypePotion;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 public class CanEntityHavePotionMixin {
 
     public static void hook(LivingEntity en, MobEffectInstance effect, CallbackInfoReturnable<Boolean> ci) {
-        if (!canAddPotion(en, effect.getEffect())) {
+        if (!canAddPotion(en, effect.getEffect().value())) {
             ci.setReturnValue(false);
         }
     }
@@ -18,21 +18,19 @@ public class CanEntityHavePotionMixin {
 
         try {
 
-            if (effect instanceof IOneOfATypePotion) {
-                IOneOfATypePotion one = (IOneOfATypePotion) effect;
+            if (effect instanceof IOneOfATypePotion one) {
 
                 if (one.isOneOfAKind()) {
                     if (en.getActiveEffects()
                         .stream()
                         .anyMatch(x -> {
-                            if (x.getEffect() instanceof IOneOfATypePotion) {
-                                IOneOfATypePotion ot = (IOneOfATypePotion) x.getEffect();
+                            MobEffect eff = x.getEffect().value();
+                            if (eff instanceof IOneOfATypePotion ot) {
                                 if (ot.getOneOfATypeType()
                                     .equals(one.getOneOfATypeType())) {
                                     return true;
                                 }
-                                if (x.getEffect()
-                                    .equals(effect)) {
+                                if (eff.equals(effect)) {
                                     return true;
                                 }
                             }
@@ -48,6 +46,5 @@ public class CanEntityHavePotionMixin {
         }
 
         return true;
-
     }
 }

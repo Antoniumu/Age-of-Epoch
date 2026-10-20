@@ -1,7 +1,7 @@
 package com.robertx22.age_of_exile.database.data.player_skills;
 
 import net.minecraft.world.level.block.Block;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.Registry;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -17,7 +17,7 @@ public class BlockBreakExp {
     }
 
     public Block getBlock() {
-        return BuiltInRegistries.BLOCK.get(ResourceLocation.parse(block_id));
+        return BuiltInRegistries.BLOCK.getValue(Identifier.parse(block_id));
     }
 
     public BlockBreakExp() {

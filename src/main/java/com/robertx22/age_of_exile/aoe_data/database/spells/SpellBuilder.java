@@ -19,7 +19,7 @@ import com.robertx22.age_of_exile.uncommon.enumclasses.PlayStyle;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.item.Items;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -88,7 +88,7 @@ public class SpellBuilder {
         return this;
     }
 
-    public SpellBuilder disableInDimension(ResourceLocation id) {
+    public SpellBuilder disableInDimension(Identifier id) {
         this.spell.disabled_dims.add(id.toString());
         return this;
     }

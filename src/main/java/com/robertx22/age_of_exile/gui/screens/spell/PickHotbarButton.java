@@ -1,16 +1,15 @@
 package com.robertx22.age_of_exile.gui.screens.spell;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.age_of_exile.database.data.spells.components.Spell;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.saveclasses.gearitem.gear_bases.TooltipInfo;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
+import com.robertx22.forge_compat.client.ImageButton;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import java.util.List;
 
 public class PickHotbarButton extends ImageButton {
 
-    static ResourceLocation SPELL_SLOT = SlashRef.guiId("spells/pick_hotbar");
+    static Identifier SPELL_SLOT = SlashRef.guiId("spells/pick_hotbar");
 
     public static int BUTTON_SIZE_X = 20;
     public static int BUTTON_SIZE_Y = 20;
@@ -45,14 +44,12 @@ public class PickHotbarButton extends ImageButton {
         Spell spell = Load.spells(mc.player)
             .getSpellByNumber(num);
 
-        mc.getTextureManager()
-            .bind(SPELL_SLOT);
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(SPELL_SLOT);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         blit(matrix, x, y, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X);
 
         if (spell != null) {
-            mc.getTextureManager()
-                .bind(spell.getIconLoc());
+            com.robertx22.forge_compat.client.AbstractGui.bindTexture(spell.getIconLoc());
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
             blit(matrix, x + 2, y + 2, 16, 16, 16, 16, 16, 16);
         }

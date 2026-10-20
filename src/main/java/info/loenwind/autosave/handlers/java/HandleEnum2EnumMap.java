@@ -124,10 +124,10 @@ public class HandleEnum2EnumMap<T extends Enum<T>> extends HandleMap<EnumMap<T, 
             if (object == null) {
                 object = createMap();
             }
-            int[] raw = nbt.getIntArray(name);
+            int[] raw = nbt.getIntArray(name).orElse(new int[0]);
             if (raw.length == 0) {
                 // Convert old data
-                long value = nbt.getLong(name);
+                long value = nbt.getLongOr(name, 0L);
                 for (T key : keys) {
                     long subvalue = (value >>> (key.ordinal() * 8)) & 0xFF;
                     if (subvalue > 0 && subvalue < vals.length) {

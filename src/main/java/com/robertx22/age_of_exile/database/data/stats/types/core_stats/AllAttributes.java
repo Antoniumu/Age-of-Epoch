@@ -24,7 +24,7 @@ public class AllAttributes extends Stat implements ITransferToOtherStats {
 
     private AllAttributes() {
         this.scaling = StatScaling.CORE_STAT;
-        this.format = ChatFormatting.LIGHT_PURPLE.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.LIGHT_PURPLE);
     }
 
     public static AllAttributes getInstance() {

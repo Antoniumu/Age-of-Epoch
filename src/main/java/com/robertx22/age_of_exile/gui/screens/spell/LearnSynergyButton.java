@@ -1,7 +1,7 @@
 package com.robertx22.age_of_exile.gui.screens.spell;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.age_of_exile.database.data.synergy.Synergy;
 import com.robertx22.age_of_exile.database.data.value_calc.LevelProvider;
 import com.robertx22.age_of_exile.gui.TextUtils;
@@ -12,9 +12,8 @@ import com.robertx22.age_of_exile.vanilla_mc.packets.spells.AllocateSynergyPacke
 import com.robertx22.library_of_exile.main.Packets;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
+import com.robertx22.forge_compat.client.ImageButton;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
@@ -24,7 +23,7 @@ import java.util.List;
 import net.minecraft.world.level.Level;
 public class LearnSynergyButton extends ImageButton {
 
-    static ResourceLocation SPELL_SLOT = SlashRef.guiId("spells/slots/synergy");
+    static Identifier SPELL_SLOT = SlashRef.guiId("spells/slots/synergy");
 
     public static int BUTTON_SIZE_X = 18;
     public static int BUTTON_SIZE_Y = 18;
@@ -48,13 +47,11 @@ public class LearnSynergyButton extends ImageButton {
     public void render(PoseStack matrix, int mouseX, int mouseY, float delta) {
         Minecraft mc = Minecraft.getInstance();
 
-        mc.getTextureManager()
-            .bind(SPELL_SLOT);
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(SPELL_SLOT);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         blit(matrix, x, y, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X);
 
-        mc.getTextureManager()
-            .bind(synergy.getIconLoc());
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(synergy.getIconLoc());
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         blit(matrix, x + 1, y + 1, 16, 16, 16, 16, 16, 16);
 

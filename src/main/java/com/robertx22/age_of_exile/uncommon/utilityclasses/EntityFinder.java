@@ -2,7 +2,7 @@ package com.robertx22.age_of_exile.uncommon.utilityclasses;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.TamableAnimal;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
@@ -95,7 +95,7 @@ public class EntityFinder {
                     Utilities.spawnParticlesForTesting(aabb, setup.world);
                 }
 
-                List<T> entityList = entity.level.getEntitiesOfClass(setup.entityType, aabb);
+                List<T> entityList = entity.level().getEntitiesOfClass(setup.entityType, aabb);
                 entityList.removeIf(e -> e == entity);
 
                 return entityList;
@@ -135,7 +135,7 @@ public class EntityFinder {
             Objects.requireNonNull(caster);
             this.entityType = entityType;
             this.caster = caster;
-            this.world = caster.level;
+            this.world = caster.level();
             this.pos = pos;
         }
 

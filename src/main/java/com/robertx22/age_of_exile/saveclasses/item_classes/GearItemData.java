@@ -28,7 +28,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 import com.robertx22.forge_compat.api.distmarker.Dist;
 import com.robertx22.forge_compat.api.distmarker.OnlyIn;
@@ -126,9 +125,9 @@ public class GearItemData implements ICommonDataItem<GearRarity> {
         }
 
         if (type.upgradeLevel > 0) {
-            player.displayClientMessage(Component.literal("Upgraded Item to +" + up.getUpgradeLevel() + " with a +" + type.upgradeLevel).withStyle(ChatFormatting.GREEN), false);
+            player.sendSystemMessage(Component.literal("Upgraded Item to +" + up.getUpgradeLevel() + " with a +" + type.upgradeLevel).withStyle(ChatFormatting.GREEN));
         } else {
-            player.displayClientMessage(Component.literal("Upgrade failed").withStyle(ChatFormatting.RED), false);
+            player.sendSystemMessage(Component.literal("Upgrade failed").withStyle(ChatFormatting.RED));
         }
 
     }
@@ -252,8 +251,8 @@ public class GearItemData implements ICommonDataItem<GearRarity> {
             .get(this.rarity);
     }
 
-    public Component name(ItemStack stack) {
-        return stack.getHoverName();
+    public MutableComponent name(ItemStack stack) {
+        return stack.getHoverName().copy();
     }
 
     public void WriteOverDataThatShouldStay(GearItemData newdata) {

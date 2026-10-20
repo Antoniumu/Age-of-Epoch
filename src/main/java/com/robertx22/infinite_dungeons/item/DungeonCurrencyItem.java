@@ -9,17 +9,16 @@ import net.minecraft.world.level.Level;
 import com.robertx22.forge_compat.api.distmarker.Dist;
 import com.robertx22.forge_compat.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class DungeonCurrencyItem extends Item {
 
     public DungeonCurrencyItem() {
-        super(new Properties().tab(MainID.ITEM_GROUP)
+        super(new Properties()
             .stacksTo(64));
     }
 
-    @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> list, TooltipFlag flag) {
 

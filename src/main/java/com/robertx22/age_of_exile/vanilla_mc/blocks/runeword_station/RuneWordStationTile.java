@@ -37,6 +37,10 @@ public class RuneWordStationTile extends BaseModificationStation {
         super(SlashBlockEntities.RUNEWORD.get(), SLOT_COUNT);
     }
 
+    public RuneWordStationTile(net.minecraft.core.BlockPos pos, net.minecraft.world.level.block.state.BlockState state) {
+        super(SlashBlockEntities.RUNEWORD.get(), SLOT_COUNT, pos, state);
+    }
+
     @Override
     public void tick() {
 

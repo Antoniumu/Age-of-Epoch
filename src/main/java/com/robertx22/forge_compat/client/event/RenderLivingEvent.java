@@ -1,12 +1,12 @@
 package com.robertx22.forge_compat.client.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.robertx22.forge_compat.client.MultiBufferSource;
 import com.robertx22.forge_compat.eventbus.api.Event;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
 
-public class RenderLivingEvent<T extends LivingEntity, R extends EntityRenderer<T>> extends Event {
+public class RenderLivingEvent<T extends LivingEntity, R extends EntityRenderer<T, ?>> extends Event {
 
     private final T entity;
     private final R renderer;
@@ -36,13 +36,13 @@ public class RenderLivingEvent<T extends LivingEntity, R extends EntityRenderer<
 
     public int getLight() { return light; }
 
-    public static class Pre<T extends LivingEntity, R extends EntityRenderer<T>> extends RenderLivingEvent<T, R> {
+    public static class Pre<T extends LivingEntity, R extends EntityRenderer<T, ?>> extends RenderLivingEvent<T, R> {
         public Pre(T entity, R renderer, PoseStack matrixStack, MultiBufferSource buffers, int light) {
             super(entity, renderer, matrixStack, buffers, light);
         }
     }
 
-    public static class Post<T extends LivingEntity, R extends EntityRenderer<T>> extends RenderLivingEvent<T, R> {
+    public static class Post<T extends LivingEntity, R extends EntityRenderer<T, ?>> extends RenderLivingEvent<T, R> {
         public Post(T entity, R renderer, PoseStack matrixStack, MultiBufferSource buffers, int light) {
             super(entity, renderer, matrixStack, buffers, light);
         }

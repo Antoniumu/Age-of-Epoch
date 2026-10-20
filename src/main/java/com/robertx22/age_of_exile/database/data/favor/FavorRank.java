@@ -8,7 +8,7 @@ import com.robertx22.age_of_exile.uncommon.localization.Words;
 import com.robertx22.library_of_exile.registry.ExileRegistryType;
 import com.robertx22.library_of_exile.registry.IAutoGson;
 import com.robertx22.library_of_exile.registry.JsonExileRegistry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
@@ -42,7 +42,7 @@ public class FavorRank implements JsonExileRegistry<FavorRank>, IAutoGson<FavorR
 
     public float favor_drain_per_item = 1;// THIS CAN A PROBLEM. THIS CAN BE GAMED WITH MAGIC FIND!!!!!
 
-    public String text_format = ChatFormatting.GREEN.getName();
+    public String text_format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.GREEN);
 
     public List<String> excludedRarities = new ArrayList<>();
 
@@ -50,15 +50,15 @@ public class FavorRank implements JsonExileRegistry<FavorRank>, IAutoGson<FavorR
 
     public ChatFormatting textFormatting() {
         try {
-            return ChatFormatting.getByName(text_format);
+            return com.robertx22.forge_compat.common.CompatChatFormatting.getByName(text_format);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return ChatFormatting.GRAY;
     }
 
-    public ResourceLocation getTexture() {
-        return new ResourceLocation(SlashRef.MODID, "textures/gui/favor/" + GUID() + ".png");
+    public Identifier getTexture() {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/favor/" + GUID() + ".png");
     }
 
     public List<MutableComponent> getTooltip() {

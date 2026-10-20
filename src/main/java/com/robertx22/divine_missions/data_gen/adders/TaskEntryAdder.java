@@ -14,18 +14,18 @@ public class TaskEntryAdder {
     public static TaskEntry KILL_ANY = TaskEntryBuilder.ofAnyMobKill(60, "kill_any_mob", 40, new MinMax(6, 20));
     public static TaskEntry KILL_MANY = TaskEntryBuilder.ofAnyMobKill(60, "kill_many_mobs", 30, new MinMax(15, 30));
 
-    public static TaskEntry KILL_GHAST = TaskEntryBuilder.kill(200, 500, EntityType.GHAST, 250, new MinMax(1, 3));
-    public static TaskEntry KILL_WITHER_SKELE = TaskEntryBuilder.kill(100, 1000, EntityType.WITHER_SKELETON, 100, new MinMax(2, 6));
-    public static TaskEntry KILL_PILLAGER = TaskEntryBuilder.kill(120, 1000, EntityType.PILLAGER, 50, new MinMax(2, 6));
-    public static TaskEntry KILL_GUARDIAN = TaskEntryBuilder.kill(250, 1000, EntityType.GUARDIAN, 250, new MinMax(1, 3));
-    public static TaskEntry KILL_SPIDER = TaskEntryBuilder.kill(120, 1000, EntityType.SPIDER, 100, new MinMax(2, 6));
-    public static TaskEntry KILL_ENDERMAN = TaskEntryBuilder.kill(500, 200, EntityType.ENDERMAN, 250, new MinMax(1, 3));
-    public static TaskEntry KILL_ZOMBIE = TaskEntryBuilder.kill(100, 1000, EntityType.ZOMBIE, 50, new MinMax(4, 10));
-    public static TaskEntry KILL_PHANTOM = TaskEntryBuilder.kill(200, 500, EntityType.PHANTOM, 150, new MinMax(1, 3));
-    public static TaskEntry KILL_WITCH = TaskEntryBuilder.kill(200, 500, EntityType.WITCH, 150, new MinMax(1, 3));
-    public static TaskEntry KILL_PIGMAN = TaskEntryBuilder.kill(200, 500, EntityType.ZOMBIFIED_PIGLIN, 50, new MinMax(2, 6));
-    public static TaskEntry KILL_SLIME = TaskEntryBuilder.kill(100, 500, EntityType.SLIME, 50, new MinMax(3, 6));
-    public static TaskEntry KILL_WITHER = TaskEntryBuilder.kill(600, 50, EntityType.WITHER, 2000, new MinMax(1, 1));
+    public static TaskEntry KILL_GHAST = TaskEntryBuilder.kill(200, 500, net.minecraft.world.entity.EntityTypes.GHAST, 250, new MinMax(1, 3));
+    public static TaskEntry KILL_WITHER_SKELE = TaskEntryBuilder.kill(100, 1000, net.minecraft.world.entity.EntityTypes.WITHER_SKELETON, 100, new MinMax(2, 6));
+    public static TaskEntry KILL_PILLAGER = TaskEntryBuilder.kill(120, 1000, net.minecraft.world.entity.EntityTypes.PILLAGER, 50, new MinMax(2, 6));
+    public static TaskEntry KILL_GUARDIAN = TaskEntryBuilder.kill(250, 1000, net.minecraft.world.entity.EntityTypes.GUARDIAN, 250, new MinMax(1, 3));
+    public static TaskEntry KILL_SPIDER = TaskEntryBuilder.kill(120, 1000, net.minecraft.world.entity.EntityTypes.SPIDER, 100, new MinMax(2, 6));
+    public static TaskEntry KILL_ENDERMAN = TaskEntryBuilder.kill(500, 200, net.minecraft.world.entity.EntityTypes.ENDERMAN, 250, new MinMax(1, 3));
+    public static TaskEntry KILL_ZOMBIE = TaskEntryBuilder.kill(100, 1000, net.minecraft.world.entity.EntityTypes.ZOMBIE, 50, new MinMax(4, 10));
+    public static TaskEntry KILL_PHANTOM = TaskEntryBuilder.kill(200, 500, net.minecraft.world.entity.EntityTypes.PHANTOM, 150, new MinMax(1, 3));
+    public static TaskEntry KILL_WITCH = TaskEntryBuilder.kill(200, 500, net.minecraft.world.entity.EntityTypes.WITCH, 150, new MinMax(1, 3));
+    public static TaskEntry KILL_PIGMAN = TaskEntryBuilder.kill(200, 500, net.minecraft.world.entity.EntityTypes.ZOMBIFIED_PIGLIN, 50, new MinMax(2, 6));
+    public static TaskEntry KILL_SLIME = TaskEntryBuilder.kill(100, 500, net.minecraft.world.entity.EntityTypes.SLIME, 50, new MinMax(3, 6));
+    public static TaskEntry KILL_WITHER = TaskEntryBuilder.kill(600, 50, net.minecraft.world.entity.EntityTypes.WITHER, 2000, new MinMax(1, 1));
 
     public static TaskEntry GET_DIAMONDS = TaskEntryBuilder.collect(750, Items.DIAMOND, 500, new MinMax(1, 3));
     public static TaskEntry GET_IRON = TaskEntryBuilder.collect(1000, Items.IRON_INGOT, 100, new MinMax(4, 8));

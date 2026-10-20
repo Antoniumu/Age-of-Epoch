@@ -7,7 +7,7 @@ import com.robertx22.library_of_exile.main.MyPacket;
 import com.robertx22.library_of_exile.packets.ExilePacketContext;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class BuyPacket extends MyPacket<BuyPacket> {
 
@@ -18,7 +18,7 @@ public class BuyPacket extends MyPacket<BuyPacket> {
     }
 
     @Override
-    public ResourceLocation getIdentifier() {
+    public Identifier getIdentifier() {
         return MainID.id("buy");
     }
 

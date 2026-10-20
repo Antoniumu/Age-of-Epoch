@@ -5,7 +5,7 @@ import com.robertx22.age_of_exile.mmorpg.SyncedToClientValues;
 import com.robertx22.library_of_exile.main.MyPacket;
 import com.robertx22.library_of_exile.packets.ExilePacketContext;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class SyncAreaLevelPacket extends MyPacket<SyncAreaLevelPacket> {
 
@@ -20,8 +20,8 @@ public class SyncAreaLevelPacket extends MyPacket<SyncAreaLevelPacket> {
     }
 
     @Override
-    public ResourceLocation getIdentifier() {
-        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "arealvl");
+    public Identifier getIdentifier() {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, "arealvl");
     }
 
     @Override

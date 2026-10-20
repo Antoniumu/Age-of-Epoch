@@ -1,4 +1,5 @@
 package com.robertx22.age_of_exile.saveclasses.gearitem.gear_bases;
+import net.minecraft.network.chat.MutableComponent;
 
 import com.robertx22.age_of_exile.aoe_data.database.stats.old.DatapackStats;
 import com.robertx22.age_of_exile.capability.entity.EntityData;
@@ -6,7 +7,6 @@ import com.robertx22.age_of_exile.database.data.stats.Stat;
 import com.robertx22.age_of_exile.database.data.stats.StatScaling;
 import com.robertx22.age_of_exile.database.data.stats.types.core_stats.AllAttributes;
 import com.robertx22.library_of_exile.registry.IAutoGson;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
@@ -140,7 +140,7 @@ public class StatRequirement implements IAutoGson<StatRequirement> {
         return this.base_req.isEmpty() && this.scaling_req.isEmpty();
     }
 
-    static Component getTooltip(int req, Stat stat, EntityData data) {
+    static MutableComponent getTooltip(int req, Stat stat, EntityData data) {
 
         if (data.getUnit()
             .getCalculatedStat(stat)

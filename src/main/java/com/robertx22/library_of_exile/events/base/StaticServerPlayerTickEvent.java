@@ -4,7 +4,7 @@ import com.robertx22.library_of_exile.utils.EntityUtils;
 import com.robertx22.library_of_exile.utils.TeleportUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import com.robertx22.forge_compat.event.TickEvent;
@@ -75,7 +75,8 @@ public class StaticServerPlayerTickEvent {
             .distSqr(x.whereShouldTeleport) > 1000) {
 
             if (x.tries > 3) {
-                BlockPos spawnpos = x.player.getRespawnPosition();
+                ServerPlayer.RespawnConfig respawnConfig = x.player.getRespawnConfig();
+                BlockPos spawnpos = respawnConfig != null ? respawnConfig.respawnData().pos() : null;
                 if (spawnpos != null) {
                     EntityUtils.setLoc(x.player, spawnpos);
                 }
@@ -87,7 +88,7 @@ public class StaticServerPlayerTickEvent {
 
                 x.tries++;
 
-                x.player.displayClientMessage(Component.literal("There was a teleport bug but the auto correction system should have teleported you back correctly"), false);
+                x.player.sendSystemMessage(Component.literal("There was a teleport bug but the auto correction system should have teleported you back correctly"));
 
                 TeleportUtils.teleport(x.player, x.whereShouldTeleport);
             }
@@ -95,7 +96,7 @@ public class StaticServerPlayerTickEvent {
 
     };
 
-    public static void makeSureTeleport(ServerPlayer player, BlockPos teleportPos, ResourceLocation dim) {
+    public static void makeSureTeleport(ServerPlayer player, BlockPos teleportPos, Identifier dim) {
 
         if (!PlayerTickDatas.containsKey(player.getUUID())) {
             PlayerTickDatas.put(player.getUUID(), new PlayerTickData());

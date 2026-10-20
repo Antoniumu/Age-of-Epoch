@@ -8,13 +8,13 @@ import com.robertx22.library_of_exile.main.MyPacket;
 import com.robertx22.library_of_exile.packets.ExilePacketContext;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class TellServerToCancelSpellCast extends MyPacket<TellServerToCancelSpellCast> {
 
     @Override
-    public ResourceLocation getIdentifier() {
-        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "cancelspell");
+    public Identifier getIdentifier() {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, "cancelspell");
     }
 
     @Override

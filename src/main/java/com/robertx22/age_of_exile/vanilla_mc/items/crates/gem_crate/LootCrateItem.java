@@ -19,14 +19,12 @@ import com.robertx22.library_of_exile.utils.SoundUtils;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.CreativeModeTab;
+import com.robertx22.forge_compat.common.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.level.Level;
@@ -39,7 +37,7 @@ import java.util.List;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.StackNBT;
 public class LootCrateItem extends Item implements IGUID {
     public LootCrateItem() {
-        super(new Properties().tab(CreativeTabs.GemRuneCurrency));
+        super(new Properties());
     }
 
     public static List<LootType> LOOT_TYPES = Arrays.asList(LootType.Gem, LootType.Rune, LootType.Currency);
@@ -62,10 +60,10 @@ public class LootCrateItem extends Item implements IGUID {
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
 
             try {
 
@@ -96,19 +94,18 @@ public class LootCrateItem extends Item implements IGUID {
 
                 stack.shrink(1);
 
-                SoundUtils.ding(player.level, player.blockPosition());
+                SoundUtils.ding(player.level(), player.blockPosition());
                 PlayerUtils.giveItem(reward, player);
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return new InteractionResult<ItemStack>(InteractionResult.PASS, player.getItemInHand(hand));
+        return InteractionResult.PASS);
     }
 
-    @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> stacks) {
-        if (this.allowdedIn(group)) {
+        if (true) {
 
             for (int tier : LevelUtils.getAllTiers()) {
                 for (LootType type : LOOT_TYPES) {
@@ -130,7 +127,6 @@ public class LootCrateItem extends Item implements IGUID {
     }
 
     @OnlyIn(Dist.CLIENT)
-    @Override
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip,
                                 TooltipFlag flagIn) {
         LootCrateData data = getData(stack);

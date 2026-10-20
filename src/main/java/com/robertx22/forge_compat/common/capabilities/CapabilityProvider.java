@@ -1,15 +1,14 @@
 package com.robertx22.forge_compat.common.capabilities;
 
-import com.robertx22.forge_compat.common.capabilities.CapabilityProvider;
-
 import com.robertx22.forge_compat.common.util.LazyOptional;
+import com.robertx22.forge_compat.event.AttachCapabilitiesEvent;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import net.minecraft.nbt.Tag;
 /**
  * Runtime store for capability instances, attached lazily on first access
  * (equivalent to Forge attaching them at object construction).
@@ -17,6 +16,13 @@ import net.minecraft.nbt.Tag;
 public class CapabilityProvider {
 
     private static final Map<Object, Map<String, ICapabilityProvider>> STORE = new WeakHashMap<>();
+
+    public static synchronized <T> LazyOptional<T> get(Object owner, Capability<T> cap, Direction side) {
+        if (owner instanceof ICapabilityProvider && !(owner instanceof net.minecraft.world.entity.Entity) && !(owner instanceof net.minecraft.world.level.Level) && !(owner instanceof net.minecraft.world.item.ItemStack)) {
+            return ((ICapabilityProvider) owner).getCapability(cap, side);
+        }
+        return get(owner, cap);
+    }
 
     @SuppressWarnings("unchecked")
     public static synchronized <T> LazyOptional<T> get(Object owner, Capability<T> cap) {
@@ -31,7 +37,7 @@ public class CapabilityProvider {
         }
         LazyOptional<T> result = LazyOptional.empty();
         for (ICapabilityProvider p : map.values()) {
-            LazyOptional<T> r = CapabilityProvider.get(p, cap, null);
+            LazyOptional<T> r = p.getCapability(cap, null);
             if (r.isPresent()) {
                 result = r;
                 break;
@@ -55,7 +61,7 @@ public class CapabilityProvider {
         if (map == null) return;
         for (Map.Entry<String, ICapabilityProvider> e : map.entrySet()) {
             if (e.getValue() instanceof ICapabilitySerializable && tag.contains(e.getKey())) {
-                ((ICapabilitySerializable<net.minecraft.nbt.Tag>) e.getValue()).deserializeNBT(tag.get(e.getKey()));
+                ((ICapabilitySerializable<Tag>) e.getValue()).deserializeNBT(tag.get(e.getKey()));
             }
         }
     }

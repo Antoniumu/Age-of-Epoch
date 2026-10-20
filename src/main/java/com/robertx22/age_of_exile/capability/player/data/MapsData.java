@@ -101,8 +101,8 @@ public class MapsData {
             tel_pos = teleporterPos;
 
             // set the dungeon data for the chunk
-            Level dimWorld = player.level.getServer()
-                .getLevel(ResourceKey.create(Registries.DIMENSION_TYPE, dungeonData.dun_type.DIMENSION_ID));
+            Level dimWorld = player.level().getServer()
+                .getLevel(ResourceKey.create(Registries.DIMENSION, dungeonData.dun_type.DIMENSION_ID));
 
             int border = MapsData.getBorder(dimWorld);
 
@@ -113,7 +113,7 @@ public class MapsData {
 
             Watch ww = new Watch();
 
-            //Chunk chunk = dimWorld.getChunk(cp.x, cp.z); // load it first
+            //Chunk chunk = dimWorld.getChunk(cp.x(), cp.z()); // load it first
 
             ww.print("loading first chunk ");
 
@@ -135,7 +135,7 @@ public class MapsData {
 
                 for (ChunkPos x : check) {
 
-                    Set<Map.Entry<BlockPos, BlockEntity>> bes = new HashSet<>(dimWorld.getChunk(x.x, x.z)
+                    Set<Map.Entry<BlockPos, BlockEntity>> bes = new HashSet<>(dimWorld.getChunk(x.x(), x.z())
                         .getBlockEntities()
                         .entrySet());
 
@@ -161,10 +161,10 @@ public class MapsData {
                 }
 
                 if (!foundSpawn) {
-                    player.displayClientMessage(Component.literal("Bug: Couldnt find spawn position, you might be placed weirdly, and possibly die."), false);
+                    player.sendSystemMessage(Component.literal("Bug: Couldnt find spawn position, you might be placed weirdly, and possibly die."));
                 }
                 if (!foundportalback) {
-                    player.displayClientMessage(Component.literal("Bug: Couldnt find portal back position."), false);
+                    player.sendSystemMessage(Component.literal("Bug: Couldnt find portal back position."));
                 }
 
                 w.print("finding spawn");
@@ -178,13 +178,13 @@ public class MapsData {
             list.add(teleporterPos.west(2));
 
             for (BlockPos x : list) {
-                if (player.level.getBlockState(x)
-                    .isAir() || player.level.getBlockState(x)
+                if (player.level().getBlockState(x)
+                    .isAir() || player.level().getBlockState(x)
                     .getBlock() == SlashBlocks.PORTAL.get()) {
-                    player.level.destroyBlock(x, false);
-                    player.level.setBlockAndUpdate(x, SlashBlocks.PORTAL.get()
+                    player.level().destroyBlock(x, false);
+                    player.level().setBlockAndUpdate(x, SlashBlocks.PORTAL.get()
                         .defaultBlockState());
-                    PortalBlockEntity be = (PortalBlockEntity) player.level.getBlockEntity(x);
+                    PortalBlockEntity be = (PortalBlockEntity) player.level().getBlockEntity(x);
                     be.data.dungeonPos = tpPos;
                     be.data.tpbackpos = teleporterPos.above();
                     be.data.dungeonType = dungeonData.dun_type;

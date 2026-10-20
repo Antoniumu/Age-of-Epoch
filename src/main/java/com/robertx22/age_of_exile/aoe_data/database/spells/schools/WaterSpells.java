@@ -86,7 +86,7 @@ public class WaterSpells implements ExileRegistryInit {
             .onExpire("block", PartBuilder.aoeParticles(ParticleTypes.ITEM_SNOWBALL, 150D, 3D))
             .onExpire("block", PartBuilder.aoeParticles(ParticleTypes.ASH, 25D, 3D))
             .onExpire("block", PartBuilder.aoeParticles(ParticleTypes.EXPLOSION, 1D, 1D))
-            .onExpire("block", PartBuilder.playSound(SoundEvents.GENERIC_EXPLODE, 1D, 1D))
+            .onExpire("block", PartBuilder.playSound(SoundEvents.GENERIC_EXPLODE.value(), 1D, 1D))
             .build();
 
         SpellBuilder.of(CHILLING_FIELD, SpellConfiguration.Builder.nonInstant(30, 20 * 60, 30)

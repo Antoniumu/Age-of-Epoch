@@ -1,5 +1,9 @@
 package com.robertx22.infinite_dungeons.item;
 
+import com.robertx22.age_of_exile.uncommon.utilityclasses.StackNBT;
+import com.robertx22.forge_compat.api.distmarker.Dist;
+import com.robertx22.forge_compat.api.distmarker.OnlyIn;
+import com.robertx22.forge_compat.common.CreativeModeTab;
 import com.robertx22.infinite_dungeons.database.DungeonsDB;
 import com.robertx22.infinite_dungeons.database.db_types.RewardList;
 import com.robertx22.infinite_dungeons.database.db_types.WeightedReward;
@@ -8,51 +12,40 @@ import com.robertx22.infinite_dungeons.exile_events.OnItemGivenEvent;
 import com.robertx22.infinite_dungeons.main.DungeonItems;
 import com.robertx22.infinite_dungeons.main.MainID;
 import com.robertx22.library_of_exile.utils.SoundUtils;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.core.NonNullList;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import com.robertx22.forge_compat.api.distmarker.Dist;
-import com.robertx22.forge_compat.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
-import com.robertx22.age_of_exile.uncommon.utilityclasses.StackNBT;
 public class RewardCrateItem extends Item {
 
     public RewardCrateItem() {
-        super(new Properties().tab(MainID.ITEM_GROUP)
-            .stacksTo(1));
+        super(new Properties().stacksTo(1));
     }
 
     public static String TAG = "reward_list";
 
-    @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> list) {
         try {
-            if (this.allowdedIn(group)) {
-
-                for (RewardList s : DungeonsDB.RewardLists()
-                    .getList()) {
-                    ItemStack stack = new ItemStack(DungeonItems.REWARD_CRATE.get());
-                    StackNBT.getOrCreate(stack)
-                        .putString(TAG, s.GUID());
-                    list.add(stack);
-                }
+            for (RewardList s : DungeonsDB.RewardLists()
+                .getList()) {
+                ItemStack stack = new ItemStack(DungeonItems.REWARD_CRATE.get());
+                StackNBT.getOrCreate(stack)
+                    .putString(TAG, s.GUID());
+                list.add(stack);
             }
         } catch (Exception e) {
-            // e.printStackTrace(); why is it even being called so early?
         }
 
     }
@@ -65,22 +58,22 @@ public class RewardCrateItem extends Item {
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
 
             try {
-                SoundUtils.playSound(player, SoundEvents.EXPERIENCE_ORB_PICKUP, 1, 1);
+                SoundUtils.playSound(player, SoundEvents.EXPERIENCE_ORB_PICKUP.value(), 1, 1);
 
                 RewardList rewardList = DungeonsDB.RewardLists()
                     .get(StackNBT.getOrCreate(stack)
-                        .getString(TAG));
+                        .getStringOr(TAG, ""));
 
                 WeightedReward reward = rewardList.getRandom();
 
                 if (rewardList.jackpot.equals(reward)) {
-                    SoundUtils.playSound(player, SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
+                    SoundUtils.playSound(player, SoundEvents.UI_TOAST_CHALLENGE_COMPLETE.value(), 1, 1);
                 }
 
                 ItemStack rewardstack = reward.reward.type.getStack(reward.reward);
@@ -88,8 +81,8 @@ public class RewardCrateItem extends Item {
                 OnItemGivenEvent event = new OnItemGivenEvent(rewardstack, player).setMadeFromStack(stack);
                 IDExileEvents.ON_ITEM_GIVE.callEvents(event);
 
-                if (player.addItem(rewardstack) == false) {
-                    player.spawnAtLocation(rewardstack, 1F);
+                if (player.addItem(rewardstack) == false && world instanceof ServerLevel sl) {
+                    player.spawnAtLocation(sl, rewardstack, 1F);
                 }
 
                 stack.shrink(1);
@@ -99,7 +92,7 @@ public class RewardCrateItem extends Item {
             }
         }
 
-        return InteractionResult.pass(stack);
+        return InteractionResult.PASS;
 
     }
 
@@ -108,19 +101,17 @@ public class RewardCrateItem extends Item {
         try {
             RewardList rewardList = DungeonsDB.RewardLists()
                 .get(StackNBT.getOrCreate(stack)
-                    .getString(TAG));
+                    .getStringOr(TAG, ""));
 
             return Component.translatable(MainID.MODID + ".reward_list." + rewardList.GUID())
                 .withStyle(rewardList.getFormat(), ChatFormatting.BOLD);
 
         } catch (Exception e) {
-            //  e.printStackTrace();
         }
 
         return Component.literal("Empty Crate");
     }
 
-    @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> list, TooltipFlag flag) {
 
@@ -128,12 +119,11 @@ public class RewardCrateItem extends Item {
 
             RewardList rewardList = DungeonsDB.RewardLists()
                 .get(StackNBT.getOrCreate(stack)
-                    .getString(TAG));
+                    .getStringOr(TAG, ""));
 
             list.addAll(rewardList.getTooltip());
 
         } catch (Exception e) {
-            // e.printStackTrace();
         }
 
     }

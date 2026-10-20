@@ -1,15 +1,16 @@
 package com.robertx22.age_of_exile.database.data.spells.components.actions;
 
-import com.robertx22.age_of_exile.database.data.exile_effects.MobEffectCategory;
+import com.robertx22.age_of_exile.database.data.exile_effects.EffectType;
 import com.robertx22.age_of_exile.database.data.spells.components.MapHolder;
 import com.robertx22.age_of_exile.database.data.spells.components.actions.ExileEffectAction.GiveOrTake;
 import com.robertx22.age_of_exile.database.data.spells.spell_classes.SpellCtx;
 import com.robertx22.age_of_exile.mixin_ducks.StatusEffectAccesor;
 import com.robertx22.age_of_exile.vanilla_mc.potion_effects.types.ExileStatusEffect;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.core.Registry;
+import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,7 +19,6 @@ import java.util.stream.Collectors;
 
 import static com.robertx22.age_of_exile.database.data.spells.map_fields.MapField.*;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 public class PotionAction extends SpellAction {
 
     public PotionAction() {
@@ -39,11 +39,11 @@ public class PotionAction extends SpellAction {
                         .intValue();
                     int str = data.getOrDefault(POTION_STRENGTH, 1D)
                         .intValue();
-                    t.addEffect(new MobEffectInstance(potion, dura, str));
+                    t.addEffect(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(potion), dura, str));
                 } else if (action == GiveOrTake.REMOVE_STACKS) {
                     MobEffect potion = data.getPotion();
 
-                    t.removeEffect(potion);
+                    t.removeEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(potion));
                 } else if (action == GiveOrTake.REMOVE_NEGATIVE) {
                     int count = data.getOrDefault(COUNT, 1D)
                         .intValue();
@@ -53,14 +53,11 @@ public class PotionAction extends SpellAction {
                         List<MobEffectInstance> opt = t.getActiveEffects()
                             .stream()
                             .filter(x -> {
-                                if (x.getEffect() instanceof StatusEffectAccesor) {
-                                    StatusEffectAccesor acc = (StatusEffectAccesor) x.getEffect();
-                                    return acc.my$getstatusEffectType() == net.minecraft.potion.MobEffectCategory.HARMFUL;
-                                } else {
-                                    if (x.getEffect() instanceof ExileStatusEffect) {
-                                        ExileStatusEffect es = (ExileStatusEffect) x.getEffect();
-                                        return es.type == MobEffectCategory.negative;
-                                    }
+                                MobEffect eff = x.getEffect().value();
+                                if (eff instanceof StatusEffectAccesor acc) {
+                                    return acc.my$getstatusEffectType() == net.minecraft.world.effect.MobEffectCategory.HARMFUL;
+                                } else if (eff instanceof ExileStatusEffect es) {
+                                    return es.type == EffectType.negative;
                                 }
                                 return false;
                             })
@@ -78,6 +75,10 @@ public class PotionAction extends SpellAction {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public MapHolder createGive(Holder<MobEffect> effect, Double duration) {
+        return createGive(effect.value(), duration);
     }
 
     public MapHolder createGive(MobEffect effect, Double duration) {
@@ -99,6 +100,10 @@ public class PotionAction extends SpellAction {
         return dmg;
     }
 
+    public MapHolder createRemove(Holder<MobEffect> effect) {
+        return createRemove(effect.value());
+    }
+
     public MapHolder createRemove(MobEffect effect) {
         MapHolder dmg = new MapHolder();
         dmg.type = GUID();
@@ -114,4 +119,3 @@ public class PotionAction extends SpellAction {
         return "potion";
     }
 }
-

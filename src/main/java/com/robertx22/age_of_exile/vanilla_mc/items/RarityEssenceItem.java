@@ -11,12 +11,11 @@ import com.robertx22.library_of_exile.registry.IGUID;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.CreativeModeTab;
+import com.robertx22.forge_compat.common.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import com.robertx22.forge_compat.api.distmarker.Dist;
@@ -28,14 +27,12 @@ import java.util.List;
 public class RarityEssenceItem extends Item implements IGUID, ISalvagable {
 
     public RarityEssenceItem() {
-        super(new Properties().stacksTo(64)
-            .tab(CreativeTabs.GemRuneCurrency));
+        super(new Properties().stacksTo(64));
     }
 
-    @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> stacks) {
 
-        if (this.allowdedIn(group)) {
+        if (true) {
 
             for (GearRarity rar : ExileDB.GearRarities()
                 .getList()) {
@@ -48,10 +45,10 @@ public class RarityEssenceItem extends Item implements IGUID, ISalvagable {
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level worldIn, Player player, InteractionHand handIn) {
+    public InteractionResult use(Level worldIn, Player player, InteractionHand handIn) {
         ItemStack stack = player.getItemInHand(handIn);
 
-        if (!worldIn.isClientSide) {
+        if (!worldIn.isClientSide()) {
 
             try {
                 GearRarity rar = GearRarity.getRarityFromEssence(stack);
@@ -66,10 +63,9 @@ public class RarityEssenceItem extends Item implements IGUID, ISalvagable {
         }
 
         player.startUsingItem(handIn);
-        return InteractionResult.success(stack);
+        return InteractionResult.SUCCESS;
     }
 
-    @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
 

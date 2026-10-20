@@ -1,21 +1,21 @@
 package com.robertx22.infinite_dungeons.database.db_types.layout;
 
 import com.robertx22.infinite_dungeons.database.CompletitionScore;
-import net.minecraft.world.level.storage.loot.LootTables;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.resources.Identifier;
 
 public class ScoreConfig {
 
     public CompletitionScore score;
-    public String loot_table = LootTables.END_CITY_TREASURE.toString(); // TODO
+    public String loot_table = BuiltInLootTables.END_CITY_TREASURE.identifier().toString(); // TODO
     public int reward_time_seconds = 60 * 3;
     public float loot_multi = 3;
 
-    public ResourceLocation getLootTable() {
-        return ResourceLocation.parse(loot_table);
+    public Identifier getLootTable() {
+        return Identifier.parse(loot_table);
     }
 
-    public static ScoreConfig defaultGold(ResourceLocation lootTable) {
+    public static ScoreConfig defaultGold(Identifier lootTable) {
         ScoreConfig c = new ScoreConfig();
         c.score = CompletitionScore.GOLD;
         c.loot_table = lootTable.toString();
@@ -24,7 +24,7 @@ public class ScoreConfig {
         return c;
     }
 
-    public static ScoreConfig defaultSilver(ResourceLocation lootTable) {
+    public static ScoreConfig defaultSilver(Identifier lootTable) {
         ScoreConfig c = new ScoreConfig();
         c.score = CompletitionScore.SILVER;
         c.loot_table = lootTable.toString();
@@ -33,7 +33,7 @@ public class ScoreConfig {
         return c;
     }
 
-    public static ScoreConfig defaultBronze(ResourceLocation lootTable) {
+    public static ScoreConfig defaultBronze(Identifier lootTable) {
         ScoreConfig c = new ScoreConfig();
         c.score = CompletitionScore.BRONZE;
         c.loot_table = lootTable.toString();

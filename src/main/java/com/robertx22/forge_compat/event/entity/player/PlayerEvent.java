@@ -13,6 +13,8 @@ public class PlayerEvent extends Event {
 
     public Player getPlayer() { return player; }
 
+    public Player getEntity() { return player; }
+
     public static class PlayerLoggedInEvent extends PlayerEvent {
         public PlayerLoggedInEvent(Player player) { super(player); }
     }

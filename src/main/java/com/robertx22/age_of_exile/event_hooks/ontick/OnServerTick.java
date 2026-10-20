@@ -42,7 +42,7 @@ public class OnServerTick {
             if (OnItemStoppedUsingCastImbuedSpell.canCastImbuedSpell(player)) {
                 if (Load.spells(player)
                     .getCastingData().imbued_spell_stacks > 0) {
-                    ParticleUtils.spawnParticles(ParticleTypes.WITCH, player.level, player.blockPosition(), 2);
+                    ParticleUtils.spawnParticles(ParticleTypes.WITCH, player.level(), player.blockPosition(), 2);
                 }
             }
         }));
@@ -50,7 +50,7 @@ public class OnServerTick {
         TICK_ACTIONS.add(new PlayerTickAction("update_caps", 20, (player, data) -> {
             OnTickSetGameMode.onTick(player);
             CapSyncUtil.syncPerSecond(player);
-            Packets.sendToClient(player, new SyncAreaLevelPacket(LevelUtils.determineLevel(player.level, player.blockPosition(), player).level));
+            Packets.sendToClient(player, new SyncAreaLevelPacket(LevelUtils.determineLevel(player.level(), player.blockPosition(), player).level));
         }));
 
         TICK_ACTIONS.add(new
@@ -63,7 +63,7 @@ public class OnServerTick {
                 .getUnit()
                 .energyData()
                 .getValue() / 10) {
-                player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 3, 1));
+                player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 20 * 3, 1));
             }
 
             UnequipGear.onTick(player);
@@ -79,7 +79,7 @@ public class OnServerTick {
 
             if (player.isAlive()) {
 
-                PopulateDungeonChunks.tryPopulateChunksAroundPlayer(player.level, player);
+                PopulateDungeonChunks.tryPopulateChunksAroundPlayer(player.level(), player);
 
                 EntityData unitdata = Load.Unit(player);
 
@@ -120,8 +120,7 @@ public class OnServerTick {
                         float exhaustion = (float) ServerContainer.get().REGEN_HUNGER_COST.get()
                             .floatValue() * percentHealed;
 
-                        player.getFoodData()
-                            .addExhaustion(exhaustion);
+                        player.causeFoodExhaustion(exhaustion);
 
                     }
                 }
@@ -178,7 +177,7 @@ public class OnServerTick {
 
         {
 
-            if (!WorldUtils.isMapWorldClass(player.level)) {
+            if (!WorldUtils.isMapWorldClass(player.level())) {
 
                 boolean wasnt = false;
                 if (!data.isInHighLvlZone) {
@@ -189,7 +188,7 @@ public class OnServerTick {
                     .getLevel();
 
                 if (lvl < 20) {
-                    data.isInHighLvlZone = LevelUtils.determineLevel(player.level, player.blockPosition(), player).level - lvl > 10;
+                    data.isInHighLvlZone = LevelUtils.determineLevel(player.level(), player.blockPosition(), player).level - lvl > 10;
 
                     if (wasnt && data.isInHighLvlZone) {
                         OnScreenMessageUtils.sendMessage(

@@ -7,7 +7,7 @@ import com.robertx22.library_of_exile.main.MyPacket;
 import com.robertx22.library_of_exile.packets.ExilePacketContext;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.ChatFormatting;
 
 public class DmgNumPacket extends MyPacket<DmgNumPacket> {
@@ -29,8 +29,8 @@ public class DmgNumPacket extends MyPacket<DmgNumPacket> {
     }
 
     @Override
-    public ResourceLocation getIdentifier() {
-        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "dmgnum");
+    public Identifier getIdentifier() {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, "dmgnum");
     }
 
     @Override
@@ -38,7 +38,7 @@ public class DmgNumPacket extends MyPacket<DmgNumPacket> {
         string = tag.readUtf(500);
         id = tag.readInt();
         this.iscrit = tag.readBoolean();
-        this.format = ChatFormatting.getByName(tag.readUtf(100));
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getByName(tag.readUtf(100));
 
     }
 
@@ -47,14 +47,14 @@ public class DmgNumPacket extends MyPacket<DmgNumPacket> {
         tag.writeUtf(string);
         tag.writeInt(id);
         tag.writeBoolean(iscrit);
-        tag.writeUtf(format.getName());
+        tag.writeUtf(com.robertx22.forge_compat.common.CompatChatFormatting.getName(format));
 
     }
 
     @Override
     public void onReceived(ExilePacketContext ctx) {
         if (ClientConfigs.getConfig().ENABLE_FLOATING_DMG.get()) {
-            DamageParticleAdder.displayParticle(ctx.getPlayer().level.getEntity(id), this);
+            DamageParticleAdder.displayParticle(ctx.getPlayer().level().getEntity(id), this);
         }
     }
 

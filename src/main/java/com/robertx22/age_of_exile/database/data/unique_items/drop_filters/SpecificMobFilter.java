@@ -1,9 +1,8 @@
 package com.robertx22.age_of_exile.database.data.unique_items.drop_filters;
 
 import com.robertx22.age_of_exile.loot.LootInfo;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.Registry;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ public class SpecificMobFilter extends DropFilter {
 
         List<Component> list = new ArrayList<>();
         list.add(Component.literal("This mobs can drop:"));
-        list.add(BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(data.id))
+        list.add(BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(data.id))
             .getDescription());
         return list;
 

@@ -1,20 +1,19 @@
 package com.robertx22.age_of_exile.player_skills.items.backpacks;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.player_skills.items.backpacks.upgrades.BackpackUpgradeItem;
 import com.robertx22.library_of_exile.gui.ItemSlotButton;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import com.robertx22.forge_compat.client.AbstractContainerScreen;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 
 public class BackpackScreen extends AbstractContainerScreen<BackpackContainer> {
-    private ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/backpack/background.png");
+    private Identifier texture = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/backpack/background.png");
 
     public BackpackScreen(BackpackContainer handler, Inventory inventory, Component text) {
         super(handler, inventory, Component.literal(""));
@@ -22,7 +21,7 @@ public class BackpackScreen extends AbstractContainerScreen<BackpackContainer> {
         imageWidth = 176;
         imageHeight = 233;
 
-        this.texture = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/backpack/" + handler.info.tier + ".png");
+        this.texture = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/backpack/" + handler.info.tier + ".png");
     }
 
     @Override
@@ -41,9 +40,7 @@ public class BackpackScreen extends AbstractContainerScreen<BackpackContainer> {
 
     @Override
     protected void renderBg(PoseStack matrices, float delta, int mouseX, int mouseY) {
-        Minecraft.getInstance()
-            .getTextureManager()
-            .bind(texture);
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(texture);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         blit(matrices, this.leftPos, this.topPos, 0, 0, imageWidth, imageHeight);
 

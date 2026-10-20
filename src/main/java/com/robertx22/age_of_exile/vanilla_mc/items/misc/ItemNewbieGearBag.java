@@ -1,7 +1,6 @@
 package com.robertx22.age_of_exile.vanilla_mc.items.misc;
 
 import com.robertx22.age_of_exile.aoe_data.database.gear_slots.GearSlots;
-import com.robertx22.age_of_exile.database.base.CreativeTabs;
 import com.robertx22.age_of_exile.database.data.gear_types.bases.BaseGearType;
 import com.robertx22.age_of_exile.database.data.perks.Perk;
 import com.robertx22.age_of_exile.database.registry.ExileDB;
@@ -13,18 +12,16 @@ import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.interfaces.data_items.IRarity;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.PlayerUtils;
 import com.robertx22.age_of_exile.vanilla_mc.items.gearitems.VanillaMaterial;
-import net.minecraft.world.item.enchantment.EnchantmentInstance;
-import net.minecraft.world.item.enchantment.Enchantments;
+import com.robertx22.forge_compat.fml.ModList;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import com.robertx22.forge_compat.fml.ModList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,13 +30,10 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import com.robertx22.age_of_exile.uncommon.utilityclasses.StackNBT;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 public class ItemNewbieGearBag extends Item {
 
     public ItemNewbieGearBag() {
-        super(new Properties().tab(CreativeTabs.MyModTab));
+        super(new Properties());
 
     }
 
@@ -100,7 +94,9 @@ public class ItemNewbieGearBag extends Item {
 
                 ItemStack stack = GearSoulLootGen.createSoulBasedOnGear(b);
 
-                EnchantedBookItem.addEnchantment(stack, new EnchantmentInstance(Enchantments.UNBREAKING, 3));
+                player.level().registryAccess().lookup(Registries.ENCHANTMENT)
+                    .flatMap(reg -> reg.get(Enchantments.UNBREAKING))
+                    .ifPresent(holder -> stack.enchant(holder, 3));
 
                 PlayerUtils.giveItem(stack, player);
 
@@ -111,9 +107,9 @@ public class ItemNewbieGearBag extends Item {
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public InteractionResult use(Level worldIn, Player playerIn, InteractionHand handIn) {
 
-        if (!worldIn.isClientSide) {
+        if (!worldIn.isClientSide()) {
             try {
 
                 List<Perk> starts = Load.playerRPGData(playerIn).talents
@@ -123,43 +119,32 @@ public class ItemNewbieGearBag extends Item {
                     .filter(x -> x.is_entry)
                     .collect(Collectors.toList());
 
-                if (true || !starts.isEmpty()) { // todo
+                if (true || !starts.isEmpty()) {
 
                     defaultContent.give(playerIn);
-                    // ItemNewbieGearBag.giveNewbieItemsFor(playerIn, starts.get(0));
 
                     if (ModList.get()
                         .isLoaded("patchouli")) {
-                        /*
-                        // dont give till i update it
-                        // guide book
-                        ItemStack book = new ItemStack(BuiltInRegistries.ITEM.get(new Identifier("patchouli", "guide_book")));
-                        CompoundTag tag = new CompoundTag();
-                        tag.putString("patchouli:book", "mmorpg:age_of_exile_guide");
-                        StackNBT.set(book, tag);
-                        PlayerUtils.giveItem(book, playerIn);
-
-                         */
                     }
 
                     playerIn.getItemInHand(handIn)
                         .shrink(1);
 
                 } else {
-                    playerIn.displayClientMessage(Component.literal("Choose your path to open this. (Press [H] and then open Talent Tree scren"), false);
+                    playerIn.sendSystemMessage(Component.literal("Choose your path to open this. (Press [H] and then open Talent Tree scren"));
                 }
 
-                return new InteractionResult<ItemStack>(InteractionResult.PASS, playerIn.getItemInHand(handIn));
+                return InteractionResult.PASS;
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return new InteractionResult<ItemStack>(InteractionResult.PASS, playerIn.getItemInHand(handIn));
+        return InteractionResult.PASS;
     }
 
     private static GearBlueprint getBlueprint(BaseGearType type) {
-        GearBlueprint print = new GearBlueprint(1);        //TODO
+        GearBlueprint print = new GearBlueprint(1);
         print.gearItemSlot.set(type);
         print.rarity.set(ExileDB.GearRarities()
             .get(IRarity.COMMON_ID));

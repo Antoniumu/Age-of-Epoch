@@ -1,36 +1,44 @@
 package com.robertx22.age_of_exile.vanilla_mc.blocks.bases;
 
 import com.robertx22.age_of_exile.uncommon.utilityclasses.ClientOnly;
+import com.robertx22.age_of_exile.uncommon.utilityclasses.StackNBT;
 import com.robertx22.age_of_exile.vanilla_mc.blocks.IAutomatable;
+import com.robertx22.forge_compat.blocks.ITickableBlockEntity;
 import com.robertx22.library_of_exile.tile_bases.NonFullBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.ExperienceOrb;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.WorldlyContainer;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import com.robertx22.forge_compat.blocks.ITickableBlockEntity;
+import net.minecraft.util.Mth;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import net.minecraft.world.Container;
 public abstract class BaseModificationStation extends BlockEntity implements WorldlyContainer, ITickableBlockEntity, MenuProvider {
 
     static UUID EMPTY_ID = UUID.fromString("3f715e84-4318-4025-9f23-875e3738c19b");
 
     public BaseModificationStation(BlockEntityType<?> tileEntityTypeIn, int slots) {
-        super(tileEntityTypeIn);
+        this(tileEntityTypeIn, slots, BlockPos.ZERO, Blocks.AIR.defaultBlockState());
+    }
+
+    public BaseModificationStation(BlockEntityType<?> tileEntityTypeIn, int slots, BlockPos pos, BlockState state) {
+        super(tileEntityTypeIn, pos, state);
         itemStacks = new ItemStack[slots];
         clearContent();
     }
@@ -50,7 +58,7 @@ public abstract class BaseModificationStation extends BlockEntity implements Wor
 
     public Player getOwner() {
 
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return ClientOnly.getPlayerById(ownerID);
         }
 
@@ -65,24 +73,21 @@ public abstract class BaseModificationStation extends BlockEntity implements Wor
         return en;
     }
 
-    // todo allow stacking items
     public boolean canPushTo(int index, ItemStack stack) {
         return itemStacks[index].isEmpty();
     }
 
-    // todo allow stacking items
     public void pushTo(int index, ItemStack stack) {
         itemStacks[index] = stack;
     }
 
     @Override
     public void tick() {
-        if (level != null && !level.isClientSide) {
+        if (level != null && !level.isClientSide()) {
             ticks++;
-            if (this instanceof ISmeltingStation) {
-                ISmeltingStation smelt = (ISmeltingStation) this;
+            if (this instanceof ISmeltingStation smelt) {
                 smelt.onSmeltTick();
-                level.setBlock(this.worldPosition, this.level.getBlockState(this.worldPosition)
+                level.setBlock(this.worldPosition, this.level().getBlockState(this.worldPosition)
                     .setValue(NonFullBlock.light, this.cook_ticks > 0), 3);
             }
             if (ticks % 2000 == 0) {
@@ -125,16 +130,13 @@ public abstract class BaseModificationStation extends BlockEntity implements Wor
     @Override
     public boolean canPlaceItemThroughFace(int index, ItemStack stack, Direction direction) {
 
-        if (this instanceof IAutomatable) {
-            IAutomatable auto = (IAutomatable) this;
+        if (this instanceof IAutomatable auto) {
             if (direction.getAxis()
                 .isVertical() && auto.isInputSlot(index)) {
-                // don't insert shit
                 return auto.isValidInput(stack);
             }
             if (direction.getAxis()
                 .isHorizontal()) {
-                // don't insert shit
                 if (auto.isFuelSlot(index)) {
                     return auto.isValidFuel(stack);
                 }
@@ -145,58 +147,46 @@ public abstract class BaseModificationStation extends BlockEntity implements Wor
 
     @Override
     public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
-        if (this instanceof IAutomatable) {
-            IAutomatable auto = (IAutomatable) this;
+        if (this instanceof IAutomatable auto) {
             return auto.isOutputSlot(index) && auto.isValidOuput(stack);
         }
         return false;
     }
 
-    // Gets the stack in the given slot
     @Override
     public ItemStack getItem(int i) {
         return itemStacks[i];
     }
 
-    /**
-     * Removes some of the units from itemstack in the given slot, and returns as a
-     * separate itemstack
-     *
-     * @param slotIndex the slot number to remove the items from
-     * @param count     the number of units to remove
-     * @return a new itemstack containing the units removed from the slot
-     */
     @Override
     public ItemStack removeItem(int slotIndex, int count) {
         ItemStack itemStackInSlot = getItem(slotIndex);
         if (itemStackInSlot.isEmpty())
-            return ItemStack.EMPTY; // isEmpty(), EMPTY_ITEM
+            return ItemStack.EMPTY;
 
         ItemStack itemStackRemoved;
-        if (itemStackInSlot.getCount() <= count) { // getStackSize
+        if (itemStackInSlot.getCount() <= count) {
             itemStackRemoved = itemStackInSlot;
-            setItem(slotIndex, ItemStack.EMPTY); // EMPTY_ITEM
+            setItem(slotIndex, ItemStack.EMPTY);
         } else {
             itemStackRemoved = itemStackInSlot.split(count);
-            if (itemStackInSlot.getCount() == 0) { // getStackSize
-                setItem(slotIndex, ItemStack.EMPTY); // EMPTY_ITEM
+            if (itemStackInSlot.getCount() == 0) {
+                setItem(slotIndex, ItemStack.EMPTY);
             }
         }
         setChanged();
         return itemStackRemoved;
     }
 
-    // Gets the number of slots in the inventory
     @Override
     public int getContainerSize() {
         return itemStacks.length;
     }
 
-    // returns true if all of the slots in the inventory are empty
     @Override
     public boolean isEmpty() {
         for (ItemStack itemstack : itemStacks) {
-            if (!itemstack.isEmpty()) { // isEmpty()
+            if (!itemstack.isEmpty()) {
                 return false;
             }
         }
@@ -204,25 +194,20 @@ public abstract class BaseModificationStation extends BlockEntity implements Wor
         return true;
     }
 
-    // overwrites the stack in the given slotIndex with the given stack
     @Override
     public void setItem(int slotIndex, ItemStack itemstack) {
         itemStacks[slotIndex] = itemstack;
-        if (!itemstack.isEmpty() && itemstack.getCount() > getMaxStackSize()) { // isEmpty(); getStackSize()
-            itemstack.setCount(getMaxStackSize()); // setStackSize()
+        if (!itemstack.isEmpty() && itemstack.getCount() > getMaxStackSize()) {
+            itemstack.setCount(getMaxStackSize());
         }
         setChanged();
     }
 
-    // set all slots to empty
     @Override
     public void clearContent() {
-        Arrays.fill(itemStacks, ItemStack.EMPTY); // EMPTY_ITEM
+        Arrays.fill(itemStacks, ItemStack.EMPTY);
     }
 
-    // this must be called manually when the container opens, or else it isn't called at all
-    // vanilla doesnt call it by itself
-    @Override
     public void startOpen(Player player) {
         if (ownerID.equals(player.getUUID()) == false) {
             ownerID = player.getUUID();
@@ -236,7 +221,7 @@ public abstract class BaseModificationStation extends BlockEntity implements Wor
 
     private static void dropExperience(Level world, Vec3 vec3d, float f) {
         int j = (int) f;
-        float g = Mth.frac((float) f);
+        float g = Mth.frac(f);
         if (g != 0.0F && Math.random() < (double) g) {
             ++j;
         }
@@ -249,35 +234,19 @@ public abstract class BaseModificationStation extends BlockEntity implements Wor
 
     }
 
-    @Override
     public void stopOpen(Player player) {
     }
 
-// -----------------------------------------------------------------------------------------------------------
-// The following methods are not needed for this example but are part of
-// Container so they must be implemented
-
-    // Unused unless your container specifically uses it.
-// Return true if the given stack is allowed to go in the given slot
     @Override
     public boolean canPlaceItem(int slotIndex, ItemStack itemstack) {
         return true;
     }
 
-    /**
-     * This method removes the entire contents of the given slot and returns it.
-     * Used by containers such as crafting tables which return any items in their
-     * slots when you close the GUI
-     *
-     * @param slotIndex
-     * @return
-     */
     @Override
     public ItemStack removeItemNoUpdate(int slotIndex) {
-
         ItemStack itemStack = getItem(slotIndex);
         if (!itemStack.isEmpty())
-            setItem(slotIndex, ItemStack.EMPTY); // isEmpty(); EMPTY_ITEM
+            setItem(slotIndex, ItemStack.EMPTY);
         return itemStack;
     }
 
@@ -288,8 +257,7 @@ public abstract class BaseModificationStation extends BlockEntity implements Wor
 
     @Override
     public boolean stillValid(Player player) {
-
-        if (this.level.getBlockEntity(this.worldPosition) != this)
+        if (this.level().getBlockEntity(this.worldPosition) != this)
             return false;
         final double X_CENTRE_OFFSET = 0.5;
         final double Y_CENTRE_OFFSET = 0.5;
@@ -300,53 +268,58 @@ public abstract class BaseModificationStation extends BlockEntity implements Wor
     }
 
     @Override
-    public CompoundTag save(CompoundTag nbt) {
-        super.save(nbt); // The super call is required to save and load the tiles location
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        CompoundTag nbt = new CompoundTag();
+        this.save(nbt);
+        output.store("AgeOfEpochData", CompoundTag.CODEC, nbt);
+    }
 
+    @Override
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        input.read("AgeOfEpochData", CompoundTag.CODEC).ifPresent(nbt -> this.load(this.getBlockState(), nbt));
+    }
+
+    public CompoundTag save(CompoundTag nbt) {
         ListTag dataForAllSlots = new ListTag();
         for (int i = 0; i < this.itemStacks.length; ++i) {
-            if (!this.itemStacks[i].isEmpty()) { // isEmpty()
+            if (!this.itemStacks[i].isEmpty()) {
                 CompoundTag dataForThisSlot = new CompoundTag();
                 dataForThisSlot.putByte("Slot", (byte) i);
-                this.itemStacks[i].save(dataForThisSlot);
+                StackNBT.saveStack(this.itemStacks[i], dataForThisSlot);
                 dataForAllSlots.add(dataForThisSlot);
             }
         }
-        // the array of hashmaps is then inserted into the instance hashmap for the
-        // container
         nbt.put("Items", dataForAllSlots);
         nbt.putInt("ticks", ticks);
         nbt.putInt("cook_ticks", cook_ticks);
         nbt.putInt("fuel", fuel);
-        nbt.putUUID("owner_id", ownerID);
-
+        if (ownerID != null) {
+            nbt.putString("owner_id", ownerID.toString());
+        }
         return nbt;
     }
 
-    // This is where you load the dataInstance that you saved in write
-    @Override
     public void load(BlockState state, CompoundTag nbt) {
         try {
-            super.load(state, nbt); // The super call is required to save and load the tiles location
-            final byte NBT_TYPE_COMPOUND = 10; // See NBTBase.createNewByType() for a listing
-            ListTag dataForAllSlots = nbt.getList("Items", NBT_TYPE_COMPOUND);
+            ListTag dataForAllSlots = nbt.getListOrEmpty("Items");
 
-            Arrays.fill(itemStacks, ItemStack.EMPTY); // set all slots to empty EMPTY_ITEM
+            Arrays.fill(itemStacks, ItemStack.EMPTY);
             for (int i = 0; i < dataForAllSlots.size(); ++i) {
-                CompoundTag dataForOneSlot = dataForAllSlots.getCompound(i);
-                byte slotNumber = dataForOneSlot.getByte("Slot");
+                CompoundTag dataForOneSlot = dataForAllSlots.getCompoundOrEmpty(i);
+                byte slotNumber = dataForOneSlot.getByteOr("Slot", (byte) -1);
                 if (slotNumber >= 0 && slotNumber < this.itemStacks.length) {
-                    this.itemStacks[slotNumber] = ItemStack.of(dataForOneSlot);
+                    this.itemStacks[slotNumber] = StackNBT.loadStack(dataForOneSlot);
                 }
             }
 
-            // Load everything else. Trim the arrays (or pad with 0) to make sure they have
-            // the correct number of elements
-            ticks = nbt.getInt("ticks");
-            cook_ticks = nbt.getInt("cook_ticks");
-            fuel = nbt.getInt("fuel");
-            if (nbt.contains("owner_id")) {
-                ownerID = nbt.getUUID("owner_id");
+            ticks = nbt.getIntOr("ticks", 0);
+            cook_ticks = nbt.getIntOr("cook_ticks", 0);
+            fuel = nbt.getIntOr("fuel", 0);
+            String ownerStr = nbt.getStringOr("owner_id", "");
+            if (!ownerStr.isEmpty()) {
+                ownerID = UUID.fromString(ownerStr);
             }
         } catch (Exception e) {
             e.printStackTrace();

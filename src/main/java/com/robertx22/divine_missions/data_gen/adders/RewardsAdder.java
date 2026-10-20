@@ -4,7 +4,7 @@ import com.robertx22.divine_missions.data_gen.builders.RewardBuilder;
 import com.robertx22.divine_missions.database.db_types.Reward;
 import com.robertx22.divine_missions.main.DivineMissions;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.storage.loot.LootTables;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
 public class RewardsAdder {
 
@@ -35,11 +35,11 @@ public class RewardsAdder {
 
     public static Reward ENCHANTED_FISHING_ROD_LOOT_TABLE = RewardBuilder.lootTable(1000, 100, DivineMissions.id("enchanted_rod"))
         .build();
-    public static Reward DUNGEON_CHEST_LOOT_TABLE = RewardBuilder.lootTable(1000, 50, LootTables.SIMPLE_DUNGEON)
+    public static Reward DUNGEON_CHEST_LOOT_TABLE = RewardBuilder.lootTable(1000, 50, BuiltInLootTables.SIMPLE_DUNGEON.identifier())
         .build();
-    public static Reward BURIED_TREASURE_LOOT_TABLE = RewardBuilder.lootTable(2000, 25, LootTables.BURIED_TREASURE)
+    public static Reward BURIED_TREASURE_LOOT_TABLE = RewardBuilder.lootTable(2000, 25, BuiltInLootTables.BURIED_TREASURE.identifier())
         .build();
-    public static Reward END_CITY_CHEST_LOOT_TABLE = RewardBuilder.lootTable(2500, 15, LootTables.END_CITY_TREASURE)
+    public static Reward END_CITY_CHEST_LOOT_TABLE = RewardBuilder.lootTable(2500, 15, BuiltInLootTables.END_CITY_TREASURE.identifier())
         .build();
 
     public static void init() {

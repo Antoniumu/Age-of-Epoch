@@ -1,9 +1,10 @@
 package com.robertx22.library_of_exile.utils;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.robertx22.forge_compat.client.AbstractGui;
+import com.robertx22.forge_compat.client.RenderSystem;
+import com.robertx22.forge_compat.common.CompatChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
@@ -28,7 +29,7 @@ public class GuiUtils {
         float xf = (float) (xp * antiScale);
         float yf = (float) (yp * antiScale);
 
-        Minecraft.getInstance().font.drawShadow(matrix, text, xf, yf, format.getColor());
+        AbstractGui.drawShadow(Minecraft.getInstance().font, matrix, text, xf, yf, CompatChatFormatting.getColor(format));
         RenderSystem.scaled(antiScale, antiScale, antiScale);
 
     }
@@ -38,8 +39,9 @@ public class GuiUtils {
     }
 
     static void renderComponentTooltip(PoseStack matrix, List<? extends Component> tooltip, int x, int y) {
-        Screen screen = Minecraft.getInstance().screen;
-        screen.renderWrappedToolTip(matrix, tooltip, x, y, Minecraft.getInstance().font);
+        if (AbstractGui.CURRENT_GRAPHICS != null && tooltip != null) {
+            AbstractGui.CURRENT_GRAPHICS.setComponentTooltipForNextFrame(Minecraft.getInstance().font, new ArrayList<>(tooltip), x, y);
+        }
     }
 
     public static boolean isInRectPoints(Point guiPos, Point size, Point mousePos) {

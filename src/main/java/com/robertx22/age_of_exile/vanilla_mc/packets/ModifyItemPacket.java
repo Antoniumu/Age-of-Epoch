@@ -5,7 +5,7 @@ import com.robertx22.age_of_exile.vanilla_mc.blocks.bases.BaseModificationStatio
 import com.robertx22.library_of_exile.main.MyPacket;
 import com.robertx22.library_of_exile.packets.ExilePacketContext;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 
 public class ModifyItemPacket extends MyPacket<ModifyItemPacket> {
@@ -45,7 +45,7 @@ public class ModifyItemPacket extends MyPacket<ModifyItemPacket> {
     public void onReceived(ExilePacketContext ctx) {
 
         try {
-            BaseModificationStation modify = (BaseModificationStation) ctx.getPlayer().level.getBlockEntity(pos);
+            BaseModificationStation modify = (BaseModificationStation) ctx.getPlayer().level().getBlockEntity(pos);
             modify.modifyItem(num, ctx.getPlayer());
         } catch (Exception e) {
             e.printStackTrace();
@@ -59,8 +59,8 @@ public class ModifyItemPacket extends MyPacket<ModifyItemPacket> {
     }
 
     @Override
-    public ResourceLocation getIdentifier() {
-        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "modifyitem");
+    public Identifier getIdentifier() {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, "modifyitem");
     }
 
 }

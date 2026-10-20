@@ -1,7 +1,7 @@
 package com.robertx22.age_of_exile.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.robertx22.forge_compat.client.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.ChatFormatting;
 
@@ -24,7 +24,7 @@ public class TextUtils {
         float xf = (float) ((double) xp * antiScale);
         float yf = (float) ((double) yp * antiScale);
 
-        mc.font.drawShadow(matrix, text, xf, yf, color.getColor());
+        com.robertx22.forge_compat.client.AbstractGui.drawShadow(mc.font, matrix, text, xf, yf, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(color));
         RenderSystem.scaled(antiScale, antiScale, antiScale);
     }
 

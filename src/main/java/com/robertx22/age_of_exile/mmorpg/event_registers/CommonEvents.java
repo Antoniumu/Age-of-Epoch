@@ -116,8 +116,7 @@ public class CommonEvents {
                         RPGPlayerData data = Load.playerRPGData(event.player);
 
                         data.deathStats.deathPos = event.player.blockPosition();
-                        data.deathStats.deathDim = event.player.level.dimension()
-                            .location()
+                        data.deathStats.deathDim = event.player.level().dimension().identifier()
                             .toString();
                     } catch (Exception e) {
                         e.printStackTrace();

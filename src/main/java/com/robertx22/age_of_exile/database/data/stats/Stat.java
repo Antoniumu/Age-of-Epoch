@@ -17,9 +17,8 @@ import com.robertx22.library_of_exile.registry.ExileRegistryType;
 import com.robertx22.library_of_exile.registry.IGUID;
 import com.robertx22.library_of_exile.registry.IWeighted;
 import com.robertx22.library_of_exile.registry.JsonExileRegistry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 import com.robertx22.forge_compat.api.distmarker.Dist;
@@ -60,11 +59,11 @@ public abstract class Stat implements IGUID, IAutoLocName, IWeighted, IAutoLocDe
     public boolean is_long = false;
     public String icon = "\u2741";
     public int order = 100;
-    public String format = ChatFormatting.AQUA.getName();
+    public String format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.AQUA);
     public StatGroup group = StatGroup.Misc;
 
     public ChatFormatting getFormat() {
-        return ChatFormatting.getByName(format);
+        return com.robertx22.forge_compat.common.CompatChatFormatting.getByName(format);
     }
 
     public String getIconNameFormat() {
@@ -141,17 +140,17 @@ public abstract class Stat implements IGUID, IAutoLocName, IWeighted, IAutoLocDe
         return ExileRegistryTypes.STAT;
     }
 
-    public static ResourceLocation DEFAULT_ICON = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/stat_icons/default.png");
+    public static Identifier DEFAULT_ICON = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/stat_icons/default.png");
 
-    public ResourceLocation getIconLocation() {
-        return new ResourceLocation(SlashRef.MODID, "textures/gui/stat_icons/" + group.id + "/" + GUID() + ".png");
+    public Identifier getIconLocation() {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/stat_icons/" + group.id + "/" + GUID() + ".png");
     }
 
-    transient ResourceLocation cachedIcon = null;
+    transient Identifier cachedIcon = null;
 
-    public ResourceLocation getIconForRendering() {
+    public Identifier getIconForRendering() {
         if (cachedIcon == null) {
-            ResourceLocation id = getIconLocation();
+            Identifier id = getIconLocation();
             if (ClientTextureUtils.textureExists(id)) {
                 cachedIcon = id;
             } else {

@@ -6,7 +6,7 @@ import com.robertx22.age_of_exile.mmorpg.registers.common.items.ProfessionItems;
 import com.robertx22.age_of_exile.player_skills.items.TieredItem;
 import com.robertx22.age_of_exile.player_skills.items.foods.SkillItemTier;
 import com.robertx22.age_of_exile.uncommon.interfaces.IAutoLocName;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import com.robertx22.forge_compat.data.ShapelessRecipeBuilder;
 
 public class CondensedEssenceItem extends TieredItem implements IAutoLocName, IAutoModel, IShapelessRecipe {
 

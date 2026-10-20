@@ -1,13 +1,15 @@
 package com.robertx22.age_of_exile.a_libraries.dmg_number_particle;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
+import com.robertx22.forge_compat.client.AbstractGui;
+import com.robertx22.forge_compat.client.RenderSystem;
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3f;
-import net.minecraft.ChatFormatting;
+import org.joml.Quaternionf;
 import org.lwjgl.opengl.GL11;
 
 import java.util.HashSet;
@@ -33,22 +35,21 @@ public class DamageParticleRenderer {
             scaleToGui *= 2;
         }
 
-        Minecraft client = Minecraft.getInstance();
-        float tickDelta = client.getFrameTime();
+        float tickDelta = 1.0F;
 
         double x = Mth.lerp((double) tickDelta, particle.xPrev, particle.x);
         double y = Mth.lerp((double) tickDelta, particle.yPrev, particle.y);
         double z = Mth.lerp((double) tickDelta, particle.zPrev, particle.z);
 
-        Vec3 camPos = camera.getPosition();
+        Vec3 camPos = camera.position();
         double camX = camPos.x;
         double camY = camPos.y;
         double camZ = camPos.z;
 
         matrix.pushPose();
         matrix.translate(x - camX, y - camY, z - camZ);
-        matrix.mulPose(Vector3f.YP.rotationDegrees(-camera.getYRot()));
-        matrix.mulPose(Vector3f.XP.rotationDegrees(camera.getXRot()));
+        matrix.mulPose(new Quaternionf().rotationY((float) Math.toRadians(-camera.yRot())));
+        matrix.mulPose(new Quaternionf().rotationX((float) Math.toRadians(camera.xRot())));
         matrix.scale(-scaleToGui, -scaleToGui, scaleToGui);
 
         RenderSystem.disableLighting();
@@ -73,6 +74,6 @@ public class DamageParticleRenderer {
 
         Minecraft minecraft = Minecraft.getInstance();
         int sw = minecraft.font.width(s);
-        minecraft.font.drawShadow(matrix, s, (int) (x + (width / 2) - sw), (int) y + 5, ChatFormatting.RED.getColor());
+        AbstractGui.drawShadow(minecraft.font, matrix, s, (int) (x + (width / 2) - sw), (int) y + 5, CompatChatFormatting.getColor(ChatFormatting.RED));
     }
 }

@@ -14,10 +14,9 @@ import com.robertx22.age_of_exile.uncommon.localization.Words;
 import com.robertx22.library_of_exile.registry.IGUID;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.CreativeModeTab;
+import com.robertx22.forge_compat.common.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import com.robertx22.forge_compat.api.distmarker.Dist;
@@ -29,14 +28,12 @@ import java.util.List;
 public class RarityUpgradeStone extends Item implements ICurrencyItemEffect, IGUID {
 
     public RarityUpgradeStone() {
-        super(new Item.Properties().stacksTo(64)
-            .tab(CreativeTabs.GemRuneCurrency));
+        super(new Item.Properties().stacksTo(64));
     }
 
-    @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> stacks) {
 
-        if (this.allowdedIn(group)) {
+        if (true) {
 
             for (GearRarity rar : ExileDB.GearRarities()
                 .getList()) {
@@ -48,7 +45,6 @@ public class RarityUpgradeStone extends Item implements ICurrencyItemEffect, IGU
         }
     }
 
-    @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
 

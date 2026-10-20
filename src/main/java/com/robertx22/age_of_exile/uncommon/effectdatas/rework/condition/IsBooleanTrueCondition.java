@@ -21,7 +21,7 @@ public class IsBooleanTrueCondition extends StatCondition {
     @Override
     public boolean can(EffectEvent event, EffectSides statSource, StatData data, Stat stat) {
 
-        return event.data.getBoolean(bool_id);
+        return event.data.getBooleanOr(bool_id, false);
     }
 
     @Override

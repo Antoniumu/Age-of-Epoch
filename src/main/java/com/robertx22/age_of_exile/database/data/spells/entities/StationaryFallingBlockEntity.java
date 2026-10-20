@@ -6,28 +6,24 @@ import com.robertx22.age_of_exile.database.data.spells.map_fields.MapField;
 import com.robertx22.age_of_exile.database.data.spells.spell_classes.SpellCtx;
 import com.robertx22.age_of_exile.mixin_ducks.FallingBlockAccessor;
 import com.robertx22.age_of_exile.mmorpg.registers.common.SlashEntities;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.server.level.ServerEntity;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.core.Registry;
 import net.minecraft.world.level.Level;
-import com.robertx22.forge_compat.fml.network.NetworkHooks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 public class StationaryFallingBlockEntity extends FallingBlockEntity implements IDatapackSpellEntity {
 
     public StationaryFallingBlockEntity(EntityType<? extends FallingBlockEntity> entityType, Level world) {
@@ -50,9 +46,8 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
 
     @Override
     public BlockState getBlockState() {
-
         try {
-            return BuiltInRegistries.BLOCK.get(new ResourceLocation(this.entityData.get(BLOCK)))
+            return BuiltInRegistries.BLOCK.getValue(Identifier.parse(this.entityData.get(BLOCK)))
                 .defaultBlockState();
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,13 +59,12 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
 
     EntitySavedSpellData spellData;
 
-    private static final EntityDataAccessor<CompoundTag> SPELL_DATA = SynchedEntityData.defineId(StationaryFallingBlockEntity.class, EntityDataSerializers.COMPOUND_TAG);
+    private static final EntityDataAccessor<String> SPELL_DATA = SynchedEntityData.defineId(StationaryFallingBlockEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<String> ENTITY_NAME = SynchedEntityData.defineId(StationaryFallingBlockEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<String> BLOCK = SynchedEntityData.defineId(StationaryFallingBlockEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Boolean> IS_FALLING = SynchedEntityData.defineId(StationaryFallingBlockEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Float> FALL_SPEED = SynchedEntityData.defineId(StationaryFallingBlockEntity.class, EntityDataSerializers.FLOAT);
 
-    @Override
     public Iterable<ItemStack> getArmorSlots() {
         return new ArrayList<>();
     }
@@ -82,19 +76,12 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
     }
 
     @Override
-    public Packet<?> getAddEntityPacket(net.minecraft.server.level.ServerEntity serverEntity) {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
-    @Override
     public void tick() {
 
         if (this.removeNextTick) {
-            this.remove();
+            this.remove(Entity.RemovalReason.DISCARDED);
             return;
         }
-
-        //this.age++; this is called somewhere again idk
 
         if (entityData.get(IS_FALLING)) {
             if (!this.isNoGravity()) {
@@ -107,8 +94,8 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
             }
             this.move(MoverType.SELF, this.getDeltaMovement());
 
-            if (this.onGround) {
-                remove();
+            if (this.onGround()) {
+                this.remove(Entity.RemovalReason.DISCARDED);
             }
 
         }
@@ -117,23 +104,23 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
             this.getSpellData()
                 .getSpell()
                 .getAttached()
-                .tryActivate(getScoreboardName(), SpellCtx.onTick(getSpellData().getCaster(level), this, getSpellData()));
+                .tryActivate(getScoreboardName(), SpellCtx.onTick(getSpellData().getCaster(this.level()), this, getSpellData()));
         } catch (Exception e) {
             e.printStackTrace();
-            this.remove();
+            this.remove(Entity.RemovalReason.DISCARDED);
         }
 
         if (tickCount > lifespan) {
-            remove();
+            this.remove(Entity.RemovalReason.DISCARDED);
         }
     }
 
     @Override
-    public void remove() {
+    public void remove(Entity.RemovalReason reason) {
 
         try {
             if (getSpellData() != null) {
-                LivingEntity caster = getSpellData().getCaster(level);
+                LivingEntity caster = getSpellData().getCaster(this.level());
 
                 if (caster != null) {
                     this.getSpellData()
@@ -146,17 +133,17 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
             e.printStackTrace();
         }
 
-        super.remove();
+        super.remove(reason);
     }
 
     static Gson GSON = new Gson();
 
     public EntitySavedSpellData getSpellData() {
-        if (level.isClientSide) {
+        if (this.level().isClientSide()) {
             if (spellData == null) {
-                CompoundTag nbt = entityData.get(SPELL_DATA);
-                if (nbt != null) {
-                    this.spellData = GSON.fromJson(nbt.getString("spell"), EntitySavedSpellData.class);
+                String json = entityData.get(SPELL_DATA);
+                if (json != null && !json.isEmpty()) {
+                    this.spellData = GSON.fromJson(json, EntitySavedSpellData.class);
                 }
             }
         }
@@ -164,13 +151,13 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(SPELL_DATA, new CompoundTag());
-        this.entityData.define(ENTITY_NAME, "");
-        this.entityData.define(BLOCK, "");
-        this.entityData.define(IS_FALLING, false);
-        this.entityData.define(FALL_SPEED, -0.04F);
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(SPELL_DATA, "");
+        builder.define(ENTITY_NAME, "");
+        builder.define(BLOCK, "");
+        builder.define(IS_FALLING, false);
+        builder.define(FALL_SPEED, -0.04F);
     }
 
     public String getScoreboardName() {
@@ -185,9 +172,7 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
             .intValue();
 
         data.item_id = holder.get(MapField.ITEM);
-        CompoundTag nbt = new CompoundTag();
-        nbt.putString("spell", GSON.toJson(spellData));
-        entityData.set(SPELL_DATA, nbt);
+        entityData.set(SPELL_DATA, GSON.toJson(spellData));
         entityData.set(ENTITY_NAME, holder.get(MapField.ENTITY_NAME));
         entityData.set(BLOCK, holder.get(MapField.BLOCK));
         entityData.set(FALL_SPEED, holder.getOrDefault(MapField.BLOCK_FALL_SPEED, -0.04D)

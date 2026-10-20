@@ -1,8 +1,8 @@
 package com.robertx22.age_of_exile.player_skills.crafting_inv;
 
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -22,29 +22,15 @@ public class ProfCraftResultSlot extends Slot {
     }
 
     void useIngredients() {
-        // apply crafting cost
         for (int i = 0; i < craftSlots.getContainerSize(); i++) {
             ItemStack ing = craftSlots.getItem(i);
             ing.shrink(1);
         }
     }
 
-    /*
     @Override
-    protected void onQuickCraft(ItemStack stack, int num) {    // apply crafting cost
+    public void onTake(Player p, ItemStack stack) {
         useIngredients();
-    }
-
-    @Override
-    protected void onSwapCraft(int num) {    // apply crafting cost
-        useIngredients();
-    }
-     */
-
-    @Override
-    public ItemStack onTake(Player p, ItemStack stack) {
-        useIngredients();
-
-        return super.onTake(p, stack);
+        super.onTake(p, stack);
     }
 }

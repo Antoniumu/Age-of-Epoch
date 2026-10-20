@@ -2,41 +2,40 @@ package com.robertx22.age_of_exile.vanilla_mc.items.misc;
 
 import com.robertx22.age_of_exile.aoe_data.datapacks.models.IAutoModel;
 import com.robertx22.age_of_exile.aoe_data.datapacks.models.ItemModelManager;
-import com.robertx22.age_of_exile.database.base.CreativeTabs;
 import com.robertx22.age_of_exile.mmorpg.registers.common.items.SlashItems;
 import com.robertx22.age_of_exile.uncommon.localization.Words;
+import com.robertx22.age_of_exile.uncommon.utilityclasses.StackNBT;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.WorldUtils;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.item.TooltipFlag;
+import com.robertx22.forge_compat.api.distmarker.Dist;
+import com.robertx22.forge_compat.api.distmarker.OnlyIn;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.LootContextParamSets;
-import net.minecraft.world.level.storage.loot.LootContextParams;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
-import com.robertx22.forge_compat.api.distmarker.Dist;
-import com.robertx22.forge_compat.api.distmarker.OnlyIn;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
 import java.util.List;
 
-import com.robertx22.age_of_exile.uncommon.utilityclasses.StackNBT;
 public class LootTableItem extends Item implements IAutoModel {
 
     public LootTableItem() {
-        super(new Properties().stacksTo(1)
-            .tab(CreativeTabs.MyModTab));
+        super(new Properties().stacksTo(1));
     }
 
     @Override
@@ -44,39 +43,39 @@ public class LootTableItem extends Item implements IAutoModel {
         manager.generated(this);
     }
 
-    public static ItemStack of(ResourceLocation loottable) {
+    public static ItemStack of(Identifier loottable) {
 
         ItemStack stack = new ItemStack(SlashItems.LOOT_TABLE_ITEM.get());
-        StackNBT.set(stack, new CompoundTag());
-        StackNBT.get(stack)
-            .putString("loot_table", loottable.toString());
+        CompoundTag tag = new CompoundTag();
+        tag.putString("loot_table", loottable.toString());
+        StackNBT.set(stack, tag);
         return stack;
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
 
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             try {
 
                 ItemStack stack = player.getItemInHand(hand);
                 stack.shrink(1);
 
-                ResourceLocation loottableId = new ResourceLocation(StackNBT.get(stack)
-                    .getString("loot_table"));
+                CompoundTag tag = StackNBT.get(stack);
+                Identifier loottableId = Identifier.parse(tag != null ? tag.getStringOr("loot_table", "") : "");
 
-                LootContext lootContext = new LootContext.Builder((ServerLevel) world)
+                LootParams lootParams = new LootParams.Builder((ServerLevel) world)
                     .withParameter(LootContextParams.THIS_ENTITY, player)
                     .withParameter(LootContextParams.ORIGIN, player.position())
                     .withParameter(LootContextParams.TOOL, ItemStack.EMPTY)
                     .withParameter(LootContextParams.BLOCK_STATE, Blocks.AIR.defaultBlockState())
                     .create(LootContextParamSets.BLOCK);
-                ServerLevel serverWorld = lootContext.getLevel();
+                ServerLevel serverWorld = (ServerLevel) world;
                 LootTable lootTable = serverWorld.getServer()
-                    .getLootTables()
-                    .get(loottableId);
+                    .reloadableRegistries()
+                    .getLootTable(ResourceKey.create(Registries.LOOT_TABLE, loottableId));
 
-                List<ItemStack> drops = lootTable.getRandomItems(lootContext);
+                List<ItemStack> drops = lootTable.getRandomItems(lootParams);
 
                 spawnEffects(world, player);
 
@@ -86,7 +85,7 @@ public class LootTableItem extends Item implements IAutoModel {
                 e.printStackTrace();
             }
         }
-        return new InteractionResult<ItemStack>(InteractionResult.PASS, player.getItemInHand(hand));
+        return InteractionResult.PASS;
     }
 
     private void spawnEffects(Level world, LivingEntity en) {
@@ -95,21 +94,13 @@ public class LootTableItem extends Item implements IAutoModel {
         WorldUtils.spawnEntity(world, firework);
     }
 
-    @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         try {
-            //LootTableManager
-
             tooltip.add(Words.ClickToOpen.locName()
                 .withStyle(ChatFormatting.RED));
-
         } catch (Exception e) {
-            // e.printStackTrace();
         }
     }
 
 }
-
-
-

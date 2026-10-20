@@ -14,7 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import com.robertx22.forge_compat.api.distmarker.Dist;
 import com.robertx22.forge_compat.api.distmarker.OnlyIn;
@@ -55,8 +54,7 @@ public class RuneItem extends Item implements IGUID, IAutoModel, IAutoLocName, I
     public RuneType type;
 
     public RuneItem(RuneType type) {
-        super(new Properties().stacksTo(64)
-            .tab(CreativeTabs.GemRuneCurrency));
+        super(new Properties().stacksTo(64));
         this.type = type;
 
         this.weight = type.weight;
@@ -108,7 +106,6 @@ public class RuneItem extends Item implements IGUID, IAutoModel, IAutoLocName, I
             .get(type.id);
     }
 
-    @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
 

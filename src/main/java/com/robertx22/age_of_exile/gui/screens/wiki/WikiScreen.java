@@ -6,14 +6,14 @@ import com.robertx22.age_of_exile.gui.bases.INamedScreen;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.uncommon.localization.Words;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class WikiScreen extends BaseScreen implements INamedScreen {
-    private static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/wiki/wiki.png");
+    private static final Identifier BACKGROUND = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/wiki/wiki.png");
 
     static int sizeX = 256;
     static int sizeY = 207;
@@ -39,8 +39,8 @@ public class WikiScreen extends BaseScreen implements INamedScreen {
     List<WikiEntry> entries = new ArrayList<>();
 
     @Override
-    public ResourceLocation iconLocation() {
-        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/icons/wiki.png");
+    public Identifier iconLocation() {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/icons/wiki.png");
     }
 
     @Override

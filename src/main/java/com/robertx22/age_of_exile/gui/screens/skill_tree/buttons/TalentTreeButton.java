@@ -1,18 +1,18 @@
 package com.robertx22.age_of_exile.gui.screens.skill_tree.buttons;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.age_of_exile.database.data.talent_tree.TalentTree;
 import com.robertx22.age_of_exile.gui.screens.skill_tree.IMarkOnTop;
 import com.robertx22.age_of_exile.gui.screens.skill_tree.SkillTreeScreen;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.resources.ResourceLocation;
+import com.robertx22.forge_compat.client.ImageButton;
+import net.minecraft.resources.Identifier;
 
 public class TalentTreeButton extends ImageButton implements IMarkOnTop {
-    static ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skill_tree/spellschoolbutton.png");
+    static Identifier ID = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skill_tree/spellschoolbutton.png");
 
     public static int XSIZE = 32;
     public static int YSIZE = 32;
@@ -50,8 +50,7 @@ public class TalentTreeButton extends ImageButton implements IMarkOnTop {
         // super.renderButton(matrices, mouseX, mouseY, delta);
 
         Minecraft mc = Minecraft.getInstance();
-        mc.getTextureManager()
-            .bind(ResourceLocation.parse(school.icon));
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(Identifier.parse(school.icon));
         RenderSystem.enableDepthTest();
         blit(matrices, this.x, this.y, 0, 0, XSIZE, XSIZE, XSIZE, XSIZE);
     }

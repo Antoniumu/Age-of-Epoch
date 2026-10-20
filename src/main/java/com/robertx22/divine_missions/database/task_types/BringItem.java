@@ -2,18 +2,16 @@ package com.robertx22.divine_missions.database.task_types;
 
 import com.robertx22.divine_missions.database.TaskTypeIds;
 import com.robertx22.divine_missions.database.db_types.TaskType;
-import com.robertx22.divine_missions.main.DivineMissions;
 import com.robertx22.divine_missions.saving.TaskData;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import net.minecraft.core.Registry;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 public class BringItem extends TaskType {
 
     public BringItem() {
@@ -29,9 +27,10 @@ public class BringItem extends TaskType {
     @Override
     public void spendItems(Player player, TaskData data) {
 
-        Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(data.getTaskEntry().data));
+        Item item = BuiltInRegistries.ITEM.getValue(Identifier.parse(data.getTaskEntry().data));
 
-        for (ItemStack stack : player.getInventory().items) {
+        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+            ItemStack stack = player.getInventory().getItem(i);
             if (data.curr < data.req) {
                 int tospend = data.req - data.curr;
 
@@ -48,7 +47,7 @@ public class BringItem extends TaskType {
 
     @Override
     public int getCurrentDoneTooltip(Player player, TaskData data) {
-        Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(data.getTaskEntry().data));
+        Item item = BuiltInRegistries.ITEM.getValue(Identifier.parse(data.getTaskEntry().data));
         int inInv = player.getInventory().countItem(item);
         int current = Mth.clamp(inInv + data.curr, 0, data.req);
         return current;
@@ -62,12 +61,9 @@ public class BringItem extends TaskType {
     @Override
     public MutableComponent getTranslatable(Player player, TaskData data) {
 
-        Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(data.getTaskEntry().data));
+        Item item = BuiltInRegistries.ITEM.getValue(Identifier.parse(data.getTaskEntry().data));
 
-        return Component.translatable(DivineMissions.MODID + ".task." + this.id).append(" ")
-            .append(item.getDescription());
-
+        return Component.literal("").append(Component.translatable(item.getDescriptionId()));
     }
 
 }
-

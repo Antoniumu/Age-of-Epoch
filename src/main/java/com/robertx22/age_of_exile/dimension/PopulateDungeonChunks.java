@@ -10,7 +10,7 @@ import com.robertx22.age_of_exile.uncommon.utilityclasses.WorldUtils;
 import com.robertx22.library_of_exile.utils.RandomUtils;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.storage.loot.LootTables;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
@@ -35,10 +35,10 @@ public class PopulateDungeonChunks {
             // Watch watch = new Watch();
 
             int populated = 0;
-            List<ChunkPos> list = getChunksAround(new ChunkPos(player.blockPosition()));
+            List<ChunkPos> list = getChunksAround(ChunkPos.containing(player.blockPosition()));
 
             for (ChunkPos cp : list) {
-                LevelChunk chunk = world.getChunk(cp.x, cp.z);
+                LevelChunk chunk = world.getChunk(cp.x(), cp.z());
 
                 if (!Load.chunkPopulated(chunk).populated) {
                     DungeonData data = Load.dungeonData(world).data.get(chunk.getPos()
@@ -65,17 +65,17 @@ public class PopulateDungeonChunks {
         List<ChunkPos> list = new ArrayList<>();
         list.add(cp);
 
-        list.add(new ChunkPos(cp.x + 1, cp.z));
-        list.add(new ChunkPos(cp.x, cp.z + 1));
+        list.add(new ChunkPos(cp.x() + 1, cp.z()));
+        list.add(new ChunkPos(cp.x(), cp.z() + 1));
 
-        list.add(new ChunkPos(cp.x - 1, cp.z));
-        list.add(new ChunkPos(cp.x, cp.z - 1));
+        list.add(new ChunkPos(cp.x() - 1, cp.z()));
+        list.add(new ChunkPos(cp.x(), cp.z() - 1));
 
-        list.add(new ChunkPos(cp.x + 1, cp.z + 1));
-        list.add(new ChunkPos(cp.x - 1, cp.z - 1));
+        list.add(new ChunkPos(cp.x() + 1, cp.z() + 1));
+        list.add(new ChunkPos(cp.x() - 1, cp.z() - 1));
 
-        list.add(new ChunkPos(cp.x - 1, cp.z + 1));
-        list.add(new ChunkPos(cp.x + 1, cp.z - 1));
+        list.add(new ChunkPos(cp.x() - 1, cp.z() + 1));
+        list.add(new ChunkPos(cp.x() + 1, cp.z() - 1));
 
         return list;
 
@@ -243,7 +243,7 @@ public class PopulateDungeonChunks {
     public static void setChest(Level world, BlockPos p) {
         world.setBlock(p, Blocks.CHEST.defaultBlockState(), 2);
         ChestBlockEntity chest = (ChestBlockEntity) world.getBlockEntity(p);
-        chest.setLootTable(LootTables.SIMPLE_DUNGEON, world.random.nextLong());
+        chest.setLootTable(net.minecraft.world.level.storage.loot.BuiltInLootTables.SIMPLE_DUNGEON, world.getRandom().nextLong());
 
     }
 }

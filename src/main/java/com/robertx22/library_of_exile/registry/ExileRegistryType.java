@@ -3,7 +3,7 @@ package com.robertx22.library_of_exile.registry;
 import com.google.gson.JsonObject;
 import com.robertx22.library_of_exile.registry.loaders.BaseDataPackLoader;
 import com.robertx22.library_of_exile.registry.serialization.ISerializable;
-import net.minecraft.server.packs.resources.SimpleReloadableResourceManager;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -60,7 +60,7 @@ public class ExileRegistryType {
         return list;
     }
 
-    public static void registerJsonListeners(SimpleReloadableResourceManager manager) {
+    public static void registerJsonListeners(ReloadableResourceManager manager) {
         List<ExileRegistryType> list = new ArrayList<>(all);
         list.sort(Comparator.comparingInt(x -> x.order));
         list
@@ -76,7 +76,7 @@ public class ExileRegistryType {
     }
 
     public BaseDataPackLoader getLoader() {
-        return new BaseDataPackLoader(this, this.id, x -> this.ser.fromJson((JsonObject) x)) {
+        return new BaseDataPackLoader(this, this.id, x -> (ExileRegistry) this.ser.fromJson((JsonObject) x)) {
             @Override
             public ExileDatapackGenerator getDataPackGenerator() {
                 return new ExileDatapackGenerator<>(modid, getAllForSerialization(), this.id);

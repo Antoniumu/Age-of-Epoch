@@ -1,17 +1,17 @@
 package com.robertx22.age_of_exile.vanilla_mc.blocks;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.vanilla_mc.blocks.bases.BaseModificationStation;
 import com.robertx22.library_of_exile.main.Packets;
 import com.robertx22.library_of_exile.packets.RequestTilePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import com.robertx22.forge_compat.client.AbstractContainerScreen;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.MutableComponent;
 
 public abstract class ModificationGui<T extends BaseTileContainer, Tile extends BaseModificationStation> extends AbstractContainerScreen<T> {
@@ -21,9 +21,9 @@ public abstract class ModificationGui<T extends BaseTileContainer, Tile extends 
 
     public int backgroundCanvasSize = 256;
     public Font font = Minecraft.getInstance().font;
-    ResourceLocation background;
+    Identifier background;
 
-    public ModificationGui(ResourceLocation background, T cont, Inventory inv, MutableComponent text, Class<Tile> token) {
+    public ModificationGui(Identifier background, T cont, Inventory inv, MutableComponent text, Class<Tile> token) {
         super(cont, inv, text);
         this.background = background;
         this.mc = Minecraft.getInstance();
@@ -51,36 +51,33 @@ public abstract class ModificationGui<T extends BaseTileContainer, Tile extends 
 
     }
 
-    static ResourceLocation COOK_ARROW = SlashRef.id("textures/gui/cook_arrow.png");
+    static Identifier COOK_ARROW = SlashRef.id("textures/gui/cook_arrow.png");
     static int COOK_X = 24;
     static int COOK_Y = 17;
 
     public void renderCookArrow(PoseStack matrix, int x, int y, float progress) {
-        mc.getTextureManager()
-            .bind(COOK_ARROW);
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(COOK_ARROW);
         blit(matrix, x, y, 0, 0, (int) (COOK_X * progress), COOK_Y);
     }
 
-    static ResourceLocation COOK_FLAME = SlashRef.id("textures/gui/cook_flame.png");
+    static Identifier COOK_FLAME = SlashRef.id("textures/gui/cook_flame.png");
     static int FLAME_X = 14;
     static int FLAME_Y = 14;
 
     public void renderCookFlame(PoseStack matrix, int x, int y, float progress) {
-        mc.getTextureManager()
-            .bind(COOK_FLAME);
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(COOK_FLAME);
 
         int offset = (int) (FLAME_Y * (1F - progress));
         blit(matrix, x, y + offset, 0, offset, FLAME_X, (int) (FLAME_Y * progress));
 
     }
 
-    static ResourceLocation ALCHEMY_ARROW = SlashRef.id("textures/gui/alchemy_arrow.png");
+    static Identifier ALCHEMY_ARROW = SlashRef.id("textures/gui/alchemy_arrow.png");
     static int A_ARROW_X = 9;
     static int A_ARROW_Y = 28;
 
     public void renderAlchemyArrow(PoseStack matrix, int x, int y, float progress) {
-        mc.getTextureManager()
-            .bind(ALCHEMY_ARROW);
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(ALCHEMY_ARROW);
 
         blit(matrix, x, y, 0, 0, A_ARROW_X, (int) (A_ARROW_Y * progress));
 
@@ -115,9 +112,7 @@ public abstract class ModificationGui<T extends BaseTileContainer, Tile extends 
     protected void renderBg(PoseStack matrix, float partialTicks, int x, int y) {
 
         // Bind the image texture
-        Minecraft.getInstance()
-            .getTextureManager()
-            .bind(background);
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(background);
         // Draw the image
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 

@@ -72,7 +72,7 @@ public class LootInfo {
         LootInfo info = new LootInfo(LootOrigin.MOB);
 
         try {
-            info.world = mob.level;
+            info.world = mob.level();
             info.mobData = Load.Unit(mob);
             info.playerData = Load.Unit(player);
             info.mobKilled = mob;
@@ -98,7 +98,7 @@ public class LootInfo {
 
     public static LootInfo ofPlayer(Player player) {
         LootInfo info = new LootInfo(LootOrigin.PLAYER);
-        info.world = player.level;
+        info.world = player.level();
         info.pos = player.blockPosition();
         info.setupAllFields();
         return info;
@@ -107,7 +107,7 @@ public class LootInfo {
     public static LootInfo ofChestLoot(Player player, BlockPos pos) {
         LootInfo info = new LootInfo(LootOrigin.CHEST);
         info.player = player;
-        info.world = player.level;
+        info.world = player.level();
         info.pos = pos;
         info.multi = 1.5F;
         info.maxItems = 7;
@@ -137,7 +137,7 @@ public class LootInfo {
     public static LootInfo ofLockedChestItem(Player player, int level) {
         LootInfo info = new LootInfo(LootOrigin.LOOT_CRATE);
         info.player = player;
-        info.world = player.level;
+        info.world = player.level();
         info.pos = player.blockPosition();
         info.level = level;
         info.multi = 5;
@@ -229,7 +229,7 @@ public class LootInfo {
     }
 
     private void errorIfClient() {
-        if (world != null && world.isClientSide) {
+        if (world != null && world.isClientSide()) {
             throw new RuntimeException("Can't use Loot Info on client side!!!");
         }
     }

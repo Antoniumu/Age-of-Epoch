@@ -10,7 +10,7 @@ public class MissionRarityBuilder {
         MissionRarity r = new MissionRarity();
         r.weight = weight;
         r.id = id;
-        r.format = format.getName();
+        r.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(format);
         r.rank = rank;
         r.reward_multi = rewardMulti;
         r.diff_multi = difficultyMulti;

@@ -6,7 +6,7 @@ import com.robertx22.library_of_exile.packets.ExilePacketContext;
 import com.robertx22.library_of_exile.utils.LoadSave;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class ParticlePacket extends MyPacket<ParticlePacket> {
 
@@ -24,8 +24,8 @@ public class ParticlePacket extends MyPacket<ParticlePacket> {
     }
 
     @Override
-    public ResourceLocation getIdentifier() {
-        return ResourceLocation.fromNamespaceAndPath(Ref.MODID, "particle");
+    public Identifier getIdentifier() {
+        return Identifier.fromNamespaceAndPath(Ref.MODID, "particle");
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ParticlePacket extends MyPacket<ParticlePacket> {
 
     @Override
     public void onReceived(ExilePacketContext ctx) {
-        data.type.activate(data, ctx.getPlayer().level);
+        data.type.activate(data, ctx.getPlayer().level());
     }
 
     @Override

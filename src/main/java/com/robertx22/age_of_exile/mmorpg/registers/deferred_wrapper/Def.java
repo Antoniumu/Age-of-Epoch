@@ -10,7 +10,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import com.robertx22.forge_compat.fml.RegistryObject;
 
@@ -77,7 +77,7 @@ public class Def {
     }
 
     public static RegObj<SoundEvent> sound(String id) {
-        Supplier<SoundEvent> sup = () -> new SoundEvent(ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, id));
+        Supplier<SoundEvent> sup = () -> SoundEvent.createVariableRangeEvent(Identifier.fromNamespaceAndPath(SlashRef.MODID, id));
         RegistryObject<SoundEvent> reg = SlashDeferred.SOUNDS.register(id, sup);
         RegObj<SoundEvent> wrapper = new RegObj<SoundEvent>(reg);
         return wrapper;

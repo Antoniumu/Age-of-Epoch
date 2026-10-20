@@ -11,7 +11,7 @@ public class SyncDatapacks {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(
             literal(CommandRefs.ID)
-                .then(literal("sync_datapacks").requires(e -> e.hasPermission(2))
+                .then(literal("sync_datapacks").requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS))
                     .executes(
                         ctx -> run())));
     }

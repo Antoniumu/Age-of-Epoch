@@ -1,4 +1,5 @@
 package com.robertx22.infinite_dungeons.database.db_types;
+import net.minecraft.network.chat.MutableComponent;
 
 import com.robertx22.infinite_dungeons.db_init.RegistryTypes;
 import com.robertx22.infinite_dungeons.exile_events.DungeonDifficultyTooltipEvent;
@@ -9,11 +10,9 @@ import com.robertx22.infinite_dungeons.util.FormatUtils;
 import com.robertx22.library_of_exile.registry.ExileRegistryType;
 import com.robertx22.library_of_exile.registry.IAutoGson;
 import com.robertx22.library_of_exile.registry.JsonExileRegistry;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +37,12 @@ public class DungeonDifficulty implements JsonExileRegistry<DungeonDifficulty>, 
         return FormatUtils.of(format);
     }
 
-    public Component getTranslatable() {
+    public MutableComponent getTranslatable() {
         return Component.translatable(MainID.MODID + ".difficulty." + id);
     }
 
-    public ResourceLocation getIconLoc() {
-        return ResourceLocation.fromNamespaceAndPath(MainID.MODID, "textures/gui/difficulty/" + id + ".png");
+    public Identifier getIconLoc() {
+        return Identifier.fromNamespaceAndPath(MainID.MODID, "textures/gui/difficulty/" + id + ".png");
     }
 
     public List<Component> getTooltip() {

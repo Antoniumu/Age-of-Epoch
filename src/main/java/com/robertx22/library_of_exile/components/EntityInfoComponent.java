@@ -9,9 +9,9 @@ import com.robertx22.library_of_exile.main.Ref;
 import com.robertx22.library_of_exile.utils.LoadSave;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 import com.robertx22.forge_compat.common.capabilities.Capability;
 import com.robertx22.forge_compat.common.capabilities.CapabilityInject;
@@ -21,7 +21,7 @@ import com.robertx22.forge_compat.fml.common.Mod;
 
 @Mod.EventBusSubscriber
 public class EntityInfoComponent {
-    public static final ResourceLocation RESOURCE = ResourceLocation.fromNamespaceAndPath(Ref.MODID, "entity_info");
+    public static final Identifier RESOURCE = Identifier.fromNamespaceAndPath(Ref.MODID, "entity_info");
 
     @CapabilityInject(IEntityInfo.class)
     public static Capability<IEntityInfo> Data = null;
@@ -55,7 +55,7 @@ public class EntityInfoComponent {
 
         MySpawnReason getSpawnReason();
 
-        void setSpawnReasonOnCreate(MobSpawnType reason);
+        void setSpawnReasonOnCreate(EntitySpawnReason reason);
     }
 
     public static class Provider extends BaseProvider<IEntityInfo, LivingEntity> {
@@ -112,7 +112,7 @@ public class EntityInfoComponent {
         }
 
         @Override
-        public void setSpawnReasonOnCreate(MobSpawnType reason) {
+        public void setSpawnReasonOnCreate(EntitySpawnReason reason) {
             if (spawnReason == null) {
                 spawnReason = MySpawnReason.get(reason);
             }
@@ -150,9 +150,9 @@ public class EntityInfoComponent {
                 if (dmgStats == null) {
                     dmgStats = new EntityDmgStatsData();
                 }
-                this.spawnPos = BlockPos.of(nbt.getLong(SPAWN_POS));
+                this.spawnPos = BlockPos.of(nbt.getLongOr(SPAWN_POS, 0L));
 
-                String res = nbt.getString(SPAWN_REASON);
+                String res = nbt.getStringOr(SPAWN_REASON, "");
                 if (res != null && !res.isEmpty()) {
                     this.spawnReason = MySpawnReason.valueOf(res);
                 } else {

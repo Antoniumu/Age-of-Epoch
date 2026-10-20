@@ -3,7 +3,7 @@ package com.robertx22.infinite_dungeons.database.db_types.layout;
 import com.robertx22.infinite_dungeons.block.ControlBlockData;
 import com.robertx22.library_of_exile.registry.IWeighted;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import com.robertx22.forge_compat.registries.ForgeRegistries;
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class DungeonSpawn implements IWeighted {
     }
 
     public EntityType<?> getEntityType() {
-        return ForgeRegistries.ENTITIES.getValue(ResourceLocation.parse(entity_id));
+        return ForgeRegistries.ENTITIES.getValue(Identifier.parse(entity_id));
     }
 
     @Override

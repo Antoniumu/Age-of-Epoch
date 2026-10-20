@@ -62,11 +62,11 @@ public abstract class HandleMap<T extends Map> extends HandleGenericType<T> {
                 object.clear();
             }
 
-            ListTag tag = nbt.getList(name, NBTConstants.TAG_COMPOUND);
+            ListTag tag = nbt.getListOrEmpty(name);
             for (int i = 0; i < tag.size(); i++) {
-                CompoundTag etag = tag.getCompound(i);
-                Object key = etag.getBoolean("key" + StorableEngine.NULL_POSTFIX) ? null : readRecursive(0, registry, phase, etag, "key", null);
-                Object val = etag.getBoolean("val" + StorableEngine.NULL_POSTFIX) ? null : readRecursive(1, registry, phase, etag, "val", null);
+                CompoundTag etag = tag.getCompoundOrEmpty(i);
+                Object key = etag.getBooleanOr("key" + StorableEngine.NULL_POSTFIX, false) ? null : readRecursive(0, registry, phase, etag, "key", null);
+                Object val = etag.getBooleanOr("val" + StorableEngine.NULL_POSTFIX, false) ? null : readRecursive(1, registry, phase, etag, "val", null);
                 object.put(key, val);
             }
         }

@@ -20,9 +20,9 @@ public class SetLevel {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(
             literal(CommandRefs.ID)
-                .then(literal("set").requires(e -> e.hasPermission(2))
+                .then(literal("set").requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS))
                     .then(literal("level")
-                        .requires(e -> e.hasPermission(2))
+                        .requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS))
                         .then(argument("target", EntityArgument.player())
                             .then(argument("level", IntegerArgumentType.integer())
                                 .executes(e -> execute(e.getSource(), EntityArgument.getPlayer(e, "target"), IntegerArgumentType

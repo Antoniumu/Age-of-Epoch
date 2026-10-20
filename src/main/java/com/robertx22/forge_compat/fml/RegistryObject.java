@@ -1,15 +1,15 @@
 package com.robertx22.forge_compat.fml;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Supplier;
 
 public class RegistryObject<T> implements Supplier<T> {
 
-    private final ResourceLocation id;
+    private final Identifier id;
     private final T value;
 
-    public RegistryObject(ResourceLocation id, T value) {
+    public RegistryObject(Identifier id, T value) {
         this.id = id;
         this.value = value;
     }
@@ -17,7 +17,7 @@ public class RegistryObject<T> implements Supplier<T> {
     @Override
     public T get() { return value; }
 
-    public ResourceLocation getId() { return id; }
+    public Identifier getId() { return id; }
 
     public boolean isPresent() { return value != null; }
 }

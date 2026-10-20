@@ -53,8 +53,8 @@ public abstract class HandleCollection<T extends Collection> extends HandleGener
                 object.clear();
             }
 
-            CompoundTag tag = nbt.getCompound(name);
-            int size = tag.getInt("size");
+            CompoundTag tag = nbt.getCompoundOrEmpty(name);
+            int size = tag.getIntOr("size", 0);
             for (int i = 0; i < size; i++) {
                 object.add(readRecursive(0, registry, phase, tag, i + "", null));
             }

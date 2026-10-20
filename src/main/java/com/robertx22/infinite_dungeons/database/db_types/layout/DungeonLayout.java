@@ -1,4 +1,5 @@
 package com.robertx22.infinite_dungeons.database.db_types.layout;
+import net.minecraft.network.chat.MutableComponent;
 
 import com.robertx22.infinite_dungeons.block.ControlBlockEntity;
 import com.robertx22.infinite_dungeons.database.CompletitionScore;
@@ -17,7 +18,7 @@ import com.robertx22.infinite_dungeons.util.FormatUtils;
 import com.robertx22.library_of_exile.registry.ExileRegistryType;
 import com.robertx22.library_of_exile.registry.IAutoGson;
 import com.robertx22.library_of_exile.registry.JsonExileRegistry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
@@ -55,8 +56,8 @@ public class DungeonLayout implements JsonExileRegistry<DungeonLayout>, IAutoGso
     public WaveBasedDungeonConfig wave_config = null;
     public CleanUpDungeonConfig clean_up_config = null;
 
-    public ResourceLocation getIconTextureLoc() {
-        return ResourceLocation.fromNamespaceAndPath(MainID.MODID, "textures/gui/dungeon_icon/" + id + ".png");
+    public Identifier getIconTextureLoc() {
+        return Identifier.fromNamespaceAndPath(MainID.MODID, "textures/gui/dungeon_icon/" + id + ".png");
     }
 
     public CompletitionScore getScore(ControlBlockEntity ce) {
@@ -85,7 +86,7 @@ public class DungeonLayout implements JsonExileRegistry<DungeonLayout>, IAutoGso
         return FormatUtils.of(format);
     }
 
-    public Component getTranslatable() {
+    public MutableComponent getTranslatable() {
         return Component.translatable(MainID.MODID + ".layout." + id);
     }
 

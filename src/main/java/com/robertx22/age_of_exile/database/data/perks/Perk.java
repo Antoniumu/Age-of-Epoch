@@ -17,11 +17,9 @@ import com.robertx22.library_of_exile.registry.JsonExileRegistry;
 import com.robertx22.library_of_exile.registry.serialization.IByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,11 +81,11 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, ITooltipL
 
     }
 
-    transient ResourceLocation cachedIcon = null;
+    transient Identifier cachedIcon = null;
 
-    public ResourceLocation getIcon() {
+    public Identifier getIcon() {
         if (cachedIcon == null) {
-            ResourceLocation id = ResourceLocation.parse(icon);
+            Identifier id = Identifier.parse(icon);
             if (ClientTextureUtils.textureExists(id)) {
                 cachedIcon = id;
             } else {

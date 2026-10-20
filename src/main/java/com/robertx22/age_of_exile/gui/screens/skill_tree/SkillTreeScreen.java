@@ -2,7 +2,7 @@ package com.robertx22.age_of_exile.gui.screens.skill_tree;
 
 import com.google.common.collect.Sets;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.age_of_exile.capability.player.RPGPlayerData;
 import com.robertx22.age_of_exile.database.data.perks.Perk;
 import com.robertx22.age_of_exile.database.data.talent_tree.TalentTree;
@@ -20,12 +20,12 @@ import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import com.robertx22.library_of_exile.utils.GuiUtils.PointF;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.components.Renderable;
+import com.robertx22.forge_compat.client.Screen;
+import com.robertx22.forge_compat.client.Button;
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.Tessellator;
-import com.mojang.blaze3d.vertex.DefaultVertexFormats;
-import net.minecraft.resources.ResourceLocation;
+import com.robertx22.forge_compat.client.Tessellator;
+import com.robertx22.forge_compat.client.DefaultVertexFormats;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.ChatFormatting;
 
@@ -34,8 +34,8 @@ import java.util.List;
 import java.util.*;
 
 public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen {
-    static ResourceLocation BIG_PANEL = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skill_tree/background.png");
-    static ResourceLocation SMALL_PANEL = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skill_tree/small_panel.png");
+    static Identifier BIG_PANEL = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skill_tree/background.png");
+    static Identifier SMALL_PANEL = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skill_tree/small_panel.png");
 
     public SchoolType schoolType;
 
@@ -75,7 +75,7 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
     int scrollX = 0;
     int scrollY = 0;
 
-    HashMap<Renderable, PointData> originalButtonLocMap = new HashMap<>();
+    HashMap<Button, PointData> originalButtonLocMap = new HashMap<>();
     HashMap<PointData, PerkButton> pointPerkButtonMap = new HashMap<>();
 
     public List<TalentTree> schoolsInOrder;
@@ -120,7 +120,7 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
 
     }
 
-    public void addButtonPublic(Renderable b) {
+    public void addButtonPublic(Button b) {
         this.addButton(b);
     }
 
@@ -279,7 +279,7 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
         this.scrollY = 0;
     }
 
-    private void newButton(Renderable b) {
+    private void newButton(Button b) {
         this.addButton(b);
         originalButtonLocMap.put(b, new PointData(b.x, b.y));
         if (b instanceof PerkButton) {
@@ -340,7 +340,7 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
-    private void renderButton(Renderable b) {
+    private void renderButton(Button b) {
         if (originalButtonLocMap.containsKey(b)) {
             b.x = (this.originalButtonLocMap.get(b).
                 x);
@@ -391,8 +391,7 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
 
             renderBackgroundDirt(this, 0);
 
-            mc.getTextureManager()
-                .bind(ConnectionButton.ID);
+            com.robertx22.forge_compat.client.AbstractGui.bindTexture(ConnectionButton.ID);
             buttons.forEach(b -> {
                 if (b instanceof ConnectionButton) {
                     ConnectionButton c = (ConnectionButton) b;
@@ -402,7 +401,7 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
 
             super.render(matrix, x, y, ticks);
 
-            for (Renderable abstractButtonWidget : buttons) {
+            for (Button abstractButtonWidget : buttons) {
                 if (abstractButtonWidget instanceof PerkButton) {
                     abstractButtonWidget.render(matrix, x, y, ticks);
                 }
@@ -411,7 +410,7 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
             // we order them here so school buttons are on top, and perks are on top of connection buttons..
             // probably a better way to do it exists?
 
-            for (Renderable button : buttons) {
+            for (Button button : buttons) {
                 if (button instanceof IMarkOnTop) {
                     button.render(matrix, x, y, ticks);
                 }
@@ -427,7 +426,7 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
         matrix.scale(1F / zoom, 1F / zoom, 1F / zoom);
 
         renderPanels(matrix);
-        for (Renderable b : buttons) {
+        for (Button b : buttons) {
             b.renderToolTip(matrix, x, y);
         }
         //watch.print(" rendering ");
@@ -437,8 +436,7 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
 
         int BG_HEIGHT = 38;
         Minecraft mc = Minecraft.getInstance();
-        mc.getTextureManager()
-            .bind(BIG_PANEL);
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(BIG_PANEL);
 
         RenderSystem.enableDepthTest();
 
@@ -451,8 +449,7 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
             blit(matrix, xp, yp, 0, 0, BG_WIDTH, 39);
         }
 
-        mc.getTextureManager()
-            .bind(SMALL_PANEL);
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(SMALL_PANEL);
         RenderSystem.enableDepthTest();
 
         int savedx = xp;
@@ -467,26 +464,24 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
         int tx = xp - mc.font.width(text) - 10;
         int yx = yp + BG_HEIGHT / 2 - mc.font.lineHeight / 2;
 
-        Minecraft.getInstance().font.drawShadow(matrix, text, tx, yx, ChatFormatting.GREEN.getColor());
+        com.robertx22.forge_compat.client.AbstractGui.drawShadow(Minecraft.getInstance().font, matrix, text, tx, yx, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.GREEN));
 
         text = "Reset Points: " + playerData.talents.reset_points;
 
         tx = savedx + 10 + BG_WIDTH;
 
-        Minecraft.getInstance().font.drawShadow(matrix, text, tx, yx, ChatFormatting.GREEN.getColor());
+        com.robertx22.forge_compat.client.AbstractGui.drawShadow(Minecraft.getInstance().font, matrix, text, tx, yx, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.GREEN));
 
     }
 
-    static ResourceLocation BACKGROUND = SlashRef.guiId("skill_tree/background");
+    static Identifier BACKGROUND = SlashRef.guiId("skill_tree/background");
 
     public static void renderBackgroundDirt(Screen screen, int vOffset) {
         //copied from Scree
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuilder();
-        Minecraft.getInstance()
-            .getTextureManager()
-            .bind(BACKGROUND);
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(BACKGROUND);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         float f = 32.0F;
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);

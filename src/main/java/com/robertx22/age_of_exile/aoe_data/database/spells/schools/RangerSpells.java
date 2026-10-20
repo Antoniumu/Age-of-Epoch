@@ -132,7 +132,7 @@ public class RangerSpells implements ExileRegistryInit {
             .onHit(PartBuilder.aoeParticles(ParticleTypes.CRIT, 100D, 1D))
             .onHit(PartBuilder.playSound(SoundEvents.ARROW_HIT, 1D, 1D))
             .onHit(PartBuilder.damageInAoe(SpellCalcs.CHARGED_BOLT, Elements.Physical, 2D)
-                .addPerEntityHit(PartBuilder.justAction(SpellAction.POTION.createGive(MobEffects.MOVEMENT_SLOWDOWN, 40D))))
+                .addPerEntityHit(PartBuilder.justAction(SpellAction.POTION.createGive(MobEffects.SLOWNESS, 40D))))
             .onTick(PartBuilder.particleOnTick(1D, ParticleTypes.CRIT, 4D, 0.1D))
             .onTick(PartBuilder.particleOnTick(1D, ParticleTypes.ENCHANTED_HIT, 4D, 0.1D))
             .build();
@@ -145,9 +145,9 @@ public class RangerSpells implements ExileRegistryInit {
                 "Gain Night vision and set all enemies around you to glow."
             )
             .attackStyle(PlayStyle.ranged)
-            .onCast(PartBuilder.playSound(SoundEvents.WOLF_HOWL, 1D, 1D))
+            .onCast(PartBuilder.playSound(SoundEvents.ENDER_DRAGON_GROWL, 1D, 1D))
             .onCast(PartBuilder.giveSelfEffect(MobEffects.NIGHT_VISION, 20D * 30))
-            .onCast(PartBuilder.giveSelfEffect(MobEffects.MOVEMENT_SPEED, 20D * 30))
+            .onCast(PartBuilder.giveSelfEffect(MobEffects.SPEED, 20D * 30))
             .onCast(PartBuilder.addEffectToEnemiesInAoe(MobEffects.GLOWING, 20D, 20D * 20))
 
             .build();
@@ -195,7 +195,7 @@ public class RangerSpells implements ExileRegistryInit {
             .onExpire(PartBuilder.playSound(SoundEvents.ARROW_HIT, 1D, 1D))
             .onExpire(PartBuilder.playSound(SoundEvents.SPLASH_POTION_BREAK, 1D, 1D))
             .onExpire(PartBuilder.damageInAoe(SpellCalcs.POISON_ARROW, Elements.Earth, 2D)
-                .addPerEntityHit(PartBuilder.justAction(SpellAction.POTION.createGive(MobEffects.MOVEMENT_SLOWDOWN, 40D))))
+                .addPerEntityHit(PartBuilder.justAction(SpellAction.POTION.createGive(MobEffects.SLOWNESS, 40D))))
             .onTick(PartBuilder.particleOnTick(1D, ParticleTypes.CRIT, 4D, 0.1D))
             .build();
 
@@ -208,9 +208,9 @@ public class RangerSpells implements ExileRegistryInit {
             .onCast(PartBuilder.justAction(SpellAction.SUMMON_PROJECTILE.createArrow(1D)))
             .onExpire(PartBuilder.aoeParticles(ParticleTypes.EXPLOSION, 1D, 0.1D))
             .onExpire(PartBuilder.playSound(SoundEvents.ARROW_HIT, 1D, 1D))
-            .onExpire(PartBuilder.playSound(SoundEvents.GENERIC_EXPLODE, 1D, 1D))
+            .onExpire(PartBuilder.playSound(SoundEvents.GENERIC_EXPLODE.value(), 1D, 1D))
             .onExpire(PartBuilder.damageInAoe(SpellCalcs.EXPLOSIVE_ARROW, Elements.Physical, 2D)
-                .addPerEntityHit(PartBuilder.justAction(SpellAction.POTION.createGive(MobEffects.MOVEMENT_SLOWDOWN, 40D))))
+                .addPerEntityHit(PartBuilder.justAction(SpellAction.POTION.createGive(MobEffects.SLOWNESS, 40D))))
             .onTick(PartBuilder.particleOnTick(1D, ParticleTypes.CRIT, 4D, 0.1D))
             .build();
 
@@ -267,7 +267,7 @@ public class RangerSpells implements ExileRegistryInit {
 
             .addSpecificAction("expire", PartBuilder.damageInAoe(dmg, element, 3D))
             .addSpecificAction("expire", PartBuilder.aoeParticles(particle, 30D, 3D))
-            .addSpecificAction("expire", PartBuilder.playSound(SoundEvents.GENERIC_EXPLODE, 1D, 1D));
+            .addSpecificAction("expire", PartBuilder.playSound(SoundEvents.GENERIC_EXPLODE.value(), 1D, 1D));
 
     }
 

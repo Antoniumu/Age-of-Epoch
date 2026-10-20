@@ -5,8 +5,8 @@ import com.robertx22.age_of_exile.dimension.dungeon_data.DungeonData;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.resources.ResourceLocation;
+import com.robertx22.forge_compat.client.ImageButton;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -17,8 +17,8 @@ public class DungeonButton extends ImageButton {
     public static int xSize = 32;
     public static int ySize = 32;
 
-    static ResourceLocation LOC = SlashRef.guiId("dungeon_button");
-    static ResourceLocation ICON = SlashRef.guiId("dungeon/icons/nether");
+    static Identifier LOC = SlashRef.guiId("dungeon_button");
+    static Identifier ICON = SlashRef.guiId("dungeon/icons/nether");
 
     Minecraft mc = Minecraft.getInstance();
 
@@ -36,8 +36,7 @@ public class DungeonButton extends ImageButton {
         super.renderButton(matrix, x, y, ticks);
 
         // icon
-        mc.getTextureManager()
-            .bind(ICON);
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(ICON);
         blit(matrix, this.x, this.y, 0, 0, 32, 32, 32, 32);
 
     }

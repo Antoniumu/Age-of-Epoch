@@ -4,11 +4,11 @@ import com.robertx22.age_of_exile.gui.screens.dungeon.DungeonInfoScreen;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
 import java.util.UUID;
@@ -19,7 +19,6 @@ public class ClientOnly {
 
     public static void totemAnimWithItem(ItemStack stack) {
         Minecraft.getInstance().player.playSound(SoundEvents.TOTEM_USE, 1, 1);
-        Minecraft.getInstance().gameRenderer.displayItemActivation(stack);
     }
 
     public static Entity getEntityByUUID(Level world, UUID id) {
@@ -56,7 +55,7 @@ public class ClientOnly {
     }
 
     public static void openMapsScreen(BlockPos pos) {
-        Minecraft.getInstance()
+        Minecraft.getInstance().gui
             .setScreen(new DungeonInfoScreen(pos, Load.playerRPGData(Minecraft.getInstance().player).maps.dungeonData));
 
     }

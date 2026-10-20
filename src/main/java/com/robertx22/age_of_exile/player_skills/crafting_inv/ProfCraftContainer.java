@@ -7,26 +7,26 @@ import com.robertx22.age_of_exile.saveclasses.player_skills.PlayerSkillEnum;
 import com.robertx22.age_of_exile.uncommon.datasaving.StackSaving;
 import com.robertx22.age_of_exile.vanilla_mc.blocks.BaseTileContainer;
 import com.robertx22.library_of_exile.main.Packets;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.SimpleContainer;
-import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.FriendlyByteBuf;
-
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.TransientCraftingContainer;
+import net.minecraft.world.item.ItemStack;
+
 public class ProfCraftContainer extends BaseTileContainer {
 
-    CraftingContainer craftInv; // craft inv allows to tell container when its changed
+    CraftingContainer craftInv;
     SimpleContainer resultInv;
     Player player;
 
     PlayerSkillEnum skill;
 
     public ProfCraftContainer(int syncid, Inventory playerinv, FriendlyByteBuf buf) {
-        this(playerinv.player.getItemInHand(playerinv.player.swingingArm), syncid, playerinv);
+        this(playerinv.player.getMainHandItem(), syncid, playerinv);
     }
 
     public ProfCraftContainer(ItemStack tool, int id, Inventory invPlayer) {
@@ -47,7 +47,7 @@ public class ProfCraftContainer extends BaseTileContainer {
 
             this.player = invPlayer.player;
 
-            this.craftInv = new CraftingContainer(this, 3, 2);
+            this.craftInv = new TransientCraftingContainer(this, 3, 2);
             this.resultInv = new SimpleContainer(1);
 
             int num = 0;
@@ -74,7 +74,7 @@ public class ProfCraftContainer extends BaseTileContainer {
     @Override
     public void slotsChanged(Container inv) {
 
-        if (!player.level.isClientSide) {
+        if (!player.level().isClientSide()) {
 
             ProfCraftResult result = ProfCraftingRecipe.canCraft(player, craftInv, resultInv, skill);
 
@@ -101,7 +101,7 @@ public class ProfCraftContainer extends BaseTileContainer {
     @Override
     public void removed(Player p) {
         super.removed(p);
-        this.clearContainer(p, p.level, craftInv);
+        this.clearContainer(p, craftInv);
         this.resultInv.setItem(0, ItemStack.EMPTY);
     }
 

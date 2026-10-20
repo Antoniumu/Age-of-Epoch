@@ -7,7 +7,6 @@ import com.robertx22.age_of_exile.uncommon.localization.Words;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 
 import java.util.List;
 
@@ -164,7 +163,7 @@ public enum BackpackUpgrade {
     }
 
     public void addSalvage(List<Component> list, int tier) {
-        Component txt = Component.literal("Salvages: ");
+        net.minecraft.network.chat.MutableComponent txt = Component.literal("Salvages: ");
         ExileDB.GearRarities()
             .getFiltered(x -> x.item_tier == tier)
             .forEach(x -> {

@@ -27,7 +27,7 @@ public class FavorAdder implements ExileRegistryInit {
         none.favor_drain_per_item = 0;
 
         none.locname = "Empty";
-        none.text_format = ChatFormatting.RED.getName();
+        none.text_format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.RED);
 
         none.addToSerializables();
 
@@ -36,7 +36,7 @@ public class FavorAdder implements ExileRegistryInit {
         low.rank = 1;
 
         low.locname = "Low";
-        low.text_format = ChatFormatting.YELLOW.getName();
+        low.text_format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.YELLOW);
 
         low.addToSerializables();
 
@@ -45,7 +45,7 @@ public class FavorAdder implements ExileRegistryInit {
         normal.rank = 2;
 
         normal.locname = "Normal";
-        normal.text_format = ChatFormatting.GREEN.getName();
+        normal.text_format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.GREEN);
 
         normal.addToSerializables();
 
@@ -57,7 +57,7 @@ public class FavorAdder implements ExileRegistryInit {
         high.extra_items_per_chest = 1;
 
         high.locname = "High";
-        high.text_format = ChatFormatting.AQUA.getName();
+        high.text_format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.AQUA);
 
         high.addToSerializables();
 
@@ -70,7 +70,7 @@ public class FavorAdder implements ExileRegistryInit {
         veryhigh.exp_multi = 1.1F;
 
         veryhigh.locname = "Very High";
-        veryhigh.text_format = ChatFormatting.BLUE.getName();
+        veryhigh.text_format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.BLUE);
 
         veryhigh.addToSerializables();
 
@@ -83,7 +83,7 @@ public class FavorAdder implements ExileRegistryInit {
         favored.exp_multi = 1.25F;
 
         favored.locname = "Favored";
-        favored.text_format = ChatFormatting.LIGHT_PURPLE.getName();
+        favored.text_format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.LIGHT_PURPLE);
 
         favored.addToSerializables();
 

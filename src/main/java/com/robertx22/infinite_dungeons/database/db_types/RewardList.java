@@ -1,4 +1,5 @@
 package com.robertx22.infinite_dungeons.database.db_types;
+import net.minecraft.network.chat.MutableComponent;
 
 import com.robertx22.infinite_dungeons.db_init.RegistryTypes;
 import com.robertx22.infinite_dungeons.main.MainID;
@@ -8,9 +9,7 @@ import com.robertx22.library_of_exile.registry.IAutoGson;
 import com.robertx22.library_of_exile.registry.JsonExileRegistry;
 import com.robertx22.library_of_exile.utils.RandomUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ public class RewardList implements JsonExileRegistry<RewardList>, IAutoGson<Rewa
         return FormatUtils.of(format);
     }
 
-    public Component getTranslatable() {
+    public MutableComponent getTranslatable() {
         return Component.translatable(MainID.MODID + ".reward_list." + id);
     }
 

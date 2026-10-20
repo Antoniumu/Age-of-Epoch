@@ -11,11 +11,10 @@ import com.robertx22.age_of_exile.player_skills.items.backpacks.BackpackItem;
 import com.robertx22.age_of_exile.player_skills.items.foods.SkillItemTier;
 import com.robertx22.age_of_exile.uncommon.localization.Words;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import com.robertx22.forge_compat.data.ShapelessRecipeBuilder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.level.Level;
@@ -32,7 +31,7 @@ public class BackpackUpgradeItem extends TieredItem implements IShapelessRecipe,
     public BackpackUpgrade upgrade;
 
     public BackpackUpgradeItem(BackpackUpgrade upgrade, SkillItemTier tier, String id, String locname) {
-        super(tier, new Properties().tab(CreativeTabs.Professions)
+        super(tier, new Properties()
             .stacksTo(1));
         this.id = id;
         this.upgrade = upgrade;
@@ -60,7 +59,6 @@ public class BackpackUpgradeItem extends TieredItem implements IShapelessRecipe,
             .unlockedBy("player_level", trigger());
     }
 
-    @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
 

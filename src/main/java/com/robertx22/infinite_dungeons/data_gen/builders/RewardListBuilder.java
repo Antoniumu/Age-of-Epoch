@@ -14,7 +14,7 @@ public class RewardListBuilder {
     public static RewardListBuilder of(String id, ChatFormatting format) {
         RewardListBuilder b = new RewardListBuilder();
         b.list.id = id;
-        b.list.format = format.getName();
+        b.list.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(format);
         return b;
     }
 

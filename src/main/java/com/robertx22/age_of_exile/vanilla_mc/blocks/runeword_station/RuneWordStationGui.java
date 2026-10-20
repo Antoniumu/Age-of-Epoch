@@ -11,12 +11,11 @@ import com.robertx22.age_of_exile.vanilla_mc.packets.ModifyItemPacket;
 import com.robertx22.library_of_exile.main.Packets;
 import com.robertx22.library_of_exile.registry.FilterListWrap;
 import com.robertx22.library_of_exile.utils.GuiUtils;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.forge_compat.client.ImageButton;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
@@ -28,7 +27,7 @@ import java.util.stream.Collectors;
 public class RuneWordStationGui extends ModificationGui<RuneWordStationContainer, RuneWordStationTile> {
 
     // This is the resource location for the background image
-    private static final ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/runewordcraft.png");
+    private static final Identifier texture = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/runewordcraft.png");
 
     public RuneWordStationGui(RuneWordStationContainer cont, Inventory invPlayer, Component comp) {
         super(texture, cont, invPlayer, Component.literal(""), RuneWordStationTile.class);
@@ -97,7 +96,9 @@ public class RuneWordStationGui extends ModificationGui<RuneWordStationContainer
                     for (int slot : RuneWordStationTile.RUNE_SLOTS) {
                         runes.add(tile.itemStacks[slot]);
                     }
-                    runes.addAll(mc.player.getInventory().items);
+                    for (int i = 0; i < mc.player.getInventory().getContainerSize(); i++) {
+                        runes.add(mc.player.getInventory().getItem(i));
+                    }
 
                     runes.removeIf(x -> x.isEmpty() || x.getItem() instanceof RuneItem == false);
 
@@ -152,8 +153,8 @@ public class RuneWordStationGui extends ModificationGui<RuneWordStationContainer
         this.addButton(new CraftButton(tile.getBlockPos(), this.leftPos + 176, this.topPos + 50));
     }
 
-    private static final ResourceLocation BUTTON_TEX = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/craft_button.png");
-    private static final ResourceLocation RUNEWORD_BUTTON_TEX = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/runeword_button.png");
+    private static final Identifier BUTTON_TEX = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/craft_button.png");
+    private static final Identifier RUNEWORD_BUTTON_TEX = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/runeword_button.png");
     static int BUTTON_SIZE_X = 22;
     static int BUTTON_SIZE_Y = 20;
 

@@ -6,7 +6,7 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.RedstoneTorchBlock;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Mirror;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.Rotation;
 
 public abstract class NonFullBlock extends Block {
 
-    public static final DirectionProperty direction = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<Direction> direction = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty light = RedstoneTorchBlock.LIT;
 
     public NonFullBlock(Properties properties) {

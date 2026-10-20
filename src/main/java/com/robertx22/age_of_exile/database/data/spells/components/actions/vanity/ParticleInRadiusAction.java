@@ -30,7 +30,7 @@ public class ParticleInRadiusAction extends SpellAction {
     @Override
     public void tryActivate(Collection<LivingEntity> targets, SpellCtx ctx, MapHolder data) {
 
-        if (ctx.world.isClientSide) {
+        if (ctx.world.isClientSide()) {
 
             Shape shape = data.getParticleShape();
 
@@ -102,11 +102,11 @@ public class ParticleInRadiusAction extends SpellAction {
         return new Vec3(xpos, y, zpos);
     }
 
-    public MapHolder create(SimpleParticleType particle, Double count, Double radius) {
+    public MapHolder create(net.minecraft.core.particles.ParticleType<?> particle, Double count, Double radius) {
         return create(particle, count, radius, ParticleMotion.None);
     }
 
-    public MapHolder create(SimpleParticleType particle, Double count, Double radius, ParticleMotion motion) {
+    public MapHolder create(net.minecraft.core.particles.ParticleType<?> particle, Double count, Double radius, ParticleMotion motion) {
         MapHolder dmg = new MapHolder();
         dmg.type = GUID();
         dmg.put(RADIUS, radius);

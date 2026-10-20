@@ -5,7 +5,7 @@ import com.robertx22.age_of_exile.player_skills.crafting_inv.ProfCraftScreen;
 import com.robertx22.age_of_exile.player_skills.items.backpacks.BackpackScreen;
 import com.robertx22.age_of_exile.player_skills.items.backpacks.mat_pouch.MatBagScreen;
 import com.robertx22.age_of_exile.vanilla_mc.blocks.runeword_station.RuneWordStationGui;
-import net.minecraft.client.gui.MenuScreens;
+import net.minecraft.client.gui.screens.MenuScreens;
 
 public class ContainerGuiRegisters {
 

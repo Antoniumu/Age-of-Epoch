@@ -86,7 +86,7 @@ public class SpecialStats {
             @Override
             public RestoreResourceEvent activate(RestoreResourceEvent effect, StatData data, Stat stat) {
                 for (MobEffectInstance x : new ArrayList<>(effect.target.getActiveEffects())) {
-                    if (x.getEffect()
+                    if (x.getEffect().value()
                         .getCategory() == MobEffectCategory.HARMFUL) {
                         effect.target.removeEffect(x.getEffect());
                     }
@@ -177,7 +177,7 @@ public class SpecialStats {
             @Override
             public boolean canActivate(DamageEvent effect, StatData data, Stat stat) {
                 return effect.getElement()
-                    .isWater() && effect.data.getBoolean(EventData.CRIT);
+                    .isWater() && effect.data.getBooleanOr(EventData.CRIT, false);
             }
 
             @Override

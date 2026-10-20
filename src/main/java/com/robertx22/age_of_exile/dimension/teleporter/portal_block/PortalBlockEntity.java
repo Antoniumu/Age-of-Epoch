@@ -10,7 +10,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 
 public class PortalBlockEntity extends BaseModificationStation {
 
@@ -18,6 +17,10 @@ public class PortalBlockEntity extends BaseModificationStation {
 
     public PortalBlockEntity() {
         super(SlashBlockEntities.PORTAL.get(), 0);
+    }
+
+    public PortalBlockEntity(net.minecraft.core.BlockPos pos, BlockState state) {
+        super(SlashBlockEntities.PORTAL.get(), 0, pos, state);
     }
 
     @Override

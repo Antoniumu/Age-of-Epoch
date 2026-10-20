@@ -8,8 +8,8 @@ import com.robertx22.age_of_exile.saveclasses.PointData;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.resources.ResourceLocation;
+import com.robertx22.forge_compat.client.ImageButton;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class ScalingDifficultyButton extends ImageButton {
     GuiPartConfig config = new GuiPartConfig(BarGuiType.SCALING_DIFFICULTY, new PointData(0, 0));
 
     public ScalingDifficultyButton(int xPos, int yPos) {
-        super(xPos, yPos, BUTTON_SIZE_X, BUTTON_SIZE_Y, 0, 0, BUTTON_SIZE_Y, ResourceLocation.parse("empty"), (button) -> {
+        super(xPos, yPos, BUTTON_SIZE_X, BUTTON_SIZE_Y, 0, 0, BUTTON_SIZE_Y, Identifier.parse("empty"), (button) -> {
         });
     }
 

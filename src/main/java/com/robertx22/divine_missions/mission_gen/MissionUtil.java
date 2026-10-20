@@ -212,9 +212,14 @@ public class MissionUtil {
     }
 
     public static List<ItemStack> getCurrentMissions(Player player) {
-        return player.getInventory().items.stream()
-            .filter(x -> x.getItem() == ModItems.MISSION_ITEM.get())
-            .collect(Collectors.toList());
+        List<ItemStack> result = new ArrayList<>();
+        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+            ItemStack x = player.getInventory().getItem(i);
+            if (x.getItem() == ModItems.MISSION_ITEM.get()) {
+                result.add(x);
+            }
+        }
+        return result;
     }
 
     public static void tryDoMissions(Player player, Consumer<TaskData> attempt) {

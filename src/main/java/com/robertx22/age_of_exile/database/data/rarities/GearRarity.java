@@ -7,7 +7,7 @@ import com.robertx22.age_of_exile.mmorpg.registers.common.items.SlashItems;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.ClientTextureUtils;
 import com.robertx22.library_of_exile.registry.IAutoGson;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import com.robertx22.age_of_exile.uncommon.utilityclasses.StackNBT;
 public final class GearRarity extends BaseRarity implements IGearRarity, IAutoGson<GearRarity> {
@@ -54,8 +54,8 @@ public final class GearRarity extends BaseRarity implements IGearRarity, IAutoGs
 
     public boolean is_unique_item = false;
 
-    transient ResourceLocation glintFull;
-    transient ResourceLocation glintTexBorder;
+    transient Identifier glintFull;
+    transient Identifier glintTexBorder;
 
     public boolean canUpgradeRarityIfUpgradeLevelIsHighEnough() {
         return this.hasHigherRarity() && upgrade_lvl_to_increase_rar > 0;
@@ -84,13 +84,13 @@ public final class GearRarity extends BaseRarity implements IGearRarity, IAutoGs
     public static GearRarity getRarityFromEssence(ItemStack stack) {
         return ExileDB.GearRarities()
             .get(StackNBT.getOrCreate(stack)
-                .getString("rar"));
+                .getStringOr("rar", ""));
     }
 
-    public ResourceLocation getGlintTextureFull() {
+    public Identifier getGlintTextureFull() {
 
         if (glintFull == null) {
-            ResourceLocation tex = SlashRef.id("textures/gui/rarity_glint/full/" + GUID() + ".png");
+            Identifier tex = SlashRef.id("textures/gui/rarity_glint/full/" + GUID() + ".png");
             if (ClientTextureUtils.textureExists(tex)) {
                 glintFull = tex;
             } else {
@@ -101,10 +101,10 @@ public final class GearRarity extends BaseRarity implements IGearRarity, IAutoGs
 
     }
 
-    public ResourceLocation getGlintTextureBorder() {
+    public Identifier getGlintTextureBorder() {
 
         if (glintTexBorder == null) {
-            ResourceLocation tex = SlashRef.id("textures/gui/rarity_glint/border/" + GUID() + ".png");
+            Identifier tex = SlashRef.id("textures/gui/rarity_glint/border/" + GUID() + ".png");
             if (ClientTextureUtils.textureExists(tex)) {
                 glintTexBorder = tex;
             } else {

@@ -29,7 +29,7 @@ public final class Utilities {
         if (id == null)
             return null;
 
-        if (world.isClientSide) {
+        if (world.isClientSide()) {
             return ClientOnly.getEntityByUUID(world, id);
         } else {
             return ServerOnly.getEntityByUUID(world, id);
@@ -44,7 +44,7 @@ public final class Utilities {
     }
 
     public static void spawnParticlesForTesting(AABB aabb, Level world) {
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             for (double x = aabb.minX; x < aabb.maxX; x += 0.3F) {
                 for (double y = aabb.minY; y < aabb.maxY; y += 1F) {
                     for (double z = aabb.minZ; z < aabb.maxZ; z += 0.3F) {

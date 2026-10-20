@@ -9,7 +9,7 @@ import com.robertx22.library_of_exile.events.base.ExileEvents;
 import com.robertx22.library_of_exile.utils.RandomUtils;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.entity.monster.cubemob.Slime;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -52,7 +52,9 @@ public class OnMobKill extends EventConsumer<ExileEvents.OnMobDeath> {
                         DungeonGroup group = DungeonsDB.Groups()
                             .random();
                         ItemStack stack = new ItemStack(group.getKeyItem());
-                        event.mob.spawnAtLocation(stack);
+                        if (event.mob.level() instanceof net.minecraft.server.level.ServerLevel sl) {
+                            event.mob.spawnAtLocation(sl, stack, 0.0F);
+                        }
                     }
                 }
 

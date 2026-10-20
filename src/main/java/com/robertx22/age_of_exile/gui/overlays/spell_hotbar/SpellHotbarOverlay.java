@@ -1,7 +1,7 @@
 package com.robertx22.age_of_exile.gui.overlays.spell_hotbar;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.age_of_exile.capability.entity.CooldownsData;
 import com.robertx22.age_of_exile.capability.player.EntitySpellCap;
 import com.robertx22.age_of_exile.database.data.spells.components.Spell;
@@ -12,34 +12,34 @@ import com.robertx22.age_of_exile.uncommon.utilityclasses.ChatUtils;
 import com.robertx22.library_of_exile.utils.CLOC;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.resources.ResourceLocation;
+import com.robertx22.forge_compat.client.AbstractGui;
+import com.robertx22.forge_compat.client.Screen;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.ChatFormatting;
 
 import java.util.Locale;
 
-public class SpellHotbarOverlay extends Gui {
+public class SpellHotbarOverlay extends AbstractGui {
 
-    private static final ResourceLocation HOTBAR_TEX = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID,
+    private static final Identifier HOTBAR_TEX = Identifier.fromNamespaceAndPath(SlashRef.MODID,
         "textures/gui/spells/hotbar.png"
     );
-    private static final ResourceLocation COOLDOWN_TEX = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID,
+    private static final Identifier COOLDOWN_TEX = Identifier.fromNamespaceAndPath(SlashRef.MODID,
         "textures/gui/spells/cooldown.png"
     );
-    private static final ResourceLocation SPELL_READY_TEX = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID,
+    private static final Identifier SPELL_READY_TEX = Identifier.fromNamespaceAndPath(SlashRef.MODID,
         "textures/gui/spells/spell_ready.png"
     );
-    private static final ResourceLocation SPELl_NO_MANA = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID,
+    private static final Identifier SPELl_NO_MANA = Identifier.fromNamespaceAndPath(SlashRef.MODID,
         "textures/gui/spells/no_mana.png"
     );
 
-    private static final ResourceLocation SPELL_ON_COOLDOWN = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID,
+    private static final Identifier SPELL_ON_COOLDOWN = Identifier.fromNamespaceAndPath(SlashRef.MODID,
         "textures/gui/spells/on_cooldown.png"
     );
 
-    private static final ResourceLocation CHARGE = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID,
+    private static final Identifier CHARGE = Identifier.fromNamespaceAndPath(SlashRef.MODID,
         "textures/gui/spells/charge_icon.png"
     );
 
@@ -55,7 +55,7 @@ public class SpellHotbarOverlay extends Gui {
     public void onHudRender(PoseStack matrix, float v) {
 
         try {
-            if (mc.options.renderDebug || mc.player.isSpectator()) {
+            if (mc.getDebugOverlay().showDebugScreen() || mc.player.isSpectator()) {
                 return;
             }
             if (mc.player.isSpectator()) {
@@ -136,18 +136,15 @@ public class SpellHotbarOverlay extends Gui {
             if (Load.Unit(mc.player)
                 .getCooldowns()
                 .getCooldownTicks(spell.GUID()) > 1) {
-                mc.getTextureManager()
-                    .bind(SPELL_ON_COOLDOWN);
+                com.robertx22.forge_compat.client.AbstractGui.bindTexture(SPELL_ON_COOLDOWN);
             } else {
-                mc.getTextureManager()
-                    .bind(SPELL_READY_TEX);
+                com.robertx22.forge_compat.client.AbstractGui.bindTexture(SPELL_READY_TEX);
             }
 
             this.blit(matrix, xs, ys, 0, 0, 16, 16, 16, 16);
 
             if (spell != null) {
-                mc.getTextureManager()
-                    .bind(spell.getIconLoc());
+                com.robertx22.forge_compat.client.AbstractGui.bindTexture(spell.getIconLoc());
                 this.blit(matrix, xs, ys, 0, 0, 16, 16, 16, 16);
 
                 if (spell.config.charges > 0) {
@@ -165,8 +162,7 @@ public class SpellHotbarOverlay extends Gui {
 
                     }
 
-                    mc.getTextureManager()
-                        .bind(CHARGE);
+                    com.robertx22.forge_compat.client.AbstractGui.bindTexture(CHARGE);
                     int chargex = x + 21;
 
                     for (int i = 0; i < charges; i++) {
@@ -211,16 +207,14 @@ public class SpellHotbarOverlay extends Gui {
 
     private void drawCooldown(float percent, PoseStack matrix, int x, int y) {
 
-        mc.getTextureManager()
-            .bind(COOLDOWN_TEX);
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(COOLDOWN_TEX);
         this.blit(matrix, x, y, 0, 0, 16, (int) (16 * percent), 16, 16);
     }
 
     private void renderHotbar(PoseStack matrix, int x, int y) {
 
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.getTextureManager()
-            .bind(HOTBAR_TEX);
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(HOTBAR_TEX);
 
         this.blit(matrix, x, y, 0, 0, WIDTH, HEIGHT);
 

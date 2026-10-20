@@ -6,7 +6,7 @@ import info.loenwind.autosave.annotations.Store;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.Registry;
@@ -56,7 +56,7 @@ public class ParticlePacketData {
     public String particleID;
 
     public <T extends ParticleOptions> ParticleOptions getParticleType() {
-        ParticleType<T> particleType = (ParticleType<T>) BuiltInRegistries.PARTICLE_TYPE.get(ResourceLocation.parse(particleID));
+        ParticleType<T> particleType = (ParticleType<T>) BuiltInRegistries.PARTICLE_TYPE.getValue(Identifier.parse(particleID));
 
         if (particleType instanceof ParticleOptions) {
             return (ParticleOptions) particleType;
@@ -101,7 +101,7 @@ public class ParticlePacketData {
     }
 
     public BlockPos getBlockPos() {
-        return new BlockPos(x, y, z);
+        return new BlockPos((int) x, (int) y, (int) z);
     }
 
     public ParticlePacketData(Vec3 pos, ParticleEnum type) {

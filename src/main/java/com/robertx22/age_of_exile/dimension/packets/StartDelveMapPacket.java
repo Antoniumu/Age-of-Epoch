@@ -11,7 +11,7 @@ import com.robertx22.library_of_exile.packets.ExilePacketContext;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 
 public class StartDelveMapPacket extends MyPacket<StartDelveMapPacket> {
@@ -29,8 +29,8 @@ public class StartDelveMapPacket extends MyPacket<StartDelveMapPacket> {
     }
 
     @Override
-    public ResourceLocation getIdentifier() {
-        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "start_delve");
+    public Identifier getIdentifier() {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, "start_delve");
     }
 
     @Override
@@ -56,7 +56,7 @@ public class StartDelveMapPacket extends MyPacket<StartDelveMapPacket> {
         Difficulty difficulty = ExileDB.Difficulties()
             .get(diff);
 
-        BlockEntity tile = player.level.getBlockEntity(pos);
+        BlockEntity tile = player.level().getBlockEntity(pos);
 
         if (tile instanceof TeleportedBlockEntity) {
             TeleportedBlockEntity be = (TeleportedBlockEntity) tile;

@@ -21,15 +21,12 @@ public class GearSoulOnInvTick {
 
         try {
 
-            if (player.level.isClientSide) {
+            if (player.level().isClientSide()) {
                 return;
             }
 
-            for (ItemStack stack : player.getInventory().items) {
-                tryStack(player, stack);
-            }
-            for (ItemStack stack : player.getInventory().armor) {
-                tryStack(player, stack);
+            for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+                tryStack(player, player.getInventory().getItem(i));
             }
 
         } catch (Exception e) {
@@ -49,7 +46,7 @@ public class GearSoulOnInvTick {
             if (soul != null && soul.canInsertIntoStack(stack)) {
                 try {
                     GearItemData gear = soul.createGearData(stack);
-                    stack.removeTagKey(StatSoulItem.TAG);
+                    StackNBT.getOrCreate(stack).remove(StatSoulItem.TAG);
                     gear.saveToStack(stack);
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -10,10 +10,10 @@ import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.library_of_exile.gui.ItemSlotButton;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Renderable;
+import com.robertx22.forge_compat.client.Button;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
@@ -76,7 +76,7 @@ public class DungeonInfoScreen extends BaseScreen {
             int y = yoff + LOOT_Y;
 
             ItemStack randomitem = new ItemStack(Items.CHEST);
-            randomitem.setHoverName(Component.literal(ChatFormatting.DARK_PURPLE + "Random Unique"));
+            randomitem.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME, Component.literal(ChatFormatting.DARK_PURPLE + "Random Unique"));
             this.publicAddButton(new ItemSlotButton(randomitem, x, y));
 
         } catch (Exception e) {
@@ -102,7 +102,7 @@ public class DungeonInfoScreen extends BaseScreen {
 
         try {
 
-            ResourceLocation BG = SlashRef.guiId("dungeon/map");
+            Identifier BG = SlashRef.guiId("dungeon/map");
 
             int BGX = 123;
             int BGY = 235;
@@ -110,8 +110,7 @@ public class DungeonInfoScreen extends BaseScreen {
             int xoff = this.width / 2;
             int yoff = this.height / 2;
 
-            mc.getTextureManager()
-                .bind(BG);
+            com.robertx22.forge_compat.client.AbstractGui.bindTexture(BG);
             blit(matrix, xoff - BGX / 2, yoff - BGY / 2, 0, 0, BGX, BGY);
 
             super.render(matrix, x, y, ticks);
@@ -122,7 +121,7 @@ public class DungeonInfoScreen extends BaseScreen {
             e.printStackTrace();
         }
 
-        for (Renderable b : buttons) {
+        for (Button b : buttons) {
             b.renderToolTip(matrix, x, y);
         }
     }

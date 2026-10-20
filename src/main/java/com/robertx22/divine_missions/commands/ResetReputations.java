@@ -15,8 +15,8 @@ public class ResetReputations {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(
             literal(DivineMissions.MODID)
-                .then(literal("reset_all_reputations").requires(e -> e.hasPermission(2))
-                    .requires(e -> e.hasPermission(2))
+                .then(literal("reset_all_reputations").requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS))
+                    .requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS))
                     .then(argument("target", EntityArgument.player())
                         .executes(e -> execute(e.getSource(), EntityArgument.getPlayer(e, "target"))))));
     }

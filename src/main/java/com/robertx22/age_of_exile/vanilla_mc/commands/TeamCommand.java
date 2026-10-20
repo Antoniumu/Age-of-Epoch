@@ -8,7 +8,6 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 
 import java.util.List;
 
@@ -20,23 +19,23 @@ public class TeamCommand {
     public static void listMembers(Player player) {
         List<Player> players = TeamUtils.getOnlineMembers(player);
 
-        player.displayClientMessage(Component.literal("Team members:"), false);
+        player.sendSystemMessage(Component.literal("Team members:"));
 
         players.forEach(e -> {
-            player.displayClientMessage(e.getDisplayName(), false);
+            player.sendSystemMessage(e.getDisplayName());
         });
     }
 
     public static void sendDpsCharts(Player player) {
         List<Player> members = TeamUtils.getOnlineMembers(player);
 
-        player.displayClientMessage(Component.literal("Damage Charts:"), false);
+        player.sendSystemMessage(Component.literal("Damage Charts:"));
 
         members.forEach(e -> {
             Component text = Component.literal("").append(e.getDisplayName())
                 .append(": " + (int) PlayerDamageChart.getDamage(e));
 
-            player.displayClientMessage(text, false);
+            player.sendSystemMessage(text);
 
         });
 
@@ -46,7 +45,7 @@ public class TeamCommand {
         commandDispatcher.register(
 
             literal(CommandRefs.ID)
-                .then(literal("teams").requires(e -> e.hasPermission(0))
+                .then(literal("teams").requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_ALL))
 
                     .then(literal("create").executes(x -> {
                         Load.playerRPGData(x.getSource()
@@ -84,21 +83,21 @@ public class TeamCommand {
 
                                 if (!Load.playerRPGData(player).team
                                     .isOnTeam()) {
-                                    player.displayClientMessage(Component.literal("You are not in a team."), false);
+                                    player.sendSystemMessage(Component.literal("You are not in a team."));
                                     return 0;
                                 }
 
                                 Player other = EntityArgument.getPlayer(x, "player");
 
-                                other.displayClientMessage(Component.literal("").append(player.getDisplayName())
-                                    .append(" has invited you to a team."), false);
-                                other.displayClientMessage(Component.literal("Do /age_of_exile teams join ").append(player.getDisplayName())
-                                    .append(" to accept"), false);
+                                other.sendSystemMessage(Component.literal("").append(player.getDisplayName())
+                                    .append(" has invited you to a team."));
+                                other.sendSystemMessage(Component.literal("Do /age_of_exile teams join ").append(player.getDisplayName())
+                                    .append(" to accept"));
 
                                 Load.playerRPGData(other).team.invitedToTeam = Load.playerRPGData(player).team.team_id;
 
-                                player.displayClientMessage(Component.literal("You have invited ").append(other.getDisplayName())
-                                    .append(Component.literal(" to join your team.")), false);
+                                player.sendSystemMessage(Component.literal("You have invited ").append(other.getDisplayName())
+                                    .append(Component.literal(" to join your team.")));
 
                                 return 0;
                             })
@@ -114,19 +113,19 @@ public class TeamCommand {
 
                                 if (!Load.playerRPGData(player).team
                                     .isOnSameTeam(other)) {
-                                    player.displayClientMessage(Component.literal("They aren't on your team"), false);
+                                    player.sendSystemMessage(Component.literal("They aren't on your team"));
                                     return 0;
                                 }
 
-                                player.displayClientMessage(Component.literal("").append(player.getDisplayName())
-                                    .append(" is now a team leader."), false);
+                                player.sendSystemMessage(Component.literal("").append(player.getDisplayName())
+                                    .append(" is now a team leader."));
 
-                                player.displayClientMessage(Component.literal("You have been made a team leader."), false);
+                                player.sendSystemMessage(Component.literal("You have been made a team leader."));
 
                                 Load.playerRPGData(other).team.isLeader = true;
 
-                                player.displayClientMessage(Component.literal("You have invited ").append(other.getDisplayName())
-                                    .append(Component.literal(" to join your team.")), false);
+                                player.sendSystemMessage(Component.literal("You have invited ").append(other.getDisplayName())
+                                    .append(Component.literal(" to join your team.")));
 
                                 return 0;
                             })
@@ -141,21 +140,21 @@ public class TeamCommand {
                                 Player other = EntityArgument.getPlayer(x, "player");
 
                                 if (!Load.playerRPGData(player).team.isLeader) {
-                                    player.displayClientMessage(Component.literal("You can't kick members because you aren't the leader."), false);
+                                    player.sendSystemMessage(Component.literal("You can't kick members because you aren't the leader."));
                                     return 0;
                                 }
                                 if (!Load.playerRPGData(player).team
                                     .isOnSameTeam(other)) {
-                                    player.displayClientMessage(Component.literal("They aren't on your team"), false);
+                                    player.sendSystemMessage(Component.literal("They aren't on your team"));
                                     return 0;
                                 }
 
                                 Load.playerRPGData(other).team.team_id = "";
 
-                                other.displayClientMessage(Component.literal("You have been kicked from your team."), false);
+                                other.sendSystemMessage(Component.literal("You have been kicked from your team."));
 
-                                player.displayClientMessage(Component.literal("You have kicked ").append(other.getDisplayName())
-                                    .append(" from your team."), false);
+                                player.sendSystemMessage(Component.literal("You have kicked ").append(other.getDisplayName())
+                                    .append(" from your team."));
 
                                 return 0;
                             })
@@ -177,16 +176,16 @@ public class TeamCommand {
                                                 .getPlayerOrException()).team
                                             .joinTeamOf(other);
 
-                                        player.displayClientMessage(Component.literal("You have joined ").append(other.getDisplayName())
-                                            .append(Component.literal("'s team.")), false);
+                                        player.sendSystemMessage(Component.literal("You have joined ").append(other.getDisplayName())
+                                            .append(Component.literal("'s team.")));
                                     } else {
-                                        player.displayClientMessage(Component.literal("You aren't invited to their team"), false);
+                                        player.sendSystemMessage(Component.literal("You aren't invited to their team"));
                                     }
 
                                 } else {
                                     x.getSource()
                                         .getPlayerOrException()
-                                        .displayClientMessage(Component.literal("Player isn't in a team"), false);
+                                        .sendSystemMessage(Component.literal("Player isn't in a team"));
                                 }
                                 return 0;
                             })

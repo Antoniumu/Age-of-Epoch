@@ -88,16 +88,16 @@ public class StatContainer implements IHandler<StatContainer> {
             if (object == null) {
                 object = new StatContainer();
             }
-            CompoundTag tag = NullHelper.notnullM(nbt.getCompound(name), "CompoundTag.getCompound()");
+            CompoundTag tag = NullHelper.notnullM(nbt.getCompoundOrEmpty(name), "CompoundTag.getCompound()");
 
             if (tag.contains("size")) {
-                int size = tag.getInt("size");
+                int size = tag.getIntOr("size", 0);
 
                 object.stats = new HashMap<>();
 
                 for (int i = 0; i < size; i++) {
 
-                    String ser = tag.getString(i + "");
+                    String ser = tag.getStringOr(i + "", "");
                     StatData data = StatData.fromSerializationString(ser);
                     object.stats.put(data.getId(), data);
                 }

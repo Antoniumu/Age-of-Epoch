@@ -2,8 +2,7 @@ package com.robertx22.age_of_exile.vanilla_mc.items.gearitems.bases.armor_materi
 
 import com.robertx22.age_of_exile.database.data.level_ranges.LevelRange;
 import com.robertx22.age_of_exile.database.registrators.LevelRanges;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.ArmorMaterial;
+import com.robertx22.forge_compat.common.ArmorMaterial;
 
 public enum ArmorTier {
     ZERO(0, ArmorMaterial.IRON, LevelRanges.STARTER),

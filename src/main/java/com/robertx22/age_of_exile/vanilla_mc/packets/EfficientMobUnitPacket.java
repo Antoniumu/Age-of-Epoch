@@ -9,7 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class EfficientMobUnitPacket extends MyPacket<EfficientMobUnitPacket> {
 
@@ -29,8 +29,8 @@ public class EfficientMobUnitPacket extends MyPacket<EfficientMobUnitPacket> {
     }
 
     @Override
-    public ResourceLocation getIdentifier() {
-        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "effmob");
+    public Identifier getIdentifier() {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, "effmob");
     }
 
     @Override
@@ -47,7 +47,7 @@ public class EfficientMobUnitPacket extends MyPacket<EfficientMobUnitPacket> {
 
     @Override
     public void onReceived(ExilePacketContext ctx) {
-        Entity entity = ctx.getPlayer().level.getEntity(id);
+        Entity entity = ctx.getPlayer().level().getEntity(id);
 
         if (entity instanceof LivingEntity) {
 

@@ -1,7 +1,7 @@
 package com.robertx22.age_of_exile.gui.screens.skill_tree.buttons;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.age_of_exile.capability.player.RPGPlayerData;
 import com.robertx22.age_of_exile.database.data.perks.Perk;
 import com.robertx22.age_of_exile.database.data.perks.PerkStatus;
@@ -15,8 +15,8 @@ import com.robertx22.library_of_exile.main.Packets;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import com.robertx22.library_of_exile.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.resources.ResourceLocation;
+import com.robertx22.forge_compat.client.ImageButton;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -26,8 +26,8 @@ public class PerkButton extends ImageButton {
     public static int SPACING = 26;
     public static int BIGGEST = 33;
 
-    static ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skill_tree/perk_buttons.png");
-    public static ResourceLocation LOCKED_TEX = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/locked.png");
+    static Identifier ID = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skill_tree/perk_buttons.png");
+    public static Identifier LOCKED_TEX = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/locked.png");
 
     public Perk perk;
     public PointData point;
@@ -136,8 +136,7 @@ public class PerkButton extends ImageButton {
 
         PerkStatus status = playerData.talents.getStatus(Minecraft.getInstance().player, school, point);
 
-        mc.getTextureManager()
-            .bind(ID);
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(ID);
 
         int offset = 4;
 
@@ -149,19 +148,17 @@ public class PerkButton extends ImageButton {
 
         if (this.perk.getType() == Perk.PerkType.STAT) {
             // icon
-            mc.getTextureManager()
-                .bind(this.perk.getIcon());
+            com.robertx22.forge_compat.client.AbstractGui.bindTexture(this.perk.getIcon());
             blit(matrices, xPos(offset, posMulti), yPos(offset, posMulti), 0, 0, 16, 16, 16, 16);
         } else if (this.perk.getType() == Perk.PerkType.MAJOR) {
             // icon
-            mc.getTextureManager()
-                .bind(this.perk.getIcon());
+            com.robertx22.forge_compat.client.AbstractGui.bindTexture(this.perk.getIcon());
             offset = 9;
             RenderUtils.render16Icon(matrices, perk.getIcon(), xPos(offset, posMulti), yPos(offset, posMulti));
         } else if (perk.getType() == Perk.PerkType.START) {
             offset = 9;
             if (perk.icon == null || perk.icon.isEmpty()) {
-                RenderUtils.render16Icon(matrices, ResourceLocation.parse(school.icon), xPos(offset, posMulti), yPos(offset, posMulti));
+                RenderUtils.render16Icon(matrices, Identifier.parse(school.icon), xPos(offset, posMulti), yPos(offset, posMulti));
             } else {
                 RenderUtils.render16Icon(matrices, perk.getIcon(), xPos(offset, posMulti), yPos(offset, posMulti));
             }
@@ -169,8 +166,7 @@ public class PerkButton extends ImageButton {
 
             // icon
             offset = 6;
-            mc.getTextureManager()
-                .bind(this.perk.getIcon());
+            com.robertx22.forge_compat.client.AbstractGui.bindTexture(this.perk.getIcon());
             blit(matrices, xPos(offset, posMulti), yPos(offset, posMulti), 0, 0, 16, 16, 16, 16);
         }
 

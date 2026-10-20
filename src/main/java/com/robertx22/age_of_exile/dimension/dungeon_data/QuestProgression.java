@@ -63,15 +63,14 @@ public class QuestProgression {
                 return; // don't check for completition if dungeon didn't finish generating
             }
 
-            player.displayClientMessage(Component.literal("Dungeon Progress: " + this.num + "/" + target), false);
+            player.sendSystemMessage(Component.literal("Dungeon Progress: " + this.num + "/" + target));
 
             if (this.num >= target) {
                 fini = true;
 
                 for (Player x : members) {
-                    x.displayClientMessage(
-                        Component.literal("Quest completed!, You can now progress to the next dungeon.")
-                        , false);
+                    x.sendSystemMessage(Component.literal("Quest completed!, You can now progress to the next dungeon.")
+                        );
                     PlayerUtils.giveItem(new ItemStack(SlashItems.TELEPORT_BACK.get()), x);
                     TeamCommand.sendDpsCharts(x);
                 }

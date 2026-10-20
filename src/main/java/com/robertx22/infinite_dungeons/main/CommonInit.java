@@ -6,7 +6,7 @@ import com.robertx22.infinite_dungeons.exile_events.IDExileEvents;
 import com.robertx22.infinite_dungeons.packets.BuyPacket;
 import com.robertx22.infinite_dungeons.packets.StartDungeonPacket;
 import com.robertx22.library_of_exile.main.Packets;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import com.robertx22.forge_compat.api.distmarker.Dist;
 import com.robertx22.forge_compat.eventbus.api.IEventBus;
 import com.robertx22.forge_compat.fml.DistExecutor;
@@ -25,7 +25,7 @@ public class CommonInit {
 
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel NETWORK = NetworkRegistry.newSimpleChannel(
-        ResourceLocation.fromNamespaceAndPath(MainID.MODID, "main"),
+        Identifier.fromNamespaceAndPath(MainID.MODID, "main"),
         () -> PROTOCOL_VERSION,
         PROTOCOL_VERSION::equals,
         PROTOCOL_VERSION::equals

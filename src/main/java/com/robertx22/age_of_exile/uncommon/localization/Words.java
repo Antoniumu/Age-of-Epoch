@@ -9,7 +9,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.Tier;
+import com.robertx22.forge_compat.common.Tier;
 import net.minecraft.world.level.Level;
 public enum Words implements IAutoLocName {
 

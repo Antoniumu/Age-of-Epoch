@@ -1,17 +1,17 @@
 package com.robertx22.age_of_exile.gui.overlays.spell_cast_bar;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.robertx22.age_of_exile.capability.player.EntitySpellCap;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import com.robertx22.forge_compat.client.AbstractGui;
+import com.robertx22.forge_compat.client.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerBossEvent;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.BossEvent;
 
-public class SpellCastBarOverlay extends Gui {
+public class SpellCastBarOverlay extends AbstractGui {
 
-    private static final ResourceLocation GUI_BARS_TEXTURES = ResourceLocation.parse("textures/gui/bars.png");
+    private static final Identifier GUI_BARS_TEXTURES = Identifier.parse("textures/gui/bars.png");
 
     static int WIDTH = 182;
     static int HEIGHT = 5;
@@ -38,25 +38,24 @@ public class SpellCastBarOverlay extends Gui {
                 ((float) data.getCastingData().lastSpellCastTimeInTicks - (float) data.getCastingData().castingTicksLeft) / (float) data
                     .getCastingData().lastSpellCastTimeInTicks;
 
-            render(matrix, x, y, ServerBossEvent.Color.PURPLE, ServerBossEvent.Overlay.NOTCHED_20, percent);
+            render(matrix, x, y, BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.NOTCHED_20, percent);
         }
     }
 
-    private void render(PoseStack matrix, int x, int y, ServerBossEvent.Color color, ServerBossEvent.Overlay overlay, float percent) {
+    private void render(PoseStack matrix, int x, int y, BossEvent.BossBarColor color, BossEvent.BossBarOverlay overlay, float percent) {
 
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.getTextureManager()
-            .bind(GUI_BARS_TEXTURES);
+        RenderSystem.bindTexture(GUI_BARS_TEXTURES);
 
         blit(matrix, x, y, 0, color.ordinal() * 5 * 2, WIDTH, HEIGHT);
-        if (overlay != ServerBossEvent.Overlay.PROGRESS) {
+        if (overlay != BossEvent.BossBarOverlay.PROGRESS) {
             blit(matrix, x, y, 0, 80 + (overlay.ordinal() - 1) * 5 * 2, WIDTH, HEIGHT);
         }
 
         int i = (int) (percent * 183.0F);
         if (i > 0) {
             blit(matrix, x, y, 0, color.ordinal() * 5 * 2 + 5, i, HEIGHT);
-            if (overlay != ServerBossEvent.Overlay.PROGRESS) {
+            if (overlay != BossEvent.BossBarOverlay.PROGRESS) {
                 blit(matrix, x, y, 0, 80 + (overlay.ordinal() - 1) * 5 * 2 + 5, i, HEIGHT);
             }
         }

@@ -7,7 +7,7 @@ import com.robertx22.age_of_exile.uncommon.interfaces.IBaseAutoLoc;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.Registry;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class CreateLangFileUtils {
         return "\n" + "\"_comment\": \"" + " [CATEGORY]: " + str + "\",\n" + "\n";
     }
 
-    public static boolean matches(ResourceLocation loc) {
+    public static boolean matches(Identifier loc) {
         if (loc == null || loc.getNamespace()
             .equals(SlashRef.MODID) == false) {
             return false;

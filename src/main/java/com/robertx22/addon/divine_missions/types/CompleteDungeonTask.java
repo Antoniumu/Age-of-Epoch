@@ -17,6 +17,6 @@ public class CompleteDungeonTask extends TaskType {
     @Override
     public MutableComponent getTranslatable(Player playerEntity, TaskData taskData) {
         return DivineMissions.ofTranslation("complete_dungeon")
-            .withStyle(ChatFormatting.DARK_PURPLE);
+            .copy().withStyle(ChatFormatting.DARK_PURPLE);
     }
 }

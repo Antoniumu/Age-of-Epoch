@@ -31,8 +31,8 @@ public class UnequipGear {
         if (player.getItemBySlot(slot)
             .isEmpty()) {
             PlayerUtils.giveItem(copy, player);
-            player.displayClientMessage(txt
-                , false);
+            player.sendSystemMessage(txt
+                );
         } else {
             player.setItemSlot(slot, copy);
             System.out.print("Error in unequipping gear, weird!!!");
@@ -45,7 +45,7 @@ public class UnequipGear {
         handler.getStacks()
             .setStackInSlot(number, ItemStack.EMPTY);
         PlayerUtils.giveItem(copy, player);
-        player.displayClientMessage(txt, false);
+        player.sendSystemMessage(txt);
     }
 
     public static void onTick(Player player) {

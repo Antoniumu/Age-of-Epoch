@@ -7,7 +7,7 @@ import com.robertx22.library_of_exile.main.Ref;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class SyncPlayerCapToClient extends MyPacket<SyncPlayerCapToClient> {
 
@@ -25,8 +25,8 @@ public class SyncPlayerCapToClient extends MyPacket<SyncPlayerCapToClient> {
     }
 
     @Override
-    public ResourceLocation getIdentifier() {
-        return ResourceLocation.fromNamespaceAndPath(Ref.MODID, "syncplayercap");
+    public Identifier getIdentifier() {
+        return Identifier.fromNamespaceAndPath(Ref.MODID, "syncplayercap");
     }
 
     @Override
@@ -49,7 +49,7 @@ public class SyncPlayerCapToClient extends MyPacket<SyncPlayerCapToClient> {
         try {
             Player player = ctx.getPlayer();
 
-            if (player.level.isClientSide) { // just an extra check
+            if (player.level().isClientSide()) { // just an extra check
 
                 IPlayerCap cap = PlayerCapabilities.get(player, capid);
                 if (cap != null) {

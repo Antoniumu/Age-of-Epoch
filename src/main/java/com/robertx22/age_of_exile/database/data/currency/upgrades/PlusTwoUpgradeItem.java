@@ -16,7 +16,7 @@ import com.robertx22.age_of_exile.uncommon.datasaving.Gear;
 import com.robertx22.age_of_exile.uncommon.interfaces.data_items.IRarity;
 import com.robertx22.age_of_exile.uncommon.localization.Words;
 import com.robertx22.library_of_exile.utils.RandomUtils;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import com.robertx22.forge_compat.data.ShapelessRecipeBuilder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
@@ -55,11 +55,11 @@ public class PlusTwoUpgradeItem extends CurrencyItem implements ICurrencyItemEff
         } else {
             if (gear.up.bless == GearBlessingType.UP_WIPE_PROTECT) {
                 gear.up.bless = GearBlessingType.NONE;
-                ctx.player.displayClientMessage(Words.FailedButSafe.locName()
-                    .withStyle(ChatFormatting.GOLD), false);
+                ctx.player.sendSystemMessage(Words.FailedButSafe.locName()
+                    .withStyle(ChatFormatting.GOLD));
             } else {
                 gear.up.regenerate(gear.getRarity());
-                ctx.player.displayClientMessage(Component.literal(ChatFormatting.RED + "Failure, all upgrades wiped."), false);
+                ctx.player.sendSystemMessage(Component.literal(ChatFormatting.RED + "Failure, all upgrades wiped."));
             }
         }
         Gear.Save(stack, gear);

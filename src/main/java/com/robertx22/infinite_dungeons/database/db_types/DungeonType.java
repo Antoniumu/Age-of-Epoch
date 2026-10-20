@@ -1,4 +1,5 @@
 package com.robertx22.infinite_dungeons.database.db_types;
+import net.minecraft.network.chat.MutableComponent;
 
 import com.robertx22.infinite_dungeons.block.ControlBlockEntity;
 import com.robertx22.infinite_dungeons.db_init.RegistryTypes;
@@ -12,7 +13,7 @@ public abstract class DungeonType implements ExileRegistry<DungeonType> {
     public int weight = 1000;
     public String id = "";
 
-    public Component getTranslatableDesc() {
+    public MutableComponent getTranslatableDesc() {
         return Component.translatable(MainID.MODID + ".dungeon_type." + id);
     }
 

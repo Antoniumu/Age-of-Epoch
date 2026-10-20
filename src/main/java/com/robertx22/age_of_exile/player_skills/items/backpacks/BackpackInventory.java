@@ -1,13 +1,12 @@
 package com.robertx22.age_of_exile.player_skills.items.backpacks;
 
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.NonNullList;
-
 import com.robertx22.age_of_exile.uncommon.utilityclasses.StackNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+
 public class BackpackInventory extends SimpleContainer {
 
     protected final ItemStack stack;
@@ -47,11 +46,13 @@ public class BackpackInventory extends SimpleContainer {
     }
 
     public void writeItemStack() {
+        CompoundTag tag = StackNBT.getOrCreate(stack);
         if (isEmpty()) {
-            stack.removeTagKey("Items");
+            tag.remove("Items");
         } else {
-            writeNBT(StackNBT.getOrCreate(stack));
+            writeNBT(tag);
         }
+        StackNBT.set(stack, tag);
     }
 
     public static int getMaxSize() {
@@ -59,21 +60,30 @@ public class BackpackInventory extends SimpleContainer {
     }
 
     private void readNBT(CompoundTag compound) {
-        final NonNullList<ItemStack> list = NonNullList.withSize(getMaxSize(), ItemStack.EMPTY);
-
-        ContainerHelper.loadAllItems(compound, list);
-        for (int i = 0; i < list.size(); i++) {
-            setItem(i, list.get(i));
+        for (int i = 0; i < getMaxSize(); i++) {
+            setItem(i, ItemStack.EMPTY);
+        }
+        ListTag listtag = compound.getListOrEmpty("Items");
+        for (int i = 0; i < listtag.size(); ++i) {
+            CompoundTag itemTag = listtag.getCompoundOrEmpty(i);
+            int slot = itemTag.getByteOr("Slot", (byte) 0) & 255;
+            if (slot >= 0 && slot < getMaxSize()) {
+                setItem(slot, StackNBT.loadStack(itemTag));
+            }
         }
     }
 
     private void writeNBT(CompoundTag compound) {
-        final NonNullList<ItemStack> list = NonNullList.withSize(getMaxSize(), ItemStack.EMPTY);
-        for (int i = 0; i < list.size(); i++) {
-            list.set(i, getItem(i));
+        ListTag listtag = new ListTag();
+        for (int i = 0; i < getMaxSize(); ++i) {
+            ItemStack itemstack = getItem(i);
+            if (!itemstack.isEmpty()) {
+                CompoundTag itemTag = StackNBT.saveStack(itemstack);
+                itemTag.putByte("Slot", (byte) i);
+                listtag.add(itemTag);
+            }
         }
-
-        ContainerHelper.saveAllItems(compound, list, false);
+        compound.put("Items", listtag);
     }
 
 }

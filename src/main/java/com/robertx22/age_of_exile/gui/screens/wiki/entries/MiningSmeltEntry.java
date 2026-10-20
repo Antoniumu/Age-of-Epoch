@@ -5,7 +5,6 @@ import com.robertx22.library_of_exile.utils.CLOC;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public class MiningSmeltEntry extends WikiEntry {
 
     @Override
     public String getName() {
-        return CLOC.translate(item.getDescription()) + ", " + exp + " Exp";
+        return CLOC.translate(Component.translatable(item.getDescriptionId())) + ", " + exp + " Exp";
     }
 
     @Override

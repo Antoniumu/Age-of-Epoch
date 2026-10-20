@@ -49,7 +49,7 @@ public class Requirements implements ITooltipList {
     public List<Component> GetTooltipString(TooltipInfo info) {
         List<Component> list = new ArrayList<>();
         this.tag_requirements.forEach(x -> {
-            list.add(new SText(""));
+            list.add(net.minecraft.network.chat.Component.literal(""));
             list.addAll(x.GetTooltipString(info));
         });
         return list;

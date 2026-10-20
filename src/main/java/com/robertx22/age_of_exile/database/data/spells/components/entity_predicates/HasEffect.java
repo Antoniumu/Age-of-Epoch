@@ -29,7 +29,7 @@ public class HasEffect extends SpellEntityPredicate {
         try {
             MobEffect effect = data.getPotion();
 
-            return target.hasEffect(effect);
+            return target.hasEffect(net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect));
         } catch (Exception e) {
             e.printStackTrace();
         }

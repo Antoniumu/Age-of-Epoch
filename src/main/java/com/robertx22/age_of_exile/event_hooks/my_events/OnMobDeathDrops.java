@@ -32,7 +32,7 @@ public class OnMobDeathDrops extends EventConsumer<ExileEvents.OnMobDeath> {
 
         try {
 
-            if (mobKilled.level.isClientSide) {
+            if (mobKilled.level().isClientSide()) {
                 return;
             }
 
@@ -42,7 +42,7 @@ public class OnMobDeathDrops extends EventConsumer<ExileEvents.OnMobDeath> {
 
                 LivingEntity killerEntity = EntityInfoComponent.get(mobKilled)
                     .getDamageStats()
-                    .getHighestDamager((ServerLevel) mobKilled.level);
+                    .getHighestDamager((ServerLevel) mobKilled.level());
 
                 if (killerEntity == null) {
                     try {
@@ -81,9 +81,9 @@ public class OnMobDeathDrops extends EventConsumer<ExileEvents.OnMobDeath> {
                         GiveExp(mobKilled, player, playerData, mobKilledData, exp_multi);
                     }
 
-                    if (WorldUtils.isDungeonWorld(mobKilled.level)) {
+                    if (WorldUtils.isDungeonWorld(mobKilled.level())) {
                         if (EntityTypeUtils.isMob(mobKilled)) {
-                            SingleDungeonData dungeon = Load.dungeonData(mobKilled.level).data.get(mobKilled.blockPosition());
+                            SingleDungeonData dungeon = Load.dungeonData(mobKilled.level()).data.get(mobKilled.blockPosition());
                             dungeon.quest.increaseProgressBy(player, 1, dungeon);
                         }
                     }
@@ -116,8 +116,8 @@ public class OnMobDeathDrops extends EventConsumer<ExileEvents.OnMobDeath> {
             .get(mobData.getRarity())
             .expMulti();
 
-        if (WorldUtils.isMapWorldClass(victim.level)) {
-            SingleDungeonData data = Load.dungeonData(victim.level).data.get(victim.blockPosition());
+        if (WorldUtils.isMapWorldClass(victim.level())) {
+            SingleDungeonData data = Load.dungeonData(victim.level()).data.get(victim.blockPosition());
             if (!data.data.isEmpty()) {
                 exp *= data.data.team.lootMulti;
             }
@@ -132,7 +132,7 @@ public class OnMobDeathDrops extends EventConsumer<ExileEvents.OnMobDeath> {
         exp += (-1F + Load.playerRPGData(killer).favor
             .getRank().exp_multi) * baseexp;
 
-        exp += (-1F + ExileDB.getDimensionConfig(victim.level).exp_multi) * baseexp;
+        exp += (-1F + ExileDB.getDimensionConfig(victim.level()).exp_multi) * baseexp;
 
         exp += (-1F + killerData.getUnit()
             .getCalculatedStat(new BonusXpToMobsOfTier(LevelUtils.levelToSkillTier(mobData.getLevel())))

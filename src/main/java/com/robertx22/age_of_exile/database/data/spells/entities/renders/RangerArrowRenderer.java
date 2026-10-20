@@ -1,20 +1,24 @@
 package com.robertx22.age_of_exile.database.data.spells.entities.renders;
 
-import net.minecraft.client.renderer.entity.ArrowRenderer;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 
-public class RangerArrowRenderer<T extends AbstractArrow> extends ArrowRenderer<T> {
-    public static final ResourceLocation RES_ARROW = ResourceLocation.parse("textures/entity/projectiles/arrow.png");
+public class RangerArrowRenderer<T extends AbstractArrow> extends EntityRenderer<T, EntityRenderState> {
+    public static final Identifier RES_ARROW = Identifier.withDefaultNamespace("textures/entity/projectiles/arrow.png");
 
-    public RangerArrowRenderer(EntityRenderDispatcher manager) {
-        super(manager);
+    public RangerArrowRenderer(EntityRendererProvider.Context context) {
+        super(context);
     }
 
     @Override
-    public ResourceLocation getTextureLocation(T en) {
-        return RES_ARROW;
+    public EntityRenderState createRenderState() {
+        return new EntityRenderState();
     }
 
+    public Identifier getTextureLocation(T en) {
+        return RES_ARROW;
+    }
 }

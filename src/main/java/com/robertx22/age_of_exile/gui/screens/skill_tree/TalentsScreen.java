@@ -3,7 +3,7 @@ package com.robertx22.age_of_exile.gui.screens.skill_tree;
 import com.robertx22.age_of_exile.database.data.talent_tree.TalentTree;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.uncommon.localization.Words;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class TalentsScreen extends SkillTreeScreen {
 
@@ -12,8 +12,8 @@ public class TalentsScreen extends SkillTreeScreen {
     }
 
     @Override
-    public ResourceLocation iconLocation() {
-        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/icons/talents.png");
+    public Identifier iconLocation() {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/icons/talents.png");
     }
 
     @Override

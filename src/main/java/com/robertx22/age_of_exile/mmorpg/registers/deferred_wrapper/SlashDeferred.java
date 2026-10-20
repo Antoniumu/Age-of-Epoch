@@ -30,7 +30,7 @@ public class SlashDeferred {
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, SlashRef.MODID);
     public static final DeferredRegister<MobEffect> POTIONS = DeferredRegister.create(ForgeRegistries.POTIONS, SlashRef.MODID);
 
-    public static final DeferredRegister<Structure<?>> STRUCTURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, SlashRef.MODID);
+    public static final DeferredRegister<Structure> STRUCTURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, SlashRef.MODID);
 
     public static void registerDefferedAtStartOfModLoading() {
         IEventBus bus = FMLJavaModLoadingContext.get()

@@ -14,14 +14,13 @@ import com.robertx22.library_of_exile.utils.CLOC;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.minecraft.world.item.Tier;
+import com.robertx22.forge_compat.common.Tier;
 import net.minecraft.world.level.Level;
 public class TooltipUtils {
 
@@ -59,7 +58,7 @@ public class TooltipUtils {
 
     public static List<String> compsToStrings(List<Component> list) {
         return list.stream()
-            .map(x -> x.getContents())
+            .map(x -> x.getString())
             .collect(Collectors.toList());
     }
 
@@ -73,7 +72,7 @@ public class TooltipUtils {
     public static List<Component> cutIfTooLong(MutableComponent comp) {
         List<String> stringList = cutIfTooLong(CLOC.translate(comp));
         return stringList.stream()
-            .map(x -> new SText(x))
+            .map(x -> net.minecraft.network.chat.Component.literal(x))
             .collect(Collectors.toList());
 
     }
@@ -81,7 +80,7 @@ public class TooltipUtils {
     public static List<MutableComponent> cutIfTooLong(MutableComponent comp, ChatFormatting format) {
         List<String> stringList = cutIfTooLong(CLOC.translate(comp));
         return stringList.stream()
-            .map(x -> new SText(x).withStyle(format))
+            .map(x -> net.minecraft.network.chat.Component.literal(x).withStyle(format))
             .collect(Collectors.toList());
 
     }

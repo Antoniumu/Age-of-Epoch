@@ -2,11 +2,12 @@ package com.robertx22.age_of_exile.vanilla_mc.packets;
 
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.ClientOnly;
+import com.robertx22.age_of_exile.uncommon.utilityclasses.StackNBT;
 import com.robertx22.library_of_exile.main.MyPacket;
 import com.robertx22.library_of_exile.packets.ExilePacketContext;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
 
 public class TotemAnimationPacket extends MyPacket<TotemAnimationPacket> {
     ItemStack stack;
@@ -16,13 +17,13 @@ public class TotemAnimationPacket extends MyPacket<TotemAnimationPacket> {
     }
 
     @Override
-    public ResourceLocation getIdentifier() {
-        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "totemanim");
+    public Identifier getIdentifier() {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, "totemanim");
     }
 
     @Override
     public void loadFromData(FriendlyByteBuf tag) {
-        stack = tag.readItem();
+        stack = StackNBT.loadStack(tag.readNbt());
 
         if (stack == null) {
             stack = ItemStack.EMPTY;
@@ -32,7 +33,7 @@ public class TotemAnimationPacket extends MyPacket<TotemAnimationPacket> {
     @Override
     public void saveToData(FriendlyByteBuf tag) {
         if (stack != null) {
-            tag.writeItem(stack);
+            tag.writeNbt(StackNBT.saveStack(stack));
         }
     }
 

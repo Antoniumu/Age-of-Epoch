@@ -7,13 +7,12 @@ import com.robertx22.age_of_exile.database.data.currency.base.IShapedRecipe;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.uncommon.interfaces.IAutoLocName;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import com.robertx22.forge_compat.data.ShapedRecipeBuilder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.Registry;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import com.robertx22.forge_compat.api.distmarker.Dist;
@@ -31,13 +30,12 @@ public class CraftEssenceItem extends Item implements IAutoLocName, IAutoModel, 
     String locname;
 
     public CraftEssenceItem(String id, Supplier<Item> craftItem, String locname) {
-        super(new Properties().tab(CreativeTabs.MyModTab));
+        super(new Properties());
         this.id = id;
         this.craftItem = craftItem;
         this.locname = locname;
     }
 
-    @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
         tooltip.add(Component.literal("Used for crafting Special Gears."));
@@ -72,7 +70,7 @@ public class CraftEssenceItem extends Item implements IAutoLocName, IAutoModel, 
     @Override
     public ShapedRecipeBuilder getRecipe() {
 
-        Item resultItem = BuiltInRegistries.ITEM.get(new ResourceLocation(SlashRef.MODID, GUID()));
+        Item resultItem = BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath(SlashRef.MODID, GUID()));
 
         ShapedRecipeBuilder fac = ShapedRecipeBuilder.shaped(resultItem, 8);
 

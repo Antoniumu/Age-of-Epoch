@@ -11,7 +11,7 @@ import com.robertx22.library_of_exile.main.MyPacket;
 import com.robertx22.library_of_exile.packets.ExilePacketContext;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class TellClientEntityIsCastingSpellPacket extends MyPacket<TellClientEntityIsCastingSpellPacket> {
 
@@ -27,8 +27,8 @@ public class TellClientEntityIsCastingSpellPacket extends MyPacket<TellClientEnt
     }
 
     @Override
-    public ResourceLocation getIdentifier() {
-        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "tell_client_entity_is_casting_spell");
+    public Identifier getIdentifier() {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, "tell_client_entity_is_casting_spell");
     }
 
     @Override
@@ -46,7 +46,7 @@ public class TellClientEntityIsCastingSpellPacket extends MyPacket<TellClientEnt
     @Override
     public void onReceived(ExilePacketContext ctx) {
 
-        LivingEntity en = (LivingEntity) ctx.getPlayer().level.getEntity(enid);
+        LivingEntity en = (LivingEntity) ctx.getPlayer().level().getEntity(enid);
 
         Spell spell = ExileDB.Spells()
             .get(spellid);

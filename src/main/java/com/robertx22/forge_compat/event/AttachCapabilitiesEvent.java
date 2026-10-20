@@ -2,7 +2,7 @@ package com.robertx22.forge_compat.event;
 
 import com.robertx22.forge_compat.common.capabilities.ICapabilityProvider;
 import com.robertx22.forge_compat.eventbus.api.Event;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -18,7 +18,7 @@ public class AttachCapabilitiesEvent<T> extends Event {
 
     public T getObject() { return object; }
 
-    public void addCapability(ResourceLocation key, ICapabilityProvider provider) {
+    public void addCapability(Identifier key, ICapabilityProvider provider) {
         providers.put(key.toString(), provider);
     }
 

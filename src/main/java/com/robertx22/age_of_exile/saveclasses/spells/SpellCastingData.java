@@ -20,7 +20,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.level.ServerPlayer;
 import com.robertx22.forge_compat.network.ClientboundTitleCompatPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -207,7 +207,7 @@ public class SpellCastingData {
 
     public boolean canCast(Spell spell, Player player) {
 
-        if (player.level.isClientSide) {
+        if (player.level().isClientSide()) {
             return false;
         }
 
@@ -255,9 +255,7 @@ public class SpellCastingData {
         }
 
         if (!ServerContainer.get().BLACKLIST_SPELLS_IN_DIMENSIONS.isEmpty()) {
-            ResourceLocation id = ctx.caster.level.registryAccess()
-                .dimensionTypes()
-                .getKey(ctx.caster.level.dimensionType());
+            Identifier id = ctx.caster.level().dimension().identifier();
 
             if (ServerContainer.get().BLACKLIST_SPELLS_IN_DIMENSIONS.stream()
                 .anyMatch(x -> x.equals(id.toString()))) {
@@ -269,9 +267,9 @@ public class SpellCastingData {
 
         if (data != null) {
 
-            if (!spell.isAllowedInDimension(caster.level)) {
+            if (!spell.isAllowedInDimension(caster.level())) {
                 if (caster instanceof Player) {
-                    ((Player) caster).displayClientMessage(Component.literal("You feel an entity watching you. [Spell can not be casted in this dimension]"), false);
+                    ((Player) caster).sendSystemMessage(Component.literal("You feel an entity watching you. [Spell can not be casted in this dimension]"));
                 }
                 return false;
             }

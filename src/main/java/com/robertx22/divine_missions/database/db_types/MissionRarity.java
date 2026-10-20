@@ -1,4 +1,5 @@
 package com.robertx22.divine_missions.database.db_types;
+import net.minecraft.network.chat.MutableComponent;
 
 import com.robertx22.divine_missions.db_init.RegistryTypes;
 import com.robertx22.divine_missions.main.DivineMissions;
@@ -27,7 +28,7 @@ public class MissionRarity implements JsonExileRegistry<MissionRarity>, IAutoGso
         return FormatUtils.of(format);
     }
 
-    public Component getTranslated() {
+    public MutableComponent getTranslated() {
         return Component.translatable(DivineMissions.MODID + ".rarity." + id);
     }
 

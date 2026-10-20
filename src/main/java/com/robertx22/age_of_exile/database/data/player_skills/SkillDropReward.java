@@ -4,7 +4,7 @@ import com.robertx22.age_of_exile.database.data.MinMax;
 import com.robertx22.library_of_exile.registry.IWeighted;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.Registry;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -22,7 +22,7 @@ public class SkillDropReward implements IWeighted {
     }
 
     public ItemStack getRewardStack() {
-        ItemStack stack = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.parse(item_id)));
+        ItemStack stack = new ItemStack(BuiltInRegistries.ITEM.getValue(Identifier.parse(item_id)));
         stack.setCount(count.random());
         return stack;
     }

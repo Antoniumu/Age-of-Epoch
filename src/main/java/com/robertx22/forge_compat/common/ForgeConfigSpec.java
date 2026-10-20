@@ -11,9 +11,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
- * Simplified ForgeConfigSpec backed by in-memory values (config file IO can be
- * layered on top later). Values behave exactly like Forge's from the call sites'
- * point of view (ConfigValue#get() etc.).
+ * Simplified ForgeConfigSpec backed by in-memory values.
  */
 public class ForgeConfigSpec {
 
@@ -31,6 +29,7 @@ public class ForgeConfigSpec {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public T get() {
             Object v = store.get(path);
             return v == null ? defaultValue : (T) v;
@@ -64,7 +63,6 @@ public class ForgeConfigSpec {
     public static class Builder {
         private final List<String> stack = new ArrayList<>();
         private final Map<String, Object> values = new HashMap<>();
-        private String commentText = "";
 
         public Builder comment(String... comments) { return this; }
 
@@ -88,6 +86,10 @@ public class ForgeConfigSpec {
         }
 
         public <T> ConfigValue<T> define(String name, T defaultValue, Predicate<Object> validator) {
+            return new ConfigValue<>(path(name), defaultValue, values);
+        }
+
+        public <T> ConfigValue<List<? extends T>> defineList(String name, List<? extends T> defaultValue, Predicate<Object> elementValidator) {
             return new ConfigValue<>(path(name), defaultValue, values);
         }
 

@@ -1,18 +1,21 @@
 package com.robertx22.age_of_exile.mmorpg.registers.client;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
-import net.minecraft.client.KeyMapping;
 import com.robertx22.forge_compat.fml.client.registry.ClientRegistry;
-import org.lwjgl.glfw.GLFW;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.resources.Identifier;
 
 public class KeybindsRegister {
 
-    public static KeyMapping HUB_SCREEN_KEY = new KeyMapping("Main Hub Screen", GLFW.GLFW_KEY_H, SlashRef.MOD_NAME);
+    public static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(SlashRef.MODID, "keys"));
 
-    public static KeyMapping SPELL_HOTBAR_1 = new KeyMapping("Use Spell 1", GLFW.GLFW_KEY_R, SlashRef.MOD_NAME);
-    public static KeyMapping SPELL_HOTBAR_2 = new KeyMapping("Use Spell 2", GLFW.GLFW_KEY_V, SlashRef.MOD_NAME);
-    public static KeyMapping SPELL_HOTBAR_3 = new KeyMapping("Use Spell 3", GLFW.GLFW_KEY_C, SlashRef.MOD_NAME);
-    public static KeyMapping SPELL_HOTBAR_4 = new KeyMapping("Use Spell 4", GLFW.GLFW_KEY_G, SlashRef.MOD_NAME);
+    public static KeyMapping HUB_SCREEN_KEY = new KeyMapping("Main Hub Screen", InputConstants.KEY_H, CATEGORY);
+
+    public static KeyMapping SPELL_HOTBAR_1 = new KeyMapping("Use Spell 1", InputConstants.KEY_R, CATEGORY);
+    public static KeyMapping SPELL_HOTBAR_2 = new KeyMapping("Use Spell 2", InputConstants.KEY_V, CATEGORY);
+    public static KeyMapping SPELL_HOTBAR_3 = new KeyMapping("Use Spell 3", InputConstants.KEY_C, CATEGORY);
+    public static KeyMapping SPELL_HOTBAR_4 = new KeyMapping("Use Spell 4", InputConstants.KEY_G, CATEGORY);
 
     public static KeyMapping getSpellHotbar(int num) {
         int n = num;

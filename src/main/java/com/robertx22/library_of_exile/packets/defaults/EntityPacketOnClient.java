@@ -1,7 +1,8 @@
+package com.robertx22.library_of_exile.packets.defaults;
+
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
-package com.robertx22.library_of_exile.packets.defaults;
 
 public class EntityPacketOnClient {
     /*
@@ -22,8 +23,8 @@ public class EntityPacketOnClient {
                 if (entity != null) {
                     entity.setPos(x, y, z);
                     entity.setPacketCoordinates(x, y, z);
-                    entity.xRot = pitch;
-                    entity.yRot = yaw;
+                    entity.setXRot(pitch);
+                    entity.setYRot(yaw);
                     entity.setId(entityID);
                     entity.setUUID(entityUUID);
                     //entity.setVelocity(velocityX, velocityY, velocityZ);

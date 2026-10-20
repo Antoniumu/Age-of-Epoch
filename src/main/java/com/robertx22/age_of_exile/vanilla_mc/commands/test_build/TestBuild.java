@@ -25,8 +25,8 @@ public class TestBuild {
 
         commandDispatcher.register(
             literal(CommandRefs.ID)
-                .then(literal("dev_replace_equipped_gear").requires(e -> e.hasPermission(2))
-                    .requires(e -> e.hasPermission(2))
+                .then(literal("dev_replace_equipped_gear").requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS))
+                    .requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS))
                     .then(argument("target", EntityArgument.player())
                         .then(argument("tag", StringArgumentType.word())
                             .suggests(new SlotTagSuggestions())

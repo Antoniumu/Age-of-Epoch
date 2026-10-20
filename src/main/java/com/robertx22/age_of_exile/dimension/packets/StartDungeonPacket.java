@@ -10,7 +10,7 @@ import com.robertx22.age_of_exile.uncommon.utilityclasses.TeamUtils;
 import com.robertx22.library_of_exile.main.MyPacket;
 import com.robertx22.library_of_exile.packets.ExilePacketContext;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 
@@ -30,8 +30,8 @@ public class StartDungeonPacket extends MyPacket<StartDungeonPacket> {
     }
 
     @Override
-    public ResourceLocation getIdentifier() {
-        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "start_dun");
+    public Identifier getIdentifier() {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, "start_dun");
     }
 
     @Override
@@ -60,9 +60,9 @@ public class StartDungeonPacket extends MyPacket<StartDungeonPacket> {
                 if (TeamUtils.getOnlineTeamMembersInRange(ctx.getPlayer())
                     .size() < teamSize.requiredMemberAmount) {
                     ctx.getPlayer()
-                        .displayClientMessage(Component.literal("You need at least " + teamSize.requiredMemberAmount + "  party members nearby to start a dungeon in this mode."), false);
+                        .sendSystemMessage(Component.literal("You need at least " + teamSize.requiredMemberAmount + "  party members nearby to start a dungeon in this mode."));
                     ctx.getPlayer()
-                        .displayClientMessage(Component.literal("Use /age_of_exile teams"), false);
+                        .sendSystemMessage(Component.literal("Use /age_of_exile teams"));
                     return;
 
                 }

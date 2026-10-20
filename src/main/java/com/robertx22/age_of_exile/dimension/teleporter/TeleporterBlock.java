@@ -37,6 +37,10 @@ public class TeleporterBlock extends OpaqueBlock implements EntityBlock {
      */
 
     @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new TeleportedBlockEntity(pos, state);
+    }
+
     public BlockEntity newBlockEntity(BlockGetter world) {
         return new TeleportedBlockEntity();
     }
@@ -54,7 +58,7 @@ public class TeleporterBlock extends OpaqueBlock implements EntityBlock {
 
             TeleportedBlockEntity be = (TeleportedBlockEntity) tile;
 
-            if (!world.isClientSide) {
+            if (!world.isClientSide()) {
 
                 if (!be.data.activated) {
                     if (be.data.type.isDungeon()) {

@@ -4,7 +4,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.ClipContext;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
@@ -108,7 +108,7 @@ public class LookUtils {
                                          double len) {
         Vec3 end = origin.add(ray.normalize()
             .scale(len));
-        HitResult pos = world.clip(new ClipContext(origin, end, ClipContext.BlockMode.OUTLINE, ClipContext.FluidMode.NONE, e));
+        HitResult pos = world.clip(new ClipContext(origin, end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, e));
         return pos;
     }
 

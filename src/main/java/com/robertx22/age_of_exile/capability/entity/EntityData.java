@@ -53,7 +53,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.nbt.CompoundTag;
 import com.robertx22.forge_compat.network.ClientboundTitleCompatPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.network.chat.MutableComponent;
@@ -75,7 +75,7 @@ public class EntityData implements ICommonPlayerCap, INeededForClient {
         this.entity = entity;
     }
 
-    public static final ResourceLocation RESOURCE = ResourceLocation.fromNamespaceAndPath(Ref.MODID, "entity_data");
+    public static final Identifier RESOURCE = Identifier.fromNamespaceAndPath(Ref.MODID, "entity_data");
 
     @Mod.EventBusSubscriber
     public static class EventHandler {
@@ -182,18 +182,18 @@ public class EntityData implements ICommonPlayerCap, INeededForClient {
     @Override
     public void loadFromClientNBT(CompoundTag nbt) {
 
-        this.rarity = nbt.getString(RARITY);
-        this.mobScalingDiff = nbt.getFloat(MOB_SCALE_DIFF);
-        this.race = nbt.getString(RACE);
-        this.level = nbt.getInt(LEVEL);
-        this.buffSeed = nbt.getInt(SCROLL_BUFF_SEED);
+        this.rarity = nbt.getStringOr(RARITY, "");
+        this.mobScalingDiff = nbt.getFloatOr(MOB_SCALE_DIFF, 0F);
+        this.race = nbt.getStringOr(RACE, "");
+        this.level = nbt.getIntOr(LEVEL, 0);
+        this.buffSeed = nbt.getIntOr(SCROLL_BUFF_SEED, 0);
         if (level < 1) {
             level = 1;
         }
-        this.maxHealth = nbt.getInt(HP);
+        this.maxHealth = nbt.getIntOr(HP, 0);
 
         try {
-            String typestring = nbt.getString(ENTITY_TYPE);
+            String typestring = nbt.getStringOr(ENTITY_TYPE, "");
             this.type = EntityTypeUtils.MobCategory.valueOf(typestring);
         } catch (Exception e) {
             this.type = EntityTypeUtils.MobCategory.OTHER;
@@ -251,14 +251,14 @@ public class EntityData implements ICommonPlayerCap, INeededForClient {
 
         loadFromClientNBT(nbt);
 
-        this.exp = nbt.getInt(EXP);
-        this.uuid = nbt.getString(UUID);
-        this.setMobStats = nbt.getBoolean(SET_MOB_STATS);
+        this.exp = nbt.getIntOr(EXP, 0);
+        this.uuid = nbt.getStringOr(UUID, "");
+        this.setMobStats = nbt.getBooleanOr(SET_MOB_STATS, false);
         if (nbt.contains(NEWBIE_STATUS)) {
-            this.isNewbie = nbt.getBoolean(NEWBIE_STATUS);
+            this.isNewbie = nbt.getBooleanOr(NEWBIE_STATUS, false);
         }
-        this.equipsChanged = nbt.getBoolean(EQUIPS_CHANGED);
-        this.shouldSync = nbt.getBoolean(SHOULD_SYNC);
+        this.equipsChanged = nbt.getBooleanOr(EQUIPS_CHANGED, false);
+        this.shouldSync = nbt.getBooleanOr(SHOULD_SYNC, false);
 
         this.unit = UnitNbt.Load(nbt);
         if (this.unit == null) {
@@ -530,8 +530,8 @@ public class EntityData implements ICommonPlayerCap, INeededForClient {
 
     public Difficulty getMapDifficulty() {
 
-        if (WorldUtils.isMapWorldClass(entity.level)) {
-            WorldDungeonCap data = Load.dungeonData(entity.level);
+        if (WorldUtils.isMapWorldClass(entity.level())) {
+            WorldDungeonCap data = Load.dungeonData(entity.level());
             return data.data.get(entity.blockPosition()).data.getDifficulty();
         }
 
@@ -607,7 +607,7 @@ public class EntityData implements ICommonPlayerCap, INeededForClient {
         PlayStyle style = PlayStyle.melee;
 
         if (data.getSource() != null && data.getSource()
-            .isProjectile()) {
+            .is(net.minecraft.tags.DamageTypeTags.IS_PROJECTILE)) {
             style = PlayStyle.ranged;
         }
 
@@ -665,10 +665,10 @@ public class EntityData implements ICommonPlayerCap, INeededForClient {
             }
         }
 
-        if (WorldUtils.isMapWorldClass(entity.level)) {
+        if (WorldUtils.isMapWorldClass(entity.level())) {
             try {
                 BlockPos pos = entity.blockPosition();
-                DungeonData data = Load.dungeonData(entity.level).data.get(pos).data;
+                DungeonData data = Load.dungeonData(entity.level()).data.get(pos).data;
                 if (!data.isEmpty()) {
                     this.setLevel(data.lv);
                     return;
@@ -688,7 +688,7 @@ public class EntityData implements ICommonPlayerCap, INeededForClient {
     private void setMobLvlNormally(LivingEntity entity, Player nearestPlayer) {
         EntityConfig entityConfig = ExileDB.getEntityConfig(entity, this);
 
-        LevelUtils.LevelDetermInfo lvl = LevelUtils.determineLevel(entity.level, entity.blockPosition(),
+        LevelUtils.LevelDetermInfo lvl = LevelUtils.determineLevel(entity.level(), entity.blockPosition(),
             nearestPlayer
         );
 
@@ -739,9 +739,9 @@ public class EntityData implements ICommonPlayerCap, INeededForClient {
     public boolean LevelUp(Player player) {
 
         if (!CheckIfCanLevelUp()) {
-            player.displayClientMessage(Chats.Not_enough_experience.locName(), false);
+            player.sendSystemMessage(Chats.Not_enough_experience.locName());
         } else if (!CheckLevelCap()) {
-            player.displayClientMessage(Chats.Can_not_go_over_maximum_level.locName(), false);
+            player.sendSystemMessage(Chats.Can_not_go_over_maximum_level.locName());
         }
 
         if (CheckIfCanLevelUp() && CheckLevelCap()) {

@@ -13,7 +13,7 @@ import com.robertx22.age_of_exile.saveclasses.item_classes.tooltips.MergedStats;
 import com.robertx22.age_of_exile.uncommon.localization.Words;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.TooltipUtils;
 import com.robertx22.age_of_exile.uncommon.wrappers.SText;
-import net.minecraft.client.gui.screens.Screen;
+import com.robertx22.forge_compat.client.Screen;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.*;
 
@@ -54,7 +54,7 @@ public class GearTooltipUtils {
             tip.addAll(gear.baseStats.GetTooltipString(info, gear));
         }
 
-        tip.add(new SText(""));
+        tip.add(net.minecraft.network.chat.Component.literal(""));
 
         if (gear.imp != null) {
             tip.addAll(gear.imp.GetTooltipString(info, gear));
@@ -176,13 +176,15 @@ public class GearTooltipUtils {
         }
         tip.add(Component.literal(""));
 
-        ItemStack.appendEnchantmentNames(tip, stack.getEnchantmentTags());
+        stack.getEnchantments().entrySet().forEach(entry -> {
+            tip.add(net.minecraft.world.item.enchantment.Enchantment.getFullname(entry.getKey(), entry.getIntValue()));
+        });
 
         if (ClientConfigs.getConfig().SHOW_DURABILITY.get()) {
             if (stack.isDamageableItem()) {
-                tip.add(new SText(ChatFormatting.WHITE + "Durability: " + (stack.getMaxDamage() - stack.getDamageValue()) + "/" + stack.getMaxDamage()));
+                tip.add(net.minecraft.network.chat.Component.literal(ChatFormatting.WHITE + "Durability: " + (stack.getMaxDamage() - stack.getDamageValue()) + "/" + stack.getMaxDamage()));
             } else {
-                tip.add(new SText(ChatFormatting.WHITE + "Unbreakable"));
+                tip.add(net.minecraft.network.chat.Component.literal(ChatFormatting.WHITE + "Unbreakable"));
             }
         }
 

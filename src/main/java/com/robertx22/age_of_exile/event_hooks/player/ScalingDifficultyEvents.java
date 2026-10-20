@@ -15,7 +15,7 @@ public class ScalingDifficultyEvents {
         ForgeEvents.registerForgeEvent(TickEvent.PlayerTickEvent.class, event -> {
             if (event.phase == TickEvent.Phase.END) {
                 if (event.player.tickCount % 20 == 0) {
-                    if (!event.player.level.isClientSide) {
+                    if (!event.player.level().isClientSide()) {
                         Load.playerRPGData(event.player).scalingDifficulty.add(ServerContainer.get().DIFFICULTY_PER_SECOND.get()
                             .floatValue());
                         Load.playerRPGData(event.player).scalingDifficulty.tickDeathCooldown(20);
@@ -26,7 +26,7 @@ public class ScalingDifficultyEvents {
 
         ForgeEvents.registerForgeEvent(LivingDeathEvent.class, event -> {
             try {
-                if (event.getEntityLiving().level.isClientSide) {
+                if (event.getEntityLiving().level().isClientSide()) {
                     return;
                 }
                 if (EntityTypeUtils.isMob(event.getEntity())) {

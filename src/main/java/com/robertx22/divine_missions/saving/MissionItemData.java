@@ -11,7 +11,6 @@ import info.loenwind.autosave.annotations.Store;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,12 +59,12 @@ public class MissionItemData {
             e.printStackTrace();
         }
 
-        player.displayClientMessage(Component.literal("+" + repreward + " ").append(getGod().getTranslatable())
+        player.sendSystemMessage(Component.literal("+" + repreward + " ").append(getGod().getTranslatable())
             .append(" ")
             .append(Component.translatable(DivineMissions.MODID + ".aspect"))
             .append(" ")
             .append(Component.translatable(DivineMissions.MODID + ".reputation"))
-            .withStyle(ChatFormatting.GREEN), false);
+            .withStyle(ChatFormatting.GREEN));
 
     }
 

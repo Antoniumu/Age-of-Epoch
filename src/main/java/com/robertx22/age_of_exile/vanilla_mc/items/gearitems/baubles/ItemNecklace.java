@@ -11,8 +11,7 @@ public class ItemNecklace extends BaseBaublesItem implements INecklace {
     VanillaMaterial mat;
 
     public ItemNecklace(VanillaMaterial mat) {
-        super(new Properties().durability((int) (mat.armormat.getDurabilityForSlot(EquipmentSlot.CHEST) * 3))
-            .tab(CreativeTabs.MyModTab), "Necklace");
+        super(new Properties().durability((int) (mat.armormat.getDurabilityForSlot(EquipmentSlot.CHEST) * 3)), "Necklace");
         this.mat = mat;
     }
 

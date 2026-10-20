@@ -29,7 +29,7 @@ import com.robertx22.library_of_exile.events.base.EventConsumer;
 import com.robertx22.library_of_exile.events.base.ExileEvents;
 import com.robertx22.library_of_exile.utils.Watch;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import com.robertx22.forge_compat.api.distmarker.Dist;
 import com.robertx22.forge_compat.eventbus.api.IEventBus;
 import com.robertx22.forge_compat.fml.DistExecutor;
@@ -53,7 +53,7 @@ public class MMORPG implements net.fabricmc.api.ModInitializer {
 
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel NETWORK = NetworkRegistry.newSimpleChannel(
-        ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "main"),
+        Identifier.fromNamespaceAndPath(SlashRef.MODID, "main"),
         () -> PROTOCOL_VERSION,
         PROTOCOL_VERSION::equals,
         PROTOCOL_VERSION::equals
@@ -87,7 +87,7 @@ public class MMORPG implements net.fabricmc.api.ModInitializer {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
             ModLoadingContext.get()
                 .registerConfig(ModConfig.Type.CLIENT, ClientConfigs.clientSpec);
-            bus.addListener(ClientInit::onInitializeClient);
+            bus.addListener((com.robertx22.forge_compat.fml.event.lifecycle.FMLClientSetupEvent e) -> ClientInit.onInitializeClient(e));
         });
 
         bus.addListener(this::commonSetupEvent);

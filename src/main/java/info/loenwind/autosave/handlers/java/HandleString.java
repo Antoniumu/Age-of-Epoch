@@ -28,7 +28,7 @@ public class HandleString implements IHandler<String> {
     @Override
     public String read(Registry registry, Set<NBTAction> phase, CompoundTag nbt, Type type, String name,
                        String object) {
-        return nbt.contains(name) ? nbt.getString(name) : object;
+        return nbt.contains(name) ? nbt.getStringOr(name, "") : object;
     }
 
 }

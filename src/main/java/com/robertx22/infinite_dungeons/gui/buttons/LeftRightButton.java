@@ -1,12 +1,12 @@
 package com.robertx22.infinite_dungeons.gui.buttons;
 
 import com.robertx22.infinite_dungeons.main.MainID;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.resources.ResourceLocation;
+import com.robertx22.forge_compat.client.ImageButton;
+import net.minecraft.resources.Identifier;
 
 public class LeftRightButton extends ImageButton {
 
-    public static ResourceLocation TEX = MainID.id("textures/gui/leftright.png");
+    public static Identifier TEX = MainID.id("textures/gui/leftright.png");
 
     public static int xSize = 20;
     public static int ySize = 20;

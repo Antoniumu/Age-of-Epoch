@@ -9,12 +9,15 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 
 public class TeleportedBlockEntity extends BaseModificationStation {
 
     public TeleportedBlockEntity() {
         super(SlashBlockEntities.TELEPORTER.get(), 0);
+    }
+
+    public TeleportedBlockEntity(net.minecraft.core.BlockPos pos, BlockState state) {
+        super(SlashBlockEntities.TELEPORTER.get(), 0, pos, state);
     }
 
     public TeleporterData data = new TeleporterData();

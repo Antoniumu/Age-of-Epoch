@@ -25,8 +25,8 @@ public class OnLootChestEvent extends EventConsumer<ExileEvents.OnChestLooted> {
 
         LootInfo info = LootInfo.ofChestLoot(player, event.pos);
 
-        if (WorldUtils.isMapWorldClass(player.level)) {
-            if (Load.dungeonData(event.player.level).data.get(event.pos).data.failedOrEmpty()) {
+        if (WorldUtils.isMapWorldClass(player.level())) {
+            if (Load.dungeonData(event.player.level()).data.get(event.pos).data.failedOrEmpty()) {
                 event.inventory.clearContent();
                 // dont gen loot
                 event.canceled = true;

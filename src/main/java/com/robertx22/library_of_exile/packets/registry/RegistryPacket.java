@@ -15,12 +15,12 @@ import com.robertx22.library_of_exile.utils.LoadSave;
 import com.robertx22.library_of_exile.utils.Watch;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 
 public class RegistryPacket extends MyPacket<RegistryPacket> {
-    public static ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Ref.MODID, "reg");
+    public static Identifier ID = Identifier.fromNamespaceAndPath(Ref.MODID, "reg");
 
     public static final JsonParser PARSER = new JsonParser();
 
@@ -37,7 +37,7 @@ public class RegistryPacket extends MyPacket<RegistryPacket> {
     }
 
     @Override
-    public ResourceLocation getIdentifier() {
+    public Identifier getIdentifier() {
         return ID;
     }
 

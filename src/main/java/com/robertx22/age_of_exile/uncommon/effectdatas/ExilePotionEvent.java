@@ -7,12 +7,14 @@ import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.effectdatas.rework.EventData;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.PlayerUtils;
 import com.robertx22.age_of_exile.vanilla_mc.potion_effects.types.ExileStatusEffect;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 
 public class ExilePotionEvent extends EffectEvent {
 
@@ -41,7 +43,7 @@ public class ExilePotionEvent extends EffectEvent {
     @Override
     protected void activate() {
 
-        if (source.level.isClientSide) {
+        if (source.level().isClientSide()) {
             return;
         }
         if (this.data.isCanceled()) {
@@ -61,6 +63,7 @@ public class ExilePotionEvent extends EffectEvent {
         }
 
         ExileStatusEffect status = effect.getStatusEffect();
+        Holder<MobEffect> statusHolder = BuiltInRegistries.MOB_EFFECT.wrapAsHolder(status);
 
         if (action == GiveOrTake.take) {
             ExileEffectInstanceData extraData = Load.Unit(target)
@@ -72,7 +75,7 @@ public class ExilePotionEvent extends EffectEvent {
             extraData.str_multi = data.getNumber();
 
             if (extraData.stacks < 1) {
-                target.removeEffect(status);
+                target.removeEffect(statusHolder);
                 Load.Unit(target)
                     .getStatusEffectsData()
                     .set(status, null);
@@ -83,7 +86,7 @@ public class ExilePotionEvent extends EffectEvent {
                 .trySync();
         } else {
 
-            MobEffectInstance instance = target.getEffect(status);
+            MobEffectInstance instance = target.getEffect(statusHolder);
             ExileEffectInstanceData extraData;
 
             if (instance != null) {
@@ -106,7 +109,7 @@ public class ExilePotionEvent extends EffectEvent {
 
             extraData.str_multi = data.getNumber();
 
-            MobEffectInstance newInstance = new MobEffectInstance(status, duration, extraData.stacks, false, false, true);
+            MobEffectInstance newInstance = new MobEffectInstance(statusHolder, duration, extraData.stacks, false, false, true);
 
             Load.Unit(target)
                 .getStatusEffectsData()
@@ -119,8 +122,7 @@ public class ExilePotionEvent extends EffectEvent {
                 target.addEffect(newInstance);
             }
 
-            // sync packets to client
-            ClientboundUpdateMobEffectPacket packet = new ClientboundUpdateMobEffectPacket(target.getId(), newInstance);
+            ClientboundUpdateMobEffectPacket packet = new ClientboundUpdateMobEffectPacket(target.getId(), newInstance, false);
 
             PlayerUtils.getNearbyPlayers(target, 50D)
                 .forEach((x) -> {

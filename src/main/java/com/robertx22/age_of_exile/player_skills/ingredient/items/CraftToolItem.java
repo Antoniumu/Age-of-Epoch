@@ -7,7 +7,7 @@ import com.robertx22.age_of_exile.player_skills.crafting_inv.ProfCraftContainer;
 import com.robertx22.age_of_exile.saveclasses.player_skills.PlayerSkillEnum;
 import com.robertx22.age_of_exile.vanilla_mc.items.misc.AutoItem;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import com.robertx22.forge_compat.data.ShapedRecipeBuilder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -17,13 +17,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.level.Level;
 import com.robertx22.forge_compat.api.distmarker.Dist;
 import com.robertx22.forge_compat.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class CraftToolItem extends AutoItem implements IShapedRecipe {
@@ -33,13 +32,12 @@ public class CraftToolItem extends AutoItem implements IShapedRecipe {
 
     public CraftToolItem(String locname, PlayerSkillEnum skill) {
 
-        super(new Properties().tab(CreativeTabs.Professions)
+        super(new Properties()
             .stacksTo(1));
         this.skill = skill;
         this.locname = locname;
     }
 
-    @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
 
@@ -53,11 +51,11 @@ public class CraftToolItem extends AutoItem implements IShapedRecipe {
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level world, Player user, InteractionHand hand) {
+    public InteractionResult use(Level world, Player user, InteractionHand hand) {
 
         user.startUsingItem(hand);
 
-        if (world != null && !world.isClientSide) {
+        if (world != null && !world.isClientSide()) {
 
             ItemStack stack = user.getItemInHand(hand);
 
@@ -77,7 +75,7 @@ public class CraftToolItem extends AutoItem implements IShapedRecipe {
 
         }
 
-        return InteractionResult.success(user.getItemInHand(hand));
+        return InteractionResult.SUCCESS);
     }
 
     @Override

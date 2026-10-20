@@ -1,22 +1,21 @@
 package com.robertx22.library_of_exile.main;
 
-import io.netty.buffer.Unpooled;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
-import com.robertx22.forge_compat.fml.network.NetworkDirection;
 import com.robertx22.forge_compat.fml.network.PacketDistributor;
 import com.robertx22.forge_compat.fml.network.simple.SimpleChannel;
+import io.netty.buffer.Unpooled;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 import java.util.HashMap;
 
 public class Packets {
 
-    static HashMap<ResourceLocation, SimpleChannel> channels = new HashMap<>();
+    static HashMap<Identifier, SimpleChannel> channels = new HashMap<>();
 
     public static <T> void sendToClient(Player player, MyPacket<T> packet) {
         try {
@@ -24,11 +23,7 @@ public class Packets {
             packet.saveToData(buf);
 
             channels.get(packet.getIdentifier())
-                .sendTo(
-                    packet,
-                    ((ServerPlayer) player).connection.getConnection(),
-                    NetworkDirection.PLAY_TO_CLIENT
-                );
+                .sendToPlayer((ServerPlayer) player, packet);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -51,7 +46,7 @@ public class Packets {
 
         channel.registerMessage(
             id,
-            (Class<MyPacket<T>>) packet.getClass(), // todo
+            (Class<MyPacket<T>>) packet.getClass(),
             MyPacket::saveToData,
             packet::loadFromDataUSETHIS,
             MyPacket::handle
@@ -63,13 +58,11 @@ public class Packets {
 
         channel.registerMessage(
             id,
-            (Class<MyPacket<T>>) packet.getClass(), // todo
+            (Class<MyPacket<T>>) packet.getClass(),
             MyPacket::saveToData,
             packet::loadFromDataUSETHIS,
             MyPacket::handle
         );
-
-        // ClientSidePacketRegistry.INSTANCE.register(packet.getIdentifier(), packet);
     }
 
     public static void sendToTracking(MyPacket msg, BlockPos pos, Level world) {
@@ -78,7 +71,7 @@ public class Packets {
     }
 
     public static void sendToTracking(MyPacket msg, Entity en) {
-        if (en.level.isClientSide) {
+        if (en.level().isClientSide()) {
 
         } else {
 

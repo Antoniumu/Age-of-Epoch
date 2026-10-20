@@ -5,7 +5,6 @@ import com.robertx22.infinite_dungeons.database.CompletitionScore;
 import com.robertx22.infinite_dungeons.database.db_types.DungeonType;
 import com.robertx22.infinite_dungeons.database.ids.DungeonTypeIds;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
 public class WaveBasedDungeon extends DungeonType {

@@ -18,8 +18,7 @@ import com.robertx22.library_of_exile.utils.RandomUtils;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
@@ -47,7 +46,7 @@ public class PlayerSkill implements JsonExileRegistry<PlayerSkill>, IAutoGson<Pl
 
     List<SkillStatReward> cachedStatRewards = null;
 
-    public ResourceLocation getIcon() {
+    public Identifier getIcon() {
         return SlashRef.id("textures/gui/skills/icons/" + id + ".png");
     }
 
@@ -112,7 +111,7 @@ public class PlayerSkill implements JsonExileRegistry<PlayerSkill>, IAutoGson<Pl
 
             if (dropTable.tier == tierContext) {
 
-                if (dropTable.req.isAllowed(player.level, player.blockPosition())) {
+                if (dropTable.req.isAllowed(player.level(), player.blockPosition())) {
                     float chance = dropTable.loot_chance_per_action_exp * expForAction;
 
                     if (RandomUtils.roll(chance)) {

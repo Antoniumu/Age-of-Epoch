@@ -1,4 +1,5 @@
 package com.robertx22.infinite_dungeons.database.db_types.group;
+import net.minecraft.network.chat.MutableComponent;
 
 import com.robertx22.infinite_dungeons.db_init.RegistryTypes;
 import com.robertx22.infinite_dungeons.main.MainID;
@@ -6,7 +7,7 @@ import com.robertx22.library_of_exile.registry.ExileRegistryType;
 import com.robertx22.library_of_exile.registry.IAutoGson;
 import com.robertx22.library_of_exile.registry.JsonExileRegistry;
 import net.minecraft.world.item.Item;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 import com.robertx22.forge_compat.registries.ForgeRegistries;
 
@@ -26,10 +27,10 @@ public class DungeonGroup implements JsonExileRegistry<DungeonGroup>, IAutoGson<
     public List<CoinDrop> coin_drops = new ArrayList<>();
 
     public Item getKeyItem() {
-        return ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(key_item_id));
+        return ForgeRegistries.ITEMS.getValue(Identifier.parse(key_item_id));
     }
 
-    public Component getTranslatable() {
+    public MutableComponent getTranslatable() {
         return Component.translatable(MainID.MODID + ".dungeon_group." + id);
     }
 

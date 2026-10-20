@@ -16,7 +16,7 @@ public class SpellDamage extends Stat {
         this.group = StatGroup.MAIN;
 
         this.statEffect = new Effect();
-        this.format = ChatFormatting.LIGHT_PURPLE.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.LIGHT_PURPLE);
     }
 
     public static String GUID = "spell_damage";

@@ -17,6 +17,8 @@ public class LivingDamageEvent extends Event {
 
     public LivingEntity getEntityLiving() { return entityLiving; }
 
+    public LivingEntity getEntity() { return entityLiving; }
+
     public DamageSource getSource() { return source; }
 
     public float getAmount() { return amount; }

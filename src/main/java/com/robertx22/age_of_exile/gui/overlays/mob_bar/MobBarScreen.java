@@ -10,17 +10,17 @@ import com.robertx22.age_of_exile.uncommon.utilityclasses.LookUtils;
 import com.robertx22.library_of_exile.utils.CLOC;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import com.robertx22.forge_compat.client.AbstractGui;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.ChatFormatting;
 
-public class MobBarScreen extends Gui {
+public class MobBarScreen extends AbstractGui {
 
     private Minecraft mc;
 
-    ResourceLocation TEX = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/mob_bar/mob_bar.png");
+    Identifier TEX = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/mob_bar/mob_bar.png");
 
     public MobBarScreen() {
         super();
@@ -74,8 +74,7 @@ public class MobBarScreen extends Gui {
                     int x = width / 2 - xSize / 2;
                     int y = 30;
 
-                    mc.getTextureManager()
-                        .bind(TEX);
+                    com.robertx22.forge_compat.client.AbstractGui.bindTexture(TEX);
 
                     blit(matrix, x, y, 0, 0, xSize, ySize); // the bar
 
@@ -83,8 +82,8 @@ public class MobBarScreen extends Gui {
 
                     String name = CLOC.translate(data.getName());
 
-                    mc.font.drawShadow(matrix, name, width / 2 - mc.font.width(name) / 2,
-                        y - 10, ChatFormatting.WHITE.getColor()
+                    com.robertx22.forge_compat.client.AbstractGui.drawShadow(mc.font, matrix, name, width / 2 - mc.font.width(name) / 2,
+                        y - 10, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.WHITE)
                     );
 
                     String hpText = (int) currentHp + "/" + (int) maxHP;

@@ -6,7 +6,7 @@ import com.robertx22.library_of_exile.components.forge.BaseStorage;
 import com.robertx22.library_of_exile.components.forge.ICommonCap;
 import com.robertx22.library_of_exile.utils.LoadSave;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import com.robertx22.forge_compat.common.capabilities.Capability;
 import com.robertx22.forge_compat.common.capabilities.CapabilityInject;
@@ -17,7 +17,7 @@ import com.robertx22.forge_compat.fml.common.Mod;
 @Mod.EventBusSubscriber
 public class WorldDungeonCap implements ICommonCap {
 
-    public static final ResourceLocation RESOURCE = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "dungeon");
+    public static final Identifier RESOURCE = Identifier.fromNamespaceAndPath(SlashRef.MODID, "dungeon");
 
     @Mod.EventBusSubscriber
     public static class EventHandler {

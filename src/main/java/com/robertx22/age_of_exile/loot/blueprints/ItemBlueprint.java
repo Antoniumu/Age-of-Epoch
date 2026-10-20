@@ -19,12 +19,12 @@ public abstract class ItemBlueprint {
     public int extraLevelModifier = 0;
 
     public ItemBlueprint(int lvl) {
-        this.level.number = lvl;
+        this.level().number = lvl;
         this.onConstruct();
     }
 
     public ItemBlueprint(LootInfo info) {
-        this.level.number = info.level;
+        this.level().number = info.level;
 
         if (info.mobData != null) {
             extraLevelModifier = ExileDB.MobRarities()
@@ -35,7 +35,7 @@ public abstract class ItemBlueprint {
     }
 
     public ItemBlueprint(int lvl, int tier) {
-        this.level.number = lvl;
+        this.level().number = lvl;
         this.onConstruct();
     }
 

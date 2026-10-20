@@ -13,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import com.robertx22.forge_compat.api.distmarker.Dist;
 import com.robertx22.forge_compat.api.distmarker.OnlyIn;
@@ -23,13 +22,13 @@ import java.util.List;
 public class CommonGearProducerItem extends AutoItem {
 
     public CommonGearProducerItem() {
-        super(new Properties().tab(CreativeTabs.MyModTab));
+        super(new Properties());
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level world, Player user, InteractionHand hand) {
+    public InteractionResult use(Level world, Player user, InteractionHand hand) {
 
-        if (world != null && !world.isClientSide) {
+        if (world != null && !world.isClientSide()) {
 
             ItemStack stack = user.getItemInHand(hand);
 
@@ -51,10 +50,9 @@ public class CommonGearProducerItem extends AutoItem {
             PlayerUtils.giveItem(soulstack, user);
         }
 
-        return InteractionResult.success(user.getItemInHand(hand));
+        return InteractionResult.SUCCESS);
     }
 
-    @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
         tooltip.add(Component.literal("Right click to produce a common gear soul."));

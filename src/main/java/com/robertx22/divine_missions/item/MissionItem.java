@@ -31,8 +31,7 @@ import net.minecraft.network.chat.MutableComponent;
 public class MissionItem extends Item {
 
     public MissionItem() {
-        super(new Item.Properties().stacksTo(1)
-            .tab(DivineMissions.CreativeTab));
+        super(new Item.Properties().stacksTo(1));
 
     }
 
@@ -43,7 +42,7 @@ public class MissionItem extends Item {
             .contains(TICKS)) {
 
             int ticksleft = StackNBT.get(stack)
-                .getInt(TICKS) - 20;
+                .getIntOr(TICKS, 0) - 20;
 
             StackNBT.get(stack)
                 .putInt(TICKS, ticksleft);
@@ -73,12 +72,12 @@ public class MissionItem extends Item {
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level world, Player user, InteractionHand hand) {
+    public InteractionResult use(Level world, Player user, InteractionHand hand) {
 
         ItemStack stack = user.getItemInHand(hand);
 
-        if (world.isClientSide) {
-            return InteractionResult.pass(stack);
+        if (world.isClientSide()) {
+            return InteractionResult.PASS;
         }
 
         try {
@@ -103,11 +102,10 @@ public class MissionItem extends Item {
             e.printStackTrace();
         }
 
-        return InteractionResult.pass(stack);
+        return InteractionResult.PASS;
 
     }
 
-    @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
 
@@ -126,7 +124,7 @@ public class MissionItem extends Item {
                         .getFormat());
 
                 int sec = StackNBT.get(stack)
-                    .getInt(TICKS) / 20;
+                    .getIntOr(TICKS, 0) / 20;
 
                 int min = sec / 60;
 

@@ -8,7 +8,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class EntityUnitPacket extends MyPacket<EntityUnitPacket> {
 
@@ -26,8 +26,8 @@ public class EntityUnitPacket extends MyPacket<EntityUnitPacket> {
     }
 
     @Override
-    public ResourceLocation getIdentifier() {
-        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "enpack");
+    public Identifier getIdentifier() {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, "enpack");
     }
 
     @Override
@@ -46,7 +46,7 @@ public class EntityUnitPacket extends MyPacket<EntityUnitPacket> {
 
     @Override
     public void onReceived(ExilePacketContext ctx) {
-        Entity entity = ctx.getPlayer().level.getEntity(id);
+        Entity entity = ctx.getPlayer().level().getEntity(id);
 
         if (entity instanceof LivingEntity) {
 

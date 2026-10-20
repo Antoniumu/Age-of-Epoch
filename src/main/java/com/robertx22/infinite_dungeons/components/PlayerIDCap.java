@@ -12,7 +12,7 @@ import com.robertx22.library_of_exile.utils.LoadSave;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import com.robertx22.forge_compat.common.capabilities.Capability;
 import com.robertx22.forge_compat.common.capabilities.CapabilityInject;
 import com.robertx22.forge_compat.event.AttachCapabilitiesEvent;
@@ -24,7 +24,7 @@ import java.util.Optional;
 @Mod.EventBusSubscriber
 public class PlayerIDCap implements IPlayerCap {
 
-    public static final ResourceLocation RESOURCE = ResourceLocation.fromNamespaceAndPath(MainID.MODID, "data");
+    public static final Identifier RESOURCE = Identifier.fromNamespaceAndPath(MainID.MODID, "data");
 
     @CapabilityInject(PlayerIDCap.class)
     public static Capability<PlayerIDCap> Data = null;
@@ -79,7 +79,7 @@ public class PlayerIDCap implements IPlayerCap {
 
     public Optional<ControlBlockEntity> getControlBlock() {
         try {
-            return Optional.of((ControlBlockEntity) this.owner.level.getBlockEntity(data.control_block_pos));
+            return Optional.of((ControlBlockEntity) this.owner.level().getBlockEntity(data.control_block_pos));
         } catch (Exception e) {
             //e.printStackTrace();
         }

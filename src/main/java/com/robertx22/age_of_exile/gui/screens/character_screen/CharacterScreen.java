@@ -1,7 +1,7 @@
 package com.robertx22.age_of_exile.gui.screens.character_screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.age_of_exile.aoe_data.database.stats.Stats;
 import com.robertx22.age_of_exile.capability.entity.EntityData;
 import com.robertx22.age_of_exile.config.forge.ServerContainer;
@@ -51,9 +51,8 @@ import com.robertx22.library_of_exile.utils.GuiUtils;
 import com.robertx22.library_of_exile.utils.RandomUtils;
 import com.robertx22.library_of_exile.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
+import com.robertx22.forge_compat.client.ImageButton;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
@@ -83,8 +82,8 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
             this.id = id;
         }
 
-        ResourceLocation getIcon() {
-            return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/stat_groups/" + id + ".png");
+        Identifier getIcon() {
+            return Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/stat_groups/" + id + ".png");
         }
     }
 
@@ -133,8 +132,8 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
     }
 
     @Override
-    public ResourceLocation iconLocation() {
-        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/icons/stat_overview.png");
+    public Identifier iconLocation() {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/icons/stat_overview.png");
     }
 
     @Override
@@ -267,18 +266,16 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
         }
     }
 
-    private static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/stats.png");
-    private static final ResourceLocation WIDE_BACKGROUND = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/full_stats_panel.png");
+    private static final Identifier BACKGROUND = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/stats.png");
+    private static final Identifier WIDE_BACKGROUND = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/full_stats_panel.png");
 
     @Override
     public void render(PoseStack matrix, int x, int y, float ticks) {
 
         if (isMainScreen()) {
-            mc.getTextureManager()
-                .bind(BACKGROUND);
+            com.robertx22.forge_compat.client.AbstractGui.bindTexture(BACKGROUND);
         } else {
-            mc.getTextureManager()
-                .bind(WIDE_BACKGROUND);
+            com.robertx22.forge_compat.client.AbstractGui.bindTexture(WIDE_BACKGROUND);
         }
 
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -297,12 +294,12 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
             .getFreePoints(mc.player);
         if (p > 0) {
             String points = "Points: " + p;
-            mc.font.drawShadow(matrix, points, guiLeft + sizeX / 2 - mc.font.width(points) / 2, guiTop + sizeY + 25, ChatFormatting.GREEN.getColor());
+            com.robertx22.forge_compat.client.AbstractGui.drawShadow(mc.font, matrix, points, guiLeft + sizeX / 2 - mc.font.width(points) / 2, guiTop + sizeY + 25, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.GREEN));
         }
 
     }
 
-    private static final ResourceLocation STAT_PAGE_BUTTON_TEXT = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/buttons_backwards.png");
+    private static final Identifier STAT_PAGE_BUTTON_TEXT = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/buttons_backwards.png");
 
     static int PLUS_BUTTON_SIZE_X = 13;
     static int PLUS_BUTTON_SIZE_Y = 13;
@@ -310,7 +307,7 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
     public static class AllocateStatButton extends ImageButton {
         static int SIZEX = 18;
         static int SIZEY = 18;
-        static ResourceLocation BUTTON_TEX = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/plus_button.png");
+        static Identifier BUTTON_TEX = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/plus_button.png");
 
         Stat stat;
 
@@ -335,7 +332,7 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
                     .locName()
                     .withStyle(ChatFormatting.GREEN));
 
-                tooltip.add(new SText(""));
+                tooltip.add(net.minecraft.network.chat.Component.literal(""));
 
                 tooltip.addAll(((CoreStat) stat).getCoreStatTooltip(Load.Unit(mc.player), Load.Unit(mc.player)
                     .getUnit()
@@ -365,13 +362,13 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
 
             RenderUtils.render16Icon(matrix, stat.getIconForRendering(), this.x - 20, this.y + 1);
 
-            mc.font.drawShadow(matrix, txt, this.x + SIZEX + 4, this.y + 4, ChatFormatting.YELLOW.getColor());
+            com.robertx22.forge_compat.client.AbstractGui.drawShadow(mc.font, matrix, txt, this.x + SIZEX + 4, this.y + 4, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.YELLOW));
 
         }
 
     }
 
-    private static final ResourceLocation BUTTON_TEX = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/button.png");
+    private static final Identifier BUTTON_TEX = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/button.png");
     static int STAT_BUTTON_SIZE_X = 18;
     static int STAT_BUTTON_SIZE_Y = 18;
 
@@ -421,12 +418,12 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
                     str = presetValue;
                 }
 
-                ResourceLocation res = stat
+                Identifier res = stat
                     .getIconForRendering();
 
                 RenderUtils.render16Icon(matrix, res, this.x, this.y);
 
-                mc.font.drawShadow(matrix, str, this.x + STAT_BUTTON_SIZE_X, this.y + 2, ChatFormatting.GOLD.getColor());
+                com.robertx22.forge_compat.client.AbstractGui.drawShadow(mc.font, matrix, str, this.x + STAT_BUTTON_SIZE_X, this.y + 2, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.GOLD));
 
             }
         }
@@ -486,8 +483,8 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
 
             if (isHovered()) {
                 String txt = page.id;
-                Minecraft.getInstance().font.drawShadow(matrices,
-                    txt, this.x + SIZEX - 30 - mc.font.width(txt), this.y + 9, ChatFormatting.YELLOW.getColor());
+                com.robertx22.forge_compat.client.AbstractGui.drawShadow(Minecraft.getInstance().font, matrices,
+                    txt, this.x + SIZEX - 30 - mc.font.width(txt), this.y + 9, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.YELLOW));
             }
 
         }

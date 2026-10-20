@@ -26,7 +26,7 @@ public class SpellMotionAction extends SpellAction {
     public void tryActivate(Collection<LivingEntity> targets, SpellCtx ctx, MapHolder data) {
 
         try {
-            if (!ctx.world.isClientSide) {
+            if (!ctx.world.isClientSide()) {
 
                 float str = data.get(PUSH_STRENGTH)
                     .floatValue();
@@ -51,7 +51,7 @@ public class SpellMotionAction extends SpellAction {
                         .scale(str);
                     Vec3 motionWithY = (new Vec3(motion.x, motion.y, motion.z)).normalize()
                         .scale(str);
-                    // this.setDeltaMovement(vector3d.x / 2.0D - vector3d1.x, this.onGround ? Math.min(0.4D, vector3d.y / 2.0D + (double)p_233627_1_) : vector3d.y, vector3d.z / 2.0D - vector3d1.z);
+                    // this.setDeltaMovement(vector3d.x / 2.0D - vector3d1.x, this.onGround() ? Math.min(0.4D, vector3d.y / 2.0D + (double)p_233627_1_) : vector3d.y, vector3d.z / 2.0D - vector3d1.z);
 
                     if (setAdd == SetAdd.SET) {
                         if (data.getOrDefault(MapField.IGNORE_Y, false)) {
@@ -66,7 +66,7 @@ public class SpellMotionAction extends SpellAction {
 
                     PlayerUtils.getNearbyPlayers(ctx.world, ctx.pos, 100)
                         .forEach(p -> {
-                            ((ServerPlayer) p).connection.send(new ClientboundSetEntityMotionPacket(x));
+                            ((ServerPlayer) p).connection.send(new ClientboundSetEntityMotionPacket(x.getId(), x.getDeltaMovement()));
                             x.hurtMarked = false;
                         });
 

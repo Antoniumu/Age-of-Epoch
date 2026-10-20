@@ -77,8 +77,8 @@ public class HandleArrays implements IHandler<Object> {
             return null;
         }
         if (nbt.contains(name)) {
-            CompoundTag tag = nbt.getCompound(name);
-            int size = tag.getInt("size");
+            CompoundTag tag = nbt.getCompoundOrEmpty(name);
+            int size = tag.getIntOr("size", 0);
 
             if (object == null) {
                 object = Array.newInstance(TypeUtil.toClass(compType), size);

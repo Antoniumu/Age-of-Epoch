@@ -18,10 +18,10 @@ public class SummonEvokerFangsAction extends SpellAction {
 
     @Override
     public void tryActivate(Collection<LivingEntity> targets, SpellCtx ctx, MapHolder data) {
-        if (!ctx.world.isClientSide) {
+        if (!ctx.world.isClientSide()) {
             targets.forEach(t -> {
                 Vec3 p = t.position();
-                t.level.addFreshEntity(new EvokerFangs(t.level, p.x, p.y, p.z, 0F, 0, ctx.caster));
+                t.level().addFreshEntity(new EvokerFangs(t.level(), p.x, p.y, p.z, 0F, 0, ctx.caster));
             });
         }
     }

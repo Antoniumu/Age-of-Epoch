@@ -42,7 +42,7 @@ public class LoadSave {
         }
 
         if (useGSON) {
-            String json = nbt.getString(loc + GSONLOC);
+            String json = nbt.getStringOr(loc + GSONLOC, "");
 
             if (json.isEmpty()) {
                 return null;

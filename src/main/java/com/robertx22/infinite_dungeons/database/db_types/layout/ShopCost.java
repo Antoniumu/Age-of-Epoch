@@ -4,7 +4,7 @@ import com.robertx22.infinite_dungeons.main.DungeonItems;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import com.robertx22.forge_compat.registries.ForgeRegistries;
 
@@ -73,6 +73,6 @@ public class ShopCost {
     }
 
     public Item getItem() {
-        return ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(item_id));
+        return ForgeRegistries.ITEMS.getValue(Identifier.parse(item_id));
     }
 }

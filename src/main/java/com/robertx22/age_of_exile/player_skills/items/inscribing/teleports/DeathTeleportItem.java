@@ -6,7 +6,7 @@ import com.robertx22.age_of_exile.player_skills.items.foods.SkillItemTier;
 import com.robertx22.age_of_exile.player_skills.items.inscribing.BaseTpItem;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.library_of_exile.utils.TeleportUtils;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import com.robertx22.forge_compat.data.ShapelessRecipeBuilder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -22,8 +22,7 @@ public class DeathTeleportItem extends BaseTpItem {
             RPGPlayerData data = Load.playerRPGData(user);
 
             if (data.deathStats.deathPos != null && data.deathStats.deathDim != null && data.deathStats.deathDim
-                .equals(world.dimension()
-                    .location()
+                .equals(world.dimension().identifier()
                     .toString())) {
                 stack.shrink(1);
 

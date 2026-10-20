@@ -1,4 +1,5 @@
 package com.robertx22.divine_missions.database.db_types;
+import net.minecraft.network.chat.MutableComponent;
 
 import com.robertx22.divine_missions.database.MissionsDB;
 import com.robertx22.divine_missions.db_init.RegistryTypes;
@@ -78,7 +79,7 @@ public class God implements JsonExileRegistry<God>, IAutoGson<God> {
         return touse;
     }
 
-    public Component getTranslatable() {
+    public MutableComponent getTranslatable() {
         return Component.translatable(DivineMissions.MODID + ".god." + id);
     }
 
