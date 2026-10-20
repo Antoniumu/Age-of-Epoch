@@ -60,12 +60,12 @@ public class RarityUpgradeStone extends Item implements ICurrencyItemEffect, IGU
                     .append(Words.UpgradeStone.locName())
                     .withStyle(rar.textFormatting()));
 
-                tooltip.add(Component.literal("Upgrades a +" + rar.upgrade_lvl_to_increase_rar + " ").append(rar.locName())
-                    .append(" to ")
+                tooltip.add(Component.literal("Улучшает предмет +").append(String.valueOf(rar.upgrade_lvl_to_increase_rar)).append(" (").append(rar.locName())
+                    .append(") до редкости ")
                     .append(rar.getHigherRarity()
                         .locName()));
 
-                tooltip.add(Component.literal("Click on an item to upgrade"));
+                tooltip.add(Component.literal("Нажмите по предмету, чтобы улучшить"));
 
             }
 

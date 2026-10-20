@@ -68,6 +68,12 @@ public class FabricBootstrap {
             t.printStackTrace();
         }
 
+        try {
+            com.robertx22.age_of_exile.database.base.CreativeTabs.registerAll();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+
         // lifecycle events on the mod event bus
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.post(new FMLCommonSetupEvent());

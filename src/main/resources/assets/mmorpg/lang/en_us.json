@@ -18,7 +18,7 @@
   "itemGroup.mmorpg.runes_group": "Age of Exile Runes",
   "itemGroup.mmorpg.runeword_group": "Age of Exile Runewords",
   "itemGroup.mmorpg_uniques": "Unique Gear",
-  "itemGroup.mmorpg_currency": "Crafting Items",
+  "itemGroup.mmorpg_currency": "Age of Exile: Currency",
   "itemGroup.mmorpg_lootboxes": "LootBoxes",
   "itemGroup.mmorpg_alchemy": "Alchemy",
   "death.attack.mmorpg.custom_damage": "Tons of Damage!",
@@ -1637,5 +1637,10 @@
   "block.mmorpg.green_totem": "Green Totem",
   "block.mmorpg.guard_totem": "Guard Totem",
   "block.mmorpg.trap": "Trap",
-  "block.mmorpg.glyph": "Glyph"
+  "block.mmorpg.glyph": "Glyph",
+  "itemGroup.mmorpg_main_group": "Age of Exile: Main",
+  "itemGroup.mmorpg_gear_soul_group": "Age of Exile: Gear Souls",
+  "itemGroup.mmorpg_gem": "Age of Exile: Gems & Runes",
+  "itemGroup.mmorpg_mats": "Age of Exile: Materials",
+  "itemGroup.mmorpg_proffs_group": "Age of Exile: Professions"
 }
