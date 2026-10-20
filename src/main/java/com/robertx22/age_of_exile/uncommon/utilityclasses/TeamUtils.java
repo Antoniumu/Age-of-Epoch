@@ -42,7 +42,7 @@ public class TeamUtils {
         List<Player> players = new ArrayList<>();
 
         try {
-            player.getServer()
+            player.level().getServer()
                 .getPlayerList()
                 .getPlayers()
                 .forEach(x -> {

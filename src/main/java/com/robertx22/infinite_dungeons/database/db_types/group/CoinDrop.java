@@ -2,7 +2,7 @@ package com.robertx22.infinite_dungeons.database.db_types.group;
 
 import com.robertx22.library_of_exile.registry.IWeighted;
 import net.minecraft.world.item.Item;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import com.robertx22.forge_compat.registries.ForgeRegistries;
 
 public class CoinDrop implements IWeighted {
@@ -19,7 +19,7 @@ public class CoinDrop implements IWeighted {
     }
 
     public Item getCoinItem() {
-        return ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(item_id));
+        return ForgeRegistries.ITEMS.getValue(Identifier.parse(item_id));
     }
 
     private CoinDrop() {

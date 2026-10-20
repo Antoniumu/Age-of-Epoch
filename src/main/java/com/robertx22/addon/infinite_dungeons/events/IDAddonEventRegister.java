@@ -62,7 +62,7 @@ public class IDAddonEventRegister {
                 if (reqlvl > Load.Unit(event.player)
                     .getLevel()) {
                     event.doNotAllowStartingDungeon();
-                    event.player.displayClientMessage(Component.literal("Your level isn't high enough for this difficulty"), false);
+                    event.player.sendSystemMessage(Component.literal("Your level isn't high enough for this difficulty"));
                 }
 
                 if (!ServerContainer.get().TURN_REQ_ILVL_INTO_RECCOMENDATION.get()) {
@@ -70,7 +70,7 @@ public class IDAddonEventRegister {
                     if (ilvl > Load.Unit(event.player)
                         .getAverageILVL()) {
                         event.doNotAllowStartingDungeon();
-                        event.player.displayClientMessage(Component.literal("Your Average Item Level isn't high enough for this difficulty"), false);
+                        event.player.sendSystemMessage(Component.literal("Your Average Item Level isn't high enough for this difficulty"));
                     }
                 }
 
@@ -96,7 +96,7 @@ public class IDAddonEventRegister {
 
                             if (event.producerStack != null && OnItemGivenEvent.isProducer(event.producerStack)) {
                                 tier = StackNBT.getOrCreate(event.producerStack)
-                                    .getInt(OVERRIDE_TIER_TAG);
+                                    .getIntOr(OVERRIDE_TIER_TAG, 0);
                             }
 
                             inte.setTier(tier);

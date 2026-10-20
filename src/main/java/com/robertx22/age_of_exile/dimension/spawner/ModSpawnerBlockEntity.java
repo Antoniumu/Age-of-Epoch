@@ -5,20 +5,23 @@ import com.robertx22.age_of_exile.dimension.database.dungeon_mob_lists.DungeonMo
 import com.robertx22.age_of_exile.mmorpg.registers.common.SlashBlockEntities;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.WorldUtils;
+import com.robertx22.forge_compat.blocks.ITickableBlockEntity;
 import com.robertx22.library_of_exile.packets.particles.ParticleEnum;
 import com.robertx22.library_of_exile.packets.particles.ParticlePacketData;
 import com.robertx22.library_of_exile.utils.RandomUtils;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.particles.ParticleTypes;
-import com.robertx22.forge_compat.blocks.ITickableBlockEntity;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.server.level.ServerLevel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +34,11 @@ public class ModSpawnerBlockEntity extends BlockEntity implements ITickableBlock
     private static int spawnRange = 16;
 
     public ModSpawnerBlockEntity() {
-        super(SlashBlockEntities.SPAWNER.get());
+        this(BlockPos.ZERO, Blocks.AIR.defaultBlockState());
+    }
+
+    public ModSpawnerBlockEntity(BlockPos pos, BlockState state) {
+        super(SlashBlockEntities.SPAWNER.get(), pos, state);
     }
 
     int ticks = 0;
@@ -43,8 +50,8 @@ public class ModSpawnerBlockEntity extends BlockEntity implements ITickableBlock
     public void tick() {
 
         if (spawnsLeft < 1) {
-            if (!level.isClientSide) {
-                this.level.removeBlock(worldPosition, false);
+            if (!level.isClientSide()) {
+                this.level().removeBlock(worldPosition, false);
                 return;
             }
         }
@@ -52,7 +59,7 @@ public class ModSpawnerBlockEntity extends BlockEntity implements ITickableBlock
         ticks++;
 
         if (ticks % 60 == 0) {
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 if (isPlayerInRange()) {
                     if (WorldUtils.isMapWorldClass(level)) {
                         int entities = level.getEntitiesOfClass(LivingEntity.class, (new AABB(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), (worldPosition.getX() + 1), (worldPosition.getY() + 1), (worldPosition.getZ() + 1))).inflate(this.spawnRange))
@@ -125,8 +132,20 @@ public class ModSpawnerBlockEntity extends BlockEntity implements ITickableBlock
     }
 
     @Override
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        CompoundTag nbt = new CompoundTag();
+        this.save(nbt);
+        output.store("AgeOfEpochData", CompoundTag.CODEC, nbt);
+    }
+
+    @Override
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        input.read("AgeOfEpochData", CompoundTag.CODEC).ifPresent(nbt -> this.load(this.getBlockState(), nbt));
+    }
+
     public CompoundTag save(CompoundTag nbt) {
-        super.save(nbt);
         nbt.putInt("ticks", ticks);
         nbt.putInt("spawnsLeft", spawnsLeft);
         nbt.putInt("range", requiredPlayerRange);
@@ -134,14 +153,12 @@ public class ModSpawnerBlockEntity extends BlockEntity implements ITickableBlock
         return nbt;
     }
 
-    @Override
     public void load(BlockState state, CompoundTag nbt) {
         try {
-            super.load(state, nbt);
-            ticks = nbt.getInt("ticks");
-            spawnsLeft = nbt.getInt("spawnsLeft");
-            requiredPlayerRange = nbt.getInt("range");
-            spawnAllAtOnce = nbt.getBoolean("at_once");
+            ticks = nbt.getIntOr("ticks", 0);
+            spawnsLeft = nbt.getIntOr("spawnsLeft", DEFAULT_SPAWNS);
+            requiredPlayerRange = nbt.getIntOr("range", 16);
+            spawnAllAtOnce = nbt.getBooleanOr("at_once", false);
         } catch (Exception e) {
             e.printStackTrace();
         }

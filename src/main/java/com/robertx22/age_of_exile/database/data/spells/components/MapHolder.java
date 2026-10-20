@@ -17,7 +17,7 @@ import com.robertx22.age_of_exile.uncommon.utilityclasses.EntityFinder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.core.Registry;
 import com.robertx22.forge_compat.registries.ForgeRegistries;
@@ -65,7 +65,7 @@ public class MapHolder {
     }
 
     public MobEffect getPotion() {
-        return BuiltInRegistries.MOB_EFFECT.get(new ResourceLocation(get(POTION_ID)));
+        return BuiltInRegistries.MOB_EFFECT.getValue(Identifier.parse(get(POTION_ID)));
     }
 
     public Elements getElement() {
@@ -103,15 +103,15 @@ public class MapHolder {
     }
 
     public SimpleParticleType getParticle() {
-        return (SimpleParticleType) BuiltInRegistries.PARTICLE_TYPE.get(new ResourceLocation(get(MapField.PARTICLE_TYPE)));
+        return (SimpleParticleType) BuiltInRegistries.PARTICLE_TYPE.getValue(Identifier.parse(get(MapField.PARTICLE_TYPE)));
     }
 
     public Block getBlock() {
-        return BuiltInRegistries.BLOCK.get(new ResourceLocation(get(MapField.BLOCK)));
+        return BuiltInRegistries.BLOCK.getValue(Identifier.parse(get(MapField.BLOCK)));
     }
 
     public SoundEvent getSound() {
-        return ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(get(MapField.SOUND)));
+        return ForgeRegistries.SOUND_EVENTS.getValue(Identifier.parse(get(MapField.SOUND)));
     }
 
     public EntityFinder.SelectionType getSelectionType() {

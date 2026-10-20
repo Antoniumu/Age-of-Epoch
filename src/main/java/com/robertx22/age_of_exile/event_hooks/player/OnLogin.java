@@ -24,16 +24,15 @@ public class OnLogin {
 
         try {
 
-            if (!player.getServer()
-                .isCommandBlockEnabled()) {
-                player.displayClientMessage(Component.literal("Command blocks are disabled, this will stop you from playing Age of Exile Dungeons!").withStyle(ChatFormatting.RED), false);
-                player.displayClientMessage(Component.literal("To enable go to your server.properties file and put enable-command-block as true.").withStyle(ChatFormatting.GREEN), false);
+            if (player.level() instanceof net.minecraft.server.level.ServerLevel sl && !sl.getGameRules().get(net.minecraft.world.level.gamerules.GameRules.COMMAND_BLOCKS_WORK)) {
+                player.sendSystemMessage(Component.literal("Command blocks are disabled, this will stop you from playing Age of Exile Dungeons!").withStyle(ChatFormatting.RED));
+                player.sendSystemMessage(Component.literal("To enable go to your server.properties file and put enable-command-block as true.").withStyle(ChatFormatting.GREEN));
             }
 
             CapSyncUtil.syncAll(player);
 
             if (MMORPG.RUN_DEV_TOOLS) {
-                player.displayClientMessage(Chats.Dev_tools_enabled_contact_the_author.locName(), false);
+                player.sendSystemMessage(Chats.Dev_tools_enabled_contact_the_author.locName());
             }
 
             EntityData data = Load.Unit(player);
@@ -54,7 +53,7 @@ public class OnLogin {
 
     public static void GiveStarterItems(Player player) {
 
-        if (player.level.isClientSide) {
+        if (player.level().isClientSide()) {
             return;
         }
 

@@ -8,12 +8,12 @@ import com.robertx22.age_of_exile.saveclasses.DeathStatsData;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.enumclasses.Elements;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import com.robertx22.forge_compat.client.AbstractGui;
 import net.minecraft.ChatFormatting;
 
 import java.util.Map;
 
-public class DeathStatsOverlay extends Gui {
+public class DeathStatsOverlay extends AbstractGui {
 
     public DeathStatsOverlay() {
         super();
@@ -27,7 +27,7 @@ public class DeathStatsOverlay extends Gui {
             if (mc.player == null) {
                 return;
             }
-            if (mc.options.renderDebug || mc.player.isCreative() || mc.player.isSpectator()) {
+            if (mc.getDebugOverlay().showDebugScreen() || mc.player.isCreative() || mc.player.isSpectator()) {
                 return;
             }
             if (!ClientConfigs.getConfig().RENDER_DEATH_STATISTICS.get()) {

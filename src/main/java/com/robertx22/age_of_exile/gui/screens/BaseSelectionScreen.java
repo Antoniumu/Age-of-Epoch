@@ -5,7 +5,7 @@ import com.robertx22.age_of_exile.gui.bases.BaseScreen;
 import com.robertx22.age_of_exile.gui.screens.skill_tree.SkillTreeScreen;
 import com.robertx22.age_of_exile.saveclasses.PointData;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Renderable;
+import com.robertx22.forge_compat.client.Button;
 
 import java.util.HashMap;
 
@@ -51,10 +51,10 @@ public class BaseSelectionScreen extends BaseScreen {
 
     }
 
-    HashMap<Renderable, PointData> originalButtonLocMap = new HashMap<>();
+    HashMap<Button, PointData> originalButtonLocMap = new HashMap<>();
 
     @Override
-    protected <T extends Renderable> T addButton(T b) {
+    protected <T extends Button> T addButton(T b) {
         super.addButton(b);
         originalButtonLocMap.put(b, new PointData(b.x, b.y));
         return b;

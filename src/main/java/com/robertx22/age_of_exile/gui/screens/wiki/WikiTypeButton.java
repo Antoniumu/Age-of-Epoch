@@ -3,17 +3,17 @@ package com.robertx22.age_of_exile.gui.screens.wiki;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.library_of_exile.utils.RenderUtils;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.resources.ResourceLocation;
+import com.robertx22.forge_compat.client.ImageButton;
+import net.minecraft.resources.Identifier;
 
 public class WikiTypeButton extends ImageButton {
 
     public static int xSize = 20;
     public static int ySize = 20;
 
-    static ResourceLocation buttonLoc = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/clear_button.png");
+    static Identifier buttonLoc = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/clear_button.png");
 
-    ResourceLocation icon;
+    Identifier icon;
 
     WikiType type;
 

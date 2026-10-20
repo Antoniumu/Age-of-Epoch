@@ -1,10 +1,11 @@
 package com.robertx22.library_of_exile.utils;
 
-import net.minecraft.world.entity.Entity;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 
 public class SoundUtils {
@@ -21,16 +22,32 @@ public class SoundUtils {
         playSound(en, event, 1, 1);
     }
 
+    public static void playSound(Entity en, Holder<SoundEvent> event) {
+        playSound(en, event.value(), 1, 1);
+    }
+
     public static void playSound(Level world, BlockPos pos, SoundEvent event) {
         playSound(world, pos, event, 1, 1);
     }
 
+    public static void playSound(Level world, BlockPos pos, Holder<SoundEvent> event) {
+        playSound(world, pos, event.value(), 1, 1);
+    }
+
+    public static void playSound(Entity en, Holder<SoundEvent> event, float volume, float pitch) {
+        playSound(en, event.value(), volume, pitch);
+    }
+
     public static void playSound(Entity en, SoundEvent event, float volume, float pitch) {
-        if (!en.level.isClientSide) {
-            en.level.playSound(null, en.getX(), en.getY(), en.getZ(), event, SoundSource.PLAYERS, volume, pitch);
+        if (!en.level().isClientSide()) {
+            en.level().playSound(null, en.getX(), en.getY(), en.getZ(), event, SoundSource.PLAYERS, volume, pitch);
         } else {
-            en.level.playLocalSound(en.getX(), en.getY(), en.getZ(), event, SoundSource.PLAYERS, volume, pitch, true);
+            en.level().playLocalSound(en.getX(), en.getY(), en.getZ(), event, SoundSource.PLAYERS, volume, pitch, true);
         }
+    }
+
+    public static void playSound(Level world, BlockPos pos, Holder<SoundEvent> event, float volume, float pitch) {
+        playSound(world, pos, event.value(), SoundSource.PLAYERS, volume, pitch);
     }
 
     public static void playSound(Level world, BlockPos pos, SoundEvent event, float volume, float pitch) {
@@ -38,7 +55,7 @@ public class SoundUtils {
     }
 
     public static void playSound(Level world, BlockPos pos, SoundEvent event, SoundSource cat, float volume, float pitch) {
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), event, cat, volume, pitch);
         } else {
             world.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), event, cat, volume, pitch, true);

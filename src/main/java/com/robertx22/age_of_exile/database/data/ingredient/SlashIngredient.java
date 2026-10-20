@@ -8,7 +8,7 @@ import com.robertx22.library_of_exile.registry.ExileRegistryType;
 import com.robertx22.library_of_exile.registry.IAutoGson;
 import com.robertx22.library_of_exile.registry.JsonExileRegistry;
 import net.minecraft.world.item.Item;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import com.robertx22.forge_compat.registries.ForgeRegistries;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class SlashIngredient implements JsonExileRegistry<SlashIngredient>, IAut
     }
 
     public Item getItem() {
-        return ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(item_id));
+        return ForgeRegistries.ITEMS.getValue(Identifier.parse(item_id));
     }
 
     public boolean isAllowedInProfession(String id) {

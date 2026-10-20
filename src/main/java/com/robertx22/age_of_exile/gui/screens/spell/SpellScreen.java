@@ -1,7 +1,7 @@
 package com.robertx22.age_of_exile.gui.screens.spell;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.age_of_exile.database.data.spell_school.SpellSchool;
 import com.robertx22.age_of_exile.database.data.spells.components.Spell;
 import com.robertx22.age_of_exile.database.data.synergy.Synergy;
@@ -15,13 +15,13 @@ import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.localization.Words;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.ChatFormatting;
 
 import java.util.List;
 
 public class SpellScreen extends BaseScreen implements INamedScreen, ILeftRight {
-    private static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/spells/spell_school_background.png");
+    private static final Identifier BACKGROUND = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/spells/spell_school_background.png");
 
     static int sizeX = 250;
     static int sizeY = 233;
@@ -46,8 +46,8 @@ public class SpellScreen extends BaseScreen implements INamedScreen, ILeftRight 
     }
 
     @Override
-    public ResourceLocation iconLocation() {
-        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/icons/spells.png");
+    public Identifier iconLocation() {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/icons/spells.png");
     }
 
     @Override
@@ -125,8 +125,7 @@ public class SpellScreen extends BaseScreen implements INamedScreen, ILeftRight 
     public void render(PoseStack matrix, int x, int y, float ticks) {
 
         try {
-            mc.getTextureManager()
-                .bind(BACKGROUND);
+            com.robertx22.forge_compat.client.AbstractGui.bindTexture(BACKGROUND);
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
             blit(matrix, mc.getWindow()
                     .getGuiScaledWidth() / 2 - sizeX / 2,
@@ -134,14 +133,12 @@ public class SpellScreen extends BaseScreen implements INamedScreen, ILeftRight 
                     .getGuiScaledHeight() / 2 - sizeY / 2, 0, 0, sizeX, sizeY
             );
 
-            mc.getTextureManager()
-                .bind(currentSchool().getIconLoc());
+            com.robertx22.forge_compat.client.AbstractGui.bindTexture(currentSchool().getIconLoc());
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
             blit(matrix, guiLeft + 108, guiTop + 8, 34, 34, 34, 34, 34, 34);
 
             // background
-            mc.getTextureManager()
-                .bind(currentSchool().getBackgroundLoc());
+            com.robertx22.forge_compat.client.AbstractGui.bindTexture(currentSchool().getBackgroundLoc());
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
             blit(matrix, guiLeft + 7, guiTop + 7, 93, 36, 93, 36, 93, 36);

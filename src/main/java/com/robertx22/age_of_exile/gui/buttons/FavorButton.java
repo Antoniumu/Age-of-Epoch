@@ -6,9 +6,8 @@ import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.localization.Words;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
+import com.robertx22.forge_compat.client.ImageButton;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
@@ -23,7 +22,7 @@ public class FavorButton extends ImageButton {
     Minecraft mc = Minecraft.getInstance();
 
     public FavorButton(int xPos, int yPos) {
-        super(xPos, yPos, FAVOR_BUTTON_SIZE_X, FAVOR_BUTTON_SIZE_Y, 0, 0, FAVOR_BUTTON_SIZE_Y, ResourceLocation.parse("empty"), (button) -> {
+        super(xPos, yPos, FAVOR_BUTTON_SIZE_X, FAVOR_BUTTON_SIZE_Y, 0, 0, FAVOR_BUTTON_SIZE_Y, Identifier.parse("empty"), (button) -> {
         });
 
     }
@@ -59,12 +58,11 @@ public class FavorButton extends ImageButton {
     @Override
     public void renderButton(PoseStack matrix, int x, int y, float f) {
 
-        ResourceLocation TEX = Load.playerRPGData(mc.player).favor
+        Identifier TEX = Load.playerRPGData(mc.player).favor
             .getRank()
             .getTexture();
 
-        mc.getTextureManager()
-            .bind(TEX);
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(TEX);
         blit(matrix, this.x, this.y, 0, 0, this.width, this.height, width, height);
 
     }

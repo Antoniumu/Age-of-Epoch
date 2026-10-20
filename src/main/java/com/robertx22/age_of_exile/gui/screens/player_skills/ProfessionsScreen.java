@@ -1,7 +1,7 @@
 package com.robertx22.age_of_exile.gui.screens.player_skills;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.age_of_exile.database.data.player_skills.PlayerSkill;
 import com.robertx22.age_of_exile.database.registry.ExileDB;
 import com.robertx22.age_of_exile.gui.bases.BaseScreen;
@@ -13,7 +13,7 @@ import com.robertx22.age_of_exile.uncommon.localization.Words;
 import com.robertx22.library_of_exile.utils.CLOC;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.ChatFormatting;
 
 import java.util.Comparator;
@@ -22,7 +22,7 @@ import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 public class ProfessionsScreen extends BaseScreen implements INamedScreen {
-    private static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skills/skills_background.png");
+    private static final Identifier BACKGROUND = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skills/skills_background.png");
 
     static int sizeX = 256;
     static int sizeY = 207;
@@ -34,8 +34,8 @@ public class ProfessionsScreen extends BaseScreen implements INamedScreen {
     }
 
     @Override
-    public ResourceLocation iconLocation() {
-        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/icons/skills.png");
+    public Identifier iconLocation() {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/icons/skills.png");
     }
 
     @Override
@@ -105,13 +105,12 @@ public class ProfessionsScreen extends BaseScreen implements INamedScreen {
 
     static int BAR_X = 227;
     static int BAR_Y = 7;
-    static ResourceLocation BAR_TEX = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skills/bar.png");
+    static Identifier BAR_TEX = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skills/bar.png");
 
     @Override
     public void render(PoseStack matrix, int x, int y, float ticks) {
 
-        mc.getTextureManager()
-            .bind(BACKGROUND);
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(BACKGROUND);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         blit(matrix, mc.getWindow()
                 .getGuiScaledWidth() / 2 - sizeX / 2,
@@ -156,8 +155,7 @@ public class ProfessionsScreen extends BaseScreen implements INamedScreen {
 
         int y = guiTop + sizeY - 20;
 
-        mc.getTextureManager()
-            .bind(BAR_TEX);
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(BAR_TEX);
         blit(matrix, mc.getWindow()
                 .getGuiScaledWidth() / 2 - BAR_X / 2,
             y, 0, 0, BAR_X, BAR_Y
@@ -179,15 +177,15 @@ public class ProfessionsScreen extends BaseScreen implements INamedScreen {
     }
 
     private void renderTextAtMiddle(PoseStack matrix, String text, int y, ChatFormatting format) {
-        mc.font.drawShadow(matrix, text,
+        com.robertx22.forge_compat.client.AbstractGui.drawShadow(mc.font, matrix, text,
             guiLeft + sizeX / 2 - mc.font.width(text) / 2, y
-            , format.getColor());
+            , com.robertx22.forge_compat.common.CompatChatFormatting.getColor(format));
     }
 
     private void renderTextAtMiddle(PoseStack matrix, FormattedCharSequence text, int y, ChatFormatting format) {
-        mc.font.drawShadow(matrix, text,
+        com.robertx22.forge_compat.client.AbstractGui.drawShadow(mc.font, matrix, text,
             guiLeft + sizeX / 2 - mc.font.width(text) / 2, y
-            , format.getColor());
+            , com.robertx22.forge_compat.common.CompatChatFormatting.getColor(format));
     }
 
     public enum IconRenderType {

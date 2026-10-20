@@ -1,8 +1,8 @@
 package com.robertx22.age_of_exile.database.data.currency.base;
 
-import net.minecraft.advancements.critereon.CriterionTriggerInstance;
-import net.minecraft.advancements.critereon.EnchantedItemTrigger;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import com.robertx22.forge_compat.data.CriterionTriggerInstance;
+import com.robertx22.forge_compat.data.EnchantedItemTrigger;
+import com.robertx22.forge_compat.data.ShapelessRecipeBuilder;
 
 public interface IShapelessRecipe {
 
@@ -12,6 +12,3 @@ public interface IShapelessRecipe {
         return EnchantedItemTrigger.Instance.enchantedItem();
     }
 }
-
-
-

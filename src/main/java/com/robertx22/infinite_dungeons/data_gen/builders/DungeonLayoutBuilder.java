@@ -6,8 +6,8 @@ import com.robertx22.infinite_dungeons.database.db_types.layout.DungeonSpawn;
 import com.robertx22.infinite_dungeons.database.db_types.layout.ScoreConfig;
 import com.robertx22.infinite_dungeons.main.MainID;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.storage.loot.LootTables;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Consumer;
 
@@ -24,7 +24,7 @@ public class DungeonLayoutBuilder {
         b.layout.dungeon_group = group;
 
         // todo
-        b.layout.structure_file = ResourceLocation.fromNamespaceAndPath(MainID.MODID, "dungeons/" + id).toString();
+        b.layout.structure_file = Identifier.fromNamespaceAndPath(MainID.MODID, "dungeons/" + id).toString();
 
         return b;
 
@@ -42,9 +42,9 @@ public class DungeonLayoutBuilder {
 
     public DungeonLayout build() {
         if (layout.score_configs.isEmpty()) {
-            layout.score_configs.put(CompletitionScore.GOLD, ScoreConfig.defaultGold(LootTables.END_CITY_TREASURE));
-            layout.score_configs.put(CompletitionScore.SILVER, ScoreConfig.defaultSilver(LootTables.UNDERWATER_RUIN_BIG));
-            layout.score_configs.put(CompletitionScore.BRONZE, ScoreConfig.defaultBronze(LootTables.VILLAGE_PLAINS_HOUSE));
+            layout.score_configs.put(CompletitionScore.GOLD, ScoreConfig.defaultGold(BuiltInLootTables.END_CITY_TREASURE.identifier()));
+            layout.score_configs.put(CompletitionScore.SILVER, ScoreConfig.defaultSilver(BuiltInLootTables.UNDERWATER_RUIN_BIG.identifier()));
+            layout.score_configs.put(CompletitionScore.BRONZE, ScoreConfig.defaultBronze(BuiltInLootTables.VILLAGE_PLAINS_HOUSE.identifier()));
         }
         layout.addToSerializables();
         return layout;

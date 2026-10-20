@@ -4,9 +4,9 @@ import com.robertx22.age_of_exile.database.data.spells.entities.renders.ModTride
 import com.robertx22.age_of_exile.database.data.spells.entities.renders.MySpriteRenderer;
 import com.robertx22.age_of_exile.database.data.spells.entities.renders.RangerArrowRenderer;
 import com.robertx22.age_of_exile.mmorpg.registers.common.SlashEntities;
+import com.robertx22.forge_compat.fml.client.registry.RenderingRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
-import com.robertx22.forge_compat.fml.client.registry.RenderingRegistry;
 
 public class RenderRegister {
 
@@ -15,10 +15,9 @@ public class RenderRegister {
         RenderingRegistry.registerEntityRenderingHandler(SlashEntities.SIMPLE_PROJECTILE.get(), (d) -> new MySpriteRenderer<>(d, Minecraft.getInstance()
             .getItemRenderer()));
 
-        RenderingRegistry.registerEntityRenderingHandler(SlashEntities.SIMPLE_ARROW.get(), m -> new RangerArrowRenderer(m));
+        RenderingRegistry.registerEntityRenderingHandler(SlashEntities.SIMPLE_ARROW.get(), m -> new RangerArrowRenderer<>(m));
         RenderingRegistry.registerEntityRenderingHandler(SlashEntities.SIMPLE_BLOCK_ENTITY.get(), m -> new FallingBlockRenderer(m));
         RenderingRegistry.registerEntityRenderingHandler(SlashEntities.SIMPLE_TRIDENT.get(), m -> new ModTridentRenderer(m));
 
     }
 }
-

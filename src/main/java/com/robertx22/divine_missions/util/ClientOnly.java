@@ -10,7 +10,7 @@ public class ClientOnly {
     }
 
     public static void openMissionsScreen() {
-        Minecraft.getInstance()
+        Minecraft.getInstance().gui
             .setScreen(new MissionsScreen());
     }
 }

@@ -1,19 +1,17 @@
 package com.robertx22.age_of_exile.dimension;
 
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
+import com.robertx22.forge_compat.worldgen.StructureSeparationSettings;
 import com.robertx22.world_of_exile.config.FeatureConfig;
 import com.robertx22.world_of_exile.main.structures.base.StructureWrapper;
 import com.robertx22.world_of_exile.world_gen.AbstractPool;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.biome.Biome;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
-import net.minecraft.world.level.levelgen.structure.Structure;
-import com.robertx22.forge_compat.worldgen.VillageConfig;
-import net.minecraft.world.level.levelgen.structure.templatesystem.ProcessorLists;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
-import com.robertx22.forge_compat.worldgen.StructureSeparationSettings;
+
+import java.util.Collections;
 
 public class DungeonDimensionJigsaw extends StructureWrapper {
 
@@ -23,7 +21,7 @@ public class DungeonDimensionJigsaw extends StructureWrapper {
 
     public static FeatureConfig config;
 
-    static class MyHackyFastFix extends FeatureConfig.MyStructureConfig {
+    static class MyHackyFastFix implements FeatureConfig.MyStructureConfig {
         @Override
         public StructureSeparationSettings get() {
             return new StructureSeparationSettings(1, 0, 0);
@@ -35,22 +33,17 @@ public class DungeonDimensionJigsaw extends StructureWrapper {
     }
 
     public DungeonDimensionJigsaw() {
-        super(x -> x.getCategory()
-                .equals(Biome.Category.THEEND)
-            , DimensionIds.DUNGEON_STRUCTURE, false, config, GenerationStep.Decoration.SURFACE_STRUCTURES);
+        super(x -> false, DimensionIds.DUNGEON_STRUCTURE, false, config, GenerationStep.Decoration.SURFACE_STRUCTURES);
     }
 
     @Override
     public Structure createConfiguredFeature() {
-        return feature.get()
-            .configured(new VillageConfig(() -> {
-                return this.startPool;
-            }, 3));
+        return null;
     }
 
     @Override
-    public Structure<VillageConfig> createFeature() {
-        return new DungeonDimensionJigsawFeature(VillageConfig.CODEC);
+    public Structure createFeature() {
+        return null;
     }
 
     @Override
@@ -73,13 +66,13 @@ public class DungeonDimensionJigsaw extends StructureWrapper {
 
     static class Pool extends AbstractPool {
 
-        public Pool(ResourceLocation poolId) {
+        public Pool(Identifier poolId) {
             super(poolId);
         }
 
         @Override
         public StructureProcessorList processorList() {
-            return ProcessorLists.EMPTY;
+            return new StructureProcessorList(Collections.emptyList());
         }
     }
 

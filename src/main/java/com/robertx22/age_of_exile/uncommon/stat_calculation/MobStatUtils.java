@@ -60,8 +60,8 @@ public class MobStatUtils {
                 .GUID())
             .applyStats(mobdata);
 
-        if (WorldUtils.isMapWorldClass(en.level)) {
-            DungeonData data = Load.dungeonData(en.level).data.get(en.blockPosition()).data;
+        if (WorldUtils.isMapWorldClass(en.level())) {
+            DungeonData data = Load.dungeonData(en.level()).data.get(en.blockPosition()).data;
             if (!data.isEmpty()) {
                 data.af.getStats(mobdata.getLevel())
                     .forEach(x -> x.applyStats(mobdata));
@@ -91,7 +91,7 @@ public class MobStatUtils {
 
         List<ExactStatData> stats = new ArrayList<>();
 
-        float val = (-1F + ExileDB.getDimensionConfig(en.level).mob_strength_multi) * 100F;
+        float val = (-1F + ExileDB.getDimensionConfig(en.level()).mob_strength_multi) * 100F;
 
         stats.add(ExactStatData.noScaling(val, ModType.GLOBAL_INCREASE, Health.getInstance()
             .GUID()));

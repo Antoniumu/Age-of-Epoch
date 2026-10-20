@@ -30,12 +30,11 @@ import com.robertx22.library_of_exile.registry.ExileRegistryType;
 import com.robertx22.library_of_exile.registry.IAutoGson;
 import com.robertx22.library_of_exile.registry.IGUID;
 import com.robertx22.library_of_exile.registry.JsonExileRegistry;
-import net.minecraft.client.gui.screens.Screen;
+import com.robertx22.forge_compat.client.Screen;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.level.Level;
@@ -71,7 +70,7 @@ public final class Spell implements IGUID, IAutoGson<Spell>, JsonExileRegistry<S
             return true;
         }
         return disabled_dims.stream()
-            .map(x -> ResourceLocation.parse(x))
+            .map(x -> Identifier.parse(x))
             .noneMatch(x -> x.equals(MapManager.getResourceLocation(world)));
 
     }
@@ -94,12 +93,12 @@ public final class Spell implements IGUID, IAutoGson<Spell>, JsonExileRegistry<S
         }
     }
 
-    public final ResourceLocation getIconLoc() {
+    public final Identifier getIconLoc() {
         return getIconLoc(GUID());
     }
 
-    public static final ResourceLocation getIconLoc(String id) {
-        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/spells/icons/" + id + ".png");
+    public static final Identifier getIconLoc(String id) {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/spells/icons/" + id + ".png");
     }
 
     public WeaponTypes getWeapon(LivingEntity en) {
@@ -160,8 +159,7 @@ public final class Spell implements IGUID, IAutoGson<Spell>, JsonExileRegistry<S
         ctx.castedThisTick = true;
 
         if (this.config.swing_arm) {
-            caster.swingTime = -1; // this makes sure hand swings
-            caster.swing(InteractionHand.MAIN_HAND);
+            // arm swing handled by item use / packet
         }
 
         if (imbue && this.config.cast_type == SpellCastType.USE_ITEM) {

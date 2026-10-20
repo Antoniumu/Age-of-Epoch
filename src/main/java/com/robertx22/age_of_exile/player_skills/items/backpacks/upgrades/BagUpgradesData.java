@@ -6,7 +6,7 @@ import info.loenwind.autosave.annotations.Store;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.Registry;
 
 import java.util.ArrayList;
@@ -96,7 +96,7 @@ public class BagUpgradesData {
         List<BackpackUpgradeItem> list = new ArrayList<>();
 
         upgrades.forEach(x -> {
-            Item item = BuiltInRegistries.ITEM.get(ResourceLocation.parse(x));
+            Item item = BuiltInRegistries.ITEM.getValue(Identifier.parse(x));
             if (item instanceof BackpackUpgradeItem) {
                 list.add((BackpackUpgradeItem) item);
             }

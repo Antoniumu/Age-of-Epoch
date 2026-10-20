@@ -95,12 +95,12 @@ public class FireSpells implements ExileRegistryInit {
             .onExpire("block", PartBuilder.aoeParticles(ParticleTypes.LAVA, 150D, 3D))
             .onExpire("block", PartBuilder.aoeParticles(ParticleTypes.ASH, 25D, 3D))
             .onExpire("block", PartBuilder.aoeParticles(ParticleTypes.EXPLOSION, 1D, 1D))
-            .onExpire("block", PartBuilder.playSound(SoundEvents.GENERIC_EXPLODE, 1D, 1D))
+            .onExpire("block", PartBuilder.playSound(SoundEvents.GENERIC_EXPLODE.value(), 1D, 1D))
             .build();
 
         SpellBuilder.of(FIRE_NOVA_ID, SpellConfiguration.Builder.instant(20, 20 * 25), "Fire Nova",
                 Arrays.asList(SpellTag.area, SpellTag.damage))
-            .onCast(PartBuilder.playSound(SoundEvents.GENERIC_EXPLODE, 1D, 1D))
+            .onCast(PartBuilder.playSound(SoundEvents.GENERIC_EXPLODE.value(), 1D, 1D))
 
             .onCast(PartBuilder.nova(ParticleTypes.FLAME, 200D, 2.8D, 0.05D))
             .onCast(PartBuilder.nova(ParticleTypes.FLAME, 100D, 2D, 0.05D))

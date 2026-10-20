@@ -22,7 +22,7 @@ public class Energy extends Stat {
         this.scaling = StatScaling.NORMAL;
         this.group = StatGroup.MAIN;
 
-        this.format = ChatFormatting.GREEN.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.GREEN);
         this.icon = "\u262F";
     }
 

@@ -12,12 +12,12 @@ public class ClientOnly {
     }
 
     public static void openPickDungeonScreen() {
-        Minecraft.getInstance()
+        Minecraft.getInstance().gui
             .setScreen(new PickDungeonScreen());
     }
 
     public static void openDungeonShopScreen() {
-        Minecraft.getInstance()
+        Minecraft.getInstance().gui
             .setScreen(new DungeonShopScreen());
     }
 }

@@ -14,7 +14,7 @@ public class ResetSpellCooldowns {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(
             literal(CommandRefs.ID)
-                .then(literal("reset").requires(e -> e.hasPermission(2))
+                .then(literal("reset").requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS))
                     .then(literal("spell_cooldowns")
                         .then(argument("target", EntityArgument.entity())
                             .executes(

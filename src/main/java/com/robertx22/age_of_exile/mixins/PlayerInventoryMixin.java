@@ -65,7 +65,7 @@ public class PlayerInventoryMixin {
                                 return;
 
                             } else {
-                                SoundUtils.ding(inv.player.level, inv.player.blockPosition());
+                                SoundUtils.ding(inv.player.level(), inv.player.blockPosition());
                                 SoundUtils.playSound(inv.player, SoundEvents.ITEM_PICKUP, 1, 1);
                                 results.forEach(x -> PlayerUtils.giveItem(x, inv.player));
                             }

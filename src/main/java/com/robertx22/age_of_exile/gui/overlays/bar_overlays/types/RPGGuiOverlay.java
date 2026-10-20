@@ -1,7 +1,7 @@
 package com.robertx22.age_of_exile.gui.overlays.bar_overlays.types;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.age_of_exile.capability.entity.EntityData;
 import com.robertx22.age_of_exile.config.forge.ClientConfigs;
 import com.robertx22.age_of_exile.database.registry.ExileDB;
@@ -14,15 +14,15 @@ import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.enumclasses.PlayerGUIs;
 import com.robertx22.library_of_exile.utils.CLOC;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import com.robertx22.forge_compat.client.AbstractGui;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.ChatFormatting;
 
-public class RPGGuiOverlay extends Gui {
+public class RPGGuiOverlay extends AbstractGui {
 
-    static ResourceLocation BASETEX = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/overlay/base.png");
-    static ResourceLocation MANA_RESERVE = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/overlay/mana_reserve.png");
+    static Identifier BASETEX = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/overlay/base.png");
+    static Identifier MANA_RESERVE = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/overlay/mana_reserve.png");
 
     public RPGGuiOverlay() {
         super();
@@ -51,14 +51,12 @@ public class RPGGuiOverlay extends Gui {
         PlayerSkillData data = Load.playerRPGData(mc.player).professions
             .getDataFor(skill);
 
-        mc.getTextureManager()
-            .bind(Load.playerRPGData(mc.player).professions
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(Load.playerRPGData(mc.player).professions
                 .getBackGroundTextureFor(skill));
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         blit(matrix, x, y, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X);
 
-        mc.getTextureManager()
-            .bind(ExileDB.PlayerSkills()
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(ExileDB.PlayerSkills()
                 .get(skill.id)
                 .getIcon());
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -90,7 +88,7 @@ public class RPGGuiOverlay extends Gui {
             if (mc.player == null) {
                 return;
             }
-            if (mc.options.renderDebug || mc.player.isCreative() || mc.player.isSpectator()) {
+            if (mc.getDebugOverlay().showDebugScreen() || mc.player.isCreative() || mc.player.isSpectator()) {
                 return;
             }
 

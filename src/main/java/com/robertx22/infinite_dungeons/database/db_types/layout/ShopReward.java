@@ -1,4 +1,5 @@
 package com.robertx22.infinite_dungeons.database.db_types.layout;
+import net.minecraft.network.chat.MutableComponent;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -10,8 +11,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 import com.robertx22.forge_compat.registries.ForgeRegistries;
 
@@ -22,12 +22,12 @@ public class ShopReward {
         ITEM {
             @Override
             public ItemStack getStack(ShopReward reward) {
-                ItemStack stack = new ItemStack(ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(reward.value)), reward.count);
+                ItemStack stack = new ItemStack(ForgeRegistries.ITEMS.getValue(Identifier.parse(reward.value)), reward.count);
 
                 if (!reward.data.isEmpty()) {
                     CompoundTag nbt = null;
                     try {
-                        nbt = new TagParser(new StringReader(reward.data)).readStruct();
+                        nbt = TagParser.parseCompoundFully(reward.data);
                     } catch (CommandSyntaxException e) {
                         e.printStackTrace();
                     }
@@ -43,7 +43,7 @@ public class ShopReward {
             }
         };
 
-        public Component getStackNameForTooltip(ShopReward reward) {
+        public MutableComponent getStackNameForTooltip(ShopReward reward) {
 
             ItemStack stack = getStack(reward);
 

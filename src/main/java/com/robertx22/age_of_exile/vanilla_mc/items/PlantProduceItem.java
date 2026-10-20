@@ -14,7 +14,7 @@ public class PlantProduceItem extends Item implements IAutoLocName, IAutoModel, 
     public SkillItemTier tier;
 
     public PlantProduceItem(SkillItemTier tier) {
-        super(new Properties().tab(CreativeTabs.Professions));
+        super(new Properties());
         this.tier = tier;
     }
 

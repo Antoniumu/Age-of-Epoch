@@ -15,7 +15,6 @@ import info.loenwind.autosave.annotations.Store;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
 import java.util.ArrayList;

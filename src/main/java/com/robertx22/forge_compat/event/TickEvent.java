@@ -14,6 +14,12 @@ public class TickEvent extends Event {
         this.phase = phase;
     }
 
+    public static class ClientTickEvent extends TickEvent {
+        public ClientTickEvent(Phase phase) {
+            super(phase);
+        }
+    }
+
     public static class ServerTickEvent extends TickEvent {
         public final MinecraftServer server;
 

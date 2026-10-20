@@ -7,6 +7,7 @@ import com.robertx22.infinite_dungeons.database.ids.DungeonModifierIds;
 import com.robertx22.infinite_dungeons.entity.TickingTNTEntity;
 import com.robertx22.infinite_dungeons.main.DungeonEntities;
 import com.robertx22.library_of_exile.events.base.ExileEvents;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.LivingEntity;
 
 public class MobSpawnTntOnDeath extends DungeonModifier {
@@ -36,11 +37,11 @@ public class MobSpawnTntOnDeath extends DungeonModifier {
 
         LivingEntity en = event.mob;
         TickingTNTEntity tnt = (TickingTNTEntity) DungeonEntities.TICKING_TNT.get()
-            .create(event.mob.level);
+            .create(event.mob.level(), EntitySpawnReason.MOB_SUMMONED);
 
         tnt.setPos(en.getX(), en.getY(), en.getZ());
 
-        en.level.addFreshEntity(tnt);
+        en.level().addFreshEntity(tnt);
 
     }
 

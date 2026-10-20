@@ -24,9 +24,8 @@ public class IsUnderExileEffect extends StatCondition {
     @Override
     public boolean can(EffectEvent event, EffectSides statSource, StatData data, Stat stat) {
         return event.getSide(side)
-            .hasEffect(ExileDB.ExileEffects()
-                .get(effect)
-                .getStatusEffect());
+            .hasEffect(net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.wrapAsHolder(
+                ExileDB.ExileEffects().get(effect).getStatusEffect()));
     }
 
     @Override

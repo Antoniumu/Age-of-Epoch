@@ -15,7 +15,7 @@ import com.robertx22.library_of_exile.utils.LoadSave;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 import com.robertx22.forge_compat.common.capabilities.Capability;
 import com.robertx22.forge_compat.common.capabilities.CapabilityInject;
@@ -30,7 +30,7 @@ import java.util.List;
 @Mod.EventBusSubscriber
 public class PlayerMissionCap implements IPlayerCap {
 
-    public static final ResourceLocation RESOURCE = ResourceLocation.fromNamespaceAndPath(Ref.MODID, "player_missions");
+    public static final Identifier RESOURCE = Identifier.fromNamespaceAndPath(Ref.MODID, "player_missions");
 
     @CapabilityInject(PlayerMissionCap.class)
     public static Capability<PlayerMissionCap> Data = null;
@@ -129,11 +129,11 @@ public class PlayerMissionCap implements IPlayerCap {
         if (level.GUID()
             .equals(after.GUID()) == false) {
 
-            owner.displayClientMessage(Component.translatable("divine_missions.new_reputation_message",
+            owner.sendSystemMessage(Component.translatable("divine_missions.new_reputation_message",
                 after.getTranslatable()
                     .withStyle(after.getFormat()),
                 god.getTranslatable()
-                    .withStyle(god.getFormat())), false);
+                    .withStyle(god.getFormat())));
         }
     }
 

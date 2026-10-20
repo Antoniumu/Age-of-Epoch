@@ -9,7 +9,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 public abstract class TieredItem extends Item implements IAutoLocName, IAutoModel {
@@ -17,12 +16,12 @@ public abstract class TieredItem extends Item implements IAutoLocName, IAutoMode
     public SkillItemTier tier;
 
     public TieredItem(SkillItemTier tier) {
-        super(new Item.Properties().tab(CreativeTabs.Professions));
+        super(new Item.Properties());
         this.tier = tier;
     }
 
     public TieredItem(SkillItemTier tier, Item.Properties settings) {
-        super(settings.tab(CreativeTabs.Professions));
+        super(settings);
         this.tier = tier;
     }
 

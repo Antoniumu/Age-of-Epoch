@@ -25,7 +25,7 @@ public class SpellPower extends Stat {
         this.group = StatGroup.MAIN;
 
         this.icon = "\u2748";
-        this.format = ChatFormatting.BLUE.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.BLUE);
 
     }
 

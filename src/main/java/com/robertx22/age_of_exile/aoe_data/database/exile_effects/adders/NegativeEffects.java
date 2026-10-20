@@ -8,7 +8,7 @@ import com.robertx22.age_of_exile.aoe_data.database.stats.Stats;
 import com.robertx22.age_of_exile.aoe_data.database.stats.base.EffectCtx;
 import com.robertx22.age_of_exile.aoe_data.database.stats.old.DatapackStats;
 import com.robertx22.age_of_exile.database.data.exile_effects.EffectTags;
-import com.robertx22.age_of_exile.database.data.exile_effects.MobEffectCategory;
+import com.robertx22.age_of_exile.database.data.exile_effects.EffectType;
 import com.robertx22.age_of_exile.database.data.exile_effects.VanillaStatData;
 import com.robertx22.age_of_exile.database.data.spells.SetAdd;
 import com.robertx22.age_of_exile.database.data.spells.components.actions.SpellAction;
@@ -30,24 +30,24 @@ import static net.minecraft.world.entity.ai.attributes.Attributes.*;
 
 public class NegativeEffects implements ExileRegistryInit {
 
-    public static EffectCtx ELE_WEAKNESS = new EffectCtx("ele_weakness", "Ele Weakness", 0, Elements.Elemental, MobEffectCategory.negative);
-    public static EffectCtx PETRIFY = new EffectCtx("petrify", "Petrify", 1, Elements.Earth, MobEffectCategory.negative);
-    public static EffectCtx CHILL = new EffectCtx("chill", "Chill", 2, Elements.Water, MobEffectCategory.negative);
-    public static EffectCtx POISON = new EffectCtx("poison", "Poison", 3, Elements.Earth, MobEffectCategory.negative);
-    public static EffectCtx WOUNDS = new EffectCtx("wounds", "Wounds", 4, Elements.Physical, MobEffectCategory.negative);
-    public static EffectCtx BURN = new EffectCtx("burn", "Burn", 5, Elements.Fire, MobEffectCategory.negative);
-    public static EffectCtx TORMENT = new EffectCtx("torment", "Torment", 7, Elements.Elemental, MobEffectCategory.negative);
-    public static EffectCtx BLEED = new EffectCtx("bleed", "Bleed", 8, Elements.Physical, MobEffectCategory.negative);
-    public static EffectCtx BLIND = new EffectCtx("blind", "Blind", 10, Elements.Earth, MobEffectCategory.negative);
-    public static EffectCtx STUN = new EffectCtx("stun", "Stun", 11, Elements.Physical, MobEffectCategory.negative);
-    public static EffectCtx SLOW = new EffectCtx("slow", "Slow", 12, Elements.Physical, MobEffectCategory.negative);
-    public static EffectCtx AGONY = new EffectCtx("agony", "Curse of Agony", 13, Elements.Elemental, MobEffectCategory.negative);
-    public static EffectCtx WEAKNESS = new EffectCtx("weak", "Curse of Weakness", 14, Elements.Elemental, MobEffectCategory.negative);
-    public static EffectCtx DESPAIR = new EffectCtx("despair", "Curse of Despair", 15, Elements.Elemental, MobEffectCategory.negative);
-    public static EffectCtx CHARM = new EffectCtx("charm", "Charm", 16, Elements.Elemental, MobEffectCategory.negative);
-    public static EffectCtx GROUNDING = new EffectCtx("ground", "Grounding", 17, Elements.Physical, MobEffectCategory.negative);
-    public static EffectCtx MARK_OF_DEATH = new EffectCtx("mark_of_death", "Mark of Death", 18, Elements.Physical, MobEffectCategory.negative);
-    public static EffectCtx SHRED = new EffectCtx("shred", "Shred", 19, Elements.Physical, MobEffectCategory.negative);
+    public static EffectCtx ELE_WEAKNESS = new EffectCtx("ele_weakness", "Ele Weakness", 0, Elements.Elemental, EffectType.negative);
+    public static EffectCtx PETRIFY = new EffectCtx("petrify", "Petrify", 1, Elements.Earth, EffectType.negative);
+    public static EffectCtx CHILL = new EffectCtx("chill", "Chill", 2, Elements.Water, EffectType.negative);
+    public static EffectCtx POISON = new EffectCtx("poison", "Poison", 3, Elements.Earth, EffectType.negative);
+    public static EffectCtx WOUNDS = new EffectCtx("wounds", "Wounds", 4, Elements.Physical, EffectType.negative);
+    public static EffectCtx BURN = new EffectCtx("burn", "Burn", 5, Elements.Fire, EffectType.negative);
+    public static EffectCtx TORMENT = new EffectCtx("torment", "Torment", 7, Elements.Elemental, EffectType.negative);
+    public static EffectCtx BLEED = new EffectCtx("bleed", "Bleed", 8, Elements.Physical, EffectType.negative);
+    public static EffectCtx BLIND = new EffectCtx("blind", "Blind", 10, Elements.Earth, EffectType.negative);
+    public static EffectCtx STUN = new EffectCtx("stun", "Stun", 11, Elements.Physical, EffectType.negative);
+    public static EffectCtx SLOW = new EffectCtx("slow", "Slow", 12, Elements.Physical, EffectType.negative);
+    public static EffectCtx AGONY = new EffectCtx("agony", "Curse of Agony", 13, Elements.Elemental, EffectType.negative);
+    public static EffectCtx WEAKNESS = new EffectCtx("weak", "Curse of Weakness", 14, Elements.Elemental, EffectType.negative);
+    public static EffectCtx DESPAIR = new EffectCtx("despair", "Curse of Despair", 15, Elements.Elemental, EffectType.negative);
+    public static EffectCtx CHARM = new EffectCtx("charm", "Charm", 16, Elements.Elemental, EffectType.negative);
+    public static EffectCtx GROUNDING = new EffectCtx("ground", "Grounding", 17, Elements.Physical, EffectType.negative);
+    public static EffectCtx MARK_OF_DEATH = new EffectCtx("mark_of_death", "Mark of Death", 18, Elements.Physical, EffectType.negative);
+    public static EffectCtx SHRED = new EffectCtx("shred", "Shred", 19, Elements.Physical, EffectType.negative);
 
     @Override
     public void registerAll() {

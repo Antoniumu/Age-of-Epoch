@@ -21,7 +21,7 @@ import com.robertx22.library_of_exile.utils.LoadSave;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import com.robertx22.forge_compat.common.capabilities.Capability;
 import com.robertx22.forge_compat.common.capabilities.CapabilityInject;
 import com.robertx22.forge_compat.event.AttachCapabilitiesEvent;
@@ -35,7 +35,7 @@ import java.util.UUID;
 
 @Mod.EventBusSubscriber
 public class EntitySpellCap {
-    public static final ResourceLocation RESOURCE = ResourceLocation.fromNamespaceAndPath(Ref.MODID, "spells");
+    public static final Identifier RESOURCE = Identifier.fromNamespaceAndPath(Ref.MODID, "spells");
 
     private static final String PLAYER_SPELL_DATA = "player_spells_data";
     private static final String GEMS = "gems";

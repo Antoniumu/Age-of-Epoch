@@ -6,9 +6,9 @@ import java.util.Locale;
 
 public enum ModType {
 
-    FLAT("flat", AttributeModifier.Operation.ADDITION),
-    PERCENT("percent", AttributeModifier.Operation.MULTIPLY_BASE),
-    GLOBAL_INCREASE("global_increase", AttributeModifier.Operation.MULTIPLY_TOTAL);
+    FLAT("flat", AttributeModifier.Operation.ADD_VALUE),
+    PERCENT("percent", AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+    GLOBAL_INCREASE("global_increase", AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
     ModType(String id, AttributeModifier.Operation op) {
         this.id = id;

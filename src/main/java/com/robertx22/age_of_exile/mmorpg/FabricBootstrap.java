@@ -29,11 +29,10 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
@@ -103,8 +102,8 @@ public class FabricBootstrap {
         ResourceManagerHelper.get(PackType.SERVER_DATA)
             .registerReloadListener(new SimpleSynchronousResourceReloadListener() {
                 @Override
-                public ResourceLocation getFabricId() {
-                    return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "reload_bridge");
+                public Identifier getFabricId() {
+                    return Identifier.fromNamespaceAndPath(SlashRef.MODID, "reload_bridge");
                 }
 
                 @Override
@@ -115,13 +114,11 @@ public class FabricBootstrap {
 
         // ---- player connection / lifecycle ----
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            ServerPlayer player = handler.player();
-            SimpleChannel.CONNECTION_PLAYERS.put(player.connection.connection, player);
+            ServerPlayer player = handler.player;
             MinecraftForge.EVENT_BUS.post(new PlayerEvent.PlayerLoggedInEvent(player));
         });
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
-            ServerPlayer player = handler.player();
-            SimpleChannel.CONNECTION_PLAYERS.remove(player.connection.connection);
+            ServerPlayer player = handler.player;
             MinecraftForge.EVENT_BUS.post(new PlayerEvent.PlayerLoggedOutEvent(player));
         });
         net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
@@ -137,9 +134,9 @@ public class FabricBootstrap {
             MinecraftForge.EVENT_BUS.post(new TickEvent.ServerTickEvent(TickEvent.Phase.START, server)));
         ServerTickEvents.END_SERVER_TICK.register(server ->
             MinecraftForge.EVENT_BUS.post(new TickEvent.ServerTickEvent(TickEvent.Phase.END, server)));
-        ServerTickEvents.START_WORLD_TICK.register(world ->
+        ServerTickEvents.START_LEVEL_TICK.register(world ->
             MinecraftForge.EVENT_BUS.post(new TickEvent.WorldTickEvent(TickEvent.Phase.START, world)));
-        ServerTickEvents.END_WORLD_TICK.register(world ->
+        ServerTickEvents.END_LEVEL_TICK.register(world ->
             MinecraftForge.EVENT_BUS.post(new TickEvent.WorldTickEvent(TickEvent.Phase.END, world)));
 
         // ---- interactions ----

@@ -31,9 +31,7 @@ public class LivingHurtUtils {
 
             List<ItemStack> curios = MyCurioUtils.getAllSlots(player);
 
-            curios.forEach(x -> x.hurtAndBreak(getItemDamage(dmg), player, (entity) -> {
-                entity.broadcastBreakEvent(EquipmentSlot.MAINHAND);
-            }));
+            curios.forEach(x -> x.hurtAndBreak(getItemDamage(dmg), player, EquipmentSlot.MAINHAND));
 
         }
     }
@@ -42,7 +40,7 @@ public class LivingHurtUtils {
 
         LivingEntity target = event.getTargetEntity();
 
-        if (target.level.isClientSide) {
+        if (target.level().isClientSide()) {
             return;
         }
 

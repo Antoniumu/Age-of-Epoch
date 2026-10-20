@@ -1,17 +1,16 @@
 package com.robertx22.age_of_exile.player_skills.items.backpacks.mat_pouch;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import com.robertx22.forge_compat.client.AbstractContainerScreen;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 
 public class MatBagScreen extends AbstractContainerScreen<MatBagContainer> {
-    private ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/backpack/pouch.png");
+    private Identifier texture = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/backpack/pouch.png");
 
     public MatBagScreen(MatBagContainer handler, Inventory inventory, Component text) {
         super(handler, inventory, Component.literal(""));
@@ -22,9 +21,7 @@ public class MatBagScreen extends AbstractContainerScreen<MatBagContainer> {
 
     @Override
     protected void renderBg(PoseStack matrices, float delta, int mouseX, int mouseY) {
-        Minecraft.getInstance()
-            .getTextureManager()
-            .bind(texture);
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(texture);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         blit(matrices, this.leftPos, this.topPos, 0, 0, imageWidth, imageHeight);
 

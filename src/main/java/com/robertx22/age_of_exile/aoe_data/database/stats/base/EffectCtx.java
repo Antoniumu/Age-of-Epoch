@@ -1,23 +1,23 @@
 package com.robertx22.age_of_exile.aoe_data.database.stats.base;
 
-import com.robertx22.age_of_exile.database.data.exile_effects.MobEffectCategory;
+import com.robertx22.age_of_exile.database.data.exile_effects.EffectType;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.uncommon.enumclasses.Elements;
 import com.robertx22.library_of_exile.registry.IGUID;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Objects;
 
 public class EffectCtx extends AutoHashClass implements IGUID {
 
-    public MobEffectCategory type;
+    public EffectType type;
     public String resourcePath;
     public String id;
     public Elements element;
     public String locname;
 
-    public ResourceLocation getEffectLocation() {
-        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, resourcePath);
+    public Identifier getEffectLocation() {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, resourcePath);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class EffectCtx extends AutoHashClass implements IGUID {
         return Objects.hash(resourcePath, id);
     }
 
-    public EffectCtx(String id, String locname, int num, Elements element, MobEffectCategory type) {
+    public EffectCtx(String id, String locname, int num, Elements element, EffectType type) {
         this.id = id;
         this.resourcePath = type.name() + "/" + num;
         this.element = element;

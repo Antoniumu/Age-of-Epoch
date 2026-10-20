@@ -4,7 +4,7 @@ import com.robertx22.library_of_exile.events.base.ExileEvents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.Container;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.LootContextParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
@@ -15,15 +15,15 @@ public class ChestGenLootMixin {
     public static void onLootGen(Container inventory, LootContext context) {
 
         try {
-            if (context.hasParam(LootContextParams.THIS_ENTITY) &&
-                context.hasParam(LootContextParams.ORIGIN)
-                && context.getParamOrNull(LootContextParams.THIS_ENTITY) instanceof Player) {
+            if (context.hasParameter(LootContextParams.THIS_ENTITY) &&
+                context.hasParameter(LootContextParams.ORIGIN)
+                && context.getOptionalParameter(LootContextParams.THIS_ENTITY) instanceof Player) {
 
                 BlockEntity chest = null;
-                BlockPos pos = new BlockPos(context.getParamOrNull(LootContextParams.ORIGIN));
+                BlockPos pos = BlockPos.containing(context.getOptionalParameter(LootContextParams.ORIGIN));
 
-                Player player = (Player) context.getParamOrNull(LootContextParams.THIS_ENTITY);
-                Level world = player.level;
+                Player player = (Player) context.getOptionalParameter(LootContextParams.THIS_ENTITY);
+                Level world = player.level();
 
                 if (inventory instanceof BlockEntity) {
                     chest = (BlockEntity) inventory;

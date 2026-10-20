@@ -5,10 +5,11 @@ import com.robertx22.age_of_exile.database.data.spells.spell_classes.bases.MyDam
 import com.robertx22.age_of_exile.mixin_ducks.LivingEntityAccesor;
 import com.robertx22.age_of_exile.mixin_methods.CanEntityHavePotionMixin;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.HealthUtils;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.gen.Invoker;
@@ -17,15 +18,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import net.minecraft.util.Mth;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin implements LivingEntityAccesor {
 
     @Shadow
-    protected abstract float getVoicePitch();
+    public abstract float getVoicePitch();
 
     @Override
-    @Invoker("blockedByShield")
+    @Invoker("blockedByItem")
     public abstract void myknockback(LivingEntity target);
 
     @Override
@@ -44,43 +44,34 @@ public abstract class LivingEntityMixin implements LivingEntityAccesor {
     public float reduceHealPerLevel(float amount, float arg) {
         LivingEntity en = (LivingEntity) (Object) this;
         return HealthUtils.realToVanilla(en, amount);
-
     }
 
-    // ENSURE MY SPECIAL DAMAGE ISNT LOWERED BY ARMOR, ENCHANTS ETC
-    @Inject(method = "getDamageAfterMagicAbsorb(Lnet/minecraft/util/DamageSource;F)F", at = @At(value = "HEAD"), cancellable = true)
+    @Inject(method = "getDamageAfterMagicAbsorb", at = @At(value = "HEAD"), cancellable = true)
     public void hookench(DamageSource source, float amount, CallbackInfoReturnable<Float> ci) {
-        LivingEntity en = (LivingEntity) (Object) this;
         if (source instanceof MyDamageSource) {
             ci.setReturnValue(amount);
         }
-
     }
 
-    @Inject(method = "getDamageAfterMagicAbsorb(Lnet/minecraft/util/DamageSource;F)F", at = @At(value = "RETURN"), cancellable = true)
+    @Inject(method = "getDamageAfterMagicAbsorb", at = @At(value = "RETURN"), cancellable = true)
     public void hookenchreturn(DamageSource source, float amount, CallbackInfoReturnable<Float> ci) {
         LivingEntity en = (LivingEntity) (Object) this;
-
-        if (!source.isBypassMagic()) {
+        if (!source.is(DamageTypeTags.BYPASSES_MAGIC)) {
             LivingHurtUtils.damageCurioItems(en, amount);
         }
         if (source instanceof MyDamageSource) {
             ci.setReturnValue(amount);
         }
-
     }
 
-    @Inject(method = "getDamageAfterArmorAbsorb(Lnet/minecraft/util/DamageSource;F)F", at = @At(value = "HEAD"), cancellable = true)
+    @Inject(method = "getDamageAfterArmorAbsorb", at = @At(value = "HEAD"), cancellable = true)
     public void hookarmortodmg(DamageSource source, float amount, CallbackInfoReturnable<Float> ci) {
-        LivingEntity en = (LivingEntity) (Object) this;
         if (source instanceof MyDamageSource) {
-            //damageArmor(source, Mth.clamp(amount, 2, 10));
             ci.setReturnValue(amount);
         }
     }
-    // ENSURE MY SPECIAL DAMAGE ISNT LOWERED BY ARMOR, ENCHANTS ETC
 
-    @Inject(method = "canBeAffected(Lnet/minecraft/potion/MobEffectInstance;)Z", at = @At(value = "HEAD"), cancellable = true)
+    @Inject(method = "canBeAffected", at = @At(value = "HEAD"), cancellable = true)
     public void hook(MobEffectInstance effect, CallbackInfoReturnable<Boolean> ci) {
         try {
             LivingEntity en = (LivingEntity) (Object) this;
@@ -89,5 +80,4 @@ public abstract class LivingEntityMixin implements LivingEntityAccesor {
             e.printStackTrace();
         }
     }
-
 }

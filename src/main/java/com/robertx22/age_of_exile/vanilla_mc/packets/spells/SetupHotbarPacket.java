@@ -8,7 +8,7 @@ import com.robertx22.library_of_exile.main.MyPacket;
 import com.robertx22.library_of_exile.packets.ExilePacketContext;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class SetupHotbarPacket extends MyPacket<SetupHotbarPacket> {
 
@@ -24,8 +24,8 @@ public class SetupHotbarPacket extends MyPacket<SetupHotbarPacket> {
     }
 
     @Override
-    public ResourceLocation getIdentifier() {
-        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "setup_hotbar");
+    public Identifier getIdentifier() {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, "setup_hotbar");
     }
 
     @Override

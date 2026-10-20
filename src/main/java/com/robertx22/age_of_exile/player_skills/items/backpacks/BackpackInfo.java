@@ -46,7 +46,7 @@ public class BackpackInfo {
     public boolean canSalvage(ItemStack stack) {
 
         if (dontSalvageEnchantedOrNamed) {
-            if (stack.isEnchanted() || stack.hasCustomHoverName()) {
+            if (stack.isEnchanted() || stack.has(net.minecraft.core.component.DataComponents.CUSTOM_NAME)) {
                 return false;
             }
         }

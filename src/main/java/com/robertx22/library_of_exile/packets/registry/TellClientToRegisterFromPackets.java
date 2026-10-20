@@ -6,13 +6,13 @@ import com.robertx22.library_of_exile.packets.ExilePacketContext;
 import com.robertx22.library_of_exile.registry.RegistryPackets;
 import com.robertx22.library_of_exile.registry.SyncTime;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class TellClientToRegisterFromPackets extends MyPacket<TellClientToRegisterFromPackets> {
 
     @Override
-    public ResourceLocation getIdentifier() {
-        return ResourceLocation.fromNamespaceAndPath(Ref.MODID, "tell_client_to_reg_from_packets");
+    public Identifier getIdentifier() {
+        return Identifier.fromNamespaceAndPath(Ref.MODID, "tell_client_to_reg_from_packets");
     }
 
     @Override

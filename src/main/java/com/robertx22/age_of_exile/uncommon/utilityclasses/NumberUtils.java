@@ -68,7 +68,7 @@ public class NumberUtils {
     public static String formatDamageNumber(DamageEvent data, int val) {
         String num = format(val);
 
-        if (data.data.getBoolean(EventData.CRIT)) {
+        if (data.data.getBooleanOr(EventData.CRIT, false)) {
             num += "!";
         }
 

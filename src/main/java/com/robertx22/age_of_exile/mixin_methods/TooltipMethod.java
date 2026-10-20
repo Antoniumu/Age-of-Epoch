@@ -15,12 +15,11 @@ import com.robertx22.age_of_exile.uncommon.interfaces.data_items.ICommonDataItem
 import com.robertx22.age_of_exile.uncommon.utilityclasses.TooltipUtils;
 import com.robertx22.library_of_exile.registry.Database;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
+import com.robertx22.forge_compat.client.Screen;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -28,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 import com.robertx22.age_of_exile.uncommon.utilityclasses.StackNBT;
-import net.minecraft.world.item.Tier;
+import com.robertx22.forge_compat.common.Tier;
 public class TooltipMethod {
     public static void getTooltip(ItemStack stack, Player entity, TooltipFlag tooltipContext, CallbackInfoReturnable<List<Component>> list) {
 
@@ -69,7 +68,7 @@ public class TooltipMethod {
                 }
             }
 
-            if (player == null || player.level == null) {
+            if (player == null || player.level() == null) {
                 return;
             }
 
@@ -84,7 +83,7 @@ public class TooltipMethod {
             if (unit == null) {
                 return;
             }
-            if (!Database.areDatapacksLoaded(player.level)) {
+            if (!Database.areDatapacksLoaded(player.level())) {
                 return;
             }
 

@@ -1,8 +1,8 @@
 package com.robertx22.age_of_exile.mmorpg.registers.client;
 
 import com.robertx22.age_of_exile.mmorpg.registers.common.SlashBlocks;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import com.robertx22.forge_compat.client.ItemBlockRenderTypes;
+import com.robertx22.forge_compat.client.RenderType;
 
 public class RenderLayersRegister {
     public static void setup() {

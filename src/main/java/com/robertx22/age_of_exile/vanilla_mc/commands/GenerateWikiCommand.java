@@ -13,7 +13,7 @@ public class GenerateWikiCommand {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(
             literal(CommandRefs.ID)
-                .then(literal("generate_wiki_files").requires(e -> e.hasPermission(2))
+                .then(literal("generate_wiki_files").requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS))
                     .executes(x -> {
 
                         if (!MMORPG.RUN_DEV_TOOLS) {

@@ -4,7 +4,7 @@ import com.robertx22.age_of_exile.database.data.gear_slots.GearSlot;
 import com.robertx22.age_of_exile.database.registry.ExileDB;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import com.robertx22.forge_compat.common.ForgeConfigSpec;
 import com.robertx22.forge_compat.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
@@ -109,7 +109,7 @@ public class ServerContainer {
                 .forEach(x -> {
                     try {
                         String[] array = x.split(":");
-                        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(array[0], array[1]);
+                        Identifier id = Identifier.fromNamespaceAndPath(array[0], array[1]);
                         GearSlot slot = ExileDB.GearSlots()
                             .get(array[2]);
                         Item item = ForgeRegistries.ITEMS.getValue(id);

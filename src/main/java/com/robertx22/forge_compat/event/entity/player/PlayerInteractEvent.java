@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class PlayerInteractEvent extends Event {
@@ -24,7 +25,13 @@ public class PlayerInteractEvent extends Event {
 
     public Player getPlayer() { return player; }
 
+    public Player getEntity() { return player; }
+
     public InteractionHand getHand() { return hand; }
+
+    public ItemStack getItemStack() {
+        return player != null && hand != null ? player.getItemInHand(hand) : ItemStack.EMPTY;
+    }
 
     public Level getWorld() { return world; }
 

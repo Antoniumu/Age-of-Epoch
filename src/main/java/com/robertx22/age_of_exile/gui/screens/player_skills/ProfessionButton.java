@@ -1,7 +1,7 @@
 package com.robertx22.age_of_exile.gui.screens.player_skills;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.age_of_exile.database.data.player_skills.PlayerSkill;
 import com.robertx22.age_of_exile.database.registry.ExileDB;
 import com.robertx22.age_of_exile.gui.TextUtils;
@@ -12,7 +12,7 @@ import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.library_of_exile.utils.CLOC;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.forge_compat.client.ImageButton;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
@@ -77,14 +77,12 @@ public class ProfessionButton extends ImageButton {
         PlayerSkillData data = Load.playerRPGData(mc.player).professions
             .getDataFor(skill);
 
-        mc.getTextureManager()
-            .bind(Load.playerRPGData(mc.player).professions
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(Load.playerRPGData(mc.player).professions
                 .getBackGroundTextureFor(skill));
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         blit(matrix, x, y, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X);
 
-        mc.getTextureManager()
-            .bind(ExileDB.PlayerSkills()
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(ExileDB.PlayerSkills()
                 .get(skill.id)
                 .getIcon());
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);

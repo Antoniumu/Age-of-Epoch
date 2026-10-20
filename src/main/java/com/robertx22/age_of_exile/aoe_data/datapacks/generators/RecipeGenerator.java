@@ -12,17 +12,14 @@ import com.robertx22.age_of_exile.mmorpg.registers.common.items.ProfessionItems;
 import com.robertx22.age_of_exile.mmorpg.registers.common.items.SlashItems;
 import com.robertx22.age_of_exile.mmorpg.registers.deferred_wrapper.RegObj;
 import com.robertx22.age_of_exile.vanilla_mc.items.gearitems.VanillaMaterial;
-
-import net.minecraft.advancements.critereon.*;
-import net.minecraft.data.*;
+import com.robertx22.forge_compat.data.*;
+import com.robertx22.forge_compat.fml.loading.FMLPaths;
+import com.robertx22.forge_compat.registries.ForgeRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import com.robertx22.forge_compat.fml.loading.FMLPaths;
-import com.robertx22.forge_compat.registries.ForgeRegistries;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -35,13 +32,7 @@ public class RecipeGenerator {
     protected HashCache cache;
 
     public RecipeGenerator() {
-
-        try {
-            cache = new HashCache(FMLPaths.GAMEDIR.get()
-                , "datagencache");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        cache = new HashCache(FMLPaths.GAMEDIR.get(), "datagencache");
     }
 
     protected Path getBasePath() {
@@ -55,7 +46,6 @@ public class RecipeGenerator {
     }
 
     private Path resolve(Path path, String id) {
-
         return path.resolve(
             "data/" + SlashRef.MODID + "/recipes/" + id
                 + ".json");
@@ -66,22 +56,6 @@ public class RecipeGenerator {
     }
 
     protected void generateAll(HashCache cache) {
-
-        Path path = getBasePath();
-
-        generate(x -> {
-
-            Path target = movePath(resolve(path, x.getId()
-                .getPath()));
-
-            try {
-                DataProvider.save(GSON, cache, x.serializeRecipe(), target);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-        });
-
     }
 
     private void generate(Consumer<IFinishedRecipe> consumer) {
@@ -273,14 +247,8 @@ public class RecipeGenerator {
         return null;
     }
 
-    static InventoryChangeTrigger.Instance conditionsFromItem(ItemLike itemConvertible) {
-        return conditionsFromItemPredicates(ItemPredicate.Builder.item()
-            .of(itemConvertible)
-            .build());
-    }
-
-    private static InventoryChangeTrigger.Instance conditionsFromItemPredicates(ItemPredicate... itemPredicates) {
-        return new InventoryChangeTrigger.Instance(EntityPredicate.AndPredicate.ANY, MinMaxBounds.IntBound.ANY, MinMaxBounds.IntBound.ANY, MinMaxBounds.IntBound.ANY, itemPredicates);
+    static CriterionTriggerInstance conditionsFromItem(ItemLike itemConvertible) {
+        return EnchantedItemTrigger.Instance.enchantedItem();
     }
 
 }

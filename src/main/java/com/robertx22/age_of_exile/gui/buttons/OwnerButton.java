@@ -6,10 +6,9 @@ import com.robertx22.age_of_exile.vanilla_mc.blocks.bases.BaseModificationStatio
 import com.robertx22.library_of_exile.utils.CLOC;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.forge_compat.client.ImageButton;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
@@ -21,7 +20,7 @@ public class OwnerButton extends ImageButton {
     public static int SIZE_X = 80;
     public static int SIZE_Y = 16;
 
-    static ResourceLocation ID = SlashRef.guiId("owner_button");
+    static Identifier ID = SlashRef.guiId("owner_button");
 
     Minecraft mc = Minecraft.getInstance();
 
@@ -85,7 +84,7 @@ public class OwnerButton extends ImageButton {
             txt += "...";
         }
 
-        mc.font.drawShadow(matrix, txt, this.x + (SIZE_X / 2F - (mc.font.width(txt) / 2F)), this.y + 3, ChatFormatting.WHITE.getColor());
+        com.robertx22.forge_compat.client.AbstractGui.drawShadow(mc.font, matrix, txt, this.x + (SIZE_X / 2F - (mc.font.width(txt) / 2F)), this.y + 3, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.WHITE));
     }
 
 }

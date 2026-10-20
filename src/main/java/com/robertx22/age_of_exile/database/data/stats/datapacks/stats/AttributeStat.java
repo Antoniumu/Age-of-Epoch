@@ -3,15 +3,16 @@ package com.robertx22.age_of_exile.database.data.stats.datapacks.stats;
 import com.robertx22.age_of_exile.database.data.stats.StatScaling;
 import com.robertx22.age_of_exile.database.data.stats.datapacks.base.BaseDatapackStat;
 import com.robertx22.age_of_exile.saveclasses.unit.StatData;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.core.Registry;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 import java.util.UUID;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 public class AttributeStat extends BaseDatapackStat {
 
     public static String SER_ID = "vanilla_attribute_stat_ser";
@@ -21,6 +22,10 @@ public class AttributeStat extends BaseDatapackStat {
     public UUID uuid;
     public String attributeId;
     public Attribute attribute;
+
+    public AttributeStat(String id, String locname, UUID uuid, Holder<Attribute> attribute, boolean perc) {
+        this(id, locname, uuid, attribute.value(), perc);
+    }
 
     public AttributeStat(String id, String locname, UUID uuid, Attribute attribute, boolean perc) {
         super(SER_ID);
@@ -48,27 +53,29 @@ public class AttributeStat extends BaseDatapackStat {
 
         float val = data.getValue();
 
-        AttributeModifier.Operation operation = AttributeModifier.Operation.ADDITION;
+        AttributeModifier.Operation operation = AttributeModifier.Operation.ADD_VALUE;
 
         if (IsPercent()) {
-            operation = AttributeModifier.Operation.MULTIPLY_TOTAL;
+            operation = AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL;
 
             val = (00F + val) / 100F;
         }
 
+        Identifier modId = Identifier.fromNamespaceAndPath("mmorpg", uuid.toString());
         AttributeModifier mod = new AttributeModifier(
-            uuid,
-            attributeId,
+            modId,
             val,
             operation
         );
 
-        AttributeInstance atri = en.getAttribute(attribute);
+        AttributeInstance atri = en.getAttribute(BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attribute));
 
-        if (atri.hasModifier(mod)) {
-            atri.removeModifier(mod); // KEEP THIS OR UPDATE WONT MAKE HP CORRECT!!!
+        if (atri != null) {
+            if (atri.hasModifier(modId)) {
+                atri.removeModifier(modId);
+            }
+            atri.addPermanentModifier(mod);
         }
-        atri.addPermanentModifier(mod);
 
     }
 }

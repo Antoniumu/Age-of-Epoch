@@ -42,15 +42,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import com.robertx22.forge_compat.api.distmarker.Dist;
 import com.robertx22.forge_compat.api.distmarker.OnlyIn;
@@ -89,21 +87,21 @@ public class GemItem extends BaseGemRuneItem implements IGUID, IAutoModel, IAuto
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level world, Player user, InteractionHand hand) {
+    public InteractionResult use(Level world, Player user, InteractionHand hand) {
         ItemStack itemStack = user.getItemInHand(hand);
         user.startUsingItem(hand);
-        return InteractionResult.success(itemStack);
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public UseAnim getUseAnimation(ItemStack p_77661_1_) {
-        return UseAnim.BOW;
+    public ItemUseAnimation getUseAnimation(ItemStack p_77661_1_) {
+        return ItemUseAnimation.BOW;
     }
 
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity en) {
 
-        if (world.isClientSide) {
+        if (world.isClientSide()) {
             return stack;
         }
 
@@ -111,11 +109,11 @@ public class GemItem extends BaseGemRuneItem implements IGUID, IAutoModel, IAuto
             Player p = (Player) en;
 
             if (!getGem().hasHigherTierGem()) {
-                p.displayClientMessage(Component.literal(ChatFormatting.RED + "These gems are already maximum rank."), false);
+                p.sendSystemMessage(Component.literal(ChatFormatting.RED + "These gems are already maximum rank."));
                 return stack;
             }
             if (stack.getCount() < 3) {
-                p.displayClientMessage(Component.literal(ChatFormatting.RED + "You need 3 gems to attempt upgrade."), false);
+                p.sendSystemMessage(Component.literal(ChatFormatting.RED + "You need 3 gems to attempt upgrade."));
                 return stack;
             }
 
@@ -133,16 +131,16 @@ public class GemItem extends BaseGemRuneItem implements IGUID, IAutoModel, IAuto
                         ItemStack newstack = new ItemStack(getGem().getHigherTierGem()
                             .getItem());
                         Packets.sendToClient(p, new TotemAnimationPacket(newstack));
-                        p.displayClientMessage(Component.literal(ChatFormatting.GREEN + "").append(old.getName(new ItemStack(old)))
+                        p.sendSystemMessage(Component.literal(ChatFormatting.GREEN + "").append(old.getName(new ItemStack(old)))
                             .append(" has been upgraded to ")
-                            .append(newstack.getHoverName()), false);
+                            .append(newstack.getHoverName()));
                         PlayerUtils.giveItem(newstack, p);
 
                     } else {
                         SoundUtils.playSound(p, SoundEvents.VILLAGER_NO, 1, 1);
 
-                        p.displayClientMessage(Component.literal(ChatFormatting.RED + "").append(old.getName(new ItemStack(old)))
-                            .append(" has failed the upgrade and was destroyed."), false);
+                        p.sendSystemMessage(Component.literal(ChatFormatting.RED + "").append(old.getName(new ItemStack(old)))
+                            .append(" has failed the upgrade and was destroyed."));
                     }
                 }
             }
@@ -151,8 +149,7 @@ public class GemItem extends BaseGemRuneItem implements IGUID, IAutoModel, IAuto
         return stack;
     }
 
-    @Override
-    public int getUseDuration(ItemStack stack) {
+    @Override public int getUseDuration(ItemStack stack, net.minecraft.world.entity.LivingEntity entity) {
         return 40;
     }
 
@@ -175,7 +172,7 @@ public class GemItem extends BaseGemRuneItem implements IGUID, IAutoModel, IAuto
 
         gear.sockets.sockets.add(socket);
 
-        ctx.player.displayClientMessage(Component.literal("Gem Socketed"), false);
+        ctx.player.sendSystemMessage(Component.literal("Gem Socketed"));
 
         Gear.Save(stack, gear);
 
@@ -380,7 +377,7 @@ public class GemItem extends BaseGemRuneItem implements IGUID, IAutoModel, IAuto
     }
 
     public GemItem(GemType type, GemRank gemRank) {
-        super(new Properties().tab(CreativeTabs.Gems)
+        super(new Properties()
             .stacksTo(16));
 
         this.gemType = type;
@@ -413,7 +410,6 @@ public class GemItem extends BaseGemRuneItem implements IGUID, IAutoModel, IAuto
         return opt.orElse(new Gem());
     }
 
-    @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
 

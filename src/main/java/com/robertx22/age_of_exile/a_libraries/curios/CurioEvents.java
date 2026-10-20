@@ -14,7 +14,7 @@ public class CurioEvents {
 
             LivingEntity entity = event.getEntityLiving();
             if (entity != null) {
-                if (!entity.level.isClientSide) {
+                if (!entity.level().isClientSide()) {
                     EntityData data = Load.Unit(entity);
                     if (data != null) {
                         data.setEquipsChanged(true);

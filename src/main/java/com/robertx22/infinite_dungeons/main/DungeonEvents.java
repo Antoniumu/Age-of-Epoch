@@ -1,5 +1,11 @@
 package com.robertx22.infinite_dungeons.main;
 
+import com.robertx22.forge_compat.event.TickEvent;
+import com.robertx22.forge_compat.event.entity.living.LivingDamageEvent;
+import com.robertx22.forge_compat.event.entity.living.LivingDeathEvent;
+import com.robertx22.forge_compat.event.entity.player.PlayerInteractEvent;
+import com.robertx22.forge_compat.eventbus.api.Event;
+import com.robertx22.forge_compat.eventbus.api.EventPriority;
 import com.robertx22.infinite_dungeons.block.ControlBlockEntity;
 import com.robertx22.infinite_dungeons.components.MobIDCap;
 import com.robertx22.infinite_dungeons.components.PlayerIDCap;
@@ -14,32 +20,26 @@ import com.robertx22.infinite_dungeons.item.KeyData;
 import com.robertx22.infinite_dungeons.util.ClientOnly;
 import com.robertx22.library_of_exile.main.ForgeEvents;
 import com.robertx22.library_of_exile.utils.Watch;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.GameType;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
-import net.minecraft.server.level.ServerLevel;
-import com.robertx22.forge_compat.event.TickEvent;
-import com.robertx22.forge_compat.event.entity.living.LivingDamageEvent;
-import com.robertx22.forge_compat.event.entity.living.LivingDeathEvent;
-import com.robertx22.forge_compat.event.entity.player.PlayerInteractEvent;
-import com.robertx22.forge_compat.eventbus.api.Event;
-import com.robertx22.forge_compat.eventbus.api.EventPriority;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,9 +50,9 @@ public class DungeonEvents {
     public static void startDungeon(ItemStack key, Player player, DungeonLayout layout, DungeonDifficulty difficulty) {
 
         try {
-            Level world = player.level;
+            Level world = player.level();
 
-            if (!world.isClientSide) {
+            if (!world.isClientSide()) {
 
                 TryStartDungeonEvent event = new TryStartDungeonEvent(player, layout, difficulty);
                 IDExileEvents.TRY_START_DUNGEON.callEvents(event);
@@ -63,7 +63,7 @@ public class DungeonEvents {
 
                 if (world.dimensionType()
                     .hasCeiling()) {
-                    player.displayClientMessage(Component.literal("Can't do this in a dimension with a ceiling."), false);
+                    player.sendSystemMessage(Component.literal("Can't do this in a dimension with a ceiling."));
                     return;
                 }
 
@@ -75,25 +75,28 @@ public class DungeonEvents {
                     return;
                 }
 
-                StructureTemplateManager templatemanager = ((ServerLevel) world).getStructureManager();
+                StructureTemplateManager templatemanager = ((ServerLevel) world).getServer().getStructureManager();
 
                 Watch load = new Watch();
 
-                StructureTemplate template = templatemanager.get(ResourceLocation.parse(layout.structure_file));
+                StructureTemplate template = templatemanager.get(Identifier.parse(layout.structure_file)).orElse(null);
+                if (template == null) {
+                    return;
+                }
                 load.print("load took");
-                BlockPos pos = new ChunkPos(player.blockPosition()).getWorldPosition();
+                BlockPos pos = ChunkPos.containing(player.blockPosition()).getWorldPosition();
 
-                pos = new BlockPos(pos.getX(), world.getMaxBuildHeight() - template.getSize()
+                pos = new BlockPos(pos.getX(), world.getMaxY() - template.getSize()
                     .getY() - 1, pos.getZ());
 
                 BoundingBox box = template.getBoundingBox(new StructurePlaceSettings(), pos);
 
-                for (int x = box.x0; x < box.x1; x++) {
-                    for (int y = box.y0; y < box.y1; y++) {
-                        for (int z = box.z0; z < box.z1; z++) {
+                for (int x = box.minX(); x < box.maxX(); x++) {
+                    for (int y = box.minY(); y < box.maxY(); y++) {
+                        for (int z = box.minZ(); z < box.maxZ(); z++) {
                             if (!world.getBlockState(new BlockPos(x, y, z))
                                 .isAir()) {
-                                player.displayClientMessage(Component.literal("Sky space has to be completely empty above you."), false);
+                                player.sendSystemMessage(Component.literal("Sky space has to be completely empty above you."));
                                 return;
                             }
                         }
@@ -105,10 +108,7 @@ public class DungeonEvents {
 
                 key.shrink(1);
 
-                //  StructureHelper.spawnStructure(layout.structure_file, pos, Rotation.NONE, 0, (ServerLevel) world, false);
-                //world.setBlock(pos, Blocks.AIR.defaultBlockState(), 1);
-
-                template.placeInWorld((ServerLevelAccessor) world, pos, pset, world.random);
+                template.placeInWorld((ServerLevelAccessor) world, pos, pos, pset, world.getRandom(), 2);
 
                 watch.print("putting structure");
 
@@ -121,16 +121,16 @@ public class DungeonEvents {
 
                 List<Player> players = new ArrayList<>();
 
-                for (int x = box.x0; x <= box.x1; x++) {
-                    for (int y = box.y0; y <= box.y1; y++) {
-                        for (int z = box.z0; z <= box.z1; z++) {
+                for (int x = box.minX(); x <= box.maxX(); x++) {
+                    for (int y = box.minY(); y <= box.maxY(); y++) {
+                        for (int z = box.minZ(); z <= box.maxZ(); z++) {
                             BlockPos p = new BlockPos(x, y, z);
                             BlockState state = world.getBlockState(p);
                             if (state.getBlock() == Placeholders.PLAYER_SPAWN) {
 
                                 players.add(player);
 
-                                player.level.getEntities(player, player.getBoundingBox()
+                                player.level().getEntities(player, player.getBoundingBox()
                                         .inflate(20))
                                     .forEach(e -> {
                                         if (e instanceof Player) {
@@ -165,8 +165,8 @@ public class DungeonEvents {
                 control.data.tp_to_surface_pos = tpsurfacepos;
                 control.data.dungeon_layout = layout.GUID();
 
-                control.data.dungeon_boundary_0 = new BlockPos(box.x0, box.y0, box.z0);
-                control.data.dungeon_boundary_1 = new BlockPos(box.x1, box.y1, box.z1);
+                control.data.dungeon_boundary_0 = new BlockPos(box.minX(), box.minY(), box.minZ());
+                control.data.dungeon_boundary_1 = new BlockPos(box.maxX(), box.maxY(), box.maxZ());
 
                 control.data.difficulty = difficulty.GUID();
 
@@ -194,7 +194,6 @@ public class DungeonEvents {
             public void accept(LivingDamageEvent event) {
 
                 try {
-                    // disable environmental damage for dungeon mobs
                     if (event.getEntity() instanceof LivingEntity) {
                         if (event.getEntity() instanceof Player == false) {
                             MobIDCap.get(event.getEntityLiving())
@@ -241,7 +240,7 @@ public class DungeonEvents {
                         return;
                     }
 
-                    if (!event.player.level.isClientSide) {
+                    if (!event.player.level().isClientSide()) {
                         ServerPlayer player = (ServerPlayer) event.player;
 
                         GameType current = player.gameMode.getGameModeForPlayer();
@@ -284,7 +283,7 @@ public class DungeonEvents {
                     cap.getControlBlock()
                         .ifPresent(x -> {
                             if (x.data.cleared) {
-                                if (event.getWorld().isClientSide) {
+                                if (event.getWorld().isClientSide()) {
                                     ClientOnly.openDungeonShopScreen();
                                 }
                                 event.setResult(Event.Result.DENY);
@@ -301,7 +300,7 @@ public class DungeonEvents {
             public void accept(PlayerInteractEvent.RightClickItem event) {
 
                 try {
-                    if (event.getEntity().level.isClientSide) {
+                    if (event.getEntity().level().isClientSide()) {
 
                         if (event.getEntity() instanceof Player == false) {
                             return;
@@ -313,13 +312,6 @@ public class DungeonEvents {
                         if (group != null) {
                             ClientOnly.openPickDungeonScreen();
                         }
-
-                        /*
-                        DungeonLayout layout = DungeonsDB.DungeonLayouts()
-                            .getFilterWrapped(x -> x.dungeon_group.equals(group.GUID()))
-                            .random();
-
-                         */
 
                     }
                 } catch (Exception e) {

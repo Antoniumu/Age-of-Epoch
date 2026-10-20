@@ -245,7 +245,7 @@ public class Unit {
     public void recalculateStats(LivingEntity entity, EntityData data, AttackInformation dmgData) {
 
         try {
-            if (entity.level.isClientSide) {
+            if (entity.level().isClientSide()) {
                 return;
             }
 
@@ -361,9 +361,10 @@ public class Unit {
             DirtyCheck aftercalc = getDirtyCheck();
 
             Cached.VANILLA_STAT_UIDS_TO_CLEAR_EVERY_STAT_CALC.forEach(x -> {
-                AttributeInstance in = entity.getAttribute(x.left);
-                if (in.getModifier(x.right) != null) {
-                    in.removeModifier(x.right);
+                AttributeInstance in = entity.getAttribute(net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE.wrapAsHolder(x.left));
+                net.minecraft.resources.Identifier modId = net.minecraft.resources.Identifier.fromNamespaceAndPath("mmorpg", x.right.toString());
+                if (in != null && in.getModifier(modId) != null) {
+                    in.removeModifier(modId);
                 }
             });
 

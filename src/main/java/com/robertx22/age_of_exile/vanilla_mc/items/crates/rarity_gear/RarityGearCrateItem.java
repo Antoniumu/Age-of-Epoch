@@ -20,13 +20,11 @@ import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import com.robertx22.forge_compat.api.distmarker.Dist;
 import com.robertx22.forge_compat.api.distmarker.OnlyIn;
@@ -37,8 +35,7 @@ import java.util.List;
 public class RarityGearCrateItem extends Item implements IAutoModel {
 
     public RarityGearCrateItem() {
-        super(new Properties().stacksTo(16)
-            .tab(CreativeTabs.MyModTab));
+        super(new Properties().stacksTo(16));
 
     }
 
@@ -85,15 +82,15 @@ public class RarityGearCrateItem extends Item implements IAutoModel {
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
 
         ItemStack stack = player.getItemInHand(hand);
 
-        if (world.isClientSide) {
+        if (world.isClientSide()) {
             ClientOnly.totemAnimWithItem(stack);
         }
 
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             try {
 
                 List<ItemStack> drops = new ArrayList<>();
@@ -123,7 +120,7 @@ public class RarityGearCrateItem extends Item implements IAutoModel {
                 e.printStackTrace();
             }
         }
-        return new InteractionResult<ItemStack>(InteractionResult.PASS, player.getItemInHand(hand));
+        return InteractionResult.PASS);
     }
 
     private void spawnEffects(Level world, LivingEntity en) {
@@ -132,7 +129,6 @@ public class RarityGearCrateItem extends Item implements IAutoModel {
         WorldUtils.spawnEntity(world, firework);
     }
 
-    @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         try {

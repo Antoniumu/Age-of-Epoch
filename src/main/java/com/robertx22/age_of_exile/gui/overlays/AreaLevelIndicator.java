@@ -3,9 +3,10 @@ package com.robertx22.age_of_exile.gui.overlays;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.robertx22.age_of_exile.mmorpg.SyncedToClientValues;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import com.robertx22.library_of_exile.utils.GuiUtils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 
-import net.minecraft.world.level.Level;
 public class AreaLevelIndicator {
 
     public static void draw(PoseStack matrix, int x, int y) {
@@ -48,20 +49,7 @@ public class AreaLevelIndicator {
     }
 
     public static void drawPrettyLevelText(String string, PoseStack matrix, float m, float n, TextColors color) {
-
-        Minecraft mc = Minecraft.getInstance();
-
-        // copied from how vanilla renders the total experience level text
-        mc.font
-            .draw(matrix, string, (m + 1), n, 0);
-        mc.font
-            .draw(matrix, string, (m - 1), n, 0);
-        mc.font
-            .draw(matrix, string, m, (n + 1), 0);
-        mc.font
-            .draw(matrix, string, m, (n - 1), 0);
-        mc.font
-            .draw(matrix, string, m, n, color.color);
+        GuiUtils.renderScaledText(matrix, (int) m, (int) n, 1.0D, string, ChatFormatting.WHITE);
     }
 
 }

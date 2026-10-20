@@ -11,7 +11,7 @@ public class OnTickSetGameMode {
 
         GameType current = player.gameMode.getGameModeForPlayer();
 
-        if (WorldUtils.isMapWorldClass(player.level)) {
+        if (WorldUtils.isMapWorldClass(player.level())) {
             if (current == GameType.SURVIVAL) {
                 Load.playerRPGData(player).maps.orig_gamemode = current.getName();
                 player.setGameMode(GameType.ADVENTURE);

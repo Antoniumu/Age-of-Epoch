@@ -1,5 +1,6 @@
-import net.minecraft.world.entity.projectile.Projectile;
 package com.robertx22.age_of_exile.database.data.spells;
+
+import net.minecraft.world.entity.projectile.Projectile;
 
 public enum SpellTag {
     projectile("Projectile"),

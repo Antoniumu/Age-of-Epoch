@@ -6,7 +6,7 @@ import net.minecraft.client.gui.screens.ChatScreen;
 public class ChatUtils {
 
     public static boolean isChatOpen() {
-        return Minecraft.getInstance().screen instanceof ChatScreen;
+        return Minecraft.getInstance().gui != null && Minecraft.getInstance().gui.screen() instanceof ChatScreen;
     }
 
     public static boolean wasChatOpenRecently() {

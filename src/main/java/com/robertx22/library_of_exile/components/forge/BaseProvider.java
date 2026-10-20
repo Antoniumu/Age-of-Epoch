@@ -6,7 +6,7 @@ import com.robertx22.forge_compat.common.capabilities.Capability;
 import com.robertx22.forge_compat.common.capabilities.ICapabilitySerializable;
 import com.robertx22.forge_compat.common.util.LazyOptional;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseProvider<TYPE, OWNER_CLASS> implements ICapabilitySerializable<CompoundTag> {
 
@@ -40,7 +40,7 @@ public abstract class BaseProvider<TYPE, OWNER_CLASS> implements ICapabilitySeri
 
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if (cap == dataInstance()) {

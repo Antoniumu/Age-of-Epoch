@@ -43,7 +43,7 @@ public class ImplicitStatsData implements IGearPartTooltip, IRerollable, IStatsC
         List<ExactStatData> stats = GetAllStats(gear);
 
         if (!stats.isEmpty()) {
-            list.add(new SText(""));
+            list.add(net.minecraft.network.chat.Component.literal(""));
 
             getAllStatsWithCtx(gear, info)
                 .forEach(x -> list.addAll(x.GetTooltipString(info)));

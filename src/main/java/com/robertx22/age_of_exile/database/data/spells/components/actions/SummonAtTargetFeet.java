@@ -5,18 +5,18 @@ import com.robertx22.age_of_exile.database.data.spells.components.Spell;
 import com.robertx22.age_of_exile.database.data.spells.map_fields.MapField;
 import com.robertx22.age_of_exile.database.data.spells.spell_classes.SpellCtx;
 import com.robertx22.age_of_exile.database.data.spells.spell_classes.SpellUtils;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.core.Registry;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 public class SummonAtTargetFeet extends SpellAction {
 
     public SummonAtTargetFeet() {
@@ -26,17 +26,17 @@ public class SummonAtTargetFeet extends SpellAction {
     @Override
     public void tryActivate(Collection<LivingEntity> targets, SpellCtx ctx, MapHolder data) {
 
-        Optional<EntityType<?>> projectile = EntityType.byString(data.get(MapField.PROJECTILE_ENTITY));
+        Optional<EntityType<?>> projectile = BuiltInRegistries.ENTITY_TYPE.getOptional(net.minecraft.resources.Identifier.parse(data.get(MapField.PROJECTILE_ENTITY)));
 
         Double height = data.getOrDefault(MapField.HEIGHT, 0D);
 
         targets.forEach(x -> {
             Vec3 pos = x.position();
             Entity en = projectile.get()
-                .create(ctx.world);
+                .create(ctx.world, EntitySpawnReason.MOB_SUMMONED);
             SpellUtils.initSpellEntity(en, ctx.caster, ctx.calculatedSpellData, data);
             en.setPos(pos.x, pos.y + height, pos.z);
-            ctx.caster.level.addFreshEntity(en);
+            ctx.caster.level().addFreshEntity(en);
         });
 
     }

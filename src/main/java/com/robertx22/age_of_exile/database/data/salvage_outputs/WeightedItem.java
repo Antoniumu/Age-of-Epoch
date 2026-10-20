@@ -2,7 +2,7 @@ package com.robertx22.age_of_exile.database.data.salvage_outputs;
 
 import com.robertx22.library_of_exile.registry.IWeighted;
 import net.minecraft.world.item.Item;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.Registry;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -18,7 +18,7 @@ public class WeightedItem implements IWeighted {
     }
 
     public Item getItem() {
-        return BuiltInRegistries.ITEM.get(ResourceLocation.parse(item));
+        return BuiltInRegistries.ITEM.getValue(Identifier.parse(item));
     }
 
     @Override

@@ -6,7 +6,7 @@ import com.robertx22.library_of_exile.main.Ref;
 import com.robertx22.library_of_exile.packets.ExilePacketContext;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 
 public class SendActionToClient extends MyPacket<SendActionToClient> {
@@ -36,8 +36,8 @@ public class SendActionToClient extends MyPacket<SendActionToClient> {
     }
 
     @Override
-    public ResourceLocation getIdentifier() {
-        return ResourceLocation.fromNamespaceAndPath(Ref.MODID, "send_action_to_client");
+    public Identifier getIdentifier() {
+        return Identifier.fromNamespaceAndPath(Ref.MODID, "send_action_to_client");
     }
 
     @Override

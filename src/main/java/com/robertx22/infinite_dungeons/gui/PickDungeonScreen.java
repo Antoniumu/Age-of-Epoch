@@ -15,7 +15,7 @@ import com.robertx22.library_of_exile.registry.FilterListWrap;
 import com.robertx22.library_of_exile.utils.CLOC;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.ChatFormatting;
 
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class PickDungeonScreen extends BaseScreen implements ILeftRight {
         }
     }
 
-    static ResourceLocation BACKGROUND = MainID.id("textures/gui/dungeon_picker.png");
+    static Identifier BACKGROUND = MainID.id("textures/gui/dungeon_picker.png");
 
     public List<DungeonLayout> layouts = new ArrayList<>();
     public DungeonLayout currentLayout;
@@ -138,8 +138,8 @@ public class PickDungeonScreen extends BaseScreen implements ILeftRight {
 
             int ypos = guiTop + 28;
 
-            mc.font.drawWordWrap(currentLayout.getDungeonType()
-                .getTranslatableDesc(), guiLeft + 7, ypos, 115, ChatFormatting.WHITE.getColor());
+            com.robertx22.forge_compat.client.AbstractGui.drawWordWrap(mc.font, currentLayout.getDungeonType()
+                .getTranslatableDesc(), guiLeft + 7, ypos, 115, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.WHITE));
 
         }
 

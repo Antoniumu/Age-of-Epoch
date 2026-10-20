@@ -29,7 +29,7 @@ public class DamageAction extends SpellAction {
     @Override
     public void tryActivate(Collection<LivingEntity> targets, SpellCtx ctx, MapHolder data) {
 
-        if (!ctx.world.isClientSide) {
+        if (!ctx.world.isClientSide()) {
             Elements ele = data.getElement();
             ValueCalculation calc = data.get(VALUE_CALCULATION);
 
@@ -46,7 +46,7 @@ public class DamageAction extends SpellAction {
                     if (data.has(MapField.EXILE_POTION_ID)) {
                         // if damage done by effect, multiple dmg by effect stacks.
                         MobEffect effect = SlashPotions.getExileEffect(data.get(MapField.EXILE_POTION_ID));
-                        if (t.hasEffect(effect)) {
+                        if (t.hasEffect(net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect))) {
                             stacks = Load.Unit(t)
                                 .getStatusEffectsData()
                                 .get((ExileStatusEffect) effect).stacks;

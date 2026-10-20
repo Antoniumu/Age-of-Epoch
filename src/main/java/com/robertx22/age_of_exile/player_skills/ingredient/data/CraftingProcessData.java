@@ -28,7 +28,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.util.Mth;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
 import java.util.ArrayList;
@@ -351,7 +350,7 @@ public class CraftingProcessData {
 
         data.tier = this.getAverageTier();
         data.crafter = player.getGameProfile()
-            .getName();
+            .name();
 
         if (skill == PlayerSkillEnum.COOKING) {
             data.uses = 3;

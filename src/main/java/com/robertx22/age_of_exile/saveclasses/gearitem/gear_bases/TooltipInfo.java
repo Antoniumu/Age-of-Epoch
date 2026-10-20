@@ -5,7 +5,7 @@ import com.robertx22.age_of_exile.database.data.MinMax;
 import com.robertx22.age_of_exile.database.data.stats.tooltips.StatTooltipType;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.ClientOnly;
-import net.minecraft.client.gui.screens.Screen;
+import com.robertx22.forge_compat.client.Screen;
 import net.minecraft.world.entity.player.Player;
 
 public class TooltipInfo implements Cloneable {

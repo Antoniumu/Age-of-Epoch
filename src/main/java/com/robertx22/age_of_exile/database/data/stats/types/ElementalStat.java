@@ -20,7 +20,7 @@ public abstract class ElementalStat extends Stat implements IElementalGenerated<
         this.show = element != Elements.Elemental;
 
         if (getElement() != null) {
-            this.format = getElement().format.getName();
+            this.format = getElement().com.robertx22.forge_compat.common.CompatChatFormatting.getName(format);
             this.icon = getElement().icon;
         }
     }

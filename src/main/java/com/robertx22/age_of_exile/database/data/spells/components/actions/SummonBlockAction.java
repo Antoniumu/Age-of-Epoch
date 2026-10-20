@@ -27,7 +27,7 @@ public class SummonBlockAction extends SpellAction {
 
     @Override
     public void tryActivate(Collection<LivingEntity> targets, SpellCtx ctx, MapHolder data) {
-        if (!ctx.world.isClientSide) {
+        if (!ctx.world.isClientSide()) {
 
             //HitResult ray = ctx.caster.rayTrace(5D, 0.0F, false);
             BlockPos pos = ctx.pos;
@@ -51,7 +51,7 @@ public class SummonBlockAction extends SpellAction {
                 if (!found) {
                     pos = ctx.pos;
                     times = 0;
-                    while (!found && pos.getY() < ctx.world.getMaxBuildHeight() && SEARCH > times) {
+                    while (!found && pos.getY() < ctx.world.getMaxY() && SEARCH > times) {
                         times++;
                         if (ctx.world.isEmptyBlock(pos) && !ctx.world.isEmptyBlock(pos.below())) {
                             found = true;

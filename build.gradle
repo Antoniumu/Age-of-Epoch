@@ -32,6 +32,19 @@ tasks.withType(JavaCompile).configureEach {
     it.options.encoding = 'UTF-8'
     // Minecraft 26.x requires Java 25
     it.options.release = 25
+    if (project.hasProperty('dshMaxErrs')) {
+        it.options.compilerArgs.addAll(['-Xmaxerrs', project.property('dshMaxErrs').toString()])
+    }
+}
+
+tasks.register('dshClasspath') {
+    doLast {
+        def buildDirFile = layout.buildDirectory.get().asFile
+        buildDirFile.mkdirs()
+        new File(buildDirFile, 'dsh-cp.txt').text = sourceSets.main.compileClasspath.asPath
+        def srcs = sourceSets.main.allJava.files.collect { '"' + it.absolutePath.replace('\\', '/') + '"' }.join('\n')
+        new File(buildDirFile, 'dsh-sources.txt').text = srcs
+    }
 }
 
 java {

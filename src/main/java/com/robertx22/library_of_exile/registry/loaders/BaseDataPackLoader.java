@@ -1,30 +1,31 @@
 package com.robertx22.library_of_exile.registry.loaders;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.robertx22.library_of_exile.main.LibraryOfExile;
 import com.robertx22.library_of_exile.registry.*;
 import com.robertx22.library_of_exile.utils.Watch;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.resources.FileToIdConverter;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
 
+import java.io.Reader;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
-public abstract class BaseDataPackLoader<T extends ExileRegistry> extends SimpleJsonResourceReloadListener {
-    private static final Gson GSON = new GsonBuilder().create();
+public abstract class BaseDataPackLoader<T extends ExileRegistry> extends SimplePreparableReloadListener<Map<Identifier, JsonElement>> {
 
     public String id;
     Function<JsonObject, T> serializer;
     public ExileRegistryType registryType;
 
     public BaseDataPackLoader(ExileRegistryType registryType, String id, Function<JsonObject, T> serializer) {
-        super(GSON, id);
         Objects.requireNonNull(registryType);
         this.id = id;
         this.serializer = serializer;
@@ -34,20 +35,32 @@ public abstract class BaseDataPackLoader<T extends ExileRegistry> extends Simple
     public abstract ExileDatapackGenerator getDataPackGenerator();
 
     @Override
-    protected Map<ResourceLocation, JsonElement> prepare(ResourceManager manager, ProfilerFiller profiler) {
+    protected Map<Identifier, JsonElement> prepare(ResourceManager manager, ProfilerFiller profiler) {
 
         if (LibraryOfExile.runDevTools()) {
             this.getDataPackGenerator()
-                .run(); // first generate, then load. so no errors in dev enviroment
+                .run();
         }
 
-        return super.prepare(manager, profiler);
+        FileToIdConverter lister = FileToIdConverter.json(this.id);
+        Map<Identifier, JsonElement> result = new HashMap<>();
+        for (Map.Entry<Identifier, Resource> entry : lister.listMatchingResources(manager).entrySet()) {
+            Identifier location = entry.getKey();
+            Identifier fileId = lister.fileToId(location);
+            try (Reader reader = entry.getValue().openAsReader()) {
+                JsonElement elem = JsonParser.parseReader(reader);
+                result.putIfAbsent(fileId, elem);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 
     static String ENABLED = "enabled";
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> mapToLoad, ResourceManager manager, ProfilerFiller profilerIn) {
+    protected void apply(Map<Identifier, JsonElement> mapToLoad, ResourceManager manager, ProfilerFiller profilerIn) {
 
         try {
             ExileRegistryContainer reg = Database.getRegistry(registryType);
@@ -77,8 +90,6 @@ public abstract class BaseDataPackLoader<T extends ExileRegistry> extends Simple
             if (reg
                 .isEmpty()) {
                 throw new RuntimeException("Exile Registry of type " + registryType.id + " is EMPTY after datapack loading!");
-            } else {
-                // System.out.println(registryType.name() + " Registry succeeded loading: " + reg.getSize() + " datapack entries.");
             }
         } catch (RuntimeException e) {
             e.printStackTrace();

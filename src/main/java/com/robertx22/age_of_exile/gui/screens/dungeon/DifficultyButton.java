@@ -7,9 +7,8 @@ import com.robertx22.age_of_exile.database.registry.ExileDB;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
+import com.robertx22.forge_compat.client.ImageButton;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ public class DifficultyButton extends ImageButton {
     public static int xSize = 32;
     public static int ySize = 32;
 
-    static ResourceLocation LOC = SlashRef.guiId("dungeon/difficulty_button");
+    static Identifier LOC = SlashRef.guiId("dungeon/difficulty_button");
 
     Minecraft mc = Minecraft.getInstance();
 

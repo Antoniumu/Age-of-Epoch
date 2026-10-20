@@ -3,14 +3,14 @@ package com.robertx22.library_of_exile.packets.particles;
 import com.robertx22.library_of_exile.main.Packets;
 import com.robertx22.library_of_exile.utils.GeometryUtils;
 import com.robertx22.library_of_exile.utils.RGB;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.core.particles.BlockParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 
 public enum ParticleEnum {
 
@@ -20,8 +20,8 @@ public enum ParticleEnum {
             Vec3 center = getCenter(data);
 
             for (int i = 0; i < data.amount; i++) {
-                Vec3 p = GeometryUtils.randomPos(center, world.random, data.radius);
-                Vec3 m = GeometryUtils.randomMotion(center, world.random);
+                Vec3 p = GeometryUtils.randomPos(center, world.getRandom(), data.radius);
+                Vec3 m = GeometryUtils.randomMotion(center, world.getRandom());
 
                 world.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.BIRCH_LEAVES.defaultBlockState()),
                     p.x, p.y, p.z, m.x, m.y, m.z
@@ -86,9 +86,9 @@ public enum ParticleEnum {
     }
 
     public static void sendToClients(Entity source, ParticlePacketData data) {
-        if (source.level.isClientSide) {
+        if (source.level().isClientSide()) {
             try {
-                data.type.activate(data, source.level);
+                data.type.activate(data, source.level());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -98,7 +98,7 @@ public enum ParticleEnum {
     }
 
     public static void sendToClients(BlockPos pos, Level world, ParticlePacketData data) {
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             Packets.sendToTracking(new ParticlePacket(data), pos, world);
         } else {
             data.type.activate(data, world);
@@ -115,9 +115,9 @@ public enum ParticleEnum {
     }
 
     public void spawnRedstone(Level world, RGB color, double xpos, double ypos, double zpos) {
-
-        DustParticleOptions data = new DustParticleOptions(color.getR(), color.getG(), color.getB(), 1F);
-        world.addParticle(data, true, xpos, ypos, zpos, 1, 1, 1);
+        int rgb = ((int) (color.getR() * 255) << 16) | ((int) (color.getG() * 255) << 8) | (int) (color.getB() * 255);
+        DustParticleOptions data = new DustParticleOptions(rgb, 1F);
+        world.addParticle(data, xpos, ypos, zpos, 1, 1, 1);
     }
 
     public abstract void activate(ParticlePacketData data, Level world);

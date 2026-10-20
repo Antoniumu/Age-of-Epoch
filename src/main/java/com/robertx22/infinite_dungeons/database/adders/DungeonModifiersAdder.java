@@ -22,8 +22,8 @@ public class DungeonModifiersAdder implements ExileRegistryInit {
         new DiamondMobs().registerToExileRegistry();
         new NetheriteMobs().registerToExileRegistry();
 
-        new MobTickPotionModifier("speed_mobs", 0, MobEffects.MOVEMENT_SPEED, 0).registerToExileRegistry();
-        new MobTickPotionModifier("strong_mobs", 1, MobEffects.DAMAGE_BOOST, 1).registerToExileRegistry();
+        new MobTickPotionModifier("speed_mobs", 0, MobEffects.SPEED, 0).registerToExileRegistry();
+        new MobTickPotionModifier("strong_mobs", 1, MobEffects.STRENGTH, 1).registerToExileRegistry();
 
         new EnchantedMobGear(DungeonModifierIds.LVL_10_ENCHANT_GEAR_MOBS, 10).registerToExileRegistry();
         new EnchantedMobGear(DungeonModifierIds.LVL_20_ENCHANT_GEAR_MOBS, 20).registerToExileRegistry();

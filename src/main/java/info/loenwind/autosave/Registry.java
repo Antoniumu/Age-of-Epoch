@@ -14,7 +14,7 @@ import info.loenwind.autosave.util.BitUtil;
 import info.loenwind.autosave.util.NullableType;
 import info.loenwind.autosave.util.TypeUtil;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.lang.reflect.Type;
@@ -49,27 +49,27 @@ public class Registry {
 
         // Java primitives
 
-        GLOBAL_REGISTRY.register(new HandlePrimitive<Boolean>(false, Boolean.class, boolean.class, CompoundTag::putBoolean, CompoundTag::getBoolean));
+        GLOBAL_REGISTRY.register(new HandlePrimitive<Boolean>(false, Boolean.class, boolean.class, CompoundTag::putBoolean, (nbt, name) -> nbt.getBooleanOr(name, false)));
         GLOBAL_REGISTRY.register(new HandlePrimitive<Character>((char) 0, Character.class, char.class, (nbt, name, c) -> nbt
-            .putInt(name, (int) c), (nbt, name) -> (char) nbt.getInt(name)));
-        GLOBAL_REGISTRY.register(new HandlePrimitive<Byte>((byte) 0, Byte.class, byte.class, CompoundTag::putByte, CompoundTag::getByte));
-        GLOBAL_REGISTRY.register(new HandlePrimitive<Short>((short) 0, Short.class, short.class, CompoundTag::putShort, CompoundTag::getShort));
-        GLOBAL_REGISTRY.register(new HandlePrimitive<Integer>(0, Integer.class, int.class, CompoundTag::putInt, CompoundTag::getInt));
-        GLOBAL_REGISTRY.register(new HandlePrimitive<Long>(0L, Long.class, long.class, CompoundTag::putLong, CompoundTag::getLong));
-        GLOBAL_REGISTRY.register(new HandlePrimitive<Float>(0F, Float.class, float.class, CompoundTag::putFloat, CompoundTag::getFloat));
-        GLOBAL_REGISTRY.register(new HandlePrimitive<Double>(0D, Double.class, double.class, CompoundTag::putDouble, CompoundTag::getDouble));
+            .putInt(name, (int) c), (nbt, name) -> (char) nbt.getIntOr(name, 0)));
+        GLOBAL_REGISTRY.register(new HandlePrimitive<Byte>((byte) 0, Byte.class, byte.class, CompoundTag::putByte, (nbt, name) -> nbt.getByteOr(name, (byte) 0)));
+        GLOBAL_REGISTRY.register(new HandlePrimitive<Short>((short) 0, Short.class, short.class, CompoundTag::putShort, (nbt, name) -> nbt.getShortOr(name, (short) 0)));
+        GLOBAL_REGISTRY.register(new HandlePrimitive<Integer>(0, Integer.class, int.class, CompoundTag::putInt, (nbt, name) -> nbt.getIntOr(name, 0)));
+        GLOBAL_REGISTRY.register(new HandlePrimitive<Long>(0L, Long.class, long.class, CompoundTag::putLong, (nbt, name) -> nbt.getLongOr(name, 0L)));
+        GLOBAL_REGISTRY.register(new HandlePrimitive<Float>(0F, Float.class, float.class, CompoundTag::putFloat, (nbt, name) -> nbt.getFloatOr(name, 0F)));
+        GLOBAL_REGISTRY.register(new HandlePrimitive<Double>(0D, Double.class, double.class, CompoundTag::putDouble, (nbt, name) -> nbt.getDoubleOr(name, 0D)));
         GLOBAL_REGISTRY.register(new HandleEnum());
         GLOBAL_REGISTRY.register(new HandleString());
 
         // Primitive array handlers
 
         // byte/Byte
-        IHandler<byte[]> byteArrayHandler = new HandlePrimitive<byte @NullableType []>(new byte[0], byte[].class, null, CompoundTag::putByteArray, CompoundTag::getByteArray);
+        IHandler<byte[]> byteArrayHandler = new HandlePrimitive<byte @NullableType []>(new byte[0], byte[].class, null, CompoundTag::putByteArray, (nbt, name) -> nbt.getByteArray(name).orElse(new byte[0]));
         GLOBAL_REGISTRY.register(byteArrayHandler);
         GLOBAL_REGISTRY.register(new DelegatingHandler<>(Byte[].class, byteArrayHandler, ArrayUtils::toPrimitive, ArrayUtils::toObject));
 
         // int/Integer
-        IHandler<int[]> intArrayHandler = new HandlePrimitive<int @NullableType []>(new int[0], int[].class, null, CompoundTag::putIntArray, CompoundTag::getIntArray);
+        IHandler<int[]> intArrayHandler = new HandlePrimitive<int @NullableType []>(new int[0], int[].class, null, CompoundTag::putIntArray, (nbt, name) -> nbt.getIntArray(name).orElse(new int[0]));
         GLOBAL_REGISTRY.register(intArrayHandler);
         GLOBAL_REGISTRY.register(new DelegatingHandler<>(Integer[].class, intArrayHandler, ArrayUtils::toPrimitive, ArrayUtils::toObject));
 
@@ -83,7 +83,7 @@ public class Registry {
             }
             nbt.putIntArray(name, ret);
         }, (nbt, name) -> {
-            int[] read = nbt.getIntArray(name);
+            int[] read = nbt.getIntArray(name).orElse(new int[0]);
             short[] ret = new short[read.length];
             for (int i = 0; i < ret.length; i++) {
                 ret[i] = (short) read[i];
@@ -101,7 +101,7 @@ public class Registry {
             }
             nbt.putIntArray(name, ret);
         }, (nbt, name) -> {
-            int[] read = nbt.getIntArray(name);
+            int[] read = nbt.getIntArray(name).orElse(new int[0]);
             char[] ret = new char[read.length];
             for (int i = 0; i < ret.length; i++) {
                 ret[i] = (char) read[i];
@@ -119,7 +119,7 @@ public class Registry {
             }
             nbt.putIntArray(name, ret);
         }, (nbt, name) -> {
-            int[] read = nbt.getIntArray(name);
+            int[] read = nbt.getIntArray(name).orElse(new int[0]);
             float[] ret = new float[read.length];
             for (int i = 0; i < ret.length; i++) {
                 ret[i] = Float.intBitsToFloat(read[i]);
@@ -138,7 +138,7 @@ public class Registry {
             }
             nbt.putIntArray(name, ret);
         }, (nbt, name) -> {
-            int[] read = nbt.getIntArray(name);
+            int[] read = nbt.getIntArray(name).orElse(new int[0]);
             long[] ret = new long[read.length / 2];
             for (int i = 0; i < ret.length; i++) {
                 ret[i] = BitUtil.longFromInts(read[i * 2], read[i * 2 + 1]);
@@ -183,7 +183,7 @@ public class Registry {
         GLOBAL_REGISTRY.register(new HandleItemStack());
         GLOBAL_REGISTRY.register(new HandleBlockPos());
         GLOBAL_REGISTRY.register(new HandleBlockState());
-        GLOBAL_REGISTRY.register(new DelegatingHandler<>(ResourceLocation.class, new HandleString(), ResourceLocation::toString, ResourceLocation::new));
+        GLOBAL_REGISTRY.register(new DelegatingHandler<Identifier, String>(Identifier.class, new HandleString(), Identifier::toString, Identifier::parse));
 
         // Annotated objects
         GLOBAL_REGISTRY.register(new HandleStorable<Object>());

@@ -24,7 +24,7 @@ public class IncreaseMinRarityStat extends Stat implements DoNotTransferToCrafte
         this.scaling = StatScaling.NONE;
         this.group = StatGroup.Misc;
         this.icon = "\u2748";
-        this.format = ChatFormatting.BLUE.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.BLUE);
 
     }
 

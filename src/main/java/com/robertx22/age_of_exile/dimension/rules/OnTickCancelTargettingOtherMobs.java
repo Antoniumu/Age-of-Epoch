@@ -7,7 +7,7 @@ import net.minecraft.world.entity.player.Player;
 public class OnTickCancelTargettingOtherMobs {
     public static void cancelTarget(Mob mob) {
         if (mob.tickCount % 50 == 0) {
-            if (WorldUtils.isMapWorldClass(mob.level)) {
+            if (WorldUtils.isMapWorldClass(mob.level())) {
                 if (mob.getTarget() instanceof Player == false) {
                     mob.setTarget(null);
                 }

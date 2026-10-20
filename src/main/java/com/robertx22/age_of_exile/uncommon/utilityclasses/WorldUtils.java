@@ -5,7 +5,7 @@ import com.robertx22.age_of_exile.mmorpg.MMORPG;
 import net.minecraft.world.level.block.LeavesBlock;
 import com.robertx22.forge_compat.material.Material;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
@@ -35,9 +35,9 @@ public class WorldUtils {
     public static BlockPos getSurfaceCenterOfChunk(LevelAccessor world, BlockPos pos) {
 
         int x = world.getChunk(pos)
-            .getPos().x + 8;
+            .getPos().x() + 8;
         int z = world.getChunk(pos)
-            .getPos().z + 8;
+            .getPos().z() + 8;
 
         pos = furtherby8(pos);
 
@@ -74,8 +74,7 @@ public class WorldUtils {
         BlockPos surface = getSurface(world, pos);
 
         for (BlockPos x : Arrays.asList(surface.above(), surface.above(2), surface.below(), surface.below(2), surface)) {
-            if (world.getBlockState(x)
-                .getMaterial() == Material.WATER) {
+            if (world.getBlockState(x).getFluidState().is(net.minecraft.tags.FluidTags.WATER)) {
                 return true;
             }
         }
@@ -118,13 +117,15 @@ public class WorldUtils {
 
     }
 
-    static boolean isId(LevelReader world, ResourceLocation dimid) {
-
+    static boolean isId(LevelReader world, Identifier dimid) {
+        if (world instanceof net.minecraft.world.level.Level lvl) {
+            return lvl.dimension().identifier().equals(dimid);
+        }
         if (MMORPG.server == null) {
             return false;
         }
-        ResourceLocation id = MMORPG.server.registryAccess()
-            .dimensionTypes()
+        Identifier id = MMORPG.server.registryAccess()
+            .lookupOrThrow(net.minecraft.core.registries.Registries.DIMENSION_TYPE)
             .getKey(world.dimensionType());
 
         if (id != null) {

@@ -77,7 +77,7 @@ public class BonusYield extends Stat implements IGenerated<Stat> {
 
         @Override
         public boolean canActivate(SkillDropEvent effect, StatData data, Stat stat) {
-            return req.isAllowed(effect.source.level, effect.source.blockPosition());
+            return req.isAllowed(effect.source.level(), effect.source.blockPosition());
         }
 
         @Override

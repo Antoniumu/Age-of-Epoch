@@ -55,7 +55,7 @@ public abstract class EffectEvent implements IGUID {
 
     public Spell getSpell() {
         return ExileDB.Spells()
-            .get(data.getString(EventData.SPELL));
+            .get(data.getStringOr(EventData.SPELL, ""));
     }
 
     public void initBeforeActivating() {
@@ -87,7 +87,7 @@ public abstract class EffectEvent implements IGUID {
     }
 
     public void calculateEffects() {
-        if (source.level.isClientSide) {
+        if (source.level().isClientSide()) {
             return; // todo is this fine? spell calc seems to be called on client every tick!
         }
         if (!effectsCalculated) {

@@ -6,7 +6,7 @@ import com.robertx22.library_of_exile.main.Ref;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 
 public class RequestTilePacket extends MyPacket<RequestTilePacket> {
@@ -22,8 +22,8 @@ public class RequestTilePacket extends MyPacket<RequestTilePacket> {
     }
 
     @Override
-    public ResourceLocation getIdentifier() {
-        return ResourceLocation.fromNamespaceAndPath(Ref.MODID, "reqtiledata");
+    public Identifier getIdentifier() {
+        return Identifier.fromNamespaceAndPath(Ref.MODID, "reqtiledata");
     }
 
     @Override
@@ -41,7 +41,7 @@ public class RequestTilePacket extends MyPacket<RequestTilePacket> {
     @Override
     public void onReceived(ExilePacketContext ctx) {
         Player player = ctx.getPlayer();
-        BlockEntity tile = player.level.getBlockEntity(pos);
+        BlockEntity tile = player.level().getBlockEntity(pos);
         Packets.sendToClient(player, new TileUpdatePacket(tile));
     }
 

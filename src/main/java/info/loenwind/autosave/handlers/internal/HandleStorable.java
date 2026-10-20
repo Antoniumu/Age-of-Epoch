@@ -61,7 +61,7 @@ public class HandleStorable<T extends Object> implements IHandler<T> {
             if (object == null) {
                 object = StorableEngine.instantiate(registry, type);
             }
-            CompoundTag tag = NullHelper.notnullM(nbt.getCompound(name), "CompoundTag.getCompound()");
+            CompoundTag tag = NullHelper.notnullM(nbt.getCompoundOrEmpty(name), "CompoundTag.getCompound()");
             StorableEngine.read(registry, phase, tag, object);
         }
         return object;

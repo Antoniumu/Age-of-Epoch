@@ -44,8 +44,8 @@ public class DungeonPopulateData {
         }
 
         public CP(ChunkPos cp) {
-            this.x = cp.x;
-            this.z = cp.z;
+            this.x = cp.x();
+            this.z = cp.z();
         }
 
         public ChunkPos getChunkPos() {
@@ -100,7 +100,7 @@ public class DungeonPopulateData {
             .getChunkPos();
 
         if (!populated.contains(new CP(cp))) {
-            PopulateDungeonChunks.populate(toPopulate, populated, world, world.getChunk(cp.x, cp.z), data.data, data.pop);
+            PopulateDungeonChunks.populate(toPopulate, populated, world, world.getChunk(cp.x(), cp.z()), data.data, data.pop);
         } else {
             toPopulate.removeIf(x -> x.equals(new CP(cp)));
         }

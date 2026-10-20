@@ -28,6 +28,20 @@ public class GeometryUtils {
         return getRandomPosInRadiusCircle(p.x, p.y, p.z, radius);
     }
 
+    public static Vec3 randomMotion(Vec3 p, net.minecraft.util.RandomSource rand) {
+        double x = rand.nextDouble() - 0.5D * 2;
+        double y = -rand.nextDouble();
+        double z = rand.nextDouble() - 0.5D * 2;
+        return new Vec3(x, y, z);
+    }
+
+    public static Vec3 randomPos(Vec3 p, net.minecraft.util.RandomSource rand, float radius) {
+        double x = p.x + rand.nextDouble() * radius - 0.5D * radius;
+        double y = p.y + rand.nextDouble() * radius - 0.5D * radius;
+        double z = p.z + rand.nextDouble() * radius - 0.5D * radius;
+        return new Vec3(x, y, z);
+    }
+
     public static Vec3 randomMotion(Vec3 p, Random rand) {
 
         double x = rand.nextDouble() - 0.5D * 2;

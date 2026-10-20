@@ -2,6 +2,7 @@ package com.robertx22.age_of_exile.dimension.rules;
 
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.WorldUtils;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Mob;
 
 public class OnTickDespawnIfFailedOrEmpty {
@@ -9,9 +10,11 @@ public class OnTickDespawnIfFailedOrEmpty {
 
         if (mob.tickCount % 50 == 0) {
             try {
-                if (WorldUtils.isMapWorldClass(mob.level)) {
-                    if (Load.dungeonData(mob.level).data.get(mob.blockPosition()).data.failedOrEmpty()) {
-                        mob.kill();
+                if (WorldUtils.isMapWorldClass(mob.level())) {
+                    if (Load.dungeonData(mob.level()).data.get(mob.blockPosition()).data.failedOrEmpty()) {
+                        if (mob.level() instanceof ServerLevel sl) {
+                            mob.kill(sl);
+                        }
                         return;
                     }
                 }

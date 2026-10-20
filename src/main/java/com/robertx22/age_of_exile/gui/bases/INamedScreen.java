@@ -1,11 +1,11 @@
 package com.robertx22.age_of_exile.gui.bases;
 
 import com.robertx22.age_of_exile.uncommon.localization.Words;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface INamedScreen {
 
-    ResourceLocation iconLocation();
+    Identifier iconLocation();
 
     Words screenName();
 

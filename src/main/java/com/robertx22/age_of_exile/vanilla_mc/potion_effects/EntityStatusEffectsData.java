@@ -60,7 +60,7 @@ public class EntityStatusEffectsData {
                     MobEffect effect = SlashPotions.CRAFTED_CONSUMABLES_MAP.get(prof)
                         .get();
 
-                    if (en.hasEffect(effect)) {
+                    if (en.hasEffect(net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect))) {
                         stats.addAll(x.getValue().stats);
                     }
                 } catch (Exception e) {

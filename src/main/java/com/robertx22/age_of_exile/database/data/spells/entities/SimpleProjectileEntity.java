@@ -11,40 +11,36 @@ import com.robertx22.age_of_exile.uncommon.utilityclasses.AllyOrEnemy;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.EntityFinder;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.Utilities;
 import com.robertx22.library_of_exile.utils.SoundUtils;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.boss.enderdragon.EnderDragonPart;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.server.level.ServerEntity;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragonPart;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.core.Registry;
-import net.minecraft.world.level.Level;
-import com.robertx22.forge_compat.fml.network.NetworkHooks;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAsItem, IDatapackSpellEntity {
 
     EntitySavedSpellData spellData;
@@ -57,7 +53,7 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
 
     private int ticksInGround = 0;
 
-    private static final EntityDataAccessor<CompoundTag> SPELL_DATA = SynchedEntityData.defineId(SimpleProjectileEntity.class, EntityDataSerializers.COMPOUND_TAG);
+    private static final EntityDataAccessor<String> SPELL_DATA = SynchedEntityData.defineId(SimpleProjectileEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<String> ENTITY_NAME = SynchedEntityData.defineId(SimpleProjectileEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Boolean> EXPIRE_ON_ENTITY_HIT = SynchedEntityData.defineId(SimpleProjectileEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> HIT_ALLIES = SynchedEntityData.defineId(SimpleProjectileEntity.class, EntityDataSerializers.BOOLEAN);
@@ -70,6 +66,10 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
     boolean collidedAlready = false;
 
     @Override
+    protected ItemStack getDefaultPickupItem() {
+        return new ItemStack(Items.ARROW);
+    }
+
     protected ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
@@ -78,22 +78,15 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
         return true;
     }
 
-    @Override
     public Iterable<ItemStack> getArmorSlots() {
         return new ArrayList<>();
     }
 
-    @Override
     public void setItemSlot(EquipmentSlot slotIn, ItemStack stack) {
 
     }
 
     @Override
-    public Packet<?> getAddEntityPacket(net.minecraft.server.level.ServerEntity serverEntity) {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
-    @Override // seems to help making it hit easier?
     public float getPickRadius() {
         return 1.0F;
     }
@@ -110,6 +103,7 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
         this.entityData.set(DEATH_TIME, newVal);
     }
 
+    @SuppressWarnings("unchecked")
     public SimpleProjectileEntity(EntityType<? extends Entity> type, Level worldIn) {
         super((EntityType<? extends AbstractArrow>) type, worldIn);
         this.xTile = -1;
@@ -129,7 +123,7 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
             return null;
         }
 
-        if (enres.getEntity() instanceof Entity) {
+        if (enres.getEntity() != null) {
             if (enres.getEntity() != this.getCaster()) {
                 return enres.getEntity();
             }
@@ -172,7 +166,7 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
     }
 
     @Override
-    public void remove() {
+    public void remove(Entity.RemovalReason reason) {
 
         LivingEntity caster = getCaster();
 
@@ -183,7 +177,7 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
                 .tryActivate(getScoreboardName(), SpellCtx.onExpire(caster, this, getSpellData()));
         }
 
-        super.remove();
+        super.remove(reason);
     }
 
     @Override
@@ -195,7 +189,7 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
     public final void tick() {
 
         if (this.removeNextTick) {
-            this.remove();
+            this.remove(Entity.RemovalReason.DISCARDED);
             return;
         }
 
@@ -236,16 +230,16 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
     protected EntityHitResult findHitEntity(Vec3 pos, Vec3 posPlusMotion) {
 
         EntityHitResult res = ProjectileUtil.getEntityHitResult(
-            this.level, this, pos, posPlusMotion, this.getBoundingBox()
+            this.level(), this, pos, posPlusMotion, this.getBoundingBox()
                 .expandTowards(this.getDeltaMovement())
                 .inflate(1D), (e) -> {
-                return !e.isSpectator() && e.isPickable() && e instanceof Entity && e != this.getCaster() && e != this.ignoreEntity;
+                return !e.isSpectator() && e.isPickable() && e != this.getCaster() && e != this.ignoreEntity;
             });
 
         if (!this.entityData.get(HIT_ALLIES)) {
             if (res != null && getCaster() != null && res.getEntity() instanceof LivingEntity) {
                 if (AllyOrEnemy.allies.is(getCaster(), (LivingEntity) res.getEntity())) {
-                    return null; // don't hit allies with spells, let them pass
+                    return null;
                 }
             }
         }
@@ -258,7 +252,7 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
         HitResult.Type raytraceresult$type = raytraceResultIn.getType();
         if (raytraceresult$type == HitResult.Type.ENTITY) {
             this.onImpact(raytraceResultIn);
-            this.playSound(SoundEvents.SHULKER_BULLET_HIT, 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
+            this.playSound(SoundEvents.SHULKER_BULLET_HIT, 1.0F, 1.2F / (this.getRandom().nextFloat() * 0.2F + 0.9F));
 
         } else if (raytraceresult$type == HitResult.Type.BLOCK) {
 
@@ -268,7 +262,7 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
             collidedAlready = true;
 
             BlockHitResult blockraytraceresult = (BlockHitResult) raytraceResultIn;
-            BlockState blockstate = this.level.getBlockState(blockraytraceresult.getBlockPos());
+            BlockState blockstate = this.level().getBlockState(blockraytraceresult.getBlockPos());
 
             Vec3 vec3d = blockraytraceresult.getLocation()
                 .subtract(this.getX(), this.getY(), this.getZ());
@@ -278,7 +272,7 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
 
             this.onImpact(blockraytraceresult);
 
-            blockstate.onProjectileHit(this.level, blockstate, blockraytraceresult, this);
+            blockstate.onProjectileHit(this.level(), blockstate, blockraytraceresult, this);
         }
 
     }
@@ -288,7 +282,7 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
         Entity entityHit = getEntityHit(result, 0.3D);
 
         if (entityHit != null) {
-            if (level.isClientSide) {
+            if (this.level().isClientSide()) {
                 SoundUtils.playSound(this, SoundEvents.GENERIC_HURT, 1F, 0.9F);
             }
 
@@ -297,12 +291,9 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
             LivingEntity en = null;
 
             if (entityHit instanceof LivingEntity == false) {
-                // HARDCODED support for dumb ender dragon non living entity dragon parts
                 if (entityHit instanceof EnderDragonPart) {
                     EnderDragonPart part = (EnderDragonPart) entityHit;
-                    if (!part.isInvulnerableTo(DamageSource.mobAttack(caster))) {
-                        en = part.parentMob;
-                    }
+                    en = part.parentMob;
                 }
             } else if (entityHit instanceof LivingEntity) {
                 en = (LivingEntity) entityHit;
@@ -323,7 +314,7 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
             }
 
         } else {
-            if (level.isClientSide) {
+            if (this.level().isClientSide()) {
                 SoundUtils.playSound(this, SoundEvents.STONE_HIT, 0.7F, 0.9F);
             }
         }
@@ -351,43 +342,33 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
     static Gson GSON = new Gson();
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
-
+    protected void addAdditionalSaveData(ValueOutput output) {
+        super.addAdditionalSaveData(output);
         try {
-
-            // super.writeCustomDataToTag(nbt);
-
-            nbt.putInt("xTile", this.xTile);
-            nbt.putInt("yTile", this.yTile);
-            nbt.putInt("zTile", this.zTile);
-
-            nbt.putByte("inGround", (byte) (this.inGround ? 1 : 0));
-
-            nbt.putInt("deathTime", this.getDeathTime());
-
-            nbt.putString("data", GSON.toJson(spellData));
+            output.putInt("xTile", this.xTile);
+            output.putInt("yTile", this.yTile);
+            output.putInt("zTile", this.zTile);
+            output.putByte("inGround", (byte) (this.inGround ? 1 : 0));
+            output.putInt("deathTime", this.getDeathTime());
+            output.putString("data", GSON.toJson(spellData));
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt) {
-
+    protected void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
         try {
-
-//            super.readCustomDataFromTag(nbt);
-
-            this.xTile = nbt.getInt("xTile");
-            this.yTile = nbt.getInt("yTile");
-            this.zTile = nbt.getInt("zTile");
-
-            this.inGround = nbt.getByte("inGround") == 1;
-
-            this.setDeathTime(nbt.getInt("deathTime"));
-
-            this.spellData = GSON.fromJson(nbt.getString("data"), EntitySavedSpellData.class);
+            this.xTile = input.getIntOr("xTile", 0);
+            this.yTile = input.getIntOr("yTile", 0);
+            this.zTile = input.getIntOr("zTile", 0);
+            this.inGround = input.getByteOr("inGround", (byte) 0) == 1;
+            this.setDeathTime(input.getIntOr("deathTime", 100));
+            String data = input.getStringOr("data", "");
+            if (!data.isEmpty()) {
+                this.spellData = GSON.fromJson(data, EntitySavedSpellData.class);
+            }
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
         }
@@ -398,9 +379,8 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
     public LivingEntity getCaster() {
         if (caster == null) {
             try {
-                this.caster = Utilities.getLivingEntityByUUID(level, UUID.fromString(getSpellData().caster_uuid));
+                this.caster = Utilities.getLivingEntityByUUID(this.level(), UUID.fromString(getSpellData().caster_uuid));
             } catch (Exception e) {
-                // e.printStackTrace();
             }
         }
 
@@ -408,15 +388,15 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(SPELL_DATA, new CompoundTag());
-        this.entityData.define(ENTITY_NAME, "");
-        this.entityData.define(EXPIRE_ON_ENTITY_HIT, true);
-        this.entityData.define(EXPIRE_ON_BLOCK_HIT, true);
-        this.entityData.define(HIT_ALLIES, false);
-        this.entityData.define(PIERCE, false);
-        this.entityData.define(DEATH_TIME, 100);
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(SPELL_DATA, "");
+        builder.define(ENTITY_NAME, "");
+        builder.define(EXPIRE_ON_ENTITY_HIT, true);
+        builder.define(EXPIRE_ON_BLOCK_HIT, true);
+        builder.define(HIT_ALLIES, false);
+        builder.define(PIERCE, false);
+        builder.define(DEATH_TIME, 100);
     }
 
     @Override
@@ -431,11 +411,11 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
 
     public EntitySavedSpellData getSpellData() {
         try {
-            if (level.isClientSide) {
+            if (this.level().isClientSide()) {
                 if (spellData == null) {
-                    CompoundTag nbt = entityData.get(SPELL_DATA);
-                    if (nbt != null) {
-                        this.spellData = GSON.fromJson(nbt.getString("spell"), EntitySavedSpellData.class);
+                    String json = entityData.get(SPELL_DATA);
+                    if (json != null && !json.isEmpty()) {
+                        this.spellData = GSON.fromJson(json, EntitySavedSpellData.class);
                     }
                 }
             }
@@ -448,12 +428,11 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
     @Override
     public ItemStack getItem() {
         try {
-            Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(getSpellData().item_id));
+            Item item = BuiltInRegistries.ITEM.getValue(Identifier.parse(getSpellData().item_id));
             if (item != null) {
                 return new ItemStack(item);
             }
         } catch (Exception e) {
-            // e.printStackTrace();
         }
 
         return new ItemStack(Items.AIR);
@@ -465,14 +444,13 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
 
     @Override
     public void playerTouch(Player player) {
-        // don't allow player to pickup lol
     }
 
     @Override
     public void init(LivingEntity caster, EntitySavedSpellData data, MapHolder holder) {
         this.spellData = data;
 
-        this.pickup = PickupStatus.DISALLOWED;
+        this.pickup = AbstractArrow.Pickup.DISALLOWED;
 
         this.setNoGravity(!holder.getOrDefault(MapField.GRAVITY, true));
         this.setDeathTime(holder.get(MapField.LIFESPAN_TICKS)
@@ -489,9 +467,7 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
         }
 
         data.item_id = holder.get(MapField.ITEM);
-        CompoundTag nbt = new CompoundTag();
-        nbt.putString("spell", GSON.toJson(spellData));
-        entityData.set(SPELL_DATA, nbt);
+        entityData.set(SPELL_DATA, GSON.toJson(spellData));
         this.setOwner(caster);
 
         String name = holder.get(MapField.ENTITY_NAME);

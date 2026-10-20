@@ -4,7 +4,7 @@ import com.robertx22.divine_missions.configs.MissionsConfig;
 import com.robertx22.divine_missions.db_init.RegistryInit;
 import com.robertx22.divine_missions.packets.PickMissionPacket;
 import com.robertx22.library_of_exile.main.Packets;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import com.robertx22.forge_compat.api.distmarker.Dist;
 import com.robertx22.forge_compat.eventbus.api.IEventBus;
 import com.robertx22.forge_compat.fml.DistExecutor;
@@ -23,7 +23,7 @@ public class CommonInit {
 
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel NETWORK = NetworkRegistry.newSimpleChannel(
-        ResourceLocation.fromNamespaceAndPath(DivineMissions.MODID, "main"),
+        Identifier.fromNamespaceAndPath(DivineMissions.MODID, "main"),
         () -> PROTOCOL_VERSION,
         PROTOCOL_VERSION::equals,
         PROTOCOL_VERSION::equals

@@ -1,4 +1,5 @@
 package com.robertx22.age_of_exile.player_skills.ingredient.data;
+import net.minecraft.network.chat.MutableComponent;
 
 import com.robertx22.age_of_exile.database.data.ingredient.SlashIngredient;
 import com.robertx22.age_of_exile.database.data.player_skills.PlayerSkill;
@@ -9,8 +10,6 @@ import com.robertx22.age_of_exile.uncommon.utilityclasses.LevelUtils;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.TooltipUtils;
 import info.loenwind.autosave.annotations.Storable;
 import info.loenwind.autosave.annotations.Store;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
@@ -33,7 +32,7 @@ public class IngredientData {
 
     static String STAR = "\u272B";
 
-    public Component getStars() {
+    public MutableComponent getStars() {
         GearRarity rar = ExileDB.GearRarities()
             .get(getIngredient().rar);
 

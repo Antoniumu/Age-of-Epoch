@@ -13,7 +13,6 @@ import info.loenwind.autosave.annotations.Storable;
 import info.loenwind.autosave.annotations.Store;
 import com.robertx22.forge_compat.util.Tuple;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.Comparator;

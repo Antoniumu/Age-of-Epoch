@@ -6,9 +6,9 @@ import com.robertx22.infinite_dungeons.main.MainID;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import com.robertx22.library_of_exile.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.forge_compat.client.ImageButton;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class ShopCostButton extends ImageButton {
     public static int SIZE_X = 24;
     public static int SIZE_Y = 24;
 
-    static ResourceLocation ID = MainID.id("textures/gui/shop_cost_button.png");
+    static Identifier ID = MainID.id("textures/gui/shop_cost_button.png");
 
     Minecraft mc = Minecraft.getInstance();
 
@@ -37,7 +37,7 @@ public class ShopCostButton extends ImageButton {
         if (isInside(x, y)) {
             List<Component> tooltip = new ArrayList<>();
             tooltip.addAll(entry.cost.getShowStack()
-                .getTooltipLines(mc.player, TooltipFlag.TooltipFlags.NORMAL));
+                .getTooltipLines(net.minecraft.world.item.Item.TooltipContext.EMPTY, mc.player, TooltipFlag.Default.NORMAL));
             GuiUtils.renderTooltip(matrix, tooltip, x, y);
         }
     }

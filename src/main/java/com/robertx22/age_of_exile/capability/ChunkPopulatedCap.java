@@ -5,7 +5,7 @@ import com.robertx22.library_of_exile.components.forge.BaseProvider;
 import com.robertx22.library_of_exile.components.forge.BaseStorage;
 import com.robertx22.library_of_exile.components.forge.ICommonCap;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.chunk.LevelChunk;
 import com.robertx22.forge_compat.common.capabilities.Capability;
 import com.robertx22.forge_compat.common.capabilities.CapabilityInject;
@@ -15,7 +15,7 @@ import com.robertx22.forge_compat.fml.common.Mod;
 
 @Mod.EventBusSubscriber
 public class ChunkPopulatedCap implements ICommonCap {
-    public static final ResourceLocation RESOURCE = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "popchunk");
+    public static final Identifier RESOURCE = Identifier.fromNamespaceAndPath(SlashRef.MODID, "popchunk");
 
     @Mod.EventBusSubscriber
     public static class EventHandler {
@@ -54,7 +54,7 @@ public class ChunkPopulatedCap implements ICommonCap {
 
     @Override
     public void loadFromNBT(CompoundTag tag) {
-        this.populated = tag.getBoolean(LOC);
+        this.populated = tag.getBooleanOr(LOC, false);
     }
 
     @Override

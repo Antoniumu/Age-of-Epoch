@@ -6,12 +6,12 @@ import com.robertx22.age_of_exile.mmorpg.registers.common.items.ProfessionItems;
 import com.robertx22.age_of_exile.player_skills.items.TieredItem;
 import com.robertx22.age_of_exile.player_skills.items.backpacks.IGatheringMat;
 import com.robertx22.age_of_exile.player_skills.items.foods.SkillItemTier;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import com.robertx22.forge_compat.data.ShapelessRecipeBuilder;
 
 public class MiningStoneItem extends TieredItem implements IGatheringMat, IShapelessRecipe {
 
     public MiningStoneItem(SkillItemTier tier) {
-        super(tier, new Properties().tab(CreativeTabs.Professions));
+        super(tier, new Properties());
     }
 
     @Override

@@ -10,6 +10,6 @@ public abstract class SignBlockEntityDuckMixin implements SignDuck {
 
     @Override
     public Component[] getMessages() {
-        return ((SignBlockEntity) (Object) this).getMessages(false);
+        return ((SignBlockEntity) (Object) this).getFrontText().getMessages(false);
     }
 }

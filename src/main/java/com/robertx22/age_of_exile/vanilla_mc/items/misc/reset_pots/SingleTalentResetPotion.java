@@ -5,12 +5,12 @@ import com.robertx22.age_of_exile.database.data.currency.base.IShapedRecipe;
 import com.robertx22.age_of_exile.mmorpg.registers.common.items.SlashItems;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.vanilla_mc.items.misc.AutoItem;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import com.robertx22.forge_compat.data.ShapedRecipeBuilder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.Level;
@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level;
 public class SingleTalentResetPotion extends AutoItem implements IShapedRecipe {
 
     public SingleTalentResetPotion() {
-        super(new Properties().tab(CreativeTabs.MyModTab)
+        super(new Properties()
             .stacksTo(64));
     }
 
@@ -42,19 +42,18 @@ public class SingleTalentResetPotion extends AutoItem implements IShapedRecipe {
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level worldIn, Player player, InteractionHand handIn) {
+    public InteractionResult use(Level worldIn, Player player, InteractionHand handIn) {
         ItemStack itemStack = player.getItemInHand(handIn);
         player.startUsingItem(handIn);
-        return InteractionResult.success(itemStack);
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public UseAnim getUseAnimation(ItemStack stack) {
-        return UseAnim.DRINK;
+    public ItemUseAnimation getUseAnimation(ItemStack stack) {
+        return ItemUseAnimation.DRINK;
     }
 
-    @Override
-    public int getUseDuration(ItemStack stack) {
+    @Override public int getUseDuration(ItemStack stack, net.minecraft.world.entity.LivingEntity entity) {
         return 30;
     }
 

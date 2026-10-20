@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.robertx22.infinite_dungeons.database.db_types.DungeonDifficulty;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.resources.ResourceLocation;
+import com.robertx22.forge_compat.client.ImageButton;
+import net.minecraft.resources.Identifier;
 
 public class ShopDifficultyButton extends ImageButton {
 
@@ -15,7 +15,7 @@ public class ShopDifficultyButton extends ImageButton {
     DungeonDifficulty diff;
 
     public ShopDifficultyButton(DungeonDifficulty diff, int x, int y) {
-        super(x, y, SIZE_X, SIZE_Y, 0, 0, 0, ResourceLocation.parse(""), button -> {
+        super(x, y, SIZE_X, SIZE_Y, 0, 0, 0, Identifier.parse(""), button -> {
 
         });
         this.diff = diff;
@@ -24,8 +24,7 @@ public class ShopDifficultyButton extends ImageButton {
     @Override
     public void renderButton(PoseStack matrices, int mouseX, int mouseY, float delta) {
         Minecraft mc = Minecraft.getInstance();
-        mc.getTextureManager()
-            .bind(diff.getIconLoc());
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(diff.getIconLoc());
         blit(matrices, this.x, this.y, 0, 0, SIZE_X, SIZE_Y, SIZE_X, SIZE_Y);
 
     }

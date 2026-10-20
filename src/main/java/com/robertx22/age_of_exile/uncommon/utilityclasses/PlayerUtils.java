@@ -26,13 +26,13 @@ public class PlayerUtils {
             .getPlayerList()
             .getPlayers()
             .stream()
-            .filter(x -> pos.distSqr(x.getX(), x.getY(), x.getZ(), false) < range)
+            .filter(x -> pos.distToCenterSqr(x.getX(), x.getY(), x.getZ()) < range)
             .collect(Collectors.toList());
 
     }
 
     public static List<Player> getNearbyPlayers(Entity en, double range) {
-        return getNearbyPlayers(en.level, en.blockPosition(), range);
+        return getNearbyPlayers(en.level(), en.blockPosition(), range);
     }
 
     public static List<ItemStack> getEquippedStacksOf(Player player, BaseGearType type) {
@@ -69,7 +69,9 @@ public class PlayerUtils {
 
     public static void giveItem(ItemStack stack, Player player) {
         if (player.addItem(stack) == false) {
-            player.spawnAtLocation(stack, 1F);
+            if (player.level() instanceof ServerLevel sl) {
+                player.spawnAtLocation(sl, stack, 1F);
+            }
         }
         player.getInventory().setChanged();
     }

@@ -23,7 +23,7 @@ public class CasterCommandAction extends SpellAction {
 
         try {
 
-            if (ctx.world.isClientSide) {
+            if (ctx.world.isClientSide()) {
                 return;
             }
 
@@ -33,10 +33,10 @@ public class CasterCommandAction extends SpellAction {
 
             CommandSourceStack source = CommandUtils.getCommandSource(entity);
 
-            ctx.caster
+            ctx.caster.level()
                 .getServer()
                 .getCommands()
-                .performCommand(source, command);
+                .performPrefixedCommand(source, command);
         } catch (Exception e) {
             e.printStackTrace();
         }

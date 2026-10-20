@@ -1,18 +1,18 @@
 package com.robertx22.library_of_exile.components;
 
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 
 public enum MySpawnReason {
     NATURAL,
     SPAWNER,
     OTHER;
 
-    public static MySpawnReason get(MobSpawnType reason) {
+    public static MySpawnReason get(EntitySpawnReason reason) {
 
-        if (reason == MobSpawnType.SPAWNER) {
+        if (reason == EntitySpawnReason.SPAWNER) {
             return SPAWNER;
         }
-        if (reason == MobSpawnType.NATURAL || reason == MobSpawnType.CHUNK_GENERATION || reason == MobSpawnType.STRUCTURE) {
+        if (reason == EntitySpawnReason.NATURAL || reason == EntitySpawnReason.CHUNK_GENERATION || reason == EntitySpawnReason.STRUCTURE) {
             return NATURAL;
         }
 

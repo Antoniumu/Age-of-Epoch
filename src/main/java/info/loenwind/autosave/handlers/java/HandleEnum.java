@@ -34,7 +34,7 @@ public class HandleEnum implements IHandler<Enum<?>> {
             Enum<?>[] enumConstants = (Enum<?>[]) TypeUtil.toClass(type)
                 .getEnumConstants();
             if (enumConstants != null) { // This should be "impossible"
-                return enumConstants[Mth.clamp(nbt.getInt(name), 0, enumConstants.length - 1)];
+                return enumConstants[Mth.clamp(nbt.getIntOr(name, 0), 0, enumConstants.length - 1)];
             }
         }
         return object;

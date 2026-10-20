@@ -27,7 +27,7 @@ public class SignUtils {
         List<String> texts = new ArrayList<>();
 
         for (Component text : list) {
-            texts.add(text.getContents());
+            texts.add(text.getString());
         }
         return texts;
     }

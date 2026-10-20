@@ -17,6 +17,8 @@ public class LivingEntityUseItemEvent extends Event {
 
     public LivingEntity getEntityLiving() { return entityLiving; }
 
+    public LivingEntity getEntity() { return entityLiving; }
+
     public ItemStack getItem() { return item; }
 
     public int getDuration() { return duration; }

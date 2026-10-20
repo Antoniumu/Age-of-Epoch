@@ -8,9 +8,8 @@ import com.robertx22.library_of_exile.main.Packets;
 import com.robertx22.library_of_exile.utils.CLOC;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
+import com.robertx22.forge_compat.client.ImageButton;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
@@ -22,7 +21,7 @@ public class StartDungeonButton extends ImageButton {
     public static int SIZE_X = 49;
     public static int SIZE_Y = 16;
 
-    static ResourceLocation ID = SlashRef.guiId("dungeon/start_dungeon_button");
+    static Identifier ID = SlashRef.guiId("dungeon/start_dungeon_button");
 
     Minecraft mc = Minecraft.getInstance();
 
@@ -70,7 +69,7 @@ public class StartDungeonButton extends ImageButton {
 
         int width = mc.font.width(txt);
 
-        mc.font.drawShadow(matrix, txt, this.x + (SIZE_X / 2F - (width / 2F)), this.y + 3, ChatFormatting.WHITE.getColor());
+        com.robertx22.forge_compat.client.AbstractGui.drawShadow(mc.font, matrix, txt, this.x + (SIZE_X / 2F - (width / 2F)), this.y + 3, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.WHITE));
     }
 
 }

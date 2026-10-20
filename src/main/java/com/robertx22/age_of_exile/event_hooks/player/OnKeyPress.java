@@ -6,7 +6,7 @@ import com.robertx22.age_of_exile.uncommon.utilityclasses.ChatUtils;
 import com.robertx22.age_of_exile.vanilla_mc.packets.spells.TellServerToCastSpellPacket;
 import com.robertx22.library_of_exile.main.Packets;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
+import com.robertx22.forge_compat.client.Screen;
 
 public class OnKeyPress {
 
@@ -29,7 +29,7 @@ public class OnKeyPress {
         }
 
         if (KeybindsRegister.HUB_SCREEN_KEY.isDown()) {
-            mc.setScreen(new CharacterScreen());
+            mc.gui.setScreen(new CharacterScreen());
             cooldown = 10;
         } else {
 
@@ -47,7 +47,7 @@ public class OnKeyPress {
                 number -= 500; // dont cast
             }
 
-            if (Screen.hasShiftDown()) {
+            if (mc.hasShiftDown()) {
                 number += 4;
             }
             if (number > -1) {

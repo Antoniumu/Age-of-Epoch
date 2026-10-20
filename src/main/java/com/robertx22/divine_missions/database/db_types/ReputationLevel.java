@@ -1,4 +1,5 @@
 package com.robertx22.divine_missions.database.db_types;
+import net.minecraft.network.chat.MutableComponent;
 
 import com.robertx22.divine_missions.db_init.RegistryTypes;
 import com.robertx22.divine_missions.main.DivineMissions;
@@ -24,7 +25,7 @@ public class ReputationLevel implements JsonExileRegistry<ReputationLevel>, IAut
         return FormatUtils.of(format);
     }
 
-    public Component getTranslatable() {
+    public MutableComponent getTranslatable() {
         return Component.translatable(DivineMissions.MODID + ".rep." + id);
     }
 

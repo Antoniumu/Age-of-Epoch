@@ -42,8 +42,7 @@ public abstract class CurrencyItem extends Item implements ExileRegistry<Currenc
     public abstract String GUID();
 
     public CurrencyItem(String name) {
-        super(new ItemDefault().stacksTo(64)
-            .tab(CreativeTabs.GemRuneCurrency));
+        super(new ItemDefault().stacksTo(64));
 
     }
 
@@ -111,7 +110,6 @@ public abstract class CurrencyItem extends Item implements ExileRegistry<Currenc
     }
 
     @OnlyIn(Dist.CLIENT)
-    @Override
     public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip,
                                 TooltipFlag flagIn) {
 

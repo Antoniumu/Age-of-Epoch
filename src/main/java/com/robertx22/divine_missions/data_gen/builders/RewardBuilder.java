@@ -3,7 +3,7 @@ package com.robertx22.divine_missions.data_gen.builders;
 import com.robertx22.divine_missions.database.RewardTypeIds;
 import com.robertx22.divine_missions.database.db_types.Reward;
 import net.minecraft.world.item.Item;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.Registry;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -11,7 +11,7 @@ public class RewardBuilder {
 
     Reward reward = new Reward();
 
-    public static RewardBuilder lootTable(int worth, int weight, ResourceLocation loottable) {
+    public static RewardBuilder lootTable(int worth, int weight, Identifier loottable) {
         RewardBuilder b = new RewardBuilder();
         b.reward.id = loottable.toString()
             .replace(":", "_");

@@ -1,11 +1,11 @@
 package com.robertx22.infinite_dungeons.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.robertx22.forge_compat.client.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.components.Renderable;
-import net.minecraft.resources.ResourceLocation;
+import com.robertx22.forge_compat.client.Screen;
+import com.robertx22.forge_compat.client.Button;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 
 public class BaseScreen extends Screen {
@@ -24,13 +24,12 @@ public class BaseScreen extends Screen {
     public int sizeX = 0;
     public int sizeY = 0;
 
-    public void renderBackground(PoseStack matrix, ResourceLocation id) {
+    public void renderBackground(PoseStack matrix, Identifier id) {
         renderBackground(matrix, id, 256, 256);
     }
 
-    public void renderBackground(PoseStack matrix, ResourceLocation id, int x, int y) {
-        mc.getTextureManager()
-            .bind(id);
+    public void renderBackground(PoseStack matrix, Identifier id, int x, int y) {
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(id);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         blit(matrix, mc.getWindow()
                 .getGuiScaledWidth() / 2 - sizeX / 2,
@@ -53,7 +52,7 @@ public class BaseScreen extends Screen {
         this.guiTop = (this.height - this.sizeY) / 2;
     }
 
-    public <T extends Renderable> T publicAddButton(T w) {
+    public <T extends Button> T publicAddButton(T w) {
         return this.addButton(w);
     }
 

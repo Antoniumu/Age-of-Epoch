@@ -1,4 +1,5 @@
 package com.robertx22.infinite_dungeons.database.db_types.dungeon_modifiers;
+import net.minecraft.network.chat.MutableComponent;
 
 import com.robertx22.infinite_dungeons.block.ControlBlockEntity;
 import com.robertx22.infinite_dungeons.db_init.RegistryTypes;
@@ -10,7 +11,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ public abstract class DungeonModifier implements ExileRegistry<DungeonModifier> 
 
     public static DungeonModifier SERIALIZER = new DungeonModifier("") {
         @Override
-        public Component announcement() {
+        public MutableComponent announcement() {
             return null;
         }
 
@@ -46,7 +46,7 @@ public abstract class DungeonModifier implements ExileRegistry<DungeonModifier> 
         return true;
     }
 
-    public Component announcement() {
+    public MutableComponent announcement() {
         return Component.translatable(MainID.MODID + ".modifier." + this.id);
     }
 

@@ -101,7 +101,7 @@ public class FavorData {
 
     private void onLowFavor(Player player) {
         if (ServerContainer.get().ENABLE_FAVOR_SYSTEM.get()) {
-            player.displayClientMessage(Component.literal("You are very low on favor.").withStyle(ChatFormatting.RED), false);
+            player.sendSystemMessage(Component.literal("You are very low on favor.").withStyle(ChatFormatting.RED));
         }
     }
 }

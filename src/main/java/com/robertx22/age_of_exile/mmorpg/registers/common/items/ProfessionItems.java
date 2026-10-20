@@ -10,7 +10,7 @@ import com.robertx22.age_of_exile.vanilla_mc.items.misc.SalvagedDustItem;
 
 import java.util.HashMap;
 
-import net.minecraft.world.item.Tier;
+import com.robertx22.forge_compat.common.Tier;
 public class ProfessionItems {
 
     public static HashMap<SkillItemTier, RegObj<CondensedEssenceItem>> CONDENSED_ESSENCE_MAP = new HashMap<>();

@@ -22,7 +22,7 @@ public class StringMatchesCondition extends StatCondition {
 
     @Override
     public boolean can(EffectEvent event, EffectSides statSource, StatData data, Stat stat) {
-        return event.data.getString(string_key)
+        return event.data.getStringOr(string_key, "")
             .equals(string_id);
     }
 

@@ -49,13 +49,13 @@ public class GearSocketsData implements IStatsContainer, IGearPartTooltip {
             if (sockets.size() > i) {
                 SocketData data = sockets.get(i);
                 Gem gem = data.getGem();
-                list.add(new SText(gem.getFormat() + "[" + TooltipUtils.STAR + "] ").append(data.GetTooltipString(info, gear)
+                list.add(net.minecraft.network.chat.Component.literal(gem.getFormat() + "[" + TooltipUtils.STAR + "] ").append(data.GetTooltipString(info, gear)
                     .get(0)));
             }
         }
 
         for (int i = 0; i < gear.getEmptySockets(); i++) {
-            list.add(new SText(ChatFormatting.YELLOW + "[Socket]"));
+            list.add(net.minecraft.network.chat.Component.literal(ChatFormatting.YELLOW + "[Socket]"));
         }
 
         return list;

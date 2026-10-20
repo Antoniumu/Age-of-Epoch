@@ -3,15 +3,15 @@ package com.robertx22.library_of_exile.gui;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.robertx22.library_of_exile.main.Ref;
 import com.robertx22.library_of_exile.utils.GuiUtils;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.resources.ResourceLocation;
+import com.robertx22.forge_compat.client.ImageButton;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
 
 public class HelpButton extends ImageButton {
 
-    static ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Ref.MODID, "textures/gui/spell_help.png");
+    static Identifier ID = Identifier.fromNamespaceAndPath(Ref.MODID, "textures/gui/spell_help.png");
     List<Component> tooltip;
 
     public HelpButton(List<Component> tooltip, int x, int y) {

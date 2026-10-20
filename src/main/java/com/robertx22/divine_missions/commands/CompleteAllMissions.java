@@ -19,8 +19,8 @@ public class CompleteAllMissions {
 
         commandDispatcher.register(
             literal(DivineMissions.MODID)
-                .then(literal("complete_all").requires(e -> e.hasPermission(2))
-                    .requires(e -> e.hasPermission(2))
+                .then(literal("complete_all").requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS))
+                    .requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS))
                     .then(argument("target", EntityArgument.player())
                         .executes(e -> execute(e.getSource(), EntityArgument.getPlayer(e, "target"))))));
     }

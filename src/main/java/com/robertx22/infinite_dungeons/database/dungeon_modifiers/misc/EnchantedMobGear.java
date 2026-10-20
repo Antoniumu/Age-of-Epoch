@@ -3,7 +3,6 @@ package com.robertx22.infinite_dungeons.database.dungeon_modifiers.misc;
 import com.robertx22.infinite_dungeons.block.ControlBlockEntity;
 import com.robertx22.infinite_dungeons.database.db_types.dungeon_modifiers.DungeonModifier;
 import com.robertx22.infinite_dungeons.database.db_types.dungeon_modifiers.ModifierType;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
@@ -31,7 +30,6 @@ public class EnchantedMobGear extends DungeonModifier {
     @Override
     public void onMobSpawn(LivingEntity en) {
         for (ItemStack stack : getAllGearOn(en)) {
-            EnchantmentHelper.enchantItem(en.level.random, stack, this.enchantLevels, false);
         }
     }
 }

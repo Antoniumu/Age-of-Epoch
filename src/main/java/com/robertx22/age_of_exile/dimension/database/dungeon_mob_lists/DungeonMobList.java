@@ -7,19 +7,18 @@ import com.robertx22.library_of_exile.registry.ExileRegistryType;
 import com.robertx22.library_of_exile.registry.IAutoGson;
 import com.robertx22.library_of_exile.registry.JsonExileRegistry;
 import com.robertx22.library_of_exile.utils.RandomUtils;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
-import net.minecraft.server.level.ServerLevel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 public class DungeonMobList implements JsonExileRegistry<DungeonMobList>, IAutoGson<DungeonMobList> {
     public static DungeonMobList SERIALIZER = new DungeonMobList();
 
@@ -46,9 +45,9 @@ public class DungeonMobList implements JsonExileRegistry<DungeonMobList>, IAutoG
     public LivingEntity spawnBoss(ServerLevel world, BlockPos pos) {
         WeightedMobEntry random = RandomUtils.weightedRandom(bosses);
 
-        EntityType type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(random.id));
+        EntityType type = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(random.id));
 
-        LivingEntity en = (LivingEntity) type.create(world);
+        LivingEntity en = (LivingEntity) type.create(world, EntitySpawnReason.MOB_SUMMONED);
 
         Load.Unit(en)
             .setRarity(IRarity.BOSS_ID);
@@ -62,10 +61,10 @@ public class DungeonMobList implements JsonExileRegistry<DungeonMobList>, IAutoG
         EntityType type = null;
         try {
             WeightedMobEntry random = RandomUtils.weightedRandom(mobs);
-            type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(random.id));
+            type = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(random.id));
         } catch (Exception e) {
             e.printStackTrace();
-            return EntityType.ZOMBIE;
+            return net.minecraft.world.entity.EntityTypes.ZOMBIE;
         }
 
         return type;
@@ -75,7 +74,7 @@ public class DungeonMobList implements JsonExileRegistry<DungeonMobList>, IAutoG
 
         try {
 
-            LivingEntity en = (LivingEntity) type.create(world);
+            LivingEntity en = (LivingEntity) type.create(world, EntitySpawnReason.MOB_SUMMONED);
 
             setup(en, pos, world);
 
@@ -89,7 +88,7 @@ public class DungeonMobList implements JsonExileRegistry<DungeonMobList>, IAutoG
 
     private void setup(LivingEntity en, BlockPos pos, ServerLevel world) {
 
-        en.moveTo(pos.getX(), pos.getY(), pos.getZ(), 0, 0);
+        en.setPos(pos.getX(), pos.getY(), pos.getZ());
 
         if (en instanceof Mob) {
             Mob mob = (Mob) en;
@@ -99,18 +98,13 @@ public class DungeonMobList implements JsonExileRegistry<DungeonMobList>, IAutoG
             mob.finalizeSpawn(
                 world,
                 world.getCurrentDifficultyAt(pos),
-                MobSpawnType.MOB_SUMMONED,
-                null, null);
+                EntitySpawnReason.MOB_SUMMONED,
+                null);
 
         }
 
         world.addFreshEntityWithPassengers(en);
 
-    }
-
-    @Override
-    public int Weight() {
-        return 1000;
     }
 
 }

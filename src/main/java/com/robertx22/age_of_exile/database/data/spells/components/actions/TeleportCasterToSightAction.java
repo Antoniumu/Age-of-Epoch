@@ -25,7 +25,7 @@ public class TeleportCasterToSightAction extends SpellAction {
         HitResult ray = ctx.caster.pick(distance, 0.0F, false);
         Vec3 pos = ray.getLocation();
 
-        EntityUtils.setLoc(ctx.caster, pos, ctx.caster.yRot, ctx.caster.xRot);
+        EntityUtils.setLoc(ctx.caster, pos, ctx.caster.getYRot(), ctx.caster.getXRot());
 
     }
 

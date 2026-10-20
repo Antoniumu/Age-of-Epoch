@@ -10,7 +10,7 @@ import com.robertx22.infinite_dungeons.gui.buttons.shop.ShopCostButton;
 import com.robertx22.infinite_dungeons.gui.buttons.shop.ShopDifficultyButton;
 import com.robertx22.infinite_dungeons.gui.buttons.shop.ShopRewardButton;
 import com.robertx22.infinite_dungeons.main.MainID;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.*;
 
@@ -29,7 +29,7 @@ public class DungeonShopScreen extends BaseScreen {
 
     }
 
-    static ResourceLocation BACKGROUND = MainID.id("textures/gui/shop.png");
+    static Identifier BACKGROUND = MainID.id("textures/gui/shop.png");
 
     public ControlBlockEntity getDungeon() {
         Optional<ControlBlockEntity> opt = PlayerIDCap.get(mc.player)
@@ -86,7 +86,7 @@ public class DungeonShopScreen extends BaseScreen {
         super.init();
 
         this.buttons.clear();
-        this.children.clear();
+        this.clearWidgets();
 
         int x = guiLeft + 40;
         int y = guiTop + 22;

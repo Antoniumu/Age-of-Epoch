@@ -8,15 +8,15 @@ import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.saveclasses.PointData;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.resources.ResourceLocation;
+import com.robertx22.forge_compat.client.ImageButton;
+import net.minecraft.resources.Identifier;
 
 import net.minecraft.network.Connection;
 public class ConnectionButton extends ImageButton {
 
     public static int SIZE = 6;
 
-    public static ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skill_tree/lines.png");
+    public static Identifier ID = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skill_tree/lines.png");
 
     TalentTree school;
     PointData one;

@@ -25,7 +25,7 @@ public class ElementalResistEffect extends BaseDamageEffect {
     @Override
     public DamageEvent activate(DamageEvent effect, StatData data, Stat stat) {
 
-        if (effect.data.getBoolean(EventData.IGNORE_RESIST)) {
+        if (effect.data.getBooleanOr(EventData.IGNORE_RESIST, false)) {
             return effect;
         }
 

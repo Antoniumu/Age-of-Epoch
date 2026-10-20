@@ -46,7 +46,7 @@ public interface IBaseAutoLoc extends IGUID {
             return "item.";
         } else if (this instanceof Block) {
             return "block.";
-        } else if (this instanceof Enchantment) {
+        } else if ((Object) this instanceof Enchantment) {
             return "enchantment.";
         } else if (this instanceof MobEffect) {
             return "effect.";

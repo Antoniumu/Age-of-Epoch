@@ -21,8 +21,7 @@ public class CurrencyItems {
     }
 
     public static List<CurrencyItem> getAllCurrenciesFromRegistry() {
-        return ForgeRegistries.ITEMS.getValues()
-            .stream()
+        return ForgeRegistries.ITEMS.stream()
             .filter(x -> x instanceof CurrencyItem)
             .map(x -> (CurrencyItem) x)
             .collect(Collectors.toList());

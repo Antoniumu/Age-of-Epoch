@@ -34,7 +34,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragonPart;
-import net.minecraft.world.entity.animal.TamableAnimal;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -256,10 +256,9 @@ public class DamageEvent extends EffectEvent {
     }
 
     AttributeModifier NO_KNOCKBACK = new AttributeModifier(
-        UUID.fromString("e926df30-c376-11ea-87d0-0242ac131053"),
-        Attributes.KNOCKBACK_RESISTANCE.getDescriptionId(),
+        net.minecraft.resources.Identifier.fromNamespaceAndPath("mmorpg", "e926df30-c376-11ea-87d0-0242ac131053"),
         100,
-        AttributeModifier.Operation.ADDITION
+        AttributeModifier.Operation.ADD_VALUE
     );
 
     @Override
@@ -304,7 +303,7 @@ public class DamageEvent extends EffectEvent {
         if (attackInfo != null) {
             ds = attackInfo.getSource();
         } else {
-            ds = DamageSource.GENERIC; // todo unsure.
+            ds = target.damageSources().generic();
         }
 
         if (target instanceof Player) {
@@ -319,19 +318,19 @@ public class DamageEvent extends EffectEvent {
 
             AttributeInstance attri = target.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
 
-            if (data.getBoolean(EventData.DISABLE_KNOCKBACK) || this.getAttackType() == AttackType.dot) {
-                if (!attri.hasModifier(NO_KNOCKBACK)) {
+            if (data.getBooleanOr(EventData.DISABLE_KNOCKBACK, false) || this.getAttackType() == AttackType.dot) {
+                if (!attri.hasModifier(NO_KNOCKBACK.id())) {
                     attri.addPermanentModifier(NO_KNOCKBACK);
                 }
             }
 
             if (target instanceof Player == false) {
-                target.invulnerableTime = 0; // disable iframes hopefully
+                LivingEntityAccesor.setInvulnerableTime(target, 0);
                 target.hurtTime = 0;
             }
 
             if (this.data.isSpellEffect()) {
-                if (!data.getBoolean(EventData.DISABLE_KNOCKBACK) && dmg > 0 && !data.isDodged()) {
+                if (!data.getBooleanOr(EventData.DISABLE_KNOCKBACK, false) && dmg > 0 && !data.isDodged()) {
                     // if magic shield absorbed the damage, still do knockback
                     DashUtils.knockback(source, target);
                 }
@@ -352,7 +351,9 @@ public class DamageEvent extends EffectEvent {
                         .filter(x -> x.name.equals("body"))
                         .findFirst()
                         .get();
-                    dragon.hurt(part, dmgsource, vanillaDamage);
+                    if (target.level() instanceof net.minecraft.server.level.ServerLevel sl) {
+                        dragon.hurtServer(sl, part, dmgsource, vanillaDamage);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -364,10 +365,12 @@ public class DamageEvent extends EffectEvent {
                         attackInfo.event.damage *= ServerContainer.get().PLAYER_VANILLA_DMG_MULTI.get();
                     }
                 }
-                int inv = target.invulnerableTime;
-                target.invulnerableTime = 0;
-                target.hurt(dmgsource, vanillaDamage);
-                target.invulnerableTime = inv;
+                int inv = LivingEntityAccesor.getInvulnerableTime(target);
+                LivingEntityAccesor.setInvulnerableTime(target, 0);
+                if (target.level() instanceof net.minecraft.server.level.ServerLevel sl) {
+                    target.hurtServer(sl, dmgsource, vanillaDamage);
+                }
+                LivingEntityAccesor.setInvulnerableTime(target, inv);
             }
 
             if (target instanceof Player == false) {
@@ -376,7 +379,7 @@ public class DamageEvent extends EffectEvent {
                 if (this.targetData.getAffixData().player_hits > 5) {
                     if (RandomUtils.roll(25)) {
 
-                        SoundUtils.playSound(target, SoundEvents.GENERIC_EXPLODE);
+                        SoundUtils.playSound(target, SoundEvents.GENERIC_EXPLODE.value());
 
                         this.targetData.getAffixData().player_hits = 0;
                         ExilePotionEvent potionEvent = EventBuilder.ofEffect(target, target, targetData.getLevel(),
@@ -388,15 +391,15 @@ public class DamageEvent extends EffectEvent {
                 }
 
                 if (getAttackType() == AttackType.dot) {
-                    target.invulnerableTime = 0; // disable iframes hopefully
+                    LivingEntityAccesor.setInvulnerableTime(target, 0);
                     target.hurtTime = 0;
                 }
             }
 
             // allow multiple dmg same tick
 
-            if (attri.hasModifier(NO_KNOCKBACK)) {
-                attri.removeModifier(NO_KNOCKBACK);
+            if (attri.hasModifier(NO_KNOCKBACK.id())) {
+                attri.removeModifier(NO_KNOCKBACK.id());
             }
 
         }
@@ -508,8 +511,8 @@ public class DamageEvent extends EffectEvent {
                     .set(x -> x.setElement(entry.getKey()))
                     .build();
 
-                bonus.data.setBoolean(EventData.IS_BASIC_ATTACK, this.data.getBoolean(EventData.IS_BASIC_ATTACK));
-                bonus.data.setBoolean(EventData.IS_ATTACK_FULLY_CHARGED, this.data.getBoolean(EventData.IS_ATTACK_FULLY_CHARGED));
+                bonus.data.setBoolean(EventData.IS_BASIC_ATTACK, this.data.getBooleanOr(EventData.IS_BASIC_ATTACK, false));
+                bonus.data.setBoolean(EventData.IS_ATTACK_FULLY_CHARGED, this.data.getBooleanOr(EventData.IS_ATTACK_FULLY_CHARGED, false));
                 bonus.data.setupNumber(EventData.ATTACK_COOLDOWN, this.data.getNumber(EventData.ATTACK_COOLDOWN).number);
                 bonus.calculateEffects();
 

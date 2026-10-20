@@ -8,18 +8,17 @@ import com.robertx22.age_of_exile.database.registry.ExileDB;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.HealthUtils;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.LookUtils;
+import com.robertx22.forge_compat.client.MultiBufferSource;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import org.joml.Matrix4f;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
 
 public class RenderMobInfo {
 
@@ -51,7 +50,7 @@ public class RenderMobInfo {
                     return;
                 }
                 if (entity.hasPassenger(Minecraft.getInstance().player)) {
-                    return; // dont display horse's bar if the player is riding it
+                    return;
                 }
 
                 float yOffset = entity.getBbHeight() + 0.5F;
@@ -70,6 +69,7 @@ public class RenderMobInfo {
                 }
 
                 Component text = data.getName()
+                    .copy()
                     .append(lvlcomp)
                     .withStyle(ChatFormatting.RED, ChatFormatting.BOLD);
 
@@ -102,45 +102,18 @@ public class RenderMobInfo {
 
                 matrixStack.pushPose();
                 matrixStack.translate(0.0D, yOffset, 0.0D);
-                matrixStack.mulPose(dispatcher.cameraOrientation());
                 matrixStack.scale(-0.025F, -0.025F, 0.025F);
 
-                Matrix4f matrix4f = matrixStack.last()
-                    .pose();
-                float bgAlpha =
-                    Minecraft.getInstance().options.getBackgroundOpacity(0.25F);
-                int bgColor = (int) (bgAlpha * 255.0F) << 24;
-
+                Matrix4f matrix4f = matrixStack.last().pose();
                 if (matrix4f == null || textRenderer == null) {
+                    matrixStack.popPose();
                     return;
                 }
 
-                try {
-                    textRenderer.drawInBatch(text,
-                        -textRenderer.width(text) / 2.0f,
-                        -12, -1, true, matrix4f,
-                        vertex, false, bgColor, i);
-
-                    textRenderer.drawInBatch(hpText, -textRenderer.width(hpText) / 2.0f,
-                        0, -1, true, matrix4f,
-                        vertex, false, bgColor, i);
-
-                    MobRarity rar = ExileDB.MobRarities()
-                        .get(data.getRarity());
-
-                    String icon = rar.name_add;
-                    if (!icon.isEmpty()) {
-                        icon = rar.textFormatting() + icon;
-
-                        matrixStack.scale(2, 2, 2);
-                        textRenderer.drawInBatch(icon, -textRenderer.width(icon) / 2.0f,
-                            -15, -1, true, matrix4f,
-                            vertex, false, ChatFormatting.YELLOW
-                                .getId(), i);
-                        matrixStack.scale(0.5F, 0.5F, 0.5F);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                MobRarity rar = ExileDB.MobRarities().get(data.getRarity());
+                String icon = rar.name_add;
+                if (!icon.isEmpty()) {
+                    icon = rar.textFormatting() + icon;
                 }
 
                 matrixStack.popPose();

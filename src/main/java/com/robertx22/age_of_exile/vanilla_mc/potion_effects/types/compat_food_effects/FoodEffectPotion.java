@@ -9,11 +9,13 @@ import com.robertx22.age_of_exile.uncommon.effectdatas.EventBuilder;
 import com.robertx22.age_of_exile.uncommon.effectdatas.RestoreResourceEvent;
 import com.robertx22.age_of_exile.uncommon.effectdatas.rework.RestoreType;
 import com.robertx22.age_of_exile.uncommon.enumclasses.ModType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
 
 import java.util.List;
 
@@ -40,16 +42,21 @@ public abstract class FoodEffectPotion extends MobEffect {
     }
 
     @Override
+    public boolean applyEffectTick(ServerLevel level, LivingEntity en, int amplifier) {
+        this.applyEffectTick(en, amplifier);
+        return true;
+    }
+
     public void applyEffectTick(LivingEntity en, int amplifier) {
 
         try {
             if (en.tickCount % 20 == 0) {
 
-                if (en.level.isClientSide) {
+                if (en.level().isClientSide()) {
                     return;
                 }
 
-                MobEffectInstance instance = en.getEffect(this);
+                MobEffectInstance instance = en.getEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(this));
 
                 EntityData data = Load.Unit(en);
 
@@ -67,7 +74,7 @@ public abstract class FoodEffectPotion extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplitude) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplitude) {
         return duration >= 1;
     }
 

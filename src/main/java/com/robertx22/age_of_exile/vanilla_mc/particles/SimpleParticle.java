@@ -1,17 +1,20 @@
 package com.robertx22.age_of_exile.vanilla_mc.particles;
 
-import net.minecraft.client.particle.*;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.particles.SimpleParticleType;
 import com.robertx22.forge_compat.api.distmarker.Dist;
 import com.robertx22.forge_compat.api.distmarker.OnlyIn;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.RandomSource;
 
-// copied from BubblePopParticle
-public class SimpleParticle extends SpriteTexturedParticle {
-    private final IAnimatedSprite spriteProvider;
+public class SimpleParticle extends SingleQuadParticle {
+    private final SpriteSet spriteProvider;
 
-    private SimpleParticle(int maxage, ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, IAnimatedSprite spriteProvider) {
-        super(world, x, y, z);
+    private SimpleParticle(int maxage, ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, SpriteSet spriteProvider) {
+        super(world, x, y, z, spriteProvider.first());
         this.spriteProvider = spriteProvider;
         this.lifetime = maxage;
         this.gravity = 0.008F;
@@ -21,6 +24,7 @@ public class SimpleParticle extends SpriteTexturedParticle {
         this.setSpriteFromAge(spriteProvider);
     }
 
+    @Override
     public void tick() {
         this.xo = this.x;
         this.yo = this.y;
@@ -34,22 +38,24 @@ public class SimpleParticle extends SpriteTexturedParticle {
         }
     }
 
-    public IParticleRenderType getRenderType() {
-        return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    @Override
+    public SingleQuadParticle.Layer getLayer() {
+        return SingleQuadParticle.Layer.OPAQUE;
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static class Factory implements IParticleFactory<SimpleParticleType> {
-        private final IAnimatedSprite spriteProvider;
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet spriteProvider;
 
         int maxAge;
 
-        public Factory(int age, IAnimatedSprite spriteProvider) {
+        public Factory(int age, SpriteSet spriteProvider) {
             this.spriteProvider = spriteProvider;
             this.maxAge = age;
         }
 
-        public Particle createParticle(SimpleParticleType defaultParticleType, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i) {
+        @Override
+        public Particle createParticle(SimpleParticleType defaultParticleType, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i, RandomSource random) {
             return new SimpleParticle(maxAge, clientWorld, d, e, f, g, h, i, this.spriteProvider);
         }
     }

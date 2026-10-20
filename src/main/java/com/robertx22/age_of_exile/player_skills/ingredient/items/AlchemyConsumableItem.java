@@ -2,7 +2,7 @@ package com.robertx22.age_of_exile.player_skills.ingredient.items;
 
 import com.robertx22.age_of_exile.saveclasses.player_skills.PlayerSkillEnum;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 
 public class AlchemyConsumableItem extends BaseCraftedConsumableItem {
     public AlchemyConsumableItem() {
@@ -16,8 +16,8 @@ public class AlchemyConsumableItem extends BaseCraftedConsumableItem {
     }
 
     @Override
-    public UseAnim getUseAnimation(ItemStack stack) {
-        return UseAnim.DRINK;
+    public ItemUseAnimation getUseAnimation(ItemStack stack) {
+        return ItemUseAnimation.DRINK;
     }
 
 }

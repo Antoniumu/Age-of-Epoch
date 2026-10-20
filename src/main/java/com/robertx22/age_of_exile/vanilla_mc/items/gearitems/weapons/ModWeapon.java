@@ -2,12 +2,12 @@ package com.robertx22.age_of_exile.vanilla_mc.items.gearitems.weapons;
 
 import com.robertx22.age_of_exile.uncommon.enumclasses.WeaponTypes;
 import com.robertx22.age_of_exile.vanilla_mc.items.gearitems.bases.SingleTargetWeapon;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import com.robertx22.forge_compat.material.Material;
+import com.robertx22.forge_compat.common.Tier;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Tier;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class ModWeapon extends SingleTargetWeapon {
 
@@ -18,7 +18,7 @@ public abstract class ModWeapon extends SingleTargetWeapon {
     }
 
     @Override
-    public boolean isCorrectToolForDrops(BlockState blockIn) {
+    public boolean isCorrectToolForDrops(ItemStack stack, BlockState blockIn) {
         return blockIn.getBlock() == Blocks.COBWEB;
     }
 
@@ -29,8 +29,7 @@ public abstract class ModWeapon extends SingleTargetWeapon {
         if (block == Blocks.COBWEB) {
             return 15.0F;
         } else {
-            Material material = state.getMaterial();
-            return material != Material.PLANT && material != Material.CORAL && material != Material.LEAVES && material != Material.VEGETABLE ? 1.0F : 1.5F;
+            return state.is(BlockTags.SWORD_EFFICIENT) ? 1.5F : 1.0F;
         }
     }
 

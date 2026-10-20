@@ -1,5 +1,6 @@
-import net.minecraft.core.particles.SimpleParticleType;
 package com.robertx22.age_of_exile.mmorpg.registers.common;
+
+import net.minecraft.core.particles.SimpleParticleType;
 
 public class SlashParticles {
 

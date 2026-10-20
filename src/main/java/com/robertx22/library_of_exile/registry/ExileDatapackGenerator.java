@@ -1,8 +1,8 @@
 package com.robertx22.library_of_exile.registry;
 
+import com.robertx22.forge_compat.data.DataProvider;
+import com.robertx22.forge_compat.data.HashCache;
 import com.robertx22.library_of_exile.registry.serialization.ISerializable;
-import net.minecraft.data.HashCache;
-import net.minecraft.data.DataProvider;
 
 import java.io.IOException;
 import java.nio.file.Path;

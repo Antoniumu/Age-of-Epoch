@@ -3,14 +3,16 @@ package com.robertx22.forge_compat.fml.network.simple;
 import com.robertx22.forge_compat.fml.network.NetworkDirection;
 import com.robertx22.forge_compat.fml.network.NetworkEvent;
 import com.robertx22.forge_compat.fml.network.PacketDistributor;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -26,25 +28,19 @@ import java.util.function.Supplier;
  */
 public class SimpleChannel {
 
-    private final ResourceLocation id;
+    private final Identifier id;
 
     public static class MsgPayload implements CustomPacketPayload {
-        public static final Map<ResourceLocation, MsgPayload.Type> TYPES = new HashMap<>();
-
-        public static class Type extends CustomPacketPayload.Type<MsgPayload> {
-            public Type(ResourceLocation id) { super(id); }
-        }
-
-        private final Type type;
+        private final CustomPacketPayload.Type<MsgPayload> type;
         private final byte[] data;
 
-        public MsgPayload(Type type, byte[] data) {
+        public MsgPayload(CustomPacketPayload.Type<MsgPayload> type, byte[] data) {
             this.type = type;
             this.data = data;
         }
 
         @Override
-        public Type type() { return type; }
+        public CustomPacketPayload.Type<MsgPayload> type() { return type; }
 
         public byte[] data() { return data; }
     }
@@ -66,23 +62,23 @@ public class SimpleChannel {
     }
 
     private final Map<Class<?>, Registration> byClass = new HashMap<>();
-    private final Map<ResourceLocation, Registration> byId = new HashMap<>();
+    private final Map<Identifier, Registration> byId = new HashMap<>();
 
     /** connection -> player tracking for sendTo(msg, connection, dir) */
     public static final Map<Connection, ServerPlayer> CONNECTION_PLAYERS = new WeakHashMap<>();
 
-    public SimpleChannel(ResourceLocation id) {
+    public SimpleChannel(Identifier id) {
         this.id = id;
     }
 
-    public ResourceLocation getId() { return id; }
+    public Identifier getId() { return id; }
 
     @SuppressWarnings("unchecked")
     public <T> void registerMessage(int index, Class<T> messageType,
                                     BiConsumer<T, FriendlyByteBuf> encoder,
                                     Function<FriendlyByteBuf, T> decoder,
                                     BiConsumer<T, Supplier<NetworkEvent.Context>> handler) {
-        ResourceLocation msgId = ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "/" + index);
+        Identifier msgId = Identifier.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "/" + index);
         Registration reg = new Registration(messageType,
             (BiConsumer<Object, FriendlyByteBuf>) (BiConsumer<?, ?>) encoder,
             (Function<FriendlyByteBuf, Object>) decoder,
@@ -90,20 +86,20 @@ public class SimpleChannel {
         byClass.put(messageType, reg);
         byId.put(msgId, reg);
 
-        MsgPayload.Type payloadType = new MsgPayload.Type(msgId);
+        CustomPacketPayload.Type<MsgPayload> payloadType = new CustomPacketPayload.Type<>(msgId);
         try {
-            PayloadTypeRegistry.playS2C().register(payloadType, codecFor(payloadType, reg));
+            PayloadTypeRegistry.clientboundPlay().register(payloadType, codecFor(payloadType, reg));
         } catch (Exception ignored) {
         }
         try {
-            PayloadTypeRegistry.playC2S().register(payloadType, codecFor(payloadType, reg));
+            PayloadTypeRegistry.serverboundPlay().register(payloadType, codecFor(payloadType, reg));
         } catch (Exception ignored) {
         }
 
         ServerPlayNetworking.registerGlobalReceiver(payloadType, (payload, context) -> {
             FriendlyByteBuf buf = new FriendlyByteBuf(io.netty.buffer.Unpooled.wrappedBuffer(payload.data()));
             Object msg = reg.decoder.apply(buf);
-            NetworkEvent.Context ctx = new NetworkEvent.Context(context.player(), context.player().connection.connection, false);
+            NetworkEvent.Context ctx = new NetworkEvent.Context(context.player(), null, false);
             reg.handler.accept(msg, () -> ctx);
             ctx.runWork();
         });
@@ -116,8 +112,8 @@ public class SimpleChannel {
         });
     }
 
-    private static net.minecraft.network.codec.StreamCodec<FriendlyByteBuf, MsgPayload> codecFor(
-        MsgPayload.Type type, Registration reg) {
+    private static net.minecraft.network.codec.StreamCodec<RegistryFriendlyByteBuf, MsgPayload> codecFor(
+        CustomPacketPayload.Type<MsgPayload> type, Registration reg) {
         return net.minecraft.network.codec.StreamCodec.of(
             (buf, payload) -> buf.writeBytes(payload.data()),
             (buf) -> {
@@ -135,33 +131,43 @@ public class SimpleChannel {
         return data;
     }
 
-    private static void sendToPlayer(ServerPlayer player, ResourceLocation msgId, Registration reg, Object msg) {
-        ServerPlayNetworking.send(player, new MsgPayload(new MsgPayload.Type(msgId), encode(reg, msg)));
+    private static void sendToPlayer(ServerPlayer player, Identifier msgId, Registration reg, Object msg) {
+        ServerPlayNetworking.send(player, new MsgPayload(new CustomPacketPayload.Type<>(msgId), encode(reg, msg)));
+    }
+
+    public void sendToPlayer(Object msg, ServerPlayer player) {
+        Registration reg = byClass.get(msg.getClass());
+        if (reg == null || player == null) return;
+        sendToPlayer(player, idOf(reg), reg, msg);
+    }
+
+    public void sendToPlayer(ServerPlayer player, Object msg) {
+        sendToPlayer(msg, player);
     }
 
     public void sendTo(Object msg, Connection connection, NetworkDirection direction) {
         Registration reg = byClass.get(msg.getClass());
         if (reg == null) return;
-        ResourceLocation msgId = idOf(reg);
+        Identifier msgId = idOf(reg);
         if (direction == NetworkDirection.PLAY_TO_CLIENT) {
             ServerPlayer player = CONNECTION_PLAYERS.get(connection);
             if (player != null) sendToPlayer(player, msgId, reg, msg);
         } else {
-            ClientPlayNetworking.send(new MsgPayload(new MsgPayload.Type(msgId), encode(reg, msg)));
+            ClientPlayNetworking.send(new MsgPayload(new CustomPacketPayload.Type<>(msgId), encode(reg, msg)));
         }
     }
 
     public void sendToServer(Object msg) {
         Registration reg = byClass.get(msg.getClass());
         if (reg == null) return;
-        ClientPlayNetworking.send(new MsgPayload(new MsgPayload.Type(idOf(reg)), encode(reg, msg)));
+        ClientPlayNetworking.send(new MsgPayload(new CustomPacketPayload.Type<>(idOf(reg)), encode(reg, msg)));
     }
 
     @SuppressWarnings("unchecked")
     public <T> void send(PacketDistributor.Directed<T> target, Object msg) {
         Registration reg = byClass.get(msg.getClass());
         if (reg == null) return;
-        ResourceLocation msgId = idOf(reg);
+        Identifier msgId = idOf(reg);
         PacketDistributor<T> distributor = target.getDistributor();
         T obj = target.getObject();
         if (obj == null) return;
@@ -170,15 +176,17 @@ public class SimpleChannel {
                 for (ServerPlayer p : PlayerLookup.tracking((Entity) obj)) {
                     sendToPlayer(p, msgId, reg, msg);
                 }
-                if (obj instanceof Entity && ((Entity) obj).level() != null) {
-                    // include self if a player
+                if (obj instanceof ServerPlayer sp) {
+                    sendToPlayer(sp, msgId, reg, msg);
                 }
                 break;
             }
             case TRACKING_CHUNK: {
                 LevelChunk chunk = (LevelChunk) obj;
-                for (ServerPlayer p : PlayerLookup.tracking(chunk.getLevel(), chunk.getPos())) {
-                    sendToPlayer(p, msgId, reg, msg);
+                if (chunk.getLevel() instanceof ServerLevel sl) {
+                    for (ServerPlayer p : PlayerLookup.tracking(sl, chunk.getPos())) {
+                        sendToPlayer(p, msgId, reg, msg);
+                    }
                 }
                 break;
             }
@@ -191,8 +199,8 @@ public class SimpleChannel {
         }
     }
 
-    private ResourceLocation idOf(Registration reg) {
-        for (Map.Entry<ResourceLocation, Registration> e : byId.entrySet()) {
+    private Identifier idOf(Registration reg) {
+        for (Map.Entry<Identifier, Registration> e : byId.entrySet()) {
             if (e.getValue() == reg) return e.getKey();
         }
         return id;
@@ -200,7 +208,7 @@ public class SimpleChannel {
 
     /** helper holder to avoid importing MinecraftServer statically in multiple places */
     private static class MinecraftServerHolder {
-        static void sendAll(ResourceLocation msgId, Registration reg, Object msg) {
+        static void sendAll(Identifier msgId, Registration reg, Object msg) {
             net.minecraft.server.MinecraftServer server = com.robertx22.forge_compat.fml.server.ServerLifecycleHooks.getCurrentServer();
             if (server == null) return;
             for (ServerPlayer p : server.getPlayerList().getPlayers()) {

@@ -11,6 +11,9 @@ import com.robertx22.age_of_exile.vanilla_mc.items.gearitems.weapons.StaffWeapon
 import com.robertx22.library_of_exile.registry.ExileRegistryType;
 import com.robertx22.library_of_exile.registry.IAutoGson;
 import com.robertx22.library_of_exile.registry.JsonExileRegistry;
+import com.robertx22.forge_compat.common.ArmorItem;
+import com.robertx22.forge_compat.common.AxeItem;
+import com.robertx22.forge_compat.common.SwordItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import top.theillusivec4.curios.api.CuriosApi;

@@ -20,7 +20,7 @@ public class OnEntityTick extends EventConsumer<ExileEvents.OnEntityTick> {
     public void accept(ExileEvents.OnEntityTick onEntityTick) {
         LivingEntity entity = onEntityTick.entity;
 
-        if (entity.level.isClientSide) {
+        if (entity.level().isClientSide()) {
             return;
         }
         try {
@@ -53,7 +53,7 @@ public class OnEntityTick extends EventConsumer<ExileEvents.OnEntityTick> {
 
     public static void checkGearChanged(LivingEntity entity) {
 
-        if (entity.level.isClientSide) {
+        if (entity.level().isClientSide()) {
             return;
         }
 

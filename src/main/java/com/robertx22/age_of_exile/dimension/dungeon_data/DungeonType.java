@@ -4,7 +4,7 @@ import com.robertx22.age_of_exile.dimension.DimensionIds;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.TeamUtils;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
@@ -23,7 +23,7 @@ public enum DungeonType {
             if (data.deaths > deathsAllowed) {
                 data.fail = true;
                 TeamUtils.getOnlineMembers(player)
-                    .forEach(x -> x.displayClientMessage(Component.literal("Expedition failed due to too many deaths.").withStyle(ChatFormatting.RED), false));
+                    .forEach(x -> x.sendSystemMessage(Component.literal("Expedition failed due to too many deaths.").withStyle(ChatFormatting.RED)));
                 // todo fail dungoen
             }
 
@@ -31,7 +31,7 @@ public enum DungeonType {
 
     };
 
-    DungeonType(ResourceLocation DIMENSION_ID) {
+    DungeonType(Identifier DIMENSION_ID) {
         this.DIMENSION_ID = DIMENSION_ID;
     }
 
@@ -43,7 +43,7 @@ public enum DungeonType {
         Load.playerRPGData(player).favor
             .addFavor(favorloss);
 
-        player.displayClientMessage(Component.literal("You lost " + Math.abs(favorloss) + " favor.").withStyle(ChatFormatting.RED), false);
+        player.sendSystemMessage(Component.literal("You lost " + Math.abs(favorloss) + " favor.").withStyle(ChatFormatting.RED));
 
     }
 
@@ -51,6 +51,6 @@ public enum DungeonType {
         return this == DUNGEON;
     }
 
-    public ResourceLocation DIMENSION_ID;
+    public Identifier DIMENSION_ID;
 
 }

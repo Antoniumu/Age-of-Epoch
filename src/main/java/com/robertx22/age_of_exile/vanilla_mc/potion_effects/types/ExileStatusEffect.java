@@ -1,7 +1,7 @@
 package com.robertx22.age_of_exile.vanilla_mc.potion_effects.types;
 
 import com.robertx22.age_of_exile.capability.entity.EntityData;
-import com.robertx22.age_of_exile.database.data.exile_effects.MobEffectCategory;
+import com.robertx22.age_of_exile.database.data.exile_effects.EffectType;
 import com.robertx22.age_of_exile.database.data.exile_effects.ExileEffect;
 import com.robertx22.age_of_exile.database.data.exile_effects.ExileEffectInstanceData;
 import com.robertx22.age_of_exile.database.data.spells.components.Spell;
@@ -14,9 +14,10 @@ import com.robertx22.age_of_exile.saveclasses.unit.stat_ctx.StatContext;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.vanilla_mc.potion_effects.IOneOfATypePotion;
 import com.robertx22.library_of_exile.registry.IGUID;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
-import net.minecraft.world.effect.MobEffect;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,22 +27,22 @@ public class ExileStatusEffect extends MobEffect implements IGUID, IApplyableSta
 
     String exileEffectId;
 
-    public MobEffectCategory type;
+    public EffectType type;
 
-    public ExileStatusEffect(MobEffectCategory type, int numericId) {
+    public ExileStatusEffect(EffectType type, int numericId) {
         super(type.type, 0);
         this.exileEffectId = getIdPath(type, numericId);
         this.type = type;
     }
 
-    public static String getIdPath(MobEffectCategory type, int num) {
-        if (type == MobEffectCategory.beneficial) {
+    public static String getIdPath(EffectType type, int num) {
+        if (type == EffectType.beneficial) {
             return "beneficial/" + num;
         }
-        if (type == MobEffectCategory.negative) {
+        if (type == EffectType.negative) {
             return "negative/" + num;
         }
-        if (type == MobEffectCategory.buff) {
+        if (type == EffectType.buff) {
             return "buff/" + num;
         }
 
@@ -64,7 +65,6 @@ public class ExileStatusEffect extends MobEffect implements IGUID, IApplyableSta
             .get(this);
     }
 
-    @Override
     public void addAttributeModifiers(LivingEntity entity, AttributeMap attributes, int amplifier) {
 
         try {
@@ -83,11 +83,10 @@ public class ExileStatusEffect extends MobEffect implements IGUID, IApplyableSta
             e.printStackTrace();
         }
 
-        super.addAttributeModifiers(entity, attributes, amplifier);
+        super.addAttributeModifiers(attributes, amplifier);
 
     }
 
-    @Override
     public void removeAttributeModifiers(LivingEntity target, AttributeMap attributes,
                                          int amplifier) {
 
@@ -99,11 +98,11 @@ public class ExileStatusEffect extends MobEffect implements IGUID, IApplyableSta
             ExileEffectInstanceData data = getSavedData(target);
 
             if (data != null && data.spellData != null) {
-                LivingEntity caster = data.spellData.getCaster(target.level);
+                LivingEntity caster = data.spellData.getCaster(target.level());
                 if (caster != null && exect.spell != null) {
                     SpellCtx ctx = SpellCtx.onExpire(caster, target, data.spellData);
 
-                    exect.spell.tryActivate(Spell.DEFAULT_EN_NAME, ctx); // source is default name at all times
+                    exect.spell.tryActivate(Spell.DEFAULT_EN_NAME, ctx);
                 }
             }
 
@@ -112,18 +111,23 @@ public class ExileStatusEffect extends MobEffect implements IGUID, IApplyableSta
                 .get(this).stacks = 0;
             unitdata.setEquipsChanged(true);
 
-            super.removeAttributeModifiers(target, attributes, amplifier);
+            super.removeAttributeModifiers(attributes);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return true;
     }
 
     @Override
+    public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
+        this.applyEffectTick(entity, amplifier);
+        return true;
+    }
+
     public void applyEffectTick(LivingEntity entity, int amplifier) {
 
         try {
@@ -143,13 +147,13 @@ public class ExileStatusEffect extends MobEffect implements IGUID, IApplyableSta
                 return;
             }
 
-            LivingEntity caster = data.spellData.getCaster(entity.level);
+            LivingEntity caster = data.spellData.getCaster(entity.level());
             if (caster == null) {
                 return;
             }
 
             SpellCtx ctx = SpellCtx.onTick(caster, entity, data.spellData);
-            exect.spell.tryActivate(Spell.DEFAULT_EN_NAME, ctx); // source is default name at all times
+            exect.spell.tryActivate(Spell.DEFAULT_EN_NAME, ctx);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -172,7 +176,7 @@ public class ExileStatusEffect extends MobEffect implements IGUID, IApplyableSta
             if (data.spellData != null) {
                 int casterlvl = data.spellData.lvl;
 
-                getExileEffect().getExactStats(en.level, data.spellData)
+                getExileEffect().getExactStats(en.level(), data.spellData)
                     .stream()
                     .forEach(x -> stats.add(x));
             }

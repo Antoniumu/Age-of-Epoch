@@ -4,9 +4,10 @@ import info.loenwind.autosave.Registry;
 import info.loenwind.autosave.exceptions.NoHandlerFoundException;
 import info.loenwind.autosave.handlers.IHandler;
 import info.loenwind.autosave.util.NBTAction;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.lang.reflect.Type;
 import java.util.Set;
@@ -32,7 +33,7 @@ public class HandleBlockState implements IHandler<BlockState> {
     @Override
     public BlockState read(Registry registry, Set<NBTAction> phase, CompoundTag nbt, Type type, String name,
                            BlockState object) throws IllegalArgumentException, IllegalAccessException, InstantiationException, NoHandlerFoundException {
-        return NbtUtils.readBlockState(nbt.getCompound(name));
+        return NbtUtils.readBlockState(BuiltInRegistries.BLOCK, nbt.getCompoundOrEmpty(name));
     }
 
 }

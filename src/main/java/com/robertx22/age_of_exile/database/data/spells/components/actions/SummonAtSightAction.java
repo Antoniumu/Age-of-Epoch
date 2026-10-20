@@ -6,6 +6,7 @@ import com.robertx22.age_of_exile.database.data.spells.map_fields.MapField;
 import com.robertx22.age_of_exile.database.data.spells.spell_classes.SpellCtx;
 import com.robertx22.age_of_exile.database.data.spells.spell_classes.SpellUtils;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.HitResult;
@@ -24,7 +25,7 @@ public class SummonAtSightAction extends SpellAction {
     @Override
     public void tryActivate(Collection<LivingEntity> targets, SpellCtx ctx, MapHolder data) {
 
-        Optional<EntityType<?>> projectile = EntityType.byString(data.get(MapField.PROJECTILE_ENTITY));
+        Optional<EntityType<?>> projectile = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getOptional(net.minecraft.resources.Identifier.parse(data.get(MapField.PROJECTILE_ENTITY)));
 
         Double distance = data.getOrDefault(MapField.DISTANCE, 10D);
         Double height = data.getOrDefault(MapField.HEIGHT, 10D);
@@ -33,11 +34,11 @@ public class SummonAtSightAction extends SpellAction {
         Vec3 pos = ray.getLocation();
 
         Entity en = projectile.get()
-            .create(ctx.world);
+            .create(ctx.world, EntitySpawnReason.MOB_SUMMONED);
         SpellUtils.initSpellEntity(en, ctx.caster, ctx.calculatedSpellData, data);
         en.setPos(pos.x, pos.y + height, pos.z);
 
-        ctx.caster.level.addFreshEntity(en);
+        ctx.caster.level().addFreshEntity(en);
 
     }
 
@@ -58,5 +59,4 @@ public class SummonAtSightAction extends SpellAction {
     public String GUID() {
         return "summon_at_sight";
     }
-
 }

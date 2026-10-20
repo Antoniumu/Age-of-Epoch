@@ -23,7 +23,7 @@ public class GiveGear {
 
         commandDispatcher.register(
             literal(CommandRefs.ID)
-                .then(literal("give").requires(e -> e.hasPermission(2))
+                .then(literal("give").requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS))
                     .then(literal("gear")
                         .then(argument("target", EntityArgument.player())
                             .then(argument("type", StringArgumentType.word())

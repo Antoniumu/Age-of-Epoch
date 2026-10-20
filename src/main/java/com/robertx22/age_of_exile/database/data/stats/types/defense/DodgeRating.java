@@ -34,7 +34,7 @@ public class DodgeRating extends Stat implements IUsableStat {
         this.statEffect = new Effect();
 
         this.icon = "\u2748";
-        this.format = ChatFormatting.DARK_GREEN.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.DARK_GREEN);
 
     }
 

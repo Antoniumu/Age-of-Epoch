@@ -66,10 +66,10 @@ public class HandleEnumMap<K extends Enum<K>> extends HandleMap<EnumMap<K, ?>> {
             if (object == null) {
                 object = createMap();
             }
-            CompoundTag tag = nbt.getCompound(name);
+            CompoundTag tag = nbt.getCompoundOrEmpty(name);
             for (K key : enumValues) {
                 String keystr = NullHelper.notnullJ(Integer.toString(key.ordinal()), "Integer.toString is null");
-                if (!tag.getBoolean(keystr + StorableEngine.NULL_POSTFIX)) {
+                if (!tag.getBooleanOr(keystr + StorableEngine.NULL_POSTFIX, false)) {
                     object.put(key, readRecursive(1, registry, phase, tag, keystr, null));
                 }
             }

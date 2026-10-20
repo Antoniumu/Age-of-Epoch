@@ -1,22 +1,25 @@
 package com.robertx22.forge_compat.worldgen;
 
+import com.mojang.serialization.Codec;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 
-/**
- * Stand-in for 1.16's VillageConfig (jigsaw configuration). Jigsaw structures in
- * 26.3 use PoolElementStructurePool-based codecs; fields are kept for source
- * compatibility and need a semantic pass for worldgen.
- */
-public class VillageConfig {
-    /** Source-compatibility placeholder; jigsaw codecs need a semantic pass for 26.3. */
-    public static final com.mojang.serialization.Codec<VillageConfig> CODEC =
-        com.mojang.serialization.Codec.unit(() -> new VillageConfig(null, 0));
+import java.util.function.Supplier;
 
-    public StructureTemplatePool startPool;
-    public int maxSize;
+public class VillageConfig implements FeatureConfiguration {
 
-    public VillageConfig(StructureTemplatePool startPool, int maxSize) {
+    public static final Codec<VillageConfig> CODEC =
+        Codec.unit(new VillageConfig(null, 0));
+
+    private final Supplier<StructureTemplatePool> startPool;
+    private final int maxDepth;
+
+    public VillageConfig(Supplier<StructureTemplatePool> startPool, int maxDepth) {
         this.startPool = startPool;
-        this.maxSize = maxSize;
+        this.maxDepth = maxDepth;
     }
+
+    public Supplier<StructureTemplatePool> startPool() { return startPool; }
+
+    public int maxDepth() { return maxDepth; }
 }

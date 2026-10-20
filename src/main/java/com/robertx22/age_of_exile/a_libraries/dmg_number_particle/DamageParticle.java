@@ -39,8 +39,7 @@ public class DamageParticle {
         Minecraft mc = Minecraft.getInstance();
         Vec3 entityLocation = entity.position()
             .add(0, entity.getBbHeight(), 0);
-        Vec3 cameraLocation = mc.gameRenderer.getMainCamera()
-            .getPosition();
+        Vec3 cameraLocation = mc.getCameraEntity() != null ? mc.getCameraEntity().getEyePosition() : entityLocation;
         double offsetBy = entity.getBbWidth();
         Vec3 offset = cameraLocation.subtract(entityLocation)
             .normalize()
@@ -49,9 +48,9 @@ public class DamageParticle {
 
         age = 0;
 
-        vx = mc.level.random.nextGaussian() * 0.01;
-        vy = 0.05 + (mc.level.random.nextGaussian() * 0.01);
-        vz = mc.level.random.nextGaussian() * 0.01;
+        vx = mc.level.getRandom().nextGaussian() * 0.01;
+        vy = 0.05 + (mc.level.getRandom().nextGaussian() * 0.01);
+        vz = mc.level.getRandom().nextGaussian() * 0.01;
 
         x = pos.x;
         y = pos.y;

@@ -1,33 +1,28 @@
 package com.robertx22.age_of_exile.vanilla_mc.items.favor;
 
 import com.robertx22.age_of_exile.capability.player.RPGPlayerData;
-import com.robertx22.age_of_exile.database.base.CreativeTabs;
 import com.robertx22.age_of_exile.mmorpg.registers.common.items.SlashItems;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.PlayerUtils;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 
 public class EmptyFavorItem extends Item {
 
     public EmptyFavorItem() {
-
-        super(new Item.Properties().tab(CreativeTabs.MyModTab)
+        super(new Item.Properties()
             .stacksTo(64));
-
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level world, Player player,
-                                       InteractionHand hand) {
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
 
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             try {
 
                 ItemStack stack = player.getItemInHand(hand);
@@ -46,14 +41,14 @@ public class EmptyFavorItem extends Item {
                         PlayerUtils.giveItem(newstack, player);
                     }
                 } else {
-                    player.displayClientMessage(Component.literal("You must be lvl 20 or higher to use this item."), false);
+                    player.sendSystemMessage(Component.literal("You must be lvl 20 or higher to use this item."));
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return new InteractionResult<ItemStack>(InteractionResult.PASS, player.getItemInHand(hand));
+        return InteractionResult.PASS;
     }
 
 }

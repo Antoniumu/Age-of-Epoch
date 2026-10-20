@@ -1,9 +1,10 @@
 package com.robertx22.divine_missions.main;
+import net.minecraft.network.chat.MutableComponent;
 
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
+import com.robertx22.forge_compat.common.CreativeModeTab;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
 
 public class DivineMissions {
 
@@ -13,11 +14,11 @@ public class DivineMissions {
 
     public final static String MODID = "divine_missions";
 
-    public static ResourceLocation id(String path) {
-        return ResourceLocation.fromNamespaceAndPath(MODID, path);
+    public static Identifier id(String path) {
+        return Identifier.fromNamespaceAndPath(MODID, path);
     }
 
-    public static Component ofTranslation(String path) {
+    public static MutableComponent ofTranslation(String path) {
         return Component.translatable(MODID + "." + path);
     }
 

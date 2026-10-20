@@ -6,7 +6,6 @@ import com.robertx22.age_of_exile.uncommon.enumclasses.Elements;
 import info.loenwind.autosave.annotations.Factory;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public class ScalingCalc {
         return (int) (multi.getValue(provider) * 100);
     }
 
-    public Component GetTooltipString(LevelProvider provider) {
+    public MutableComponent GetTooltipString(LevelProvider provider) {
         return Component.literal("(" + getMultiAsPercent(provider) + "% of " + getStat().getIconNameFormat() + ")");
     }
 

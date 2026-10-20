@@ -2,11 +2,10 @@ package com.robertx22.library_of_exile.registry;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.robertx22.library_of_exile.registry.serialization.ISerializable;
-import net.minecraft.data.HashCache;
+import com.robertx22.forge_compat.data.HashCache;
 import com.robertx22.forge_compat.fml.loading.FMLPaths;
+import com.robertx22.library_of_exile.registry.serialization.ISerializable;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -24,11 +23,7 @@ public abstract class BaseDatapackGenerator<T extends IGUID & ISerializable<T>> 
 
         this.list = list;
         this.category = category;
-        try {
-            cache = new HashCache(FMLPaths.GAMEDIR.get(), "datagencache");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        cache = new HashCache(FMLPaths.GAMEDIR.get(), "datagencache");
     }
 
     protected Path gameDirPath() {

@@ -7,7 +7,7 @@ import com.robertx22.divine_missions.packets.PickMissionPacket;
 import com.robertx22.library_of_exile.gui.ItemSlotButton;
 import com.robertx22.library_of_exile.main.Packets;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Map;
 
@@ -21,7 +21,7 @@ public class MissionsScreen extends BaseScreen {
         super(146, 180);
     }
 
-    static ResourceLocation BACKGROUND = DivineMissions.id("textures/gui/background.png");
+    static Identifier BACKGROUND = DivineMissions.id("textures/gui/background.png");
 
     @Override
     public void init() {

@@ -33,7 +33,7 @@ public class MeleeSkeletonChance extends DungeonModifier {
     @Override
     public void onMobSpawn(LivingEntity en) {
         if (RandomUtils.roll(chance)) {
-            if (en.getType() == EntityType.SKELETON) {
+            if (en.getType() == net.minecraft.world.entity.EntityTypes.SKELETON) {
                 en.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
             }
         }

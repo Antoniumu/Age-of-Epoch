@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.item.Tier;
+import com.robertx22.forge_compat.common.Tier;
 public class BonusXpToMobsOfTier extends Stat implements IGenerated<Stat> {
 
     @Override

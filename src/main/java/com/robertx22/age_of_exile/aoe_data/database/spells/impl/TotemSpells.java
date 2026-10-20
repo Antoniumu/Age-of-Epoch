@@ -13,7 +13,7 @@ import com.robertx22.age_of_exile.mmorpg.registers.common.SlashBlocks;
 import com.robertx22.age_of_exile.mmorpg.registers.common.SlashEntities;
 import com.robertx22.library_of_exile.registry.ExileRegistryInit;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 
@@ -28,7 +28,7 @@ public class TotemSpells implements ExileRegistryInit {
     public static String HEAL_TOTEM_ID = "rejuv_totem";
     public static String GUARD_TOTEM_ID = "guard_totem";
 
-    SpellBuilder of(Block block, String id, SpellConfiguration config, String name, List<SpellTag> tags, SimpleParticleType particle) {
+    SpellBuilder of(Block block, String id, SpellConfiguration config, String name, List<SpellTag> tags, ParticleType<?> particle) {
 
         return SpellBuilder.of(id, config, name, tags)
 

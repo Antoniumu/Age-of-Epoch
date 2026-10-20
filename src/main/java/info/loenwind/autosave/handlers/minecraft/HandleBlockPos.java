@@ -31,7 +31,7 @@ public class HandleBlockPos implements IHandler<BlockPos> {
     public BlockPos read(Registry registry, Set<NBTAction> phase, CompoundTag nbt, Type type, String name,
                          BlockPos object) throws IllegalArgumentException, IllegalAccessException, InstantiationException, NoHandlerFoundException {
         if (nbt.contains(name)) {
-            return BlockPos.of(nbt.getLong(name));
+            return BlockPos.of(nbt.getLongOr(name, 0L));
         }
         return object;
     }

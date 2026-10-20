@@ -2,12 +2,12 @@ package com.robertx22.age_of_exile.database.data.salvage_recipes;
 
 import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
 import com.robertx22.age_of_exile.uncommon.datasaving.Gear;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.Registry;
-
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.ItemStack;
+
 public class ItemRequirement {
 
     public static String LEVEL = "lvl";
@@ -27,12 +27,10 @@ public class ItemRequirement {
     public boolean matches(ItemStack stack) {
 
         if (req_type.equals("item")) {
-            return stack.getItem() == BuiltInRegistries.ITEM.get(ResourceLocation.parse(req_str));
+            return stack.getItem() == BuiltInRegistries.ITEM.getValue(Identifier.parse(req_str));
         }
         if (req_type.equals("tag")) {
-            return stack.getItem()
-                .is(ItemTags.getAllTags()
-                    .getTag(ResourceLocation.parse(req_str)));
+            return stack.is(TagKey.create(Registries.ITEM, Identifier.parse(req_str)));
         }
         GearItemData gear = Gear.Load(stack);
 

@@ -2,21 +2,19 @@ package com.robertx22.age_of_exile.vanilla_mc.items;
 
 import com.robertx22.age_of_exile.aoe_data.datapacks.models.IAutoModel;
 import com.robertx22.age_of_exile.aoe_data.datapacks.models.ItemModelManager;
-import com.robertx22.age_of_exile.database.base.CreativeTabs;
 import com.robertx22.age_of_exile.database.data.currency.base.IShapelessRecipe;
 import com.robertx22.age_of_exile.uncommon.interfaces.IAutoLocName;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
-import net.minecraft.world.item.ItemNameBlockItem;
+import com.robertx22.forge_compat.common.ItemNameBlockItem;
+import com.robertx22.forge_compat.data.ShapelessRecipeBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.core.Registry;
+import net.minecraft.world.level.block.Block;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 public class MiscSeedItem extends ItemNameBlockItem implements IAutoLocName, IShapelessRecipe, IAutoModel {
 
     public MiscSeedItem(String name, Item recipeItem, Block block) {
-        super(block, new Item.Properties().tab(CreativeTabs.Professions));
+        super(block, new Item.Properties());
         this.name = name;
         this.recipeItem = recipeItem;
     }

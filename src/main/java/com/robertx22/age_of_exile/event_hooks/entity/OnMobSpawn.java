@@ -28,7 +28,7 @@ public class OnMobSpawn {
 
     public static void setupNewMobOnSpawn(LivingEntity entity) {
 
-        if (entity.level.isClientSide) {
+        if (entity.level().isClientSide()) {
             return;
         }
 
@@ -40,7 +40,7 @@ public class OnMobSpawn {
 
             Player nearestPlayer = null;
 
-            nearestPlayer = PlayerUtils.nearestPlayer((ServerLevel) entity.level, entity);
+            nearestPlayer = PlayerUtils.nearestPlayer((ServerLevel) entity.level(), entity);
 
             if (endata.needsToBeGivenStats()) {
                 setupNewMob(entity, endata, nearestPlayer);

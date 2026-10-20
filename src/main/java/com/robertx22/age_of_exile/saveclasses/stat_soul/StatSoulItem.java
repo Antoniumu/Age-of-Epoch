@@ -1,6 +1,5 @@
 package com.robertx22.age_of_exile.saveclasses.stat_soul;
 
-import com.robertx22.age_of_exile.database.base.CreativeTabs;
 import com.robertx22.age_of_exile.database.data.gear_slots.GearSlot;
 import com.robertx22.age_of_exile.database.data.rarities.GearRarity;
 import com.robertx22.age_of_exile.database.registry.ExileDB;
@@ -11,31 +10,30 @@ import com.robertx22.age_of_exile.uncommon.datasaving.StackSaving;
 import com.robertx22.age_of_exile.uncommon.localization.Words;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.ClientOnly;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.LevelUtils;
+import com.robertx22.age_of_exile.uncommon.utilityclasses.StackNBT;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.TooltipUtils;
-import com.robertx22.library_of_exile.registry.IGUID;
-import com.robertx22.library_of_exile.utils.LoadSave;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.*;
-import net.minecraft.world.level.Level;
 import com.robertx22.forge_compat.api.distmarker.Dist;
 import com.robertx22.forge_compat.api.distmarker.OnlyIn;
+import com.robertx22.forge_compat.common.CreativeModeTab;
+import com.robertx22.library_of_exile.registry.IGUID;
+import com.robertx22.library_of_exile.utils.LoadSave;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-import com.robertx22.age_of_exile.uncommon.utilityclasses.StackNBT;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 public class StatSoulItem extends Item implements IGUID {
 
     public static String TAG = "stat_soul";
 
     public StatSoulItem() {
-        super(new Properties().tab(CreativeTabs.GearSouls));
+        super(new Properties());
     }
 
     public static ItemStack ofAnySlotOfRarity(String rar) {
@@ -46,25 +44,21 @@ public class StatSoulItem extends Item implements IGUID {
     }
 
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> stacks) {
-        if (this.allowdedIn(group)) {
-
-            for (GearRarity rarity : ExileDB.GearRarities()
+        for (GearRarity rarity : ExileDB.GearRarities()
+            .getList()) {
+            for (GearSlot slot : ExileDB.GearSlots()
                 .getList()) {
-                for (GearSlot slot : ExileDB.GearSlots()
-                    .getList()) {
-                    for (int i = 0; i <= LevelUtils.getMaxTier(); i++) {
-                        StatSoulData data = new StatSoulData();
-                        data.tier = i;
-                        data.rar = rarity.GUID();
-                        data.slot = slot.GUID();
+                for (int i = 0; i <= LevelUtils.getMaxTier(); i++) {
+                    StatSoulData data = new StatSoulData();
+                    data.tier = i;
+                    data.rar = rarity.GUID();
+                    data.slot = slot.GUID();
 
-                        ItemStack stack = data.toStack();
-                        stacks.add(stack);
-                    }
-
+                    ItemStack stack = data.toStack();
+                    stacks.add(stack);
                 }
-            }
 
+            }
         }
     }
 
@@ -113,7 +107,6 @@ public class StatSoulItem extends Item implements IGUID {
         return data;
     }
 
-    @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
 

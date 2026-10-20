@@ -123,7 +123,7 @@ public class HolySpells implements ExileRegistryInit {
                     + SpellCalcs.SHOUT_WARN.getLocDmgTooltip() + " Shield to all nearby allies.")
 
             .attackStyle(PlayStyle.melee)
-            .onCast(PartBuilder.playSound(SoundEvents.WOLF_HOWL, 1D, 1D))
+            .onCast(PartBuilder.playSound(SoundEvents.ENDER_DRAGON_GROWL, 1D, 1D))
             .onCast(PartBuilder.giveShieldInRadius(10D, SpellCalcs.SHOUT_WARN, 10D))
             .build();
 
@@ -137,7 +137,7 @@ public class HolySpells implements ExileRegistryInit {
             .attackStyle(PlayStyle.melee)
             .onCast(PartBuilder.playSound(SoundEvents.ANVIL_HIT, 1D, 1D))
             .onCast(PartBuilder.justAction(SpellAction.TP_TARGET_TO_SELF.create())
-                .addActions(SpellAction.POTION.createGive(MobEffects.MOVEMENT_SLOWDOWN, 20D * 5))
+                .addActions(SpellAction.POTION.createGive(MobEffects.SLOWNESS, 20D * 5))
                 .addActions(SpellAction.DEAL_DAMAGE.create(SpellCalcs.PULL, Elements.Physical))
                 .addActions(SpellAction.EXILE_EFFECT.create(NegativeEffects.STUN.resourcePath, ExileEffectAction.GiveOrTake.GIVE_STACKS, 20D * 2))
                 .addTarget(TargetSelector.AOE.create(8D, EntityFinder.SelectionType.RADIUS, AllyOrEnemy.enemies)))
@@ -154,7 +154,7 @@ public class HolySpells implements ExileRegistryInit {
             .weaponReq(CastingWeapon.MELEE_WEAPON)
 
             .onCast(PartBuilder.playSound(SoundEvents.ANVIL_PLACE, 1D, 1D))
-            .onCast(PartBuilder.playSound(SoundEvents.GENERIC_EXPLODE, 1D, 1D))
+            .onCast(PartBuilder.playSound(SoundEvents.GENERIC_EXPLODE.value(), 1D, 1D))
 
             .onCast(PartBuilder.damageInFront(SpellCalcs.GONG_STRIKE, Elements.Physical, 2D, 3D))
             .onCast(PartBuilder.addExileEffectToEnemiesInFront(NegativeEffects.STUN.resourcePath, 2D, 2D, 20D * 3))

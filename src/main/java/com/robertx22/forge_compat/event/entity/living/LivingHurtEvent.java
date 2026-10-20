@@ -19,6 +19,8 @@ public class LivingHurtEvent extends Event {
 
     public LivingEntity getEntityLiving() { return entityLiving; }
 
+    public LivingEntity getEntity() { return entityLiving; }
+
     public LivingEntity getTargetEntity() { return targetEntity; }
 
     public DamageSource getSource() { return source; }

@@ -82,11 +82,10 @@ public class MatBagContainer extends BaseTileContainer {
     public boolean stillValid(Player player) {
 
         try {
-            if (!player.getMainHandItem()
-                .getTag()
-                .getString("id")
+            if (!StackNBT.getOrCreate(player.getMainHandItem())
+                .getStringOr("id", "")
                 .equals(StackNBT.get(stack)
-                    .getString("id"))) {
+                    .getStringOr("id", ""))) {
                 return false;
             }
         } catch (Exception e) {

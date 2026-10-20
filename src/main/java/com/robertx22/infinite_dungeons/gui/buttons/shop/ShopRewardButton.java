@@ -9,10 +9,9 @@ import com.robertx22.library_of_exile.main.Packets;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import com.robertx22.library_of_exile.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.forge_compat.client.ImageButton;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
@@ -24,7 +23,7 @@ public class ShopRewardButton extends ImageButton {
     public static int SIZE_X = 24;
     public static int SIZE_Y = 24;
 
-    static ResourceLocation ID = MainID.id("textures/gui/shop_reward_button.png");
+    static Identifier ID = MainID.id("textures/gui/shop_reward_button.png");
 
     Minecraft mc = Minecraft.getInstance();
 
@@ -49,7 +48,7 @@ public class ShopRewardButton extends ImageButton {
         if (isInside(x, y)) {
             List<Component> tooltip = new ArrayList<>();
             tooltip.addAll(entry.reward.type.getStack(entry.reward)
-                .getTooltipLines(mc.player, TooltipFlag.TooltipFlags.NORMAL));
+                .getTooltipLines(net.minecraft.world.item.Item.TooltipContext.EMPTY, mc.player, TooltipFlag.Default.NORMAL));
 
             int left = entry.max_uses - PlayerIDCap.get(mc.player).data.buy_history.getOrCreateHistoryOf(entry).amount;
 

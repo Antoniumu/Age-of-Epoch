@@ -33,8 +33,8 @@ public class SlashBlocks {
     public static RegObj<TotemBlock> GLYPH = Def.block("glyph", () -> new TotemBlock());
 
     static RegObj<Block> plant(String id) {
-        return Def.block(id, () -> new BeetrootBlock(BlockBehaviour.Properties.of(Material.PLANT)
-            .noCollission()
+        return Def.block(id, () -> new BeetrootBlock(BlockBehaviour.Properties.of()
+            .noCollision()
             .randomTicks()
             .instabreak()
             .sound(SoundType.CROP)));

@@ -3,12 +3,12 @@ package com.robertx22.age_of_exile.gui.screens.spell;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.robertx22.age_of_exile.gui.screens.ILeftRight;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.resources.ResourceLocation;
+import com.robertx22.forge_compat.client.ImageButton;
+import net.minecraft.resources.Identifier;
 
 public class LeftRightButton extends ImageButton {
 
-    public static ResourceLocation TEX = SlashRef.guiId("leftright/leftright");
+    public static Identifier TEX = SlashRef.guiId("leftright/leftright");
 
     public static int xSize = 22;
     public static int ySize = 22;

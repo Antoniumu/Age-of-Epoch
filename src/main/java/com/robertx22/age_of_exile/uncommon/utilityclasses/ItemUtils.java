@@ -10,14 +10,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
-import net.minecraft.world.item.ItemUtils;
 public class ItemUtils {
     public static Item.Properties getDefaultGearProperties() {
 
-        Item.Properties prop = new Item.Properties().tab(CreativeTabs.MyModTab);
+        Item.Properties prop = new Item.Properties();
 
         return prop;
     }
@@ -51,10 +49,10 @@ public class ItemUtils {
                             .withStyle(ChatFormatting.BOLD))
                         .append(" item!");
 
-                    player.getServer()
+                    player.level().getServer()
                         .getPlayerList()
                         .getPlayers()
-                        .forEach(x -> x.displayClientMessage(txt, false));
+                        .forEach(x -> x.sendSystemMessage(txt));
 
                 }
 

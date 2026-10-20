@@ -10,11 +10,11 @@ import com.robertx22.library_of_exile.gui.ItemSlotButton;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.forge_compat.client.ImageButton;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.ChatFormatting;
 
 import net.minecraft.world.level.Level;
@@ -23,7 +23,7 @@ public class PlayerGearButton extends ImageButton {
     public static int xSize = 99;
     public static int ySize = 80;
 
-    static ResourceLocation TEX = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/player_gear.png");
+    static Identifier TEX = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/player_gear.png");
     BaseScreen screen;
     Player player;
 
@@ -57,15 +57,14 @@ public class PlayerGearButton extends ImageButton {
         Minecraft mc = Minecraft.getInstance();
 
         // player 3d view
-        InventoryScreen.renderEntityInInventory(this.x + 50, this.y + 77, 30, this.x - x, this.y - y, player);
-        mc.font.draw(matrix, str, this.x + xSize / 2 - mc.font.width(str) / 2, this.y + 3, ChatFormatting.YELLOW.getColor());
+        com.robertx22.forge_compat.client.AbstractGui.drawString(mc.font, matrix, str, this.x + xSize / 2 - mc.font.width(str) / 2, this.y + 3, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.YELLOW));
 
         str = "Avg ILVL: " + Load.Unit(mc.player)
             .getAverageILVL();
 
         GuiUtils.renderScaledText(matrix, this.x + xSize / 2, this.y + 17, 0.8F, str, ChatFormatting.GREEN);
 
-        // mc.font.draw(matrix, str, this.x + xSize / 2 - mc.font.width(str) / 2, this.y + 5, ChatFormatting.GREEN.getColor());
+        // com.robertx22.forge_compat.client.AbstractGui.drawString(mc.font, matrix, str, this.x + xSize / 2 - mc.font.width(str) / 2, this.y + 5, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.GREEN));
 
         // player 3d view
 

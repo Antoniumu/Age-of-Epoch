@@ -1,7 +1,7 @@
 package com.robertx22.divine_missions.main;
 
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import com.robertx22.forge_compat.client.ItemBlockRenderTypes;
+import com.robertx22.forge_compat.client.RenderType;
 
 public class ClientInit {
 

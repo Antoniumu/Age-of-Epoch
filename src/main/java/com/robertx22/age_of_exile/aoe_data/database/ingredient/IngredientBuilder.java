@@ -26,7 +26,7 @@ public class IngredientBuilder {
             .getFromSerializables(new DataGenKey<>(rarity))
             .Weight();
         b.ingredient.rar = rarity;
-        b.ingredient.item_id = item.getRegistryName()
+        b.ingredient.item_id = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item)
             .toString();
         return b;
     }

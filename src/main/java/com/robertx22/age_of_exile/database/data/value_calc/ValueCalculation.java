@@ -10,9 +10,8 @@ import com.robertx22.library_of_exile.registry.ExileRegistryType;
 import com.robertx22.library_of_exile.registry.IAutoGson;
 import com.robertx22.library_of_exile.registry.JsonExileRegistry;
 import info.loenwind.autosave.annotations.Factory;
-import net.minecraft.client.gui.screens.Screen;
+import com.robertx22.forge_compat.client.Screen;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
@@ -82,7 +81,7 @@ public class ValueCalculation implements JsonExileRegistry<ValueCalculation>, IA
 
     }
 
-    public Component getShortTooltip(LevelProvider provider) {
+    public MutableComponent getShortTooltip(LevelProvider provider) {
         MutableComponent text = Component.literal("");
 
         int val = getCalculatedValue(provider);

@@ -53,7 +53,7 @@ public class PlayerMissionData {
         PlayerMissionCap.get(player)
             .syncToClient(player);
 
-        // player.displayClientMessage(Component.translatable(DivineMissions.MODID + ".new_missions_arrived").withStyle(ChatFormatting.GOLD), false);
+        // player.sendSystemMessage(Component.translatable(DivineMissions.MODID + ".new_missions_arrived").withStyle(ChatFormatting.GOLD));
 
     }
 

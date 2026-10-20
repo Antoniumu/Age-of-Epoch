@@ -1,11 +1,11 @@
 package com.robertx22.age_of_exile.vanilla_mc.items.gearitems.bases.armor_materials;
 
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
+import com.robertx22.forge_compat.common.ArmorMaterial;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 
 public class ModArmorMaterial implements ArmorMaterial {
 
@@ -55,12 +55,12 @@ public class ModArmorMaterial implements ArmorMaterial {
 
     @Override
     public SoundEvent getEquipSound() {
-        return SoundEvents.ARMOR_EQUIP_IRON;
+        return SoundEvents.ARMOR_EQUIP_IRON.value();
     }
 
     @Override
     public Ingredient getRepairIngredient() {
-        return Ingredient.of(Items.STRUCTURE_BLOCK); // as in, nothing besides creative items should repair it
+        return Ingredient.of(Items.STRUCTURE_BLOCK);
     }
 
 }

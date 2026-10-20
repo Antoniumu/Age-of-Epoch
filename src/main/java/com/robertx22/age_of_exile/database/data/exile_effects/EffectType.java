@@ -1,15 +1,16 @@
-import net.minecraft.world.effect.MobEffectCategory;
 package com.robertx22.age_of_exile.database.data.exile_effects;
 
-public enum MobEffectCategory {
-    beneficial(net.minecraft.potion.MobEffectCategory.BENEFICIAL),
-    negative(net.minecraft.potion.MobEffectCategory.HARMFUL),
-    buff(net.minecraft.potion.MobEffectCategory.BENEFICIAL),
-    neutral(net.minecraft.potion.MobEffectCategory.NEUTRAL);
+import net.minecraft.world.effect.MobEffectCategory;
 
-    public net.minecraft.potion.MobEffectCategory type;
+public enum EffectType {
+    beneficial(MobEffectCategory.BENEFICIAL),
+    negative(MobEffectCategory.HARMFUL),
+    buff(MobEffectCategory.BENEFICIAL),
+    neutral(MobEffectCategory.NEUTRAL);
 
-    MobEffectCategory(net.minecraft.potion.MobEffectCategory type) {
+    public MobEffectCategory type;
+
+    EffectType(MobEffectCategory type) {
         this.type = type;
     }
 }
