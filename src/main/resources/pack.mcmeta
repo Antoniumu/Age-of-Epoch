@@ -1,8 +1,10 @@
 {
   "pack": {
     "pack_format": 97,
+    "min_format": 65,
+    "max_format": 121,
     "supported_formats": {
-      "min_inclusive": 97,
+      "min_inclusive": 65,
       "max_inclusive": 121
     },
     "description": "Age of Epoch (Age of Exile port) resources and data"

@@ -1,10 +1,13 @@
 {
   "type": "mmorpg:dungeon",
   "generator": {
-	"type": "mmorpg:dungeon_flat",
-	
-	 "settings": {
-          "disable_mob_generation": true    		
-	}
-}
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "minecraft:the_void",
+      "features": false,
+      "lakes": false,
+      "layers": [],
+      "structure_overrides": []
+    }
+  }
 }
