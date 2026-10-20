@@ -18,7 +18,7 @@
   "itemGroup.mmorpg.runes_group": "Руны Эпохи Изгнания",
   "itemGroup.mmorpg.runeword_group": "Рунные слова Эпохи Изгнания",
   "itemGroup.mmorpg_uniques": "Уникальное снаряжение",
-  "itemGroup.mmorpg_currency": "Материалы для создания",
+  "itemGroup.mmorpg_currency": "Эпоха Изгнания: Валюта и сферы",
   "itemGroup.mmorpg_lootboxes": "Ящики с добычей",
   "itemGroup.mmorpg_alchemy": "Алхимия",
   "death.attack.mmorpg.custom_damage": "Тонны урона!",
@@ -1637,5 +1637,10 @@
   "block.mmorpg.green_totem": "Зелёный тотем",
   "block.mmorpg.guard_totem": "Защитный тотем",
   "block.mmorpg.trap": "Ловушка",
-  "block.mmorpg.glyph": "Глиф"
+  "block.mmorpg.glyph": "Глиф",
+  "itemGroup.mmorpg_main_group": "Эпоха Изгнания: Основное",
+  "itemGroup.mmorpg_gear_soul_group": "Эпоха Изгнания: Души снаряжения",
+  "itemGroup.mmorpg_gem": "Эпоха Изгнания: Самоцветы и руны",
+  "itemGroup.mmorpg_mats": "Эпоха Изгнания: Материалы и ингредиенты",
+  "itemGroup.mmorpg_proffs_group": "Эпоха Изгнания: Профессии и алхимия"
 }
