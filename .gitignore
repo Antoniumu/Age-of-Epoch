@@ -7,6 +7,7 @@
 .gradle-home/
 build/
 out/
+.jdks/
 
 # ── Minecraft / Fabric Loom ───────────────────────────────────
 # Loom-кэш и сгенерированные данные живут внутри .gradle/ и build/ (уже выше)

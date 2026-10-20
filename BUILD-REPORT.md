@@ -62,11 +62,26 @@ build/libs/Age-of-Epoch-5.0.0-sources.jar  3.8 МБ
 
 ## 5. Как собирать
 
+Самый простой способ — `build.bat` в корне проекта (сам находит JDK 25, кэши Gradle держит
+в `.gradle-home`, в конце печатает путь к собранному jar):
+
+```bat
+build.bat                 :: собрать мод
+build.bat clean           :: чистая сборка
+build.bat runClient       :: запустить клиент для проверки
+build.bat getjdk          :: скачать Temurin JDK 25 в .jdks (нужен только один раз)
+```
+
+Вручную:
+
 ```powershell
 $env:JAVA_HOME = "<JDK 25>"
 $env:GRADLE_USER_HOME = "C:\Code\Age-of-Epoch\.gradle-home"
-.\gradlew.bat build
+.\gradlew.bat build --no-problems-report
 ```
+
+`--no-problems-report` отключает HTML-отчёт Gradle о проблемах сборки: он не нужен, а именно
+его запись ломается, если каталог `build/` недоступен на запись.
 
 Быстрый цикл проверки компиляции без Gradle (полный список ошибок, ~40 c):
 
