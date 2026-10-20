@@ -52,8 +52,7 @@ public class LootCrateItem extends Item implements IGUID {
         data.type = data.type;
         ItemStack stack = new ItemStack(SlashItems.LOOT_CRATE.get());
         StackSaving.GEM_CRATE.saveTo(stack, data);
-        StackNBT.get(stack)
-            .putInt("CustomModelData", data.type.custommodeldata);
+        StackNBT.setCustomModelData(stack, data.type.custommodeldata);
 
         return stack;
 
@@ -117,8 +116,7 @@ public class LootCrateItem extends Item implements IGUID {
 
                     StackSaving.GEM_CRATE.saveTo(stack, data);
 
-                    StackNBT.get(stack)
-                        .putInt("CustomModelData", type.custommodeldata);
+                    StackNBT.setCustomModelData(stack, type.custommodeldata);
 
                     stacks.add(stack);
                 }
@@ -166,7 +164,7 @@ public class LootCrateItem extends Item implements IGUID {
 
         }
 
-        return Component.literal("Box");
+        return Component.literal("Ящик");
 
     }
 

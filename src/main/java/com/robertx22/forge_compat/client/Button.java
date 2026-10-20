@@ -1,6 +1,7 @@
 package com.robertx22.forge_compat.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -38,8 +39,7 @@ public class Button extends net.minecraft.client.gui.components.Button {
         AbstractGui.CURRENT_GRAPHICS = graphics;
         if (this.getX() != this.x) this.setX(this.x);
         if (this.getY() != this.y) this.setY(this.y);
-        PoseStack matrix = new PoseStack();
-        this.renderButton(matrix, mouseX, mouseY, delta);
+        this.renderButton(AbstractGui.currentPose(), mouseX, mouseY, delta);
     }
 
     public void render(PoseStack matrix, int mouseX, int mouseY, float delta) {
@@ -53,6 +53,17 @@ public class Button extends net.minecraft.client.gui.components.Button {
     public void renderButton(PoseStack matrix, int mouseX, int mouseY, float delta) {
         if (AbstractGui.CURRENT_GRAPHICS != null) {
             this.extractDefaultSprite(AbstractGui.CURRENT_GRAPHICS);
+            Component msg = this.getMessage();
+            if (msg != null && !msg.getString().isEmpty()) {
+                AbstractGui.drawCenteredString(
+                    matrix,
+                    Minecraft.getInstance().font,
+                    msg,
+                    this.x + this.width / 2,
+                    this.y + (this.height - 8) / 2,
+                    this.active ? 0xFFFFFFFF : 0xFFA0A0A0
+                );
+            }
         }
     }
 

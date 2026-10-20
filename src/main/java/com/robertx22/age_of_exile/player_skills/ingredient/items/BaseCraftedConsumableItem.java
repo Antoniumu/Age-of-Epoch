@@ -52,7 +52,7 @@ public abstract class BaseCraftedConsumableItem extends AutoItem {
 
             if (data != null) {
                 if (!data.canEat(p)) {
-                    p.sendSystemMessage(Component.literal("Not high enough level."));
+                    p.sendSystemMessage(Component.literal("Недостаточно высокий уровень."));
                     return stack;
                 }
 

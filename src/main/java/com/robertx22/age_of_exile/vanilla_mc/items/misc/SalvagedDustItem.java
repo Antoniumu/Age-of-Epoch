@@ -50,7 +50,7 @@ public class SalvagedDustItem extends Item implements IAutoLocName, IWeighted, I
         tooltip.add(Component.literal(""));
 
         tooltip.add(Component.literal("Repairs " + durabilityRepair + " durability."));
-        tooltip.add(Component.literal("Less effective on higher tier gear."));
+        tooltip.add(Component.literal("Менее эффективно на снаряжении более высокого ранга."));
 
         tooltip.add(TooltipUtils.dragOntoGearToUse());
 

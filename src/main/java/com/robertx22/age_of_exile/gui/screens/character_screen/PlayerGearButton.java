@@ -51,22 +51,30 @@ public class PlayerGearButton extends ImageButton {
     public void renderButton(PoseStack matrix, int x, int y, float ticks) {
         super.renderButton(matrix, x, y, ticks);
 
-        String str = "Level: " + Load.Unit(player)
+        String str = "Ур.: " + Load.Unit(player)
             .getLevel();
 
         Minecraft mc = Minecraft.getInstance();
 
         // player 3d view
-        com.robertx22.forge_compat.client.AbstractGui.drawString(mc.font, matrix, str, this.x + xSize / 2 - mc.font.width(str) / 2, this.y + 3, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.YELLOW));
+        com.robertx22.library_of_exile.utils.RenderUtils.renderEntityInInventory(
+            this.x + 25,
+            this.y + 18,
+            this.x + 74,
+            this.y + 76,
+            26,
+            0.0625F,
+            (float) x,
+            (float) y,
+            mc.player
+        );
 
-        str = "Avg ILVL: " + Load.Unit(mc.player)
+        com.robertx22.forge_compat.client.AbstractGui.drawString(mc.font, matrix, str, this.x + xSize / 2 - mc.font.width(str) / 2, this.y + 5, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.YELLOW));
+
+        str = "Ср. ур.: " + Load.Unit(mc.player)
             .getAverageILVL();
 
         GuiUtils.renderScaledText(matrix, this.x + xSize / 2, this.y + 17, 0.8F, str, ChatFormatting.GREEN);
-
-        // com.robertx22.forge_compat.client.AbstractGui.drawString(mc.font, matrix, str, this.x + xSize / 2 - mc.font.width(str) / 2, this.y + 5, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.GREEN));
-
-        // player 3d view
 
     }
 

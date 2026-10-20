@@ -38,7 +38,7 @@ public class CraftEssenceItem extends Item implements IAutoLocName, IAutoModel, 
 
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
-        tooltip.add(Component.literal("Used for crafting Special Gears."));
+        tooltip.add(Component.literal("Используется для создания особого снаряжения."));
     }
 
     @Override

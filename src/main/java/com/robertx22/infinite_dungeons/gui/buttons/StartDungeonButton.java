@@ -54,7 +54,7 @@ public class StartDungeonButton extends ImageButton {
 
         super.renderButton(matrix, x, y, f);
 
-        String txt = "Start Dungeon";
+        String txt = "Начать подземелье";
 
         com.robertx22.forge_compat.client.AbstractGui.drawShadow(mc.font, matrix, txt, this.x + (SIZE_X / 2F - (mc.font.width(txt) / 2F)), this.y + 3, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.WHITE));
     }

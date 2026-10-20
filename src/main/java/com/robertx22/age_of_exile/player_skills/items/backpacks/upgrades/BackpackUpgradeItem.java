@@ -105,7 +105,7 @@ public class BackpackUpgradeItem extends TieredItem implements IShapelessRecipe,
         return Arrays.asList(new BaseLocRequirement() {
             @Override
             public MutableComponent getText() {
-                return Component.literal("No duplicate upgrades, Must upgrade tier by tier.");
+                return Component.literal("Без дубликатов; улучшайте ранги последовательно.");
             }
 
             @Override

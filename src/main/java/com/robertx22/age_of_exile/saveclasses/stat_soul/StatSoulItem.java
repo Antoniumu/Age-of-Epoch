@@ -120,7 +120,7 @@ public class StatSoulItem extends Item implements IGUID {
                 if (data.canBeOnAnySlot()) {
 
                 } else {
-                    tooltip.add(Component.literal("Item Type: ").withStyle(ChatFormatting.WHITE)
+                    tooltip.add(Component.literal("Тип предмета: ").withStyle(ChatFormatting.WHITE)
                         .append(ExileDB.GearSlots()
                             .get(data.slot)
                             .locName()
@@ -134,7 +134,7 @@ public class StatSoulItem extends Item implements IGUID {
 
         tooltip.add(Component.literal(""));
 
-        tooltip.add(Component.literal("Infuses stats into empty gear").withStyle(ChatFormatting.AQUA));
+        tooltip.add(Component.literal("Наполняет пустое снаряжение характеристиками").withStyle(ChatFormatting.AQUA));
         tooltip.add(TooltipUtils.dragOntoGearToUse());
 
     }

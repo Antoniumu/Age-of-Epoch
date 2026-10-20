@@ -459,14 +459,14 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
         xp = savedx;
         yp = savedy;
 
-        String text = "Points: " + playerData.talents.getFreePoints(Load.Unit(mc.player), this.schoolType);
+        String text = "Очки: " + playerData.talents.getFreePoints(Load.Unit(mc.player), this.schoolType);
 
         int tx = xp - mc.font.width(text) - 10;
         int yx = yp + BG_HEIGHT / 2 - mc.font.lineHeight / 2;
 
         com.robertx22.forge_compat.client.AbstractGui.drawShadow(Minecraft.getInstance().font, matrix, text, tx, yx, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.GREEN));
 
-        text = "Reset Points: " + playerData.talents.reset_points;
+        text = "Очки сброса: " + playerData.talents.reset_points;
 
         tx = savedx + 10 + BG_WIDTH;
 
@@ -477,9 +477,14 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
     static Identifier BACKGROUND = SlashRef.guiId("skill_tree/background");
 
     public static void renderBackgroundDirt(Screen screen, int vOffset) {
-        // TODO(26.3 port): the immediate-mode Tessellator/BufferBuilder background is gone in
-        // Minecraft 26.3 (rendering is now driven by GuiGraphicsExtractor). Background is skipped
-        // until the skill tree screen is moved to the new GUI pipeline.
+        PoseStack emptyPose = new PoseStack();
+        com.robertx22.forge_compat.client.AbstractGui.fill(emptyPose, 0, 0, screen.width, screen.height, 0xFF141018);
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(BACKGROUND);
+        for (int gx = 0; gx < screen.width; gx += 32) {
+            for (int gy = 0; gy < screen.height; gy += 32) {
+                com.robertx22.forge_compat.client.AbstractGui.blit(emptyPose, gx, gy, 0.0F, (float) vOffset, 32, 32, 32, 32);
+            }
+        }
     }
 
 }

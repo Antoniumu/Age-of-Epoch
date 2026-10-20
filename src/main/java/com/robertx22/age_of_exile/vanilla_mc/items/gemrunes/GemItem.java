@@ -172,7 +172,7 @@ public class GemItem extends BaseGemRuneItem implements IGUID, IAutoModel, IAuto
 
         gear.sockets.sockets.add(socket);
 
-        ctx.player.sendSystemMessage(Component.literal("Gem Socketed"));
+        ctx.player.sendSystemMessage(Component.literal("Самоцвет вставлен"));
 
         Gear.Save(stack, gear);
 
@@ -420,8 +420,8 @@ public class GemItem extends BaseGemRuneItem implements IGUID, IAutoModel, IAuto
             tooltip.add(Component.literal(""));
 
             if (getGem().hasHigherTierGem()) {
-                tooltip.add(Component.literal("Hold 3 gems to attempt upgrade"));
-                tooltip.add(Component.literal("Upgrade chance: " + getGem().perc_upgrade_chance + "%"));
+                tooltip.add(Component.literal("Возьмите 3 самоцвета для попытки улучшения"));
+                tooltip.add(Component.literal("Шанс улучшения: " + getGem().perc_upgrade_chance + "%"));
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -46,7 +46,7 @@ public class CoreStat extends BaseDatapackStat implements ICoreStat {
     @Override
     public final String locDescForLangFile() {
         // because i tend to change things and then the damn tooltip becomes outdated.
-        String str = "Determines your total: ";
+        String str = "Определяет ваш общий показатель: ";
         for (OptScaleExactStat x : this.statsThatBenefit()) {
             str += x.getStat()
                 .translate() + ", ";
@@ -69,13 +69,13 @@ public class CoreStat extends BaseDatapackStat implements ICoreStat {
         List<Component> list = new ArrayList<>();
 
         list.add(
-            Component.literal("For each point: ").withStyle(ChatFormatting.GREEN));
+            Component.literal("За каждое очко: ").withStyle(ChatFormatting.GREEN));
         getMods(1).forEach(x -> list.addAll(x.GetTooltipString(info)));
 
         list.add(net.minecraft.network.chat.Component.literal(""));
 
         list.add(
-            Component.literal("Total: ").withStyle(ChatFormatting.GREEN));
+            Component.literal("Всего: ").withStyle(ChatFormatting.GREEN));
         getMods(val).forEach(x -> list.addAll(x.GetTooltipString(info)));
 
         return list;

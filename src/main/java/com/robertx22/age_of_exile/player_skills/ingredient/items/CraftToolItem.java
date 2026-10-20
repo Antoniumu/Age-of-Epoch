@@ -41,11 +41,11 @@ public class CraftToolItem extends AutoItem implements IShapedRecipe {
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
 
-        tooltip.add(Component.literal("Used for: ").append(skill.word.locName()));
-        tooltip.add(Component.literal("Right click to Open Crafting Menu.").withStyle(ChatFormatting.LIGHT_PURPLE));
+        tooltip.add(Component.literal("Используется для: ").append(skill.word.locName()));
+        tooltip.add(Component.literal("ПКМ, чтобы открыть меню ремесла.").withStyle(ChatFormatting.LIGHT_PURPLE));
 
         if (skill.isGearCraftingProf()) {
-            tooltip.add(Component.literal("Requires a matching piece of gear."));
+            tooltip.add(Component.literal("Требуется подходящий предмет снаряжения."));
         }
 
     }

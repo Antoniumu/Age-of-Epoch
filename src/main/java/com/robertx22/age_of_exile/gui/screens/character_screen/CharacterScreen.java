@@ -293,7 +293,7 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
         int p = Load.playerRPGData(mc.player).statPoints
             .getFreePoints(mc.player);
         if (p > 0) {
-            String points = "Points: " + p;
+            String points = "Очки: " + p;
             com.robertx22.forge_compat.client.AbstractGui.drawShadow(mc.font, matrix, points, guiLeft + sizeX / 2 - mc.font.width(points) / 2, guiTop + sizeY + 25, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.GREEN));
         }
 

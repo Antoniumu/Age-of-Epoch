@@ -88,7 +88,7 @@ public class ProfessionsScreen extends BaseScreen implements INamedScreen {
         }
 
         if (currentSkill.type_enum.wiki != null) {
-            //   addButton(new ExtraInfoButton(Arrays.asList(Component.literal("Open Wiki")), guiLeft + 20, guiTop + sizeY - 50, a -> {
+            //   addButton(new ExtraInfoButton(Arrays.asList(Component.literal("Открыть вики")), guiLeft + 20, guiTop + sizeY - 50, a -> {
             //      WikiScreen wiki = new WikiScreen();
             //     wiki.changeType(currentSkill.type_enum.wiki);
             //    mc.setScreen(wiki);

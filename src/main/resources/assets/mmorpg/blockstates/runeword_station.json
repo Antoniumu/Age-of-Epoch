@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "facing=north,lit=false": { "model": "mmorpg:block/socket_station_normal" },
+    "facing=south,lit=false": { "model": "mmorpg:block/socket_station_normal", "y": 180 },
+    "facing=west,lit=false":  { "model": "mmorpg:block/socket_station_normal", "y": 270 },
+    "facing=east,lit=false":  { "model": "mmorpg:block/socket_station_normal", "y": 90 },
+    "facing=north,lit=true":  { "model": "mmorpg:block/socket_station_normal" },
+    "facing=south,lit=true":  { "model": "mmorpg:block/socket_station_normal", "y": 180 },
+    "facing=west,lit=true":   { "model": "mmorpg:block/socket_station_normal", "y": 270 },
+    "facing=east,lit=true":   { "model": "mmorpg:block/socket_station_normal", "y": 90 }
+  }
+}

@@ -35,11 +35,11 @@ public class TooltipUtils {
 
         if (data.getLevel() >= lvl) {
             tip.add(Component.literal(ChatFormatting.GREEN + "" + ChatFormatting.BOLD + StatRequirement.CHECK_YES_ICON + ChatFormatting.GRAY)
-                .append(ChatFormatting.GRAY + " Level Min: " + lvl + " "));
+                .append(ChatFormatting.GRAY + " Мин. ур.: " + lvl + " "));
 
         } else {
             tip.add(Component.literal(ChatFormatting.RED + "" + ChatFormatting.BOLD + StatRequirement.NO_ICON + ChatFormatting.GRAY)
-                .append(ChatFormatting.GRAY + " Level Min: " + lvl + " ")
+                .append(ChatFormatting.GRAY + " Мин. ур.: " + lvl + " ")
             );
         }
         tip.addAll(req
@@ -48,7 +48,7 @@ public class TooltipUtils {
 
     public static void addSocketNamesLine(List<Component> tip, GearItemData gear) {
         if (gear.sockets.sockets.size() > 0) {
-            tip.add(Component.literal("Gemmed").withStyle(ChatFormatting.LIGHT_PURPLE));
+            tip.add(Component.literal("Инкрустировано").withStyle(ChatFormatting.LIGHT_PURPLE));
         }
     }
 
@@ -210,24 +210,24 @@ public class TooltipUtils {
     }
 
     public static MutableComponent gearSlot(GearSlot slot) {
-        return Component.literal("Item Type: ").withStyle(ChatFormatting.WHITE)
+        return Component.literal("Тип предмета: ").withStyle(ChatFormatting.WHITE)
             .append(slot.locName()
                 .withStyle(ChatFormatting.AQUA));
     }
 
     public static MutableComponent gearTier(int tier) {
-        return Component.literal("Item Tier: ").withStyle(ChatFormatting.WHITE)
+        return Component.literal("Ранг предмета: ").withStyle(ChatFormatting.WHITE)
             .append(Component.literal(tier + "").withStyle(ChatFormatting.AQUA));
     }
 
     public static MutableComponent gearRarity(GearRarity rarity) {
-        return Component.literal("Rarity: ").withStyle(ChatFormatting.WHITE)
+        return Component.literal("Редкость: ").withStyle(ChatFormatting.WHITE)
             .append(rarity.locName()
                 .withStyle(rarity.textFormatting()));
     }
 
     public static MutableComponent gearLevel(int lvl) {
-        return Component.literal("Level Req: ")
+        return Component.literal("Треб. уровень: ")
             .withStyle(ChatFormatting.WHITE)
             .append(Component.literal(lvl + "")
                 .withStyle(ChatFormatting.YELLOW));
@@ -237,7 +237,7 @@ public class TooltipUtils {
 
     public static MutableComponent upgradeStars(GearItemData gear) {
 
-        String txt = "Upgrades: [";
+        String txt = "Улучшения: [";
 
         for (UpgradeData.SlotType up : gear.up.ups) {
 
@@ -251,6 +251,6 @@ public class TooltipUtils {
     }
 
     public static MutableComponent dragOntoGearToUse() {
-        return Component.literal("[Drag onto gear to use]").withStyle(ChatFormatting.AQUA, ChatFormatting.BOLD);
+        return Component.literal("[Перетащите на снаряжение для использования]").withStyle(ChatFormatting.AQUA, ChatFormatting.BOLD);
     }
 }

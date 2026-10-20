@@ -127,13 +127,13 @@ public class PickDungeonScreen extends BaseScreen implements ILeftRight {
             String title = CLOC.translate(currentLayout.getTranslatable());
             GuiUtils.renderScaledText(matrix, this.guiLeft + sizeX / 2, guiTop + 12, 1, title, ChatFormatting.YELLOW);
 
-            String difftext = "Difficulty:";
+            String difftext = "Сложность:";
             GuiUtils.renderScaledText(matrix, this.guiLeft + 162, guiTop + 32, 1, difftext, ChatFormatting.RED);
 
-            String cointext = "Coin Drops:";
+            String cointext = "Добыча монет:";
             GuiUtils.renderScaledText(matrix, this.guiLeft + 162, guiTop + 74, 1, cointext, ChatFormatting.GREEN);
 
-            String shoptext = "Shop:";
+            String shoptext = "Магазин:";
             GuiUtils.renderScaledText(matrix, this.guiLeft + 162, guiTop + 111, 1, shoptext, ChatFormatting.GREEN);
 
             int ypos = guiTop + 28;

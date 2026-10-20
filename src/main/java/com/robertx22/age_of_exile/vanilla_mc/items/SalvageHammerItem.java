@@ -31,6 +31,6 @@ public class SalvageHammerItem extends AutoItem {
 
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
-        tooltip.add(Component.literal("Click on items to salvage them.").withStyle(ChatFormatting.RED));
+        tooltip.add(Component.literal("Нажмите по предмету, чтобы разобрать его.").withStyle(ChatFormatting.RED));
     }
 }

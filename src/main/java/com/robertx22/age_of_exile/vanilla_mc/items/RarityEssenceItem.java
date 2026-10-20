@@ -81,8 +81,8 @@ public class RarityEssenceItem extends Item implements IGUID, ISalvagable {
                     .append(Words.Essence.locName())
                     .withStyle(rar.textFormatting()));
 
-                tooltip.add(Component.literal("Click to combine 9 into a rarity upgrade stone"));
-                tooltip.add(Component.literal("Can be salvaged."));
+                tooltip.add(Component.literal("Нажмите, чтобы объединить 9 шт. в камень улучшения редкости"));
+                tooltip.add(Component.literal("Можно разобрать."));
 
             }
 

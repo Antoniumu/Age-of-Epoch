@@ -65,8 +65,7 @@ public final class GearRarity extends BaseRarity implements IGearRarity, IAutoGs
         ItemStack stack = new ItemStack(SlashItems.RARITY_UPGRADE.get());
         StackNBT.getOrCreate(stack)
             .putString("rar", GUID());
-        StackNBT.getOrCreate(stack)
-            .putInt("CustomModelData", this.item_model_data_num);
+        StackNBT.setCustomModelData(stack, this.item_model_data_num);
         return stack;
     }
 
@@ -75,8 +74,7 @@ public final class GearRarity extends BaseRarity implements IGearRarity, IAutoGs
 
         StackNBT.getOrCreate(stack)
             .putString("rar", GUID());
-        StackNBT.getOrCreate(stack)
-            .putInt("CustomModelData", this.item_model_data_num);
+        StackNBT.setCustomModelData(stack, this.item_model_data_num);
 
         return stack;
     }

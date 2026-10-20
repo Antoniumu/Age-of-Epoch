@@ -40,15 +40,15 @@ public class StartDungeonButton extends ImageButton {
     public void renderToolTip(PoseStack matrix, int x, int y) {
         if (isInside(x, y)) {
             List<Component> tooltip = new ArrayList<>();
-            tooltip.add(Component.literal("Choose this dungeon to start."));
+            tooltip.add(Component.literal("Выберите это подземелье для начала."));
 
             if (teamSize.requiredMemberAmount > 1) {
-                tooltip.add(Component.literal("This starts the dungeon in team mode."));
-                tooltip.add(Component.literal("/age_of_exile teams, is required to play."));
-                tooltip.add(Component.literal("The enemies are much more powerful but so are the rewards!"));
+                tooltip.add(Component.literal("Запускает подземелье в командном режиме."));
+                tooltip.add(Component.literal("Для игры требуется команда (/age_of_exile teams)."));
+                tooltip.add(Component.literal("Враги намного сильнее, но и награды выше!"));
 
                 if (teamSize.requiredMemberAmount > 2) {
-                    tooltip.add(Component.literal("A dedicated Tank, Healer and Damage Dealer are recommended."));
+                    tooltip.add(Component.literal("Рекомендуются Танк, Целитель и Боец."));
                 }
             }
 
