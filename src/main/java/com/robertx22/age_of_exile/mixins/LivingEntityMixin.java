@@ -23,7 +23,7 @@ public abstract class LivingEntityMixin implements LivingEntityAccesor {
     @Override
     public void myknockback(LivingEntity target) {
         LivingEntity self = (LivingEntity) (Object) this;
-        target.knockback(0.5D, self.getX() - target.getX(), self.getZ() - target.getZ());
+        target.knockback(0.5D, self.getX() - target.getX(), self.getZ() - target.getZ(), target.damageSources().generic(), 0.5F);
     }
 
     @Override
