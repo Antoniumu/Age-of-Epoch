@@ -21,12 +21,12 @@ import java.util.function.Consumer;
 public class ForgeEvents {
 
     public static <T extends Event> void registerForgeEvent(Class<T> clazz, Consumer<T> event, EventPriority priority) {
-        if (clazz.isAssignableFrom(IModBusEvent.class)) { // todo
+        if (IModBusEvent.class.isAssignableFrom(clazz)) {
             FMLJavaModLoadingContext.get()
                 .getModEventBus()
-                .addListener(priority, event);
+                .addListener(priority, clazz, event);
         } else {
-            MinecraftForge.EVENT_BUS.addListener(priority, event);
+            MinecraftForge.EVENT_BUS.addListener(priority, clazz, event);
         }
     }
 
