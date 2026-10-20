@@ -362,9 +362,11 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
     @Override
     public void render(PoseStack matrix, int x, int y, float ticks) {
 
-        // Watch watch = new Watch();
         mouseRecentlyClickedTicks--;
 
+        renderBackgroundDirt(this, 0);
+
+        matrix.pushPose();
         matrix.scale(zoom, zoom, zoom);
 
         try {
@@ -389,17 +391,12 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
                 }
             });
 
-            renderBackgroundDirt(this, 0);
-
             com.robertx22.forge_compat.client.AbstractGui.bindTexture(ConnectionButton.ID);
             buttons.forEach(b -> {
                 if (b instanceof ConnectionButton) {
-                    ConnectionButton c = (ConnectionButton) b;
                     ((ConnectionButton) b).renderButtonForReal(matrix, x, y, ticks);
                 }
             });
-
-            super.render(matrix, x, y, ticks);
 
             for (Button abstractButtonWidget : buttons) {
                 if (abstractButtonWidget instanceof PerkButton) {
@@ -407,29 +404,23 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
                 }
             }
 
-            // we order them here so school buttons are on top, and perks are on top of connection buttons..
-            // probably a better way to do it exists?
-
-            for (Button button : buttons) {
-                if (button instanceof IMarkOnTop) {
-                    button.render(matrix, x, y, ticks);
-                }
-
-            }
-
             this.tick_count++;
 
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            matrix.popPose();
         }
 
-        matrix.scale(1F / zoom, 1F / zoom, 1F / zoom);
-
         renderPanels(matrix);
+        for (Button button : buttons) {
+            if (button instanceof IMarkOnTop) {
+                button.render(matrix, x, y, ticks);
+            }
+        }
         for (Button b : buttons) {
             b.renderToolTip(matrix, x, y);
         }
-        //watch.print(" rendering ");
     }
 
     private void renderPanels(PoseStack matrix) {

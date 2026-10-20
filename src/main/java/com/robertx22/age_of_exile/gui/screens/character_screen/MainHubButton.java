@@ -58,10 +58,9 @@ public class MainHubButton extends ImageButton {
         String str = screen.screenName()
             .translate();
 
-        if (isHovered()) {
-            com.robertx22.forge_compat.client.AbstractGui.drawShadow(Minecraft.getInstance().font, matrix,
-                str, this.x + 32, this.y + 9, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.GREEN));
-        }
+        ChatFormatting color = isHovered() ? ChatFormatting.GREEN : ChatFormatting.GOLD;
+        com.robertx22.forge_compat.client.AbstractGui.drawShadow(Minecraft.getInstance().font, matrix,
+            str, this.x + 28, this.y + 9, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(color));
     }
 
 }
