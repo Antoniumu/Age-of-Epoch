@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"id": "age_of_exile",
+	"version": "${version}",
+	"name": "Age of Exile",
+	"description": "Diablo-like ARPG mod for Minecraft - Fabric port 26.3",
+	"authors": [
+		"Robertx22"
+	],
+	"contact": {
+		"homepage": "https://github.com/RobertSkalko/Age-of-Exile",
+		"sources": "https://github.com/RobertSkalko/Age-of-Exile"
+	},
+	"license": "MIT",
+	"icon": "assets/mmorpg/textures/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.robertx22.age_of_exile.AoEMod"
+		],
+		"client": [
+			"com.robertx22.age_of_exile.mmorpg.init.ClientInit"
+		]
+	},
+	"mixins": [
+		"mmorpg-mixins.json",
+		{
+			"config": "mmorpg-client-mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
