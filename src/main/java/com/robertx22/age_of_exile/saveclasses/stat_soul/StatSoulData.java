@@ -65,9 +65,8 @@ public class StatSoulData implements ISalvagable, IRarity, ISettableLevelTier {
         StackSaving.STAT_SOULS.saveTo(stack, this);
 
         if (!slot.isEmpty()) {
-            StackNBT.getOrCreate(stack)
-                .putInt("CustomModelData", ExileDB.GearSlots()
-                    .get(slot).model_num);
+            StackNBT.setCustomModelData(stack, ExileDB.GearSlots()
+                .get(slot).model_num);
         }
 
         return stack;

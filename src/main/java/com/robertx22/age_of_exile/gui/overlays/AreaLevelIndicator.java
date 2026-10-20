@@ -13,7 +13,7 @@ public class AreaLevelIndicator {
 
         Minecraft mc = Minecraft.getInstance();
 
-        String text = "Area Level: ";
+        String text = "Уровень зоны: ";
 
         String lvltext = SyncedToClientValues.areaLevel + "";
 

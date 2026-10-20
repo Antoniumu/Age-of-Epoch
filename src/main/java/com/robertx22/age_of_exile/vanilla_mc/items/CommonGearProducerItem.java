@@ -55,7 +55,7 @@ public class CommonGearProducerItem extends AutoItem {
 
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
-        tooltip.add(Component.literal("Right click to produce a common gear soul."));
+        tooltip.add(Component.literal("ПКМ, чтобы создать обычную душу снаряжения."));
     }
 
     @Override

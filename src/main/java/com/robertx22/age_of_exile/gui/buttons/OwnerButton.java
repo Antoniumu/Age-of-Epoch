@@ -38,10 +38,10 @@ public class OwnerButton extends ImageButton {
         if (isInside(x, y)) {
             List<Component> tooltip = new ArrayList<>();
 
-            tooltip.add(Component.literal("This is the owner of the station."));
-            tooltip.add(Component.literal("The station can craft things based on the owner's skill levels."));
-            tooltip.add(Component.literal("Owner gets experience when things are crafted here."));
-            tooltip.add(Component.literal("The station won't work if the owner is offline."));
+            tooltip.add(Component.literal("Это владелец станции."));
+            tooltip.add(Component.literal("Станция создаёт предметы на основе уровней навыков владельца."));
+            tooltip.add(Component.literal("Владелец получает опыт при создании предметов на этой станции."));
+            tooltip.add(Component.literal("Станция не работает, если владелец не в сети."));
 
             GuiUtils.renderTooltip(matrix, tooltip, x, y);
 

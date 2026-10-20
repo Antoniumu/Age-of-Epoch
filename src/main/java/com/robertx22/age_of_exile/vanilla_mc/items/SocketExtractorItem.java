@@ -32,6 +32,6 @@ public class SocketExtractorItem extends AutoItem {
 
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
-        tooltip.add(Component.literal("Click on gear to extract a gem.").withStyle(ChatFormatting.RED));
+        tooltip.add(Component.literal("Нажмите по снаряжению, чтобы извлечь самоцвет.").withStyle(ChatFormatting.RED));
     }
 }

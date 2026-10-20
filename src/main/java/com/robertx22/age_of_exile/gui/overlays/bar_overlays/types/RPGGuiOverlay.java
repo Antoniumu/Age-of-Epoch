@@ -64,7 +64,7 @@ public class RPGGuiOverlay extends AbstractGui {
 
         if (render == IconRenderType.OVERLAY || render == IconRenderType.SCREEN) {
             int lvl = data.getLvl();
-            String lvltext = "Lvl: " + lvl;
+            String lvltext = "Ур.: " + lvl;
             TextUtils.renderText(matrix, 1, lvltext, x + BUTTON_SIZE_X / 2, (int) (y + BUTTON_SIZE_Y * 1.2F), ChatFormatting.YELLOW);
         }
 

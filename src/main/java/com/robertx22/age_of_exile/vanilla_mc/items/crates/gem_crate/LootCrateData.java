@@ -22,8 +22,7 @@ public class LootCrateData {
 
     public ItemStack createStack() {
         ItemStack stack = new ItemStack(SlashItems.LOOT_CRATE.get());
-        StackNBT.getOrCreate(stack)
-            .putInt("CustomModelData", type.custommodeldata);
+        StackNBT.setCustomModelData(stack, type.custommodeldata);
 
         StackSaving.GEM_CRATE.saveTo(stack, this);
         return stack;

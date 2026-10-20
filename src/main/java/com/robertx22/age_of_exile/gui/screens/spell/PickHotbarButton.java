@@ -70,8 +70,8 @@ public class PickHotbarButton extends ImageButton {
             if (spell != null) {
                 tooltip.addAll(spell.GetTooltipString(info));
             } else {
-                tooltip.add(Component.literal("Click to start selecting a spell to place on hotbar."));
-                tooltip.add(Component.literal("Click again on desired spell to confirm"));
+                tooltip.add(Component.literal("Нажмите, чтобы выбрать заклинание для панели быстрого доступа."));
+                tooltip.add(Component.literal("Нажмите на выбранное заклинание для подтверждения"));
             }
             GuiUtils.renderTooltip(matrix, tooltip, x, y);
 

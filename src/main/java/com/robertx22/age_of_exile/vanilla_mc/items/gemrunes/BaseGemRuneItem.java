@@ -64,21 +64,21 @@ public abstract class BaseGemRuneItem extends Item {
 
         tooltip.add(Component.literal(""));
         List<OptScaleExactStat> wep = gem.getFor(SlotFamily.Weapon);
-        tooltip.add(Component.literal("On Weapon:").withStyle(ChatFormatting.RED));
+        tooltip.add(Component.literal("На оружии:").withStyle(ChatFormatting.RED));
         for (OptScaleExactStat x : wep) {
             tooltip.addAll(x.GetTooltipString(info));
         }
 
         tooltip.add(Component.literal(""));
         List<OptScaleExactStat> armor = gem.getFor(SlotFamily.Armor);
-        tooltip.add(Component.literal("On Armor:").withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.literal("На броне:").withStyle(ChatFormatting.BLUE));
         for (OptScaleExactStat x : armor) {
             tooltip.addAll(x.GetTooltipString(info));
         }
 
         tooltip.add(Component.literal(""));
         List<OptScaleExactStat> jewelry = gem.getFor(SlotFamily.Jewelry);
-        tooltip.add(Component.literal("On Jewelry:").withStyle(ChatFormatting.LIGHT_PURPLE));
+        tooltip.add(Component.literal("На бижутерии:").withStyle(ChatFormatting.LIGHT_PURPLE));
         for (OptScaleExactStat x : jewelry) {
             tooltip.addAll(x.GetTooltipString(info));
         }

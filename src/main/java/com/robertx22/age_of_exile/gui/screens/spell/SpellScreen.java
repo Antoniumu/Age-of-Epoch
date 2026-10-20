@@ -146,7 +146,7 @@ public class SpellScreen extends BaseScreen implements INamedScreen, ILeftRight 
 
             super.render(matrix, x, y, ticks);
 
-            String txt = "Points: " + Load.spells(mc.player)
+            String txt = "Очки: " + Load.spells(mc.player)
                 .getFreeSpellPoints();
             GuiUtils.renderScaledText(matrix, guiLeft + 125, guiTop + 215, 1D, txt, ChatFormatting.GREEN);
 

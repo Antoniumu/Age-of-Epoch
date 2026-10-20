@@ -31,7 +31,7 @@ public class SetEntry extends WikiEntry {
 
         List<Component> list = new ArrayList<>();
 
-        list.add(Component.literal("Set Pieces: ").withStyle(ChatFormatting.GREEN));
+        list.add(Component.literal("Предметы комплекта: ").withStyle(ChatFormatting.GREEN));
         ExileDB.UniqueGears()
             .getList()
             .forEach(x -> {

@@ -41,7 +41,7 @@ public class EmptyFavorItem extends Item {
                         PlayerUtils.giveItem(newstack, player);
                     }
                 } else {
-                    player.sendSystemMessage(Component.literal("You must be lvl 20 or higher to use this item."));
+                    player.sendSystemMessage(Component.literal("Для использования этого предмета необходим 20-й уровень или выше."));
                 }
 
             } catch (Exception e) {

@@ -168,7 +168,7 @@ public class GearTooltipUtils {
                 .withStyle(ChatFormatting.RED));
         }
         if (gear.hasCraftedStats()) {
-            tip.add(Component.literal("Crafted").withStyle(ChatFormatting.GOLD));
+            tip.add(Component.literal("Создано").withStyle(ChatFormatting.GOLD));
         }
         int socketed = gear.sockets.sockets.size();
         if (socketed > 0) {

@@ -1,131 +1,300 @@
 package com.robertx22.forge_compat.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
+import org.joml.Matrix4f;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Compatibility bridge for the legacy 1.16.5 {@code AbstractGui} helper methods,
+ * routed through Minecraft 26.3's {@link GuiGraphicsExtractor}.
+ */
 public class AbstractGui {
 
     public static GuiGraphicsExtractor CURRENT_GRAPHICS;
-    public static Identifier BOUND_TEXTURE = Identifier.withDefaultNamespace("textures/gui/widgets.png");
+    public static Identifier CURRENT_TEXTURE;
+    public static PoseStack CURRENT_POSE;
 
-    public AbstractGui() {
+    private static Method TOOLTIP_SEQ_METHOD;
+    private static boolean TOOLTIP_METHOD_SEARCHED = false;
+
+    public static void setCurrentGraphics(GuiGraphicsExtractor g) {
+        CURRENT_GRAPHICS = g;
     }
 
-    public AbstractGui(net.minecraft.client.Minecraft mc) {
+    public static GuiGraphicsExtractor currentGraphics() {
+        return CURRENT_GRAPHICS;
     }
 
-    public static void renderFakeItem(net.minecraft.world.item.ItemStack stack, int x, int y) {
-        if (CURRENT_GRAPHICS != null && stack != null) {
-            CURRENT_GRAPHICS.item(stack, x, y);
-        }
+    public static void setCurrentPose(PoseStack pose) {
+        CURRENT_POSE = pose;
     }
 
-    public static void renderItemDecorations(Font font, net.minecraft.world.item.ItemStack stack, int x, int y) {
-        if (CURRENT_GRAPHICS != null && stack != null) {
-            CURRENT_GRAPHICS.itemDecorations(font, stack, x, y);
-        }
+    public static PoseStack currentPose() {
+        return CURRENT_POSE != null ? CURRENT_POSE : new PoseStack();
     }
 
     public static void bindTexture(Identifier id) {
-        if (id != null) {
-            BOUND_TEXTURE = id;
+        CURRENT_TEXTURE = id;
+    }
+
+    public static Identifier currentTexture() {
+        return CURRENT_TEXTURE;
+    }
+
+    public static int opaqueColor(int color) {
+        return (color & 0xFF000000) == 0 ? (color | 0xFF000000) : color;
+    }
+
+    private static boolean pushPoseIfTransformed(GuiGraphicsExtractor g, PoseStack pose) {
+        PoseStack active = pose != null ? pose : CURRENT_POSE;
+        if (g == null || active == null) return false;
+        Matrix4f m = active.last().pose();
+        float sx = m.m00();
+        float sy = m.m11();
+        float tx = m.m30();
+        float ty = m.m31();
+        if (Math.abs(sx - 1.0f) > 1e-4f || Math.abs(sy - 1.0f) > 1e-4f || Math.abs(tx) > 1e-4f || Math.abs(ty) > 1e-4f) {
+            g.pose().pushMatrix();
+            if (Math.abs(tx) > 1e-4f || Math.abs(ty) > 1e-4f) {
+                g.pose().translate(tx, ty);
+            }
+            if (Math.abs(sx - 1.0f) > 1e-4f || Math.abs(sy - 1.0f) > 1e-4f) {
+                g.pose().scale(sx, sy);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private static void popPoseIfTransformed(GuiGraphicsExtractor g, boolean pushed) {
+        if (pushed && g != null) {
+            g.pose().popMatrix();
         }
     }
 
-    public static void blit(PoseStack matrix, int x, int y, int u, int v, int w, int h) {
-        blit(matrix, x, y, (float) u, (float) v, w, h, 256, 256);
+    public int getBlitOffset() {
+        return 0;
     }
 
-    public static void blit(PoseStack matrix, int x, int y, float u, float v, int w, int h, int texW, int texH) {
-        if (CURRENT_GRAPHICS != null && BOUND_TEXTURE != null) {
-            CURRENT_GRAPHICS.blit(RenderPipelines.GUI_TEXTURED, BOUND_TEXTURE, x, y, u, v, w, h, texW, texH);
+    public void setBlitOffset(int offset) {
+    }
+
+    public static void fill(PoseStack matrices, int x1, int y1, int x2, int y2, int color) {
+        GuiGraphicsExtractor g = CURRENT_GRAPHICS;
+        if (g != null) {
+            boolean pushed = pushPoseIfTransformed(g, matrices);
+            try {
+                g.fill(x1, y1, x2, y2, color);
+            } finally {
+                popPoseIfTransformed(g, pushed);
+            }
         }
     }
 
-    public static void blit(PoseStack matrix, int x, int y, int u, int v, int w, int h, int texW, int texH) {
-        blit(matrix, x, y, (float) u, (float) v, w, h, texW, texH);
-    }
-
-    public static void blit(PoseStack matrix, int x, int y, int z, float u, float v, int w, int h, int texW, int texH) {
-        blit(matrix, x, y, u, v, w, h, texW, texH);
-    }
-
-    public static void blit(PoseStack matrix, int x, int y, int w, int h, float u, float v, int regionW, int regionH, int texW, int texH) {
-        blit(matrix, x, y, u, v, w, h, texW, texH);
-    }
-
-    public static void blit(PoseStack matrix, int x, int y, int w, int h, int u, int v, int regionW, int regionH, int texW, int texH) {
-        blit(matrix, x, y, w, h, (float) u, (float) v, regionW, regionH, texW, texH);
-    }
-
-    public static void fill(PoseStack matrix, int x1, int y1, int x2, int y2, int color) {
-        if (CURRENT_GRAPHICS != null) {
-            CURRENT_GRAPHICS.fill(x1, y1, x2, y2, color);
+    protected void fillGradient(PoseStack matrices, int x1, int y1, int x2, int y2, int colorFrom, int colorTo) {
+        GuiGraphicsExtractor g = CURRENT_GRAPHICS;
+        if (g != null) {
+            boolean pushed = pushPoseIfTransformed(g, matrices);
+            try {
+                g.fillGradient(x1, y1, x2, y2, colorFrom, colorTo);
+            } finally {
+                popPoseIfTransformed(g, pushed);
+            }
         }
     }
 
-    public void fillGradient(PoseStack matrix, int x1, int y1, int x2, int y2, int colorFrom, int colorTo) {
-        if (CURRENT_GRAPHICS != null) {
-            CURRENT_GRAPHICS.fillGradient(x1, y1, x2, y2, colorFrom, colorTo);
+    public static void blit(PoseStack matrices, int x, int y, int u, int v, int width, int height) {
+        blit(matrices, x, y, width, height, (float) u, (float) v, width, height, 256, 256);
+    }
+
+    public static void blit(PoseStack matrices, int x, int y, int z, float u, float v, int width, int height, int textureHeight, int textureWidth) {
+        blit(matrices, x, y, width, height, u, v, width, height, textureWidth, textureHeight);
+    }
+
+    public static void blit(PoseStack matrices, int x, int y, int width, int height, float u, float v, int regionWidth, int regionHeight, int textureWidth, int textureHeight) {
+        GuiGraphicsExtractor g = CURRENT_GRAPHICS;
+        Identifier tex = CURRENT_TEXTURE;
+        if (g != null && tex != null) {
+            boolean pushed = pushPoseIfTransformed(g, matrices);
+            try {
+                g.blit(RenderPipelines.GUI_TEXTURED, tex, x, y, u, v, width, height, regionWidth, regionHeight, textureWidth, textureHeight);
+            } finally {
+                popPoseIfTransformed(g, pushed);
+            }
         }
     }
 
-    public static int drawString(Font font, PoseStack matrix, String text, float x, float y, int color) {
-        if (CURRENT_GRAPHICS != null && font != null && text != null) {
-            CURRENT_GRAPHICS.text(font, text, (int) x, (int) y, color, false);
-            return (int) x + font.width(text);
-        }
-        return (int) x;
+    public static void blit(PoseStack matrices, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight) {
+        blit(matrices, x, y, width, height, u, v, width, height, textureWidth, textureHeight);
     }
 
-    public static int drawString(Font font, PoseStack matrix, Component text, float x, float y, int color) {
-        if (CURRENT_GRAPHICS != null && font != null && text != null) {
-            CURRENT_GRAPHICS.text(font, text, (int) x, (int) y, color, false);
-            return (int) x + font.width(text);
+    public static void drawCenteredString(PoseStack matrices, Font font, String text, int x, int y, int color) {
+        GuiGraphicsExtractor g = CURRENT_GRAPHICS;
+        if (g != null && font != null && text != null) {
+            boolean pushed = pushPoseIfTransformed(g, matrices);
+            try {
+                g.centeredText(font, text, x, y, opaqueColor(color));
+            } finally {
+                popPoseIfTransformed(g, pushed);
+            }
         }
-        return (int) x;
     }
 
-    public static int drawString(Font font, PoseStack matrix, FormattedCharSequence text, float x, float y, int color) {
-        if (CURRENT_GRAPHICS != null && font != null && text != null) {
-            CURRENT_GRAPHICS.text(font, text, (int) x, (int) y, color, false);
-            return (int) x + font.width(text);
+    public static void drawCenteredString(PoseStack matrices, Font font, Component text, int x, int y, int color) {
+        GuiGraphicsExtractor g = CURRENT_GRAPHICS;
+        if (g != null && font != null && text != null) {
+            boolean pushed = pushPoseIfTransformed(g, matrices);
+            try {
+                g.centeredText(font, text, x, y, opaqueColor(color));
+            } finally {
+                popPoseIfTransformed(g, pushed);
+            }
         }
-        return (int) x;
     }
 
-    public static int drawShadow(Font font, PoseStack matrix, String text, float x, float y, int color) {
-        if (CURRENT_GRAPHICS != null && font != null && text != null) {
-            CURRENT_GRAPHICS.text(font, text, (int) x, (int) y, color, true);
-            return (int) x + font.width(text);
+    public static void drawString(PoseStack matrices, Font font, String text, int x, int y, int color) {
+        GuiGraphicsExtractor g = CURRENT_GRAPHICS;
+        if (g != null && font != null && text != null) {
+            boolean pushed = pushPoseIfTransformed(g, matrices);
+            try {
+                g.text(font, text, x, y, opaqueColor(color), true);
+            } finally {
+                popPoseIfTransformed(g, pushed);
+            }
         }
-        return (int) x;
     }
 
-    public static int drawShadow(Font font, PoseStack matrix, Component text, float x, float y, int color) {
-        if (CURRENT_GRAPHICS != null && font != null && text != null) {
-            CURRENT_GRAPHICS.text(font, text, (int) x, (int) y, color, true);
-            return (int) x + font.width(text);
+    public static void drawString(PoseStack matrices, Font font, Component text, int x, int y, int color) {
+        GuiGraphicsExtractor g = CURRENT_GRAPHICS;
+        if (g != null && font != null && text != null) {
+            boolean pushed = pushPoseIfTransformed(g, matrices);
+            try {
+                g.text(font, text, x, y, opaqueColor(color), true);
+            } finally {
+                popPoseIfTransformed(g, pushed);
+            }
         }
-        return (int) x;
     }
 
-    public static int drawShadow(Font font, PoseStack matrix, FormattedCharSequence text, float x, float y, int color) {
-        if (CURRENT_GRAPHICS != null && font != null && text != null) {
-            CURRENT_GRAPHICS.text(font, text, (int) x, (int) y, color, true);
-            return (int) x + font.width(text);
+    public static void drawString(PoseStack matrices, Font font, FormattedCharSequence text, int x, int y, int color) {
+        GuiGraphicsExtractor g = CURRENT_GRAPHICS;
+        if (g != null && font != null && text != null) {
+            boolean pushed = pushPoseIfTransformed(g, matrices);
+            try {
+                g.text(font, text, x, y, opaqueColor(color), true);
+            } finally {
+                popPoseIfTransformed(g, pushed);
+            }
         }
-        return (int) x;
     }
 
-    public static void drawWordWrap(Font font, net.minecraft.network.chat.FormattedText text, int x, int y, int maxWidth, int color) {
-        if (CURRENT_GRAPHICS != null && font != null && text != null) {
-            CURRENT_GRAPHICS.textWithWordWrap(font, text, x, y, maxWidth, color, false);
+    public static int drawString(Font font, PoseStack matrices, String text, float x, float y, int color) {
+        GuiGraphicsExtractor g = CURRENT_GRAPHICS;
+        if (g != null && font != null && text != null) {
+            boolean pushed = pushPoseIfTransformed(g, matrices);
+            try {
+                g.text(font, text, (int) x, (int) y, opaqueColor(color), false);
+            } finally {
+                popPoseIfTransformed(g, pushed);
+            }
+            return font.width(text);
         }
+        return 0;
+    }
+
+    public static int drawString(Font font, PoseStack matrices, Component text, float x, float y, int color) {
+        GuiGraphicsExtractor g = CURRENT_GRAPHICS;
+        if (g != null && font != null && text != null) {
+            boolean pushed = pushPoseIfTransformed(g, matrices);
+            try {
+                g.text(font, text, (int) x, (int) y, opaqueColor(color), false);
+            } finally {
+                popPoseIfTransformed(g, pushed);
+            }
+            return font.width(text);
+        }
+        return 0;
+    }
+
+    public static int drawString(Font font, PoseStack matrices, FormattedCharSequence text, float x, float y, int color) {
+        GuiGraphicsExtractor g = CURRENT_GRAPHICS;
+        if (g != null && font != null && text != null) {
+            boolean pushed = pushPoseIfTransformed(g, matrices);
+            try {
+                g.text(font, text, (int) x, (int) y, opaqueColor(color), false);
+            } finally {
+                popPoseIfTransformed(g, pushed);
+            }
+            return font.width(text);
+        }
+        return 0;
+    }
+
+    public static int drawShadow(Font font, PoseStack matrices, String text, float x, float y, int color) {
+        GuiGraphicsExtractor g = CURRENT_GRAPHICS;
+        if (g != null && font != null && text != null) {
+            boolean pushed = pushPoseIfTransformed(g, matrices);
+            try {
+                g.text(font, text, (int) x, (int) y, opaqueColor(color), true);
+            } finally {
+                popPoseIfTransformed(g, pushed);
+            }
+            return font.width(text);
+        }
+        return 0;
+    }
+
+    public static int drawShadow(Font font, PoseStack matrices, Component text, float x, float y, int color) {
+        GuiGraphicsExtractor g = CURRENT_GRAPHICS;
+        if (g != null && font != null && text != null) {
+            boolean pushed = pushPoseIfTransformed(g, matrices);
+            try {
+                g.text(font, text, (int) x, (int) y, opaqueColor(color), true);
+            } finally {
+                popPoseIfTransformed(g, pushed);
+            }
+            return font.width(text);
+        }
+        return 0;
+    }
+
+    public static int drawShadow(Font font, PoseStack matrices, FormattedCharSequence text, float x, float y, int color) {
+        GuiGraphicsExtractor g = CURRENT_GRAPHICS;
+        if (g != null && font != null && text != null) {
+            boolean pushed = pushPoseIfTransformed(g, matrices);
+            try {
+                g.text(font, text, (int) x, (int) y, opaqueColor(color), true);
+            } finally {
+                popPoseIfTransformed(g, pushed);
+            }
+            return font.width(text);
+        }
+        return 0;
+    }
+
+    public static void renderTooltip(PoseStack matrices, List<? extends FormattedCharSequence> lines, int mouseX, int mouseY) {
+        GuiGraphicsExtractor g = CURRENT_GRAPHICS;
+        if (g == null || lines == null || lines.isEmpty()) return;
+        Font font = Minecraft.getInstance().font;
+        if (font == null) return;
+        g.setTooltipForNextFrame(font, new ArrayList<>(lines), mouseX, mouseY);
+    }
+
+    public static void renderComponentTooltip(PoseStack matrices, List<Component> lines, int mouseX, int mouseY) {
+        GuiGraphicsExtractor g = CURRENT_GRAPHICS;
+        if (g == null || lines == null || lines.isEmpty()) return;
+        Font font = Minecraft.getInstance().font;
+        if (font == null) return;
+        g.setComponentTooltipForNextFrame(font, new ArrayList<>(lines), mouseX, mouseY);
     }
 }

@@ -109,7 +109,7 @@ public class RewardCrateItem extends Item {
         } catch (Exception e) {
         }
 
-        return Component.literal("Empty Crate");
+        return Component.literal("Пустой ящик");
     }
 
     @OnlyIn(Dist.CLIENT)
