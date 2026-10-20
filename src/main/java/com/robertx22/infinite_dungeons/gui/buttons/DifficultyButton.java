@@ -19,7 +19,7 @@ public class DifficultyButton extends ImageButton {
     public DifficultyButton(PickDungeonScreen screen, int x, int y) {
         super(x, y, SIZE_X, SIZE_Y, 0, 0, 0, Identifier.parse(""), new IPressable() {
             @Override
-            public void onPress(Button button) {
+            public void onPress(net.minecraft.client.gui.components.Button button) {
 
             }
         });

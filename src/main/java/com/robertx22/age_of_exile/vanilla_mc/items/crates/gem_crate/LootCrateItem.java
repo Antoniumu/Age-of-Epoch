@@ -101,7 +101,7 @@ public class LootCrateItem extends Item implements IGUID {
                 e.printStackTrace();
             }
         }
-        return InteractionResult.PASS);
+        return InteractionResult.PASS;
     }
 
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> stacks) {

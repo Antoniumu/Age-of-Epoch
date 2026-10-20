@@ -48,7 +48,7 @@ public class PickMissionPacket extends MyPacket<PickMissionPacket> {
                 .addReputation(-data.rep, data.getGod()); // upfront cost
 
             //cap.missionData.picks--;
-            player.getInventory().placeItemBackInInventory(player.level(), stack);
+            player.getInventory().placeItemBackInInventory(stack, net.minecraft.util.Prediction.SERVER_ONLY);
             cap.missionData.missions.remove(num);
 
             cap.syncToClient(player);

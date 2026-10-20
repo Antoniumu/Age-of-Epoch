@@ -87,7 +87,7 @@ public abstract class BaseModificationStation extends BlockEntity implements Wor
             ticks++;
             if (this instanceof ISmeltingStation smelt) {
                 smelt.onSmeltTick();
-                level.setBlock(this.worldPosition, this.level().getBlockState(this.worldPosition)
+                level.setBlock(this.worldPosition, this.level.getBlockState(this.worldPosition)
                     .setValue(NonFullBlock.light, this.cook_ticks > 0), 3);
             }
             if (ticks % 2000 == 0) {
@@ -257,7 +257,7 @@ public abstract class BaseModificationStation extends BlockEntity implements Wor
 
     @Override
     public boolean stillValid(Player player) {
-        if (this.level().getBlockEntity(this.worldPosition) != this)
+        if (this.level.getBlockEntity(this.worldPosition) != this)
             return false;
         final double X_CENTRE_OFFSET = 0.5;
         final double Y_CENTRE_OFFSET = 0.5;

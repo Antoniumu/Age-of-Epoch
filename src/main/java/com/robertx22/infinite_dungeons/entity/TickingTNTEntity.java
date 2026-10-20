@@ -52,9 +52,4 @@ public class TickingTNTEntity extends Entity implements IRendersAsItem {
     public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
         return false;
     }
-
-    @Override
-    public ItemStack getItem() {
-        return new ItemStack(Items.TNT);
-    }
 }

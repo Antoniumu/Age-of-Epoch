@@ -1,0 +1,10 @@
+accessWidener v2 official
+
+# NOTE: this file is intentionally NOT wired up (there is no "accessWidener" entry in
+# fabric.mod.json). Menu screen registration is done at runtime by
+# com.robertx22.forge_compat.client.MenuScreensCompat instead, because Loom cannot remap
+# Minecraft with an access widener in the build environment used for the 26.3 port.
+# Kept only as a reference for the two entries that would be needed:
+#
+# accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
+# accessible method net/minecraft/client/gui/screens/MenuScreens register (Lnet/minecraft/world/inventory/MenuType;Lnet/minecraft/client/gui/screens/MenuScreens$ScreenConstructor;)V

@@ -55,7 +55,7 @@ public class OnItemInteract {
 
                 SalvagedDustItem essence = (SalvagedDustItem) cursor.getItem();
 
-                SoundUtils.playSound(player, SoundEvents.ANVIL_USE.value(), 1, 1);
+                SoundUtils.playSound(player, SoundEvents.ANVIL_USE, 1, 1);
 
                 int repair = essence.durabilityRepair;
 
@@ -90,7 +90,7 @@ public class OnItemInteract {
                 }
 
                 if (data != null) {
-                    SoundUtils.playSound(player, SoundEvents.ANVIL_USE.value(), 1, 1);
+                    SoundUtils.playSound(player, SoundEvents.ANVIL_USE, 1, 1);
 
                     stack.shrink(1);
                     data.getSalvageResult(stack)
@@ -124,7 +124,7 @@ public class OnItemInteract {
 
             if (success) {
                 SoundUtils.ding(player.level(), player.blockPosition());
-                SoundUtils.playSound(player.level(), player.blockPosition(), SoundEvents.ANVIL_USE.value(), 1, 1);
+                SoundUtils.playSound(player.level(), player.blockPosition(), SoundEvents.ANVIL_USE, 1, 1);
 
                 cursor.shrink(1);
                 ci.setReturnValue(ItemStack.EMPTY);

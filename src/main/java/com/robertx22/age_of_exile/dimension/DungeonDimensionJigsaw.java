@@ -61,7 +61,9 @@ public class DungeonDimensionJigsaw extends StructureWrapper {
 
         stone.build();
 
-        return startBuilder.build();
+        // TODO(26.3 port): jigsaw pools are built through the codec-based worldgen pipeline now,
+        // the old AbstractPool builder cannot produce a StructureTemplatePool anymore.
+        return null;
     }
 
     static class Pool extends AbstractPool {

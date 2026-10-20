@@ -120,7 +120,7 @@ public class RarityGearCrateItem extends Item implements IAutoModel {
                 e.printStackTrace();
             }
         }
-        return InteractionResult.PASS);
+        return InteractionResult.PASS;
     }
 
     private void spawnEffects(Level world, LivingEntity en) {

@@ -173,7 +173,7 @@ public class ControlBlockEntity extends BlockEntity implements ITickableBlockEnt
         en.setPos(pos.getX(), pos.getY(), pos.getZ());
 
         if (en instanceof Mob mob) {
-            mob.finalizeSpawn((ServerLevelAccessor) level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.STRUCTURE, null);
+            mob.finalizeSpawn((ServerLevelAccessor) level, ((ServerLevel) level).getCurrentDifficultyAt(pos), EntitySpawnReason.STRUCTURE, null);
         }
 
         for (DungeonModifier x : data.getModifiers()) {
@@ -223,7 +223,7 @@ public class ControlBlockEntity extends BlockEntity implements ITickableBlockEnt
                 x.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 20 * 30));
             }
 
-            if (this.level() instanceof ServerLevel sl) {
+            if (this.level instanceof ServerLevel sl) {
                 this.getAllDungeonMobsAlive()
                     .forEach(x -> x.kill(sl));
             }
@@ -231,9 +231,9 @@ public class ControlBlockEntity extends BlockEntity implements ITickableBlockEnt
             BlockPos.betweenClosed(data.dungeon_boundary_1, data.dungeon_boundary_0)
                 .forEach(x -> {
                     if (level.getBlockEntity(x) != null) {
-                        this.level().destroyBlock(x, true);
+                        this.level.destroyBlock(x, true);
                     } else {
-                        this.level().setBlockAndUpdate(x, Blocks.AIR.defaultBlockState());
+                        this.level.setBlockAndUpdate(x, Blocks.AIR.defaultBlockState());
                     }
                 });
 

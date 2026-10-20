@@ -16,6 +16,7 @@ public class MobTagFilter extends DropFilter {
     @Override
     public boolean canDrop(DropFilterData data, LootInfo info) {
         return info.mobKilled != null && info.mobKilled.getType()
+            .builtInRegistryHolder()
             .is(TagKey.create(Registries.ENTITY_TYPE, Identifier.parse(data.id)));
     }
 

@@ -60,7 +60,7 @@ public class MaterialBagItem extends Item implements IAutoLocName, IAutoModel, I
 
         }
 
-        return InteractionResult.SUCCESS);
+        return InteractionResult.SUCCESS;
     }
 
     @OnlyIn(Dist.CLIENT)

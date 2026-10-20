@@ -16,7 +16,7 @@ public class ItemRewardType extends RewardType {
 
     @Override
     public void giveReward(Player player, RewardData data) {
-        player.getInventory().placeItemBackInInventory(player.level(), data.getStack());
+        player.getInventory().placeItemBackInInventory(data.getStack(), net.minecraft.util.Prediction.SERVER_ONLY);
     }
 
     @Override

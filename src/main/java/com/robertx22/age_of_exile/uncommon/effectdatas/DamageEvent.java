@@ -352,7 +352,7 @@ public class DamageEvent extends EffectEvent {
                         .findFirst()
                         .get();
                     if (target.level() instanceof net.minecraft.server.level.ServerLevel sl) {
-                        dragon.hurtServer(sl, part, dmgsource, vanillaDamage);
+                        part.hurtServer(sl, dmgsource, vanillaDamage);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

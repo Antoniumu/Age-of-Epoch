@@ -75,7 +75,7 @@ public class DungeonEvents {
                     return;
                 }
 
-                StructureTemplateManager templatemanager = ((ServerLevel) world).getServer().getStructureManager();
+                StructureTemplateManager templatemanager = ((ServerLevel) world).getServer().getStructureTemplateManager();
 
                 Watch load = new Watch();
 

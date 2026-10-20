@@ -30,13 +30,11 @@ public class LifeCycleEvents {
 
             regenDefault = event.getServer()
                 .getGameRules()
-                .getRule(GameRules.RULE_NATURAL_REGENERATION)
-                .get();
+                .get(GameRules.NATURAL_HEALTH_REGENERATION);
 
             event.getServer()
                 .getGameRules()
-                .getRule(GameRules.RULE_NATURAL_REGENERATION)
-                .set(false, event.getServer());
+                .set(GameRules.NATURAL_HEALTH_REGENERATION, false, event.getServer());
 
             if (MMORPG.RUN_DEV_TOOLS) { // CHANGE ON PUBLIC BUILDS TO FALSE
                 TestManager.RunAllTests(event.getServer()
@@ -47,8 +45,7 @@ public class LifeCycleEvents {
         ForgeEvents.registerForgeEvent(FMLServerStoppedEvent.class, event -> {
             event.getServer()
                 .getGameRules()
-                .getRule(GameRules.RULE_NATURAL_REGENERATION)
-                .set(regenDefault, event.getServer());
+                .set(GameRules.NATURAL_HEALTH_REGENERATION, regenDefault, event.getServer());
         });
 
     }

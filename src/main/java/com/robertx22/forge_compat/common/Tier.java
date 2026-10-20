@@ -7,4 +7,7 @@ public interface Tier {
     Tier DIAMOND = Tiers.DIAMOND;
     Tier GOLD = Tiers.GOLD;
     Tier NETHERITE = Tiers.NETHERITE;
+
+    /** Number of uses (durability) this tool material provides. */
+    int getUses();
 }

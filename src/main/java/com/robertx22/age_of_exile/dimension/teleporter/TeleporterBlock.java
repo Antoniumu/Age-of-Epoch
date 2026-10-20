@@ -21,7 +21,7 @@ import net.minecraft.world.level.Level;
 public class TeleporterBlock extends OpaqueBlock implements EntityBlock {
 
     public TeleporterBlock() {
-        super(Properties.of(Material.STONE)
+        super(Properties.of()
             .strength(5F, 2));
     }
 
@@ -47,10 +47,8 @@ public class TeleporterBlock extends OpaqueBlock implements EntityBlock {
 
     @Override
     @Deprecated
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player,
-                                InteractionHand hand, BlockHitResult ray) {
-
-        ItemStack stack = player.getItemInHand(hand);
+    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player,
+                                       InteractionHand hand, BlockHitResult ray) {
 
         BlockEntity tile = world.getBlockEntity(pos);
 

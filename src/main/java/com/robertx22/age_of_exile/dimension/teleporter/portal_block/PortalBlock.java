@@ -27,8 +27,8 @@ import java.util.Random;
 public class PortalBlock extends OpaqueBlock implements EntityBlock {
 
     public PortalBlock() {
-        super(Properties.of(Material.STONE)
-            .noCollission()
+        super(Properties.of()
+            .noCollision()
             .strength(5F, 2));
     }
 
@@ -42,7 +42,7 @@ public class PortalBlock extends OpaqueBlock implements EntityBlock {
     }
 
     @Override
-    public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, net.minecraft.util.RandomSource random) {
         if (random.nextInt(100) == 0) {
             world.playLocalSound((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.PORTAL_AMBIENT, SoundSource.BLOCKS, 0.5F, random.nextFloat() * 0.4F + 0.8F, false);
         }
@@ -71,7 +71,8 @@ public class PortalBlock extends OpaqueBlock implements EntityBlock {
     }
 
     @Override
-    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity,
+                             net.minecraft.world.entity.InsideBlockEffectApplier effectApplier, boolean flag) {
         try {
 
             if (world.isClientSide()) {
@@ -104,7 +105,7 @@ public class PortalBlock extends OpaqueBlock implements EntityBlock {
                 PortalBlockEntity be = (PortalBlockEntity) world.getBlockEntity(pos);
 
                 if (entity instanceof ServerPlayer) {
-                    if (!entity.isPassenger() && !entity.isVehicle() && entity.canChangeDimensions()) {
+                    if (!entity.isPassenger() && !entity.isVehicle() && !((ServerPlayer) entity).isChangingDimension()) {
 
                         if (maps.maps.ticksinPortal < 40) {
                             maps.maps.ticksinPortal++;

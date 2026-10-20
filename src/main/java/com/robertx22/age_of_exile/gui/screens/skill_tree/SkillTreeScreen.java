@@ -477,31 +477,9 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
     static Identifier BACKGROUND = SlashRef.guiId("skill_tree/background");
 
     public static void renderBackgroundDirt(Screen screen, int vOffset) {
-        //copied from Scree
-
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuilder();
-        com.robertx22.forge_compat.client.AbstractGui.bindTexture(BACKGROUND);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        float f = 32.0F;
-        bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        bufferBuilder.vertex(0.0D, (double) screen.height, 0.0D)
-            .uv(0.0F, (float) screen.height / 32.0F + (float) vOffset)
-            .color(64, 64, 64, 255)
-            .endVertex();
-        bufferBuilder.vertex((double) screen.width, (double) screen.height, 0.0D)
-            .uv((float) screen.width / 32.0F, (float) screen.height / 32.0F + (float) vOffset)
-            .color(64, 64, 64, 255)
-            .endVertex();
-        bufferBuilder.vertex((double) screen.width, 0.0D, 0.0D)
-            .uv((float) screen.width / 32.0F, (float) vOffset)
-            .color(64, 64, 64, 255)
-            .endVertex();
-        bufferBuilder.vertex(0.0D, 0.0D, 0.0D)
-            .uv(0.0F, (float) vOffset)
-            .color(64, 64, 64, 255)
-            .endVertex();
-        tessellator.end();
+        // TODO(26.3 port): the immediate-mode Tessellator/BufferBuilder background is gone in
+        // Minecraft 26.3 (rendering is now driven by GuiGraphicsExtractor). Background is skipped
+        // until the skill tree screen is moved to the new GUI pipeline.
     }
 
 }

@@ -12,10 +12,7 @@ public class VanillaFuelSlot extends Slot {
 
     @Override
     public boolean mayPlace(ItemStack stack) {
-        if (ServerLifecycleHooks.getCurrentServer() != null && ServerLifecycleHooks.getCurrentServer().overworld() != null) {
-            return ServerLifecycleHooks.getCurrentServer().overworld().fuelValues().isFuel(stack);
-        }
-        return !stack.isEmpty();
+        return !stack.isEmpty() && stack.has(net.minecraft.core.component.DataComponents.COOKING_FUEL);
     }
 
 }

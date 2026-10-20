@@ -51,7 +51,7 @@ public class ModSpawnerBlockEntity extends BlockEntity implements ITickableBlock
 
         if (spawnsLeft < 1) {
             if (!level.isClientSide()) {
-                this.level().removeBlock(worldPosition, false);
+                this.level.removeBlock(worldPosition, false);
                 return;
             }
         }

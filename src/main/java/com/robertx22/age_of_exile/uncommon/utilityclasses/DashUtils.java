@@ -26,11 +26,10 @@ public class DashUtils {
 
     public static void knockback(LivingEntity source, LivingEntity target) {
 
-        target.knockback(0.5D, source.getX() - target.getX(), source.getZ() - target.getZ());
+        target.knockback(0.5D, source.getX() - target.getX(), source.getZ() - target.getZ(), target.damageSources().generic(), 0.5F);
 
         if (target instanceof ServerPlayer) {
             ((ServerPlayer) target).connection.send(new ClientboundSetEntityMotionPacket(target));
-            target.hurtMarked = false;
         }
     }
 
@@ -68,7 +67,6 @@ public class DashUtils {
 
         if (entity instanceof ServerPlayer) {
             ((ServerPlayer) entity).connection.send(new ClientboundSetEntityMotionPacket(entity));
-            entity.hurtMarked = false;
         }
     }
 

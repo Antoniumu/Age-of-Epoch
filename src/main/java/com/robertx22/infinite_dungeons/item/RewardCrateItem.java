@@ -64,7 +64,7 @@ public class RewardCrateItem extends Item {
         if (!world.isClientSide()) {
 
             try {
-                SoundUtils.playSound(player, SoundEvents.EXPERIENCE_ORB_PICKUP.value(), 1, 1);
+                SoundUtils.playSound(player, SoundEvents.EXPERIENCE_ORB_PICKUP, 1, 1);
 
                 RewardList rewardList = DungeonsDB.RewardLists()
                     .get(StackNBT.getOrCreate(stack)
@@ -73,7 +73,7 @@ public class RewardCrateItem extends Item {
                 WeightedReward reward = rewardList.getRandom();
 
                 if (rewardList.jackpot.equals(reward)) {
-                    SoundUtils.playSound(player, SoundEvents.UI_TOAST_CHALLENGE_COMPLETE.value(), 1, 1);
+                    SoundUtils.playSound(player, SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
                 }
 
                 ItemStack rewardstack = reward.reward.type.getStack(reward.reward);

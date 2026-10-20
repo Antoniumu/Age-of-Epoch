@@ -75,7 +75,7 @@ public class CraftToolItem extends AutoItem implements IShapedRecipe {
 
         }
 
-        return InteractionResult.SUCCESS);
+        return InteractionResult.SUCCESS;
     }
 
     @Override

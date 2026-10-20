@@ -55,7 +55,7 @@ public class MissionItem extends Item {
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+    public void inventoryTick(ItemStack stack, net.minecraft.server.level.ServerLevel world, Entity entity, net.minecraft.world.entity.EquipmentSlot slot) {
         if (entity.tickCount % 20 == 0) {
             try {
                 if (entity instanceof ServerPlayer) {

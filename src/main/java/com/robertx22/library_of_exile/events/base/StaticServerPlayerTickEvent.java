@@ -38,7 +38,7 @@ public class StaticServerPlayerTickEvent {
 
                 if (data.ensureTeleportData == null) {
                     if (data.removeInvlunTicks > 0) {
-                        player.setInvulnerable(false);
+                        player.setPermanentlyInvulnerable(false);
                     }
                 } else {
 
@@ -69,7 +69,7 @@ public class StaticServerPlayerTickEvent {
             return;
         }
 
-        x.player.setInvulnerable(true);
+        x.player.setPermanentlyInvulnerable(true);
 
         if (x.player.blockPosition()
             .distSqr(x.whereShouldTeleport) > 1000) {
@@ -101,7 +101,7 @@ public class StaticServerPlayerTickEvent {
         if (!PlayerTickDatas.containsKey(player.getUUID())) {
             PlayerTickDatas.put(player.getUUID(), new PlayerTickData());
         }
-        player.setInvulnerable(true);
+        player.setPermanentlyInvulnerable(true);
         PlayerTickDatas.get(player.getUUID()).ensureTeleportData =
             new EnsureTeleportData(player, MAKE_SURE_TELEPORT, 50, teleportPos, dim);
     }

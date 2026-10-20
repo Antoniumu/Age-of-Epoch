@@ -12,8 +12,7 @@ public class RenderRegister {
 
     public static void regRenders() {
 
-        RenderingRegistry.registerEntityRenderingHandler(SlashEntities.SIMPLE_PROJECTILE.get(), (d) -> new MySpriteRenderer<>(d, Minecraft.getInstance()
-            .getItemRenderer()));
+        RenderingRegistry.registerEntityRenderingHandler(SlashEntities.SIMPLE_PROJECTILE.get(), (d) -> new MySpriteRenderer<>(d));
 
         RenderingRegistry.registerEntityRenderingHandler(SlashEntities.SIMPLE_ARROW.get(), m -> new RangerArrowRenderer<>(m));
         RenderingRegistry.registerEntityRenderingHandler(SlashEntities.SIMPLE_BLOCK_ENTITY.get(), m -> new FallingBlockRenderer(m));

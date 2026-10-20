@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class ModSpawnerBlock extends OpaqueBlock implements EntityBlock {
 
     public ModSpawnerBlock() {
-        super(Properties.of(Material.STONE)
+        super(Properties.of()
             .strength(5F, 2));
     }
 

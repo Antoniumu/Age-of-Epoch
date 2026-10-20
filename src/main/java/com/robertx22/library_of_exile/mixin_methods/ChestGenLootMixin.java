@@ -17,12 +17,12 @@ public class ChestGenLootMixin {
         try {
             if (context.hasParameter(LootContextParams.THIS_ENTITY) &&
                 context.hasParameter(LootContextParams.ORIGIN)
-                && context.getOptionalParameter(LootContextParams.THIS_ENTITY) instanceof Player) {
+                && context.getOptional(LootContextParams.THIS_ENTITY) instanceof Player) {
 
                 BlockEntity chest = null;
-                BlockPos pos = BlockPos.containing(context.getOptionalParameter(LootContextParams.ORIGIN));
+                BlockPos pos = BlockPos.containing(context.getOptional(LootContextParams.ORIGIN));
 
-                Player player = (Player) context.getOptionalParameter(LootContextParams.THIS_ENTITY);
+                Player player = (Player) context.getOptional(LootContextParams.THIS_ENTITY);
                 Level world = player.level();
 
                 if (inventory instanceof BlockEntity) {

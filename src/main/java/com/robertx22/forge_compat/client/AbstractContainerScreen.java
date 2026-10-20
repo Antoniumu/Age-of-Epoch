@@ -50,7 +50,7 @@ public abstract class AbstractContainerScreen<T extends AbstractContainerMenu> e
         } else if (widget instanceof Renderable && widget instanceof NarratableEntry) {
             this.addRenderableWidget((GuiEventListener & Renderable & NarratableEntry) widget);
         } else {
-            this.addWidget(widget);
+            this.addWidget((GuiEventListener & NarratableEntry) widget);
         }
         return widget;
     }

@@ -45,7 +45,6 @@ public class SpellCastBarOverlay extends AbstractGui {
     private void render(PoseStack matrix, int x, int y, BossEvent.BossBarColor color, BossEvent.BossBarOverlay overlay, float percent) {
 
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.bindTexture(GUI_BARS_TEXTURES);
 
         blit(matrix, x, y, 0, color.ordinal() * 5 * 2, WIDTH, HEIGHT);
         if (overlay != BossEvent.BossBarOverlay.PROGRESS) {
