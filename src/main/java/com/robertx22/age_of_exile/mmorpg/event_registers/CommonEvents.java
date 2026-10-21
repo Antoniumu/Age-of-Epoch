@@ -56,6 +56,7 @@ public class CommonEvents {
         ForgeEvents.registerForgeEvent(TickEvent.WorldTickEvent.class, event -> {
             if (event.phase == TickEvent.Phase.END && event.world instanceof ServerLevel) {
                 OnTickDungeonWorld.onEndTick((ServerLevel) event.world);
+                com.robertx22.world_of_exile.world_gen.TowerDestroyer.tickAll(event.world);
             }
         });
 

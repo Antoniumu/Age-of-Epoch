@@ -104,10 +104,8 @@ public class MapsData {
             Level dimWorld = player.level().getServer()
                 .getLevel(ResourceKey.create(Registries.DIMENSION, dungeonData.dun_type.DIMENSION_ID));
 
-            int border = MapsData.getBorder(dimWorld);
-
-            int X = RandomUtils.RandomRange(-border, border);
-            int Z = RandomUtils.RandomRange(-border, border);
+            int X = RandomUtils.RandomRange(1000, 50000);
+            int Z = RandomUtils.RandomRange(1000, 50000);
 
             ChunkPos cp = DungeonDimensionJigsawFeature.getSpawnChunkOf(new BlockPos(X, 0, Z));
 
@@ -251,7 +249,7 @@ public class MapsData {
                     ctx,
                     poolOpt.get(),
                     Optional.empty(),
-                    3,
+                    5,
                     startPos,
                     false,
                     Optional.empty(),

@@ -39,6 +39,19 @@ public abstract class BaseModificationBlock extends OpaqueBlock implements Entit
     }
 
     @Override
+    public <T extends BlockEntity> net.minecraft.world.level.block.entity.BlockEntityTicker<T> getTicker(
+        Level level,
+        BlockState state,
+        net.minecraft.world.level.block.entity.BlockEntityType<T> type
+    ) {
+        return (lvl, pos, st, be) -> {
+            if (be instanceof com.robertx22.forge_compat.blocks.ITickableBlockEntity tickable) {
+                tickable.tick();
+            }
+        };
+    }
+
+    @Override
     @Deprecated
     public List<ItemStack> getDrops(BlockState blockstate, LootParams.Builder context) {
 

@@ -20,6 +20,19 @@ public class ModSpawnerBlock extends OpaqueBlock implements EntityBlock {
         return new ModSpawnerBlockEntity(pos, state);
     }
 
+    @Override
+    public <T extends BlockEntity> net.minecraft.world.level.block.entity.BlockEntityTicker<T> getTicker(
+        net.minecraft.world.level.Level level,
+        BlockState state,
+        net.minecraft.world.level.block.entity.BlockEntityType<T> type
+    ) {
+        return (lvl, pos, st, be) -> {
+            if (be instanceof com.robertx22.forge_compat.blocks.ITickableBlockEntity tickable) {
+                tickable.tick();
+            }
+        };
+    }
+
     public BlockEntity newBlockEntity(BlockGetter world) {
         return new ModSpawnerBlockEntity();
     }
