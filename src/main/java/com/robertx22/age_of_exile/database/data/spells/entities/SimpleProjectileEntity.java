@@ -174,11 +174,12 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
 
     private boolean expireEffectsDone = false;
 
-    // In modern MC a server-initiated removal reaches the client through
-    // setRemoved()/onClientRemoval() and NOT through remove() (that changed after 1.16,
-    // where the destroy-entities packet handler called entity.remove()).
-    // So the on-expire effects (which include all the client-side impact particles)
-    // must be triggered from every removal path, guarded to run exactly once per side.
+    // In modern MC a server-initiated removal reaches the client through the
+    // onRemoval() hook (invoked by the final setRemoved()), NOT through remove()
+    // (that changed after 1.16, where the destroy-entities packet handler called
+    // entity.remove()). So the on-expire effects (which include all the client-side
+    // impact particles) must run from both remove() and onRemoval(),
+    // guarded to run exactly once per side.
     private void runExpireEffects() {
         if (this.expireEffectsDone) {
             return;
@@ -205,6 +206,9 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
         super.remove(reason);
     }
 
+    // Entity.setRemoved() is final in modern MC; onRemoval() is the hook it invokes
+    // when the entity is removed (incl. server-initiated removal reaching the client,
+    // where remove() is skipped)
     @Override
     public void onRemoval(Entity.RemovalReason reason) {
         runExpireEffects();

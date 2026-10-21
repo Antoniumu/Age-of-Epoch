@@ -7,6 +7,7 @@ import com.robertx22.age_of_exile.database.data.spells.spell_classes.SpellCtx;
 import com.robertx22.age_of_exile.database.data.spells.spell_classes.SpellUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,14 +35,29 @@ public class SummonAtSightAction extends SpellAction {
         HitResult ray = ctx.caster.pick(distance, 0.0F, false);
         Vec3 pos = ray.getLocation();
 
+        double spawnY = pos.y + height;
+
+        // when the ray misses (aiming at the sky / past max range), the raw point can
+        // end up far above the caster and the spell lands somewhere unnoticeable.
+        // Clamp it to caster eye level so it always drops on terrain in view.
+        if (ray.getType() == HitResult.Type.MISS) {
+            spawnY = Math.min(spawnY, ctx.caster.getEyeY() + height);
+        }
+
         // if the spawn point ended up inside terrain (e.g. aimed at a cliff face),
         // lift it up until there's open air, otherwise the summoned entity
         // instantly expires inside the ground and the spell looks like it fizzled
-        double spawnY = pos.y + height;
         int tries = 0;
-        while (tries < 24 && !ctx.world.isEmptyBlock(BlockPos.containing(pos.x, spawnY, pos.z))) {
+        while (tries < 32 && !ctx.world.isEmptyBlock(BlockPos.containing(pos.x, spawnY, pos.z))) {
             spawnY += 1.0D;
             tries++;
+        }
+
+        // still buried inside terrain (deep mountainside etc.):
+        // fall back to just above the column's surface so it lands visibly on top
+        if (!ctx.world.isEmptyBlock(BlockPos.containing(pos.x, spawnY, pos.z))) {
+            BlockPos column = BlockPos.containing(pos.x, 0, pos.z);
+            spawnY = ctx.world.getHeight(Heightmap.Types.MOTION_BLOCKING, column.getX(), column.getZ()) + 2;
         }
 
         Entity en = projectile.get()
