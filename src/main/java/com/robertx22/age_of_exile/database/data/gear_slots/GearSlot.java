@@ -139,7 +139,7 @@ public class GearSlot implements JsonExileRegistry<GearSlot>, IAutoGson<GearSlot
                 } else if (id.equals(GearSlots.BOW)) {
                     bool = item instanceof BowItem || itemPath.equals("bow") || itemPath.endsWith("_bow");
                 } else if (id.equals(GearSlots.AXE)) {
-                    bool = item instanceof AxeItem || item instanceof net.minecraft.world.item.AxeItem || itemPath.endsWith("_axe") || defaultStack.is(net.minecraft.tags.ItemTags.AXES);
+                    bool = item instanceof AxeItem || itemPath.endsWith("_axe") || defaultStack.is(net.minecraft.tags.ItemTags.AXES);
                 } else if (id.equals(GearSlots.SHIELD)) {
                     bool = item instanceof ShieldItem || itemPath.equals("shield") || itemPath.endsWith("_shield");
                 } else if (id.equals(GearSlots.CROSBOW)) {
