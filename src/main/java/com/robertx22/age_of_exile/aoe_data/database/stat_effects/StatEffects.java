@@ -101,6 +101,10 @@ public class StatEffects implements ExileRegistryInit {
     public static StatEffect REFLECT_PERCENT_DAMAGE = new ReflectDamageAction("reflect_perc_dmg", NumberProvider.ofPercentOfDataNumber(EventData.NUMBER));
     public static StatEffect APPLY_CAST_SPEED_TO_CD = new ApplyCooldownAsCastTimeEffect();
 
+    // Древо «Божественный», ветка некроманта
+    public static StatEffect RAISE_DEAD = new RaiseDeadAction();
+    public static StatEffect EXPLODE_CORPSE = new ExplodeCorpseAction();
+
     public static DataHolder<String, StatEffect> ADD_PERC_OF_STAT_TO_NUMBER = new DataHolder<>(
         Arrays.asList(
             Health.getInstance()
@@ -141,6 +145,9 @@ public class StatEffects implements ExileRegistryInit {
         DECREASE_COOLDOWN_BY_X_TICKS.addToSerializables();
         DECREASE_VALUE.addToSerializables();
         INCREASE_EFFECT_DURATION.addToSerializables();
+
+        RAISE_DEAD.addToSerializables();
+        EXPLODE_CORPSE.addToSerializables();
 
     }
 }

@@ -34,6 +34,13 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, ITooltipL
     public String icon = "";
     public String one_of_a_kind = "";
 
+    /**
+     * Взаимоисключающая ветка древа. Если у игрока уже изучен талант из другой ветки (другое
+     * непустое значение этого поля), этот талант взять нельзя. Нужно для древа «Божественный»:
+     * некромант и призыватель не выбираются одновременно.
+     */
+    public String exclusive_branch = "";
+
     public transient String locname = "";
 
     public boolean is_entry = false;
@@ -51,6 +58,11 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, ITooltipL
         data.one_of_a_kind = buf.readUtf(80);
         if (data.one_of_a_kind.isEmpty()) {
             data.one_of_a_kind = null;
+        }
+
+        data.exclusive_branch = buf.readUtf(80);
+        if (data.exclusive_branch.isEmpty()) {
+            data.exclusive_branch = null;
         }
 
         data.is_entry = buf.readBoolean();
@@ -72,6 +84,8 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, ITooltipL
         buf.writeUtf(icon != null ? icon : "", 150);
 
         buf.writeUtf(one_of_a_kind != null ? one_of_a_kind : "", 80);
+
+        buf.writeUtf(exclusive_branch != null ? exclusive_branch : "", 80);
 
         buf.writeBoolean(is_entry);
         buf.writeInt(lvl_req);
@@ -119,6 +133,15 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, ITooltipL
                 list.add(Component.literal("Можно выбрать только один талант этого типа: ").withStyle(ChatFormatting.GREEN));
 
                 list.add(Component.translatable(SlashRef.MODID + ".one_of_a_kind." + one_of_a_kind).withStyle(ChatFormatting.GREEN));
+            }
+
+            if (this.exclusive_branch != null && !this.exclusive_branch.isEmpty()) {
+                list.add(Component.literal("Взаимоисключающая ветка: ")
+                    .append(Component.translatable(SlashRef.MODID + ".branch." + exclusive_branch))
+                    .withStyle(ChatFormatting.RED));
+
+                list.add(Component.literal("Взять таланты другой ветки призыва не получится, пока эта не сброшена.")
+                    .withStyle(ChatFormatting.DARK_GRAY));
             }
 
             if (lvl_req > 1) {
@@ -225,10 +248,16 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, ITooltipL
         }
 
 
+        if (exclusive_branch != null && !exclusive_branch.isEmpty()) {
+            String chosen = Load.playerRPGData(player).talents.getChosenExclusiveBranch();
+            if (chosen != null && !chosen.equals(exclusive_branch)) {
+                return true; // выбрана другая ветка (например, некромант вместо призывателя)
+            }
+        }
+
         return false;
 
     }
-
 
     @Override
     public Class<Perk> getClassForSerialization() {

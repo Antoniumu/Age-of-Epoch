@@ -1,11 +1,15 @@
 package com.robertx22.age_of_exile.dimension.rules;
 
 import com.robertx22.age_of_exile.uncommon.utilityclasses.WorldUtils;
+import com.robertx22.age_of_exile.summoning.MinionUtils;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 
 public class OnTickCancelTargettingOtherMobs {
     public static void cancelTarget(Mob mob) {
+        if (MinionUtils.isMinion(mob)) {
+            return; // прислужники древа «Божественный» выбирают цель сами, см. MinionUtils.onMinionTick
+        }
         if (mob.tickCount % 20 == 0) {
             if (WorldUtils.isMapWorldClass(mob.level()) || WorldUtils.isSimulationWorld(mob.level())) {
                 if (mob.getTarget() instanceof Player == false) {

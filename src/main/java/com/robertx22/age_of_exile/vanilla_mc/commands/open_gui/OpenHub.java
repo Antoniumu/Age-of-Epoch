@@ -17,7 +17,7 @@ public class OpenHub {
                     .then(literal("hub")
                         .executes(ctx -> run(ctx.getSource())))
                     .then(literal("questbook")
-                        .executes(ctx -> runQuestBook(ctx.getSource()))));
+                        .executes(ctx -> runQuestBook(ctx.getSource())))));
     }
 
     public static final String COMMAND = "slash open hub";
