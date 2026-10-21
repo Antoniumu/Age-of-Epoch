@@ -294,7 +294,7 @@ public class DamageEvent extends EffectEvent {
 
         float vanillaDamage = HealthUtils.realToVanilla(target, dmg);
 
-        if (this.data.isCanceled()) {
+        if (this.data.isCanceled() || dmg <= 0F || vanillaDamage <= 0F) {
             cancelDamage();
             return;
         }
@@ -362,7 +362,10 @@ public class DamageEvent extends EffectEvent {
 
                 if (attackInfo != null && attackInfo.event != null) {
                     if (source instanceof Player) {
-                        attackInfo.event.damage *= ServerContainer.get().PLAYER_VANILLA_DMG_MULTI.get();
+                        attackInfo.setAmount((float) (attackInfo.getAmount() * ServerContainer.get().PLAYER_VANILLA_DMG_MULTI.get()));
+                    } else {
+                        float nonExilePart = (float) Math.max(0D, 1D - ServerContainer.get().VANILLA_MOB_DMG_AS_EXILE_DMG.get());
+                        attackInfo.setAmount(attackInfo.getAmount() * nonExilePart);
                     }
                 }
                 int inv = LivingEntityAccesor.getInvulnerableTime(target);
@@ -440,20 +443,30 @@ public class DamageEvent extends EffectEvent {
 
         String text = "";
 
-        if (source instanceof ServerPlayer) {
-            ServerPlayer player = (ServerPlayer) source;
+        if (data.isDodged()) {
+            if (getAttackType().isAttack()) {
+                text = "Уклонение";
+            } else {
+                text = "Сопротивление";
+            }
 
-            if (data.isDodged()) {
-                if (getAttackType().isAttack()) {
-                    text = "Уклонение";
-                } else {
-                    text = "Сопротивление";
-                }
-
+            if (source instanceof ServerPlayer player) {
                 DmgNumPacket packet = new DmgNumPacket(target, text, false, ChatFormatting.GOLD);
                 Packets.sendToClient(player, packet);
-                return;
             }
+            if (target instanceof ServerPlayer defPlayer && defPlayer != source) {
+                DmgNumPacket packet = new DmgNumPacket(target, text, false, ChatFormatting.GOLD);
+                Packets.sendToClient(defPlayer, packet);
+                defPlayer.displayClientMessage(
+                    net.minecraft.network.chat.Component.literal("✦ " + text + "!").withStyle(ChatFormatting.GOLD),
+                    true
+                );
+            }
+            return;
+        }
+
+        if (source instanceof ServerPlayer) {
+            ServerPlayer player = (ServerPlayer) source;
 
             for (Entry<Elements, Float> entry : info.dmgmap.entrySet()) {
                 if (entry.getValue() != null && entry.getValue() > 0.05F) {
@@ -516,8 +529,6 @@ public class DamageEvent extends EffectEvent {
                 bonus.data.setBoolean(EventData.IS_BASIC_ATTACK, this.data.getBooleanOr(EventData.IS_BASIC_ATTACK, false));
                 bonus.data.setBoolean(EventData.IS_ATTACK_FULLY_CHARGED, this.data.getBooleanOr(EventData.IS_ATTACK_FULLY_CHARGED, false));
                 bonus.data.setupNumber(EventData.ATTACK_COOLDOWN, this.data.getNumber(EventData.ATTACK_COOLDOWN).number);
-                bonus.calculateEffects();
-
                 bonus.setElement(entry.getKey());
                 bonus.calculateEffects();
                 float dmg = bonus.getActualDamage();

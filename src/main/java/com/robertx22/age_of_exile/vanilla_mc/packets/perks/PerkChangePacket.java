@@ -91,9 +91,12 @@ public class PerkChangePacket extends MyPacket<PerkChangePacket> {
                 }
             }
         } else if (action == ACTION.REMOVE) {
-            if (playerData.talents.canRemove(sc, point)) {
+            boolean inSim = com.robertx22.age_of_exile.uncommon.utilityclasses.WorldUtils.isSimulationWorld(ctx.getPlayer().level());
+            if (inSim ? playerData.talents.canRemoveIgnoringResetPoints(sc, point) : playerData.talents.canRemove(sc, point)) {
                 playerData.talents.remove(sc, new PointData(x, y));
-                playerData.talents.reset_points--;
+                if (!inSim && playerData.talents.reset_points > 0) {
+                    playerData.talents.reset_points--;
+                }
             }
         }
         System.out.println("[AOE-PACKET] PerkChangePacket.onReceived AFTER: freePointsAfter="

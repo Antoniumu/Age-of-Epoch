@@ -242,6 +242,7 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
             screens.add(new TalentsScreen());
             screens.add(new ProfessionsScreen());
             screens.add(new WikiScreen());
+            screens.add(new com.robertx22.age_of_exile.simulation.SimulationScreen());
 
             int x = guiLeft + sizeX - 1;
             int y = guiTop + 20;
@@ -384,11 +385,25 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
         @Override
         public void renderToolTip(PoseStack matrix, int x, int y) {
             if (isInside(x, y)) {
+                Minecraft mc = Minecraft.getInstance();
                 List<Component> tooltip = new ArrayList<>();
 
                 tooltip.add(stat
                     .locName()
                     .withStyle(ChatFormatting.GREEN));
+
+                if (mc.player != null) {
+                    EntityData unitdata = Load.Unit(mc.player);
+                    StatData data = unitdata.getUnit().getCalculatedStat(stat);
+                    String rawVal = NumberUtils.formatForTooltip(data.getValue()) + (stat.IsPercent() ? "%" : "");
+                    tooltip.add(Component.literal("Значение: " + rawVal).withStyle(ChatFormatting.YELLOW));
+                    if (stat instanceof IUsableStat usable && !(stat instanceof Health)) {
+                        int lvl = unitdata.getLevel();
+                        String effPct = NumberUtils.format(usable.getUsableValue((int) data.getValue(), lvl) * 100F) + "%";
+                        String maxPct = (int) (usable.getMaximumPercent() * 100F) + "%";
+                        tooltip.add(Component.literal("Эффективность (Ур. " + lvl + "): " + effPct + " (макс. " + maxPct + ")").withStyle(ChatFormatting.AQUA));
+                    }
+                }
 
                 tooltip.addAll(stat
                     .getCutDescTooltip());

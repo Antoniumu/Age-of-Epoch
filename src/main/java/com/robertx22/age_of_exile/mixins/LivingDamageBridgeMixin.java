@@ -22,13 +22,29 @@ public abstract class LivingDamageBridgeMixin {
         LivingEntity attacker = source.getEntity() instanceof LivingEntity le ? le : self;
         LivingHurtEvent hurt = new LivingHurtEvent(self, attacker, source, amount);
         MinecraftForge.EVENT_BUS.post(hurt);
+        if (hurt.isCanceled() || hurt.getAmount() <= 0.0F) {
+            return 0.0F;
+        }
         LivingDamageEvent dmg = new LivingDamageEvent(self, source, hurt.getAmount());
         MinecraftForge.EVENT_BUS.post(dmg);
-        return dmg.getAmount();
+        float finalAmount = dmg.isCanceled() ? 0.0F : Math.max(0.0F, dmg.getAmount());
+        if (finalAmount > 0.0F && self instanceof net.minecraft.server.level.ServerPlayer sp) {
+            if (com.robertx22.age_of_exile.simulation.SimulationManager.interceptLethalDamageInSimulation(sp, finalAmount)) {
+                return 0.0F;
+            }
+        }
+        return finalAmount;
     }
 
-    @Inject(method = "die", at = @At("HEAD"))
+    @Inject(method = "die", at = @At("HEAD"), cancellable = true)
     private void ageOfEpoch$onDeath(DamageSource source, CallbackInfo ci) {
-        MinecraftForge.EVENT_BUS.post(new LivingDeathEvent((LivingEntity) (Object) this, source));
+        LivingEntity self = (LivingEntity) (Object) this;
+        if (self instanceof net.minecraft.server.level.ServerPlayer sp
+            && com.robertx22.age_of_exile.uncommon.utilityclasses.WorldUtils.isSimulationWorld(sp.level())) {
+            com.robertx22.age_of_exile.simulation.SimulationManager.healPlayerFull(sp);
+            ci.cancel();
+            return;
+        }
+        MinecraftForge.EVENT_BUS.post(new LivingDeathEvent(self, source));
     }
 }

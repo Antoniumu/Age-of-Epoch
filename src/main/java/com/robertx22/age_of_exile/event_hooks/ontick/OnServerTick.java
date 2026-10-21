@@ -131,6 +131,7 @@ public class OnServerTick {
         TICK_ACTIONS.add(new PlayerTickAction("gear_soul_gen_in_inventory", 20, (player, data) ->
         {
             GearSoulOnInvTick.checkAndGenerate(player);
+            com.robertx22.age_of_exile.simulation.SimulationManager.checkAndRestoreIfLeftSimulation(player);
         }));
 
         TICK_ACTIONS.add(new
