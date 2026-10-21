@@ -73,6 +73,19 @@ public class GuideAdvisor {
         player.sendSystemMessage(Component.literal("§a[Гайд] Активен: §f" + guide.name
             + "§a. Подсказки подсвечиваются у характеристик, талантов и заклинаний."));
         player.sendSystemMessage(Component.literal("§7На Полигоне этот гайд собирается в готовую сборку целиком."));
+
+        // советы советника — в чат, чтобы длинный текст не обрезался в окне
+        try {
+            Progress progress = progress(player);
+            int shown = 0;
+            for (String advice : progress.advice) {
+                if (shown++ >= 3) {
+                    break;
+                }
+                player.sendSystemMessage(Component.literal(advice));
+            }
+        } catch (Exception ignored) {
+        }
     }
 
     // ------------------------------------------------------------------ характеристики
