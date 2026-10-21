@@ -103,7 +103,7 @@ public class FireSpells implements ExileRegistryInit {
             .onExpire("block", PartBuilder.groundParticles(ParticleTypes.FLAME, 60D, 3D, 0.5D))
             .onExpire("block", PartBuilder.aoeParticles(ParticleTypes.LARGE_SMOKE, 40D, 3D))
             .onExpire("block", PartBuilder.aoeParticles(ParticleTypes.ASH, 25D, 3D))
-            .onExpire("block", PartBuilder.playSound(SoundEvents.GENERIC_EXPLODE.value(), 1D, 1D))
+            .onExpire("block", PartBuilder.playSound(SoundEvents.GENERIC_EXPLODE.value(), 4D, 1D))
             .build();
 
         SpellBuilder.of(FIRE_NOVA_ID, SpellConfiguration.Builder.instant(20, 20 * 25), "Fire Nova",

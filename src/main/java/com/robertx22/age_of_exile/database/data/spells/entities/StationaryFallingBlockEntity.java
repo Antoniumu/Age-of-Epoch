@@ -115,10 +115,20 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
         }
 
         try {
-            this.getSpellData()
-                .getSpell()
-                .getAttached()
-                .tryActivate(getScoreboardName(), SpellCtx.onTick(getSpellData().getCaster(this.level()), this, getSpellData()));
+            EntitySavedSpellData data = this.getSpellData();
+            LivingEntity caster = data == null ? null : data.getCaster(this.level());
+
+            if (data != null && caster != null) {
+                data.getSpell()
+                    .getAttached()
+                    .tryActivate(getScoreboardName(), SpellCtx.onTick(caster, this, data));
+            } else if (this.age > 100) {
+                // spell data / caster never resolved: don't kill the block on the
+                // first ticks (e.g. client copy whose synced data hasn't arrived
+                // yet) - that made meteors silently vanish mid-air.
+                // Only give up once it's clear they're never coming.
+                this.remove(Entity.RemovalReason.DISCARDED);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             this.remove(Entity.RemovalReason.DISCARDED);
