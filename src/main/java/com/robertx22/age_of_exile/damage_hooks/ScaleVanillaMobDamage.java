@@ -20,6 +20,9 @@ public class ScaleVanillaMobDamage extends EventConsumer<ExileEvents.OnDamageEnt
         if (event.source instanceof MyDamageSource) {
             return;
         }
+        if (event.damage <= 0) {
+            return;
+        }
         if (event.source.getEntity() instanceof LivingEntity) {
             if (!(event.source.getEntity() instanceof Player)) {
                 event.damage = HealthUtils.realToVanilla(event.mob, event.damage);

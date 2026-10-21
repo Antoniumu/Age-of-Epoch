@@ -112,6 +112,10 @@ public class WorldUtils {
         return isId(world, DimensionIds.DUNGEON_DIMENSION);
     }
 
+    public static boolean isSimulationWorld(LevelReader world) {
+        return isId(world, DimensionIds.SIMULATION_DIMENSION);
+    }
+
     public static boolean isMapWorldClass(LevelReader world) {
         return isId(world, DimensionIds.DUNGEON_DIMENSION);
 

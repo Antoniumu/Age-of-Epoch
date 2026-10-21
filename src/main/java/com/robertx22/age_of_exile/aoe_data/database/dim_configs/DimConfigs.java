@@ -23,5 +23,11 @@ public class DimConfigs implements ExileRegistryInit {
         cc.dimension_id = DimensionIds.DUNGEON_DIMENSION.toString();
         cc.addToSerializables();
 
+        DimensionConfig sim = new DimensionConfig();
+        sim.max_lvl = Integer.MAX_VALUE;
+        sim.min_lvl = 1;
+        sim.dimension_id = DimensionIds.SIMULATION_DIMENSION.toString();
+        sim.addToSerializables();
+
     }
 }
