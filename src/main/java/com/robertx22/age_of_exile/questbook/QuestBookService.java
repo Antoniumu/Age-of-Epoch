@@ -22,6 +22,7 @@ import com.robertx22.world_of_exile.world_gen.TowerBoss;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -122,9 +123,10 @@ public final class QuestBookService {
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             changed |= recordStack(book, player.getInventory().getItem(i));
         }
-        for (ItemStack stack : player.getArmorSlots()) {
-            changed |= recordStack(book, stack);
-        }
+        changed |= recordStack(book, player.getItemBySlot(EquipmentSlot.HEAD));
+        changed |= recordStack(book, player.getItemBySlot(EquipmentSlot.CHEST));
+        changed |= recordStack(book, player.getItemBySlot(EquipmentSlot.LEGS));
+        changed |= recordStack(book, player.getItemBySlot(EquipmentSlot.FEET));
         changed |= recordStack(book, player.getOffhandItem());
 
         afterProgress(player, changed);
