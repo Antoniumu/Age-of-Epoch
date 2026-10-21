@@ -57,4 +57,22 @@ public class SpellsData {
         return level;
     }
 
+    public int getAllocatedPointsInSchool(SpellSchool school) {
+        if (school == null) {
+            return 0;
+        }
+        int total = 0;
+        if (school.spells != null) {
+            for (String spellId : school.spells.keySet()) {
+                total += allocated_lvls.getOrDefault(spellId, 0);
+            }
+        }
+        if (school.synergies != null) {
+            for (String synId : school.synergies.keySet()) {
+                total += allocated_lvls.getOrDefault(synId, 0);
+            }
+        }
+        return total;
+    }
+
 }

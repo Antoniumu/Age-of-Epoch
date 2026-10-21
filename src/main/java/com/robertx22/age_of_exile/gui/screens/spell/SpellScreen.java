@@ -347,7 +347,7 @@ public class SpellScreen extends BaseScreen implements INamedScreen, ILeftRight 
 
         if (GuiUtils.isInRect(leftBtnX, btnY, LeftRightButton.xSize, LeftRightButton.ySize, mouseX, mouseY)) {
             int prevIdx = currentIndex - 1 < 0 ? maxIndex : currentIndex - 1;
-            SpellSchool prev = orderedSchools.get(prevIdx);
+            SpellSchool prev = schoolsInOrder.get(prevIdx);
             java.util.List<net.minecraft.network.chat.Component> tooltip = new java.util.ArrayList<>();
             tooltip.add(net.minecraft.network.chat.Component.literal("Предыдущий класс: " + getSchoolDisplayName(prev)).withStyle(getSchoolColor(prev)));
             tooltip.add(net.minecraft.network.chat.Component.literal(getSchoolSubtitle(prev)).withStyle(ChatFormatting.GRAY));
@@ -358,7 +358,7 @@ public class SpellScreen extends BaseScreen implements INamedScreen, ILeftRight 
 
         if (GuiUtils.isInRect(rightBtnX, btnY, LeftRightButton.xSize, LeftRightButton.ySize, mouseX, mouseY)) {
             int nextIdx = currentIndex + 1 > maxIndex ? 0 : currentIndex + 1;
-            SpellSchool next = orderedSchools.get(nextIdx);
+            SpellSchool next = schoolsInOrder.get(nextIdx);
             java.util.List<net.minecraft.network.chat.Component> tooltip = new java.util.ArrayList<>();
             tooltip.add(net.minecraft.network.chat.Component.literal("Следующий класс: " + getSchoolDisplayName(next)).withStyle(getSchoolColor(next)));
             tooltip.add(net.minecraft.network.chat.Component.literal(getSchoolSubtitle(next)).withStyle(ChatFormatting.GRAY));
