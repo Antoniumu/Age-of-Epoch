@@ -1,6 +1,7 @@
 package com.robertx22.age_of_exile.mmorpg.registers.server;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.robertx22.age_of_exile.gamemaster.GameMasterCommand;
 import com.robertx22.age_of_exile.vanilla_mc.commands.*;
 import com.robertx22.age_of_exile.vanilla_mc.commands.entity.*;
 import com.robertx22.age_of_exile.vanilla_mc.commands.giveitems.GiveExactUnique;
@@ -49,6 +50,7 @@ public class CommandRegister {
 
         OpenHub.register(dispatcher);
         com.robertx22.age_of_exile.simulation.SimCommand.register(dispatcher);
+        GameMasterCommand.register(dispatcher);
 
     }
 }
