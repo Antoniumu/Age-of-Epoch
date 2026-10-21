@@ -3,7 +3,7 @@
 	"texture_size": [32, 32],
 	"textures": {
 		"3": "mmorpg:blocks/trap",
-		"particle": "spells/trap"
+		"particle": "mmorpg:blocks/trap"
 	},
 	"elements": [
 		{

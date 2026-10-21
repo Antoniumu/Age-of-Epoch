@@ -7,7 +7,8 @@
 		"9": "mmorpg:blocks/teleporter/rune_q",
 		"10": "mmorpg:blocks/teleporter/rune_k",
 		"11": "mmorpg:blocks/teleporter/rune_z",
-		"12": "mmorpg:blocks/teleporter/teleporter"
+		"12": "mmorpg:blocks/teleporter/teleporter",
+		"particle": "mmorpg:blocks/teleporter/teleporter"
 	},
 	"elements": [
 		{

@@ -35,20 +35,27 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
         FallingBlockAccessor acc = (FallingBlockAccessor) this;
         acc.setBlockState(block);
         acc.setDestroyedOnLanding(false);
+        this.entityData.set(BLOCK, BuiltInRegistries.BLOCK.getKey(block.getBlock()).toString());
         this.blocksBuilding = true;
-        this.setPos(pos.getX() + 0.5D, pos.getY() + (double) ((1.0F - this.getBbHeight()) / 2.0F), pos.getZ() + 0.5D);
+        this.setPos(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
         this.setDeltaMovement(Vec3.ZERO);
-        this.xo = pos.getX();
+        this.xo = pos.getX() + 0.5D;
         this.yo = pos.getY();
-        this.zo = pos.getZ();
+        this.zo = pos.getZ() + 0.5D;
         this.setStartPos(this.blockPosition());
     }
 
     @Override
     public BlockState getBlockState() {
         try {
-            return BuiltInRegistries.BLOCK.getValue(Identifier.parse(this.entityData.get(BLOCK)))
-                .defaultBlockState();
+            String blockStr = this.entityData.get(BLOCK);
+            if (blockStr != null && !blockStr.isEmpty()) {
+                Identifier id = Identifier.parse(blockStr);
+                if (BuiltInRegistries.BLOCK.containsKey(id)) {
+                    return BuiltInRegistries.BLOCK.getValue(id)
+                        .defaultBlockState();
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
