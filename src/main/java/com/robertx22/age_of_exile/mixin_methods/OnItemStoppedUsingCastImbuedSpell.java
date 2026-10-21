@@ -1,5 +1,7 @@
 package com.robertx22.age_of_exile.mixin_methods;
 
+import com.robertx22.age_of_exile.aoe_data.database.gear_slots.GearSlots;
+import com.robertx22.age_of_exile.database.data.gear_slots.GearSlot;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.forge_compat.event.entity.living.LivingEntityUseItemEvent;
 import com.robertx22.library_of_exile.main.ForgeEvents;
@@ -25,40 +27,49 @@ public class OnItemStoppedUsingCastImbuedSpell {
 
     }
 
-    public static boolean canCastImbuedSpell(LivingEntity user) {
-
-        ItemStack stack = user.getUseItem();
-
-        int remainingUseTicks = user.getUseItemRemainingTicks();
-
-        boolean shoot = false;
-        int usedur = stack.getItem()
-            .getUseDuration(stack, user) - remainingUseTicks;
-
-        if (stack.getItem() instanceof BowItem && usedur > 20 * 1) {
-            shoot = true;
+    public static boolean isBowItem(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) {
+            return false;
         }
         if (stack.getItem() instanceof BowItem) {
-            int i = stack.getItem()
-                .getUseDuration(stack, user) - remainingUseTicks;
-            float f = BowItem.getPowerForTime(i);
-            if (f == 1F) {
-                shoot = true;
+            return true;
+        }
+        GearSlot slot = GearSlot.getSlotOf(stack.getItem());
+        return slot != null && GearSlots.BOW.equals(slot.GUID());
+    }
 
-            }
+    public static boolean isCrossbowItem(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) {
+            return false;
+        }
+        if (stack.getItem() instanceof CrossbowItem) {
+            return true;
+        }
+        GearSlot slot = GearSlot.getSlotOf(stack.getItem());
+        return slot != null && GearSlots.CROSBOW.equals(slot.GUID());
+    }
+
+    public static boolean canCastImbuedSpell(LivingEntity user) {
+        return canCastImbuedSpell(user.getUseItem(), user, user.getUseItemRemainingTicks());
+    }
+
+    public static boolean canCastImbuedSpell(ItemStack stack, LivingEntity user, int remainingUseTicks) {
+        if (!isBowItem(stack)) {
+            return false;
         }
 
-        return shoot;
-
+        int useTicks = stack.getItem()
+            .getUseDuration(stack, user) - remainingUseTicks;
+        float power = BowItem.getPowerForTime(useTicks);
+        return power >= 0.1F;
     }
 
     public static void onStoppedUsing(ItemStack stack, LivingEntity user, int remainingUseTicks) {
 
-        if (canCastImbuedSpell(user)) {
-            if (Load.spells(user)
+        if (canCastImbuedSpell(stack, user, remainingUseTicks)) {
+            Load.spells(user)
                 .getCastingData()
-                .tryCastImbuedSpell(user)) {
-            }
+                .tryCastImbuedSpell(user);
         }
 
     }
@@ -69,12 +80,11 @@ public class OnItemStoppedUsingCastImbuedSpell {
             if (user.level().isClientSide()) {
                 return;
             }
-            if (stack.getItem() instanceof CrossbowItem) {
+            if (isCrossbowItem(stack)) {
                 if (CrossbowItem.isCharged(stack)) {
-                    if (Load.spells(user)
+                    Load.spells(user)
                         .getCastingData()
-                        .tryCastImbuedSpell(user)) {
-                    }
+                        .tryCastImbuedSpell(user);
                 }
             }
         } catch (Exception e) {

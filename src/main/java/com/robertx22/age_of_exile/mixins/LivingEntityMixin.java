@@ -5,6 +5,8 @@ import com.robertx22.age_of_exile.database.data.spells.spell_classes.bases.MyDam
 import com.robertx22.age_of_exile.mixin_ducks.LivingEntityAccesor;
 import com.robertx22.age_of_exile.mixin_methods.CanEntityHavePotionMixin;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.HealthUtils;
+import com.robertx22.forge_compat.common.MinecraftForge;
+import com.robertx22.forge_compat.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
@@ -16,6 +18,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
@@ -84,6 +87,20 @@ public abstract class LivingEntityMixin implements LivingEntityAccesor {
         try {
             LivingEntity en = (LivingEntity) (Object) this;
             CanEntityHavePotionMixin.hook(en, effect, ci);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Inject(method = "releaseUsingItem", at = @At("HEAD"))
+    public void hookReleaseUsingItem(CallbackInfo ci) {
+        try {
+            LivingEntity en = (LivingEntity) (Object) this;
+            if (!en.level().isClientSide()) {
+                MinecraftForge.EVENT_BUS.post(
+                    new LivingEntityUseItemEvent.Stop(en, en.getUseItem(), en.getUseItemRemainingTicks())
+                );
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
