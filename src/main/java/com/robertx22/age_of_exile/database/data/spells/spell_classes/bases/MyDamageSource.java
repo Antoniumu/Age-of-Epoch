@@ -13,7 +13,7 @@ public class MyDamageSource extends DamageSource {
     DamageSource source;
 
     public MyDamageSource(DamageSource s, Entity source, Elements element, float dmg) {
-        super(s != null ? s.typeHolder() : source.damageSources().generic().typeHolder(), source, source);
+        super(source != null ? source.damageSources().generic().typeHolder() : s.typeHolder(), source, source);
         this.element = element;
         realDamage = dmg;
         this.source = s;
