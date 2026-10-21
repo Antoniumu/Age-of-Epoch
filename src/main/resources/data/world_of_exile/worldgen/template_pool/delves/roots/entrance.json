@@ -1,0 +1,15 @@
+{
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "world_of_exile:delves/roots/entrance",
+        "processors": "world_of_exile:delve_processor",
+        "projection": "rigid",
+        "override_liquid_settings": "ignore_waterlogging"
+      }
+    }
+  ]
+}
