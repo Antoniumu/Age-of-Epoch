@@ -24,6 +24,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
@@ -206,6 +207,12 @@ public class FabricBootstrap {
                 new PlayerInteractEvent.EntityInteract(player, hand, entity);
             MinecraftForge.EVENT_BUS.post(event);
             return event.isCanceled() ? InteractionResult.FAIL : InteractionResult.PASS;
+        });
+        PlayerBlockBreakEvents.BEFORE.register((world, player, pos, state, blockEntity) -> {
+            if (!(world instanceof net.minecraft.server.level.ServerLevel level) || player == null) {
+                return true;
+            }
+            return !com.robertx22.world_of_exile.world_gen.TowerBoss.denyBreak(level, pos, player);
         });
     }
 }
