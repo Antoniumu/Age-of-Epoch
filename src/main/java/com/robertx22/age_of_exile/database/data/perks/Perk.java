@@ -132,8 +132,15 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, ITooltipL
                 list.add(Component.literal("Ключевой талант.").withStyle(ChatFormatting.RED));
             }
 
-            list.add(Words.PressAltForStatInfo.locName()
-                    .withStyle(ChatFormatting.BLUE));
+            if (info.shouldShowDescriptions()) {
+                if (this.type == PerkType.START) {
+                    list.add(Component.literal(" [Стартовый узел древа талантов. Выберите один из стартовых путей, чтобы открыть соседние узлы.]")
+                        .withStyle(ChatFormatting.BLUE));
+                }
+            } else {
+                list.add(Words.PressAltForStatInfo.locName()
+                        .withStyle(ChatFormatting.BLUE));
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

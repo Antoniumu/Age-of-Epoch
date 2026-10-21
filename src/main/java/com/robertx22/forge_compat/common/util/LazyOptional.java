@@ -32,6 +32,12 @@ public class LazyOptional<T> {
         return v == null ? other : v;
     }
 
+    public T orElseGet(Supplier<? extends T> other) {
+        if (empty) return other.get();
+        T v = supplier.get();
+        return v == null ? other.get() : v;
+    }
+
     public T orElseThrow(java.util.function.Supplier<? extends RuntimeException> ex) {
         T v = empty ? null : supplier.get();
         if (v == null) throw ex.get();

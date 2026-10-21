@@ -27,12 +27,12 @@ public class Load {
 
     public static EntityData Unit(Entity entity) {
         return CapabilityProvider.get(entity, EntityData.Data)
-            .orElse(new EntityData((LivingEntity) entity));
+            .orElseGet(() -> entity instanceof LivingEntity living ? new EntityData(living) : null);
     }
 
     public static RPGPlayerData playerRPGData(Player player) {
         return CapabilityProvider.get(player, RPGPlayerData.Data)
-            .orElse(null);
+            .orElseGet(() -> player != null ? new RPGPlayerData(player) : null);
     }
 
     public static WorldDungeonCap dungeonData(Level world) {

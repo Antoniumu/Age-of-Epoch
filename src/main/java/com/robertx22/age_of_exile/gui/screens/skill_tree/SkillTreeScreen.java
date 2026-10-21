@@ -2,7 +2,6 @@ package com.robertx22.age_of_exile.gui.screens.skill_tree;
 
 import com.google.common.collect.Sets;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.age_of_exile.capability.player.RPGPlayerData;
 import com.robertx22.age_of_exile.database.data.perks.Perk;
 import com.robertx22.age_of_exile.database.data.talent_tree.TalentTree;
@@ -11,27 +10,27 @@ import com.robertx22.age_of_exile.database.registry.ExileDB;
 import com.robertx22.age_of_exile.gui.bases.BaseScreen;
 import com.robertx22.age_of_exile.gui.bases.INamedScreen;
 import com.robertx22.age_of_exile.gui.screens.skill_tree.buttons.ConnectionButton;
+import com.robertx22.age_of_exile.gui.screens.skill_tree.buttons.IMarkOnTop;
 import com.robertx22.age_of_exile.gui.screens.skill_tree.buttons.PerkButton;
 import com.robertx22.age_of_exile.gui.screens.skill_tree.buttons.SelectTreeButton;
 import com.robertx22.age_of_exile.gui.screens.skill_tree.buttons.TalentTreeButton;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.saveclasses.PointData;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import com.robertx22.forge_compat.client.Button;
+import com.robertx22.forge_compat.client.RenderSystem;
+import com.robertx22.forge_compat.client.Screen;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import com.robertx22.library_of_exile.utils.GuiUtils.PointF;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import com.robertx22.forge_compat.client.Screen;
-import com.robertx22.forge_compat.client.Button;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.robertx22.forge_compat.client.Tessellator;
-import com.robertx22.forge_compat.client.DefaultVertexFormats;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
-import net.minecraft.ChatFormatting;
 
 import java.awt.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen {
     static Identifier BIG_PANEL = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skill_tree/background.png");
@@ -51,6 +50,16 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
 
     public PointData pointClicked = new PointData(0, 0);
     public int mouseRecentlyClickedTicks = 0;
+
+    private final List<PerkButton> perkButtons = new ArrayList<>();
+    private final List<ConnectionButton> connectionButtons = new ArrayList<>();
+    private Object lastTalentsRef = null;
+    private boolean dirtyStatuses = true;
+
+    public void markDirty() {
+        this.dirtyStatuses = true;
+        this.mouseRecentlyClickedTicks = 25;
+    }
 
     @Override
     public boolean mouseReleased(double x, double y, int ticks) {
@@ -102,6 +111,7 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
         super.init();
 
         try {
+            this.playerData = Load.playerRPGData(mc.player);
 
             schoolsInOrder = ExileDB.TalentTrees()
                 .getFiltered(x -> {
@@ -126,70 +136,65 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
 
     private void addConnections() {
 
-        HashSet<PointData> def = new HashSet();
+        HashSet<PointData> def = new HashSet<>();
 
         Set<Set<PointData>> cons = new HashSet<>();
 
-        new ArrayList<>(buttons).forEach(b -> {
-            if (b instanceof PerkButton) {
-                PerkButton pb = (PerkButton) b;
+        for (PerkButton pb : this.perkButtons) {
+            Set<PointData> connections = this.school.calcData.connections.getOrDefault(pb.point, def);
 
-                Set<PointData> connections = this.school.calcData.connections.getOrDefault(pb.point, def);
+            int x1 = pb.origX + pb.getWidth() / 2;
+            int y1 = pb.origY + pb.getHeight() / 2;
 
-                int x1 = pb.x + pb.getWidth() / 2;
-                int y1 = pb.y + pb.getHeight() / 2;
+            int size = 6;
+            float spacing = size + size / 2F;
 
-                int size = 6;
-                float spacing = size + size / 2F;
+            for (PointData p : connections) {
 
-                for (PointData p : connections) {
+                if (cons.contains(Sets.newHashSet(p, pb.point))) {
+                    continue;
+                }
 
-                    if (cons.stream()
-                        .anyMatch(x -> x.contains(p) && x.contains(pb.point))) {
-                        continue;
-                    }
+                cons.add(Sets.newHashSet(p, pb.point));
 
-                    cons.add(Sets.newHashSet(p, pb.point));
+                PerkButton sb = this.pointPerkButtonMap.get(p);
 
-                    PerkButton sb = this.pointPerkButtonMap.get(p);
+                if (sb == null) {
+                    continue;
+                }
 
-                    if (sb == null) {
-                        continue;
+                int x2 = sb.origX + sb.getWidth() / 2;
+                int y2 = sb.origY + sb.getHeight() / 2;
 
-                    }
+                List<PointF> points = GuiUtils.generateCurve(new PointF(x1, y1), new PointF(x2, y2), 360f, spacing + 2, true);
 
-                    int x2 = sb.x + sb.getWidth() / 2;
-                    int y2 = sb.y + sb.getHeight() / 2;
+                for (PointF point : points) {
 
-                    List<PointF> points = GuiUtils.generateCurve(new PointF(x1, y1), new PointF(x2, y2), 360f, spacing + 2, true);
+                    int x = (int) (point.x - ((float) size / 2));
+                    int y = (int) (point.y - ((float) size / 2));
 
-                    for (PointF point : points) {
-
-                        int x = (int) (point.x - ((float) size / 2));
-                        int y = (int) (point.y - ((float) size / 2));
-
-                        newButton(new ConnectionButton(this, school, p, pb.point, x, y));
-
-                    }
+                    this.connectionButtons.add(new ConnectionButton(this, school, p, pb.point, x, y));
 
                 }
-            }
 
-        });
+            }
+        }
 
     }
 
     public void refreshButtons() {
 
-        //Watch watch = new Watch();
-
         originalButtonLocMap.clear();
         pointPerkButtonMap.clear();
+        perkButtons.clear();
+        connectionButtons.clear();
         this.buttons.clear();
         this.children.clear();
 
         this.scrollX = 0;
         this.scrollY = 0;
+        this.dirtyStatuses = true;
+        this.playerData = Load.playerRPGData(mc.player);
 
         for (Map.Entry<PointData, String> e : school.calcData.perks.entrySet()) {
             Perk perk = ExileDB.Perks()
@@ -209,8 +214,9 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
                 int subx = PerkButton.BIGGEST / 2;
                 int suby = PerkButton.BIGGEST / 2;
 
-                int x = getPosForPoint(e.getKey()).x + addx - subx + TalentTreeButton.XSIZE / 2;
-                int y = getPosForPoint(e.getKey()).y + addy - suby + TalentTreeButton.YSIZE / 2;
+                Point pos = getPosForPoint(e.getKey());
+                int x = pos.x + addx - subx + TalentTreeButton.XSIZE / 2;
+                int y = pos.y + addy - suby + TalentTreeButton.YSIZE / 2;
 
                 this.newButton(new PerkButton(this, playerData, school, e.getKey(), perk, x, y));
             } catch (Exception exception) {
@@ -248,8 +254,8 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
         }
 
         addConnections();
-
-        //        watch.print(" Setting up buttons ");
+        updateButtonPositions();
+        refreshCachedStates();
 
     }
 
@@ -277,13 +283,15 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
     public void goToCenter() {
         this.scrollX = 0;
         this.scrollY = 0;
+        updateButtonPositions();
     }
 
     private void newButton(Button b) {
         this.addButton(b);
         originalButtonLocMap.put(b, new PointData(b.x, b.y));
-        if (b instanceof PerkButton) {
-            this.pointPerkButtonMap.put(((PerkButton) b).point, (PerkButton) b);
+        if (b instanceof PerkButton pb) {
+            this.perkButtons.add(pb);
+            this.pointPerkButtonMap.put(pb.point, pb);
         }
     }
 
@@ -313,6 +321,12 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
     }
 
     @Override
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        updateButtonPositions();
+        return super.mouseClicked(event, doubleClick);
+    }
+
+    @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scroll) {
         if (scroll < 0) {
             zoom -= 0.1F;
@@ -321,7 +335,8 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
             zoom += 0.1F;
         }
 
-        this.zoom = Mth.clamp(zoom, 0.08F, 1);
+        this.zoom = Mth.clamp(zoom, 0.15F, 1);
+        updateButtonPositions();
 
         return true;
     }
@@ -336,33 +351,56 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
         this.scrollY += 1F / zoom * deltaY;
 
         scrollY = Mth.clamp(scrollY, -3333, 3333);
+        updateButtonPositions();
 
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
-    private void renderButton(Button b) {
-        if (originalButtonLocMap.containsKey(b)) {
-            b.x = (this.originalButtonLocMap.get(b).
-                x);
-            b.y = (this.originalButtonLocMap.get(b)
-                .y);
+    private void updateButtonPositions() {
+        float addx = (1F / zoom - 1) * this.width / 2F + scrollX;
+        float addy = (1F / zoom - 1) * this.height / 2F + scrollY;
 
-            float addx = (1F / zoom - 1) * this.width / 2F;
-            float addy = (1F / zoom - 1) * this.height / 2F;
+        for (ConnectionButton cb : this.connectionButtons) {
+            cb.x = (int) (cb.origX + addx);
+            cb.y = (int) (cb.origY + addy);
+        }
+        for (PerkButton pb : this.perkButtons) {
+            pb.x = (int) (pb.origX + addx);
+            pb.y = (int) (pb.origY + addy);
+        }
+    }
 
-            b.x += addx;
-            b.y += addy;
+    private void refreshCachedStates() {
+        RPGPlayerData current = Load.playerRPGData(mc.player);
+        if (current == null) {
+            return;
+        }
+        this.playerData = current;
+        this.lastTalentsRef = current.talents;
+        this.dirtyStatuses = false;
 
-            b.x += scrollX;
-            b.y += scrollY;
-
+        for (PerkButton pb : this.perkButtons) {
+            pb.refreshStatus(current);
+        }
+        for (ConnectionButton cb : this.connectionButtons) {
+            cb.refreshConnection(current);
         }
     }
 
     @Override
     public void render(PoseStack matrix, int x, int y, float ticks) {
 
-        mouseRecentlyClickedTicks--;
+        if (mouseRecentlyClickedTicks > 0) {
+            mouseRecentlyClickedTicks--;
+        }
+
+        RPGPlayerData current = Load.playerRPGData(mc.player);
+        if (current != null) {
+            this.playerData = current;
+            if (this.dirtyStatuses || current.talents != this.lastTalentsRef || (mouseRecentlyClickedTicks > 0 && tick_count % 5 == 0) || tick_count % 40 == 0) {
+                refreshCachedStates();
+            }
+        }
 
         renderBackgroundDirt(this, 0);
 
@@ -370,37 +408,21 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
         matrix.scale(zoom, zoom, zoom);
 
         try {
+            updateButtonPositions();
 
-            this.buttons.forEach(b -> {
-
-                if (originalButtonLocMap.containsKey(b)) {
-                    b.x = (this.originalButtonLocMap.get(b).
-                        x);
-                    b.y = (this.originalButtonLocMap.get(b)
-                        .y);
-
-                    float addx = (1F / zoom - 1) * this.width / 2F;
-                    float addy = (1F / zoom - 1) * this.height / 2F;
-
-                    b.x += addx;
-                    b.y += addy;
-
-                    b.x += scrollX;
-                    b.y += scrollY;
-
-                }
-            });
+            int maxVisX = (int) (this.width / zoom) + 40;
+            int maxVisY = (int) (this.height / zoom) + 40;
 
             com.robertx22.forge_compat.client.AbstractGui.bindTexture(ConnectionButton.ID);
-            buttons.forEach(b -> {
-                if (b instanceof ConnectionButton) {
-                    ((ConnectionButton) b).renderButtonForReal(matrix, x, y, ticks);
+            for (ConnectionButton cb : this.connectionButtons) {
+                if (cb.x >= -16 && cb.y >= -16 && cb.x <= maxVisX && cb.y <= maxVisY) {
+                    cb.renderButtonForReal(matrix, x, y, ticks);
                 }
-            });
+            }
 
-            for (Button abstractButtonWidget : buttons) {
-                if (abstractButtonWidget instanceof PerkButton) {
-                    abstractButtonWidget.render(matrix, x, y, ticks);
+            for (PerkButton pb : this.perkButtons) {
+                if (pb.x + pb.getWidth() >= -16 && pb.y + pb.getHeight() >= -16 && pb.x <= maxVisX && pb.y <= maxVisY) {
+                    pb.render(matrix, x, y, ticks);
                 }
             }
 
@@ -418,8 +440,19 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
                 button.render(matrix, x, y, ticks);
             }
         }
+
+        int zoomedMouseX = (int) (1F / zoom * x);
+        int zoomedMouseY = (int) (1F / zoom * y);
+        for (PerkButton pb : this.perkButtons) {
+            if (pb.isInside(zoomedMouseX, zoomedMouseY)) {
+                pb.renderToolTip(matrix, x, y);
+                break;
+            }
+        }
         for (Button b : buttons) {
-            b.renderToolTip(matrix, x, y);
+            if (!(b instanceof PerkButton)) {
+                b.renderToolTip(matrix, x, y);
+            }
         }
     }
 
@@ -471,11 +504,7 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
         PoseStack emptyPose = new PoseStack();
         com.robertx22.forge_compat.client.AbstractGui.fill(emptyPose, 0, 0, screen.width, screen.height, 0xFF141018);
         com.robertx22.forge_compat.client.AbstractGui.bindTexture(BACKGROUND);
-        for (int gx = 0; gx < screen.width; gx += 32) {
-            for (int gy = 0; gy < screen.height; gy += 32) {
-                com.robertx22.forge_compat.client.AbstractGui.blit(emptyPose, gx, gy, 0.0F, (float) vOffset, 32, 32, 32, 32);
-            }
-        }
+        com.robertx22.forge_compat.client.AbstractGui.blit(emptyPose, 0, 0, 0.0F, (float) vOffset, screen.width, screen.height, 32, 32);
     }
 
 }

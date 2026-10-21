@@ -66,8 +66,8 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
     }
 
     public void onAllDatapacksLoaded() {
-        if (map.isEmpty() && !serializables.isEmpty()) {
-            map.putAll(serializables);
+        if (!serializables.isEmpty()) {
+            serializables.forEach(map::putIfAbsent);
         }
 
         fromDatapacks = null;
