@@ -1,0 +1,22 @@
+{
+  "structures": [
+    {
+      "structure": "world_of_exile:savanna_t1",
+      "weight": 6
+    },
+    {
+      "structure": "world_of_exile:savanna_t2",
+      "weight": 3
+    },
+    {
+      "structure": "world_of_exile:savanna_t3",
+      "weight": 2
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 22,
+    "separation": 7,
+    "salt": 521587
+  }
+}

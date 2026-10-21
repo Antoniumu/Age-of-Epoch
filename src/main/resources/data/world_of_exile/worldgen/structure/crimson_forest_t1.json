@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:jigsaw",
+  "biomes": [
+    "minecraft:crimson_forest",
+    "minecraft:warped_forest"
+  ],
+  "step": "surface_structures",
+  "spawn_overrides": {},
+  "terrain_adaptation": "none",
+  "start_pool": "world_of_exile:towers/crimson_forest/start",
+  "size": 4,
+  "start_height": {
+    "absolute": 36
+  },
+  "use_expansion_hack": false,
+  "max_distance_from_center": 80
+}

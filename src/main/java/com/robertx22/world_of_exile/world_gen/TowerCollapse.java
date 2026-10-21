@@ -43,7 +43,7 @@ import java.util.Set;
  */
 public final class TowerCollapse {
 
-    private static final int HORIZONTAL = 40;
+    private static final int HORIZONTAL = 16;
     private static final int DOWN = 96;
     private static final int UP = 16;
     private static final int MAX_BLOCKS = 24000;
@@ -94,34 +94,13 @@ public final class TowerCollapse {
         }
     }
 
+    /**
+     * Anything a themed tower can be built from.  Delegated to
+     * {@link com.robertx22.world_of_exile.tower.TowerMaterials} so ice, sand,
+     * prismarine, deepslate, mushroom and nether palettes all collapse too.
+     */
     public static boolean isTowerMaterial(BlockState state) {
-        if (state.isAir()) {
-            return false;
-        }
-        var block = state.getBlock();
-        if (block == Blocks.CHEST || block == Blocks.TRAPPED_CHEST || block == Blocks.BARREL || block == Blocks.SPAWNER) {
-            return true;
-        }
-        if (block == SlashBlocks.TOWER_BOSS_MARKER.get()) {
-            return true;
-        }
-        if (state.is(BlockTags.ALL_SIGNS) || state.is(BlockTags.WALL_SIGNS) || state.is(BlockTags.DOORS)
-            || state.is(BlockTags.FENCES) || state.is(BlockTags.CAMPFIRES)) {
-            return true;
-        }
-        if (block == Blocks.LADDER || block == Blocks.IRON_BARS || block == Blocks.COBWEB
-            || block == Blocks.TORCH || block == Blocks.WALL_TORCH || block == Blocks.SOUL_TORCH
-            || block == Blocks.SOUL_WALL_TORCH || block == Blocks.REDSTONE_TORCH || block == Blocks.REDSTONE_WALL_TORCH
-            || block == Blocks.SOUL_LANTERN || block == Blocks.LANTERN || block == Blocks.LEVER
-            || block == Blocks.BEACON) {
-            return true;
-        }
-        Identifier id = BuiltInRegistries.BLOCK.getKey(block);
-        if (id == null) {
-            return false;
-        }
-        String path = id.getPath();
-        return path.contains("stone_brick") || path.contains("smooth_stone") || path.contains("polished_blackstone");
+        return com.robertx22.world_of_exile.tower.TowerMaterials.isTowerBlock(state);
     }
 
     private static Set<BlockPos> collect(ServerLevel level, BlockPos origin) {
@@ -131,7 +110,11 @@ public final class TowerCollapse {
         int maxX = origin.getX() + HORIZONTAL;
         int minZ = origin.getZ() - HORIZONTAL;
         int maxZ = origin.getZ() + HORIZONTAL;
-        int minY = Math.max(level.getMinY(), origin.getY() - DOWN);
+        // never dig into the terrain under the tower: the foundation is the
+        // lowest tower block, and natural sandstone / ice / basalt below it must
+        // not be swallowed by the collapse
+        int measured = TowerBoss.towerHeight(level, origin);
+        int minY = Math.max(level.getMinY(), origin.getY() - Math.min(DOWN, measured + 6));
         int maxY = Math.min(level.getMaxY(), origin.getY() + UP);
 
         for (int dx = -2; dx <= 2; dx++) {

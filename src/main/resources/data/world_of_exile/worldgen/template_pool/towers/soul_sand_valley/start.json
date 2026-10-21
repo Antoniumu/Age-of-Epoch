@@ -1,0 +1,14 @@
+{
+  "fallback": "world_of_exile:towers/soul_sand_valley/middle",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "world_of_exile:towers/soul_sand_valley/start0",
+        "processors": "world_of_exile:tower_processor",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

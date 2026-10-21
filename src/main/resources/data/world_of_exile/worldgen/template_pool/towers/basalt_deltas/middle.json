@@ -1,0 +1,32 @@
+{
+  "fallback": "world_of_exile:towers/basalt_deltas/top",
+  "elements": [
+    {
+      "weight": 3,
+      "element": {
+        "location": "world_of_exile:towers/basalt_deltas/middle0",
+        "processors": "world_of_exile:tower_processor",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "location": "world_of_exile:towers/basalt_deltas/middle1",
+        "processors": "world_of_exile:tower_processor",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "location": "world_of_exile:towers/basalt_deltas/middle2",
+        "processors": "world_of_exile:tower_processor",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

@@ -13,6 +13,9 @@ public class TowerBossMarkerBlockEntity extends BlockEntity implements ITickable
 
     public boolean restoreCampfire = false;
 
+    /** Tower theme id baked into the structure; empty means "use the biome". */
+    public String theme = "";
+
     public TowerBossMarkerBlockEntity(BlockPos pos, BlockState state) {
         super(SlashBlockEntities.TOWER_BOSS_MARKER.get(), pos, state);
     }
@@ -31,6 +34,7 @@ public class TowerBossMarkerBlockEntity extends BlockEntity implements ITickable
         super.saveAdditional(output);
         CompoundTag tag = new CompoundTag();
         tag.putBoolean("restore_campfire", restoreCampfire);
+        tag.putString("theme", theme);
         output.store("AgeOfEpochData", CompoundTag.CODEC, tag);
     }
 
@@ -39,6 +43,7 @@ public class TowerBossMarkerBlockEntity extends BlockEntity implements ITickable
         super.loadAdditional(input);
         input.read("AgeOfEpochData", CompoundTag.CODEC).ifPresent(tag -> {
             restoreCampfire = tag.getBooleanOr("restore_campfire", false);
+            theme = tag.getStringOr("theme", "");
         });
     }
 }

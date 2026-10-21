@@ -2,6 +2,8 @@ package com.robertx22.world_of_exile.world_gen;
 
 import com.mojang.serialization.MapCodec;
 import com.robertx22.age_of_exile.mmorpg.registers.common.SlashBlocks;
+import com.robertx22.world_of_exile.tower.TowerTheme;
+import com.robertx22.world_of_exile.tower.TowerThemes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.BlockTags;
@@ -16,22 +18,46 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Turns the tag signs baked into the tower templates into real content.
+ *
+ * <p>Sign tags understood:</p>
+ * <ul>
+ *   <li>{@code [boss]} – the boss cage, carries {@code [tower:<theme>]}</li>
+ *   <li>{@code [spawner]} – themed mob spawner, carries {@code [tower:<theme>]}</li>
+ *   <li>{@code [treasure]} / {@code [final_treasure]} – chest with
+ *       {@code [loot#<table>]} and an optional {@code [chance:<percent>]}</li>
+ *   <li>{@code [deployer]} – removed</li>
+ * </ul>
+ *
+ * Legacy templates (stone brick tower, blackstone tower) still work: they only
+ * carry {@code [boss]}/{@code [spawner]}/{@code [treasure]} and fall back to a
+ * generic spawner pool that never contains nether mobs in the overworld.
+ */
 public class TowerStructureProcessor implements StructureProcessor {
 
     public static final MapCodec<TowerStructureProcessor> CODEC = MapCodec.unit(TowerStructureProcessor::new);
 
-    private static final Pattern CHANCE_PATTERN = Pattern.compile("chance\\s*:\\s*(\\d+)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern CHANCE_PATTERN = Pattern.compile("\\[chance\\s*:\\s*(\\d+)]");
+    private static final Pattern THEME_PATTERN = Pattern.compile("\\[tower:([a-z0-9_]+)]");
+    private static final Pattern LOOT_PATTERN = Pattern.compile("\\[loot#([a-z0-9_./:-]+)]");
 
-    private static final List<String> TOWER_MOBS = List.of(
+    /** Overworld-only fallback pool, kept for the pre-theme tower templates. */
+    private static final List<String> GENERIC_MOBS = List.of(
         "minecraft:zombie",
         "minecraft:skeleton",
         "minecraft:spider",
         "minecraft:cave_spider",
         "minecraft:witch",
         "minecraft:vindicator",
-        "minecraft:pillager",
+        "minecraft:pillager"
+    );
+
+    private static final List<String> NETHER_MOBS = List.of(
+        "minecraft:wither_skeleton",
+        "minecraft:piglin",
         "minecraft:blaze",
-        "minecraft:wither_skeleton"
+        "minecraft:magma_cube"
     );
 
     @Override
@@ -61,21 +87,21 @@ public class TowerStructureProcessor implements StructureProcessor {
             return processedBlockInfo;
         }
 
+        // legacy beacon markers from the original tower templates
         if (processedBlockInfo.state().is(Blocks.BEACON)) {
             if (random.nextBoolean()) {
                 return createChestInfo(processedBlockInfo.pos(), "minecraft:chests/simple_dungeon", random);
-            } else {
-                return createSpawnerInfo(processedBlockInfo.pos(), random);
             }
+            return createSpawnerInfo(processedBlockInfo.pos(), randomMob(null, random), random);
         }
 
         if (processedBlockInfo.state().is(BlockTags.ALL_SIGNS)) {
             String raw = processedBlockInfo.nbt() != null ? processedBlockInfo.nbt().toString() : "";
 
-            Matcher matcher = CHANCE_PATTERN.matcher(raw);
-            if (matcher.find()) {
+            Matcher chanceMatcher = CHANCE_PATTERN.matcher(raw);
+            if (chanceMatcher.find()) {
                 try {
-                    float chance = Float.parseFloat(matcher.group(1));
+                    float chance = Float.parseFloat(chanceMatcher.group(1));
                     if (random.nextFloat() * 100.0F > chance) {
                         return new StructureTemplate.StructureBlockInfo(processedBlockInfo.pos(), Blocks.AIR.defaultBlockState(), null);
                     }
@@ -83,17 +109,25 @@ public class TowerStructureProcessor implements StructureProcessor {
                 }
             }
 
+            String theme = match(THEME_PATTERN, raw);
+            if (theme == null && level instanceof net.minecraft.world.level.Level realLevel) {
+                theme = TowerThemes.forDimension(realLevel).id();
+            }
+            String loot = match(LOOT_PATTERN, raw);
+
             if (raw.contains("[boss]")) {
-                return createBossMarker(processedBlockInfo.pos(), false);
+                return createBossMarker(processedBlockInfo.pos(), theme);
             }
             if (raw.contains("[spawner]")) {
-                return createSpawnerInfo(processedBlockInfo.pos(), random);
+                return createSpawnerInfo(processedBlockInfo.pos(), randomMob(theme, random), random);
             }
             if (raw.contains("[final_treasure]") || raw.contains("[lock_treasure]")) {
-                return createChestInfo(processedBlockInfo.pos(), "minecraft:chests/end_city_treasure", random);
+                return createChestInfo(processedBlockInfo.pos(),
+                    loot != null ? loot : "minecraft:chests/end_city_treasure", random);
             }
             if (raw.contains("[treasure]")) {
-                return createChestInfo(processedBlockInfo.pos(), "minecraft:chests/simple_dungeon", random);
+                return createChestInfo(processedBlockInfo.pos(),
+                    loot != null ? loot : "minecraft:chests/simple_dungeon", random);
             }
             if (raw.contains("[deployer]")) {
                 return new StructureTemplate.StructureBlockInfo(processedBlockInfo.pos(), Blocks.AIR.defaultBlockState(), null);
@@ -103,9 +137,28 @@ public class TowerStructureProcessor implements StructureProcessor {
         return processedBlockInfo;
     }
 
-    private static StructureTemplate.StructureBlockInfo createBossMarker(BlockPos pos, boolean restoreCampfire) {
+    private static String match(Pattern pattern, String raw) {
+        Matcher matcher = pattern.matcher(raw);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+
+    private static String randomMob(String themeId, RandomSource random) {
+        if (TowerThemes.exists(themeId)) {
+            TowerTheme theme = TowerThemes.byId(themeId);
+            return theme.randomMob(random);
+        }
+        return GENERIC_MOBS.get(random.nextInt(GENERIC_MOBS.size()));
+    }
+
+    private static StructureTemplate.StructureBlockInfo createBossMarker(BlockPos pos, String themeId) {
         CompoundTag data = new CompoundTag();
-        data.putBoolean("restore_campfire", restoreCampfire);
+        data.putBoolean("restore_campfire", false);
+        if (TowerThemes.exists(themeId)) {
+            data.putString("theme", themeId);
+        }
         CompoundTag tag = new CompoundTag();
         tag.putString("id", "mmorpg:tower_boss_marker");
         tag.put("AgeOfEpochData", data);
@@ -120,8 +173,7 @@ public class TowerStructureProcessor implements StructureProcessor {
         return new StructureTemplate.StructureBlockInfo(pos, Blocks.CHEST.defaultBlockState(), tag);
     }
 
-    private static StructureTemplate.StructureBlockInfo createSpawnerInfo(BlockPos pos, RandomSource random) {
-        String mobId = TOWER_MOBS.get(random.nextInt(TOWER_MOBS.size()));
+    private static StructureTemplate.StructureBlockInfo createSpawnerInfo(BlockPos pos, String mobId, RandomSource random) {
         CompoundTag tag = new CompoundTag();
         tag.putString("id", "minecraft:mob_spawner");
         tag.putShort("Delay", (short) 20);
@@ -160,26 +212,8 @@ public class TowerStructureProcessor implements StructureProcessor {
         return new StructureTemplate.StructureBlockInfo(pos, Blocks.SPAWNER.defaultBlockState(), tag);
     }
 
-    private static StructureTemplate.StructureBlockInfo createBossSpawnerInfo(BlockPos pos) {
-        CompoundTag tag = new CompoundTag();
-        tag.putString("id", "minecraft:mob_spawner");
-        tag.putShort("Delay", (short) 20);
-        tag.putShort("MinSpawnDelay", (short) 800);
-        tag.putShort("MaxSpawnDelay", (short) 800);
-        tag.putShort("SpawnCount", (short) 1);
-        tag.putShort("MaxNearbyEntities", (short) 1);
-        tag.putShort("RequiredPlayerRange", (short) 14);
-        tag.putShort("SpawnRange", (short) 2);
-
-        CompoundTag spawnData = new CompoundTag();
-        CompoundTag entityTag = new CompoundTag();
-        entityTag.putString("id", "minecraft:wither_skeleton");
-        entityTag.putBoolean("PersistenceRequired", true);
-        net.minecraft.nbt.ListTag tagsList = new net.minecraft.nbt.ListTag();
-        tagsList.add(net.minecraft.nbt.StringTag.valueOf("woe_tower_boss"));
-        entityTag.put("Tags", tagsList);
-        spawnData.put("entity", entityTag);
-        tag.put("SpawnData", spawnData);
-        return new StructureTemplate.StructureBlockInfo(pos, Blocks.SPAWNER.defaultBlockState(), tag);
+    /** Kept for compatibility with the legacy blackstone tower template. */
+    static List<String> netherMobs() {
+        return NETHER_MOBS;
     }
 }

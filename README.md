@@ -7,6 +7,7 @@
 - **Age of Exile** — ядро мода (заклинания, характеристики, аффиксы, снаряжение, данжи, карты приключений, профессии…);
 - **Library of Exile** — общая библиотека (реестры JSON-базы данных, пакеты, капабилити, события);
 - **Divine Missions** и **Infinite Dungeons** — аддоны, интегрированные в исходниках Age of Exile.
+- **Тематические башни** — 16 тем по биомам, 3 уровня сложности и 80 боссов; см. [`TOWERS.md`](TOWERS.md).
 
 ## Статус
 
@@ -47,6 +48,8 @@ src/main/java/com/robertx22/world_of_exile/    — заглушки (World of Ex
 src/main/resources/                            — ресурсы, данные, fabric.mod.json, локализация
 tools/port_to_fabric.py                        — воспроизводимый скрипт миграции
 tools/ru_work/                                 — исходники перевода (генерация ru_ru.json)
+tools/tower_gen/                               — генератор тематических башен (NBT + JSON), см. TOWERS.md
+TOWERS.md                                      — описание тем, сложности и боссов башен
 ```
 
 ## Авторство

@@ -1,0 +1,22 @@
+{
+  "structures": [
+    {
+      "structure": "world_of_exile:soul_sand_valley_t1",
+      "weight": 6
+    },
+    {
+      "structure": "world_of_exile:soul_sand_valley_t2",
+      "weight": 3
+    },
+    {
+      "structure": "world_of_exile:soul_sand_valley_t3",
+      "weight": 2
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 14,
+    "separation": 5,
+    "salt": 269917
+  }
+}
