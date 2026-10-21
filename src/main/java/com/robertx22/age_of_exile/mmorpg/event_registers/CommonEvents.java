@@ -18,7 +18,6 @@ import com.robertx22.age_of_exile.event_hooks.ontick.OnTickDungeonWorld;
 import com.robertx22.world_of_exile.world_gen.TowerBoss;
 import com.robertx22.world_of_exile.world_gen.TowerCollapse;
 import com.robertx22.age_of_exile.event_hooks.player.OnLogin;
-import com.robertx22.age_of_exile.event_hooks.player.StopCastingIfInteract;
 import com.robertx22.age_of_exile.mixin_methods.OnItemStoppedUsingCastImbuedSpell;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.error_checks.base.ErrorChecks;
@@ -33,7 +32,6 @@ import com.robertx22.forge_compat.event.TickEvent;
 import com.robertx22.forge_compat.event.entity.EntityJoinWorldEvent;
 import com.robertx22.forge_compat.event.entity.living.LivingDeathEvent;
 import com.robertx22.forge_compat.event.entity.living.LivingHurtEvent;
-import com.robertx22.forge_compat.event.entity.player.AttackEntityEvent;
 import com.robertx22.forge_compat.event.entity.player.PlayerEvent;
 import com.robertx22.forge_compat.fml.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -66,12 +64,6 @@ public class CommonEvents {
         });
 
         ForgeEvents.registerForgeEvent(LivingDeathEvent.class, TowerBoss::onDeath);
-
-        ForgeEvents.registerForgeEvent(AttackEntityEvent.class, event -> {
-            if (event.getEntityLiving() instanceof ServerPlayer) {
-                StopCastingIfInteract.interact(event.getPlayer());
-            }
-        });
 
         ForgeEvents.registerForgeEvent(PlayerEvent.StartTracking.class, event -> {
             if (event.getPlayer() instanceof ServerPlayer) {

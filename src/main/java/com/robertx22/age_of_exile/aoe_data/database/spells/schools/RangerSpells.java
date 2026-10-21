@@ -105,8 +105,8 @@ public class RangerSpells implements ExileRegistryInit {
                 "Dash in your direction and gain slowfall.")
             .weaponReq(CastingWeapon.NON_MAGE_WEAPON)
             .attackStyle(PlayStyle.ranged)
-            .onCast(PartBuilder.playSound(SoundEvents.CREEPER_PRIMED, 1D, 1.6D)
-                .addActions(SpellAction.CASTER_USE_COMMAND.create("effect give @p minecraft:slow_falling 1 1 true")))
+            .onCast(PartBuilder.playSound(SoundEvents.CREEPER_PRIMED, 1D, 1.6D))
+            .onCast(PartBuilder.giveSelfEffect(MobEffects.SLOW_FALLING, 25D))
             .onCast(PartBuilder.playSound(SoundEvents.FIRE_EXTINGUISH, 1D, 1.6D))
 
             .teleportForward()
@@ -235,7 +235,7 @@ public class RangerSpells implements ExileRegistryInit {
             .weaponReq(CastingWeapon.ANY_WEAPON)
             .attackStyle(PlayStyle.ranged)
             .onCast(PartBuilder.playSound(SoundEvents.ARROW_SHOOT, 1D, 1D))
-            .onCast(PartBuilder.justAction(SpellAction.CASTER_USE_COMMAND.create("/give @s minecraft:arrow 64")))
+            .onCast(PartBuilder.justAction(SpellAction.GIVE_ITEM.create(Items.ARROW, 64D)))
             .build();
 
     }

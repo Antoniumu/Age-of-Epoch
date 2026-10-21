@@ -60,12 +60,17 @@ public class ValueCalculation implements JsonExileRegistry<ValueCalculation>, IA
 
         float amount = 0;
         if (attack_scaling.getValue(provider) > 0) {
+            float weaponAttack = 0;
             for (Stat stat : new AttackDamage(Elements.Earth).generateAllPossibleStatVariations()) {
-                amount += provider.getCasterData()
+                weaponAttack += provider.getCasterData()
                     .getUnit()
                     .getCalculatedStat(stat.GUID())
-                    .getValue() * attack_scaling.getValue(provider);
+                    .getValue();
             }
+            if (weaponAttack <= 0F) {
+                weaponAttack = StatScaling.NORMAL.scale(6F, provider.getCasterLevel());
+            }
+            amount += weaponAttack * attack_scaling.getValue(provider);
         }
         amount += getAllScalingValues().stream()
             .mapToInt(x -> x.getCalculatedValue(provider))
