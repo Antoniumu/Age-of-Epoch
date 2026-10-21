@@ -4,8 +4,10 @@ import com.robertx22.age_of_exile.database.base.CreativeTabs;
 import com.robertx22.age_of_exile.database.data.currency.base.IShapedRecipe;
 import com.robertx22.age_of_exile.mmorpg.registers.common.items.SlashItems;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import com.robertx22.age_of_exile.uncommon.utilityclasses.ItemUtils;
 import com.robertx22.age_of_exile.vanilla_mc.items.misc.AutoItem;
 import com.robertx22.forge_compat.data.ShapedRecipeBuilder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -20,7 +22,8 @@ public class SpellResetPotion extends AutoItem implements IShapedRecipe {
 
     public SpellResetPotion() {
         super(new Item.Properties()
-            .stacksTo(10));
+            .stacksTo(10)
+            .component(DataComponents.CONSUMABLE, ItemUtils.drinkConsumable(1.5F)));
     }
 
     @Override
@@ -40,6 +43,8 @@ public class SpellResetPotion extends AutoItem implements IShapedRecipe {
             p.addItem(new ItemStack(Items.GLASS_BOTTLE));
         }
 
+        ItemUtils.playConsumeSound(world, player, stack);
+
         return stack;
     }
 
@@ -56,7 +61,7 @@ public class SpellResetPotion extends AutoItem implements IShapedRecipe {
     }
 
     @Override public int getUseDuration(ItemStack stack, net.minecraft.world.entity.LivingEntity entity) {
-        return 30;
+        return ItemUtils.useDuration(stack, 30);
     }
 
     @Override
