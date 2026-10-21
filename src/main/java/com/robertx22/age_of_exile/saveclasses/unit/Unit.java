@@ -180,7 +180,7 @@ public class Unit {
 
     public StatData magicShieldData() {
         try {
-            return getCalculatedStat(com.robertx22.age_of_exile.database.data.stats.types.defense.DamageShield.GUID);
+            return getCalculatedStat(com.robertx22.age_of_exile.database.data.stats.types.defense.DamageShield.getInstance().GUID());
         } catch (Exception e) {
         }
         return StatData.empty();
