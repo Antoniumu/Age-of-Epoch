@@ -69,10 +69,6 @@ public class TowerStructureProcessor implements StructureProcessor {
             }
         }
 
-        if (processedBlockInfo.state().is(Blocks.SOUL_CAMPFIRE)) {
-            return createBossMarker(processedBlockInfo.pos(), true);
-        }
-
         if (processedBlockInfo.state().is(BlockTags.ALL_SIGNS)) {
             String raw = processedBlockInfo.nbt() != null ? processedBlockInfo.nbt().toString() : "";
 
@@ -128,11 +124,39 @@ public class TowerStructureProcessor implements StructureProcessor {
         String mobId = TOWER_MOBS.get(random.nextInt(TOWER_MOBS.size()));
         CompoundTag tag = new CompoundTag();
         tag.putString("id", "minecraft:mob_spawner");
-        CompoundTag spawnData = new CompoundTag();
+        tag.putShort("Delay", (short) 20);
+        tag.putShort("MinSpawnDelay", (short) 200);
+        tag.putShort("MaxSpawnDelay", (short) 400);
+        tag.putShort("SpawnCount", (short) 2);
+        tag.putShort("MaxNearbyEntities", (short) 4);
+        tag.putShort("RequiredPlayerRange", (short) 24);
+        tag.putShort("SpawnRange", (short) 4);
+
         CompoundTag entityTag = new CompoundTag();
         entityTag.putString("id", mobId);
+        entityTag.putBoolean("PersistenceRequired", true);
+        net.minecraft.nbt.ListTag tags = new net.minecraft.nbt.ListTag();
+        tags.add(net.minecraft.nbt.StringTag.valueOf(TowerBoss.MOB_TAG));
+        entityTag.put("Tags", tags);
+
+        CompoundTag light = new CompoundTag();
+        light.putInt("min_inclusive", 0);
+        light.putInt("max_inclusive", 15);
+        CompoundTag rules = new CompoundTag();
+        rules.put("block_light_limit", light);
+        rules.put("sky_light_limit", light.copy());
+
+        CompoundTag spawnData = new CompoundTag();
         spawnData.put("entity", entityTag);
+        spawnData.put("custom_spawn_rules", rules);
         tag.put("SpawnData", spawnData);
+
+        CompoundTag potential = new CompoundTag();
+        potential.putInt("weight", 1);
+        potential.put("data", spawnData.copy());
+        net.minecraft.nbt.ListTag potentials = new net.minecraft.nbt.ListTag();
+        potentials.add(potential);
+        tag.put("SpawnPotentials", potentials);
         return new StructureTemplate.StructureBlockInfo(pos, Blocks.SPAWNER.defaultBlockState(), tag);
     }
 
