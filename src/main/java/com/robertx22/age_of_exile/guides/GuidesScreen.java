@@ -36,34 +36,27 @@ import java.util.List;
  * характеристики, таланты, заклинания. Кнопка «Собрать» работает только
  * на Полигоне и собирает билд целиком.
  *
- * Вёрстка: панель 256×210. Текстура панели (full_stats_panel.png) — это рамка
- * 8 px вокруг плоской середины (строки 8..169), поэтому панель рисуется
- * 9-slice'ом: рамка как есть, середина тайлится полосами по 16 px.
- * Любой текст режется по ширине и по нижней границе области — за панель
- * ничего не выезжает, длинные строки получают «…».
+ * Вёрстка: панель 300×220 под отдельную текстуру guides_panel.png
+ * (та же рамка 8 px, что у full_stats_panel.png, но без тайлинга — иначе на
+ * стыках полос видны швы). Любой текст режется по ширине и по нижней границе
+ * области — за панель ничего не выезжает, длинные строки получают «…».
  */
 public class GuidesScreen extends BaseScreen implements INamedScreen {
 
-    private static final Identifier PANEL = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/full_stats_panel.png");
+    private static final Identifier PANEL = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/guides_panel.png");
     private static final Identifier ICON = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/icons/guides.png");
 
-    static final int SIZE_X = 256;
-    static final int SIZE_Y = 210;
-
-    /** рамка панели в текстуре */
-    private static final int BORDER = 8;
-    /** строка текстуры, которой тайлится середина панели */
-    private static final int PANEL_INNER_V = 8;
-    private static final int PANEL_INNER_BAND = 16;
+    static final int SIZE_X = 300;
+    static final int SIZE_Y = 220;
 
     private static final int LINE = 9;
 
     // --- геометрия колонок (относительно guiLeft / guiTop)
-    private static final int LEFT_X = 8;
-    private static final int LEFT_W = 104;
-    private static final int RIGHT_X = 118;
-    private static final int RIGHT_W = 130;
-    private static final int TOP_Y = 22;
+    private static final int LEFT_X = 16;
+    private static final int LEFT_W = 126;
+    private static final int RIGHT_X = 150;
+    private static final int RIGHT_W = 134;
+    private static final int TOP_Y = 24;
     private static final int BAR_Y = SIZE_Y - 30;
 
     public int selected = 0;
@@ -121,7 +114,7 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
             GuideDefinition g = GuideData.all().get(i);
             boolean active = g.id.equals(activeId);
             String prefix = active ? "§a● " : (index == selected ? "§e> " : "§7○ ");
-            addButton(new GuideButton(listX, listY + i * 21, LEFT_W, 19, prefix + g.name,
+            addButton(new GuideButton(listX, listY + i * 22, LEFT_W, 20, prefix + g.name,
                 b -> {
                     selected = index;
                     this.init();
@@ -129,9 +122,9 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
                 tooltipFor(g)));
         }
 
-        int actionY = listY + GuideData.all().size() * 21 + 4;
+        int actionY = listY + GuideData.all().size() * 22 + 6;
 
-        addButton(new GuideButton(listX, actionY, LEFT_W, 18, "§bСделать активным", b -> {
+        addButton(new GuideButton(listX, actionY, LEFT_W, 20, "§bСделать активным", b -> {
             GuideDefinition g = guide();
             if (g != null) {
                 Packets.sendToServer(GuidesPacket.select(g.id));
@@ -142,7 +135,7 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
             Component.literal("начнут подсвечивать следующий шаг.")
                 .withStyle(ChatFormatting.GRAY))));
 
-        addButton(new GuideButton(listX, actionY + 20, LEFT_W, 18, "§7Отключить гайд", b ->
+        addButton(new GuideButton(listX, actionY + 22, LEFT_W, 20, "§7Отключить гайд", b ->
             Packets.sendToServer(GuidesPacket.clear()),
             List.of(Component.literal("Снять подсветку").withStyle(ChatFormatting.GRAY))));
 
@@ -150,7 +143,7 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
         int barY = guiTop + BAR_Y;
         int x = guiLeft + LEFT_X;
 
-        addButton(new GuideButton(x, barY, 66, 20,
+        addButton(new GuideButton(x, barY, 72, 22,
             inSimulation() ? "§6Собрать" : "§8Собрать", b -> {
             GuideDefinition g = guide();
             if (g != null) {
@@ -164,19 +157,19 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
                 .withStyle(ChatFormatting.GRAY),
             Component.literal("и выдаёт экипировку под гайд.")
                 .withStyle(ChatFormatting.GRAY))));
-        x += 70;
+        x += 76;
 
-        addButton(new GuideButton(x, barY, 54, 20, "§eТаланты", b ->
+        addButton(new GuideButton(x, barY, 58, 22, "§eТаланты", b ->
             mc.gui.setScreen(new TalentsScreen()),
             List.of(Component.literal("Открыть Дерево талантов").withStyle(ChatFormatting.YELLOW))));
-        x += 58;
+        x += 62;
 
-        addButton(new GuideButton(x, barY, 56, 20, "§bСпеллы", b ->
+        addButton(new GuideButton(x, barY, 60, 22, "§bСпеллы", b ->
             mc.gui.setScreen(new SpellScreen()),
             List.of(Component.literal("Открыть экран заклинаний").withStyle(ChatFormatting.AQUA))));
-        x += 60;
+        x += 64;
 
-        addButton(new GuideButton(x, barY, 52, 20, "§aСтаты", b ->
+        addButton(new GuideButton(x, barY, 56, 22, "§aСтаты", b ->
             mc.gui.setScreen(new CharacterScreen()),
             List.of(Component.literal("Открыть экран персонажа").withStyle(ChatFormatting.GREEN))));
     }
@@ -205,7 +198,7 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
         GuideDefinition guide = guide();
 
         AbstractGui.drawShadow(mc.font, matrix, "§6ГАЙДЫ §7— готовые сборки",
-            guiLeft + BORDER + 2, guiTop + 9, 0xFFFFFF);
+            guiLeft + LEFT_X, guiTop + 10, 0xFFFFFF);
 
         if (guide == null) {
             AbstractGui.drawShadow(mc.font, matrix, "§cГайды не загружены",
@@ -215,7 +208,7 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
         }
 
         // разделитель колонок
-        int dividerX = guiLeft + RIGHT_X - 4;
+        int dividerX = guiLeft + RIGHT_X - 6;
         AbstractGui.fill(matrix, dividerX, guiTop + TOP_Y - 2, dividerX + 1,
             guiTop + BAR_Y - 6, 0x40FFFFFF);
 
@@ -326,7 +319,7 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
         GuideAdvisor.Progress progress = GuideAdvisor.progress(mc.player);
 
         int x = guiLeft + LEFT_X;
-        int y = guiTop + TOP_Y + GuideData.all().size() * 21 + 4 + 20 + 18 + 6;
+        int y = guiTop + TOP_Y + GuideData.all().size() * 22 + 6 + 22 + 22 + 12;
         int contentBottom = guiTop + BAR_Y - 6;
 
         if (y + LINE > contentBottom) {
@@ -334,8 +327,8 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
         }
 
         if (!inSimulation()) {
-            line(matrix, "§8Сборка — только на Полигоне", x, y, LEFT_W, 0x808080);
-            y += LINE + 1;
+            line(matrix, "§8Сборка — на Полигоне", x, y, LEFT_W, 0x808080);
+            y += LINE + 2;
         }
 
         if (progress == null || progress.advice.isEmpty() || y + LINE > contentBottom) {
@@ -358,24 +351,9 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
     }
 
     // ------------------------------------------------------------------ панель
-    /**
-     * 9-slice панели: верхняя и нижняя рамки берутся из текстуры как есть,
-     * середина повторяется полосами — так панель можно сделать выше
-     * исходных 178 px без прозрачных полос и растянутого «шума».
-     */
+    /** Панель целиком одним blit'ом: текстура ровно 300×220, швов нет. */
     static void drawPanel(PoseStack matrix, int x, int y, int width, int height) {
-        int w = Math.min(width, 256);
-        AbstractGui.blit(matrix, x, y, 0, 0, w, BORDER);
-        AbstractGui.blit(matrix, x, y + height - BORDER, 0, 170, w, BORDER);
-
-        int inner = height - BORDER * 2;
-        int done = 0;
-        while (done < inner) {
-            int part = Math.min(PANEL_INNER_BAND, inner - done);
-            AbstractGui.blit(matrix, x, y + BORDER + done, w, part,
-                0, PANEL_INNER_V, w, part, 256, 256);
-            done += part;
-        }
+        AbstractGui.blit(matrix, x, y, 0, 0, width, height);
     }
 
     // ------------------------------------------------------------------ текст
