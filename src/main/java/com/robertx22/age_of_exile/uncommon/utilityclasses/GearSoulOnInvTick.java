@@ -25,8 +25,19 @@ public class GearSoulOnInvTick {
                 return;
             }
 
+            boolean changed = false;
             for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-                tryStack(player, player.getInventory().getItem(i));
+                ItemStack stack = player.getInventory().getItem(i);
+                if (tryStack(player, stack)) {
+                    player.getInventory().setItem(i, stack.copy());
+                    changed = true;
+                }
+            }
+            if (changed) {
+                player.inventoryMenu.broadcastChanges();
+                if (player.containerMenu != null && player.containerMenu != player.inventoryMenu) {
+                    player.containerMenu.broadcastChanges();
+                }
             }
 
         } catch (Exception e) {
@@ -35,9 +46,9 @@ public class GearSoulOnInvTick {
 
     }
 
-    static void tryStack(Player player, ItemStack stack) {
+    static boolean tryStack(Player player, ItemStack stack) {
         if (stack.isEmpty()) {
-            return;
+            return false;
         }
 
         if (StackSaving.STAT_SOULS.has(stack)) {
@@ -48,6 +59,7 @@ public class GearSoulOnInvTick {
                     GearItemData gear = soul.createGearData(stack);
                     StackNBT.getOrCreate(stack).remove(StatSoulItem.TAG);
                     gear.saveToStack(stack);
+                    return true;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -78,11 +90,13 @@ public class GearSoulOnInvTick {
                     stack.shrink(1);
                     PlayerUtils.giveItem(new ItemStack(Items.GUNPOWDER), player); // todo give specific fail items for each profession?
                 }
+                return true;
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
+        return false;
     }
 
 }

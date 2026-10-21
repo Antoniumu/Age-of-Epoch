@@ -73,13 +73,9 @@ public class StackNBT {
     public static CompoundTag getOrCreate(ItemStack stack) {
         if (stack == null) return new CompoundTag();
         CustomData data = stack.get(DataComponents.CUSTOM_DATA);
-        if (data == null) {
-            CompoundTag tag = new CompoundTag();
-            data = createLiveCustomData(tag);
-            stack.set(DataComponents.CUSTOM_DATA, data);
-            return tag;
-        }
-        return getLiveTag(data);
+        CompoundTag tag = data != null ? data.copyTag() : new CompoundTag();
+        stack.set(DataComponents.CUSTOM_DATA, createLiveCustomData(tag));
+        return tag;
     }
 
     public static void set(ItemStack stack, CompoundTag tag) {

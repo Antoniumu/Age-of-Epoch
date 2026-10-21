@@ -54,12 +54,8 @@ public class Gear {
         if (stack == null) {
             return;
         }
-        if (!StackNBT.has(stack)) {
-            StackNBT.set(stack, new CompoundTag());
-        }
         if (gear != null) {
-
-            LoadSave.Save(gear, StackNBT.get(stack), LOC);
+            LoadSave.Save(gear, StackNBT.getOrCreate(stack), LOC);
         }
 
     }
