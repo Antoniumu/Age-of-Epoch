@@ -34,6 +34,63 @@ public class GuideMath {
         return StatScaling.NORMAL.scale(1F, level);
     }
 
+    /** Значение GUIDE_MAX_LEVEL по умолчанию (совпадает с GameBalanceConfig). */
+    public static final int DEFAULT_GUIDE_MAX_LEVEL = GameBalanceConfig.DEFAULT_GUIDE_MAX_LEVEL;
+
+    /**
+     * До какого уровня гайд ведёт игрока. Задаётся хостом через датапак
+     * (game_balance → GUIDE_MAX_LEVEL); метод терпит отсутствие реестра.
+     */
+    public static int guideMaxLevel() {
+        GameBalanceConfig cfg = null;
+        try {
+            cfg = GameBalanceConfig.get();
+        } catch (Exception ignored) {
+        }
+        if (cfg == null) {
+            return DEFAULT_GUIDE_MAX_LEVEL;
+        }
+        try {
+            return cfg.guideMaxLevel();
+        } catch (Exception e) {
+            return DEFAULT_GUIDE_MAX_LEVEL;
+        }
+    }
+
+    /**
+     * Уровень, обрезанный охватом гайда. Все «цели» гайда считаются на этом
+     * уровне, поэтому после предела бюджеты не растут.
+     */
+    public static int cappedLevel(int level) {
+        return Math.max(0, Math.min(level, guideMaxLevel()));
+    }
+
+    /** Персонаж уже выше охвата гайда — подсказывать больше нечего. */
+    public static boolean beyondGuide(int level) {
+        return level > guideMaxLevel();
+    }
+
+    /**
+     * Сколько узлов плана талантов попадает в охват гайда.
+     * Очков талантов на уровне L: 1 + 2L, узел i требует уровня i / 2.
+     */
+    public static int talentStepsInScope(GuideDefinition guide) {
+        if (guide == null) {
+            return 0;
+        }
+        int cap = guideMaxLevel();
+        // очков талантов на уровне cap — столько узлов максимум можно взять
+        int points = talentBudget(cap);
+        int n = 0;
+        for (int i = 0; i < guide.talents.size(); i++) {
+            if (GuideDefinition.levelNeededForTalentStep(i) > cap || i + 1 > points) {
+                break;
+            }
+            n = i + 1;
+        }
+        return n;
+    }
+
     /** Сколько очков характеристик доступно на уровне. */
     public static int statBudget(int level) {
         return (int) (level * GameBalanceConfig.get().STAT_POINTS_PER_LEVEL);
