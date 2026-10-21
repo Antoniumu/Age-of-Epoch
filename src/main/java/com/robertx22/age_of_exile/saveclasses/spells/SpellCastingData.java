@@ -5,6 +5,7 @@ import com.robertx22.age_of_exile.capability.player.EntitySpellCap;
 import com.robertx22.age_of_exile.config.forge.ServerContainer;
 import com.robertx22.age_of_exile.database.data.spells.SpellCastType;
 import com.robertx22.age_of_exile.database.data.spells.components.Spell;
+import com.robertx22.age_of_exile.database.data.spells.spell_classes.CastingWeapon;
 import com.robertx22.age_of_exile.database.data.spells.spell_classes.bases.SpellCastContext;
 import com.robertx22.age_of_exile.database.registry.ExileDB;
 import com.robertx22.age_of_exile.mmorpg.MMORPG;
@@ -309,13 +310,15 @@ public class SpellCastingData {
                     return false;
                 }
 
-                GearItemData wep = Gear.Load(ctx.caster.getMainHandItem());
+                if (spell.getConfig().castingWeapon != CastingWeapon.ANY_WEAPON) {
+                    GearItemData wep = Gear.Load(ctx.caster.getMainHandItem());
 
-                if (wep != null && !wep.canPlayerWear(ctx.data)) {
-                    if (ctx.caster instanceof ServerPlayer) {
-                        OnScreenMessageUtils.sendMessage((ServerPlayer) ctx.caster, Component.literal("Требования оружия не выполнены"), ClientboundTitleCompatPacket.Type.ACTIONBAR);
+                    if (wep != null && !wep.canPlayerWear(ctx.data)) {
+                        if (ctx.caster instanceof ServerPlayer) {
+                            OnScreenMessageUtils.sendMessage((ServerPlayer) ctx.caster, Component.literal("Требования оружия не выполнены"), ClientboundTitleCompatPacket.Type.ACTIONBAR);
+                        }
+                        return false;
                     }
-                    return false;
                 }
 
                 return true;

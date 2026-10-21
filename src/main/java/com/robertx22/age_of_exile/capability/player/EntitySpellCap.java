@@ -177,7 +177,7 @@ public class EntitySpellCap {
         @Override
         public int getFreeSpellPoints() {
             return (int) (GameBalanceConfig.get().SPELL_POINTS_PER_LEVEL * Load.Unit(entity)
-                .getLevel()) - getSpentSpellPoints();
+                .getLevel()) + this.spellData.bonus_spell_points - getSpentSpellPoints();
         }
 
         @Override

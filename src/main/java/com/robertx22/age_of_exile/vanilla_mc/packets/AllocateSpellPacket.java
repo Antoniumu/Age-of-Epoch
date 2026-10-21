@@ -1,15 +1,18 @@
 package com.robertx22.age_of_exile.vanilla_mc.packets;
 
 import com.robertx22.age_of_exile.capability.player.EntitySpellCap;
+import com.robertx22.age_of_exile.capability.player.RPGPlayerData;
 import com.robertx22.age_of_exile.database.data.spell_school.SpellSchool;
 import com.robertx22.age_of_exile.database.data.spells.components.Spell;
 import com.robertx22.age_of_exile.database.registry.ExileDB;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import com.robertx22.age_of_exile.uncommon.utilityclasses.WorldUtils;
 import com.robertx22.library_of_exile.main.MyPacket;
 import com.robertx22.library_of_exile.packets.ExilePacketContext;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
 
 public class AllocateSpellPacket extends MyPacket<AllocateSpellPacket> {
 
@@ -54,20 +57,33 @@ public class AllocateSpellPacket extends MyPacket<AllocateSpellPacket> {
 
     @Override
     public void onReceived(ExilePacketContext ctx) {
-
-        EntitySpellCap.ISpellsCap spells = Load.spells(ctx.getPlayer());
+        Player player = ctx.getPlayer();
+        EntitySpellCap.ISpellsCap spells = Load.spells(player);
 
         Spell spell = ExileDB.Spells()
             .get(this.spellid);
         SpellSchool school = ExileDB.SpellSchools()
             .get(this.schoolid);
 
-        if (spells.canLearn(school, spell)) {
+        if (this.action == ACTION.REMOVE) {
+            boolean inSim = WorldUtils.isSimulationWorld(player.level());
+            RPGPlayerData rpgData = Load.playerRPGData(player);
+            if (inSim || rpgData.talents.reset_points > 0) {
+                if (spells.getSpellsData().unlearnNode(this.spellid, school)) {
+                    if (!inSim && rpgData.talents.reset_points > 0) {
+                        rpgData.talents.reset_points--;
+                        rpgData.syncToClient(player);
+                    }
+                    Load.Unit(player).setEquipsChanged(true);
+                }
+            }
+        } else if (spell != null && school != null && spells.canLearn(school, spell)) {
             spells.getSpellsData()
                 .learnSpell(spell, school);
+            Load.Unit(player).setEquipsChanged(true);
         }
 
-        spells.syncToClient(ctx.getPlayer());
+        spells.syncToClient(player);
 
     }
 

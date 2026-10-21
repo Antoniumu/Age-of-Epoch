@@ -6,8 +6,10 @@ import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
 import com.robertx22.age_of_exile.saveclasses.player_skills.PlayerSkillEnum;
 import com.robertx22.age_of_exile.saveclasses.stat_soul.StatSoulData;
 import com.robertx22.age_of_exile.saveclasses.stat_soul.StatSoulItem;
+import com.robertx22.age_of_exile.uncommon.datasaving.Gear;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.datasaving.StackSaving;
+import com.robertx22.library_of_exile.utils.LoadSave;
 import com.robertx22.library_of_exile.utils.RandomUtils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -91,6 +93,16 @@ public class GearSoulOnInvTick {
                     PlayerUtils.giveItem(new ItemStack(Items.GUNPOWDER), player); // todo give specific fail items for each profession?
                 }
                 return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (Gear.has(stack)) {
+            try {
+                GearItemData gear = LoadSave.Load(GearItemData.class, new GearItemData(), StackNBT.get(stack), "GEAR_ITEM_DATA");
+                if (Gear.repairIfMismatched(stack, gear)) {
+                    Load.Unit(player).setEquipsChanged(true);
+                    return true;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

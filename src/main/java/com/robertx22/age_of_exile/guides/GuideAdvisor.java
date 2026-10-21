@@ -1028,17 +1028,26 @@ public class GuideAdvisor {
             SimulationManager.syncAll(player);
         }
 
-        // первое заклинание плана — в хотбар, если он пуст
+        // изученные заклинания плана — в хотбар
         try {
-            if (spellData.hotbars.isEmpty()) {
-                for (GuideDefinition.SpellStep step : guide.spells) {
-                    if (spellData.getLevelOf(step.spell) > 0) {
-                        spellData.hotbars.put(0, step.spell);
-                        break;
+            int slot = 0;
+            for (GuideDefinition.SpellStep step : guide.spells) {
+                if (slot >= 8) {
+                    break;
+                }
+                if (ExileDB.Spells().isRegistered(step.spell) && spellData.getLevelOf(step.spell) > 0) {
+                    if (!spellData.hotbars.containsValue(step.spell)) {
+                        while (slot < 8 && spellData.hotbars.containsKey(slot)) {
+                            slot++;
+                        }
+                        if (slot < 8) {
+                            spellData.hotbars.put(slot, step.spell);
+                            slot++;
+                        }
                     }
                 }
-                Load.spells(player).syncToClient(player);
             }
+            Load.spells(player).syncToClient(player);
         } catch (Exception ignored) {
         }
     }

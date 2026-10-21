@@ -2,6 +2,7 @@ package com.robertx22.age_of_exile.vanilla_mc.packets.spells;
 
 import com.robertx22.age_of_exile.capability.player.EntitySpellCap;
 import com.robertx22.age_of_exile.database.data.spells.components.Spell;
+import com.robertx22.age_of_exile.database.data.spells.spell_classes.CastingWeapon;
 import com.robertx22.age_of_exile.database.data.spells.spell_classes.bases.SpellCastContext;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
@@ -41,11 +42,10 @@ public class TellServerToCastSpellPacket extends MyPacket<TellServerToCastSpellP
 
         EntitySpellCap.ISpellsCap spells = Load.spells(player);
 
-        if (player.isBlocking()) {
-            return false;
-        }
-
         if (spell != null) {
+            if (player.isBlocking() && spell.getConfig().castingWeapon != CastingWeapon.ANY_WEAPON) {
+                return false;
+            }
 
             if (spells.getCastingData()
                 .canCast(spell, player)) {
@@ -55,7 +55,11 @@ public class TellServerToCastSpellPacket extends MyPacket<TellServerToCastSpellP
                 SpellCastContext c = new SpellCastContext(player, 0, spell);
 
                 spell.spendResources(c);
+                if (spells.getCastingData().castingTicksLeft <= 0) {
+                    spells.getCastingData().tryCast(c);
+                }
                 spells.syncToClient(player);
+                Load.Unit(player).syncToClient(player);
 
                 return true;
             }

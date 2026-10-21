@@ -51,6 +51,7 @@ public class GiveItemAction extends SpellAction {
                 PlayerUtils.giveItem(new ItemStack(item, batch), player);
                 remaining -= batch;
             }
+            player.inventoryMenu.broadcastChanges();
         } catch (Exception e) {
             e.printStackTrace();
         }
