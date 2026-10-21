@@ -228,7 +228,10 @@ public final class TowerBoss {
         String mobId = Level.NETHER.equals(level.dimension()) ? "minecraft:wither_skeleton" : "minecraft:vindicator";
         EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(mobId));
         if (type == null) {
-            type = EntityType.VINDICATOR;
+            type = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse("minecraft:vindicator"));
+        }
+        if (type == null) {
+            return null;
         }
         LivingEntity entity = (LivingEntity) type.create(level, EntitySpawnReason.MOB_SUMMONED);
         if (entity == null) {

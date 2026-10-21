@@ -380,9 +380,6 @@ public final class TowerCollapse {
         if (value instanceof Identifier id) {
             return ResourceKey.create(Registries.LOOT_TABLE, id);
         }
-        if (value instanceof OptionalLike optional) {
-            return asLootKey(optional.orElse(null));
-        }
         if (value instanceof java.util.Optional<?> optional) {
             return optional.map(TowerCollapse::asLootKey).orElse(null);
         }
@@ -398,9 +395,9 @@ public final class TowerCollapse {
         double z = pos.getZ() + 0.5D;
         ItemEntity entity = new ItemEntity(level, x, y, z, stack);
         entity.setDeltaMovement(
-            (level.random.nextDouble() - 0.5D) * 0.25D,
-            0.18D + level.random.nextDouble() * 0.12D,
-            (level.random.nextDouble() - 0.5D) * 0.25D);
+            (level.getRandom().nextDouble() - 0.5D) * 0.25D,
+            0.18D + level.getRandom().nextDouble() * 0.12D,
+            (level.getRandom().nextDouble() - 0.5D) * 0.25D);
         entity.setPickUpDelay(15);
         level.addFreshEntity(entity);
     }
