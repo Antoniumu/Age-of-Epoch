@@ -124,3 +124,73 @@ javac -J-Xmx3G -Xmaxerrs 20000 -encoding UTF-8 --release 25 -proc:none `
 ```
 
 Задача `dshClasspath` и флаг `-PdshMaxErrs` — вспомогательные, добавлены в `build.gradle`.
+
+## 6. Если `compileJava` не видит Minecraft (обновление 2026-10-21)
+
+Симптом ровно один и он узнаваем:
+
+```
+error: package net.minecraft.network.chat does not exist
+error: package net.minecraft.world.entity.player does not exist
+...
+> java.lang.NullPointerException: Cannot invoke
+  "javax.lang.model.element.TypeElement.getNestingKind()" because "typeElement" is null
+```
+
+Это **не ошибки исходников**. Оба признака — следствие одного: на compile classpath нет
+(или он пуст/обрезан) remap-нутый jar Minecraft, который Loom кладёт в
+`.gradle\loom-cache\minecraftMaven\...`. javac тогда не находит ни одного `net.minecraft.*`,
+а annotation processor миксинов падает с NPE, потому что поиск целевого класса возвращает null.
+
+Доказательство, что дело не в коде: `build.gradle` и `gradle.properties` между успешной
+сборкой (§1) и этим логом не менялись (в PR #59 добавлены только строки про Trinkets),
+а ни один java-файл не может «потерять» ванильные пакеты.
+
+### Лечение
+
+```bat
+build.bat repair      :: удаляет .gradle\loom-cache, кэши fabric-loom / com.mojang /
+                      :: net.minecraft / net.fabricmc и пересобирает с --refresh-dependencies
+```
+
+Вручную то же самое:
+
+```powershell
+Remove-Item -Recurse -Force .gradle\loom-cache
+Remove-Item -Recurse -Force "$env:GRADLE_USER_HOME\caches\fabric-loom"
+Remove-Item -Recurse -Force "$env:GRADLE_USER_HOME\caches\modules-2\files-2.1\com.mojang"
+.\gradlew.bat build --refresh-dependencies --no-problems-report
+```
+
+Если после `repair` картина та же, удалите кэши целиком и соберите снова (дольше, но
+гарантированно с нуля):
+
+```powershell
+Remove-Item -Recurse -Force .gradle, .gradle-home
+.\gradlew.bat build --refresh-dependencies --no-problems-report
+```
+
+Обычно помогает сразу: пересборка скачивает манифест версии, библиотеки и заново ремапит
+Minecraft (это самый долгий шаг, 1–3 минуты). Кэш пересоздаётся и целиком, поэтому обрезанный
+jar (нехватка места, антивирус, прерванный/OOM-нутый ремап при `-Xmx4G` из `gradle.properties`)
+больше не используется.
+
+### Если не помогло
+
+```bat
+build.bat diagnose    :: пишет build-diagnose.txt
+```
+
+Отчёт содержит версию JDK, содержимое `.gradle\loom-cache`, разобранный compile classpath и
+проверку самого jar (`net/minecraft/...` записи). Ищите строку `=== Verdict`:
+
+- `Minecraft is NOT on the compile classpath` — Loom не смог разрешить зависимость
+  (`minecraft "com.mojang:minecraft:26.3"`); смотреть `gradlew dependencies --configuration compileClasspath`;
+- `holds no net/minecraft classes` — jar скачался битым (место на диске, антивирус,
+  прерванный ремап): повторить `build.bat repair`, при повторе поднять `-Xmx` в `gradle.properties`;
+- `[OK]` — Minecraft на месте, значит ошибки действительно в исходниках; полный их список
+  без ограничения в 100 штук: `build.bat compileJava -PdshMaxErrs=4000`.
+
+С этого момента сборка сама проверяет это состояние: задача `checkMinecraftClasspath`
+(перед `compileJava`) падает с одной понятной строкой вместо сотни ложных ошибок.
+Обойти проверку, если она вдруг сработает на здоровой сборке: `-PskipMcCheck`.

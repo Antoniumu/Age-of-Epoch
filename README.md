@@ -31,6 +31,18 @@
 ./gradlew runClient      # запуск клиента для проверки
 ```
 
+На Windows удобнее `build.bat` (сам находит JDK 25, кэши держит в `.gradle-home`):
+
+```bat
+build.bat                :: собрать мод
+build.bat repair         :: починить сборку: сброс кэшей Loom/Minecraft + --refresh-dependencies
+build.bat diagnose       :: build-diagnose.txt: видит ли javac Minecraft на classpath
+```
+
+Если `compileJava` сыплет `package net.minecraft.* does not exist` и падает с
+`NullPointerException` в `TypeElement.getNestingKind()` — это битый кэш Loom, а не код;
+лечится `build.bat repair`, подробности в [`BUILD-REPORT.md`](BUILD-REPORT.md) §6.
+
 ## Управление
 
 Всё управление прежнее (кнопка H — хаб, панель заклинаний и т.д.), перевод выполнен
