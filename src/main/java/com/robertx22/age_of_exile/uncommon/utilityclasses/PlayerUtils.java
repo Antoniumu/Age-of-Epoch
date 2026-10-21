@@ -1,7 +1,7 @@
 package com.robertx22.age_of_exile.uncommon.utilityclasses;
 
-import com.robertx22.age_of_exile.a_libraries.curios.MyCurioUtils;
-import com.robertx22.age_of_exile.a_libraries.curios.RefCurio;
+import com.robertx22.age_of_exile.a_libraries.trinkets.MyTrinketUtils;
+import com.robertx22.age_of_exile.a_libraries.trinkets.TrinketSlots;
 import com.robertx22.age_of_exile.database.data.gear_types.bases.BaseGearType;
 import com.robertx22.age_of_exile.event_hooks.my_events.CollectGearEvent;
 import com.robertx22.age_of_exile.saveclasses.unit.GearData;
@@ -41,11 +41,11 @@ public class PlayerUtils {
 
         if (type.getVanillaSlotType() == null) {
             List<ItemStack> list = new ArrayList<>();
-            if (type.gear_slot.equals(RefCurio.RING)) {
-                list.addAll(MyCurioUtils.getAllSlots(Arrays.asList(RefCurio.RING), player));
+            if (type.gear_slot.equals(TrinketSlots.RING.name)) {
+                list.addAll(MyTrinketUtils.getAllSlots(Arrays.asList(TrinketSlots.RING.name), player));
             }
-            if (type.gear_slot.equals(RefCurio.NECKLACE)) {
-                list.addAll(MyCurioUtils.getAllSlots(Arrays.asList(RefCurio.NECKLACE), player));
+            if (type.gear_slot.equals(TrinketSlots.NECKLACE.name)) {
+                list.addAll(MyTrinketUtils.getAllSlots(Arrays.asList(TrinketSlots.NECKLACE.name), player));
             }
             return list;
         } else {

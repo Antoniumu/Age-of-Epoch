@@ -1,6 +1,6 @@
 package com.robertx22.age_of_exile.damage_hooks;
 
-import com.robertx22.age_of_exile.a_libraries.curios.MyCurioUtils;
+import com.robertx22.age_of_exile.a_libraries.trinkets.MyTrinketUtils;
 import com.robertx22.age_of_exile.damage_hooks.util.AttackInformation;
 import com.robertx22.age_of_exile.damage_hooks.util.DmgSourceUtils;
 import com.robertx22.age_of_exile.database.data.gear_slots.GearSlot;
@@ -38,9 +38,9 @@ public class LivingHurtUtils {
 
             Player player = (Player) en;
 
-            List<ItemStack> curios = MyCurioUtils.getAllSlots(player);
+            List<ItemStack> trinkets = MyTrinketUtils.getAllSlots(player);
 
-            curios.forEach(x -> x.hurtAndBreak(getItemDamage(dmg), player, EquipmentSlot.MAINHAND));
+            trinkets.forEach(x -> x.hurtAndBreak(getItemDamage(dmg), player, EquipmentSlot.MAINHAND));
 
         }
     }

@@ -1,6 +1,6 @@
 package com.robertx22.age_of_exile.event_hooks.ontick;
 
-import com.robertx22.age_of_exile.a_libraries.curios.MyCurioUtils;
+import com.robertx22.age_of_exile.a_libraries.trinkets.MyTrinketUtils;
 import com.robertx22.age_of_exile.config.forge.ServerContainer;
 import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
 import com.robertx22.age_of_exile.uncommon.datasaving.Gear;
@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
-import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
+import eu.pb4.trinkets.api.TrinketInventory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,11 +39,10 @@ public class UnequipGear {
         }
     }
 
-    static void drop(Player player, ICurioStacksHandler handler, int number, ItemStack stack, MutableComponent txt) {
+    static void drop(Player player, TrinketInventory inventory, int number, ItemStack stack, MutableComponent txt) {
 
         ItemStack copy = stack.copy();
-        handler.getStacks()
-            .setStackInSlot(number, ItemStack.EMPTY);
+        inventory.setItem(number, ItemStack.EMPTY);
         PlayerUtils.giveItem(copy, player);
         player.sendSystemMessage(txt);
     }
@@ -71,14 +70,13 @@ public class UnequipGear {
             }
         }
 
-        for (ICurioStacksHandler handler : MyCurioUtils.getHandlers(player)) {
+        for (TrinketInventory handler : MyTrinketUtils.getHandlers(player)) {
 
             for (int i = 0; i < handler
-                .getSlots(); i++) {
+                .getContainerSize(); i++) {
 
                 ItemStack stack = handler
-                    .getStacks()
-                    .getStackInSlot(i);
+                    .getItem(i);
 
                 if (!stack.isEmpty()) {
                     GearItemData gear = Gear.Load(stack);

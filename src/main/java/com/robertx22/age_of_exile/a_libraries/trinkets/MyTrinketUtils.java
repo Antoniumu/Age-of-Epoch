@@ -1,44 +1,48 @@
-package com.robertx22.age_of_exile.a_libraries.curios;
+package com.robertx22.age_of_exile.a_libraries.trinkets;
 
-import com.robertx22.age_of_exile.a_libraries.curios.interfaces.INecklace;
-import com.robertx22.age_of_exile.a_libraries.curios.interfaces.IRing;
+import com.robertx22.age_of_exile.a_libraries.trinkets.interfaces.INecklace;
+import com.robertx22.age_of_exile.a_libraries.trinkets.interfaces.IRing;
 import com.robertx22.age_of_exile.database.data.gear_slots.GearSlot;
 import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
 import com.robertx22.age_of_exile.uncommon.datasaving.Gear;
+import eu.pb4.trinkets.api.TrinketsApi;
+import eu.pb4.trinkets.api.TrinketAttachment;
+import eu.pb4.trinkets.api.TrinketInventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import top.theillusivec4.curios.api.CuriosApi;
-import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
-import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-public class MyCurioUtils {
+public class MyTrinketUtils {
 
     public static List<String> SLOTS = Arrays.asList("ring", "necklace");
 
-    public static List<ICurioStacksHandler> getHandlers(Player player) {
+    public static List<TrinketInventory> getHandlers(Player player) {
         return getHandlers(SLOTS, player);
     }
 
-    public static List<ICurioStacksHandler> getHandlers(List<String> slots, Player player) {
+    public static List<TrinketInventory> getHandlers(List<String> slots, Player player) {
 
-        List<ICurioStacksHandler> list = new ArrayList<>();
+        List<TrinketInventory> list = new ArrayList<>();
 
-        ICuriosItemHandler handler = CuriosApi.getCuriosHelper()
-            .getCuriosHandler(player)
-            .orElse(null);
+        TrinketAttachment attachment = TrinketsApi.getAttachment(player);
 
-        if (handler != null) {
+        if (attachment != null) {
             for (String slot : slots) {
 
-                Optional<ICurioStacksHandler> sh = handler.getStacksHandler(slot);
+                String trinketId = TrinketSlots.trinketId(slot);
 
-                if (sh.isPresent()) {
-                    list.add(sh.get());
+                if (trinketId == null) {
+                    continue;
+                }
+
+                TrinketInventory inventory = attachment.getInventory(trinketId);
+
+                if (inventory != null) {
+                    list.add(inventory);
                 }
 
             }
@@ -48,7 +52,6 @@ public class MyCurioUtils {
 
     public static List<ItemStack> getAllSlots(Player player) {
         return getAllSlots(SLOTS, player);
-
     }
 
     public static ItemStack get(String slot, Player player, int num) {
@@ -84,38 +87,26 @@ public class MyCurioUtils {
 
         List<ItemStack> list = new ArrayList<>();
 
-        List<ICurioStacksHandler> handlers = getHandlers(slots, player);
+        List<TrinketInventory> handlers = getHandlers(slots, player);
         if (!handlers.isEmpty()) {
             handlers.forEach(x -> {
-                for (int i = 0; i < x.getSlots(); i++) {
-                    ItemStack stack = x.getStacks().getStackInSlot(i);
+                for (int i = 0; i < x.getContainerSize(); i++) {
+                    ItemStack stack = x.getItem(i);
                     list.add(stack);
                 }
             });
             return list;
         }
 
-        if (player == null || player.getInventory() == null) {
-            return list;
-        }
-
-        for (String slot : slots) {
-            int maxForSlot = "ring".equals(slot) ? 2 : 1;
-            int found = 0;
-            for (int i = 0; i < player.getInventory().getContainerSize() && found < maxForSlot; i++) {
-                ItemStack stack = player.getInventory().getItem(i);
-                if (matchesSlot(stack, slot)) {
-                    list.add(stack);
-                    found++;
-                }
-            }
-            while (found < maxForSlot) {
-                list.add(ItemStack.EMPTY);
-                found++;
-            }
-        }
-
         return list;
 
     }
+
+    public static boolean isTrinketOfSlot(Item item, String slotName) {
+        if (item instanceof ITrinketType type) {
+            return type.trinketTypeName().equals(slotName);
+        }
+        return false;
+    }
+
 }

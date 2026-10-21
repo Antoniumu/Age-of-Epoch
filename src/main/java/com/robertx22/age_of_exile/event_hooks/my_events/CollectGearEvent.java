@@ -1,6 +1,6 @@
 package com.robertx22.age_of_exile.event_hooks.my_events;
 
-import com.robertx22.age_of_exile.a_libraries.curios.MyCurioUtils;
+import com.robertx22.age_of_exile.a_libraries.trinkets.MyTrinketUtils;
 import com.robertx22.age_of_exile.capability.entity.EntityData;
 import com.robertx22.age_of_exile.damage_hooks.util.AttackInformation;
 import com.robertx22.age_of_exile.saveclasses.unit.GearData;
@@ -63,7 +63,7 @@ public class CollectGearEvent {
             }
         }
         if (entity instanceof Player) {
-            MyCurioUtils.getAllSlots((Player) entity)
+            MyTrinketUtils.getAllSlots((Player) entity)
                 .forEach(x -> {
                     GearData data = new GearData(x, null, unitdata);
                     list.add(data);

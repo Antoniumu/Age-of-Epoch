@@ -1,6 +1,6 @@
 package com.robertx22.age_of_exile.mmorpg;
 
-import com.robertx22.age_of_exile.aoe_data.datapacks.curio_tags.GenerateCurioDataJsons;
+import com.robertx22.age_of_exile.aoe_data.datapacks.trinkets_tags.GenerateTrinketDataJsons;
 import com.robertx22.age_of_exile.aoe_data.datapacks.generators.LootTableGenerator;
 import com.robertx22.age_of_exile.aoe_data.datapacks.generators.RecipeGenerator;
 import com.robertx22.age_of_exile.aoe_data.datapacks.lang_file.CreateLangFile;
@@ -18,7 +18,7 @@ public class DataGeneration {
             ModpackerHelperLists.generate();
 
             CreateLangFile.create();
-            GenerateCurioDataJsons.generate();
+            GenerateTrinketDataJsons.generate();
             ItemModelManager.INSTANCE.generateModels();
         } catch (Exception e) {
             e.printStackTrace();
