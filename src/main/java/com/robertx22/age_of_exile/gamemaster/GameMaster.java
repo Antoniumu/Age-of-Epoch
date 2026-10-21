@@ -349,7 +349,7 @@ public class GameMaster {
     private PlayerProgress progressFor(ServerPlayer player) {
         PlayerProgress progress = data.getOrCreate(player.getUUID()
             .toString(), player.getGameProfile()
-            .getName());
+            .name());
         if (progress.history.isEmpty() && progress.playtime_seconds <= 0) {
             try {
                 progress.level = Load.Unit(player)
