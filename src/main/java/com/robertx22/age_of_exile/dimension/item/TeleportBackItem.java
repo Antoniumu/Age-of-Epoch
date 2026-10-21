@@ -44,6 +44,11 @@ public class TeleportBackItem extends AutoItem {
         stack.shrink(1);
 
         if (!world.isClientSide()) {
+            if (WorldUtils.isSimulationWorld(world) && player instanceof ServerPlayer sp) {
+                com.robertx22.age_of_exile.simulation.SimulationManager.exitSimulation(sp);
+                SoundUtils.playSound(player, SoundEvents.PORTAL_TRAVEL, world.getRandom().nextFloat() * 0.4F + 0.8F, 0.25F);
+                return stack;
+            }
             if (WorldUtils.isMapWorldClass(world)) {
                 BlockPos pos = Load.playerRPGData((Player) player).maps.tel_pos.above();
                 TeleportUtils.teleport((ServerPlayer) player, pos, Level.OVERWORLD.identifier());

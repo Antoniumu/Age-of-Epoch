@@ -35,6 +35,20 @@ public class ControlBlock extends Block implements EntityBlock {
     }
 
     @Nullable
+    @Override
+    public <T extends BlockEntity> net.minecraft.world.level.block.entity.BlockEntityTicker<T> getTicker(
+        net.minecraft.world.level.Level level,
+        BlockState state,
+        net.minecraft.world.level.block.entity.BlockEntityType<T> type
+    ) {
+        return (lvl, pos, st, be) -> {
+            if (be instanceof com.robertx22.forge_compat.blocks.ITickableBlockEntity tickable) {
+                tickable.tick();
+            }
+        };
+    }
+
+    @Nullable
     public BlockEntity newBlockEntity(BlockGetter p_196283_1_) {
         return new ControlBlockEntity();
     }

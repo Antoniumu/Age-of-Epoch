@@ -142,10 +142,10 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
     private boolean expireEffectsDone = false;
 
     // In modern MC a server-initiated removal reaches the client through the
-    // onClientRemoval() hook (invoked by the final setRemoved()), NOT through remove()
+    // onRemoval() hook (invoked by the final setRemoved()), NOT through remove()
     // (that changed after 1.16, where the destroy-entities packet handler called
     // entity.remove()). So the on-expire effects (which include all the client-side
-    // impact particles) must run from both remove() and onClientRemoval(),
+    // impact particles) must run from both remove() and onRemoval(),
     // guarded to run exactly once per side.
     private void runExpireEffects() {
         if (this.expireEffectsDone) {
@@ -175,11 +175,17 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
         super.remove(reason);
     }
 
-    // client-side counterpart of remove(): Entity.setRemoved() is final and calls
-    // this hook when the server removes the entity; remove() is skipped in that path
+    // Entity.setRemoved() is final in modern MC; onRemoval() is the hook it invokes
+    // when the entity is removed (incl. server-initiated removal reaching the client,
+    // where remove() is skipped)
     @Override
+    public void onRemoval(Entity.RemovalReason reason) {
+        runExpireEffects();
+        super.onRemoval(reason);
+    }
+
+    // intentionally no @Override: only acts as the vanilla client-removal hook where it exists
     public void onClientRemoval() {
-        super.onClientRemoval();
         runExpireEffects();
     }
 

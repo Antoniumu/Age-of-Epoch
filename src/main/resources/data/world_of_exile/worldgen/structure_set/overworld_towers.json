@@ -1,0 +1,22 @@
+{
+  "structures": [
+    {
+      "structure": "world_of_exile:stone_brick_tower",
+      "weight": 3
+    },
+    {
+      "structure": "world_of_exile:ladder_tower",
+      "weight": 2
+    },
+    {
+      "structure": "world_of_exile:shortfatfortress",
+      "weight": 2
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 28,
+    "separation": 10,
+    "salt": 14357619
+  }
+}

@@ -162,6 +162,30 @@ public class Unit {
         return StatData.empty();
     }
 
+    public StatData armorData() {
+        try {
+            return getCalculatedStat(com.robertx22.age_of_exile.database.data.stats.types.defense.Armor.GUID);
+        } catch (Exception e) {
+        }
+        return StatData.empty();
+    }
+
+    public StatData dodgeData() {
+        try {
+            return getCalculatedStat(com.robertx22.age_of_exile.database.data.stats.types.defense.DodgeRating.GUID);
+        } catch (Exception e) {
+        }
+        return StatData.empty();
+    }
+
+    public StatData magicShieldData() {
+        try {
+            return getCalculatedStat(com.robertx22.age_of_exile.database.data.stats.types.defense.DamageShield.GUID);
+        } catch (Exception e) {
+        }
+        return StatData.empty();
+    }
+
     public String randomRarity(LivingEntity entity, EntityData data) {
 
         List<MobRarity> rarities = ExileDB.MobRarities()

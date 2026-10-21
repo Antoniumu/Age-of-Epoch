@@ -104,16 +104,16 @@ public class MapsData {
             Level dimWorld = player.level().getServer()
                 .getLevel(ResourceKey.create(Registries.DIMENSION, dungeonData.dun_type.DIMENSION_ID));
 
-            int border = MapsData.getBorder(dimWorld);
-
-            int X = RandomUtils.RandomRange(-border, border);
-            int Z = RandomUtils.RandomRange(-border, border);
+            int X = RandomUtils.RandomRange(1000, 50000);
+            int Z = RandomUtils.RandomRange(1000, 50000);
 
             ChunkPos cp = DungeonDimensionJigsawFeature.getSpawnChunkOf(new BlockPos(X, 0, Z));
 
             Watch ww = new Watch();
 
-            //Chunk chunk = dimWorld.getChunk(cp.x(), cp.z()); // load it first
+            if (dimWorld instanceof net.minecraft.server.level.ServerLevel serverDim) {
+                ensureDungeonGenerated(serverDim, cp);
+            }
 
             ww.print("loading first chunk ");
 
@@ -212,6 +212,71 @@ public class MapsData {
             e.printStackTrace();
         }
 
+    }
+
+    private static void ensureDungeonGenerated(net.minecraft.server.level.ServerLevel serverDim, ChunkPos cp) {
+        try {
+            BlockPos startPos = new BlockPos(cp.getMinBlockX() + 8, DungeonDimensionJigsawFeature.HEIGHT, cp.getMinBlockZ() + 8);
+            Registry<net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool> poolReg =
+                serverDim.registryAccess().lookupOrThrow(Registries.TEMPLATE_POOL);
+            ResourceKey<net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool> poolKey =
+                ResourceKey.create(Registries.TEMPLATE_POOL, com.robertx22.age_of_exile.mmorpg.SlashRef.id("dungeon/starts"));
+            Optional<net.minecraft.core.Holder.Reference<net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool>> poolOpt =
+                poolReg.get(poolKey);
+            if (poolOpt.isEmpty()) {
+                return;
+            }
+            net.minecraft.world.level.chunk.ChunkGenerator generator = serverDim.getChunkSource().getGenerator();
+            net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager templateManager = serverDim.getStructureTemplateManager();
+            net.minecraft.world.level.StructureManager structureManager = serverDim.structureManager();
+            net.minecraft.util.RandomSource random = serverDim.getRandom();
+            net.minecraft.world.level.levelgen.RandomState randomState = serverDim.getChunkSource().randomState();
+            net.minecraft.world.level.levelgen.structure.Structure.GenerationContext ctx =
+                new net.minecraft.world.level.levelgen.structure.Structure.GenerationContext(
+                    serverDim.registryAccess(),
+                    generator,
+                    generator.getBiomeSource(),
+                    randomState.createClimateSampler(net.minecraft.world.level.levelgen.densityfunction.SamplerContext.EMPTY_UNCACHED),
+                    randomState,
+                    templateManager,
+                    serverDim.getSeed() + cp.pack(),
+                    cp,
+                    serverDim,
+                    b -> true
+                );
+            Optional<net.minecraft.world.level.levelgen.structure.Structure.GenerationStub> stub =
+                net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement.addPieces(
+                    ctx,
+                    poolOpt.get(),
+                    Optional.empty(),
+                    5,
+                    startPos,
+                    false,
+                    Optional.empty(),
+                    new net.minecraft.world.level.levelgen.structure.structures.JigsawStructure.MaxDistance(128),
+                    net.minecraft.world.level.levelgen.structure.pools.alias.PoolAliasLookup.EMPTY,
+                    net.minecraft.world.level.levelgen.structure.structures.JigsawStructure.DEFAULT_DIMENSION_PADDING,
+                    net.minecraft.world.level.levelgen.structure.structures.JigsawStructure.DEFAULT_LIQUID_SETTINGS
+                );
+            if (stub.isPresent()) {
+                net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder builder = stub.get().getPiecesBuilder();
+                for (net.minecraft.world.level.levelgen.structure.StructurePiece piece : builder.build().pieces()) {
+                    if (piece instanceof net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece poolPiece) {
+                        poolPiece.place(
+                            serverDim,
+                            structureManager,
+                            generator,
+                            random,
+                            net.minecraft.world.level.levelgen.structure.BoundingBox.infinite(),
+                            startPos,
+                            false
+                        );
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // todo add to RPG CAP

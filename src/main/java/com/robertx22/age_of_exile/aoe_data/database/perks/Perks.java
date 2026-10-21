@@ -61,7 +61,7 @@ public class Perks implements ExileRegistryInit {
 
         PerkBuilder.stat(new OptScaleExactStat(3, Stats.SHIELD_DURATION.get(), ModType.FLAT));
         PerkBuilder.stat(new OptScaleExactStat(3, Stats.SHIELD_STRENGTH.get(), ModType.FLAT));
-        PerkBuilder.stat(new OptScaleExactStat(3, DamageShield.getInstance(), ModType.FLAT));
+        PerkBuilder.stat(new OptScaleExactStat(3, DamageShield.getInstance(), ModType.FLAT).scale());
 
         PerkBuilder.stat(new OptScaleExactStat(3, SpellDamage.getInstance(), ModType.FLAT));
 
@@ -94,8 +94,8 @@ public class Perks implements ExileRegistryInit {
         PerkBuilder.stat(new OptScaleExactStat(1, Stats.STYLE_DAMAGE.get(PlayStyle.ranged), ModType.FLAT));
         PerkBuilder.stat(new OptScaleExactStat(1, Stats.STYLE_DAMAGE.get(PlayStyle.magic), ModType.FLAT));
 
-        PerkBuilder.stat("mana_on_hit", new OptScaleExactStat(3, Stats.RESOURCE_ON_HIT.get(new ResourceAndAttack(ResourceType.mana, AttackType.attack)), ModType.FLAT));
-        PerkBuilder.stat("health_on_hit", new OptScaleExactStat(3, Stats.RESOURCE_ON_HIT.get(new ResourceAndAttack(ResourceType.health, AttackType.attack)), ModType.FLAT));
+        PerkBuilder.stat("mana_on_hit", new OptScaleExactStat(3, Stats.RESOURCE_ON_HIT.get(new ResourceAndAttack(ResourceType.mana, AttackType.attack)), ModType.FLAT).scale());
+        PerkBuilder.stat("health_on_hit", new OptScaleExactStat(3, Stats.RESOURCE_ON_HIT.get(new ResourceAndAttack(ResourceType.health, AttackType.attack)), ModType.FLAT).scale());
 
         PerkBuilder.stat("more_dualwield_dmg", new OptScaleExactStat(3, DualWieldDamage.getInstance()));
 
@@ -112,7 +112,7 @@ public class Perks implements ExileRegistryInit {
 
         Stats.RESOURCE_ON_KILL.getAll()
             .forEach(x -> {
-                PerkBuilder.stat(x.GUID(), new OptScaleExactStat(10, x, ModType.FLAT));
+                PerkBuilder.stat(x.GUID(), new OptScaleExactStat(10, x, ModType.FLAT).scale());
             });
 
         Stats.ELEMENTAL_WEAPON_DAMAGE.getAll()
@@ -128,13 +128,13 @@ public class Perks implements ExileRegistryInit {
 
         new ElementalResist(Elements.Earth).generateAllPossibleStatVariations()
             .forEach(x -> {
-                PerkBuilder.stat(x.GUID(), new OptScaleExactStat(4, x, ModType.FLAT));
+                PerkBuilder.stat(x.GUID(), new OptScaleExactStat(4, x, ModType.FLAT).scale());
 
             });
 
         new ElementalPenetration(Elements.Earth).generateAllPossibleStatVariations()
             .forEach(x -> {
-                PerkBuilder.stat(x.GUID(), new OptScaleExactStat(5, x, ModType.FLAT));
+                PerkBuilder.stat(x.GUID(), new OptScaleExactStat(5, x, ModType.FLAT).scale());
             });
 
         new AttackDamage(Elements.Earth).generateAllPossibleStatVariations()

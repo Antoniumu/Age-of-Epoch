@@ -47,6 +47,9 @@ public class AttackInformation {
 
     public void setAmount(float f) {
         amount = f;
+        if (this.event != null) {
+            this.event.damage = f;
+        }
     }
 
     public LivingEntity getTargetEntity() {
@@ -65,8 +68,15 @@ public class AttackInformation {
         return Load.Unit(targetEntity);
     }
 
+    public boolean isCanceled() {
+        return this.canceled;
+    }
+
     public void setCanceled(boolean canceled) {
         this.canceled = canceled;
+        if (canceled && this.event != null) {
+            this.event.damage = 0;
+        }
     }
 
     public enum Mitigation {

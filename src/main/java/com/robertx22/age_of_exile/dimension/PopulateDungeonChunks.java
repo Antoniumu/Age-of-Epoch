@@ -96,26 +96,26 @@ public class PopulateDungeonChunks {
 
     public static boolean populateChunk(Level world, ChunkAccess chunk, DungeonData dungeon, DungeonPopulateData data) {
 
-        Set<BlockPos> list = chunk.getBlockEntitiesPos();
+        Set<BlockPos> list = new java.util.HashSet<>(chunk.getBlockEntitiesPos());
 
         boolean has = !list.isEmpty();
 
         for (BlockPos blockPos : list) {
-            BlockEntity be = world.getBlockEntity(blockPos);
-            if (be instanceof BeaconBlockEntity) {
-                try {
+            try {
+                BlockEntity be = world.getBlockEntity(blockPos);
+                if (be instanceof BeaconBlockEntity) {
                     populate(world, blockPos, dungeon, data);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else if (be instanceof SignBlockEntity) {
+                    SignBlockEntity sign = (SignBlockEntity) be;
+                    if (SignUtils.has("[chest]", sign)) {
+                        setChest(world, blockPos);
+                    } else if (SignUtils.has("[portal]", sign)) {
+                        world.setBlockAndUpdate(blockPos, SlashBlocks.PORTAL.get()
+                            .defaultBlockState());
+                    }
                 }
-            } else if (be instanceof SignBlockEntity) {
-                SignBlockEntity sign = (SignBlockEntity) be;
-                if (SignUtils.has("[chest]", sign)) {
-                    setChest(world, blockPos);
-                } else if (SignUtils.has("[portal]", sign)) {
-                    world.setBlockAndUpdate(blockPos, SlashBlocks.PORTAL.get()
-                        .defaultBlockState());
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -232,6 +232,9 @@ public class PopulateDungeonChunks {
                 ms.spawnAllAtOnce = true;
                 ms.spawnsLeft = mobs;
                 ms.requiredPlayerRange = 25;
+                if (i == 0 && (data.pieces == 2 || RandomUtils.roll(20))) {
+                    ms.spawnBoss = true;
+                }
             }
             list.remove(p);
         }
