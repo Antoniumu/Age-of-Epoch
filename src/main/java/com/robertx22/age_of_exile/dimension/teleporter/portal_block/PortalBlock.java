@@ -113,25 +113,20 @@ public class PortalBlock extends OpaqueBlock implements EntityBlock {
                     }
                 }
 
-                PortalBlockEntity be = (PortalBlockEntity) world.getBlockEntity(pos);
-
-                if (entity instanceof ServerPlayer) {
-                    if (!entity.isPassenger() && !entity.isVehicle() && !((ServerPlayer) entity).isChangingDimension()) {
+                if (entity instanceof ServerPlayer sp) {
+                    if (!entity.isPassenger() && !entity.isVehicle() && !sp.isChangingDimension()) {
 
                         if (maps.maps.ticksinPortal < 40) {
                             maps.maps.ticksinPortal++;
-                        } else {
+                        } else if (world.getBlockEntity(pos) instanceof PortalBlockEntity be
+                            && !be.data.dungeonPos.equals(BlockPos.ZERO)) {
+                            // портал создан удачно и знает, куда вести
+                            maps.maps.ticksinPortal = 0;
+                            maps.maps.tel_pos = be.data.tpbackpos;
+                            maps.maps.tp_b_dim = VanillaReg.getId(entity.level())
+                                .toString();
 
-                            if (be.data.dungeonPos == BlockPos.ZERO) {
-                                return;
-                            } else {
-                                maps.maps.ticksinPortal = 0;
-                                maps.maps.tel_pos = be.data.tpbackpos;
-                                maps.maps.tp_b_dim = VanillaReg.getId(entity.level())
-                                    .toString();
-
-                                TeleportUtils.teleport((ServerPlayer) entity, be.data.dungeonPos, be.data.dungeonType.DIMENSION_ID);
-                            }
+                            TeleportUtils.teleport(sp, be.data.dungeonPos, be.data.dungeonType.DIMENSION_ID);
                         }
                     }
                 }

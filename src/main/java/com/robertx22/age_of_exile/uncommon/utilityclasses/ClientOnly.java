@@ -1,7 +1,6 @@
 package com.robertx22.age_of_exile.uncommon.utilityclasses;
 
-import com.robertx22.age_of_exile.gui.screens.dungeon.DungeonInfoScreen;
-import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import com.robertx22.age_of_exile.gui.screens.dungeon.PortalScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -56,8 +55,7 @@ public class ClientOnly {
 
     public static void openMapsScreen(BlockPos pos) {
         Minecraft.getInstance().gui
-            .setScreen(new DungeonInfoScreen(pos, Load.playerRPGData(Minecraft.getInstance().player).maps.dungeonData));
-
+            .setScreen(new PortalScreen(pos));
     }
 
     public static void stopUseKey() {
