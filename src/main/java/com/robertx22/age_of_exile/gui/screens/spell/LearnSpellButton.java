@@ -2,6 +2,8 @@ package com.robertx22.age_of_exile.gui.screens.spell;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.robertx22.age_of_exile.database.data.spells.components.Spell;
+import com.robertx22.age_of_exile.database.data.spell_school.SpellSchool;
+import com.robertx22.age_of_exile.guides.GuideAdvisor;
 import com.robertx22.age_of_exile.gui.TextUtils;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.saveclasses.gearitem.gear_bases.TooltipInfo;
@@ -64,6 +66,18 @@ public class LearnSpellButton extends ImageButton {
         String lvltext = currentlvl + "/" + maxlvl;
         ChatFormatting col = currentlvl > 0 ? ChatFormatting.GREEN : ChatFormatting.GRAY;
         TextUtils.renderText(matrix, 0.75F, lvltext, x + BUTTON_SIZE_X / 2, (int) (y + BUTTON_SIZE_Y * 0.85F), col);
+
+        SpellSchool guideSchool = GuideAdvisor.spellSchool(GuideAdvisor.activeGuide(mc.player));
+        if (guideSchool != null && screen.currentSchool() != null
+            && guideSchool.GUID().equals(screen.currentSchool().GUID())
+            && GuideAdvisor.isRecommendedSpell(mc.player, spell.GUID())) {
+            int alpha = 130 + (int) (110 * (0.5F + 0.5F * (float) Math.sin(System.currentTimeMillis() / 240.0)));
+            int color = (Math.min(255, alpha) << 24) | 0x0058FF8C;
+            AbstractGui.fill(matrix, x - 1, y - 1, x + BUTTON_SIZE_X + 1, y, color);
+            AbstractGui.fill(matrix, x - 1, y + BUTTON_SIZE_Y, x + BUTTON_SIZE_X + 1, y + BUTTON_SIZE_Y + 1, color);
+            AbstractGui.fill(matrix, x - 1, y, x, y + BUTTON_SIZE_Y, color);
+            AbstractGui.fill(matrix, x + BUTTON_SIZE_X, y, x + BUTTON_SIZE_X + 1, y + BUTTON_SIZE_Y, color);
+        }
     }
 
     @Override
@@ -80,6 +94,10 @@ public class LearnSpellButton extends ImageButton {
                 .getLevelNeededToAllocate(screen.currentSchool().spells.get(spell.GUID()));
 
             tooltip.add(Component.literal("Требуемый уровень: " + reqlvl).withStyle(ChatFormatting.RED));
+
+            if (GuideAdvisor.isRecommendedSpell(mc.player, spell.GUID())) {
+                tooltip.add(Component.literal("★ Следующее заклинание по гайду").withStyle(ChatFormatting.AQUA));
+            }
 
             int currentlvl = Load.spells(mc.player).getLevelOf(spell.GUID());
             if (currentlvl > 0) {

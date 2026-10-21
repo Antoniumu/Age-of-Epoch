@@ -30,6 +30,9 @@ import com.robertx22.age_of_exile.gui.bases.BaseScreen;
 import com.robertx22.age_of_exile.gui.bases.INamedScreen;
 import com.robertx22.age_of_exile.gui.buttons.FavorButton;
 import com.robertx22.age_of_exile.gui.buttons.ScalingDifficultyButton;
+import com.robertx22.age_of_exile.guides.GuideAdvisor;
+import com.robertx22.age_of_exile.guides.GuideDefinition;
+import com.robertx22.age_of_exile.guides.GuidesScreen;
 import com.robertx22.age_of_exile.gui.screens.player_skills.ProfessionsScreen;
 import com.robertx22.age_of_exile.gui.screens.skill_tree.TalentsScreen;
 import com.robertx22.age_of_exile.gui.screens.spell.SpellScreen;
@@ -243,9 +246,11 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
             screens.add(new ProfessionsScreen());
             screens.add(new WikiScreen());
             screens.add(new com.robertx22.age_of_exile.simulation.SimulationScreen());
+            screens.add(new GuidesScreen());
 
             int x = guiLeft + sizeX - 1;
-            int y = guiTop + 20;
+            // 6 вкладок: начинаем чуть выше, чтобы все влезли в панель
+            int y = guiTop + 4;
 
             for (INamedScreen screen : screens) {
                 addButton(new MainHubButton(screen, x, y));
@@ -290,6 +295,16 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
 
         int p = Load.playerRPGData(mc.player).statPoints
             .getFreePoints(mc.player);
+        if (isMainScreen()) {
+            GuideDefinition guide = GuideAdvisor.activeGuide(mc.player);
+            if (guide != null) {
+                String hint = "Гайд «" + guide.name + "»: " + GuideAdvisor.nextStepText(mc.player);
+                com.robertx22.forge_compat.client.AbstractGui.drawShadow(mc.font, matrix, hint,
+                    guiLeft + sizeX / 2 - mc.font.width(hint) / 2, guiTop + sizeY + 12,
+                    com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.AQUA));
+            }
+        }
+
         if (p > 0) {
             String points = "Очки: " + p;
             com.robertx22.forge_compat.client.AbstractGui.drawShadow(mc.font, matrix, points, guiLeft + sizeX / 2 - mc.font.width(points) / 2, guiTop + sizeY + 25, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.GREEN));
@@ -336,6 +351,17 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
                     .getUnit()
                     .getCalculatedStat(stat)));
 
+                if (GuideAdvisor.isRecommendedStat(mc.player, stat.GUID())) {
+                    tooltip.add(net.minecraft.network.chat.Component.literal("★ Гайд: вложите очко сюда")
+                        .withStyle(ChatFormatting.GOLD));
+                    String preview = com.robertx22.age_of_exile.guides.GuideMath.nextPointPreview(
+                        stat.GUID(), Load.Unit(mc.player).getLevel());
+                    if (!preview.isEmpty()) {
+                        tooltip.add(net.minecraft.network.chat.Component.literal("+1 очко даст: " + preview)
+                            .withStyle(ChatFormatting.AQUA));
+                    }
+                }
+
                 GuiUtils.renderTooltip(matrix,
                     tooltip, x, y);
 
@@ -361,6 +387,23 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
             RenderUtils.render16Icon(matrix, stat.getIconForRendering(), this.x - 20, this.y + 1);
 
             com.robertx22.forge_compat.client.AbstractGui.drawShadow(mc.font, matrix, txt, this.x + SIZEX + 4, this.y + 4, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.YELLOW));
+
+            // подсветка рекомендованного гайдом стата
+            if (this.stat != null && GuideAdvisor.isRecommendedStat(mc.player, this.stat.GUID())) {
+                int alpha = 140 + (int) (115 * (0.5F + 0.5F * (float) Math.sin(System.currentTimeMillis() / 260.0)));
+                int color = (Math.min(255, alpha) << 24) | 0x00FFD24A;
+                com.robertx22.forge_compat.client.AbstractGui.fill(matrix,
+                    this.x - 1, this.y - 1, this.x + SIZEX + 1, this.y, color);
+                com.robertx22.forge_compat.client.AbstractGui.fill(matrix,
+                    this.x - 1, this.y + SIZEY, this.x + SIZEX + 1, this.y + SIZEY + 1, color);
+                com.robertx22.forge_compat.client.AbstractGui.fill(matrix,
+                    this.x - 1, this.y, this.x, this.y + SIZEY, color);
+                com.robertx22.forge_compat.client.AbstractGui.fill(matrix,
+                    this.x + SIZEX, this.y, this.x + SIZEX + 1, this.y + SIZEY, color);
+                com.robertx22.forge_compat.client.AbstractGui.drawShadow(mc.font, matrix, "▲",
+                    this.x + SIZEX / 2 - 2, this.y - 9,
+                    com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.GOLD));
+            }
 
         }
 

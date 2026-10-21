@@ -3,6 +3,8 @@ package com.robertx22.age_of_exile.gui.screens.spell;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.age_of_exile.database.data.synergy.Synergy;
+import com.robertx22.age_of_exile.database.data.spell_school.SpellSchool;
+import com.robertx22.age_of_exile.guides.GuideAdvisor;
 import com.robertx22.age_of_exile.database.data.value_calc.LevelProvider;
 import com.robertx22.age_of_exile.gui.TextUtils;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
@@ -61,6 +63,18 @@ public class LearnSynergyButton extends ImageButton {
         String lvltext = currentlvl + "/" + maxlvl;
         TextUtils.renderText(matrix, 0.8F, lvltext, x + BUTTON_SIZE_X / 2, (int) (y + BUTTON_SIZE_Y * 0.85F), ChatFormatting.GREEN);
 
+        // подсветка рекомендованной гайдом синергии (та же логика, что у заклинаний)
+        SpellSchool guideSchool = GuideAdvisor.spellSchool(GuideAdvisor.activeGuide(mc.player));
+        if (guideSchool != null && screen.currentSchool() != null
+            && guideSchool.GUID().equals(screen.currentSchool().GUID())
+            && GuideAdvisor.isRecommendedSpell(mc.player, synergy.GUID())) {
+            int alpha = 130 + (int) (110 * (0.5F + 0.5F * (float) Math.sin(System.currentTimeMillis() / 240.0)));
+            int color = (Math.min(255, alpha) << 24) | 0x0058FF8C;
+            com.robertx22.forge_compat.client.AbstractGui.fill(matrix, x - 1, y - 1, x + BUTTON_SIZE_X + 1, y, color);
+            com.robertx22.forge_compat.client.AbstractGui.fill(matrix, x - 1, y + BUTTON_SIZE_Y, x + BUTTON_SIZE_X + 1, y + BUTTON_SIZE_Y + 1, color);
+            com.robertx22.forge_compat.client.AbstractGui.fill(matrix, x - 1, y, x, y + BUTTON_SIZE_Y, color);
+            com.robertx22.forge_compat.client.AbstractGui.fill(matrix, x + BUTTON_SIZE_X, y, x + BUTTON_SIZE_X + 1, y + BUTTON_SIZE_Y, color);
+        }
     }
 
     @Override
@@ -83,6 +97,10 @@ public class LearnSynergyButton extends ImageButton {
                 .getLevelNeededToAllocate(screen.currentSchool().synergies.get(synergy.GUID()));
 
             tooltip.add(Component.literal("Требуемый уровень: " + reqlvl).withStyle(ChatFormatting.RED));
+
+            if (GuideAdvisor.isRecommendedSpell(mc.player, synergy.GUID())) {
+                tooltip.add(Component.literal("★ Следующая синергия по гайду").withStyle(ChatFormatting.AQUA));
+            }
 
             GuiUtils.renderTooltip(matrix, tooltip, x, y);
 

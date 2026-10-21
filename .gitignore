@@ -53,3 +53,7 @@ desktop.ini
 local.properties
 gradle-local.properties
 .env
+
+# ── Python ───────────────────────────────────────────────────
+__pycache__/
+*.pyc

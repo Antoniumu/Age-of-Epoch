@@ -299,6 +299,36 @@ public class SimulationScreen extends BaseScreen implements INamedScreen {
             b -> Minecraft.getInstance().gui.setScreen(new CharacterScreen()),
             List.of(Component.literal("Вернуться к Экрану персонажа").withStyle(ChatFormatting.GREEN))
         ));
+
+        // Row 7: гайды — на полигоне гайд превращается в готовую сборку
+        y += 20;
+        String activeGuide = com.robertx22.age_of_exile.guides.GuideAdvisor.activeGuideId(mc.player);
+        com.robertx22.age_of_exile.guides.GuideDefinition guide =
+            com.robertx22.age_of_exile.guides.GuideData.byId(activeGuide);
+        addButton(new SimButton(
+            left, y, 100, 18,
+            "§6Собрать гайд",
+            b -> Packets.sendToServer(new SimulationPacket(SimulationPacket.Action.GUIDE_BUILD, 1)),
+            Arrays.asList(
+                Component.literal(guide == null ? "Гайд не выбран" : "Гайд: " + guide.name)
+                    .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD),
+                Component.literal("Сбрасывает билд и вкладывает статы, таланты,").withStyle(ChatFormatting.GRAY),
+                Component.literal("заклинания и выдаёт экипировку под гайд.").withStyle(ChatFormatting.GRAY),
+                Component.literal("Если гайд не выбран — берётся первый из списка.").withStyle(ChatFormatting.DARK_GRAY)
+            )
+        ));
+        addButton(new SimButton(
+            left + 104, y, 56, 18,
+            "§eГайды",
+            b -> Minecraft.getInstance().gui.setScreen(new com.robertx22.age_of_exile.guides.GuidesScreen()),
+            List.of(Component.literal("Открыть вкладку гайдов").withStyle(ChatFormatting.YELLOW))
+        ));
+        addButton(new SimButton(
+            left + 160, y, 80, 18,
+            "§6Сброс+гайд",
+            b -> Packets.sendToServer(new SimulationPacket(SimulationPacket.Action.RESET_AND_GUIDE)),
+            List.of(Component.literal("Сброс и сборка активного гайда").withStyle(ChatFormatting.GOLD))
+        ));
     }
 
     @Override

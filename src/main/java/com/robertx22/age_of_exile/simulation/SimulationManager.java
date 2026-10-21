@@ -411,6 +411,37 @@ public class SimulationManager {
     private record KitEntry(String slotHint, Item item) {
     }
 
+    /**
+     * Собирает активный гайд целиком: сброс билда, статы, таланты, заклинания,
+     * при желании — экипировка. Если гайд не выбран, берётся первый из списка.
+     */
+    public static void buildActiveGuide(ServerPlayer player, boolean clearFirst, boolean gear) {
+        if (player == null) {
+            return;
+        }
+        if (!WorldUtils.isSimulationWorld(player.level())) {
+            player.sendSystemMessage(Component.literal(
+                "§e[Гайд] Сборка собирается только на Полигоне. Войдите в него кнопкой «Войти на Полигон»."));
+            return;
+        }
+        com.robertx22.age_of_exile.guides.GuideDefinition guide =
+            com.robertx22.age_of_exile.guides.GuideAdvisor.activeGuide(player);
+        if (guide == null) {
+            guide = com.robertx22.age_of_exile.guides.GuideData.first();
+        }
+        if (guide == null) {
+            player.sendSystemMessage(Component.literal("§c[Гайд] Гайды не загружены."));
+            return;
+        }
+        com.robertx22.age_of_exile.guides.GuideAdvisor.applyInSimulation(player, guide, clearFirst, gear);
+    }
+
+    /** Сброс билда + сразу сборка активного гайда («на полигоне гайд = готовый билд»). */
+    public static void resetBuildAndApplyGuide(ServerPlayer player) {
+        resetBuildInSimulation(player);
+        buildActiveGuide(player, false, true);
+    }
+
     public static void giveGearKit(ServerPlayer player, int kitType) {
         if (!ensureInSimulation(player)) {
             return;

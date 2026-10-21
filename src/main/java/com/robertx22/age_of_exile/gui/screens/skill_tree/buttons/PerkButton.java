@@ -5,6 +5,7 @@ import com.robertx22.age_of_exile.capability.player.RPGPlayerData;
 import com.robertx22.age_of_exile.database.data.perks.Perk;
 import com.robertx22.age_of_exile.database.data.perks.PerkStatus;
 import com.robertx22.age_of_exile.database.data.talent_tree.TalentTree;
+import com.robertx22.age_of_exile.guides.GuideAdvisor;
 import com.robertx22.age_of_exile.gui.screens.skill_tree.SkillTreeScreen;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.saveclasses.PointData;
@@ -83,6 +84,10 @@ public class PerkButton extends ImageButton {
             RPGPlayerData data = Load.playerRPGData(mc.player);
             if (data != null && data.talents != null && mc.player != null) {
                 PerkStatus status = cachedStatus != null ? cachedStatus : data.talents.getStatus(mc.player, school, point);
+                if (GuideAdvisor.isRecommendedTalent(mc.player, point)) {
+                    tooltip.add(Component.literal("★ Следующий узел по гайду")
+                        .withStyle(net.minecraft.ChatFormatting.AQUA));
+                }
                 if (status == PerkStatus.POSSIBLE) {
                     tooltip.add(Component.literal("ЛКМ / ПКМ — Изучить талант").withStyle(net.minecraft.ChatFormatting.GREEN));
                 } else if (status == PerkStatus.CONNECTED) {
@@ -217,6 +222,20 @@ public class PerkButton extends ImageButton {
             RenderUtils.render16Icon(matrices, cachedSchoolIcon, this.x + offset, this.y + offsetY);
         } else {
             RenderUtils.render16Icon(matrices, this.perk.getIcon(), this.x + offset, this.y + offsetY);
+        }
+
+        // подсветка следующего узла из плана гайда
+        if (GuideAdvisor.isRecommendedTalent(mc.player, this.point)) {
+            int alpha = 130 + (int) (110 * (0.5F + 0.5F * (float) Math.sin(System.currentTimeMillis() / 240.0)));
+            int color = (Math.min(255, alpha) << 24) | 0x0058FF8C;
+            com.robertx22.forge_compat.client.AbstractGui.fill(matrices,
+                this.x - 2, this.y - 2, this.x + this.width + 2, this.y - 1, color);
+            com.robertx22.forge_compat.client.AbstractGui.fill(matrices,
+                this.x - 2, this.y + this.height + 1, this.x + this.width + 2, this.y + this.height + 2, color);
+            com.robertx22.forge_compat.client.AbstractGui.fill(matrices,
+                this.x - 2, this.y - 1, this.x - 1, this.y + this.height + 1, color);
+            com.robertx22.forge_compat.client.AbstractGui.fill(matrices,
+                this.x + this.width + 1, this.y - 1, this.x + this.width + 2, this.y + this.height + 1, color);
         }
     }
 }
