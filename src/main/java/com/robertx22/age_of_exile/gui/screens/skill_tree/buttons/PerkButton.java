@@ -86,7 +86,13 @@ public class PerkButton extends ImageButton {
                 if (status == PerkStatus.POSSIBLE) {
                     tooltip.add(Component.literal("ЛКМ / ПКМ — Изучить талант").withStyle(net.minecraft.ChatFormatting.GREEN));
                 } else if (status == PerkStatus.CONNECTED) {
-                    tooltip.add(Component.literal("Изучено (ПКМ — сбросить)").withStyle(net.minecraft.ChatFormatting.AQUA));
+                    if (data.talents.canRemove(school, point)) {
+                        tooltip.add(Component.literal("Изучено (ПКМ — сбросить, очков сброса: " + data.talents.reset_points + ")").withStyle(net.minecraft.ChatFormatting.AQUA));
+                    } else if (!data.talents.canRemoveIgnoringResetPoints(school, point)) {
+                        tooltip.add(Component.literal("Изучено (сначала сбросьте крайние таланты)").withStyle(net.minecraft.ChatFormatting.GRAY));
+                    } else {
+                        tooltip.add(Component.literal("Изучено (нет очков сброса)").withStyle(net.minecraft.ChatFormatting.GRAY));
+                    }
                 } else if (data.talents.findAllocatableEntryConnection(school, point, Load.Unit(mc.player), mc.player) != null) {
                     tooltip.add(Component.literal("ЛКМ / ПКМ — Выбрать этот начальный путь").withStyle(net.minecraft.ChatFormatting.GOLD));
                 } else {

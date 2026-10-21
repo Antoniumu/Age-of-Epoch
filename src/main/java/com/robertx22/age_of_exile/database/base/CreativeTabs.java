@@ -169,7 +169,6 @@ public class CreativeTabs {
                     souls.forEach(s -> acceptStack(sink, s));
                 } catch (Exception ignored) {
                 }
-                acceptRegObj(sink, SlashItems.STAT_SOUL);
             }
         );
 

@@ -74,11 +74,15 @@ public class StatSoulData implements ISalvagable, IRarity, ISettableLevelTier {
     }
 
     public void insertAsUnidentifiedOn(ItemStack stack) {
+        insertAsUnidentifiedOn(stack, null);
+    }
+
+    public void insertAsUnidentifiedOn(ItemStack stack, @Nullable net.minecraft.world.entity.player.Player player) {
         if (gear != null) {
             Gear.Save(stack, gear);
         } else {
             try {
-                GearItemData created = createGearData(stack);
+                GearItemData created = createGearData(stack, player);
                 StackNBT.getOrCreate(stack).remove(StatSoulItem.TAG);
                 Gear.Save(stack, created);
             } catch (Exception e) {
@@ -88,13 +92,34 @@ public class StatSoulData implements ISalvagable, IRarity, ISettableLevelTier {
     }
 
     public GearItemData createGearData(@Nullable ItemStack stack) {
+        return createGearData(stack, null);
+    }
 
-        int lvl = LevelUtils.tierToLevel(tier);
+    public GearItemData createGearData(@Nullable ItemStack stack, @Nullable net.minecraft.world.entity.player.Player player) {
+
+        int effectiveTier = tier;
+        if (effectiveTier < 0 && player != null) {
+            try {
+                effectiveTier = LevelUtils.levelToTier(Math.max(1, com.robertx22.age_of_exile.uncommon.datasaving.Load.Unit(player).getLevel()));
+            } catch (Exception ignored) {
+                effectiveTier = 0;
+            }
+        }
+        int lvl = LevelUtils.tierToLevel(Math.max(0, effectiveTier));
+        if (tier < 0 && player != null) {
+            try {
+                lvl = Math.max(1, com.robertx22.age_of_exile.uncommon.datasaving.Load.Unit(player).getLevel());
+            } catch (Exception ignored) {
+            }
+        }
 
         GearBlueprint b = new GearBlueprint(lvl);
         b.level.set(lvl);
-        b.rarity.set(ExileDB.GearRarities()
-            .get(rar));
+        GearRarity rarity = ExileDB.GearRarities().get(rar);
+        if (rarity == null) {
+            rarity = ExileDB.GearRarities().random();
+        }
+        b.rarity.set(rarity);
 
         UniqueGear uniq = ExileDB.UniqueGears()
             .get(this.uniq);
@@ -105,10 +130,12 @@ public class StatSoulData implements ISalvagable, IRarity, ISettableLevelTier {
         }
 
         if (this.canBeOnAnySlot()) {
-            GearSlot gearslot = ExileDB.GearSlots()
-                .random();
+            GearSlot gearslot = null;
             if (stack != null) {
                 gearslot = GearSlot.getSlotOf(stack.getItem());
+            }
+            if (gearslot == null) {
+                gearslot = ExileDB.GearSlots().random();
             }
             String slotid = gearslot.GUID();
 

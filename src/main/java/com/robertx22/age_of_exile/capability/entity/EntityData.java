@@ -706,14 +706,10 @@ public class EntityData implements ICommonPlayerCap, INeededForClient {
 
         setExp(exp + i);
 
-        if (exp > this.getExpRequiredForLevelUp()) {
-
-            if (this.CheckIfCanLevelUp() && this.CheckLevelCap()) {
-                this.LevelUp(player);
-            }
-
-            return i;
+        while (exp >= this.getExpRequiredForLevelUp() && this.CheckIfCanLevelUp() && this.CheckLevelCap()) {
+            this.LevelUp(player);
         }
+        this.syncToClient(player);
         return i;
     }
 
@@ -758,10 +754,14 @@ public class EntityData implements ICommonPlayerCap, INeededForClient {
 
             // fully restore on lvlup
 
+            int remainingExp = getRemainingExp();
             this.setLevel(level + 1);
-            setExp(getRemainingExp());
+            setExp(remainingExp);
 
             OnScreenMessageUtils.sendLevelUpMessage(player, Component.literal("Игрок"), level - 1, level);
+            this.setEquipsChanged(true);
+            this.tryRecalculateStats();
+            this.syncToClient(player);
 
             return true;
         }

@@ -2,13 +2,18 @@ package com.robertx22.age_of_exile.mixin_methods;
 
 import com.robertx22.age_of_exile.database.data.currency.base.ICurrencyItemEffect;
 import com.robertx22.age_of_exile.database.data.currency.loc_reqs.LocReqContext;
+import com.robertx22.age_of_exile.database.data.gear_slots.GearSlot;
+import com.robertx22.age_of_exile.database.data.rarities.GearRarity;
+import com.robertx22.age_of_exile.database.registry.ExileDB;
 import com.robertx22.age_of_exile.mmorpg.registers.common.items.SlashItems;
 import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
 import com.robertx22.age_of_exile.saveclasses.stat_soul.StatSoulData;
 import com.robertx22.age_of_exile.saveclasses.stat_soul.StatSoulItem;
 import com.robertx22.age_of_exile.uncommon.datasaving.Gear;
+import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.datasaving.StackSaving;
 import com.robertx22.age_of_exile.uncommon.interfaces.data_items.ISalvagable;
+import com.robertx22.age_of_exile.uncommon.utilityclasses.LevelUtils;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.PlayerUtils;
 import com.robertx22.age_of_exile.vanilla_mc.items.misc.SalvagedDustItem;
 import com.robertx22.library_of_exile.utils.SoundUtils;
@@ -53,12 +58,6 @@ public class OnItemInteract {
                     return;
                 }
 
-                if (player.level().isClientSide()) {
-                    ci.setReturnValue(ItemStack.EMPTY);
-                    ci.cancel();
-                    return;
-                }
-
                 SalvagedDustItem essence = (SalvagedDustItem) cursor.getItem();
 
                 SoundUtils.playSound(player, SoundEvents.ANVIL_USE, 1, 1);
@@ -68,36 +67,52 @@ public class OnItemInteract {
                 if (gear.getTier() > essence.tier.tier) {
                     repair /= 5;
                 }
-                stack.setDamageValue(stack.getDamageValue() - repair);
-                slot.set(stack.copy());
+                ItemStack copy = stack.copy();
+                copy.setDamageValue(Math.max(0, copy.getDamageValue() - repair));
+                slot.set(copy);
                 success = true;
 
             } else if (cursor.getItem() instanceof StatSoulItem) {
                 StatSoulData data = StackSaving.STAT_SOULS.loadFrom(cursor);
 
+                if (data == null && !stack.isEmpty() && !Gear.has(stack)) {
+                    GearSlot targetSlot = GearSlot.getSlotOf(stack.getItem());
+                    if (targetSlot != null) {
+                        data = new StatSoulData();
+                        data.slot = targetSlot.GUID();
+                        int playerLvl = 1;
+                        try {
+                            playerLvl = Math.max(1, Load.Unit(player).getLevel());
+                        } catch (Exception ignored) {
+                        }
+                        data.tier = LevelUtils.levelToTier(playerLvl);
+                        GearRarity rar = ExileDB.GearRarities().random();
+                        data.rar = rar != null ? rar.GUID() : "common";
+                    }
+                }
+
                 if (data != null) {
                     if (data.canInsertIntoStack(stack)) {
-                        if (player.level().isClientSide()) {
-                            ci.setReturnValue(ItemStack.EMPTY);
-                            ci.cancel();
-                            return;
-                        }
-                        data.insertAsUnidentifiedOn(stack);
-                        slot.set(stack.copy());
+                        ItemStack copy = stack.copy();
+                        data.insertAsUnidentifiedOn(copy, player);
+                        slot.set(copy);
                         success = true;
                     }
                 }
             } else if (cursor.getItem() instanceof ICurrencyItemEffect) {
-                LocReqContext ctx = new LocReqContext(player, stack, cursor);
+                LocReqContext ctx = new LocReqContext(player, stack.copy(), cursor);
                 if (ctx.effect.canItemBeModified(ctx)) {
-                    if (player.level().isClientSide()) {
-                        ci.setReturnValue(ItemStack.EMPTY);
-                        ci.cancel();
-                        return;
-                    }
                     ItemStack result = ctx.effect.modifyItem(ctx).stack;
-                    stack.shrink(1);
-                    slot.set(result.copy());
+                    if (stack.getCount() == 1) {
+                        slot.set(result.copy());
+                    } else {
+                        ItemStack copy = stack.copy();
+                        copy.shrink(1);
+                        slot.set(copy);
+                        if (!player.level().isClientSide()) {
+                            PlayerUtils.giveItem(result.copy(), player);
+                        }
+                    }
                     success = true;
                 }
             } else if (cursor.getItem() == SlashItems.SALVAGE_HAMMER.get()) {
@@ -108,19 +123,17 @@ public class OnItemInteract {
                 }
 
                 if (data != null) {
-                    if (player.level().isClientSide()) {
-                        ci.setReturnValue(ItemStack.EMPTY);
-                        ci.cancel();
-                        return;
-                    }
                     SoundUtils.playSound(player, SoundEvents.ANVIL_USE, 1, 1);
 
-                    stack.shrink(1);
-                    slot.set(stack.copy());
-                    data.getSalvageResult(stack)
-                        .forEach(x -> PlayerUtils.giveItem(x, player));
+                    ItemStack salvagedStack = stack.copy();
+                    ItemStack remaining = stack.copy();
+                    remaining.shrink(1);
+                    slot.set(remaining.isEmpty() ? ItemStack.EMPTY : remaining);
+                    if (!player.level().isClientSide()) {
+                        data.getSalvageResult(salvagedStack)
+                            .forEach(x -> PlayerUtils.giveItem(x, player));
+                    }
                     slot.setChanged();
-                    screen.broadcastChanges();
                     ci.setReturnValue(ItemStack.EMPTY);
                     ci.cancel();
                     return;
@@ -131,24 +144,21 @@ public class OnItemInteract {
 
                 if (gear != null) {
                     if (gear.sockets != null && gear.sockets.sockets.size() > 0) {
-                        if (player.level().isClientSide()) {
-                            ci.setReturnValue(ItemStack.EMPTY);
-                            ci.cancel();
-                            return;
-                        }
                         try {
                             ItemStack gem = new ItemStack(gear.sockets.sockets.get(0)
                                 .getGem()
                                 .getItem());
                             gear.sockets.sockets.remove(0);
-                            Gear.Save(stack, gear);
-                            slot.set(stack.copy());
-                            PlayerUtils.giveItem(gem, player);
+                            ItemStack copy = stack.copy();
+                            Gear.Save(copy, gear);
+                            slot.set(copy);
+                            if (!player.level().isClientSide()) {
+                                PlayerUtils.giveItem(gem, player);
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                         slot.setChanged();
-                        screen.broadcastChanges();
                         ci.setReturnValue(ItemStack.EMPTY);
                         ci.cancel();
                         return;
@@ -161,8 +171,8 @@ public class OnItemInteract {
                 SoundUtils.playSound(player.level(), player.blockPosition(), SoundEvents.ANVIL_USE, 1, 1);
 
                 cursor.shrink(1);
+                screen.setCarried(cursor.isEmpty() ? ItemStack.EMPTY : cursor);
                 slot.setChanged();
-                screen.broadcastChanges();
                 ci.setReturnValue(ItemStack.EMPTY);
                 ci.cancel();
             }
