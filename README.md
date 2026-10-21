@@ -40,8 +40,17 @@ build.bat diagnose       :: build-diagnose.txt: видит ли javac Minecraft 
 ```
 
 Если `compileJava` сыплет `package net.minecraft.* does not exist` и падает с
-`NullPointerException` в `TypeElement.getNestingKind()` — это битый кэш Loom, а не код;
-лечится `build.bat repair`, подробности в [`BUILD-REPORT.md`](BUILD-REPORT.md) §6.
+`NullPointerException` в `TypeElement.getNestingKind()` — это не код, а Loom-артефакт Minecraft:
+
+```bat
+build.bat repair                  :: сброс кэшей + --refresh-dependencies
+build.bat diagnose                :: build-diagnose.txt: на каком шаге jar стал пустым
+build.bat build --info --stacktrace > build-log.txt
+```
+
+Признак «`minecraft-merged-<hash>-26.3.jar (22 bytes)`» означает пустой zip: jar создаётся
+заново пустым, причина — место на диске, антивирус или память Gradle. Подробности и порядок
+действий — [`BUILD-REPORT.md`](BUILD-REPORT.md) §6.
 
 ## Управление
 

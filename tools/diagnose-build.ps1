@@ -1,25 +1,37 @@
 # ---------------------------------------------------------------------------
 #  Age of Epoch - build diagnostics
 #
-#  Answers one question: is Minecraft actually on the compile classpath?
+#  Answers one question: is Minecraft really on the compile classpath, and if
+#  not, at which step did it disappear?
 #
 #  It is written for this failure mode:
-#      error: package net.minecraft.network.chat does not exist
+#      error: package net.minecraft.network.chat does not exist     (every file)
 #      ...
 #      NullPointerException: Cannot invoke
 #      "javax.lang.model.element.TypeElement.getNestingKind()" because "typeElement" is null
+#      minecraft-merged-<hash>-26.3.jar (22 bytes)
 #
-#  That pair means Loom's Minecraft jar is missing/empty, not that the sources
-#  are wrong.  The script prints a verdict and writes build-diagnose.txt.
+#  A 22 byte jar is an empty zip: the step that writes it produced no entries.
+#  The report walks the chain Loom uses and shows which link is empty:
+#
+#      caches\fabric-loom\26.3\minecraft-client.jar      (download)
+#      caches\fabric-loom\26.3\minecraft-server.jar      (download)
+#      caches\fabric-loom\26.3\minecraft-merged.jar      (merge of the two)
+#      ...\minecraftMaven\net\minecraft\minecraft-merged-<hash>\26.3\*.jar   (remap + jar processors)
 #
 #  Usage (from the project root):
 #      powershell -ExecutionPolicy Bypass -File tools\diagnose-build.ps1
 #  or simply:
 #      build.bat diagnose
+#
+#  Switches:
+#      -ProjectDir <path>   project root (default: parent of this script)
+#      -SkipGradle          do not run "gradlew dshClasspath" (no classpath section)
 # ---------------------------------------------------------------------------
 [CmdletBinding()]
 param(
-    [string]$ProjectDir = ''
+    [string]$ProjectDir = '',
+    [switch]$SkipGradle
 )
 
 if ([string]::IsNullOrEmpty($ProjectDir)) {
@@ -29,6 +41,7 @@ $ProjectDir = (Resolve-Path $ProjectDir).Path
 $ReportPath = Join-Path $ProjectDir 'build-diagnose.txt'
 
 $script:Lines = @()
+$script:Facts = @{}   # machine readable probe results, used by the verdict
 
 function Say {
     param([string]$Text = '')
@@ -42,10 +55,58 @@ function Section {
     Say ('=== ' + $Title + ' ' + ('=' * [Math]::Max(3, 60 - $Title.Length)))
 }
 
-function Size-Mb {
+function Mb {
     param([long]$Bytes)
     return ('{0:N1} MB' -f ($Bytes / 1MB))
 }
+
+<#
+  Inspects one jar: size and how many net/minecraft entries it holds.
+  Returns $null when the file cannot be read as a zip.
+#>
+function Get-JarInfo {
+    param([string]$Path)
+    if (-not (Test-Path $Path)) { return $null }
+    $file = Get-Item $Path
+    $info = [pscustomobject]@{
+        Path      = $file.FullName
+        Size      = $file.Length
+        McEntries = -1       # -1 = unreadable / not a zip
+        Probe     = $false   # contains a known Minecraft class
+    }
+    try {
+        $zip = [System.IO.Compression.ZipFile]::OpenRead($file.FullName)
+        try {
+            $count = 0
+            foreach ($item in $zip.Entries) {
+                if ($item.FullName.StartsWith('net/minecraft/')) { $count++ }
+            }
+            $info.McEntries = $count
+            foreach ($probe in @('net/minecraft/resources/Identifier.class',
+                                 'net/minecraft/ChatFormatting.class',
+                                 'net/minecraft/server/MinecraftServer.class')) {
+                if ($null -ne $zip.GetEntry($probe)) { $info.Probe = $true }
+            }
+        } finally {
+            $zip.Dispose()
+        }
+    } catch {
+        $info.McEntries = -1
+    }
+    return $info
+}
+
+function Show-Jar {
+    param($Info)
+    if ($null -eq $Info) {
+        Say '    (missing)'
+        return
+    }
+    $entries = if ($Info.McEntries -lt 0) { 'not a readable zip' } else { '' + $Info.McEntries + ' net/minecraft entries' }
+    Say ('    ' + $Info.Path + '  ' + (Mb $Info.Size) + '  ' + $entries)
+}
+
+Add-Type -AssemblyName System.IO.Compression.FileSystem -ErrorAction SilentlyContinue
 
 Say ('Age of Epoch - build diagnostics, ' + (Get-Date).ToString('yyyy-MM-dd HH:mm:ss'))
 
@@ -53,7 +114,14 @@ $gradleHome = $env:GRADLE_USER_HOME
 if ([string]::IsNullOrEmpty($gradleHome)) {
     $gradleHome = Join-Path $env:USERPROFILE '.gradle'
 }
+$mcVersion = '26.3'
+$gradleProps = Join-Path $ProjectDir 'gradle.properties'
+if (Test-Path $gradleProps) {
+    $hit = Select-String -Path $gradleProps -Pattern '^\s*minecraft_version\s*=\s*(\S+)' | Select-Object -First 1
+    if ($null -ne $hit) { $mcVersion = $hit.Matches[0].Groups[1].Value.Trim() }
+}
 
+# ---------------------------------------------------------------------------
 Section 'Environment'
 Say ('Project          : ' + $ProjectDir)
 Say ('GRADLE_USER_HOME : ' + $gradleHome)
@@ -63,38 +131,104 @@ if (Get-Command java -ErrorAction SilentlyContinue) {
 } else {
     Say 'java -version    : java not found on PATH'
 }
+Say ('Minecraft        : ' + $mcVersion)
 
-$propsFile = Join-Path $ProjectDir 'gradle.properties'
-if (Test-Path $propsFile) {
+$drive = (Get-Item $ProjectDir).PSDrive
+$freeMb = [math]::Round((Get-PSDrive $drive.Name).Free / 1MB)
+$script:Facts['FreeMb'] = $freeMb
+Say ('Free space       : ' + $freeMb + ' MB on ' + $drive.Name + ':')
+if ($freeMb -lt 1024) {
+    Say '  [!!] less than 1 GB free - this alone can make Loom write empty jars'
+}
+
+if (Test-Path $gradleProps) {
     Section 'gradle.properties'
-    foreach ($line in (Get-Content $propsFile)) {
-        if ($line -match '=' -and $line -notmatch '^\s*#') {
-            Say ('  ' + $line)
+    foreach ($line in (Get-Content $gradleProps)) {
+        if ($line -match '=' -and $line -notmatch '^\s*#') { Say ('  ' + $line) }
+    }
+}
+
+# ---------------------------------------------------------------------------
+Section ('Downloads and merge (caches\fabric-loom\' + $mcVersion + ')')
+$mcDir = Join-Path (Join-Path $gradleHome 'caches\fabric-loom') $mcVersion
+$clientJar = Get-JarInfo (Join-Path $mcDir 'minecraft-client.jar')
+$serverJar = Get-JarInfo (Join-Path $mcDir 'minecraft-server.jar')
+$mergedJar = Get-JarInfo (Join-Path $mcDir 'minecraft-merged.jar')
+Say '  client.jar (download)'
+Show-Jar $clientJar
+Say '  server.jar (download)'
+Show-Jar $serverJar
+Say '  merged.jar (merge of the two)'
+Show-Jar $mergedJar
+$script:Facts['MergedEntries'] = if ($null -ne $mergedJar) { $mergedJar.McEntries } else { -2 }
+
+# ---------------------------------------------------------------------------
+Section 'Remapped / processed jars (minecraftMaven)'
+$repos = @(
+    (Join-Path (Join-Path $gradleHome 'caches\fabric-loom') 'minecraftMaven'),
+    (Join-Path $ProjectDir '.gradle\loom-cache\minecraftMaven')
+)
+$mavenJars = @()
+foreach ($repo in $repos) {
+    Say ('  repo: ' + $repo)
+    if (-not (Test-Path $repo)) {
+        Say '    (not created yet)'
+        continue
+    }
+    $jars = @(Get-ChildItem -Path $repo -Recurse -Filter *.jar -File -ErrorAction SilentlyContinue)
+    if ($jars.Count -eq 0) {
+        Say '    (no jars)'
+        continue
+    }
+    foreach ($jar in ($jars | Sort-Object -Property FullName)) {
+        $info = Get-JarInfo $jar.FullName
+        $mavenJars += $info
+        Show-Jar $info
+    }
+}
+$smallest = $mavenJars | Sort-Object -Property Size | Select-Object -First 1
+$script:Facts['MavenSmallestSize'] = if ($null -ne $smallest) { $smallest.Size } else { -1 }
+$script:Facts['MavenSmallestEntries'] = if ($null -ne $smallest) { $smallest.McEntries } else { -1 }
+
+# ---------------------------------------------------------------------------
+Section 'Other Loom caches'
+foreach ($path in @(
+        (Join-Path $ProjectDir '.gradle\loom-cache'),
+        (Join-Path $gradleHome 'caches\fabric-loom'))) {
+    if (Test-Path $path) {
+        $files = @(Get-ChildItem -Path $path -Recurse -File -ErrorAction SilentlyContinue)
+        $jarCount = @($files | Where-Object { $_.Extension -eq '.jar' }).Count
+        Say ('  [ok] ' + $path + '  (' + $files.Count + ' files, ' + $jarCount + ' jars)')
+    } else {
+        Say ('  [!!] not created: ' + $path)
+    }
+}
+foreach ($group in @('com.mojang', 'net.minecraft')) {
+    $dir = Join-Path (Join-Path $gradleHome 'caches\modules-2\files-2.1') $group
+    if (Test-Path $dir) {
+        $files = @(Get-ChildItem -Path $dir -Recurse -File -ErrorAction SilentlyContinue)
+        Say ('  [ok] ' + $dir + '  (' + $files.Count + ' files)')
+        foreach ($item in $files) {
+            Say ('       ' + $item.FullName.Substring($dir.Length).TrimStart('\') + '  ' + $item.Length + ' B')
         }
+    } else {
+        Say ('  [!!] not cached: ' + $dir)
     }
 }
 
-Section 'Loom cache jars (project .gradle\loom-cache)'
-$loomCache = Join-Path $ProjectDir '.gradle\loom-cache'
-$loomJars = @()
-if (Test-Path $loomCache) {
-    $loomJars = @(Get-ChildItem -Path $loomCache -Recurse -Filter *.jar -File -ErrorAction SilentlyContinue)
-}
-if ($loomJars.Count -eq 0) {
-    Say '  [!!] no jars at all - Loom has not produced a Minecraft jar here'
-} else {
-    foreach ($jar in ($loomJars | Sort-Object -Property FullName)) {
-        Say ('  ' + $jar.FullName.Substring($ProjectDir.Length).TrimStart('\') + '  ' + (Size-Mb $jar.Length))
-    }
-}
-
+# ---------------------------------------------------------------------------
 Section 'Resolved compile classpath (gradle dshClasspath)'
-$gradlew = Join-Path $ProjectDir 'gradlew.bat'
 $cpFile = Join-Path $ProjectDir 'build\dsh-cp.txt'
-if (Test-Path $gradlew) {
+$gradlew = Join-Path $ProjectDir 'gradlew.bat'
+if ($SkipGradle) {
+    Say '  skipped (-SkipGradle)'
+} elseif (Test-Path $gradlew) {
     Push-Location $ProjectDir
     try {
-        & $gradlew -q dshClasspath --no-problems-report 2>&1 | ForEach-Object { Say ('  ' + $_) }
+        $out = & $gradlew -q dshClasspath --no-problems-report 2>&1
+        $out | ForEach-Object { Say ('  ' + $_) }
+    } catch {
+        Say ('  [!!] dshClasspath failed: ' + $_.Exception.Message)
     } finally {
         Pop-Location
     }
@@ -102,87 +236,69 @@ if (Test-Path $gradlew) {
     Say '  [!!] gradlew.bat not found - cannot resolve the classpath'
 }
 
-$mcEntries = @()
+$cpMc = @()
 if (Test-Path $cpFile) {
-    $raw = Get-Content $cpFile -Raw
-    $all = @($raw -split ';' | Where-Object { $_ -ne '' })
-    Say ('  classpath entries           : ' + $all.Count)
-    $mcEntries = @($all | Where-Object { $_ -match '(?i)minecraft' })
-    Say ('  entries matching minecraft  : ' + $mcEntries.Count)
-    foreach ($entry in $mcEntries) {
+    $all = @((Get-Content $cpFile -Raw) -split ';' | Where-Object { $_ -ne '' })
+    Say ('  classpath entries          : ' + $all.Count)
+    $cpMc = @($all | Where-Object { $_ -match '(?i)minecraft' })
+    Say ('  entries matching minecraft : ' + $cpMc.Count)
+    foreach ($entry in $cpMc) {
         Say ('    ' + $entry)
+        $info = Get-JarInfo $entry
+        if ($null -eq $info) {
+            Say '      [!!] listed on the classpath but missing on disk'
+        } else {
+            Say ('      ' + (Mb $info.Size) + ', ' + $info.McEntries + ' net/minecraft entries')
+            if ($info.Probe) { $script:Facts['CpHasMc'] = $true }
+        }
     }
 } else {
     Say '  [!!] build\dsh-cp.txt was not produced'
 }
 
-Section 'Minecraft jar contents'
-Add-Type -AssemblyName System.IO.Compression.FileSystem -ErrorAction SilentlyContinue
-$haveMcClasses = $false
-foreach ($entry in $mcEntries) {
-    if (-not (Test-Path $entry)) {
-        Say ('  [!!] listed on the classpath but missing on disk: ' + $entry)
-        continue
-    }
-    $file = Get-Item $entry
-    Say ('  ' + $file.Name + '  ' + (Size-Mb $file.Length))
-    try {
-        $zip = [System.IO.Compression.ZipFile]::OpenRead($entry)
-        try {
-            $count = 0
-            foreach ($item in $zip.Entries) {
-                if ($item.FullName.StartsWith('net/minecraft/')) { $count++ }
-            }
-            Say ('    net/minecraft/ entries : ' + $count)
-            foreach ($probe in @('net/minecraft/resources/Identifier.class',
-                                 'net/minecraft/ChatFormatting.class',
-                                 'net/minecraft/server/MinecraftServer.class')) {
-                $hit = ($null -ne $zip.GetEntry($probe))
-                if ($hit) { $haveMcClasses = $true }
-                Say ('    ' + $probe + ' -> ' + $hit)
-            }
-        } finally {
-            $zip.Dispose()
-        }
-    } catch {
-        Say ('    [!!] cannot open the jar: ' + $_.Exception.Message)
-    }
-}
-
-Section 'Gradle artifact cache'
-$files21 = Join-Path $gradleHome 'caches\modules-2\files-2.1'
-foreach ($group in @('com.mojang', 'net.minecraft')) {
-    $groupDir = Join-Path $files21 $group
-    if (Test-Path $groupDir) {
-        Say ('  ' + $groupDir)
-        foreach ($item in (Get-ChildItem -Path $groupDir -Recurse -File -ErrorAction SilentlyContinue)) {
-            Say ('    ' + $item.FullName.Substring($groupDir.Length).TrimStart('\') + '  ' + $item.Length + ' B')
-        }
-    } else {
-        Say ('  [!!] not cached: ' + $groupDir)
-    }
-}
-$loomHome = Join-Path $gradleHome 'caches\fabric-loom'
-if (Test-Path $loomHome) {
-    Say ('  [ok] ' + $loomHome)
-} else {
-    Say ('  [!!] not cached: ' + $loomHome)
-}
-
+# ---------------------------------------------------------------------------
 Section 'Verdict'
-if ($mcEntries.Count -eq 0) {
-    Say '  [!!] Minecraft is NOT on the compile classpath.'
-    Say '       The "package net.minecraft.* does not exist" errors and the mixin'
-    Say '       NullPointerException come from that, not from the sources.'
-    Say '       Fix: build.bat repair'
-} elseif (-not $haveMcClasses) {
-    Say '  [!!] A Minecraft jar is on the classpath but it holds no net/minecraft'
-    Say '       classes - the jar is empty or truncated (interrupted remap, full disk,'
-    Say '       antivirus).  Fix: build.bat repair'
-} else {
+$mergedEntries = $script:Facts['MergedEntries']
+$cpHasMc = $script:Facts.ContainsKey('CpHasMc') -and $script:Facts['CpHasMc']
+
+if ($cpHasMc) {
     Say '  [OK] Minecraft classes are on the compile classpath.'
-    Say '       If compileJava still fails, the errors are source-level.  Get them all:'
-    Say '           gradlew compileJava -PdshMaxErrs=4000'
+    Say '       If compileJava still fails, the errors are source-level. Full list:'
+    Say '           build.bat compileJava -PdshMaxErrs=4000'
+    Say '       Or let the checker decide: gradlew checkMinecraftClasspath'
+} elseif ($cpMc.Count -eq 0) {
+    Say '  [!!] Minecraft is NOT on the compile classpath (no minecraft jar resolved).'
+    Say '       Look at the "Resolved compile classpath" section above and the'
+    Say '       gradle -info log of the dependency resolution.'
+} elseif ($null -eq $mergedJar -or $mergedEntries -le 0) {
+    Say '  [!!] The merge step is the broken link:'
+    Say ('       caches\fabric-loom\' + $mcVersion + '\minecraft-merged.jar is ' +
+         $(if ($null -eq $mergedJar) { 'missing' } else { (Mb $mergedJar.Size) + ' with ' + $mergedEntries + ' entries' }) + '.')
+    Say '       Either client.jar / server.jar did not download properly (see sizes above;'
+    Say '       a few KB means a broken download, expect tens of MB) or the merge itself'
+    Say '       wrote nothing. Try, in this order:'
+    Say '         1) build.bat repair'
+    Say '         2) free disk space / exclude the project folder in the antivirus'
+    Say '         3) build.bat build --info --stacktrace > build-log.txt   and keep the log'
+} elseif ($script:Facts['MavenSmallestSize'] -ge 0 -and $script:Facts['MavenSmallestSize'] -lt 1024) {
+    Say '  [!!] The remap/jar-processing step is the broken link:'
+    Say ('       minecraft-merged.jar is fine (' + (Mb $mergedJar.Size) + ', ' + $mergedEntries + ' entries)')
+    Say ('       but the processed jar in minecraftMaven is only ' + $script:Facts['MavenSmallestSize'] + ' bytes' +
+         ' (' + $script:Facts['MavenSmallestEntries'] + ' entries).')
+    Say '       A 22 byte jar is an empty zip: the writer created it and added nothing.'
+    Say '       Usual causes, in order of likelihood:'
+    Say '         1) not enough disk space / antivirus deleting jar content while writing'
+    Say '            -> free space above, Windows Security > Virus & threat protection >'
+    Say '               Exclusions > add the project folder and GRADLE_USER_HOME'
+    Say '         2) the Gradle JVM ran out of memory while remapping'
+    Say '            -> raise org.gradle.jvmargs in gradle.properties (e.g. -Xmx6G)'
+    Say '         3) a jar processor (mixin annotation processor / access widener) failed'
+    Say '            silently -> build.bat build --info --stacktrace > build-log.txt'
+    Say '       After changing anything: build.bat repair'
+} else {
+    Say '  [!!] A Minecraft jar is on the classpath but holds no net/minecraft classes,'
+    Say '       while the merge looks fine. Attach build-diagnose.txt and the output of'
+    Say '           build.bat build --info --stacktrace > build-log.txt'
 }
 
 try {
