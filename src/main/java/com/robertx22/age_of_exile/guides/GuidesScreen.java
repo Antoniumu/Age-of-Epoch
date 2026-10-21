@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.robertx22.age_of_exile.capability.entity.EntityData;
 import com.robertx22.age_of_exile.capability.player.EntitySpellCap;
 import com.robertx22.age_of_exile.database.data.perks.Perk;
+import com.robertx22.age_of_exile.database.data.spell_school.SpellSchool;
 import com.robertx22.age_of_exile.database.data.talent_tree.TalentTree;
 import com.robertx22.age_of_exile.gui.bases.BaseScreen;
 import com.robertx22.age_of_exile.gui.bases.INamedScreen;
@@ -203,11 +204,13 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
         List<Component> lines = new ArrayList<>();
         lines.add(Component.literal(g.name).withStyle(g.color));
         lines.add(Component.literal(g.tagline).withStyle(ChatFormatting.GRAY));
-        lines.add(Component.literal("§8Статы на 50 ур.: "
+        lines.add(Component.literal("§8Статы в финальной сборке (50 ур.): "
             + GuideAdvisor.splitLine(GuideMath.idealSplit(g, GuideMath.statBudget(50)))));
         for (String tip : g.tips) {
             lines.add(Component.literal("§7• " + tip));
         }
+        lines.add(Component.literal("§8Ведёт до ур. " + GuideAdvisor.maxLevel()
+            + " (настраивается хостом)"));
         lines.add(Component.literal("§eЛКМ — посмотреть, «Сделать активным» — включить"));
         return lines;
     }
@@ -221,7 +224,8 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
 
         GuideDefinition guide = guide();
 
-        full(matrix, "§6ГАЙДЫ §7— готовые сборки", guiLeft + LEFT_X, guiTop + 10);
+        full(matrix, "§6ГАЙДЫ §7— готовые сборки §8(до ур. " + GuideAdvisor.maxLevel() + ")",
+            guiLeft + LEFT_X, guiTop + 10);
 
         if (guide == null) {
             AbstractGui.drawShadow(mc.font, matrix, "§cГайды не загружены",
@@ -274,10 +278,15 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
         }
         y += 2;
 
-        // прогресс одной строкой
-        small(matrix, "§7Таланты §f" + progress.planTalentsTaken + "§7/§f" + progress.planTalentsTotal
-            + " §7• Статы §f" + progress.statSpent + "§7/§f" + progress.statBudget
-            + " §7• Спеллы §f" + progress.spellSpent + "§7/§f" + progress.spellBudget, x, y);
+        // прогресс одной строкой; после предела гайда цели уже не растут
+        if (progress.guideFinished) {
+            small(matrix, "§aГайд пройден до ур. §f" + progress.guideMaxLevel
+                + "§a — дальше сами", x, y);
+        } else {
+            small(matrix, "§7Таланты §f" + progress.planTalentsTaken + "§7/§f" + progress.planTalentsTotal
+                + " §7• Статы §f" + progress.statSpent + "§7/§f" + progress.statBudget
+                + " §7• Спеллы §f" + progress.spellSpent + "§7/§f" + progress.spellBudget, x, y);
+        }
         y += LINE_S + 2;
 
         String milestone = GuideAdvisor.milestoneText(mc.player, guide);
@@ -429,6 +438,9 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
         if (!progress.startCompatible) {
             return "§cДругой стартовый путь — план недостижим";
         }
+        if (progress.guideFinished) {
+            return "§7Гайд закончен — выбор ваш";
+        }
         PointData nextTalent = GuideAdvisor.recommendedTalent(mc.player);
         if (nextTalent == null) {
             return level < 50 ? "§7Ждите уровень или очки" : "§7План изучен";
@@ -443,12 +455,24 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
     private String spellLine(GuideDefinition guide) {
         StringBuilder sb = new StringBuilder();
         EntitySpellCap.ISpellsCap spells = Load.spells(mc.player);
+        SpellSchool school = GuideAdvisor.spellSchool(guide);
+        int cap = GuideAdvisor.maxLevel();
         for (GuideDefinition.SpellStep step : guide.spells) {
             int lvl = spells.getLevelOf(step.spell);
             if (sb.length() > 0) {
                 sb.append("§7, ");
             }
-            sb.append(lvl >= step.targetLevel ? "§a" : "§7")
+            // Заклинания, которые открываются уже после предела гайда, — тёмные:
+            // план их не ведёт, это выбор игрока.
+            boolean inScope = true;
+            if (school != null) {
+                PointData point = school.spells.get(step.spell);
+                if (point == null) {
+                    point = school.synergies.get(step.spell);
+                }
+                inScope = point == null || school.getLevelNeededToAllocate(point) <= cap;
+            }
+            sb.append(inScope ? (lvl >= step.targetLevel ? "§a" : "§7") : "§8")
                 .append(GuideAdvisor.spellName(step.spell)).append(" ").append(lvl)
                 .append("/").append(step.targetLevel);
         }
