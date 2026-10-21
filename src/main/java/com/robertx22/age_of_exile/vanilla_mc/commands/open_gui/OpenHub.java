@@ -13,11 +13,12 @@ public class OpenHub {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(
             literal(CommandRefs.ID)
-                .then(literal("open").requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_ALL))
+                .then(literal("open")
+                    .requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_ALL))
                     .then(literal("hub")
                         .executes(ctx -> run(ctx.getSource())))
                     .then(literal("questbook")
-                        .executes(ctx -> runQuestBook(ctx.getSource()))));
+                        .executes(ctx -> runQuestBook(ctx.getSource())))));
     }
 
     public static final String COMMAND = "slash open hub";
