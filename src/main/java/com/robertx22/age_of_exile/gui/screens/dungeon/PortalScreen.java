@@ -410,7 +410,7 @@ public class PortalScreen extends BaseScreen {
     // ------------------------------------------------------------------ утилиты
 
     private static String colorCode(ChatFormatting format) {
-        return String.valueOf(format.getChar());
+        return String.valueOf(com.robertx22.forge_compat.common.CompatChatFormatting.getCode(format));
     }
 
     private String clip(String text, int maxWidth) {

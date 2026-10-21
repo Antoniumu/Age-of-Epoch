@@ -208,12 +208,12 @@ public class GameMasterCommand {
                 .toString());
         if (progress == null) {
             send(source, "По игроку " + target.getGameProfile()
-                .getName() + " ещё нет данных.");
+                .name() + " ещё нет данных.");
             return 1;
         }
         GameMaster.MultiplierBreakdown breakdown = gm.breakdown(progress);
         send(source, target.getGameProfile()
-            .getName() + ": уровень " + progress.level + ", время " + GameMaster.fmt(progress.playtimeHours()) + " ч");
+            .name() + ": уровень " + progress.level + ", время " + GameMaster.fmt(progress.playtimeHours()) + " ч");
         send(source, "Множитель: x" + GameMaster.fmt(breakdown.total)
             + " (темп x" + GameMaster.fmt(breakdown.pacing)
             + ", догоняющий x" + GameMaster.fmt(breakdown.catchUp) + ")");
