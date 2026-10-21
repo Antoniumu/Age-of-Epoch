@@ -272,6 +272,12 @@ def check_json():
             structure_set = json.load(handle)
         for entry in structure_set["structures"]:
             structure_name = entry["structure"].split(":")[1]
+            if structure_name.startswith("delve_"):
+                # Finite underground expeditions have their own validator; they
+                # must not be mistaken for retired non-themed tower structures.
+                if not os.path.exists(os.path.join(structure_dir, f"{structure_name}.json")):
+                    fail(f"{path}: unknown delve {entry['structure']}")
+                continue
             active.add(structure_name)
             if structure_name not in expected_structures:
                 fail(f"{path}: legacy/non-themed structure still in natural generation: {structure_name}")

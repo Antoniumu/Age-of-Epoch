@@ -27,4 +27,7 @@ public class SlashBlockEntities {
     public static RegObj<BlockEntityType<TowerBossMarkerBlockEntity>> TOWER_BOSS_MARKER = Def.blockEntity("tower_boss_marker",
         () -> FabricBlockEntityTypeBuilder.create(TowerBossMarkerBlockEntity::new, SlashBlocks.TOWER_BOSS_MARKER.get()).build());
 
+    public static RegObj<BlockEntityType<com.robertx22.world_of_exile.delve.DelveMarkerBlockEntity>> DELVE_MARKER = Def.blockEntity("delve_marker",
+        () -> FabricBlockEntityTypeBuilder.create(com.robertx22.world_of_exile.delve.DelveMarkerBlockEntity::new, SlashBlocks.DELVE_MARKER.get()).build());
+
 }

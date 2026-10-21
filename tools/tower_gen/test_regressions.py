@@ -6,6 +6,7 @@ Requires nbtlib (the same dependency as validate.py).
 """
 from pathlib import Path
 import json
+import re
 import shutil
 import tempfile
 import unittest
@@ -187,7 +188,11 @@ class SourceSafetyContracts(unittest.TestCase):
         self.assertNotIn("placeOneFallbackMarker", source)
         self.assertNotIn("pumpTowerSpawners", source)
         self.assertIn("private static void protectFromSun(Mob mob)", source)
-        self.assertIn("entity.addTag(DEF_PREFIX + def.id())", source)
+        # main exposes this prefix to the questbook; allow a constant rename,
+        # but still require the saved boss definition tag at the spawn site.
+        prefixes = re.findall(r'String\s+(\w+)\s*=\s*"aoe_tower_def:"', source)
+        self.assertTrue(any(f"entity.addTag({prefix} + def.id())" in source for prefix in prefixes),
+                        "boss spawn must persist its roster definition tag")
 
 
 if __name__ == "__main__":

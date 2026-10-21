@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "world_of_exile:delve_sands",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 48,
+    "separation": 16,
+    "salt": 907712
+  }
+}

@@ -28,6 +28,8 @@ public class SlashBlocks {
     public static RegObj<BlackHoleBlock> BLACK_HOLE = Def.block("black_hole", () -> new BlackHoleBlock());
     public static RegObj<ModSpawnerBlock> SPAWNER = Def.block("spawner", () -> new ModSpawnerBlock());
     public static RegObj<TowerBossMarkerBlock> TOWER_BOSS_MARKER = Def.block("tower_boss_marker", () -> new TowerBossMarkerBlock());
+    public static RegObj<com.robertx22.world_of_exile.delve.DelveMarkerBlock> DELVE_MARKER = Def.block("delve_marker", com.robertx22.world_of_exile.delve.DelveMarkerBlock::new);
+    public static RegObj<Block> DELVE_SEAL = Def.block("delve_seal", () -> new Block(BlockBehaviour.Properties.of().strength(-1.0F, 3600000.0F)));
     public static RegObj<TotemBlock> BLUE_TOTEM = Def.block("blue_totem", () -> new TotemBlock());
     public static RegObj<TotemBlock> GREEN_TOTEM = Def.block("green_totem", () -> new TotemBlock());
     public static RegObj<TotemBlock> GUARD_TOTEM = Def.block("guard_totem", () -> new TotemBlock());
