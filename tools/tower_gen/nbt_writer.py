@@ -223,8 +223,11 @@ class Structure:
         palette_index = {}
         palette = []
         blocks = []
-        for pos in sorted(self.blocks):
-            name, props, nbt = self.blocks[pos]
+        # Missing cells mean "leave the world unchanged", not air. Write the
+        # whole volume so rooms clear terrain, foliage and existing liquids.
+        sx, sy, sz = self.size
+        for pos in ((x, y, z) for x in range(sx) for y in range(sy) for z in range(sz)):
+            name, props, nbt = self.blocks.get(pos, ("minecraft:air", (), None))
             key = (name, props)
             if key not in palette_index:
                 entry = {"Name": String(name)}

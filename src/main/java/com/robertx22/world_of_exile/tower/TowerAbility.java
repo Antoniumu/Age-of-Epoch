@@ -1,5 +1,7 @@
 package com.robertx22.world_of_exile.tower;
 
+import com.robertx22.world_of_exile.world_gen.TowerBoss;
+
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -183,11 +185,7 @@ public enum TowerAbility {
                 double z = target.getZ() + Math.sin(angle) * distance;
                 double y = target.getY() + (level.getRandom().nextInt(3) - 1);
                 net.minecraft.core.BlockPos pos = net.minecraft.core.BlockPos.containing(x, y, z);
-                if (level.getBlockState(pos).isAir() && level.getBlockState(pos.above()).isAir()) {
-                    level.sendParticles(ParticleTypes.PORTAL, boss.getX(), boss.getY() + 1.0D, boss.getZ(),
-                        24, 0.3D, 0.6D, 0.3D, 0.05D);
-                    boss.teleportTo(x, y, z);
-                    boss.getNavigation().stop();
+                if (TowerBoss.blink(level, boss, pos)) {
                     return;
                 }
             }
@@ -213,6 +211,10 @@ public enum TowerAbility {
         if (target == null) {
             return;
         }
+        List<TowerAbility> abilities = TowerBoss.abilitiesOf(boss);
+        if (abilities.isEmpty()) {
+            return;
+        }
         long now = level.getGameTime();
         Map<TowerAbility, Long> local = NEXT.computeIfAbsent(boss.getUUID(), key -> new ConcurrentHashMap<>());
         if (NEXT.size() > 512) {
@@ -220,10 +222,9 @@ public enum TowerAbility {
         }
         if (boss.getHealth() < boss.getMaxHealth() * 0.35F && boss.getRandom().nextInt(25) == 0) {
             // cornered bosses shrug off one cooldown
-            TowerAbility[] all = values();
-            local.remove(all[boss.getRandom().nextInt(all.length)]);
+            local.remove(abilities.get(boss.getRandom().nextInt(abilities.size())));
         }
-        for (TowerAbility ability : values()) {
+        for (TowerAbility ability : abilities) {
             Long next = local.get(ability);
             if (next == null) {
                 // stagger the opening volley so a boss does not dump every

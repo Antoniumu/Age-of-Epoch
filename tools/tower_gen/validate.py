@@ -21,6 +21,8 @@ import sys
 
 import nbtlib
 
+from themes import THEMES
+
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 RES = os.path.join(ROOT, "src", "main", "resources")
 DATA = os.path.join(RES, "data", "world_of_exile")
@@ -34,6 +36,10 @@ KNOWN_BIOMES = {
     "minecraft:old_growth_birch_forest",
     "minecraft:flower_forest",
     "minecraft:windswept_forest",
+    "minecraft:taiga",
+    "minecraft:old_growth_pine_taiga",
+    "minecraft:old_growth_spruce_taiga",
+    "minecraft:cherry_grove",
     "minecraft:snowy_plains",
     "minecraft:ice_spikes",
     "minecraft:snowy_taiga",
@@ -93,13 +99,17 @@ def check_nbt(path):
         x, y, z = [int(v) for v in block["pos"]]
         if not (0 <= x < size[0] and 0 <= y < size[1] and 0 <= z < size[2]):
             fail(f"{path}: block {(x, y, z)} outside {size}")
+        if (x, y, z) in positions:
+            fail(f"{path}: duplicate block at {(x, y, z)}")
         positions.add((x, y, z))
         state = int(block["state"])
         if state < 0 or state >= len(palette):
             fail(f"{path}: palette index {state} out of range")
         name = str(palette[state]["Name"])
-        if name in ("minecraft:air", "minecraft:cave_air"):
-            fail(f"{path}: air is written explicitly at {(x, y, z)} (wastes space)")
+    if len(positions) != size[0] * size[1] * size[2]:
+        fail(f"{path}: missing explicit air cells: terrain can fill the tower interior")
+    states = {tuple(int(v) for v in block["pos"]): str(palette[int(block["state"])]["Name"])
+              for block in blocks}
 
     names = {}
     for block in blocks:
@@ -120,7 +130,7 @@ def check_nbt(path):
         supports = {(1, 8): (0, 8), (15, 8): (16, 8), (8, 1): (8, 0), (8, 15): (8, 16)}
         sx, sz = supports[(lx, lz)]
         for y in ys:
-            if (sx, y, sz) not in positions:
+            if states.get((sx, y, sz), "minecraft:air") == "minecraft:air":
                 fail(f"{path}: ladder at {(lx, y, lz)} has no support at {(sx, y, sz)}")
                 break
 
@@ -130,6 +140,12 @@ def check_nbt(path):
         if tag is None:
             fail(f"{path}: jigsaw without nbt")
             continue
+        orientation = str(palette[int(block["state"])]["Properties"]["orientation"])
+        expected_orientation = "down_north" if int(block["pos"][1]) == 0 else "up_east"
+        if orientation != expected_orientation:
+            fail(f"{path}: connector has wrong orientation {orientation}")
+        if str(tag.get("name")) != "world_of_exile:connect":
+            fail(f"{path}: connector has wrong name")
         if str(tag.get("target")) != "world_of_exile:connect":
             fail(f"{path}: jigsaw target {tag.get('target')}")
         pool = str(tag.get("pool"))
@@ -147,12 +163,27 @@ def check_nbt(path):
             continue
         marker = match.group(0).split("]")[0] + "]"
         markers.append(marker)
+        if marker == "[boss]":
+            x, y, z = [int(v) for v in block["pos"]]
+            for dx in range(-2, 3):
+                for dz in range(-2, 3):
+                    floor = states.get((x + dx, y - 1, z + dz), "minecraft:air")
+                    if floor in {"minecraft:air", "minecraft:water", "minecraft:lava", "minecraft:magma_block"}:
+                        fail(f"{path}: unsafe boss platform")
+                    for dy in range(5):
+                        if dx == dz == dy == 0:
+                            continue  # the marker itself is removed before spawn
+                        if states.get((x + dx, y + dy, z + dz)) != "minecraft:air":
+                            fail(f"{path}: obstructed boss headroom at {(x+dx, y+dy, z+dz)}")
         if marker == "[spawner]" and "[tower:" not in raw:
             fail(f"{path}: spawner sign has no theme tag")
         if marker in ("[treasure]", "[final_treasure]") and "[loot#" not in raw:
             fail(f"{path}: treasure sign has no loot table")
-    if "[boss]" not in markers and "top" in path:
-        fail(f"{path}: top piece without a [boss] marker")
+    is_top = os.path.basename(path).startswith("top")
+    if markers.count("[boss]") != (1 if is_top else 0):
+        fail(f"{path}: expected exactly one boss in top, none in other pieces")
+    if len(jigsaws) != (1 if is_top else 2):
+        fail(f"{path}: missing vertical connector")
     if "[spawner]" not in markers:
         fail(f"{path}: piece without a [spawner] marker")
 
@@ -169,24 +200,39 @@ def check_json():
     for path in glob.glob(os.path.join(pool_dir, "towers", "*", "*.json")):
         with open(path, encoding="utf-8") as handle:
             pool = json.load(handle)
+        theme_id = os.path.basename(os.path.dirname(path))
         for element in pool["elements"]:
             location = element["element"]["location"]
+            if not location.startswith(f"world_of_exile:towers/{theme_id}/"):
+                fail(f"{path}: template belongs to another theme")
             if not template_exists(location):
                 fail(f"{path}: missing template {location}")
             if element["element"].get("processors") != "world_of_exile:tower_processor":
                 fail(f"{path}: element without the tower processor")
         fallback = pool["fallback"]
         if fallback != "minecraft:empty":
+            if not fallback.startswith(f"world_of_exile:towers/{theme_id}/"):
+                fail(f"{path}: fallback belongs to another theme")
             fallback_path = os.path.join(pool_dir, f"{fallback.split(':')[1]}.json")
             if not os.path.exists(fallback_path):
                 fail(f"{path}: missing fallback {fallback}")
 
+    by_id = {theme["id"]: theme for theme in THEMES}
+    nether_biomes = {biome for theme in THEMES if theme.get("nether") for biome in theme["biomes"]}
+    expected_structures = {f"{theme['id']}_t{tier}" for theme in THEMES for tier in (1, 2, 3)}
     known_structures = set()
     for path in sorted(glob.glob(os.path.join(structure_dir, "towers_*.json")) + glob.glob(os.path.join(structure_dir, "*_t[123].json"))):
         with open(path, encoding="utf-8") as handle:
             structure = json.load(handle)
         name = os.path.basename(path)[:-5]
         known_structures.add(name)
+        theme = by_id[name.rsplit("_t", 1)[0]]
+        if set(structure["biomes"]) != set(theme["biomes"]):
+            fail(f"{path}: wrong biome whitelist for theme {theme['id']}")
+        if bool(set(structure["biomes"]) & nether_biomes) != bool(theme.get("nether")):
+            fail(f"{path}: dimension mismatch")
+        if structure["start_pool"] != f"world_of_exile:towers/{theme['id']}/start":
+            fail(f"{path}: wrong themed start pool")
         for biome in structure["biomes"]:
             if biome not in KNOWN_BIOMES:
                 fail(f"{path}: unknown biome {biome}")
@@ -197,13 +243,26 @@ def check_json():
         if structure["type"] != "minecraft:jigsaw":
             fail(f"{path}: not a jigsaw structure")
 
+    if known_structures != expected_structures:
+        fail("Missing or extra themed structures")
+    active = set()
     for path in glob.glob(os.path.join(set_dir, "*.json")):
         with open(path, encoding="utf-8") as handle:
             structure_set = json.load(handle)
         for entry in structure_set["structures"]:
             structure_name = entry["structure"].split(":")[1]
+            active.add(structure_name)
+            if structure_name not in expected_structures:
+                fail(f"{path}: legacy/non-themed structure still in natural generation: {structure_name}")
             if not os.path.exists(os.path.join(structure_dir, f"{structure_name}.json")):
                 fail(f"{path}: unknown structure {entry['structure']}")
+
+    if active != expected_structures:
+        fail("Natural generation must include all 48 themed structures and no legacy towers")
+    legacy = os.path.join(structure_dir, "shortfatfortress.json")
+    with open(legacy, encoding="utf-8") as handle:
+        if json.load(handle)["biomes"] != "#minecraft:is_nether":
+            fail("shortfatfortress must not be eligible in the overworld even if re-added to a set")
 
 
 def main():
