@@ -119,6 +119,23 @@ public class PerkButton extends ImageButton {
                 this.playerData = currentData;
             }
 
+            com.robertx22.age_of_exile.capability.entity.EntityData unitData = Load.Unit(mc.player);
+            boolean canAlloc = this.playerData != null && this.playerData.talents.canAllocate(school, point, unitData, mc.player);
+            String failReason = this.playerData != null ? this.playerData.talents.getFailAllocateReason(school, point, unitData, mc.player) : "playerData is null";
+            System.out.println("[AOE-CLICK] PerkButton HIT: point=" + point
+                + " perk=" + (perk != null ? perk.GUID() : "null")
+                + " type=" + (perk != null ? perk.getType() : "null")
+                + " isEntry=" + (perk != null && perk.is_entry)
+                + " oneOfAKind=" + (perk != null ? perk.one_of_a_kind : "null")
+                + " lvlReq=" + (perk != null ? perk.lvl_req : -1)
+                + " btn=" + button
+                + " playerLvl=" + (unitData != null ? unitData.getLevel() : -1)
+                + " freePoints=" + (this.playerData != null && unitData != null ? this.playerData.talents.getFreePoints(unitData, school.getSchool_type()) : -999)
+                + " allocatedInSchool=" + (this.playerData != null ? this.playerData.talents.getSchool(school).getAllocatedPoints(school) : "null")
+                + " connections=" + (school != null && school.calcData != null ? school.calcData.connections.get(point) : "null")
+                + " canAllocate=" + canAlloc
+                + " failReason=" + failReason);
+
             this.playDownSound(Minecraft.getInstance().getSoundManager());
 
             if (button == 0 && this.playerData != null) {

@@ -77,16 +77,23 @@ public abstract class Screen extends net.minecraft.client.gui.screens.Screen {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        System.out.println("[AOE-CLICK] Screen.mouseClicked: screen=" + this.getClass().getSimpleName()
+            + " x=" + event.x() + " y=" + event.y() + " btn=" + event.button()
+            + " doubleClick=" + doubleClick + " buttons=" + this.buttons.size());
         if (this.mouseClicked(event.x(), event.y(), event.button())) {
+            System.out.println("[AOE-CLICK] Handled by screen.mouseClicked(double,double,int)");
             return true;
         }
         List<Button> snapshot = new ArrayList<>(this.buttons);
         for (int i = snapshot.size() - 1; i >= 0; i--) {
             Button b = snapshot.get(i);
             if (b != null && b.mouseClicked(event, doubleClick)) {
+                System.out.println("[AOE-CLICK] Handled by button[" + i + "]=" + b.getClass().getSimpleName()
+                    + " at (" + b.x + "," + b.y + " " + b.getWidth() + "x" + b.getHeight() + ")");
                 return true;
             }
         }
+        System.out.println("[AOE-CLICK] No button matched in " + this.getClass().getSimpleName());
         return super.mouseClicked(event, doubleClick);
     }
 
