@@ -100,6 +100,10 @@ public class MapsData {
 
             tel_pos = teleporterPos;
 
+            // запоминаем выбранный состав отряда: от него зависят множители
+            // добычи/опыта и лимит смертей (DungeonType.onDeath)
+            dungeonData.team = teamSize;
+
             // set the dungeon data for the chunk
             Level dimWorld = player.level().getServer()
                 .getLevel(ResourceKey.create(Registries.DIMENSION, dungeonData.dun_type.DIMENSION_ID));
@@ -162,9 +166,15 @@ public class MapsData {
 
                 if (!foundSpawn) {
                     player.sendSystemMessage(Component.literal("Ошибка: не удалось найти точку появления."));
+                    // Мир подземелья залит камнем (см. dimension/dungeon.json). Если
+                    // структура не сгенерировалась, игрок окажется внутри монолита —
+                    // вырезаем аварийную комнату, чтобы он не задохнулся.
+                    carveEmergencyRoom(dimWorld, tpPos);
                 }
                 if (!foundportalback) {
                     player.sendSystemMessage(Component.literal("Ошибка: не удалось найти позицию обратного портала."));
+                    // без обратного портала игрок застрянет в измерении подземелья
+                    placeEmergencyPortal(dimWorld, tpPos);
                 }
 
                 w.print("finding spawn");
@@ -184,10 +194,12 @@ public class MapsData {
                     player.level().destroyBlock(x, false);
                     player.level().setBlockAndUpdate(x, SlashBlocks.PORTAL.get()
                         .defaultBlockState());
-                    PortalBlockEntity be = (PortalBlockEntity) player.level().getBlockEntity(x);
-                    be.data.dungeonPos = tpPos;
-                    be.data.tpbackpos = teleporterPos.above();
-                    be.data.dungeonType = dungeonData.dun_type;
+                    if (player.level().getBlockEntity(x) instanceof PortalBlockEntity be) {
+                        be.data.dungeonPos = tpPos;
+                        be.data.tpbackpos = teleporterPos.above();
+                        be.data.dungeonType = dungeonData.dun_type;
+                        be.setChanged();
+                    }
 
                 }
             }
@@ -214,6 +226,45 @@ public class MapsData {
 
     }
 
+    /**
+     * Аварийная комната на случай, если структура не сгенерировалась.
+     * Нужна потому, что измерение подземелья теперь залито камнем
+     * (как в оригинале 1.16.5), а не пустое.
+     */
+    private static void carveEmergencyRoom(Level world, BlockPos center) {
+        for (int x = -3; x <= 3; x++) {
+            for (int z = -3; z <= 3; z++) {
+                for (int y = 0; y <= 4; y++) {
+                    world.setBlockAndUpdate(center.offset(x, y, z), Blocks.AIR.defaultBlockState());
+                }
+                world.setBlockAndUpdate(center.offset(x, -1, z), Blocks.STONE_BRICKS.defaultBlockState());
+                world.setBlockAndUpdate(center.offset(x, 5, z), Blocks.STONE_BRICKS.defaultBlockState());
+            }
+        }
+        world.setBlockAndUpdate(center.offset(-3, -1, -3), Blocks.GLOWSTONE.defaultBlockState());
+        world.setBlockAndUpdate(center.offset(3, -1, 3), Blocks.GLOWSTONE.defaultBlockState());
+    }
+
+    /**
+     * Ставит обратный портал рядом с точкой появления, если в структуре не нашёлся
+     * знак {@code [portal]}. Портал в измерении подземелья всегда возвращает игрока
+     * в {@code maps.tel_pos} (см. PortalBlock), поэтому данных блоку не нужно.
+     */
+    private static void placeEmergencyPortal(Level world, BlockPos center) {
+        int[][] offsets = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {-1, -1}, {2, 0}, {-2, 0}, {0, 2}, {0, -2}};
+        for (int[] offset : offsets) {
+            BlockPos p = center.offset(offset[0], 0, offset[1]);
+            if (world.getBlockState(p)
+                .isAir()
+                && world.getBlockState(p.above())
+                .isAir()) {
+                world.setBlockAndUpdate(p, SlashBlocks.PORTAL.get()
+                    .defaultBlockState());
+                return;
+            }
+        }
+    }
+
     private static void ensureDungeonGenerated(net.minecraft.server.level.ServerLevel serverDim, ChunkPos cp) {
         try {
             BlockPos startPos = new BlockPos(cp.getMinBlockX() + 8, DungeonDimensionJigsawFeature.HEIGHT, cp.getMinBlockZ() + 8);
@@ -224,6 +275,7 @@ public class MapsData {
             Optional<net.minecraft.core.Holder.Reference<net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool>> poolOpt =
                 poolReg.get(poolKey);
             if (poolOpt.isEmpty()) {
+                System.err.println("[AOE] Не найден пул mmorpg:dungeon/starts — подземелье не будет сгенерировано.");
                 return;
             }
             net.minecraft.world.level.chunk.ChunkGenerator generator = serverDim.getChunkSource().getGenerator();
@@ -258,6 +310,10 @@ public class MapsData {
                     net.minecraft.world.level.levelgen.structure.structures.JigsawStructure.DEFAULT_DIMENSION_PADDING,
                     net.minecraft.world.level.levelgen.structure.structures.JigsawStructure.DEFAULT_LIQUID_SETTINGS
                 );
+            if (stub.isEmpty()) {
+                System.err.println("[AOE] JigsawPlacement не создал ни одного куска подземелья для чанка " + cp);
+            }
+
             if (stub.isPresent()) {
                 net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder builder = stub.get().getPiecesBuilder();
                 for (net.minecraft.world.level.levelgen.structure.StructurePiece piece : builder.build().pieces()) {
@@ -275,6 +331,7 @@ public class MapsData {
                 }
             }
         } catch (Exception e) {
+            System.err.println("[AOE] Ошибка генерации подземелья: " + e);
             e.printStackTrace();
         }
     }
