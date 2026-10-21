@@ -8,6 +8,7 @@ import com.robertx22.age_of_exile.dimension.rules.OnTickRegenerate;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.library_of_exile.events.base.EventConsumer;
 import com.robertx22.library_of_exile.events.base.ExileEvents;
+import com.robertx22.world_of_exile.world_gen.TowerBoss;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
@@ -23,6 +24,7 @@ public class OnEntityTick extends EventConsumer<ExileEvents.OnEntityTick> {
         if (entity.level().isClientSide()) {
             return;
         }
+        TowerBoss.contain(entity);
         try {
             if (Load.Unit(entity) == null) {
                 return; // it shouldnt be though

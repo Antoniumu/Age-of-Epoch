@@ -15,6 +15,8 @@ import com.robertx22.age_of_exile.event_hooks.my_events.OnMobDeathDrops;
 import com.robertx22.age_of_exile.event_hooks.my_events.OnPlayerDeath;
 import com.robertx22.age_of_exile.event_hooks.ontick.OnServerTick;
 import com.robertx22.age_of_exile.event_hooks.ontick.OnTickDungeonWorld;
+import com.robertx22.world_of_exile.world_gen.TowerBoss;
+import com.robertx22.world_of_exile.world_gen.TowerCollapse;
 import com.robertx22.age_of_exile.event_hooks.player.OnLogin;
 import com.robertx22.age_of_exile.event_hooks.player.StopCastingIfInteract;
 import com.robertx22.age_of_exile.mixin_methods.OnItemStoppedUsingCastImbuedSpell;
@@ -29,6 +31,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerLevel;
 import com.robertx22.forge_compat.event.TickEvent;
 import com.robertx22.forge_compat.event.entity.EntityJoinWorldEvent;
+import com.robertx22.forge_compat.event.entity.living.LivingDeathEvent;
 import com.robertx22.forge_compat.event.entity.living.LivingHurtEvent;
 import com.robertx22.forge_compat.event.entity.player.AttackEntityEvent;
 import com.robertx22.forge_compat.event.entity.player.PlayerEvent;
@@ -56,8 +59,12 @@ public class CommonEvents {
         ForgeEvents.registerForgeEvent(TickEvent.WorldTickEvent.class, event -> {
             if (event.phase == TickEvent.Phase.END && event.world instanceof ServerLevel) {
                 OnTickDungeonWorld.onEndTick((ServerLevel) event.world);
+                TowerBoss.tickLevel((ServerLevel) event.world);
+                TowerCollapse.tick((ServerLevel) event.world);
             }
         });
+
+        ForgeEvents.registerForgeEvent(LivingDeathEvent.class, TowerBoss::onDeath);
 
         ForgeEvents.registerForgeEvent(AttackEntityEvent.class, event -> {
             if (event.getEntityLiving() instanceof ServerPlayer) {

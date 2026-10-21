@@ -1633,6 +1633,7 @@
   "block.mmorpg.portal": "Портал",
   "block.mmorpg.black_hole": "Чёрная дыра",
   "block.mmorpg.spawner": "Спавнер",
+  "block.mmorpg.tower_boss_marker": "Клетка стража башни",
   "block.mmorpg.blue_totem": "Синий тотем",
   "block.mmorpg.green_totem": "Зелёный тотем",
   "block.mmorpg.guard_totem": "Защитный тотем",

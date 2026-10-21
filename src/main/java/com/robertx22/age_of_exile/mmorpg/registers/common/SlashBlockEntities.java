@@ -1,6 +1,7 @@
 package com.robertx22.age_of_exile.mmorpg.registers.common;
 
 import com.robertx22.age_of_exile.dimension.spawner.ModSpawnerBlockEntity;
+import com.robertx22.world_of_exile.world_gen.TowerBossMarkerBlockEntity;
 import com.robertx22.age_of_exile.dimension.teleporter.TeleportedBlockEntity;
 import com.robertx22.age_of_exile.dimension.teleporter.portal_block.PortalBlockEntity;
 import com.robertx22.age_of_exile.mmorpg.registers.deferred_wrapper.Def;
@@ -23,5 +24,7 @@ public class SlashBlockEntities {
         () -> FabricBlockEntityTypeBuilder.create(PortalBlockEntity::new, SlashBlocks.PORTAL.get()).build());
     public static RegObj<BlockEntityType<ModSpawnerBlockEntity>> SPAWNER = Def.blockEntity("spawner",
         () -> FabricBlockEntityTypeBuilder.create(ModSpawnerBlockEntity::new, SlashBlocks.SPAWNER.get()).build());
+    public static RegObj<BlockEntityType<TowerBossMarkerBlockEntity>> TOWER_BOSS_MARKER = Def.blockEntity("tower_boss_marker",
+        () -> FabricBlockEntityTypeBuilder.create(TowerBossMarkerBlockEntity::new, SlashBlocks.TOWER_BOSS_MARKER.get()).build());
 
 }
