@@ -3,9 +3,9 @@
 Only the subset needed by the tower generator: `size`, `entities`, `blocks`,
 `palette`, `DataVersion`.  Blocks may carry optional NBT (used for signs).
 
-The files written here follow the same layout as the hand-built tower
-structures that shipped with the mod, so `StructureTemplate` reads them
-without any extra conversion.
+Targets Minecraft 26.3 / DataVersion 5023. Palette entries use `id` and
+`properties`, not the legacy `Name` / `Properties`. Labeling legacy block
+states as current data makes NbtUtils.readBlockState silently load AIR.
 """
 
 from __future__ import annotations
@@ -29,9 +29,8 @@ TAG_COMPOUND = 10
 TAG_INT_ARRAY = 11
 TAG_LONG_ARRAY = 12
 
-# Current data version of the target platform (see BUILD-REPORT.md).  Using the
-# current version keeps the newer palette blocks (mud bricks, deepslate,
-# smooth basalt, ...) out of the data fixer pass.
+# The schema must match this version, including the lowercase palette keys.
+# See tools/tower_gen/FORMAT.md for the vanilla 26.3 reference.
 DATA_VERSION = 5023
 
 
@@ -230,9 +229,9 @@ class Structure:
             name, props, nbt = self.blocks.get(pos, ("minecraft:air", (), None))
             key = (name, props)
             if key not in palette_index:
-                entry = {"Name": String(name)}
+                entry = {"id": String(name)}
                 if props:
-                    entry["Properties"] = Compound({k: String(v) for k, v in props})
+                    entry["properties"] = Compound({k: String(v) for k, v in props})
                 palette_index[key] = len(palette)
                 palette.append(Compound(entry))
             block = {
