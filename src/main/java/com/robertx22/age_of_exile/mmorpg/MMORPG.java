@@ -2,7 +2,7 @@ package com.robertx22.age_of_exile.mmorpg;
 
 import com.robertx22.addon.divine_missions.DMRegInit;
 import com.robertx22.addon.infinite_dungeons.IDAddonRegInit;
-import com.robertx22.age_of_exile.a_libraries.curios.CurioEvents;
+import com.robertx22.age_of_exile.a_libraries.trinkets.TrinketEvents;
 import com.robertx22.age_of_exile.aoe_data.GeneratedData;
 import com.robertx22.age_of_exile.aoe_data.database.stat_conditions.StatConditions;
 import com.robertx22.age_of_exile.aoe_data.database.stat_effects.StatEffects;
@@ -33,7 +33,6 @@ import net.minecraft.resources.Identifier;
 import com.robertx22.forge_compat.api.distmarker.Dist;
 import com.robertx22.forge_compat.eventbus.api.IEventBus;
 import com.robertx22.forge_compat.fml.DistExecutor;
-import com.robertx22.forge_compat.fml.InterModComms;
 import com.robertx22.forge_compat.fml.ModList;
 import com.robertx22.forge_compat.fml.ModLoadingContext;
 import com.robertx22.forge_compat.fml.common.Mod;
@@ -43,8 +42,6 @@ import com.robertx22.forge_compat.fml.event.lifecycle.InterModEnqueueEvent;
 import com.robertx22.forge_compat.fml.javafmlmod.FMLJavaModLoadingContext;
 import com.robertx22.forge_compat.fml.network.NetworkRegistry;
 import com.robertx22.forge_compat.fml.network.simple.SimpleChannel;
-import top.theillusivec4.curios.api.SlotTypeMessage;
-
 @Mod(SlashRef.MODID)
 public class MMORPG implements net.fabricmc.api.ModInitializer {
 
@@ -102,7 +99,7 @@ public class MMORPG implements net.fabricmc.api.ModInitializer {
         bus.addListener(this::commonSetupEvent);
         bus.addListener(this::interMod);
 
-        CurioEvents.reg();
+        TrinketEvents.reg();
 
         ScalingDifficultyEvents.register();
 
@@ -152,10 +149,6 @@ public class MMORPG implements net.fabricmc.api.ModInitializer {
             IDAddonRegInit.init();
         }
 
-        InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("ring").size(2)
-            .build());
-        InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("necklace").size(1)
-            .build());
     }
 
     public void commonSetupEvent(FMLCommonSetupEvent event) {

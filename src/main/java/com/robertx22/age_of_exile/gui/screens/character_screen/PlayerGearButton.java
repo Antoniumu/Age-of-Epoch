@@ -1,8 +1,8 @@
 package com.robertx22.age_of_exile.gui.screens.character_screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.robertx22.age_of_exile.a_libraries.curios.MyCurioUtils;
-import com.robertx22.age_of_exile.a_libraries.curios.RefCurio;
+import com.robertx22.age_of_exile.a_libraries.trinkets.MyTrinketUtils;
+import com.robertx22.age_of_exile.a_libraries.trinkets.TrinketSlots;
 import com.robertx22.age_of_exile.gui.bases.BaseScreen;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
@@ -33,9 +33,9 @@ public class PlayerGearButton extends ImageButton {
         this.player = player;
         this.screen = screen;
 
-        addItemButton(MyCurioUtils.get(RefCurio.NECKLACE, player, 0), 0, 4);
-        addItemButton(MyCurioUtils.get(RefCurio.RING, player, 0), 0, 22);
-        addItemButton(MyCurioUtils.get(RefCurio.RING, player, 1), 0, 40);
+        addItemButton(MyTrinketUtils.get(TrinketSlots.NECKLACE.name, player, 0), 0, 4);
+        addItemButton(MyTrinketUtils.get(TrinketSlots.RING.name, player, 0), 0, 22);
+        addItemButton(MyTrinketUtils.get(TrinketSlots.RING.name, player, 1), 0, 40);
 
         addItemButton(player.getItemBySlot(EquipmentSlot.HEAD), 81, 4);
         addItemButton(player.getItemBySlot(EquipmentSlot.CHEST), 81, 22);
