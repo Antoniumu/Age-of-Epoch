@@ -186,20 +186,15 @@ public class SpellHotbarOverlay extends AbstractGui {
 
                     int cdsec = cds.getCooldownTicks(spell.GUID()) / 20;
                     if (cdsec > 1) {
-                        String stext = cdsec + "s";
+                        String stext = cdsec + "с";
                         GuiUtils.renderScaledText(matrix, xs + 27, ys + 10, 0.75F, stext, ChatFormatting.YELLOW);
                     }
                 }
 
-                String txt = CLOC.translate(KeybindsRegister.getSpellHotbar(place)
-                        .getTranslatedKeyMessage())
-                    .toUpperCase(Locale.ROOT);
-
-                if (txt.length() > 3) {
-                    txt = txt.substring(0, 2);
+                if (!txt.isEmpty()) {
+                    GuiUtils.renderScaledText(matrix,
+                        xs + 14, ys + 12, 1, txt, ChatFormatting.GREEN);
                 }
-                GuiUtils.renderScaledText(matrix,
-                    xs + 14, ys + 12, 1, txt, ChatFormatting.GREEN);
 
             }
         } catch (Exception e) {
