@@ -3,8 +3,8 @@
 	"parent": "block/block",
 	"ambientocclusion": false,
 	"textures": {
-		"0": "entity/end_portal",
-		"particle": "entity/end_portal"
+		"0": "minecraft:block/nether_portal",
+		"particle": "minecraft:block/nether_portal"
 	},
 	"elements": [
 		{
