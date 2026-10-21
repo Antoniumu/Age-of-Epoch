@@ -30,6 +30,22 @@ public class TowerBossMarkerBlock extends Block implements EntityBlock {
     }
 
     @Override
+    public <T extends BlockEntity> net.minecraft.world.level.block.entity.BlockEntityTicker<T> getTicker(
+        Level level,
+        BlockState state,
+        net.minecraft.world.level.block.entity.BlockEntityType<T> type
+    ) {
+        if (level.isClientSide()) {
+            return null;
+        }
+        return (lvl, pos, st, be) -> {
+            if (be instanceof TowerBossMarkerBlockEntity marker) {
+                marker.serverTick();
+            }
+        };
+    }
+
+    @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
         if (random.nextInt(3) != 0) {
             return;
