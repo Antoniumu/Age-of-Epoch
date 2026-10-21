@@ -43,8 +43,12 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
     List<C> fromDatapacks = null;
     FriendlyByteBuf cachedBuf = null;
 
+    public boolean isDatapack() {
+        return this.isDatapack;
+    }
+
     public void sendUpdatePacket(ServerPlayer player) {
-        if (type.ser == null || !type.isDatapack()) {
+        if (type.ser == null || !this.isDatapack) {
             return;
         }
         try {
@@ -78,7 +82,7 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
     public void onAllDatapacksLoaded() {
         registerSerializables();
 
-        if (!type.isDatapack() || type.ser == null) {
+        if (!this.isDatapack || type.ser == null) {
             return;
         }
 

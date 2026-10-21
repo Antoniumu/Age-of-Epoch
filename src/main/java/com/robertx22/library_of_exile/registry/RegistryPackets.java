@@ -34,10 +34,9 @@ public class RegistryPackets {
 
         ExileRegistryType.getInRegisterOrder(sync)
             .forEach(type -> {
+                ExileRegistryContainer reg = Database.getRegistry(type);
 
-                if (type.isDatapack() && type.getLoader() != null && type.ser instanceof IByteBuf == false) {
-
-                    ExileRegistryContainer reg = Database.getRegistry(type);
+                if (reg.isDatapack() && type.getLoader() != null && type.ser instanceof IByteBuf == false) {
 
                     List<JsonObject> list = map.get(type);
 
