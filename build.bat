@@ -12,6 +12,7 @@ rem    build.bat runClient      launch the development client
 rem    build.bat getjdk         download Temurin JDK 25 into .jdks\
 rem    build.bat repair         wipe Loom/Minecraft caches, then rebuild from scratch
 rem    build.bat diagnose       write build-diagnose.txt (why compileJava cannot see net.minecraft)
+rem    build.bat probe          reproduce Loom's merge step and show the exception it swallows
 rem    build.bat <task> ...     any other Gradle task is passed through
 rem
 rem  Environment (all optional):
@@ -28,6 +29,7 @@ if not defined GRADLE_USER_HOME set "GRADLE_USER_HOME=%PROJECT_DIR%\.gradle-home
 if /i "%~1"=="getjdk" goto :getjdk
 if /i "%~1"=="repair" goto :repair
 if /i "%~1"=="diagnose" goto :diagnose
+if /i "%~1"=="probe" goto :probe
 
 set "ORIGINAL_JAVA_HOME=%JAVA_HOME%"
 call :find_jdk
@@ -64,8 +66,11 @@ echo   Full log: run the same command with more output, e.g.
 echo       build.bat build --stacktrace
 echo.
 echo   Errors like "package net.minecraft.* does not exist" (with a NullPointerException
-echo   in TypeElement.getNestingKind) are a broken Loom cache, not the sources:
-echo       build.bat repair
+echo   in TypeElement.getNestingKind) mean the Minecraft jar on the classpath is empty,
+echo   not that the sources are wrong:
+echo       build.bat diagnose    what Loom produced, step by step
+echo       build.bat probe       why the merge produced nothing (shows the hidden error)
+echo       build.bat repair      wipe the caches and rebuild
 goto :done
 
 rem ----------------------------------------------------------------------
@@ -162,6 +167,26 @@ if not "%RC%"=="0" (
     echo   Diagnose failed. Run it manually to see the error:
     echo       powershell -ExecutionPolicy Bypass -File tools\diagnose-build.ps1
 )
+goto :done
+
+rem ----------------------------------------------------------------------
+:probe
+rem  Runs tools\MergeProbe.java with the project JDK 25. It performs the same
+rem  zip/zipfs operations Loom's MinecraftJarMerger does, but prints the
+rem  exception Loom throws away - that is why minecraft-merged.jar comes out
+rem  empty (22 bytes) without a single line of explanation.
+rem ----------------------------------------------------------------------
+echo.
+echo   Probing the Loom merge step ...
+echo.
+call :find_jdk
+if not defined JAVA_HOME goto :no_jdk
+echo   JDK    : %JAVA_HOME%  [Java %JAVA_MAJOR%]
+echo.
+"%JAVA_HOME%\bin\java.exe" -Dprobe.projectDir="%PROJECT_DIR%" "%PROJECT_DIR%\tools\MergeProbe.java"
+set "RC=%ERRORLEVEL%"
+echo.
+if not "%RC%"=="0" echo   The failure above is the reason minecraft-merged.jar is empty - Loom hides it.
 goto :done
 
 rem ----------------------------------------------------------------------
