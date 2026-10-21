@@ -335,7 +335,8 @@ public class SimulationScreen extends BaseScreen implements INamedScreen {
     public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
         AbstractGui.bindTexture(PANEL_BG);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        blit(matrix, guiLeft, guiTop, 0, 0, sizeX, sizeY);
+        // текстура панели — 256×178; ниже 178 прозрачные пиксели дали бы щель внизу рамки
+        blit(matrix, guiLeft, guiTop, 0, 0, sizeX, 178);
 
         Minecraft mc = Minecraft.getInstance();
         if (mc.player != null) {
