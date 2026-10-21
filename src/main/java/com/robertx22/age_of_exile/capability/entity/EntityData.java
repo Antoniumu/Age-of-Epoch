@@ -701,7 +701,7 @@ public class EntityData implements ICommonPlayerCap, INeededForClient {
 
     public int GiveExp(Player player, int i) {
 
-        MutableComponent txt = Component.literal("+" + (int) i + " Experience").withStyle(ChatFormatting.GREEN);
+        MutableComponent txt = Component.literal("+" + (int) i + " опыта").withStyle(ChatFormatting.GREEN);
         OnScreenMessageUtils.sendMessage((ServerPlayer) player, txt, ClientboundTitleCompatPacket.Type.ACTIONBAR);
 
         setExp(exp + i);
@@ -761,7 +761,7 @@ public class EntityData implements ICommonPlayerCap, INeededForClient {
             this.setLevel(level + 1);
             setExp(getRemainingExp());
 
-            OnScreenMessageUtils.sendLevelUpMessage(player, Component.literal("Player"), level - 1, level);
+            OnScreenMessageUtils.sendLevelUpMessage(player, Component.literal("Игрок"), level - 1, level);
 
             return true;
         }

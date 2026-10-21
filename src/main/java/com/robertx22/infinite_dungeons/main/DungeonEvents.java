@@ -63,7 +63,7 @@ public class DungeonEvents {
 
                 if (world.dimensionType()
                     .hasCeiling()) {
-                    player.sendSystemMessage(Component.literal("Can't do this in a dimension with a ceiling."));
+                    player.sendSystemMessage(Component.literal("Нельзя использовать в измерении с потолком."));
                     return;
                 }
 
@@ -96,7 +96,7 @@ public class DungeonEvents {
                         for (int z = box.minZ(); z < box.maxZ(); z++) {
                             if (!world.getBlockState(new BlockPos(x, y, z))
                                 .isAir()) {
-                                player.sendSystemMessage(Component.literal("Sky space has to be completely empty above you."));
+                                player.sendSystemMessage(Component.literal("Пространство над вами должно быть открытым до неба."));
                                 return;
                             }
                         }

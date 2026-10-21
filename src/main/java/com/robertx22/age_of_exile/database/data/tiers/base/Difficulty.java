@@ -54,18 +54,18 @@ public class Difficulty implements JsonExileRegistry<Difficulty>, IAutoGson<Diff
 
         List<Component> list = new ArrayList<>();
 
-        list.add(Component.literal("Difficulty: ").append(locName())
+        list.add(Component.literal("Сложность: ").append(locName())
             .withStyle(ChatFormatting.DARK_RED));
 
         list.add(Component.literal(""));
 
-        list.add(Component.literal("Mob Health: " + (int) (hp_multi * 100) + "%").withStyle(ChatFormatting.RED));
-        list.add(Component.literal("Mob Damage: " + (int) (dmg_multi * 100) + "%").withStyle(ChatFormatting.RED));
-        list.add(Component.literal("Mob Stats: " + (int) (stat_multi * 100) + "%").withStyle(ChatFormatting.RED));
+        list.add(Component.literal("Здоровье существ: " + (int) (hp_multi * 100) + "%").withStyle(ChatFormatting.RED));
+        list.add(Component.literal("Урон существ: " + (int) (dmg_multi * 100) + "%").withStyle(ChatFormatting.RED));
+        list.add(Component.literal("Характеристики существ: " + (int) (stat_multi * 100) + "%").withStyle(ChatFormatting.RED));
 
         list.add(Component.literal(""));
 
-        list.add(Component.literal("Loot: " + (int) (loot_multi * 100) + "%").withStyle(ChatFormatting.GOLD));
+        list.add(Component.literal("Добыча: " + (int) (loot_multi * 100) + "%").withStyle(ChatFormatting.GOLD));
 
         return list;
     }

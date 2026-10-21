@@ -23,7 +23,7 @@ public enum DungeonType {
             if (data.deaths > deathsAllowed) {
                 data.fail = true;
                 TeamUtils.getOnlineMembers(player)
-                    .forEach(x -> x.sendSystemMessage(Component.literal("Expedition failed due to too many deaths.").withStyle(ChatFormatting.RED)));
+                    .forEach(x -> x.sendSystemMessage(Component.literal("Экспедиция провалена из-за слишком большого числа смертей.").withStyle(ChatFormatting.RED)));
                 // todo fail dungoen
             }
 
@@ -43,7 +43,7 @@ public enum DungeonType {
         Load.playerRPGData(player).favor
             .addFavor(favorloss);
 
-        player.sendSystemMessage(Component.literal("You lost " + Math.abs(favorloss) + " favor.").withStyle(ChatFormatting.RED));
+        player.sendSystemMessage(Component.literal("Вы потеряли " + Math.abs(favorloss) + " ед. благосклонности.").withStyle(ChatFormatting.RED));
 
     }
 

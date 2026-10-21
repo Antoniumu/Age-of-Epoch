@@ -50,9 +50,9 @@ public class DungeonDifficulty implements JsonExileRegistry<DungeonDifficulty>, 
         List<Component> list = new ArrayList<>();
         list.add(getTranslatable());
 
-        list.add(Component.literal("Mob HP: " + mob_hp_multi + "x"));
-        list.add(Component.literal("Mob DMG: " + mob_dmg_multi + "x"));
-        list.add(Component.literal("Coin Drops: " + coin_drop_multi + "x"));
+        list.add(Component.literal("Здоровье существ: " + mob_hp_multi + "x"));
+        list.add(Component.literal("Урон существ: " + mob_dmg_multi + "x"));
+        list.add(Component.literal("Выпадение монет: " + coin_drop_multi + "x"));
 
         DungeonDifficultyTooltipEvent event = new DungeonDifficultyTooltipEvent(ClientOnly.getPlayer(), this, list);
         IDExileEvents.DIFFICULTY_TOOLTIP.callEvents(event);

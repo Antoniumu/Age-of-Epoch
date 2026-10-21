@@ -74,33 +74,33 @@ public class FavorRank implements JsonExileRegistry<FavorRank>, IAutoGson<FavorR
         boolean hasBad = false;
 
         if (!can_salvage_loot) {
-            list.add(Component.literal("Looted gear can't be salvaged!").withStyle(ChatFormatting.RED)
+            list.add(Component.literal("Добытое снаряжение нельзя разобрать!").withStyle(ChatFormatting.RED)
                 .withStyle(ChatFormatting.BOLD));
             hasBad = true;
         }
         if (exp_multi < 1) {
-            list.add(Component.literal("You gain reduced experience.").withStyle(ChatFormatting.RED)
+            list.add(Component.literal("Вы получаете меньше опыта.").withStyle(ChatFormatting.RED)
                 .withStyle(ChatFormatting.BOLD));
             hasBad = true;
         } else if (exp_multi > 1) {
-            list.add(Component.literal("You gain increased experience.").withStyle(ChatFormatting.AQUA)
+            list.add(Component.literal("Вы получаете больше опыта.").withStyle(ChatFormatting.AQUA)
                 .withStyle(ChatFormatting.BOLD));
         }
 
         if (!drop_unique_gears) {
-            list.add(Component.literal("No Unique Gear Drops.").withStyle(ChatFormatting.RED));
+            list.add(Component.literal("Уникальное снаряжение не выпадает.").withStyle(ChatFormatting.RED));
             hasBad = true;
         }
         if (!drop_currency) {
-            list.add(Component.literal("No Currency Drops.").withStyle(ChatFormatting.RED));
+            list.add(Component.literal("Валюта не выпадает.").withStyle(ChatFormatting.RED));
             hasBad = true;
         }
         if (!drop_gems) {
-            list.add(Component.literal("No Gem Drops.").withStyle(ChatFormatting.RED));
+            list.add(Component.literal("Самоцветы не выпадают.").withStyle(ChatFormatting.RED));
             hasBad = true;
         }
         if (!drop_runes) {
-            list.add(Component.literal("No Rune Drops.").withStyle(ChatFormatting.RED));
+            list.add(Component.literal("Руны не выпадают.").withStyle(ChatFormatting.RED));
             hasBad = true;
         }
 
@@ -110,28 +110,28 @@ public class FavorRank implements JsonExileRegistry<FavorRank>, IAutoGson<FavorR
                 list.add(ExileDB.GearRarities()
                     .get(x)
                     .locName()
-                    .append(" rarity can't drop.")
+                    .append(" редкость не может выпасть.")
                     .withStyle(ChatFormatting.GOLD));
             });
         }
 
         if (!hasBad) {
-            list.add(Component.literal("You are blessed by Azuna").withStyle(ChatFormatting.GREEN));
+            list.add(Component.literal("Вы благословлены Азуной").withStyle(ChatFormatting.GREEN));
         } else {
             list.add(Component.literal(""));
-            list.add(Component.literal("Azuna is disappointed in you.").withStyle(ChatFormatting.RED));
+            list.add(Component.literal("Азуна разочарована в вас.").withStyle(ChatFormatting.RED));
         }
 
         if (extra_items_per_boss > 0) {
             list.add(Component.literal(""));
-            list.add(Component.literal("Bosses Drop extra items.").withStyle(ChatFormatting.LIGHT_PURPLE));
+            list.add(Component.literal("Боссы оставляют дополнительные предметы.").withStyle(ChatFormatting.LIGHT_PURPLE));
         }
         if (extra_items_per_chest > 0) {
-            list.add(Component.literal("Loot Chests Drop extra items.").withStyle(ChatFormatting.LIGHT_PURPLE));
+            list.add(Component.literal("В сундуках с добычей больше предметов.").withStyle(ChatFormatting.LIGHT_PURPLE));
         }
 
         list.add(Component.literal(""));
-        list.add(Component.literal("Restore favor by looting chests found in the world.").withStyle(ChatFormatting.BLUE));
+        list.add(Component.literal("Восстанавливайте благосклонность, обыскивая сундуки в мире.").withStyle(ChatFormatting.BLUE));
 
         return list;
 

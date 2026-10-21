@@ -147,12 +147,12 @@ public class StatRequirement implements IAutoGson<StatRequirement> {
             .getValue() >= req) {
             return Component.literal(ChatFormatting.GREEN + "" + ChatFormatting.BOLD + CHECK_YES_ICON + " ").append(stat.locName()
                     .withStyle(ChatFormatting.GRAY))
-                .append(" " + ChatFormatting.GRAY + "Min: " + req + " ");
+                .append(" " + ChatFormatting.GRAY + "Мин.: " + req + " ");
         } else {
 
             return Component.literal(ChatFormatting.RED + "" + ChatFormatting.BOLD + NO_ICON + " ").append(stat.locName()
                     .withStyle(ChatFormatting.GRAY))
-                .append(" " + ChatFormatting.GRAY + "Min: " + req + " ");
+                .append(" " + ChatFormatting.GRAY + "Мин.: " + req + " ");
 
         }
 

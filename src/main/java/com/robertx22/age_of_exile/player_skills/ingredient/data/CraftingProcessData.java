@@ -137,17 +137,17 @@ public class CraftingProcessData {
             GearRarity max = getMaxRarity();
 
             tip.add(Component.literal(""));
-            tip.add(Component.literal("Mini Rarity: ").append(min.locName()
+            tip.add(Component.literal("Мин. редкость: ").append(min.locName()
                 .withStyle(min.textFormatting())));
-            tip.add(Component.literal("Max Rarity: ").append(max.locName()
+            tip.add(Component.literal("Макс. редкость: ").append(max.locName()
                 .withStyle(max.textFormatting())));
 
         }
 
         tip.add(Component.literal(""));
-        tip.add(Component.literal("Success Chance:" + getSuccessChance(ClientOnly.getPlayer()) + "%").withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
+        tip.add(Component.literal("Шанс успеха: " + getSuccessChance(ClientOnly.getPlayer()) + "%").withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
         tip.add(Component.literal(""));
-        tip.add(Component.literal("Stat Multiplier:" + (int) (getStatMulti() * 100) + "%").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD));
+        tip.add(Component.literal("Множитель характеристик: " + (int) (getStatMulti() * 100) + "%").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD));
 
         if (MMORPG.RUN_DEV_TOOLS) {
             ingredients.forEach(x -> {

@@ -60,9 +60,9 @@ public class StartDungeonPacket extends MyPacket<StartDungeonPacket> {
                 if (TeamUtils.getOnlineTeamMembersInRange(ctx.getPlayer())
                     .size() < teamSize.requiredMemberAmount) {
                     ctx.getPlayer()
-                        .sendSystemMessage(Component.literal("You need at least " + teamSize.requiredMemberAmount + "  party members nearby to start a dungeon in this mode."));
+                        .sendSystemMessage(Component.literal("Рядом должно быть не менее " + teamSize.requiredMemberAmount + " участников группы для начала подземелья в этом режиме."));
                     ctx.getPlayer()
-                        .sendSystemMessage(Component.literal("Use /age_of_exile teams"));
+                        .sendSystemMessage(Component.literal("Используйте /age_of_exile teams"));
                     return;
 
                 }

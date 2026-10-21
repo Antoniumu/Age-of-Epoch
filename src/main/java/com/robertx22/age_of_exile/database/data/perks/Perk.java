@@ -116,7 +116,7 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, ITooltipL
 
 
             if (this.one_of_a_kind != null) {
-                list.add(Component.literal("Can only have one Perk of this type: ").withStyle(ChatFormatting.GREEN));
+                list.add(Component.literal("Можно выбрать только один талант этого типа: ").withStyle(ChatFormatting.GREEN));
 
                 list.add(Component.translatable(SlashRef.MODID + ".one_of_a_kind." + one_of_a_kind).withStyle(ChatFormatting.GREEN));
             }
@@ -129,7 +129,7 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, ITooltipL
 
             if (this.type == PerkType.MAJOR) {
 
-                list.add(Component.literal("Game changer talent.").withStyle(ChatFormatting.RED));
+                list.add(Component.literal("Ключевой талант.").withStyle(ChatFormatting.RED));
             }
 
             list.add(Words.PressAltForStatInfo.locName()

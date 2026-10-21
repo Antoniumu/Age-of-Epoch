@@ -40,7 +40,7 @@ public class ProfessionsScreen extends BaseScreen implements INamedScreen {
 
     @Override
     public Words screenName() {
-        return Words.Skills;
+        return Words.Professions;
     }
 
     PlayerSkill currentSkill;
@@ -126,7 +126,7 @@ public class ProfessionsScreen extends BaseScreen implements INamedScreen {
 
         if (currentSkill != null) {
 
-            String name = currentSkill.type_enum.word.translate() + " " + "(Level " + Load.playerRPGData(mc.player).professions
+            String name = currentSkill.type_enum.word.translate() + " " + "(Ур. " + Load.playerRPGData(mc.player).professions
                 .getProfessionLevel(currentSkill.type_enum) + ")";
             renderTextAtMiddle(matrix, name, guiTop + 50, ChatFormatting.GOLD);
             // renderTextAtMiddle(matrix,, guiTop + 65, Formatting.GREEN);

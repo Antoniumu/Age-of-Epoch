@@ -244,7 +244,7 @@ public final class Spell implements IGUID, IAutoGson<Spell>, JsonExileRegistry<S
 
         if (this.config.times_to_cast > 1) {
             TooltipUtils.addEmpty(list);
-            list.add(Component.literal("Casted " + config.times_to_cast + " times during channel.").withStyle(ChatFormatting.RED));
+            list.add(Component.literal("Применяется " + config.times_to_cast + " раз за время поддержания.").withStyle(ChatFormatting.RED));
 
         }
 

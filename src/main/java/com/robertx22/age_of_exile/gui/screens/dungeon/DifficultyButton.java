@@ -47,7 +47,7 @@ public class DifficultyButton extends ImageButton {
                 if (r.drops_after_tier > -1) {
                     if (tier.rank >= r.drops_after_tier) {
                         tooltip.add(Component.literal("").append(r.locName())
-                            .append(" items can drop")
+                            .append(" предметы могут выпасть")
                             .withStyle(r.textFormatting()));
                     }
                 }

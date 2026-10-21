@@ -43,11 +43,11 @@ public class ItemUtils {
                         .withStyle(ChatFormatting.LIGHT_PURPLE);
 
                     Component txt = name
-                        .append(" found a ")
+                        .append(" нашёл предмет редкости ")
                         .append(rar.locName()
                             .withStyle(rar.textFormatting())
                             .withStyle(ChatFormatting.BOLD))
-                        .append(" item!");
+                        .append("!");
 
                     player.level().getServer()
                         .getPlayerList()

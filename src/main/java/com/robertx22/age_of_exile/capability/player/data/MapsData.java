@@ -161,10 +161,10 @@ public class MapsData {
                 }
 
                 if (!foundSpawn) {
-                    player.sendSystemMessage(Component.literal("Bug: Couldnt find spawn position, you might be placed weirdly, and possibly die."));
+                    player.sendSystemMessage(Component.literal("Ошибка: не удалось найти точку появления."));
                 }
                 if (!foundportalback) {
-                    player.sendSystemMessage(Component.literal("Bug: Couldnt find portal back position."));
+                    player.sendSystemMessage(Component.literal("Ошибка: не удалось найти позицию обратного портала."));
                 }
 
                 w.print("finding spawn");

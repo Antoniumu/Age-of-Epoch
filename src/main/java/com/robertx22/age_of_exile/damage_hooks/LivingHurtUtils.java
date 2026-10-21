@@ -84,7 +84,7 @@ public class LivingHurtUtils {
                 }
 
                 if (!weapondata.canPlayerWear(data.getAttackerEntityData())) {
-                    OnScreenMessageUtils.sendMessage((ServerPlayer) data.getAttackerEntity(), Component.literal("Weapon requirements not met"), ClientboundTitleCompatPacket.Type.ACTIONBAR);
+                    OnScreenMessageUtils.sendMessage((ServerPlayer) data.getAttackerEntity(), Component.literal("Требования оружия не выполнены"), ClientboundTitleCompatPacket.Type.ACTIONBAR);
                     return;
                 }
 

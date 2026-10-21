@@ -111,7 +111,7 @@ public class ExileEffect implements JsonExileRegistry<ExileEffect>, IAutoGson<Ex
     public List<Component> GetTooltipString(TooltipInfo info, EntitySavedSpellData data) {
         List<Component> list = new ArrayList<>();
 
-        list.add(Component.literal("Status Effect: ").append(this.locName())
+        list.add(Component.literal("Эффект состояния: ").append(this.locName())
             .withStyle(ChatFormatting.YELLOW));
         if (!stats.isEmpty()) {
             list.add(Words.Stats.locName()

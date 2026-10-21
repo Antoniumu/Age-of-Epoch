@@ -62,7 +62,7 @@ public class IDAddonEventRegister {
                 if (reqlvl > Load.Unit(event.player)
                     .getLevel()) {
                     event.doNotAllowStartingDungeon();
-                    event.player.sendSystemMessage(Component.literal("Your level isn't high enough for this difficulty"));
+                    event.player.sendSystemMessage(Component.literal("Ваш уровень недостаточно высок для этой сложности"));
                 }
 
                 if (!ServerContainer.get().TURN_REQ_ILVL_INTO_RECCOMENDATION.get()) {
@@ -70,7 +70,7 @@ public class IDAddonEventRegister {
                     if (ilvl > Load.Unit(event.player)
                         .getAverageILVL()) {
                         event.doNotAllowStartingDungeon();
-                        event.player.sendSystemMessage(Component.literal("Your Average Item Level isn't high enough for this difficulty"));
+                        event.player.sendSystemMessage(Component.literal("Средний уровень ваших предметов недостаточно высок для этой сложности"));
                     }
                 }
 

@@ -69,7 +69,7 @@ public class QuestProgression {
                 fini = true;
 
                 for (Player x : members) {
-                    x.sendSystemMessage(Component.literal("Quest completed!, You can now progress to the next dungeon.")
+                    x.sendSystemMessage(Component.literal("Задание выполнено! Теперь вы можете перейти к следующему подземелью.")
                         );
                     PlayerUtils.giveItem(new ItemStack(SlashItems.TELEPORT_BACK.get()), x);
                     TeamCommand.sendDpsCharts(x);
