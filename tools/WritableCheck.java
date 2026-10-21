@@ -19,15 +19,15 @@
  * On the machine this was written for, Files.isWritable() returns false for
  * EVERY path - the project folder, the Loom cache, the jars - while opening the
  * same files for write and creating files in the same folders works fine. That
- * is a misreporting JVM, not a permissions problem, and no antivirus exclusion
- * will change the value: another JDK build is needed.
+ * shows differing access-check behavior. Compare another JDK build; security
+ * software and process-specific policy are not excluded by this test alone.
  *
  * Usage (works on Java 11+ so an older JDK can be compared with JDK 25):
  *
  *     build.bat jcheck
  *     java tools/WritableCheck.java [path ...]
  *
- * Exit codes: 0 = isWritable is usable, 3 = JVM misreports it (JDK bug),
+ * Exit codes: 0 = isWritable is usable, 3 = access check disagrees with actual writes,
  *             2 = writes really are denied, 1 = usage error.
  */
 
@@ -74,17 +74,12 @@ public final class WritableCheck {
 			System.exit(1);
 		}
 
-		if (flags[3]) {
-			System.out.println("  VERDICT: OK - Files.isWritable reports true here; zipfs can write.");
-			System.exit(0);
-		}
-
 		if (flags[0]) {
 			System.out.println("  VERDICT: MISREPORT - Files.isWritable is false while actual writes succeed.");
-			System.out.println("           This JVM will make every zip file system read-only (JDK 25),");
+			System.out.println("           JDK 25 zipfs can mark jars at the affected paths read-only,");
 			System.out.println("           so Loom cannot produce minecraft-merged.jar with it.");
-			System.out.println("           Antivirus exclusions will NOT change the value - use another JDK 25");
-			System.out.println("           build (Microsoft / Corretto / Zulu / Oracle) and point JAVA_HOME at it.");
+			System.out.println("           Compare another JDK 25 build; this check alone cannot exclude security software.");
+			System.out.println("           Use Microsoft / Corretto / Zulu / Oracle and point JAVA_HOME at it.");
 			System.exit(3);
 		}
 
@@ -92,6 +87,11 @@ public final class WritableCheck {
 			System.out.println("  VERDICT: DENIED - writes really fail here; fix the folder permissions");
 			System.out.println("           (icacls \"<dir>\" /grant \"%USERNAME%:(OI)(CI)F\" /T) or the antivirus.");
 			System.exit(2);
+		}
+
+		if (flags[3]) {
+			System.out.println("  VERDICT: OK - all checked paths passed the writability check.");
+			System.exit(0);
 		}
 
 		System.out.println("  VERDICT: inconclusive");
@@ -104,6 +104,8 @@ public final class WritableCheck {
 
 		if (!Files.exists(path)) {
 			System.out.println("    does not exist");
+			flags[1] = true;
+			flags[2] = true;
 			return;
 		}
 
