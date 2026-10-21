@@ -99,7 +99,15 @@ public class Button extends net.minecraft.client.gui.components.Button {
         if (this.mouseClicked(event.x(), event.y(), event.button())) {
             return true;
         }
-        return super.mouseClicked(event, doubleClick);
+        if (super.mouseClicked(event, doubleClick)) {
+            return true;
+        }
+        if (event.button() == 1 && this.clicked(event.x(), event.y())) {
+            this.playDownSound(Minecraft.getInstance().getSoundManager());
+            this.onPress(event);
+            return true;
+        }
+        return false;
     }
 
     public boolean mouseClicked(double mouseX, double mouseY, int button) {

@@ -62,11 +62,23 @@ public class EventBusImpl implements IEventBus {
             if (m.getParameterCount() != 1) continue;
             Class<?> eventType = m.getParameterTypes()[0];
             if (!Event.class.isAssignableFrom(eventType)) continue;
+            java.lang.reflect.Type genericParam = m.getGenericParameterTypes()[0];
+            final Class<?> genericFilter;
+            if (genericParam instanceof java.lang.reflect.ParameterizedType pt && pt.getActualTypeArguments().length == 1 && pt.getActualTypeArguments()[0] instanceof Class<?> gc) {
+                genericFilter = gc;
+            } else {
+                genericFilter = null;
+            }
             m.setAccessible(true);
             boolean isStatic = java.lang.reflect.Modifier.isStatic(m.getModifiers());
             Object instance = isStatic ? null : target;
             handlers.add(new Handler(ann.priority(), eventType, (Event e) -> {
                 try {
+                    if (genericFilter != null && e instanceof com.robertx22.forge_compat.event.AttachCapabilitiesEvent<?> ace) {
+                        if (ace.getObject() != null && !genericFilter.isInstance(ace.getObject())) {
+                            return;
+                        }
+                    }
                     m.invoke(instance, e);
                 } catch (Exception ex) {
                     ex.printStackTrace();
