@@ -127,10 +127,11 @@ Say ('Project          : ' + $ProjectDir)
 Say ('GRADLE_USER_HOME : ' + $gradleHome)
 Say ('JAVA_HOME        : ' + $env:JAVA_HOME)
 if (Get-Command java -ErrorAction SilentlyContinue) {
-    Say ('java -version    : ' + ((& java -version 2>&1) -join ' | '))
+    Say ('java on PATH     : ' + ((& java -version 2>&1) -join ' | '))
 } else {
-    Say 'java -version    : java not found on PATH'
+    Say 'java on PATH     : java not found'
 }
+Say '                   (Gradle and the probe use JAVA_HOME; PATH only matters for tools you run by hand)'
 Say ('Minecraft        : ' + $mcVersion)
 
 $drive = (Get-Item $ProjectDir).PSDrive
@@ -158,9 +159,17 @@ Say '  client.jar (download)'
 Show-Jar $clientJar
 Say '  server.jar (download)'
 Show-Jar $serverJar
+Say '  extracted_server.jar (unpacked bundle, used by newer versions)'
+$extractedServerJar = Get-JarInfo (Join-Path $mcDir 'minecraft-extracted_server.jar')
+Show-Jar $extractedServerJar
 Say '  merged.jar (merge of the two)'
 Show-Jar $mergedJar
+$script:Facts['ClientEntries'] = if ($null -ne $clientJar) { $clientJar.McEntries } else { -2 }
+$script:Facts['ServerEntries'] = if ($null -ne $serverJar) { $serverJar.McEntries } else { -2 }
+$script:Facts['ExtractedServerEntries'] = if ($null -ne $extractedServerJar) { $extractedServerJar.McEntries } else { -2 }
 $script:Facts['MergedEntries'] = if ($null -ne $mergedJar) { $mergedJar.McEntries } else { -2 }
+$script:Facts['ClientSize'] = if ($null -ne $clientJar) { $clientJar.Size } else { 0 }
+$script:Facts['ServerSize'] = if ($null -ne $serverJar) { $serverJar.Size } else { 0 }
 
 # ---------------------------------------------------------------------------
 Section 'Remapped / processed jars (minecraftMaven)'
@@ -271,15 +280,25 @@ if ($cpHasMc) {
     Say '       Look at the "Resolved compile classpath" section above and the'
     Say '       gradle -info log of the dependency resolution.'
 } elseif ($null -eq $mergedJar -or $mergedEntries -le 0) {
+    $clientEntries = $script:Facts['ClientEntries']
     Say '  [!!] The merge step is the broken link:'
     Say ('       caches\fabric-loom\' + $mcVersion + '\minecraft-merged.jar is ' +
          $(if ($null -eq $mergedJar) { 'missing' } else { (Mb $mergedJar.Size) + ' with ' + $mergedEntries + ' entries' }) + '.')
-    Say '       Either client.jar / server.jar did not download properly (see sizes above;'
-    Say '       a few KB means a broken download, expect tens of MB) or the merge itself'
-    Say '       wrote nothing. Try, in this order:'
-    Say '         1) build.bat repair'
-    Say '         2) free disk space / exclude the project folder in the antivirus'
-    Say '         3) build.bat build --info --stacktrace > build-log.txt   and keep the log'
+    if ($clientEntries -gt 1000) {
+        Say ('       The downloads are fine (client: ' + (Mb $script:Facts['ClientSize']) + ', ' + $clientEntries + ' entries;' +
+             ' server: ' + (Mb $script:Facts['ServerSize']) + ').')
+        Say '       So the merge itself wrote nothing and Loom hid the reason: MinecraftJarMerger'
+        Say '       submits its work to executors without keeping the Futures, so any exception'
+        Say '       inside readToMap()/add() is discarded and the already-created output zip'
+        Say '       stays empty (22 bytes, 0 entries).'
+        Say ''
+        Say '       Run the probe - it repeats the same zip/zipfs operations with the same JDK'
+        Say '       and prints the exception Loom throws away:'
+        Say '           build.bat probe'
+    } else {
+        Say '       client.jar itself looks empty or truncated, so the merge had nothing to work with.'
+        Say '       Delete the files above and re-run:  build.bat repair'
+    }
 } elseif ($script:Facts['MavenSmallestSize'] -ge 0 -and $script:Facts['MavenSmallestSize'] -lt 1024) {
     Say '  [!!] The remap/jar-processing step is the broken link:'
     Say ('       minecraft-merged.jar is fine (' + (Mb $mergedJar.Size) + ', ' + $mergedEntries + ' entries)')

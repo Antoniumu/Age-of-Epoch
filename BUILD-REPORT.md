@@ -177,61 +177,110 @@ Remove-Item -Recurse -Force .gradle, .gradle-home
 
 ### Что было в реальном прогоне (2026-10-21)
 
-После `build.bat repair` кэши пересоздались, но проверка показала:
+После `build.bat repair` кэши пересоздались, проверка сказала:
 
 ```
 Minecraft classes are missing from the compile classpath
 (the Minecraft jar(s) on the compile classpath are empty or truncated:
- minecraft-merged-80b2a6d18e-26.3.jar (22 bytes))
+ ...\minecraft-merged-80b2a6d18e-26.3.jar (22 bytes))
 ```
 
-**22 байта — это пустой zip** (только end-of-central-directory, ни одной записи).
-Файл с таким именем — не скачанный Minecraft, а результат обработки:
-Loom берёт `minecraft-merged.jar` (слияние client+server), ремапит его и прогоняет через
-jar-процессоры, результат кладёт в `minecraftMaven` как `minecraft-merged-<hash>-26.3.jar`.
-Если там 22 байта, значит **на этапе записи не добавилось ни одной записи**, а не «кэш
-залежался» — поэтому простой сброс кэшей и не помогает, jar честно создаётся заново пустым.
+А `build.bat diagnose` показал, где именно всё рассыпается:
 
-Вероятные причины (по убыванию):
+| Шаг | Файл | Размер | Записей `net/minecraft/` |
+|---|---|---|---|
+| скачивание клиента | `caches\fabric-loom\26.3\minecraft-client.jar` | 39.6 МБ | **11 266** ✅ |
+| скачивание сервера | `caches\fabric-loom\26.3\minecraft-server.jar` | 59.4 МБ | 6 (это бандлер, так и должно быть) ✅ |
+| **слияние** | `caches\fabric-loom\26.3\minecraft-merged.jar` | **0.0 МБ** | **0** ❌ |
+| ремап + jar-процессоры | `...\minecraftMaven\...\minecraft-merged-80b2a6d18e-26.3.jar` | 22 байта | 0 |
 
-1. **место на диске** — zip пишется, но данные не помещаются;
-2. **антивирус** (Windows Defender и т.п.) удаляет/блокирует содержимое при записи в
-   `.gradle-home` — лечится исключением для папки проекта и `GRADLE_USER_HOME`;
-3. **нехватка памяти у Gradle** при ремапе (`org.gradle.jvmargs=-Xmx4G` → попробовать `-Xmx6G`);
-4. сбой jar-процессора (mixin annotation processor / access widener), который виден только в `--info`.
+Вывод: **скачанные jar'ы целы, ломается слияние**. 22 байта — это пустой zip (только
+end-of-central-directory), то есть файл создан, но ни одной записи в него не попало.
+Сброс кэшей тут не поможет: он каждый раз честно создаёт файл заново и снова пустым.
 
-### Если не помогло
+Почему Loom молчит. В `MinecraftJarMerger.merge()` (loom 1.18) задачи отправляются в
+executor **без сохранения `Future`**:
+
+```java
+try (ExecutorService service = Executors.newFixedThreadPool(2)) {
+    service.submit(() -> readToMap(entriesClient, inputClient));   // результат никто не проверяет
+    service.submit(() -> readToMap(entriesServer, inputServer));
+}
+entriesAll.addAll(entriesClient.keySet());
+entriesAll.addAll(entriesServer.keySet());
+try (ExecutorService service = Executors.newWorkStealingPool()) {
+    for (String entry : entriesAll) processEntry(entry, service);  // add() тоже async
+}
+```
+
+Любое исключение внутри `readToMap()` / `add()` просто теряется: конструктор уже создал
+пустой выходной zip, поток закрывается — и на выходе валидный пустой jar без единой строки
+в лог. Дальше ремап «успешно» перемапывает пустоту, на classpath попадает 22-байтный jar,
+javac не видит `net.minecraft.*`, а annotation processor миксинов падает с тем самым
+`NullPointerException ... getNestingKind()`.
+
+### `build.bat probe` — показать то, что Loom скрывает
+
+`tools/MergeProbe.java` повторяет те же примитивы тем же JDK 25 и печатает настоящее
+исключение:
 
 ```bat
-build.bat diagnose                                  :: пишет build-diagnose.txt
-build.bat build --info --stacktrace > build-log.txt :: подробный лог (приложить к issue)
+build.bat probe
 ```
 
-`build-diagnose.txt` проходит всю цепочку и показывает, какое звено пустое:
+Что делает проба:
 
-| Звено | Файл |
-|---|---|
-| скачивание клиента | `caches\fabric-loom\26.3\minecraft-client.jar` |
-| скачивание сервера | `caches\fabric-loom\26.3\minecraft-server.jar` |
-| слияние | `caches\fabric-loom\26.3\minecraft-merged.jar` |
-| ремап + jar-процессоры | `...\minecraftMaven\net\minecraft\minecraft-merged-<hash>\26.3\*.jar` |
+1. перечисляет jar'ы в `caches\fabric-loom\<version>`;
+2. открывает client/server через **тот же zipfs API**, что и `readToMap()`, и обходит их
+   `walkFileTree` — падение здесь и есть причина пустого merge;
+3. пишет zip через zipfs (`create=true`, `CREATE_NEW`, `setTimes`) — так делает
+   `MinecraftJarMerger.add()`, — затем переоткрывает и считает записи;
+4. контроль: те же данные через `java.util.zip` — чтобы отличить проблему zipfs от
+   проблемы диска/антивируса;
+5. печатает итог и код возврата: `0` — все примитивы работают, `1` — что-то упало.
 
-В конце отчёта — блок `=== Verdict` с конкретной причиной, например
-«The merge step is the broken link» (тогда виноваты скачанные client/server jar) или
-«The remap/jar-processing step is the broken link» (merge в порядке, пустой уже
-обработанный jar → диск/антивирус/память/процессор).
+Запуск в режиме одного файла (`java tools\MergeProbe.java`), компилятор не нужен, пишет
+только в `build\probe\`. Файл можно запустить и руками:
 
-Вердикты отчёта:
+```powershell
+& "$env:JAVA_HOME\bin\java" -Dprobe.projectDir=. tools\MergeProbe.java
+```
+
+Дальше по результату:
+
+- упало в п.2 (открытие client.jar) → битый **скачанный** jar: удалить `minecraft-client.jar`,
+  `minecraft-server.jar`, `minecraft-merged.jar` и `build.bat repair`;
+- упало только в п.3, а п.4 прошёл → виноват zipfs самого JDK: попробовать другой JDK 25
+  (Corretto/Zulu/Microsoft) в `.jdks\`, `build.bat` подхватит его автоматически;
+- упало и в п.3, и в п.4 → диск/антивирус: исключение для папки проекта и `.gradle-home`,
+  проверить свободное место;
+- всё прошло → ошибка внутри Loom; приложить вывод пробы и
+  `build.bat build --info --stacktrace > build-log.txt`.
+
+### `build.bat diagnose` — какой шаг виноват
+
+```bat
+build.bat diagnose    :: пишет build-diagnose.txt
+```
+
+Отчёт (JDK, свободное место, `gradle.properties`, jar'ы Loom, кэш `modules-2`, разобранный
+compile classpath) заканчивается блоком `=== Verdict`:
 
 - `[OK] Minecraft classes are on the compile classpath` — Minecraft на месте, значит ошибки
   действительно в исходниках; полный их список без ограничения в 100 штук:
   `build.bat compileJava -PdshMaxErrs=4000`;
 - `Minecraft is NOT on the compile classpath` — ни один minecraft-jar не разрешился;
   смотреть `gradlew dependencies --configuration compileClasspath`;
-- `The merge step is the broken link` — виноваты скачанные client/server jar (в норме это
-  десятки МБ, а не килобайты) или само слияние;
+- `The merge step is the broken link` — скачанные client/server целы, но слияние дало пустой
+  jar (см. выше): `build.bat probe` покажет скрытое исключение;
 - `The remap/jar-processing step is the broken link` — merge в порядке, пустой уже
   обработанный jar: диск / антивирус / память Gradle / сбой jar-процессора.
+
+Полный лог сборки (приложить к issue, если причина не нашлась):
+
+```bat
+build.bat build --info --stacktrace > build-log.txt
+```
 
 С этого момента сборка сама проверяет это состояние: задача `checkMinecraftClasspath`
 (перед `compileJava`) падает с одной понятной строкой вместо сотни ложных ошибок.

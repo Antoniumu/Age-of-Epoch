@@ -125,6 +125,7 @@ tasks.register('checkMinecraftClasspath') {
                 '    build.bat repair      (wipes the Loom/Minecraft caches, rebuilds with --refresh-dependencies)\n' +
                 'Still a ~22 byte jar after that? Then the jar is not cached but produced empty:\n' +
                 '    build.bat diagnose    (writes build-diagnose.txt - see "Verdict" at the end)\n' +
+                '    build.bat probe       (replays Loom\'s merge and prints the exception it swallows)\n' +
                 '    build.bat build --info --stacktrace > build-log.txt   (keep/attach that log)\n' +
                 'Bypass this check with:\n' +
                 '    -PskipMcCheck'
