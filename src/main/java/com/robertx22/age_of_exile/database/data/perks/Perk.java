@@ -32,7 +32,7 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, ITooltipL
     public PerkType type;
     public String identifier;
     public String icon = "";
-    public String one_of_a_kind = null;
+    public String one_of_a_kind = "";
 
     public transient String locname = "";
 
@@ -67,9 +67,9 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, ITooltipL
 
     @Override
     public void toBuf(FriendlyByteBuf buf) {
-        buf.writeUtf(type.name(), 100);
-        buf.writeUtf(identifier, 100);
-        buf.writeUtf(icon, 150);
+        buf.writeUtf(type != null ? type.name() : PerkType.STAT.name(), 100);
+        buf.writeUtf(identifier != null ? identifier : "", 100);
+        buf.writeUtf(icon != null ? icon : "", 150);
 
         buf.writeUtf(one_of_a_kind != null ? one_of_a_kind : "", 80);
 
@@ -115,7 +115,7 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, ITooltipL
             stats.forEach(x -> list.addAll(x.GetTooltipString(info)));
 
 
-            if (this.one_of_a_kind != null) {
+            if (this.one_of_a_kind != null && !this.one_of_a_kind.isEmpty()) {
                 list.add(Component.literal("Можно выбрать только один талант этого типа: ").withStyle(ChatFormatting.GREEN));
 
                 list.add(Component.translatable(SlashRef.MODID + ".one_of_a_kind." + one_of_a_kind).withStyle(ChatFormatting.GREEN));
@@ -216,7 +216,7 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, ITooltipL
                         .values()
                         .stream()
                         .filter(x -> {
-                            return this.one_of_a_kind.equals(x.one_of_a_kind);
+                            return x != null && this.one_of_a_kind.equals(x.one_of_a_kind);
                         })
                         .count() > 0) {
                     return true;

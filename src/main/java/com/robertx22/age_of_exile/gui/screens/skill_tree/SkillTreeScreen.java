@@ -60,6 +60,14 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
         this.mouseRecentlyClickedTicks = 25;
     }
 
+    public String statusMessage = "";
+    public int statusMessageTicks = 0;
+
+    public void setStatusMessage(String msg) {
+        this.statusMessage = msg != null ? msg : "";
+        this.statusMessageTicks = this.statusMessage.isEmpty() ? 0 : 100;
+    }
+
     @Override
     public boolean mouseReleased(double x, double y, int ticks) {
 
@@ -392,6 +400,12 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
         if (mouseRecentlyClickedTicks > 0) {
             mouseRecentlyClickedTicks--;
         }
+        if (statusMessageTicks > 0) {
+            statusMessageTicks--;
+            if (statusMessageTicks == 0) {
+                statusMessage = "";
+            }
+        }
 
         RPGPlayerData current = Load.playerRPGData(mc.player);
         if (current != null) {
@@ -494,6 +508,21 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
         tx = savedx + 10 + BG_WIDTH;
 
         com.robertx22.forge_compat.client.AbstractGui.drawShadow(Minecraft.getInstance().font, matrix, text, tx, yx, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.GREEN));
+
+        String topHint = this.statusMessage;
+        int hintColor = com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.RED);
+        if ((topHint == null || topHint.isEmpty()) && school != null && playerData != null && playerData.talents != null) {
+            if (playerData.talents.getSchool(school).getAllocatedPoints(school).isEmpty()
+                && playerData.talents.hasFreePoints(Load.Unit(mc.player), this.schoolType)) {
+                topHint = "Выберите один из 6 начальных путей в центре древа";
+                hintColor = com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.GOLD);
+            }
+        }
+        if (topHint != null && !topHint.isEmpty()) {
+            int hintX = mc.getWindow().getGuiScaledWidth() / 2 - mc.font.width(topHint) / 2;
+            int hintY = this.schoolsInOrder.size() > 1 ? 42 : yx;
+            com.robertx22.forge_compat.client.AbstractGui.drawShadow(Minecraft.getInstance().font, matrix, topHint, hintX, hintY, hintColor);
+        }
 
     }
 

@@ -67,21 +67,21 @@ public class EfficientRegistryPacket<T extends IByteBuf & JsonExileRegistry> ext
 
     @Override
     public void onReceived(ExilePacketContext ctx) {
-
         ExileRegistryContainer reg = Database.getRegistry(type);
 
-        reg.unregisterAllEntriesFromDatapacks();
-
-        for (Object s : reg.getSerializable()) {
-            if (s instanceof com.robertx22.library_of_exile.registry.ExileRegistry entry && !reg.isRegistered(entry)) {
-                reg.register(entry);
-            }
+        if (net.minecraft.client.Minecraft.getInstance().hasSingleplayerServer()) {
+            reg.registerSerializables();
+            return;
         }
+
+        reg.unregisterAllEntriesFromDatapacks();
 
         items.forEach(x -> {
             reg.unRegister(x);
             x.registerToExileRegistry();
         });
+
+        reg.registerSerializables();
 
         System.out.println("Efficient " + type.id + " reg load on client success with: " + reg.getSize() + " entries.");
 

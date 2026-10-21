@@ -37,8 +37,16 @@ public class TalentsData implements IApplyableStats {
     public int getAllocatedPoints(TalentTree.SchoolType type) {
         int points = 0;
         for (Map.Entry<String, SchoolData> x : getPerks(type).entrySet()) {
-            points += x.getValue()
-                .getAllocatedPointsInSchool();
+            if (x.getValue() == null) {
+                continue;
+            }
+            TalentTree school = ExileDB.TalentTrees().isRegistered(x.getKey())
+                ? ExileDB.TalentTrees().get(x.getKey())
+                : null;
+            if (school != null && school.getSchool_type() == type) {
+                points += x.getValue()
+                    .getAllocatedPointsInSchool(school);
+            }
         }
         return points;
     }
@@ -119,6 +127,59 @@ public class TalentsData implements IApplyableStats {
 
         return true;
 
+    }
+
+    public PointData findAllocatableEntryConnection(TalentTree school, PointData point, EntityData data, Player player) {
+        if (school == null || point == null || data == null || player == null) {
+            return null;
+        }
+        SchoolData schoolData = getSchool(school);
+        if (!schoolData.getAllocatedPoints(school).isEmpty()) {
+            return null;
+        }
+        Set<PointData> con = school.calcData.connections.get(point);
+        if (con == null || con.isEmpty()) {
+            return null;
+        }
+        for (PointData neighbor : con) {
+            Perk neighborPerk = school.calcData.getPerk(neighbor);
+            if (neighborPerk != null && neighborPerk.is_entry && canAllocate(school, neighbor, data, player)) {
+                return neighbor;
+            }
+        }
+        return null;
+    }
+
+    public String getFailAllocateReason(TalentTree school, PointData point, EntityData data, Player player) {
+        if (school == null || point == null || data == null || player == null) {
+            return "";
+        }
+        if (isAllocated(school, point)) {
+            return "Талант уже изучен (ПКМ — сбросить)";
+        }
+        if (!hasFreePoints(data, school.getSchool_type())) {
+            return "Недостаточно очков талантов";
+        }
+        Perk perk = school.calcData.getPerk(point);
+        if (perk == null) {
+            return "Неизвестный узел древа";
+        }
+        if (perk.lvl_req > data.getLevel()) {
+            return "Требуется уровень: " + perk.lvl_req;
+        }
+        if (perk.isLockedToPlayer(player)) {
+            if ("start".equals(perk.one_of_a_kind)) {
+                return "Начальный путь уже выбран";
+            }
+            return "Уже выбран другой талант этого типа";
+        }
+        if (!perk.is_entry) {
+            if (getSchool(school).getAllocatedPoints(school).isEmpty()) {
+                return "Сначала выберите начальный путь в центре древа";
+            }
+            return "Сначала изучите соседний связанный талант";
+        }
+        return "";
     }
 
     public boolean canRemove(TalentTree school, PointData point) {

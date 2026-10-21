@@ -72,6 +72,14 @@ public class PerkChangePacket extends MyPacket<PerkChangePacket> {
         if (action == ACTION.ALLOCATE) {
             if (playerData.talents.canAllocate(sc, point, Load.Unit(ctx.getPlayer()), ctx.getPlayer())) {
                 playerData.talents.allocate(ctx.getPlayer(), sc, new PointData(x, y));
+            } else {
+                PointData entryPoint = playerData.talents.findAllocatableEntryConnection(sc, point, Load.Unit(ctx.getPlayer()), ctx.getPlayer());
+                if (entryPoint != null) {
+                    playerData.talents.allocate(ctx.getPlayer(), sc, entryPoint);
+                    if (playerData.talents.canAllocate(sc, point, Load.Unit(ctx.getPlayer()), ctx.getPlayer())) {
+                        playerData.talents.allocate(ctx.getPlayer(), sc, new PointData(x, y));
+                    }
+                }
             }
         } else if (action == ACTION.REMOVE) {
             if (playerData.talents.canRemove(sc, point)) {
