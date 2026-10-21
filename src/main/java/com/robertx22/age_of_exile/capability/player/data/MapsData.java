@@ -113,7 +113,9 @@ public class MapsData {
 
             Watch ww = new Watch();
 
-            //Chunk chunk = dimWorld.getChunk(cp.x(), cp.z()); // load it first
+            if (dimWorld instanceof net.minecraft.server.level.ServerLevel serverDim) {
+                ensureDungeonGenerated(serverDim, cp);
+            }
 
             ww.print("loading first chunk ");
 
@@ -212,6 +214,69 @@ public class MapsData {
             e.printStackTrace();
         }
 
+    }
+
+    private static void ensureDungeonGenerated(net.minecraft.server.level.ServerLevel serverDim, ChunkPos cp) {
+        try {
+            BlockPos startPos = new BlockPos(cp.getMinBlockX() + 8, DungeonDimensionJigsawFeature.HEIGHT, cp.getMinBlockZ() + 8);
+            Registry<net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool> poolReg =
+                serverDim.registryAccess().lookupOrThrow(Registries.TEMPLATE_POOL);
+            ResourceKey<net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool> poolKey =
+                ResourceKey.create(Registries.TEMPLATE_POOL, com.robertx22.age_of_exile.mmorpg.SlashRef.id("dungeon/starts"));
+            Optional<net.minecraft.core.Holder.Reference<net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool>> poolOpt =
+                poolReg.get(poolKey);
+            if (poolOpt.isEmpty()) {
+                return;
+            }
+            net.minecraft.world.level.chunk.ChunkGenerator generator = serverDim.getChunkSource().getGenerator();
+            net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager templateManager = serverDim.getStructureManager();
+            net.minecraft.world.level.StructureManager structureManager = serverDim.structureManager();
+            net.minecraft.util.RandomSource random = serverDim.getRandom();
+            net.minecraft.world.level.levelgen.structure.Structure.GenerationContext ctx =
+                new net.minecraft.world.level.levelgen.structure.Structure.GenerationContext(
+                    serverDim.registryAccess(),
+                    generator,
+                    generator.getBiomeSource(),
+                    serverDim.getChunkSource().randomState(),
+                    templateManager,
+                    serverDim.getSeed() + cp.toLong(),
+                    cp,
+                    serverDim,
+                    b -> true
+                );
+            Optional<net.minecraft.world.level.levelgen.structure.Structure.GenerationStub> stub =
+                net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement.addPieces(
+                    ctx,
+                    poolOpt.get(),
+                    Optional.empty(),
+                    3,
+                    startPos,
+                    false,
+                    Optional.empty(),
+                    new net.minecraft.world.level.levelgen.structure.structures.JigsawStructure.MaxDistance(128),
+                    net.minecraft.world.level.levelgen.structure.pools.alias.PoolAliasLookup.EMPTY,
+                    net.minecraft.world.level.levelgen.structure.structures.JigsawStructure.DEFAULT_DIMENSION_PADDING,
+                    net.minecraft.world.level.levelgen.structure.structures.JigsawStructure.DEFAULT_LIQUID_SETTINGS
+                );
+            if (stub.isPresent()) {
+                net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder builder = stub.get().getPiecesBuilder();
+                for (net.minecraft.world.level.levelgen.structure.StructurePiece piece : builder.build().pieces()) {
+                    if (piece instanceof net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece poolPiece) {
+                        poolPiece.place(
+                            serverDim,
+                            structureManager,
+                            generator,
+                            random,
+                            net.minecraft.world.level.levelgen.structure.BoundingBox.infinite(),
+                            startPos,
+                            false
+                        );
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // todo add to RPG CAP
