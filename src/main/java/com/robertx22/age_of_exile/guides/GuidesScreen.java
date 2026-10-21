@@ -233,8 +233,8 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
             CompatChatFormatting.getColor(guide.color));
         y += LINE + 2;
 
-        // слоган — одна строка, длинный обрезается с «…»
-        y = wrap(matrix, guide.tagline, x, y, RIGHT_W, y + LINE, 0xA0A0A0);
+        // слоган — до двух строк
+        y = wrap(matrix, guide.tagline, x, y, RIGHT_W, y + LINE * 2, 0xA0A0A0);
 
         // прогресс: две короткие строки вместо одной «простыни»
         line(matrix, "§7Таланты: §f" + progress.planTalentsTaken + "§7/§f" + progress.planTalentsTotal,
@@ -245,10 +245,10 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
             x, y, RIGHT_W, 0xFFFFFF);
         y += LINE;
 
-        // веха по уровню — одна строка
+        // веха по уровню — до двух строк
         String milestone = GuideAdvisor.milestoneText(mc.player, guide);
         if (!milestone.isEmpty()) {
-            y = wrap(matrix, "§6Сейчас: §7" + milestone, x, y, RIGHT_W, y + LINE, 0xC0C0C0);
+            y = wrap(matrix, "§6Сейчас: §7" + milestone, x, y, RIGHT_W, y + LINE * 2, 0xC0C0C0);
         }
         y += 2;
 
@@ -331,7 +331,26 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
             y += LINE + 2;
         }
 
-        if (progress == null || progress.advice.isEmpty() || y + LINE > contentBottom) {
+        boolean hasAdvice = progress != null && !progress.advice.isEmpty();
+        if (!hasAdvice) {
+            // советника нет (гайд не активен или всё по плану) — показываем советы сборки
+            if (y + LINE > contentBottom) {
+                return;
+            }
+            line(matrix, "§6Советы", x, y, LEFT_W, 0xFFFFFF);
+            y += LINE;
+            int lines = 0;
+            for (int i = 0; i < guide.tips.size() && y + LINE <= contentBottom; i++) {
+                String tip = guide.tips.get(i);
+                y = wrap(matrix, "§7• " + tip, x, y, LEFT_W, Math.min(contentBottom, y + LINE * 3), 0xA0A0A0);
+                if (++lines >= 2) {
+                    break;
+                }
+            }
+            return;
+        }
+
+        if (y + LINE > contentBottom) {
             return;
         }
 
@@ -351,9 +370,20 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
     }
 
     // ------------------------------------------------------------------ панель
-    /** Панель целиком одним blit'ом: текстура ровно 300×220, швов нет. */
+    /** Размер текстуры панели (assets/mmorpg/textures/gui/guides_panel.png). */
+    private static final int PANEL_TEX_W = 300;
+    private static final int PANEL_TEX_H = 220;
+
+    /**
+     * Панель целиком одним blit'ом.
+     *
+     * Размер атласа передаём явно: короткий blit(x, y, u, v, w, h) считает текстуру
+     * 256×256, а наша — 300×220. Из-за этого правые 44 px панели сэмплировались
+     * за краем текстуры с заворотом на её начало, и справа рисовалась вторая
+     * рамка с полосой фона (ровно то, что было видно на скриншоте).
+     */
     static void drawPanel(PoseStack matrix, int x, int y, int width, int height) {
-        AbstractGui.blit(matrix, x, y, 0, 0, width, height);
+        AbstractGui.blit(matrix, x, y, width, height, 0F, 0F, width, height, PANEL_TEX_W, PANEL_TEX_H);
     }
 
     // ------------------------------------------------------------------ текст
