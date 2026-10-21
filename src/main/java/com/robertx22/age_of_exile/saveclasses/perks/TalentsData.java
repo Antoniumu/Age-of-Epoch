@@ -74,12 +74,22 @@ public class TalentsData implements IApplyableStats {
     }
 
     public boolean canAllocate(TalentTree school, PointData point, EntityData data, Player player) {
+        if (school == null || point == null || data == null || player == null) {
+            return false;
+        }
+
+        if (isAllocated(school, point)) {
+            return false;
+        }
 
         if (!hasFreePoints(data, school.getSchool_type())) {
             return false;
         }
 
         Perk perk = school.calcData.getPerk(point);
+        if (perk == null) {
+            return false;
+        }
 
         if (perk.lvl_req > data.getLevel()) {
             return false;
@@ -91,10 +101,18 @@ public class TalentsData implements IApplyableStats {
 
         if (!perk.is_entry) {
             Set<PointData> con = school.calcData.connections.get(point);
-
-            if (con == null || !con.stream()
-                .anyMatch(x -> getSchool(school)
-                    .isAllocated(x))) {
+            if (con == null || con.isEmpty()) {
+                return false;
+            }
+            SchoolData schoolData = getSchool(school);
+            boolean connected = false;
+            for (PointData x : con) {
+                if (schoolData.isAllocated(x)) {
+                    connected = true;
+                    break;
+                }
+            }
+            if (!connected) {
                 return false;
             }
         }
@@ -194,6 +212,9 @@ public class TalentsData implements IApplyableStats {
             return PerkStatus.CONNECTED;
         }
         Perk perk = school.calcData.getPerk(point);
+        if (perk == null) {
+            return PerkStatus.BLOCKED;
+        }
 
         if (perk.isLockedToPlayer(player)) {
             return PerkStatus.LOCKED_UNDER_ACHIEV;

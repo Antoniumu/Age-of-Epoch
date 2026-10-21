@@ -107,7 +107,13 @@ public abstract class Stat implements IGUID, IAutoLocName, IWeighted, IAutoLocDe
     public List<MutableComponent> getCutDescTooltip() {
         List<MutableComponent> list = new ArrayList<>();
 
-        List<Component> cut = TooltipUtils.cutIfTooLong(locDesc());
+        MutableComponent descComp = locDesc();
+        String descStr = descComp.getString();
+        if (descStr == null || descStr.isEmpty() || descStr.equals(locDescLangFileGUID())) {
+            descComp = locName();
+        }
+
+        List<Component> cut = TooltipUtils.cutIfTooLong(descComp);
 
         for (int i = 0; i < cut.size(); i++) {
 

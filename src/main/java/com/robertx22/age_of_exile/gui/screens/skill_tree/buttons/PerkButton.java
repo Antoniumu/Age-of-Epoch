@@ -1,7 +1,6 @@
 package com.robertx22.age_of_exile.gui.screens.skill_tree.buttons;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.age_of_exile.capability.player.RPGPlayerData;
 import com.robertx22.age_of_exile.database.data.perks.Perk;
 import com.robertx22.age_of_exile.database.data.perks.PerkStatus;
@@ -12,14 +11,15 @@ import com.robertx22.age_of_exile.saveclasses.PointData;
 import com.robertx22.age_of_exile.saveclasses.gearitem.gear_bases.TooltipInfo;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.vanilla_mc.packets.perks.PerkChangePacket;
+import com.robertx22.forge_compat.client.ImageButton;
+import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.library_of_exile.main.Packets;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import com.robertx22.library_of_exile.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.input.MouseButtonEvent;
-import com.robertx22.forge_compat.client.ImageButton;
-import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class PerkButton extends ImageButton {
     public static int SPACING = 26;
     public static int BIGGEST = 33;
 
-    static Identifier ID = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skill_tree/perk_buttons.png");
+    public static Identifier ID = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skill_tree/perk_buttons.png");
     public static Identifier LOCKED_TEX = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/locked.png");
 
     public Perk perk;
@@ -44,6 +44,9 @@ public class PerkButton extends ImageButton {
     Minecraft mc = Minecraft.getInstance();
     SkillTreeScreen screen;
 
+    public PerkStatus cachedStatus = null;
+    private Identifier cachedSchoolIcon = null;
+
     public PerkButton(SkillTreeScreen screen, RPGPlayerData playerData, TalentTree school, PointData point, Perk perk, int x, int y) {
         super(x, y, perk.getType().width, perk.getType().height, 0, 0, 1, ID, (action) -> {
         });
@@ -57,6 +60,13 @@ public class PerkButton extends ImageButton {
         this.originalWidth = this.width;
         this.originalHeight = this.height;
         this.screen = screen;
+    }
+
+    public void refreshStatus(RPGPlayerData data) {
+        if (data != null && data.talents != null && mc.player != null) {
+            this.playerData = data;
+            this.cachedStatus = data.talents.getStatus(mc.player, school, point);
+        }
     }
 
     public boolean isInside(int x, int y) {
@@ -81,27 +91,35 @@ public class PerkButton extends ImageButton {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        mouseX = 1F / screen.zoom * mouseX;
-        mouseY = 1F / screen.zoom * mouseY;
+        int mx = (int) (1F / screen.zoom * mouseX);
+        int my = (int) (1F / screen.zoom * mouseY);
 
-        if (this.active && this.visible && this.isInside((int) mouseX, (int) mouseY)) {
+        if (this.active && this.visible && this.isInside(mx, my)) {
             screen.mouseRecentlyClickedTicks = 25;
             screen.pointClicked = this.point;
+
+            RPGPlayerData currentData = Load.playerRPGData(mc.player);
+            if (currentData != null) {
+                this.playerData = currentData;
+            }
 
             this.playDownSound(Minecraft.getInstance().getSoundManager());
 
             if (button == 0) {
-                if (playerData.talents.canAllocate(school, point, Load.Unit(mc.player), mc.player)) {
-                    playerData.talents.allocate(mc.player, school, point);
+                if (this.playerData != null && this.playerData.talents.canAllocate(school, point, Load.Unit(mc.player), mc.player)) {
+                    this.playerData.talents.allocate(mc.player, school, point);
                 }
                 Packets.sendToServer(new PerkChangePacket(school, point, PerkChangePacket.ACTION.ALLOCATE));
+                screen.markDirty();
             } else if (button == 1) {
-                if (playerData.talents.canRemove(school, point)) {
-                    playerData.talents.remove(school, point);
+                if (this.playerData != null && this.playerData.talents.canRemove(school, point)) {
+                    this.playerData.talents.remove(school, point);
+                    this.playerData.talents.reset_points--;
                 }
                 Packets.sendToServer(new PerkChangePacket(school, point, PerkChangePacket.ACTION.REMOVE));
+                screen.markDirty();
             }
-            this.onClick(mouseX, mouseY);
+            this.onClick(mx, my);
             return true;
         }
         return false;
@@ -109,7 +127,10 @@ public class PerkButton extends ImageButton {
 
     @Override
     public void renderButton(PoseStack matrices, int mouseX, int mouseY, float delta) {
-        PerkStatus status = playerData.talents.getStatus(Minecraft.getInstance().player, school, point);
+        if (cachedStatus == null) {
+            refreshStatus(Load.playerRPGData(mc.player));
+        }
+        PerkStatus status = cachedStatus != null ? cachedStatus : PerkStatus.BLOCKED;
 
         com.robertx22.forge_compat.client.AbstractGui.bindTexture(ID);
 
@@ -120,7 +141,10 @@ public class PerkButton extends ImageButton {
         int offsetY = (this.height - 16) / 2;
 
         if (perk.getType() == Perk.PerkType.START && (perk.icon == null || perk.icon.isEmpty())) {
-            RenderUtils.render16Icon(matrices, Identifier.parse(school.icon), this.x + offset, this.y + offsetY);
+            if (cachedSchoolIcon == null) {
+                cachedSchoolIcon = Identifier.parse(school.icon);
+            }
+            RenderUtils.render16Icon(matrices, cachedSchoolIcon, this.x + offset, this.y + offsetY);
         } else {
             RenderUtils.render16Icon(matrices, this.perk.getIcon(), this.x + offset, this.y + offsetY);
         }

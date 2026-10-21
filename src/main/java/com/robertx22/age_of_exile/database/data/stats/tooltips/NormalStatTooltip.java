@@ -22,7 +22,11 @@ public class NormalStatTooltip implements IStatTooltipType {
             .translate(format, ctx, info.type, info.firstValue, info.stat));
 
         if (ctx.statinfo.stat.is_long) {
-            return longStat(ctx, txt);
+            list.addAll(longStat(ctx, txt));
+            if (info.shouldShowDescriptions()) {
+                list.addAll(info.stat.getCutDescTooltip());
+            }
+            return list;
         }
 
         if (ctx.showStatRanges()) {

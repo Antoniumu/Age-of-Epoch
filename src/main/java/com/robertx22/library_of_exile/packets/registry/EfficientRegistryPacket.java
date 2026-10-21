@@ -72,7 +72,16 @@ public class EfficientRegistryPacket<T extends IByteBuf & JsonExileRegistry> ext
 
         reg.unregisterAllEntriesFromDatapacks();
 
-        items.forEach(x -> x.registerToExileRegistry());
+        for (Object s : reg.getSerializable()) {
+            if (s instanceof com.robertx22.library_of_exile.registry.ExileRegistry entry && !reg.isRegistered(entry)) {
+                reg.register(entry);
+            }
+        }
+
+        items.forEach(x -> {
+            reg.unRegister(x);
+            x.registerToExileRegistry();
+        });
 
         System.out.println("Efficient " + type.id + " reg load on client success with: " + reg.getSize() + " entries.");
 

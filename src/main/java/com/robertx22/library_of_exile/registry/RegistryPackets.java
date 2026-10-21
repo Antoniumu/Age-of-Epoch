@@ -35,6 +35,12 @@ public class RegistryPackets {
 
                     reg.unregisterAllEntriesFromDatapacks();
 
+                    for (Object s : reg.getSerializable()) {
+                        if (s instanceof ExileRegistry entry && !reg.isRegistered(entry)) {
+                            reg.register(entry);
+                        }
+                    }
+
                     List<JsonObject> list = map.get(type);
 
                     if (list == null || list.isEmpty()) {
@@ -46,6 +52,7 @@ public class RegistryPackets {
                         try {
                             JsonExileRegistry entry = (JsonExileRegistry) type.getSerializer()
                                 .fromJson(x);
+                            reg.unRegister(entry);
                             entry.registerToExileRegistry();
 
                         } catch (JsonSyntaxException e) {

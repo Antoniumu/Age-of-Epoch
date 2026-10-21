@@ -26,6 +26,10 @@ public class BaseLocalStatTooltip implements IStatTooltipType {
                 .append(Component.literal((int) info.firstValue + "")
                     .withStyle(ChatFormatting.GRAY)));
 
+            if (info.shouldShowDescriptions()) {
+                list.addAll(info.stat.getCutDescTooltip());
+            }
+
             return list;
 
         }
