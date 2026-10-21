@@ -100,7 +100,7 @@ public enum TowerAbility {
                 p -> p.knockback(0.6D, boss.getX() - p.getX(), boss.getZ() - p.getZ(),
                     boss.damageSources().generic(), 0.0F));
             burst(level, boss, ParticleTypes.ELECTRIC_SPARK, 50);
-            level.playSound(null, boss.blockPosition(), net.minecraft.sounds.SoundEvents.LIGHTNING_BOLT_THUNDER.value(),
+            level.playSound(null, boss.blockPosition(), net.minecraft.sounds.SoundEvents.LIGHTNING_BOLT_THUNDER,
                 net.minecraft.sounds.SoundSource.HOSTILE, 0.5F, 1.4F);
         }
     },
@@ -116,7 +116,7 @@ public enum TowerAbility {
                 30, 0.7D, 0.4D, 0.7D, 0.0D);
             level.sendParticles(ParticleTypes.FLAME, target.getX(), target.getY() + 1.0D, target.getZ(),
                 40, 0.8D, 0.6D, 0.8D, 0.04D);
-            level.playSound(null, target.blockPosition(), net.minecraft.sounds.SoundEvents.FIRECHARGE_USE.value(),
+            level.playSound(null, target.blockPosition(), net.minecraft.sounds.SoundEvents.FIRECHARGE_USE,
                 net.minecraft.sounds.SoundSource.HOSTILE, 1.0F, 0.7F);
         }
     },
