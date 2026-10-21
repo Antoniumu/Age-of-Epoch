@@ -176,7 +176,7 @@ public class RuneWordStationGui extends ModificationGui<RuneWordStationContainer
                     List<Component> tooltip = new ArrayList<>();
 
                     if (tooltip.isEmpty()) {
-                        tooltip.add(Component.literal("Modify Item"));
+                        tooltip.add(Component.literal("Модифицировать"));
                     }
 
                     GuiUtils.renderTooltip(matrix,

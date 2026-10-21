@@ -132,7 +132,7 @@ public class GemItem extends BaseGemRuneItem implements IGUID, IAutoModel, IAuto
                             .getItem());
                         Packets.sendToClient(p, new TotemAnimationPacket(newstack));
                         p.sendSystemMessage(Component.literal(ChatFormatting.GREEN + "").append(old.getName(new ItemStack(old)))
-                            .append(" has been upgraded to ")
+                            .append(" улучшен до ")
                             .append(newstack.getHoverName()));
                         PlayerUtils.giveItem(newstack, p);
 
@@ -140,7 +140,7 @@ public class GemItem extends BaseGemRuneItem implements IGUID, IAutoModel, IAuto
                         SoundUtils.playSound(p, SoundEvents.VILLAGER_NO, 1, 1);
 
                         p.sendSystemMessage(Component.literal(ChatFormatting.RED + "").append(old.getName(new ItemStack(old)))
-                            .append(" has failed the upgrade and was destroyed."));
+                            .append(" не удалось улучшить, предмет разрушен."));
                     }
                 }
             }

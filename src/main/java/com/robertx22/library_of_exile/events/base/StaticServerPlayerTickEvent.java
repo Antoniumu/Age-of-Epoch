@@ -88,7 +88,7 @@ public class StaticServerPlayerTickEvent {
 
                 x.tries++;
 
-                x.player.sendSystemMessage(Component.literal("There was a teleport bug but the auto correction system should have teleported you back correctly"));
+                x.player.sendSystemMessage(Component.literal("Произошла ошибка телепортации, вы были возвращены обратно."));
 
                 TeleportUtils.teleport(x.player, x.whereShouldTeleport);
             }

@@ -48,7 +48,7 @@ public class FunnyDeathPotion extends AutoItem {
 
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
-        tooltip.add(Component.literal("Are you sure it's a good idea to drink this?"));
+        tooltip.add(Component.literal("Вы уверены, что стоит это пить?"));
     }
 
     @Override

@@ -150,7 +150,7 @@ public enum BackpackUpgrade {
 
         @Override
         public void addToTooltip(BackpackUpgradeItem bag, List<Component> list) {
-            list.add(Component.literal("Adds " + (bag.tier.tier + 1) * 9 + " Slots"));
+            list.add(Component.literal("Добавляет " + (bag.tier.tier + 1) * 9 + " ячеек"));
         }
     };
 
@@ -163,7 +163,7 @@ public enum BackpackUpgrade {
     }
 
     public void addSalvage(List<Component> list, int tier) {
-        net.minecraft.network.chat.MutableComponent txt = Component.literal("Salvages: ");
+        net.minecraft.network.chat.MutableComponent txt = Component.literal("Разбирает: ");
         ExileDB.GearRarities()
             .getFiltered(x -> x.item_tier == tier)
             .forEach(x -> {

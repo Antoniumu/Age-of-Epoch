@@ -10,11 +10,13 @@ import com.robertx22.age_of_exile.gui.screens.skill_tree.SkillTreeScreen;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.saveclasses.PointData;
 import com.robertx22.age_of_exile.saveclasses.gearitem.gear_bases.TooltipInfo;
+import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.vanilla_mc.packets.perks.PerkChangePacket;
 import com.robertx22.library_of_exile.main.Packets;
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import com.robertx22.library_of_exile.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.input.MouseButtonEvent;
 import com.robertx22.forge_compat.client.ImageButton;
 import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
@@ -55,133 +57,72 @@ public class PerkButton extends ImageButton {
         this.originalWidth = this.width;
         this.originalHeight = this.height;
         this.screen = screen;
-
     }
 
     public boolean isInside(int x, int y) {
-
-        float scale = 2 - screen.zoom;
-
-        return GuiUtils.isInRect((int) (this.x), (int) (this.y), (int) (width * scale), (int) (height * scale), x, y);
+        return GuiUtils.isInRect(this.x, this.y, this.width, this.height, x, y);
     }
 
     @Override
     public void renderToolTip(PoseStack matrices, int mouseX, int mouseY) {
-
         int MmouseX = (int) (1F / screen.zoom * mouseX);
         int MmouseY = (int) (1F / screen.zoom * mouseY);
 
         if (this.isInside(MmouseX, MmouseY)) {
-
             List<Component> tooltip = perk.GetTooltipString(new TooltipInfo(Minecraft.getInstance().player));
             GuiUtils.renderTooltip(matrices, tooltip, mouseX, mouseY);
         }
     }
 
-    // copied from abstractbutton
+    @Override
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        return this.mouseClicked(event.x(), event.y(), event.button());
+    }
+
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-
-        screen.mouseRecentlyClickedTicks = 25;
-        screen.pointClicked = this.point;
-
         mouseX = 1F / screen.zoom * mouseX;
         mouseY = 1F / screen.zoom * mouseY;
 
-        if (this.active && this.visible) {
+        if (this.active && this.visible && this.isInside((int) mouseX, (int) mouseY)) {
+            screen.mouseRecentlyClickedTicks = 25;
+            screen.pointClicked = this.point;
 
-            boolean bl = this.clicked(mouseX, mouseY);
-            if (bl) {
-                this.playDownSound(Minecraft.getInstance()
-                    .getSoundManager());
+            this.playDownSound(Minecraft.getInstance().getSoundManager());
 
-                if (button == 0) {
-                    Packets.sendToServer(new PerkChangePacket(school, point, PerkChangePacket.ACTION.ALLOCATE));
+            if (button == 0) {
+                if (playerData.talents.canAllocate(school, point, Load.Unit(mc.player), mc.player)) {
+                    playerData.talents.allocate(mc.player, school, point);
                 }
-                if (button == 1) {
-                    Packets.sendToServer(new PerkChangePacket(school, point, PerkChangePacket.ACTION.REMOVE));
+                Packets.sendToServer(new PerkChangePacket(school, point, PerkChangePacket.ACTION.ALLOCATE));
+            } else if (button == 1) {
+                if (playerData.talents.canRemove(school, point)) {
+                    playerData.talents.remove(school, point);
                 }
-                this.onClick(mouseX, mouseY);
-
-                return true;
+                Packets.sendToServer(new PerkChangePacket(school, point, PerkChangePacket.ACTION.REMOVE));
             }
-
-            return false;
-        } else {
-            return false;
+            this.onClick(mouseX, mouseY);
+            return true;
         }
-    }
-
-    int xPos(int offset, float multi) {
-        return (int) ((this.x) * multi) + offset;
-    }
-
-    int yPos(int offset, float multi) {
-        return (int) ((this.y) * multi) + offset;
+        return false;
     }
 
     @Override
-
     public void renderButton(PoseStack matrices, int mouseX, int mouseY, float delta) {
-
-        float scale = 2 - screen.zoom;
-
-        float posMulti = 1F / scale;
-
-        if (posMulti > 1.5F) {
-            posMulti = 1.5F;
-        }
-
-        matrices.scale(scale, scale, scale);
-
         PerkStatus status = playerData.talents.getStatus(Minecraft.getInstance().player, school, point);
 
         com.robertx22.forge_compat.client.AbstractGui.bindTexture(ID);
 
-        int offset = 4;
-
-        // background
         RenderSystem.enableDepthTest();
-        blit(matrices, xPos(0, posMulti), yPos(0, posMulti), perk.getType()
-            .getXOffset(), status
-            .getYOffset(), this.width, this.height);
+        blit(matrices, this.x, this.y, perk.getType().getXOffset(), status.getYOffset(), this.width, this.height);
 
-        if (this.perk.getType() == Perk.PerkType.STAT) {
-            // icon
-            com.robertx22.forge_compat.client.AbstractGui.bindTexture(this.perk.getIcon());
-            blit(matrices, xPos(offset, posMulti), yPos(offset, posMulti), 0, 0, 16, 16, 16, 16);
-        } else if (this.perk.getType() == Perk.PerkType.MAJOR) {
-            // icon
-            com.robertx22.forge_compat.client.AbstractGui.bindTexture(this.perk.getIcon());
-            offset = 9;
-            RenderUtils.render16Icon(matrices, perk.getIcon(), xPos(offset, posMulti), yPos(offset, posMulti));
-        } else if (perk.getType() == Perk.PerkType.START) {
-            offset = 9;
-            if (perk.icon == null || perk.icon.isEmpty()) {
-                RenderUtils.render16Icon(matrices, Identifier.parse(school.icon), xPos(offset, posMulti), yPos(offset, posMulti));
-            } else {
-                RenderUtils.render16Icon(matrices, perk.getIcon(), xPos(offset, posMulti), yPos(offset, posMulti));
-            }
-        } else if (perk.getType() == Perk.PerkType.SPECIAL) {
+        int offset = (this.width - 16) / 2;
+        int offsetY = (this.height - 16) / 2;
 
-            // icon
-            offset = 6;
-            com.robertx22.forge_compat.client.AbstractGui.bindTexture(this.perk.getIcon());
-            blit(matrices, xPos(offset, posMulti), yPos(offset, posMulti), 0, 0, 16, 16, 16, 16);
+        if (perk.getType() == Perk.PerkType.START && (perk.icon == null || perk.icon.isEmpty())) {
+            RenderUtils.render16Icon(matrices, Identifier.parse(school.icon), this.x + offset, this.y + offsetY);
+        } else {
+            RenderUtils.render16Icon(matrices, this.perk.getIcon(), this.x + offset, this.y + offsetY);
         }
-
-        if (this.perk.isLockedToPlayer(mc.player)) {
-
-            if (!this.isHovered()) {
-                //    mc.getTextureManager()
-                //       .bindTexture(LOCKED_TEX);
-
-                // drawTexture(matrices, xPos(offset, posMulti), (int) (yPos(offset, posMulti) * 10 * posMulti), 0, 0, 16, 16, 16, 16);
-            }
-        }
-
-        matrices.scale(1F / scale, 1F / scale, 1F / scale);
-
     }
-
 }

@@ -28,7 +28,7 @@ public class MobTagFilter extends DropFilter {
     public List<Component> getTooltip(DropFilterData data) {
 
         List<Component> list = new ArrayList<>();
-        list.add(Component.literal("Mobs with this tag can drop:"));
+        list.add(Component.literal("Существа с этим тегом могут оставить:"));
         list.add(Component.literal(data.id));
         return list;
 

@@ -61,11 +61,11 @@ public class UnequipGear {
 
             if (gear != null) {
                 if (!gear.canPlayerWear(Load.Unit(player))) {
-                    drop(player, slot, stack, Component.literal("You do not meet the requirements of that item.").withStyle(ChatFormatting.RED));
+                    drop(player, slot, stack, Component.literal("Вы не соответствуете требованиям этого предмета.").withStyle(ChatFormatting.RED));
                 } else if (gear.isUnique()) {
                     uniques++;
                     if (uniques > ServerContainer.get().MAX_UNIQUE_GEARS_WORN.get()) {
-                        drop(player, slot, stack, Component.literal("You cannot equip that many unique items.").withStyle(ChatFormatting.RED));
+                        drop(player, slot, stack, Component.literal("Вы не можете надеть столько уникальных предметов.").withStyle(ChatFormatting.RED));
                     }
                 }
             }
@@ -85,11 +85,11 @@ public class UnequipGear {
 
                     if (gear != null) {
                         if (!gear.canPlayerWear(Load.Unit(player))) {
-                            drop(player, handler, i, stack, Component.literal("You do not meet the requirements of that item.").withStyle(ChatFormatting.RED));
+                            drop(player, handler, i, stack, Component.literal("Вы не соответствуете требованиям этого предмета.").withStyle(ChatFormatting.RED));
                         } else if (gear.isUnique()) {
                             uniques++;
                             if (uniques > ServerContainer.get().MAX_UNIQUE_GEARS_WORN.get()) {
-                                drop(player, handler, i, stack, Component.literal("You cannot equip that many unique items.").withStyle(ChatFormatting.RED));
+                                drop(player, handler, i, stack, Component.literal("Вы не можете надеть столько уникальных предметов.").withStyle(ChatFormatting.RED));
                             }
                         }
                     }

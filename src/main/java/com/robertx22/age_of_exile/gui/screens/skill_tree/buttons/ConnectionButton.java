@@ -8,10 +8,10 @@ import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.saveclasses.PointData;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.input.MouseButtonEvent;
 import com.robertx22.forge_compat.client.ImageButton;
 import net.minecraft.resources.Identifier;
 
-import net.minecraft.network.Connection;
 public class ConnectionButton extends ImageButton {
 
     public static int SIZE = 6;
@@ -31,16 +31,25 @@ public class ConnectionButton extends ImageButton {
         this.school = school;
         this.one = one;
         this.two = two;
-
         this.screen = screen;
+        this.active = false;
 
         connection = Load.playerRPGData(mc.player).talents
             .getConnection(school, one, two);
-
     }
 
     int ticks = 0;
-    Perk.Connection connection;
+    public Perk.Connection connection;
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        return false;
+    }
 
     @Override
     public void renderButton(PoseStack matrices, int mouseX, int mouseY, float delta) {
@@ -50,19 +59,12 @@ public class ConnectionButton extends ImageButton {
     // render here so the bind texture is only called once
     // because there are thousands of connector buttons
     public void renderButtonForReal(PoseStack matrices, int mouseX, int mouseY, float delta) {
-
         ticks++;
 
-        if (screen.mouseRecentlyClickedTicks > 1) {
-            if (ticks % 10 == 0) {
-                if (screen.pointClicked.equals(this.one) || screen.pointClicked.equals(this.two)) {
-                    connection = Load.playerRPGData(mc.player).talents
-                        .getConnection(school, one, two);
-                }
-            }
+        if (connection == null || (screen.mouseRecentlyClickedTicks > 1 && ticks % 5 == 0)) {
+            connection = Load.playerRPGData(mc.player).talents
+                .getConnection(school, one, two);
         }
-
-        //RenderSystem.enableDepthTest();
 
         if (connection == Perk.Connection.POSSIBLE) {
             blit(matrices, this.x, this.y, 0, 0, 6, 6);
@@ -71,6 +73,5 @@ public class ConnectionButton extends ImageButton {
         } else if (connection == Perk.Connection.BLOCKED) {
             blit(matrices, this.x, this.y, 12, 0, 6, 6);
         }
-
     }
 }

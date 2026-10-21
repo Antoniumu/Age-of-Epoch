@@ -19,7 +19,7 @@ public class TeamCommand {
     public static void listMembers(Player player) {
         List<Player> players = TeamUtils.getOnlineMembers(player);
 
-        player.sendSystemMessage(Component.literal("Team members:"));
+        player.sendSystemMessage(Component.literal("Участники команды:"));
 
         players.forEach(e -> {
             player.sendSystemMessage(e.getDisplayName());
@@ -29,7 +29,7 @@ public class TeamCommand {
     public static void sendDpsCharts(Player player) {
         List<Player> members = TeamUtils.getOnlineMembers(player);
 
-        player.sendSystemMessage(Component.literal("Damage Charts:"));
+        player.sendSystemMessage(Component.literal("Таблица урона:"));
 
         members.forEach(e -> {
             Component text = Component.literal("").append(e.getDisplayName())
@@ -83,21 +83,21 @@ public class TeamCommand {
 
                                 if (!Load.playerRPGData(player).team
                                     .isOnTeam()) {
-                                    player.sendSystemMessage(Component.literal("You are not in a team."));
+                                    player.sendSystemMessage(Component.literal("Вы не состоите в команде."));
                                     return 0;
                                 }
 
                                 Player other = EntityArgument.getPlayer(x, "player");
 
                                 other.sendSystemMessage(Component.literal("").append(player.getDisplayName())
-                                    .append(" has invited you to a team."));
-                                other.sendSystemMessage(Component.literal("Do /age_of_exile teams join ").append(player.getDisplayName())
-                                    .append(" to accept"));
+                                    .append(" пригласил вас в команду."));
+                                other.sendSystemMessage(Component.literal("Введите /age_of_exile teams join ").append(player.getDisplayName())
+                                    .append(" чтобы принять"));
 
                                 Load.playerRPGData(other).team.invitedToTeam = Load.playerRPGData(player).team.team_id;
 
-                                player.sendSystemMessage(Component.literal("You have invited ").append(other.getDisplayName())
-                                    .append(Component.literal(" to join your team.")));
+                                player.sendSystemMessage(Component.literal("Вы пригласили ").append(other.getDisplayName())
+                                    .append(Component.literal(" в свою команду.")));
 
                                 return 0;
                             })
@@ -113,19 +113,19 @@ public class TeamCommand {
 
                                 if (!Load.playerRPGData(player).team
                                     .isOnSameTeam(other)) {
-                                    player.sendSystemMessage(Component.literal("They aren't on your team"));
+                                    player.sendSystemMessage(Component.literal("Этот игрок не в вашей команде"));
                                     return 0;
                                 }
 
                                 player.sendSystemMessage(Component.literal("").append(player.getDisplayName())
-                                    .append(" is now a team leader."));
+                                    .append(" теперь лидер команды."));
 
-                                player.sendSystemMessage(Component.literal("You have been made a team leader."));
+                                player.sendSystemMessage(Component.literal("Вы назначены лидером команды."));
 
                                 Load.playerRPGData(other).team.isLeader = true;
 
-                                player.sendSystemMessage(Component.literal("You have invited ").append(other.getDisplayName())
-                                    .append(Component.literal(" to join your team.")));
+                                player.sendSystemMessage(Component.literal("Вы пригласили ").append(other.getDisplayName())
+                                    .append(Component.literal(" в свою команду.")));
 
                                 return 0;
                             })
@@ -140,21 +140,21 @@ public class TeamCommand {
                                 Player other = EntityArgument.getPlayer(x, "player");
 
                                 if (!Load.playerRPGData(player).team.isLeader) {
-                                    player.sendSystemMessage(Component.literal("You can't kick members because you aren't the leader."));
+                                    player.sendSystemMessage(Component.literal("Вы не можете исключать участников, так как не являетесь лидером."));
                                     return 0;
                                 }
                                 if (!Load.playerRPGData(player).team
                                     .isOnSameTeam(other)) {
-                                    player.sendSystemMessage(Component.literal("They aren't on your team"));
+                                    player.sendSystemMessage(Component.literal("Этот игрок не в вашей команде"));
                                     return 0;
                                 }
 
                                 Load.playerRPGData(other).team.team_id = "";
 
-                                other.sendSystemMessage(Component.literal("You have been kicked from your team."));
+                                other.sendSystemMessage(Component.literal("Вы были исключены из команды."));
 
-                                player.sendSystemMessage(Component.literal("You have kicked ").append(other.getDisplayName())
-                                    .append(" from your team."));
+                                player.sendSystemMessage(Component.literal("Вы исключили ").append(other.getDisplayName())
+                                    .append(" из команды."));
 
                                 return 0;
                             })
@@ -176,16 +176,16 @@ public class TeamCommand {
                                                 .getPlayerOrException()).team
                                             .joinTeamOf(other);
 
-                                        player.sendSystemMessage(Component.literal("You have joined ").append(other.getDisplayName())
-                                            .append(Component.literal("'s team.")));
+                                        player.sendSystemMessage(Component.literal("Вы присоединились к команде игрока ").append(other.getDisplayName())
+                                            .append(Component.literal(".")));
                                     } else {
-                                        player.sendSystemMessage(Component.literal("You aren't invited to their team"));
+                                        player.sendSystemMessage(Component.literal("Вы не приглашены в эту команду"));
                                     }
 
                                 } else {
                                     x.getSource()
                                         .getPlayerOrException()
-                                        .sendSystemMessage(Component.literal("Player isn't in a team"));
+                                        .sendSystemMessage(Component.literal("Игрок не состоит в команде"));
                                 }
                                 return 0;
                             })

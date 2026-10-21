@@ -81,7 +81,7 @@ public class IngredientData {
 
         if (ingredient.isOneOfAKind()) {
             tip.add(Component.literal(""));
-            tip.add(Component.literal("Can only have one: ").append(ingredient.getOneOfAKindId())
+            tip.add(Component.literal("Только один из: ").append(ingredient.getOneOfAKindId())
                 .withStyle(ChatFormatting.LIGHT_PURPLE));
         }
 
@@ -93,7 +93,7 @@ public class IngredientData {
 
         tip.add(Component.literal(""));
 
-        tip.add(Component.literal("Used in:"));
+        tip.add(Component.literal("Используется в:"));
 
         ingredient.allowed_in.forEach(x -> {
             PlayerSkill skill = ExileDB.PlayerSkills()

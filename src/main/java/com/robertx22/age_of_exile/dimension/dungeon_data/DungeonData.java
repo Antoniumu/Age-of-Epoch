@@ -84,7 +84,7 @@ public class DungeonData {
     }
 
     public MutableComponent getAffixedName() {
-        return Component.literal("Dungeon");
+        return Component.literal("Подземелье");
     }
 
     public DungeonMobList getMobList() {

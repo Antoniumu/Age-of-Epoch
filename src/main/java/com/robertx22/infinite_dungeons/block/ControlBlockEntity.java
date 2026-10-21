@@ -150,7 +150,7 @@ public class ControlBlockEntity extends BlockEntity implements ITickableBlockEnt
 
         } catch (Exception e) {
             e.printStackTrace();
-            this.sendMessage(Component.literal("Error in Dungeon Control Block code, destroying dungeon :("));
+            this.sendMessage(Component.literal("Ошибка блока управления подземельем, подземелье удаляется."));
             this.destroyDungeon();
             this.setRemoved();
         }
@@ -299,10 +299,10 @@ public class ControlBlockEntity extends BlockEntity implements ITickableBlockEnt
 
     public void finishMessage(CompletitionScore score) {
 
-        Component text = Component.literal("Dungeon Cleared.").withStyle(ChatFormatting.GREEN);
+        Component text = Component.literal("Подземелье зачищено.").withStyle(ChatFormatting.GREEN);
 
         if (score == CompletitionScore.FAIL) {
-            text = Component.literal("Dungeon Failed.").withStyle(ChatFormatting.RED);
+            text = Component.literal("Подземелье провалено.").withStyle(ChatFormatting.RED);
         }
 
         sendTitleMessage(text);

@@ -190,7 +190,7 @@ public class PlayerSkill implements JsonExileRegistry<PlayerSkill>, IAutoGson<Pl
             OptScaleExactStat.combine(nextStats);
 
             list.add(Component.literal(""));
-            list.add(Component.literal("Level " + opt.get().lvl_req + " unlocks:"));
+            list.add(Component.literal("Уровень " + opt.get().lvl_req + " открывает:"));
             nextStats.forEach(x -> list.addAll(x.GetTooltipString(info)));
         }
 
@@ -201,8 +201,8 @@ public class PlayerSkill implements JsonExileRegistry<PlayerSkill>, IAutoGson<Pl
                 .getLevel()) {
                 if (lvl < GameBalanceConfig.get().MAX_LEVEL) {
                     list.add(Component.literal(""));
-                    list.add(Component.literal("Skill level Capped to Combat level.").withStyle(ChatFormatting.RED));
-                    list.add(Component.literal("Level your Combat level to progress further.").withStyle(ChatFormatting.RED));
+                    list.add(Component.literal("Уровень навыка ограничен боевым уровнем.").withStyle(ChatFormatting.RED));
+                    list.add(Component.literal("Повысьте боевой уровень для дальнейшего развития.").withStyle(ChatFormatting.RED));
                 }
             }
         }

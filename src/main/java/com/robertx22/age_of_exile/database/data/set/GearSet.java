@@ -64,7 +64,7 @@ public class GearSet implements JsonExileRegistry<GearSet>, IAutoGson<GearSet>, 
 
         int lvl = info.unitdata.getLevel();
 
-        list.add(locName().append(" Set")
+        list.add(locName().append(" (Комплект)")
             .withStyle(ChatFormatting.GREEN));
 
         stats.entrySet()

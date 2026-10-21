@@ -269,7 +269,7 @@ public class SpellCastingData {
 
             if (!spell.isAllowedInDimension(caster.level())) {
                 if (caster instanceof Player) {
-                    ((Player) caster).sendSystemMessage(Component.literal("You feel an entity watching you. [Spell can not be casted in this dimension]"));
+                    ((Player) caster).sendSystemMessage(Component.literal("Вы чувствуете чей-то взгляд. [Заклинание нельзя применить в этом измерении]"));
                 }
                 return false;
             }
@@ -291,7 +291,7 @@ public class SpellCastingData {
 
                 if (!wep.canPlayerWear(ctx.data)) {
                     if (ctx.caster instanceof Player) {
-                        OnScreenMessageUtils.sendMessage((ServerPlayer) ctx.caster, Component.literal("Weapon requirements not met"), ClientboundTitleCompatPacket.Type.ACTIONBAR);
+                        OnScreenMessageUtils.sendMessage((ServerPlayer) ctx.caster, Component.literal("Требования оружия не выполнены"), ClientboundTitleCompatPacket.Type.ACTIONBAR);
                     }
                     return false;
                 }

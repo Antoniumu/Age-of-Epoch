@@ -193,9 +193,9 @@ public class OnServerTick {
                     if (wasnt && data.isInHighLvlZone) {
                         OnScreenMessageUtils.sendMessage(
                             player,
-                            Component.literal("YOU ARE ENTERING").withStyle(ChatFormatting.RED)
+                            Component.literal("ВЫ ВХОДИТЕ В").withStyle(ChatFormatting.RED)
                                 .withStyle(ChatFormatting.BOLD),
-                            Component.literal("A HIGH LEVEL ZONE").withStyle(ChatFormatting.RED)
+                            Component.literal("ЗОНУ ВЫСОКОГО УРОВНЯ").withStyle(ChatFormatting.RED)
                                 .withStyle(ChatFormatting.BOLD));
                     }
                 }

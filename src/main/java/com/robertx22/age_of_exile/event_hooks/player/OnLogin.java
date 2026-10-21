@@ -25,8 +25,8 @@ public class OnLogin {
         try {
 
             if (player.level() instanceof net.minecraft.server.level.ServerLevel sl && !sl.getGameRules().get(net.minecraft.world.level.gamerules.GameRules.COMMAND_BLOCKS_WORK)) {
-                player.sendSystemMessage(Component.literal("Command blocks are disabled, this will stop you from playing Age of Exile Dungeons!").withStyle(ChatFormatting.RED));
-                player.sendSystemMessage(Component.literal("To enable go to your server.properties file and put enable-command-block as true.").withStyle(ChatFormatting.GREEN));
+                player.sendSystemMessage(Component.literal("Командные блоки отключены — это помешает работе подземелий Age of Exile!").withStyle(ChatFormatting.RED));
+                player.sendSystemMessage(Component.literal("Чтобы включить их, укажите enable-command-block=true в файле server.properties.").withStyle(ChatFormatting.GREEN));
             }
 
             CapSyncUtil.syncAll(player);

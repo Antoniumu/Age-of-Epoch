@@ -41,7 +41,7 @@ public class ScalingCalc {
     }
 
     public MutableComponent GetTooltipString(LevelProvider provider) {
-        return Component.literal("(" + getMultiAsPercent(provider) + "% of " + getStat().getIconNameFormat() + ")");
+        return Component.literal("(" + getMultiAsPercent(provider) + "% от " + getStat().getIconNameFormat() + ")");
     }
 
     public List<Component> getTooltipFor(float multi, float value, MutableComponent statname, Elements el) {

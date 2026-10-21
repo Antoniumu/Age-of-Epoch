@@ -137,7 +137,7 @@ public class ProfessionsData implements IApplyableStats {
         SoundUtils.ding(player.level(), player.blockPosition());
 
         player.sendSystemMessage(skill.word.locName()
-            .append(" leveled up!")
+            .append(" повышен в уровне!")
             .withStyle(skill.format));
 
         Packets.sendToClient(player, new SkillLevelUpToClient(skill));

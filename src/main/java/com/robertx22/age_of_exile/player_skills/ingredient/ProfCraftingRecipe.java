@@ -41,7 +41,7 @@ public class ProfCraftingRecipe {
 
                     if (skill.gearMatchesProfession(stack.getItem())) {
 
-                        OnScreenMessageUtils.sendMessage((ServerPlayer) player, Component.literal("No gear"), ClientboundTitleCompatPacket.Type.SUBTITLE);
+                        OnScreenMessageUtils.sendMessage((ServerPlayer) player, Component.literal("Нет снаряжения"), ClientboundTitleCompatPacket.Type.SUBTITLE);
 
                         hasgear = true;
                     }

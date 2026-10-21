@@ -28,7 +28,7 @@ public class SpecificMobFilter extends DropFilter {
     public List<Component> getTooltip(DropFilterData data) {
 
         List<Component> list = new ArrayList<>();
-        list.add(Component.literal("This mobs can drop:"));
+        list.add(Component.literal("Эти существа могут оставить:"));
         list.add(BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(data.id))
             .getDescription());
         return list;

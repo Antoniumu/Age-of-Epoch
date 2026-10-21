@@ -96,7 +96,7 @@ public class ValueCalculation implements JsonExileRegistry<ValueCalculation>, IA
             }
 
             if (val < 1 || Screen.hasShiftDown()) {
-                text.append(" (" + (int) (attack_scaling.getValue(provider) * 100) + "% Weapon Damage)")
+                text.append(" (" + (int) (attack_scaling.getValue(provider) * 100) + "% урона оружия)")
                     .withStyle(ChatFormatting.YELLOW);
             }
         }

@@ -27,14 +27,14 @@ public class ScalingPlayerDiffData {
 
         list.add(Component.literal("Difficulty: " + (int) diff));
         list.add(Component.literal("Extra Mob Levels: " + getBonusLevels()));
-        list.add(Component.literal("Mob Damage at max LVL: " + NumberUtils.singleDigitFloat(getDMGMulti(getMobDifficultyAdder(GameBalanceConfig.get().MAX_LEVEL))) + "x"));
-        list.add(Component.literal("Mob Health at max LVL: " + NumberUtils.singleDigitFloat(getDMGMulti(getMobDifficultyAdder(GameBalanceConfig.get().MAX_LEVEL))) + "x"));
+        list.add(Component.literal("Урон существ на макс. ур.: " + NumberUtils.singleDigitFloat(getDMGMulti(getMobDifficultyAdder(GameBalanceConfig.get().MAX_LEVEL))) + "x"));
+        list.add(Component.literal("Здоровье существ на макс. ур.: " + NumberUtils.singleDigitFloat(getDMGMulti(getMobDifficultyAdder(GameBalanceConfig.get().MAX_LEVEL))) + "x"));
 
         list.add(Component.literal(""));
 
-        list.add(Component.literal("Difficulty increases by:"));
-        list.add(Component.literal("- time passing"));
-        list.add(Component.literal("- hostile mob kills"));
+        list.add(Component.literal("Сложность увеличивается от:"));
+        list.add(Component.literal("- течения времени"));
+        list.add(Component.literal("- убийства враждебных существ"));
 
         return list;
     }
