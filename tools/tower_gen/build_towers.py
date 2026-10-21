@@ -7,9 +7,8 @@ Every theme gets six pieces:
     top0, top1        – boss hall with the [boss] marker and treasure
 
 All pieces are 17x17 in footprint so they line up through the vertical
-jigsaw connector in the centre.  The ladder column sits at x=1, z=8 (against
-the west wall) and is continuous through every piece, so towers are fully
-climbable.
+jigsaw connector in the centre. Four ladder columns, one against each wall,
+remain aligned even when jigsaw rotates individual pieces.
 """
 
 from __future__ import annotations
@@ -433,6 +432,14 @@ def build_top(theme, variant):
 
     _decorate_special(s, theme, rng, TOP_H)
     _plants(s, theme, rng, count=4)
+
+    # Decorations must not bury the boss inside plants, lava or a pillar.
+    # A 5x5 platform and five blocks of headroom also fit the larger bosses.
+    for x in range(CX - 2, CX + 3):
+        for z in range(dais_z - 2, dais_z + 3):
+            s.put(x, 1, z, theme["wall_alt"])
+            for y in range(2, 7):
+                s.remove(x, y, z)
 
     _marker(s, CX, 2, dais_z, "[boss]", f"[tower:{theme['id']}]")
 

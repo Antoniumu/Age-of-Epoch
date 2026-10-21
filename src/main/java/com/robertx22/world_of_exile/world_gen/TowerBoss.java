@@ -13,6 +13,8 @@ import com.robertx22.world_of_exile.tower.TowerTheme;
 import com.robertx22.world_of_exile.tower.TowerThemes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -26,7 +28,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -52,7 +53,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * One tower guardian per structure. He can walk the interior and attack,
- * but he cannot leave the tower, and the floor under him cannot be dug out.
+ * but he cannot leave the tower. Containment never builds blocks under him.
  * Killing him starts {@link TowerCollapse}.
  */
 public final class TowerBoss {
@@ -62,6 +63,7 @@ public final class TowerBoss {
     public static final String MOB_TAG = "aoe_tower_mob";
     private static final String HOME_PREFIX = "aoe_tower_home:";
     private static final String THEME_PREFIX = "aoe_tower_theme:";
+    private static final String DEF_PREFIX = "aoe_tower_def:";
     private static final String RANK_PREFIX = "aoe_tower_rank:";
     private static final int SCAN_RADIUS_CHUNKS = 3;
     private static final int SAME_TOWER = 48;
@@ -69,9 +71,10 @@ public final class TowerBoss {
     private static final Set<BlockPos> SPAWNING = ConcurrentHashMap.newKeySet();
     private static final Set<Long> SPAWNING_COLUMNS = ConcurrentHashMap.newKeySet();
     private static final Set<UUID> COLLAPSED = ConcurrentHashMap.newKeySet();
-    private static final Map<BlockPos, Long> COLLAPSED_AT = new ConcurrentHashMap<>();
-    private static final Map<BlockPos, Long> SPAWNER_NEXT = new ConcurrentHashMap<>();
-    private static final Map<BlockPos, Arena> ARENAS = new ConcurrentHashMap<>();
+    private record TowerKey(ResourceKey<Level> dimension, BlockPos pos) {}
+
+    private static final Map<TowerKey, Long> COLLAPSED_AT = new ConcurrentHashMap<>();
+    private static final Map<TowerKey, Arena> ARENAS = new ConcurrentHashMap<>();
 
     private TowerBoss() {
     }
@@ -81,8 +84,6 @@ public final class TowerBoss {
             return;
         }
         List<TowerBossMarkerBlockEntity> markers = new ArrayList<>();
-        List<BlockPos> campfires = new ArrayList<>();
-        List<BlockPos> towerSpawners = new ArrayList<>();
         for (ServerPlayer player : level.players()) {
             if (player.isSpectator()) {
                 continue;
@@ -102,25 +103,15 @@ public final class TowerBoss {
                             markers.add(marker);
                         } else if (be instanceof SignBlockEntity sign) {
                             tryConvertBossSign(level, pos, sign);
-                        } else if (level.getBlockState(pos).is(Blocks.SOUL_CAMPFIRE) && nearTowerMaterial(level, pos)) {
-                            campfires.add(pos);
-                        } else if (be != null && level.getBlockState(pos).is(Blocks.SPAWNER) && nearTowerMaterial(level, pos)) {
-                            towerSpawners.add(pos);
                         }
                     }
                 }
             }
         }
         keepOneMarkerPerTower(level, markers);
-        List<BlockPos> liveMarkers = new ArrayList<>();
-        for (TowerBossMarkerBlockEntity marker : markers) {
-            if (!marker.isRemoved() && level.getBlockState(marker.getBlockPos()).is(SlashBlocks.TOWER_BOSS_MARKER.get())) {
-                liveMarkers.add(marker.getBlockPos());
-            }
-        }
-        placeOneFallbackMarker(level, campfires, liveMarkers);
+        // Themed vanilla spawners own their spawn cadence and mob selection.
+        // Never turn decorative campfires into bosses or pump arbitrary spawners.
         aggroTowerMobs(level);
-        pumpTowerSpawners(level, towerSpawners);
     }
 
     private static void keepOneMarkerPerTower(ServerLevel level, List<TowerBossMarkerBlockEntity> markers) {
@@ -142,37 +133,11 @@ public final class TowerBoss {
         }
     }
 
-    /**
-     * Legacy safety net: the old World of Exile towers marked their boss with a
-     * soul campfire.  Only campfires are converted - never spawners, because the
-     * themed tower halls are full of real spawners.
-     */
-    private static void placeOneFallbackMarker(ServerLevel level, List<BlockPos> campfires, List<BlockPos> liveMarkers) {
-        List<BlockPos> placed = new ArrayList<>(liveMarkers);
-        List<BlockPos> candidates = new ArrayList<>(campfires);
-        candidates.sort((a, b) -> Integer.compare(b.getY(), a.getY()));
-        for (BlockPos pos : candidates) {
-            if (!level.getChunkSource().hasChunk(pos.getX() >> 4, pos.getZ() >> 4)) {
-                continue;
-            }
-            if (collapsedNear(level, pos) || bossInRange(level, pos) || nearAny(placed, pos)) {
-                continue;
-            }
-            boolean campfire = level.getBlockState(pos).is(Blocks.SOUL_CAMPFIRE);
-            level.setBlock(pos, SlashBlocks.TOWER_BOSS_MARKER.get().defaultBlockState(), 3);
-            BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof TowerBossMarkerBlockEntity marker) {
-                marker.restoreCampfire = campfire;
-            }
-            placed.add(pos);
-        }
-    }
-
     public static void trySpawnFromMarker(TowerBossMarkerBlockEntity marker) {
         if (!(marker.getLevel() instanceof ServerLevel level)) {
             return;
         }
-        if (marker.isRemoved()) {
+        if (marker.isRemoved() || level.getGameTime() % 20 != 0) {
             return;
         }
         BlockPos pos = marker.getBlockPos();
@@ -198,8 +163,14 @@ public final class TowerBoss {
                 return;
             }
             level.removeBlock(pos, false);
-            if (spawn(level, pos, marker.theme) == null && restoreCampfire) {
-                level.setBlock(pos, Blocks.SOUL_CAMPFIRE.defaultBlockState(), 3);
+            if (spawn(level, pos, marker.theme) == null) {
+                // Keep the encounter retryable when every valid spot is occupied.
+                level.setBlock(pos, SlashBlocks.TOWER_BOSS_MARKER.get().defaultBlockState(), 3);
+                if (level.getBlockEntity(pos) instanceof TowerBossMarkerBlockEntity retry) {
+                    retry.theme = marker.theme;
+                    retry.restoreCampfire = restoreCampfire;
+                    retry.setChanged();
+                }
             }
         } finally {
             SPAWNING.remove(pos);
@@ -208,10 +179,13 @@ public final class TowerBoss {
     }
 
     public static void contain(LivingEntity entity) {
-        if (entity.level().isClientSide() || !entity.entityTags().contains(TAG) || !entity.isAlive()) {
+        if (entity.level().isClientSide() || !entity.isAlive()) {
             return;
         }
-        if (!(entity.level() instanceof ServerLevel level)) {
+        if (entity instanceof Mob mob && (entity.entityTags().contains(TAG) || entity.entityTags().contains(MOB_TAG))) {
+            protectFromSun(mob);
+        }
+        if (!entity.entityTags().contains(TAG) || !(entity.level() instanceof ServerLevel level)) {
             return;
         }
         BlockPos home = readHome(entity);
@@ -222,25 +196,21 @@ public final class TowerBoss {
             entity.stopRiding();
         }
         Arena arena = arenaOf(level, home);
-        BlockPos below = entity.blockPosition().below();
-        boolean hole = arena.contains(below) && level.getBlockState(below).isAir();
         boolean outside = entity.getX() < arena.minX + 0.2D || entity.getX() > arena.maxX + 0.8D
             || entity.getZ() < arena.minZ + 0.2D || entity.getZ() > arena.maxZ + 0.8D
             || entity.getY() < arena.minY - 0.2D || entity.getY() > arena.maxY + 3.0D;
-        boolean falling = entity.getDeltaMovement().y < -0.35D && !solid(level, below);
-        if (outside || falling) {
-            if (hole) {
-                level.setBlock(below, supportBlock(level, below), 3);
+        // Normal jumps, knockback, stairs and falls must not create platforms or
+        // trigger per-tick teleports. Only rescue an escape, at most once a second.
+        if (outside && entity.tickCount % 20 == 0) {
+            BlockPos stand = findStand(level, entity, home, arena);
+            if (stand != null) {
+                entity.teleportTo(stand.getX() + 0.5D, stand.getY(), stand.getZ() + 0.5D);
+                entity.setDeltaMovement(Vec3.ZERO);
+                entity.resetFallDistance();
+                if (entity instanceof Mob mob) {
+                    mob.getNavigation().stop();
+                }
             }
-            BlockPos stand = nearestStand(level, arena, entity.blockPosition());
-            entity.teleportTo(stand.getX() + 0.5D, stand.getY(), stand.getZ() + 0.5D);
-            entity.setDeltaMovement(Vec3.ZERO);
-            entity.resetFallDistance();
-            if (entity instanceof Mob mob) {
-                mob.getNavigation().stop();
-            }
-        } else if (hole && entity.getDeltaMovement().y <= 0.08D) {
-            level.setBlock(below, supportBlock(level, below), 3);
         }
         if (entity instanceof Mob mob) {
             if ((entity.tickCount % 10) == 0) {
@@ -322,7 +292,7 @@ public final class TowerBoss {
             return;
         }
         entity.removeTag(TAG);
-        COLLAPSED_AT.put(home.immutable(), level.getGameTime());
+        COLLAPSED_AT.put(new TowerKey(level.dimension(), home.immutable()), level.getGameTime());
         TowerCollapse.start(level, home);
         tell(level, home, "Страж пал. Башня рушится.", ChatFormatting.RED);
     }
@@ -338,7 +308,7 @@ public final class TowerBoss {
         int rank = rankAt(level, pos, theme);
         RandomSource random = level.getRandom();
         TowerBossDef def = TowerRoster.mainBoss(theme.id(), rank, random);
-        LivingEntity boss = createBoss(level, pos, def, theme, rank, false);
+        LivingEntity boss = createBoss(level, pos, pos, def, theme, rank, false);
         if (boss == null) {
             return null;
         }
@@ -346,7 +316,7 @@ public final class TowerBoss {
         int spawnedChampions = 0;
         for (TowerBossDef champion : TowerRoster.champions(theme.id(), rank, championCount, def, random)) {
             BlockPos spot = pos.offset(random.nextInt(9) - 4, random.nextInt(3) - 1, random.nextInt(9) - 4);
-            if (createBoss(level, spot, champion, theme, Math.max(1, rank - 1), true) != null) {
+            if (createBoss(level, spot, pos, champion, theme, Math.max(1, rank - 1), true) != null) {
                 spawnedChampions++;
             }
         }
@@ -356,7 +326,7 @@ public final class TowerBoss {
         return boss;
     }
 
-    private static LivingEntity createBoss(ServerLevel level, BlockPos pos, TowerBossDef def, TowerTheme theme,
+    private static LivingEntity createBoss(ServerLevel level, BlockPos pos, BlockPos home, TowerBossDef def, TowerTheme theme,
                                            int rank, boolean champion) {
         EntityType<?> type = null;
         try {
@@ -374,11 +344,22 @@ public final class TowerBoss {
         if (!(created instanceof LivingEntity entity)) {
             return null;
         }
-        BlockPos stand = findAir(level, pos);
+        // Finalization can change dimensions (e.g. slimes or baby zombies).
+        // Check the final bounding box, not the type's default dimensions.
+        entity.setPos(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
+        if (entity instanceof Mob mob) {
+            mob.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.MOB_SUMMONED, null);
+        }
+        Arena arena = arenaOf(level, home);
+        BlockPos stand = findStand(level, entity, pos, arena);
+        if (stand == null) {
+            return null; // No air-only fallback: never spawn floating or inside blocks.
+        }
         entity.setPos(stand.getX() + 0.5D, stand.getY(), stand.getZ() + 0.5D);
         entity.addTag(TAG);
-        entity.addTag(HOME_PREFIX + stand.getX() + "," + stand.getY() + "," + stand.getZ());
+        entity.addTag(HOME_PREFIX + home.getX() + "," + home.getY() + "," + home.getZ());
         entity.addTag(THEME_PREFIX + theme.id());
+        entity.addTag(DEF_PREFIX + def.id());
         entity.addTag(RANK_PREFIX + rank);
         if (champion) {
             entity.addTag(CHAMPION_TAG);
@@ -393,13 +374,9 @@ public final class TowerBoss {
         if (entity instanceof Mob mob) {
             mob.setPersistenceRequired();
             mob.setCanPickUpLoot(false);
-            try {
-                mob.finalizeSpawn(level, level.getCurrentDifficultyAt(stand), EntitySpawnReason.MOB_SUMMONED, null);
-            } catch (Exception ignored) {
-            }
             equip(mob, def);
             arm(mob);
-            Player target = nearestFighter(level, entity, arenaOf(level, stand));
+            Player target = nearestFighter(level, entity, arena);
             if (target != null) {
                 mob.setTarget(target);
                 mob.setAggressive(true);
@@ -522,8 +499,59 @@ public final class TowerBoss {
         return 1;
     }
 
+    /** Persist the selected roster entry so reloaded bosses keep only their own abilities. */
+    public static List<TowerAbility> abilitiesOf(LivingEntity entity) {
+        TowerTheme theme = themeOf(entity);
+        if (theme == null) {
+            return List.of();
+        }
+        for (TowerBossDef def : TowerRoster.all(theme.id())) {
+            if (entity.entityTags().contains(DEF_PREFIX + def.id())) {
+                return def.abilities();
+            }
+        }
+        // Migrate named bosses already present in saves from before the def tag.
+        Component name = entity.getCustomName();
+        if (name != null) {
+            for (TowerBossDef def : TowerRoster.all(theme.id())) {
+                if (name.getString().equals(def.name()) || name.getString().equals(def.name() + " (прислужник)")) {
+                    entity.addTag(DEF_PREFIX + def.id());
+                    return def.abilities();
+                }
+            }
+        }
+        return List.of();
+    }
+
+    /** BLINK requires existing ground and a destination clear of walls. */
+    public static boolean blink(ServerLevel level, Mob boss, BlockPos desired) {
+        BlockPos home = readHome(boss);
+        if (home == null) {
+            return false;
+        }
+        Arena arena = arenaOf(level, home);
+        if (!arena.contains(desired)) {
+            return false;
+        }
+        BlockPos stand = findStand(level, boss, desired, arena);
+        if (stand == null) {
+            return false;
+        }
+        level.sendParticles(net.minecraft.core.particles.ParticleTypes.PORTAL,
+            boss.getX(), boss.getY() + 1.0D, boss.getZ(), 24, 0.3D, 0.6D, 0.3D, 0.05D);
+        boss.teleportTo(stand.getX() + 0.5D, stand.getY(), stand.getZ() + 0.5D);
+        boss.setDeltaMovement(Vec3.ZERO);
+        boss.resetFallDistance();
+        boss.getNavigation().stop();
+        return true;
+    }
+
     /** Called by {@link TowerAbility#SUMMON_MINIONS}. */
     public static LivingEntity summonMinion(ServerLevel level, LivingEntity boss, TowerTheme theme) {
+        if (level.getEntitiesOfClass(Mob.class, boss.getBoundingBox().inflate(48.0D),
+            mob -> mob.isAlive() && mob.entityTags().contains(MOB_TAG)).size() >= 12) {
+            return null;
+        }
         String mobId = theme.randomMob(level.getRandom());
         EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(mobId));
         if (type == null) {
@@ -534,12 +562,20 @@ public final class TowerBoss {
             return null;
         }
         RandomSource random = level.getRandom();
-        BlockPos stand = findAir(level, boss.blockPosition().offset(random.nextInt(7) - 3, 0, random.nextInt(7) - 3));
+        BlockPos home = readHome(boss);
+        if (home == null) {
+            home = boss.blockPosition();
+        }
+        BlockPos stand = findStand(level, mob,
+            boss.blockPosition().offset(random.nextInt(7) - 3, 0, random.nextInt(7) - 3), arenaOf(level, home));
+        if (stand == null) {
+            return null;
+        }
         mob.setPos(stand.getX() + 0.5D, stand.getY(), stand.getZ() + 0.5D);
         mob.addTag(MOB_TAG);
         mob.setPersistenceRequired();
-        level.addFreshEntity(mob);
         arm(mob);
+        level.addFreshEntity(mob);
         Player target = nearestPlayer(level, stand, 24.0D);
         if (target != null) {
             mob.setTarget(target);
@@ -552,29 +588,70 @@ public final class TowerBoss {
 
     /** Called by {@link TowerAbility#SUMMON_ELITE}. */
     public static LivingEntity summonChampion(ServerLevel level, LivingEntity boss, TowerTheme theme, int rank) {
+        // Champions cannot recursively summon more champions.
+        if (boss.entityTags().contains(CHAMPION_TAG)
+            || level.getEntitiesOfClass(Mob.class, boss.getBoundingBox().inflate(48.0D),
+                mob -> mob.isAlive() && mob.entityTags().contains(CHAMPION_TAG)).size() >= 3) {
+            return null;
+        }
         TowerBossDef def = TowerRoster.mainBoss(theme.id(), Math.max(1, rank), level.getRandom());
-        return createBoss(level, boss.blockPosition(), def, theme, Math.max(1, rank), true);
+        BlockPos home = readHome(boss);
+        return createBoss(level, boss.blockPosition(), home != null ? home : boss.blockPosition(),
+            def, theme, Math.max(1, rank), true);
     }
 
-    private static BlockPos findAir(ServerLevel level, BlockPos pos) {
-        BlockPos[] candidates = new BlockPos[] {
-            pos, pos.below(), pos.above(), pos.north(), pos.south(), pos.east(), pos.west(),
-            pos.below().north(), pos.below().south(), pos.below().east(), pos.below().west(),
-            pos.above().north(), pos.above().south(), pos.above().east(), pos.above().west()
-        };
-        for (BlockPos candidate : candidates) {
-            if (level.getBlockState(candidate).isAir()
-                && level.getBlockState(candidate.above()).isAir()
-                && !level.getBlockState(candidate.below()).isAir()) {
-                return candidate;
+    /** Find existing ground and clearance for the actual entity, including wide/tall bosses. */
+    private static BlockPos findStand(ServerLevel level, LivingEntity entity, BlockPos from, Arena arena) {
+        BlockPos best = null;
+        double bestDist = Double.MAX_VALUE;
+        for (int dy = -6; dy <= 4; dy++) {
+            for (int dx = -8; dx <= 8; dx++) {
+                for (int dz = -8; dz <= 8; dz++) {
+                    BlockPos candidate = from.offset(dx, dy, dz);
+                    double dist = candidate.distSqr(from);
+                    if (dist >= bestDist || !arena.contains(candidate)) {
+                        continue;
+                    }
+                    AABB box = entity.getBoundingBox().move(
+                        candidate.getX() + 0.5D - entity.getX(), candidate.getY() - entity.getY(),
+                        candidate.getZ() + 0.5D - entity.getZ());
+                    if (box.minX < arena.minX || box.maxX > arena.maxX + 1
+                        || box.minZ < arena.minZ || box.maxZ > arena.maxZ + 1
+                        || box.maxY > arena.maxY + 3) {
+                        continue;
+                    }
+                    boolean supported = true;
+                    // Require a full, dry floor across the footprint, not a torch,
+                    // ladder, fluid or a block under just one corner of a large mob.
+                    for (int x = (int) Math.floor(box.minX); x <= (int) Math.floor(box.maxX - 0.001D); x++) {
+                        for (int z = (int) Math.floor(box.minZ); z <= (int) Math.floor(box.maxZ - 0.001D); z++) {
+                            BlockPos floor = new BlockPos(x, candidate.getY() - 1, z);
+                            if (!level.getChunkSource().hasChunk(x >> 4, z >> 4)
+                                || !level.getBlockState(floor).isFaceSturdy(level, floor, Direction.UP)
+                                || !level.getFluidState(floor.above()).isEmpty()
+                                || !level.getFluidState(floor.above(2)).isEmpty()
+                                || level.getBlockState(floor).is(Blocks.MAGMA_BLOCK)
+                                || level.getBlockState(floor).is(Blocks.CAMPFIRE)
+                                || level.getBlockState(floor).is(Blocks.SOUL_CAMPFIRE)) {
+                                supported = false;
+                                break;
+                            }
+                        }
+                        if (!supported) {
+                            break;
+                        }
+                    }
+                    if (!supported || !level.noCollision(box)
+                        || !level.getEntitiesOfClass(LivingEntity.class, box,
+                            other -> other != entity && other.isAlive()).isEmpty()) {
+                        continue;
+                    }
+                    best = candidate;
+                    bestDist = dist;
+                }
             }
         }
-        for (BlockPos candidate : candidates) {
-            if (level.getBlockState(candidate).isAir() && level.getBlockState(candidate.above()).isAir()) {
-                return candidate;
-            }
-        }
-        return pos;
+        return best;
     }
 
     private static void tryConvertBossSign(ServerLevel level, BlockPos pos, SignBlockEntity sign) {
@@ -699,13 +776,16 @@ public final class TowerBoss {
         boolean hit = false;
         var iterator = COLLAPSED_AT.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry<BlockPos, Long> entry = iterator.next();
+            Map.Entry<TowerKey, Long> entry = iterator.next();
+            if (!entry.getKey().dimension().equals(level.dimension())) {
+                continue;
+            }
             if (now - entry.getValue() > 20L * 60L * 15L) {
                 iterator.remove();
                 continue;
             }
-            double dx = entry.getKey().getX() - pos.getX();
-            double dz = entry.getKey().getZ() - pos.getZ();
+            double dx = entry.getKey().pos().getX() - pos.getX();
+            double dz = entry.getKey().pos().getZ() - pos.getZ();
             if (dx * dx + dz * dz <= (double) SAME_TOWER * SAME_TOWER) {
                 hit = true;
             }
@@ -731,10 +811,7 @@ public final class TowerBoss {
             }
             AABB box = player.getBoundingBox().inflate(28.0D);
             for (Mob mob : level.getEntitiesOfClass(Mob.class, box, m -> m.isAlive() && !m.entityTags().contains(TAG))) {
-                if (mob.getType().getCategory() != MobCategory.MONSTER && !mob.entityTags().contains(MOB_TAG)) {
-                    continue;
-                }
-                if (!mob.entityTags().contains(MOB_TAG) && !inTower(level, mob.blockPosition())) {
+                if (!mob.entityTags().contains(MOB_TAG)) {
                     continue;
                 }
                 if (mob.getTarget() instanceof Player target && target.isAlive() && canBeHunted(target)) {
@@ -748,83 +825,22 @@ public final class TowerBoss {
         }
     }
 
-    private static void pumpTowerSpawners(ServerLevel level, List<BlockPos> spawners) {
-        long now = level.getGameTime();
-        for (BlockPos pos : spawners) {
-            if (!level.hasNearbyAlivePlayer(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 20.0D)) {
-                continue;
-            }
-            Long next = SPAWNER_NEXT.get(pos);
-            if (next != null && now < next) {
-                continue;
-            }
-            AABB box = new AABB(pos).inflate(10.0D);
-            int hostiles = level.getEntitiesOfClass(Mob.class, box, m -> m.isAlive() && m.getType().getCategory() == MobCategory.MONSTER).size();
-            if (hostiles >= 4) {
-                SPAWNER_NEXT.put(pos.immutable(), now + 80L);
-                continue;
-            }
-            LivingEntity spawned = spawnTowerMob(level, pos);
-            SPAWNER_NEXT.put(pos.immutable(), now + (spawned == null ? 40L : 160L));
+    /** Vanilla undead do not ignite in daylight with head equipment. Repair the
+     * encounter helmet so sunlight cannot wear it out; this is NOT fire immunity. */
+    private static void protectFromSun(Mob mob) {
+        ItemStack head = mob.getItemBySlot(EquipmentSlot.HEAD);
+        if (head.isEmpty()) {
+            mob.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
+            mob.setDropChance(EquipmentSlot.HEAD, 0.0F);
+            // Also migrate already-spawned, burning tower defenders on first equip.
+            mob.setRemainingFireTicks(0);
+        } else if (head.isDamageableItem() && head.getDamageValue() > 0) {
+            head.setDamageValue(0);
         }
-        if (SPAWNER_NEXT.size() > 512) {
-            SPAWNER_NEXT.entrySet().removeIf(entry -> now - entry.getValue() > 20L * 60L);
-        }
-    }
-
-    private static LivingEntity spawnTowerMob(ServerLevel level, BlockPos pos) {
-        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(mobFor(level, pos)));
-        if (type == null) {
-            return null;
-        }
-        Entity created = type.create(level, EntitySpawnReason.SPAWNER);
-        if (!(created instanceof Mob mob)) {
-            return null;
-        }
-        BlockPos stand = findAir(level, pos.above());
-        mob.setPos(stand.getX() + 0.5D, stand.getY(), stand.getZ() + 0.5D);
-        mob.addTag(MOB_TAG);
-        mob.setPersistenceRequired();
-        try {
-            mob.finalizeSpawn(level, level.getCurrentDifficultyAt(stand), EntitySpawnReason.SPAWNER, null);
-        } catch (Exception ignored) {
-        }
-        arm(mob);
-        level.addFreshEntity(mob);
-        Player target = nearestPlayer(level, stand, 28.0D);
-        if (target != null) {
-            mob.setTarget(target);
-            mob.setAggressive(true);
-        }
-        return mob;
-    }
-
-    /**
-     * Spawner mobs always match the tower theme around them.  Nether mobs are
-     * never rolled in the overworld and vice versa.
-     */
-    private static String mobFor(ServerLevel level, BlockPos pos) {
-        TowerTheme around = themeAround(level, pos);
-        if (around != null) {
-            return around.randomMob(level.getRandom());
-        }
-        TowerTheme fallback = TowerThemes.forDimension(level);
-        return fallback.randomMob(level.getRandom());
-    }
-
-    private static TowerTheme themeAround(ServerLevel level, BlockPos pos) {
-        AABB box = new AABB(pos).inflate(36.0D);
-        for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, box,
-            e -> e.isAlive() && e.entityTags().contains(TAG))) {
-            TowerTheme theme = themeOf(entity);
-            if (theme != null) {
-                return theme;
-            }
-        }
-        return null;
     }
 
     private static void arm(Mob mob) {
+        protectFromSun(mob);
         try {
             if (mob.getMainHandItem().isEmpty() && mob.entityTags().contains(TAG)) {
                 mob.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_AXE));
@@ -879,22 +895,9 @@ public final class TowerBoss {
         return player != null && player.isAlive() && !player.isSpectator() && !player.isCreative();
     }
 
-    private static boolean inTower(ServerLevel level, BlockPos pos) {
-        if (nearTowerMaterial(level, pos) || TowerCollapse.isTowerMaterial(level.getBlockState(pos.below()))) {
-            return true;
-        }
-        for (int dx = -6; dx <= 6; dx += 3) {
-            for (int dz = -6; dz <= 6; dz += 3) {
-                if (TowerCollapse.isTowerMaterial(level.getBlockState(pos.offset(dx, -1, dz)))) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     private static Arena arenaOf(ServerLevel level, BlockPos home) {
-        Arena cached = ARENAS.get(home);
+        TowerKey key = new TowerKey(level.dimension(), home.immutable());
+        Arena cached = ARENAS.get(key);
         if (cached != null && level.getGameTime() < cached.expires) {
             return cached;
         }
@@ -946,7 +949,7 @@ public final class TowerBoss {
             maxY = home.getY() + 4;
         }
         Arena arena = new Arena(minX, maxX, minY, maxY, minZ, maxZ, level.getGameTime() + 200L);
-        ARENAS.put(home, arena);
+        ARENAS.put(key, arena);
         if (ARENAS.size() > 256) {
             long now = level.getGameTime();
             ARENAS.entrySet().removeIf(entry -> entry.getValue().expires < now);
@@ -954,59 +957,9 @@ public final class TowerBoss {
         return arena;
     }
 
-    private static BlockPos nearestStand(ServerLevel level, Arena arena, BlockPos from) {
-        int x = Math.max(arena.minX, Math.min(arena.maxX, from.getX()));
-        int y = Math.max(arena.minY, Math.min(arena.maxY, from.getY()));
-        int z = Math.max(arena.minZ, Math.min(arena.maxZ, from.getZ()));
-        BlockPos clamped = new BlockPos(x, y, z);
-        BlockPos best = null;
-        double bestDist = Double.MAX_VALUE;
-        for (int dy = 3; dy >= -8; dy--) {
-            for (int dx = -3; dx <= 3; dx++) {
-                for (int dz = -3; dz <= 3; dz++) {
-                    BlockPos candidate = clamped.offset(dx, dy, dz);
-                    if (!arena.contains(candidate) || !arena.contains(candidate.above())) {
-                        continue;
-                    }
-                    if (!level.getBlockState(candidate).isAir() || !level.getBlockState(candidate.above()).isAir()) {
-                        continue;
-                    }
-                    if (!solid(level, candidate.below())) {
-                        continue;
-                    }
-                    double dist = candidate.distSqr(from);
-                    if (dist < bestDist) {
-                        bestDist = dist;
-                        best = candidate;
-                    }
-                }
-            }
-        }
-        return best != null ? best : findAir(level, clamped);
-    }
-
     private static boolean solid(ServerLevel level, BlockPos pos) {
         BlockState state = level.getBlockState(pos);
         return !state.isAir() && !state.getCollisionShape(level, pos).isEmpty();
-    }
-
-    private static BlockState supportBlock(ServerLevel level, BlockPos pos) {
-        for (int dy = -2; dy <= 2; dy++) {
-            for (int dx = -2; dx <= 2; dx++) {
-                for (int dz = -2; dz <= 2; dz++) {
-                    BlockState state = level.getBlockState(pos.offset(dx, dy, dz));
-                    if (state.isAir()) {
-                        continue;
-                    }
-                    if (TowerMaterials.isTowerBlock(state) && !state.is(net.minecraft.tags.BlockTags.ALL_SIGNS)) {
-                        return state.getBlock().defaultBlockState();
-                    }
-                }
-            }
-        }
-        return Level.NETHER.equals(level.dimension())
-            ? Blocks.POLISHED_BLACKSTONE_BRICKS.defaultBlockState()
-            : Blocks.STONE_BRICKS.defaultBlockState();
     }
 
     private static final class Arena {
