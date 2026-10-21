@@ -445,9 +445,9 @@ public class DamageEvent extends EffectEvent {
 
             if (data.isDodged()) {
                 if (getAttackType().isAttack()) {
-                    text = "Dodge";
+                    text = "Уклонение";
                 } else {
-                    text = "Resist";
+                    text = "Сопротивление";
                 }
 
                 DmgNumPacket packet = new DmgNumPacket(target, text, false, ChatFormatting.GOLD);
@@ -456,13 +456,15 @@ public class DamageEvent extends EffectEvent {
             }
 
             for (Entry<Elements, Float> entry : info.dmgmap.entrySet()) {
-                if (entry.getValue()
-                    .intValue() > 0) {
+                if (entry.getValue() != null && entry.getValue() > 0.05F) {
+                    Elements ele = entry.getKey() != null ? entry.getKey() : Elements.Physical;
+                    int intVal = entry.getValue().intValue();
+                    String numStr = intVal > 0
+                        ? NumberUtils.formatDamageNumber(this, intVal)
+                        : NumberUtils.singleDigitFloat(entry.getValue());
+                    text = ele.format + ele.icon + " " + numStr + " (" + ele.dmgName + ")";
 
-                    text = entry.getKey().format + NumberUtils.formatDamageNumber(this, entry.getValue()
-                        .intValue());
-
-                    DmgNumPacket packet = new DmgNumPacket(target, text, data.isCrit(), entry.getKey().format);
+                    DmgNumPacket packet = new DmgNumPacket(target, text, data.isCrit(), ele.format);
                     Packets.sendToClient(player, packet);
                 }
             }

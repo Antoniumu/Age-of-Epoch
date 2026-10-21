@@ -1,7 +1,6 @@
 package com.robertx22.age_of_exile.gui.screens.spell;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.age_of_exile.database.data.spells.components.Spell;
 import com.robertx22.age_of_exile.gui.TextUtils;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
@@ -9,18 +8,19 @@ import com.robertx22.age_of_exile.saveclasses.gearitem.gear_bases.TooltipInfo;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.vanilla_mc.packets.AllocateSpellPacket;
 import com.robertx22.age_of_exile.vanilla_mc.packets.spells.SetupHotbarPacket;
+import com.robertx22.forge_compat.client.AbstractGui;
+import com.robertx22.forge_compat.client.ImageButton;
+import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.library_of_exile.main.Packets;
 import com.robertx22.library_of_exile.utils.GuiUtils;
-import net.minecraft.client.Minecraft;
-import com.robertx22.forge_compat.client.ImageButton;
-import net.minecraft.resources.Identifier;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.world.level.Level;
 public class LearnSpellButton extends ImageButton {
 
     static Identifier SPELL_SLOT = SlashRef.guiId("spells/slots/spell");
@@ -31,11 +31,10 @@ public class LearnSpellButton extends ImageButton {
     Minecraft mc = Minecraft.getInstance();
     SpellScreen screen;
 
-    Spell spell;
+    public Spell spell;
 
     public LearnSpellButton(SpellScreen screen, Spell spell, int xPos, int yPos) {
         super(xPos, yPos, BUTTON_SIZE_X, BUTTON_SIZE_Y, 0, 0, BUTTON_SIZE_Y, SPELL_SLOT, (button) -> {
-
             if (SpellScreen.IS_PICKING_HOTBAR_SPELL) {
                 SpellScreen.IS_PICKING_HOTBAR_SPELL = false;
                 Packets.sendToServer(new SetupHotbarPacket(spell, SpellScreen.NUMBER_OF_HOTBAR_FOR_PICKING));
@@ -45,27 +44,26 @@ public class LearnSpellButton extends ImageButton {
         });
         this.screen = screen;
         this.spell = spell;
-
     }
 
     @Override
     public void render(PoseStack matrix, int mouseX, int mouseY, float delta) {
         Minecraft mc = Minecraft.getInstance();
 
-        com.robertx22.forge_compat.client.AbstractGui.bindTexture(SPELL_SLOT);
+        AbstractGui.bindTexture(SPELL_SLOT);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        blit(matrix, x, y, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X);
+        blit(matrix, x, y, BUTTON_SIZE_X, BUTTON_SIZE_X, 0, 0, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X);
 
-        com.robertx22.forge_compat.client.AbstractGui.bindTexture(spell.getIconLoc());
+        AbstractGui.bindTexture(spell.getIconLoc());
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        blit(matrix, x + 1, y + 1, 16, 16, 16, 16, 16, 16);
+        blit(matrix, x + 1, y + 1, 16, 16, 0, 0, 16, 16, 16, 16);
 
         int currentlvl = Load.spells(mc.player)
             .getLevelOf(spell.GUID());
         int maxlvl = spell.getMaxLevel();
         String lvltext = currentlvl + "/" + maxlvl;
-        TextUtils.renderText(matrix, 0.8F, lvltext, x + BUTTON_SIZE_X / 2, (int) (y + BUTTON_SIZE_Y * 0.85F), ChatFormatting.GREEN);
-
+        ChatFormatting col = currentlvl > 0 ? ChatFormatting.GREEN : ChatFormatting.GRAY;
+        TextUtils.renderText(matrix, 0.75F, lvltext, x + BUTTON_SIZE_X / 2, (int) (y + BUTTON_SIZE_Y * 0.85F), col);
     }
 
     @Override
@@ -81,7 +79,14 @@ public class LearnSpellButton extends ImageButton {
             int reqlvl = screen.currentSchool()
                 .getLevelNeededToAllocate(screen.currentSchool().spells.get(spell.GUID()));
 
-            tooltip.add(Component.literal("Required Level: " + reqlvl).withStyle(ChatFormatting.RED));
+            tooltip.add(Component.literal("Требуемый уровень: " + reqlvl).withStyle(ChatFormatting.RED));
+
+            int currentlvl = Load.spells(mc.player).getLevelOf(spell.GUID());
+            if (currentlvl > 0) {
+                tooltip.add(Component.literal("ЛКМ — Повысить ур. | Зажмите и перетащите в ячейку внизу").withStyle(ChatFormatting.GOLD));
+            } else {
+                tooltip.add(Component.literal("ЛКМ — Изучить заклинание").withStyle(ChatFormatting.GREEN));
+            }
 
             GuiUtils.renderTooltip(matrix, tooltip, x, y);
 

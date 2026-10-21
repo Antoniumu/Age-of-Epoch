@@ -52,7 +52,7 @@ public class DimensionConfig implements JsonExileRegistry<DimensionConfig>, ISer
 
     public static DimensionConfig DefaultExtra() {
         DimensionConfig config = new DimensionConfig();
-        config.min_lvl = 10;
+        config.min_lvl = 1;
         config.max_lvl = 50;
         return config;
     }

@@ -7,13 +7,13 @@ import java.util.List;
 
 public enum Elements {
 
-    Physical(false, "Physical", ChatFormatting.GOLD, "physical", "\u2726"),
-    Fire(true, "Fire", ChatFormatting.RED, "fire", "\u2600"),
-    Water(true, "Water", ChatFormatting.AQUA, "water", "\u2749"),
-    Earth(true, "Earth", ChatFormatting.DARK_GREEN, "earth", "\u273F"), /* Reminder: if i rename this to "earth" satte will get pissed off */
+    Physical(false, "Физический", ChatFormatting.GOLD, "physical", "\u2726"),
+    Fire(true, "Огненный", ChatFormatting.RED, "fire", "\u2600"),
+    Water(true, "Водный", ChatFormatting.AQUA, "water", "\u2749"),
+    Earth(true, "Природный", ChatFormatting.DARK_GREEN, "earth", "\u273F"), /* Reminder: if i rename this to "earth" satte will get pissed off */
 
-    Elemental(false, "Elemental", ChatFormatting.LIGHT_PURPLE, "elemental", "\u269C"),
-    All(false, "All", ChatFormatting.LIGHT_PURPLE, "all", "\u273F");
+    Elemental(false, "Стихийный", ChatFormatting.LIGHT_PURPLE, "elemental", "\u269C"),
+    All(false, "Все стихии", ChatFormatting.LIGHT_PURPLE, "all", "\u273F");
 
     public boolean isSingleElement = true;
 
@@ -33,7 +33,7 @@ public enum Elements {
     public ChatFormatting format;
 
     public String getIconNameDmg() {
-        return getIconNameFormat(dmgName) + " Damage";
+        return getIconNameFormat(dmgName) + " урон";
     }
 
     public String getIconNameFormat() {

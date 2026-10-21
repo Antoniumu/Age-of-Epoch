@@ -88,7 +88,7 @@ public class RPGGuiOverlay extends AbstractGui {
             if (mc.player == null) {
                 return;
             }
-            if (mc.getDebugOverlay().showDebugScreen() || mc.player.isCreative() || mc.player.isSpectator()) {
+            if (mc.getDebugOverlay().showDebugScreen() || mc.player.isSpectator()) {
                 return;
             }
 
@@ -135,6 +135,13 @@ public class RPGGuiOverlay extends AbstractGui {
                             true);
                     }
                 });
+
+            int areaY = data.getResources().getShield() > 0 ? 66 : 55;
+            com.robertx22.age_of_exile.gui.overlays.AreaLevelIndicator.draw(
+                matrix,
+                5 + MineAndSlashBars.BAR_WIDTH / 2,
+                areaY
+            );
 
         } catch (Exception e) {
             e.printStackTrace();

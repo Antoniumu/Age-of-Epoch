@@ -150,7 +150,10 @@ public class FabricBootstrap {
             MinecraftForge.EVENT_BUS.post(new PlayerEvent.Clone(newPlayer, oldPlayer, !alive));
         });
 
-        // ---- entity join ----
+        // ---- entity join & tracking ----
+        net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents.START_TRACKING.register((trackedEntity, player) -> {
+            MinecraftForge.EVENT_BUS.post(new PlayerEvent.StartTracking(player, trackedEntity));
+        });
         ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
             if (entity instanceof LivingEntity living) {
                 try {
@@ -164,10 +167,18 @@ public class FabricBootstrap {
         });
 
         // ---- ticks ----
-        ServerTickEvents.START_SERVER_TICK.register(server ->
-            MinecraftForge.EVENT_BUS.post(new TickEvent.ServerTickEvent(TickEvent.Phase.START, server)));
-        ServerTickEvents.END_SERVER_TICK.register(server ->
-            MinecraftForge.EVENT_BUS.post(new TickEvent.ServerTickEvent(TickEvent.Phase.END, server)));
+        ServerTickEvents.START_SERVER_TICK.register(server -> {
+            MinecraftForge.EVENT_BUS.post(new TickEvent.ServerTickEvent(TickEvent.Phase.START, server));
+            for (ServerPlayer p : server.getPlayerList().getPlayers()) {
+                MinecraftForge.EVENT_BUS.post(new TickEvent.PlayerTickEvent(TickEvent.Phase.START, p));
+            }
+        });
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            MinecraftForge.EVENT_BUS.post(new TickEvent.ServerTickEvent(TickEvent.Phase.END, server));
+            for (ServerPlayer p : server.getPlayerList().getPlayers()) {
+                MinecraftForge.EVENT_BUS.post(new TickEvent.PlayerTickEvent(TickEvent.Phase.END, p));
+            }
+        });
         ServerTickEvents.START_LEVEL_TICK.register(world ->
             MinecraftForge.EVENT_BUS.post(new TickEvent.WorldTickEvent(TickEvent.Phase.START, world)));
         ServerTickEvents.END_LEVEL_TICK.register(world ->

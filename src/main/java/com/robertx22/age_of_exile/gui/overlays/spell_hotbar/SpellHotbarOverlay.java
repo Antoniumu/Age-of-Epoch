@@ -55,19 +55,17 @@ public class SpellHotbarOverlay extends AbstractGui {
     public void onHudRender(PoseStack matrix, float v) {
 
         try {
+            if (mc.player == null) {
+                return;
+            }
             if (mc.getDebugOverlay().showDebugScreen() || mc.player.isSpectator()) {
                 return;
             }
-            if (mc.player.isSpectator()) {
-                return;
-            }
-            if (data == null) {
-                data = Load.spells(mc.player);
-            }
+            data = Load.spells(mc.player);
             if (ChatUtils.isChatOpen()) {
                 return;
             }
-            if (Load.spells(mc.player) == null) {
+            if (data == null) {
                 return;
             }
 
@@ -78,7 +76,6 @@ public class SpellHotbarOverlay extends AbstractGui {
                 .getGuiScaledHeight() / 2 - HEIGHT / 2;
 
             renderHotbar(matrix, x, y);
-            //renderSpellsOnHotbar(matrix, x, y);
 
             for (int i = 0; i < 4; i++) {
 
@@ -103,36 +100,42 @@ public class SpellHotbarOverlay extends AbstractGui {
 
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        boolean render = true;
-
-        Spell spell = null;
-        try {
-            spell = Load.spells(this.mc.player)
-                .getSpellByNumber(place);
-
-            if (spell == null) {
-                return;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            render = false;
-        }
-
-        if (!render) {
-            return;
-        }
-
         int x = 3;
         int y = mc.getWindow()
             .getGuiScaledHeight() / 2 - HEIGHT / 2 + 3;
 
         y += num * 20;
 
-        try {
-            int xs = (int) (x);
-            int ys = (int) (y);
+        int xs = x;
+        int ys = y;
 
+        String txt = "";
+        try {
+            txt = CLOC.translate(KeybindsRegister.getSpellHotbar(place)
+                    .getTranslatedKeyMessage())
+                .toUpperCase(Locale.ROOT);
+            if (txt.length() > 3) {
+                txt = txt.substring(0, 2);
+            }
+        } catch (Exception ignored) {
+        }
+
+        Spell spell = null;
+        try {
+            spell = Load.spells(this.mc.player)
+                .getSpellByNumber(place);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (spell == null) {
+            if (!txt.isEmpty()) {
+                GuiUtils.renderScaledText(matrix, xs + 13, ys + 12, 0.75D, txt, ChatFormatting.GRAY);
+            }
+            return;
+        }
+
+        try {
             if (Load.Unit(mc.player)
                 .getCooldowns()
                 .getCooldownTicks(spell.GUID()) > 1) {
@@ -141,7 +144,7 @@ public class SpellHotbarOverlay extends AbstractGui {
                 com.robertx22.forge_compat.client.AbstractGui.bindTexture(SPELL_READY_TEX);
             }
 
-            this.blit(matrix, xs, ys, 0, 0, 16, 16, 16, 16);
+            this.blit(matrix, xs, ys, 16, 16, 0, 0, 20, 20, 20, 20);
 
             if (spell != null) {
                 com.robertx22.forge_compat.client.AbstractGui.bindTexture(spell.getIconLoc());

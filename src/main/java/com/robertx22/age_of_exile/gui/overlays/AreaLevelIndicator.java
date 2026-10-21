@@ -13,28 +13,28 @@ public class AreaLevelIndicator {
 
         Minecraft mc = Minecraft.getInstance();
 
-        String text = "Уровень зоны: ";
+        String text = "Уровень локации: ";
 
-        String lvltext = SyncedToClientValues.areaLevel + "";
+        int arealvl = Math.max(1, SyncedToClientValues.areaLevel);
+        String lvltext = arealvl + "";
 
-        int arealvl = SyncedToClientValues.areaLevel;
         TextColors color = TextColors.GREEN;
+        ChatFormatting fmt = ChatFormatting.GREEN;
 
-        int playerlvl = Load.Unit(mc.player)
-            .getLevel();
+        int playerlvl = Load.Unit(mc.player) != null ? Load.Unit(mc.player).getLevel() : 1;
 
         if (arealvl - 10 > playerlvl) {
             color = TextColors.RED;
-            lvltext += "!!";
+            fmt = ChatFormatting.RED;
+            lvltext += " !!";
         } else if (arealvl - 5 > playerlvl) {
             color = TextColors.YELLOW;
-            lvltext += "!";
+            fmt = ChatFormatting.YELLOW;
+            lvltext += " !";
         }
         text += lvltext;
 
-        int width = mc.font.width(text);
-
-        drawPrettyLevelText(text, matrix, x - width / 2F, y + 12, color);
+        GuiUtils.renderScaledText(matrix, x, y, 0.85D, text, fmt);
     }
 
     public enum TextColors {

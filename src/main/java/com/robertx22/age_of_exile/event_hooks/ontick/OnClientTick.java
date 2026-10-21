@@ -29,6 +29,8 @@ public class OnClientTick {
     public static void onEndTick(Minecraft mc) {
 
         try {
+            com.robertx22.age_of_exile.a_libraries.dmg_number_particle.DamageParticleRenderer.tickParticles();
+
             Player player = Minecraft.getInstance().player;
 
             if (player == null) {

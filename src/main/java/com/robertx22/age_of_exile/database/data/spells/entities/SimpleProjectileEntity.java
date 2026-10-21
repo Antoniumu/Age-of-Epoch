@@ -412,7 +412,7 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
     public EntitySavedSpellData getSpellData() {
         try {
             if (this.level().isClientSide()) {
-                if (spellData == null) {
+                if (spellData == null || spellData.item_id == null || spellData.item_id.isEmpty()) {
                     String json = entityData.get(SPELL_DATA);
                     if (json != null && !json.isEmpty()) {
                         this.spellData = GSON.fromJson(json, EntitySavedSpellData.class);

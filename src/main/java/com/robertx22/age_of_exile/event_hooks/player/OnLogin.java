@@ -41,6 +41,13 @@ public class OnLogin {
 
             data.syncToClient(player);
 
+            com.robertx22.library_of_exile.main.Packets.sendToClient(
+                player,
+                new com.robertx22.age_of_exile.vanilla_mc.packets.SyncAreaLevelPacket(
+                    com.robertx22.age_of_exile.uncommon.utilityclasses.LevelUtils.determineLevel(player.level(), player.blockPosition(), player).level
+                )
+            );
+
         } catch (
             Exception e) {
             e.printStackTrace();
