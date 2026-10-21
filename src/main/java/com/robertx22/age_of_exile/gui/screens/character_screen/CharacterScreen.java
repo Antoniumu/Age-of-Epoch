@@ -400,7 +400,7 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
                     if (stat instanceof IUsableStat usable && !(stat instanceof Health)) {
                         int lvl = unitdata.getLevel();
                         String effPct = NumberUtils.format(usable.getUsableValue((int) data.getValue(), lvl) * 100F) + "%";
-                        String maxPct = (int) (usable.getMaximumPercent() * 100F) + "%";
+                        String maxPct = (int) (usable.getMaxMulti() * 100F) + "%";
                         tooltip.add(Component.literal("Эффективность (Ур. " + lvl + "): " + effPct + " (макс. " + maxPct + ")").withStyle(ChatFormatting.AQUA));
                     }
                 }

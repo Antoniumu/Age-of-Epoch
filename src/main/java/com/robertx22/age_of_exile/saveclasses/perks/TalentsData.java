@@ -30,6 +30,9 @@ public class TalentsData implements IApplyableStats {
     @Store
     public int reset_points = 5;
 
+    @Store
+    public int bonus_points = 0;
+
     public HashMap<String, SchoolData> getPerks(TalentTree.SchoolType type) {
         return perks;
     }
@@ -55,7 +58,7 @@ public class TalentsData implements IApplyableStats {
 
         int num = 0;
 
-        num = (int) GameBalanceConfig.get().STARTING_TALENT_POINTS;
+        num = (int) GameBalanceConfig.get().STARTING_TALENT_POINTS + this.bonus_points;
         num += GameBalanceConfig.get().TALENT_POINTS_AT_MAX_LEVEL * LevelUtils.getMaxLevelMultiplier(data.getLevel());
 
         num -= this.getAllocatedPoints(type);

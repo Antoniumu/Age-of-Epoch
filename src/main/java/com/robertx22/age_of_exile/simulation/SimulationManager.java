@@ -4,41 +4,33 @@ import com.robertx22.age_of_exile.a_libraries.curios.MyCurioUtils;
 import com.robertx22.age_of_exile.capability.entity.EntityData;
 import com.robertx22.age_of_exile.capability.player.EntitySpellCap;
 import com.robertx22.age_of_exile.capability.player.RPGPlayerData;
-import com.robertx22.age_of_exile.database.data.EntityConfig;
+import com.robertx22.age_of_exile.capability.player.data.StatPointsData;
+import com.robertx22.age_of_exile.database.OptScaleExactStat;
 import com.robertx22.age_of_exile.database.data.game_balance_config.GameBalanceConfig;
 import com.robertx22.age_of_exile.database.data.perks.Perk;
 import com.robertx22.age_of_exile.database.data.rarities.GearRarity;
 import com.robertx22.age_of_exile.database.data.rarities.MobRarity;
-import com.robertx22.age_of_exile.database.data.stats.IUsableStat;
-import com.robertx22.age_of_exile.database.data.stats.Stat;
 import com.robertx22.age_of_exile.database.data.stats.StatScaling;
+import com.robertx22.age_of_exile.database.data.stats.types.core_stats.AllAttributes;
 import com.robertx22.age_of_exile.database.data.stats.types.defense.Armor;
-import com.robertx22.age_of_exile.database.data.stats.types.defense.DamageShield;
 import com.robertx22.age_of_exile.database.data.stats.types.defense.DodgeRating;
 import com.robertx22.age_of_exile.database.data.stats.types.defense.SpellDodge;
-import com.robertx22.age_of_exile.database.data.stats.types.generated.AttackDamage;
 import com.robertx22.age_of_exile.database.data.stats.types.generated.ElementalResist;
 import com.robertx22.age_of_exile.database.data.stats.types.resources.health.Health;
-import com.robertx22.age_of_exile.database.data.stats.types.resources.mana.Mana;
 import com.robertx22.age_of_exile.database.data.talent_tree.TalentTree;
 import com.robertx22.age_of_exile.database.registry.ExileDB;
 import com.robertx22.age_of_exile.dimension.DimensionIds;
 import com.robertx22.age_of_exile.loot.blueprints.GearBlueprint;
-import com.robertx22.age_of_exile.loot.generators.util.GearCreationUtils;
 import com.robertx22.age_of_exile.mmorpg.registers.common.SlashBlocks;
 import com.robertx22.age_of_exile.mmorpg.registers.common.items.CurrencyItems;
-import com.robertx22.age_of_exile.saveclasses.ExactStatData;
-import com.robertx22.age_of_exile.database.OptScaleExactStat;
-import com.robertx22.age_of_exile.saveclasses.PointData;
-import com.robertx22.age_of_exile.capability.player.data.StatPointsData;
+import com.robertx22.age_of_exile.mmorpg.registers.common.items.SlashItems;
 import com.robertx22.age_of_exile.saveclasses.perks.TalentsData;
+import com.robertx22.age_of_exile.saveclasses.stat_soul.StatSoulData;
 import com.robertx22.age_of_exile.saveclasses.unit.ResourceType;
-import com.robertx22.age_of_exile.saveclasses.unit.StatData;
 import com.robertx22.age_of_exile.saveclasses.unit.Unit;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.effectdatas.DamageEvent;
 import com.robertx22.age_of_exile.uncommon.effectdatas.EventBuilder;
-import com.robertx22.age_of_exile.uncommon.effectdatas.RestoreResourceEvent;
 import com.robertx22.age_of_exile.uncommon.effectdatas.rework.EventData;
 import com.robertx22.age_of_exile.uncommon.effectdatas.rework.RestoreType;
 import com.robertx22.age_of_exile.uncommon.enumclasses.AttackType;
@@ -46,14 +38,17 @@ import com.robertx22.age_of_exile.uncommon.enumclasses.Elements;
 import com.robertx22.age_of_exile.uncommon.enumclasses.ModType;
 import com.robertx22.age_of_exile.uncommon.enumclasses.PlayStyle;
 import com.robertx22.age_of_exile.uncommon.enumclasses.WeaponTypes;
+import com.robertx22.age_of_exile.uncommon.interfaces.data_items.IRarity;
+import com.robertx22.age_of_exile.vanilla_mc.items.gearitems.VanillaMaterial;
+import com.robertx22.age_of_exile.uncommon.utilityclasses.HealthUtils;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.NumberUtils;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.PlayerUtils;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.StackNBT;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.WorldUtils;
-import com.robertx22.age_of_exile.saveclasses.stat_soul.StatSoulData;
 import com.robertx22.library_of_exile.utils.TeleportUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -64,20 +59,17 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.monster.Skeleton;
-import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -178,7 +170,7 @@ public class SimulationManager {
             restoreFromSnapshot(player, snap, memInv);
             player.sendSystemMessage(Component.literal("§a[Полигон] Симуляция завершена. Ваш персонаж, уровень, таланты и инвентарь полностью восстановлены!"));
         } else if (WorldUtils.isSimulationWorld(player.level())) {
-            BlockPos spawnPos = player.level().getSharedSpawnPos();
+            BlockPos spawnPos = new BlockPos(0, 80, 0);
             TeleportUtils.teleport(player, spawnPos, Identifier.withDefaultNamespace("overworld"));
             player.sendSystemMessage(Component.literal("§e[Полигон] Вы покинули измерение симуляции."));
         }
@@ -232,7 +224,7 @@ public class SimulationManager {
             ItemStack stack = player.getInventory().getItem(i);
             memCopy.add(stack.isEmpty() ? ItemStack.EMPTY : stack.copy());
             if (!stack.isEmpty()) {
-                CompoundTag itemNbt = StackNBT.itemStackToNbt(stack.copy(), player.registryAccess());
+                CompoundTag itemNbt = StackNBT.saveStack(stack.copy());
                 if (!itemNbt.isEmpty()) {
                     CompoundTag entry = new CompoundTag();
                     entry.putInt("slot", i);
@@ -287,7 +279,7 @@ public class SimulationManager {
                     int slot = entry.getIntOr("slot", -1);
                     CompoundTag itemTag = entry.getCompoundOrEmpty("item");
                     if (slot >= 0 && slot < invSize && !itemTag.isEmpty()) {
-                        ItemStack restored = StackNBT.nbtToItemStack(itemTag, player.registryAccess());
+                        ItemStack restored = StackNBT.loadStack(itemTag);
                         player.getInventory().setItem(slot, restored);
                     }
                 }
@@ -331,7 +323,7 @@ public class SimulationManager {
             return false;
         }
         if (player.getHealth() - vanillaDamage <= 0.5F) {
-            float realDmg = com.robertx22.age_of_exile.uncommon.utilityclasses.HealthUtils.vanillaToReal(player, vanillaDamage);
+            float realDmg = HealthUtils.vanillaToReal(player, vanillaDamage);
             healPlayerFull(player);
             player.sendSystemMessage(Component.literal(
                 "§c[Полигон] Смертельный удар (" + NumberUtils.format(realDmg) + " ед. урона) перехвачен! Персонаж мгновенно исцелён для продолжения теста."
@@ -370,9 +362,11 @@ public class SimulationManager {
         rpgData.talents.reset_points = 999;
 
         EntityData unitData = Load.Unit(player);
-        unitData.getCustomExactStats().add(
-            ExactStatData.of(50, com.robertx22.age_of_exile.database.data.stats.types.core_stats.AllAttributes.getInstance(), ModType.FLAT, 1),
-            "sim_bonus_all_stats"
+        unitData.getCustomExactStats().addExactStat(
+            "sim_bonus_all_stats",
+            AllAttributes.getInstance().GUID(),
+            50,
+            ModType.FLAT
         );
         unitData.setEquipsChanged(true);
         unitData.tryRecalculateStats();
@@ -391,10 +385,12 @@ public class SimulationManager {
         rpgData.talents.reset_points = 999;
         rpgData.statPoints = new StatPointsData();
 
-        Load.spells(player).getSpellsData().reset();
+        Load.spells(player).getSpellsData().allocated_lvls.clear();
+        Load.spells(player).getSpellsData().schools.clear();
+        Load.spells(player).getSpellsData().hotbars.clear();
 
         EntityData unitData = Load.Unit(player);
-        unitData.getCustomExactStats().remove("sim_bonus_all_stats");
+        unitData.getCustomExactStats().removeExactStat("sim_bonus_all_stats");
         unitData.getStatusEffectsData().exileMap.clear();
         unitData.setEquipsChanged(true);
         unitData.tryRecalculateStats();
@@ -404,66 +400,80 @@ public class SimulationManager {
         player.sendSystemMessage(Component.literal("§e[Полигон] Все таланты, очки характеристик и заклинания сброшены! Вы можете собрать новый билд с нуля."));
     }
 
+    private record KitEntry(String slotHint, Item item) {
+    }
+
     public static void giveGearKit(ServerPlayer player, int kitType) {
         if (!ensureInSimulation(player)) {
             return;
         }
         int lvl = Load.Unit(player).getLevel();
-        List<GearRarity> rarities = ExileDB.GearRarities().getList();
-        String bestRarity = "mythic";
-        int maxRank = -1;
-        for (GearRarity r : rarities) {
-            if (r.rank > maxRank && !r.GUID().equals("unique")) {
-                maxRank = r.rank;
+        String bestRarity = IRarity.EPIC_ID;
+        int maxTier = -1;
+        for (GearRarity r : ExileDB.GearRarities().getList()) {
+            if (!r.is_unique_item && r.item_tier > maxTier) {
+                maxTier = r.item_tier;
                 bestRarity = r.GUID();
             }
         }
 
-        List<String> slotFamilies = new ArrayList<>();
+        List<KitEntry> entries = new ArrayList<>();
         String kitName;
         if (kitType == 0) {
             kitName = "Воин (Тяжёлая броня + Меч + Топор + Щит)";
-            slotFamilies.add("plate_helmet");
-            slotFamilies.add("plate_chest");
-            slotFamilies.add("plate_pants");
-            slotFamilies.add("plate_boots");
-            slotFamilies.add("sword");
-            slotFamilies.add("axe");
-            slotFamilies.add("armor_shield");
+            entries.add(new KitEntry("plate_helmet", Items.DIAMOND_HELMET));
+            entries.add(new KitEntry("plate_chest", Items.DIAMOND_CHESTPLATE));
+            entries.add(new KitEntry("plate_pants", Items.DIAMOND_LEGGINGS));
+            entries.add(new KitEntry("plate_boots", Items.DIAMOND_BOOTS));
+            entries.add(new KitEntry("sword", Items.DIAMOND_SWORD));
+            entries.add(new KitEntry("axe", Items.DIAMOND_AXE));
+            entries.add(new KitEntry("armor_shield", Items.SHIELD));
         } else if (kitType == 1) {
             kitName = "Охотник (Уклонение + Лук + Арбалет)";
-            slotFamilies.add("leather_helmet");
-            slotFamilies.add("leather_chest");
-            slotFamilies.add("leather_pants");
-            slotFamilies.add("leather_boots");
-            slotFamilies.add("bow");
-            slotFamilies.add("crossbow");
-            slotFamilies.add("dodge_shield");
+            entries.add(new KitEntry("leather_helmet", Items.LEATHER_HELMET));
+            entries.add(new KitEntry("leather_chest", Items.LEATHER_CHESTPLATE));
+            entries.add(new KitEntry("leather_pants", Items.LEATHER_LEGGINGS));
+            entries.add(new KitEntry("leather_boots", Items.LEATHER_BOOTS));
+            entries.add(new KitEntry("bow", Items.BOW));
+            entries.add(new KitEntry("crossbow", Items.CROSSBOW));
+            entries.add(new KitEntry("dodge_shield", Items.SHIELD));
         } else if (kitType == 2) {
             kitName = "Маг (Магический щит + Посох + Скипетр)";
-            slotFamilies.add("cloth_helmet");
-            slotFamilies.add("cloth_chest");
-            slotFamilies.add("cloth_pants");
-            slotFamilies.add("cloth_boots");
-            slotFamilies.add("staff");
-            slotFamilies.add("wand");
-            slotFamilies.add("ms_shield");
+            Item staffItem = SlashItems.GearItems.STAFFS.containsKey(VanillaMaterial.DIAMOND)
+                ? SlashItems.GearItems.STAFFS.get(VanillaMaterial.DIAMOND).get()
+                : Items.STICK;
+            entries.add(new KitEntry("cloth_helmet", Items.GOLDEN_HELMET));
+            entries.add(new KitEntry("cloth_chest", Items.GOLDEN_CHESTPLATE));
+            entries.add(new KitEntry("cloth_pants", Items.GOLDEN_LEGGINGS));
+            entries.add(new KitEntry("cloth_boots", Items.GOLDEN_BOOTS));
+            entries.add(new KitEntry("staff", staffItem));
+            entries.add(new KitEntry("scepter", staffItem));
+            entries.add(new KitEntry("ms_shield", Items.SHIELD));
         } else {
             kitName = "Бижутерия и Валюта (2 Кольца + Ожерелье + Души + Валюта)";
-            slotFamilies.add("ring");
-            slotFamilies.add("ring");
-            slotFamilies.add("necklace");
+            Item ringItem = SlashItems.GearItems.RINGS.containsKey(VanillaMaterial.DIAMOND)
+                ? SlashItems.GearItems.RINGS.get(VanillaMaterial.DIAMOND).get()
+                : Items.GOLD_NUGGET;
+            Item neckItem = SlashItems.GearItems.NECKLACES.containsKey(VanillaMaterial.DIAMOND)
+                ? SlashItems.GearItems.NECKLACES.get(VanillaMaterial.DIAMOND).get()
+                : Items.EMERALD;
+            entries.add(new KitEntry("ring", ringItem));
+            entries.add(new KitEntry("ring", ringItem));
+            entries.add(new KitEntry("necklace", neckItem));
         }
 
         int given = 0;
-        for (String slotHint : slotFamilies) {
+        for (KitEntry entry : entries) {
             GearBlueprint bp = new GearBlueprint(lvl, 0);
-            bp.rarity.set(ExileDB.GearRarities().get(bestRarity));
+            bp.item = entry.item();
+            if (ExileDB.GearRarities().isRegistered(bestRarity)) {
+                bp.rarity.set(ExileDB.GearRarities().get(bestRarity));
+            }
             ExileDB.GearTypes().getList().stream()
-                .filter(g -> g.GUID().contains(slotHint) || (g.gear_slot != null && g.gear_slot.contains(slotHint)))
+                .filter(g -> g.GUID().contains(entry.slotHint()) || (g.gear_slot != null && g.gear_slot.contains(entry.slotHint())))
                 .findFirst()
                 .ifPresent(bp.gearItemSlot::set);
-            ItemStack stack = GearCreationUtils.CreateStack(bp);
+            ItemStack stack = bp.createStack();
             if (!stack.isEmpty()) {
                 PlayerUtils.giveItem(stack, player);
                 given++;
@@ -501,8 +511,9 @@ public class SimulationManager {
         int maxLvl = GameBalanceConfig.get() != null ? GameBalanceConfig.get().MAX_LEVEL : 50;
         int lvl = Math.max(1, Math.min(maxLvl, level <= 0 ? Load.Unit(player).getLevel() : level));
 
-        IronGolem dummy = EntityType.IRON_GOLEM.create(serverLevel, EntitySpawnReason.COMMAND);
-        if (dummy == null) {
+        EntityType<?> golemType = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.withDefaultNamespace("iron_golem"));
+        Entity created = golemType != null ? golemType.create(serverLevel, EntitySpawnReason.COMMAND) : null;
+        if (!(created instanceof Mob dummy)) {
             return;
         }
         BlockPos pos = DUMMY_POS;
@@ -516,17 +527,18 @@ public class SimulationManager {
         data.setLevel(lvl);
 
         List<MobRarity> mobRarities = ExileDB.MobRarities().getList();
-        MobRarity chosenRarity = ExileDB.MobRarities().get("rare");
-        if (chosenRarity == null && !mobRarities.isEmpty()) {
-            chosenRarity = mobRarities.get(0);
-        }
+        MobRarity chosenRarity = ExileDB.MobRarities().isRegistered(IRarity.RARE_ID)
+            ? ExileDB.MobRarities().get(IRarity.RARE_ID)
+            : (!mobRarities.isEmpty() ? mobRarities.get(0) : null);
         if (chosenRarity != null) {
             data.setRarity(chosenRarity.GUID());
         }
 
-        data.getCustomExactStats().add(
-            ExactStatData.of(500, Health.getInstance(), ModType.PERCENT, lvl),
-            "sim_dummy_hp"
+        data.getCustomExactStats().addExactStat(
+            "sim_dummy_hp",
+            Health.getInstance().GUID(),
+            500,
+            ModType.PERCENT
         );
         data.setMobStats = true;
         data.setEquipsChanged(true);
@@ -558,10 +570,12 @@ public class SimulationManager {
         int maxLvl = GameBalanceConfig.get() != null ? GameBalanceConfig.get().MAX_LEVEL : 50;
         int lvl = Math.max(1, Math.min(maxLvl, level <= 0 ? Load.Unit(player).getLevel() : level));
 
-        Mob mob = (rarityRank >= 3)
-            ? EntityType.SKELETON.create(serverLevel, EntitySpawnReason.COMMAND)
-            : EntityType.ZOMBIE.create(serverLevel, EntitySpawnReason.COMMAND);
-        if (mob == null) {
+        Identifier mobTypeId = (rarityRank >= 3)
+            ? Identifier.withDefaultNamespace("skeleton")
+            : Identifier.withDefaultNamespace("zombie");
+        EntityType<?> mobType = BuiltInRegistries.ENTITY_TYPE.getValue(mobTypeId);
+        Entity created = mobType != null ? mobType.create(serverLevel, EntitySpawnReason.COMMAND) : null;
+        if (!(created instanceof Mob mob)) {
             return;
         }
 
@@ -569,15 +583,12 @@ public class SimulationManager {
         mob.snapTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 180F, 0F);
         mob.setPersistenceRequired();
 
+        List<MobRarity> sortedRarities = new ArrayList<>(ExileDB.MobRarities().getList());
+        sortedRarities.sort(Comparator.comparingDouble(MobRarity::ExtraHealthMulti));
         MobRarity chosenRarity = null;
-        for (MobRarity r : ExileDB.MobRarities().getList()) {
-            if (r.rank == rarityRank) {
-                chosenRarity = r;
-                break;
-            }
-        }
-        if (chosenRarity == null) {
-            chosenRarity = ExileDB.MobRarities().random();
+        if (!sortedRarities.isEmpty()) {
+            int idx = Math.max(0, Math.min(sortedRarities.size() - 1, rarityRank));
+            chosenRarity = sortedRarities.get(idx);
         }
 
         EntityData data = Load.Unit(mob);
@@ -637,8 +648,9 @@ public class SimulationManager {
         playerData.tryRecalculateStats();
         healPlayerFull(player);
 
-        Zombie simAttacker = EntityType.ZOMBIE.create(serverLevel, EntitySpawnReason.COMMAND);
-        if (simAttacker == null) {
+        EntityType<?> zombieType = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.withDefaultNamespace("zombie"));
+        Entity created = zombieType != null ? zombieType.create(serverLevel, EntitySpawnReason.COMMAND) : null;
+        if (!(created instanceof Mob simAttacker)) {
             return;
         }
         EntityData attackerData = Load.Unit(simAttacker);
@@ -652,7 +664,7 @@ public class SimulationManager {
         PlayStyle playStyle = (mode == 1) ? PlayStyle.ranged : (mode == 2 ? PlayStyle.magic : PlayStyle.melee);
         Elements element = (mode == 2) ? Elements.Fire : Elements.Physical;
 
-        float baseScale = (float) StatScaling.NORMAL.scale(8.0F, lvl);
+        float baseScale = StatScaling.NORMAL.scale(8.0F, lvl);
 
         int totalHits = 20;
         int dodgedCount = 0;
@@ -663,16 +675,14 @@ public class SimulationManager {
 
         for (int i = 0; i < totalHits; i++) {
             healPlayerFull(player);
-            float msBefore = playerData.getResources().getMagicShield();
+            float msBefore = playerData.getResources().getShield();
             float manaBefore = playerData.getResources().getMana();
 
             DamageEvent dmgEvent = EventBuilder.ofDamage(null, simAttacker, player, baseScale)
                 .setupDamage(attackType, weaponType, playStyle)
                 .set(x -> {
                     x.setElement(element);
-                    if (mode == 1) {
-                        x.data.setBoolean(EventData.IS_PROJECTILE, true);
-                    } else if (mode == 2) {
+                    if (mode == 2) {
                         x.data.setString(EventData.SPELL, "sim_spell_test");
                     }
                 })
@@ -687,7 +697,7 @@ public class SimulationManager {
             } else {
                 float actual = Math.max(0F, dmgEvent.data.getNumber(EventData.NUMBER).number);
                 totalFinalDmg += actual;
-                float msAfter = playerData.getResources().getMagicShield();
+                float msAfter = playerData.getResources().getShield();
                 float manaAfter = playerData.getResources().getMana();
                 if (msBefore > msAfter) {
                     totalShieldAbsorbed += (msBefore - msAfter);
@@ -734,9 +744,12 @@ public class SimulationManager {
             return;
         }
         int[] levels = new int[]{1, 5, 10, 20, 30, 40, 50};
-        MobRarity common = ExileDB.MobRarities().get("common");
-        MobRarity rare = ExileDB.MobRarities().get("rare");
-        MobRarity mythic = ExileDB.MobRarities().get("mythic");
+        List<MobRarity> sorted = new ArrayList<>(ExileDB.MobRarities().getList());
+        sorted.sort(Comparator.comparingDouble(MobRarity::ExtraHealthMulti));
+
+        MobRarity common = !sorted.isEmpty() ? sorted.get(0) : null;
+        MobRarity rare = sorted.size() > 2 ? sorted.get(2) : common;
+        MobRarity mythic = !sorted.isEmpty() ? sorted.get(sorted.size() - 1) : common;
 
         float commonHpMulti = common != null ? common.ExtraHealthMulti() : 1.0F;
         float rareHpMulti = rare != null ? rare.ExtraHealthMulti() : 2.5F;
@@ -749,12 +762,12 @@ public class SimulationManager {
         for (int lvl : levels) {
             float extraFactor = 1.0F + (0.02F * lvl);
             float baseHpAt1 = 20.0F * extraFactor;
-            float scaledCommonHp = StatScaling.MOB_HEALTH.scale(baseHpAt1 * commonHpMulti, lvl);
-            float scaledRareHp = StatScaling.MOB_HEALTH.scale(baseHpAt1 * rareHpMulti, lvl);
-            float scaledMythicHp = StatScaling.MOB_HEALTH.scale(baseHpAt1 * mythicHpMulti, lvl);
+            float scaledCommonHp = Health.getInstance().scale(ModType.FLAT, baseHpAt1 * commonHpMulti, lvl);
+            float scaledRareHp = Health.getInstance().scale(ModType.FLAT, baseHpAt1 * rareHpMulti, lvl);
+            float scaledMythicHp = Health.getInstance().scale(ModType.FLAT, baseHpAt1 * mythicHpMulti, lvl);
 
-            float commonArmor = StatScaling.NORMAL.scale(20.0F * commonStatMulti, lvl);
-            float mythicArmor = StatScaling.NORMAL.scale(20.0F * mythicStatMulti, lvl);
+            float commonArmor = StatScaling.NORMAL.scale(10.0F * commonStatMulti, lvl);
+            float mythicArmor = StatScaling.NORMAL.scale(10.0F * mythicStatMulti, lvl);
             float commonDmg = StatScaling.NORMAL.scale(4.0F * commonStatMulti, lvl);
             float mythicDmg = StatScaling.NORMAL.scale(4.0F * mythicStatMulti, lvl);
 
@@ -762,7 +775,7 @@ public class SimulationManager {
                 "§eУр. " + String.format("%2d", lvl)
                     + " §7| ХП [Обыч: §a" + (int) scaledCommonHp
                     + "§7, Редк: §b" + (int) scaledRareHp
-                    + "§7, Миф: §d" + (int) scaledMythicHp
+                    + "§7, Высш: §d" + (int) scaledMythicHp
                     + "§7] | Броня: §e" + (int) commonArmor + "–" + (int) mythicArmor
                     + " §7| Баз. урон: §c" + NumberUtils.format(commonDmg) + "–" + NumberUtils.format(mythicDmg)
             ));
@@ -808,7 +821,7 @@ public class SimulationManager {
 
         int allocatedCount = 0;
         for (TalentTree tree : ExileDB.TalentTrees().getList()) {
-            allocatedCount += rpgData.talents.getAllocatedPoints(tree).size();
+            allocatedCount += rpgData.talents.getSchool(tree).getAllocatedPointsInSchool(tree);
         }
 
         List<ItemStack> trinkets = MyCurioUtils.getAllSlots(player);
@@ -853,11 +866,10 @@ public class SimulationManager {
         EntityData unitData = Load.Unit(player);
         float maxHp = unitData.getUnit().healthData().getValue();
         float maxMana = unitData.getUnit().manaData().getValue();
-        float maxMs = unitData.getUnit().magicShieldData().getValue();
 
-        RestoreResourceEvent.of(player, player, (int) Math.max(1000, maxHp), ResourceType.health, RestoreType.heal).Activate();
-        RestoreResourceEvent.of(player, player, (int) Math.max(1000, maxMana), ResourceType.mana, RestoreType.heal).Activate();
-        RestoreResourceEvent.of(player, player, (int) Math.max(1000, maxMs), ResourceType.magic_shield, RestoreType.heal).Activate();
+        EventBuilder.ofRestore(player, player, ResourceType.health, RestoreType.heal, Math.max(1000F, maxHp)).build().Activate();
+        EventBuilder.ofRestore(player, player, ResourceType.mana, RestoreType.heal, Math.max(1000F, maxMana)).build().Activate();
+        EventBuilder.ofRestore(player, player, ResourceType.energy, RestoreType.heal, 1000F).build().Activate();
         player.setHealth(player.getMaxHealth());
         player.getFoodData().setFoodLevel(20);
         player.getFoodData().setSaturation(20F);
