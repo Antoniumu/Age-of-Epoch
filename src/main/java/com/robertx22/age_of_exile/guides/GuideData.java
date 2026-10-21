@@ -131,8 +131,77 @@ public class GuideData {
             .milestone("Ур. 40-50: большие узлы уклонения/брони, poison-узлы, добор ЛОВ до 55.")
             .talentPlan("51:41:start_dex;53:43:arrow_barrage;54:45:health;56:47:dodge;60:49:big_dodge;61:47:health_dodge;63:46:big_health_dodge;64:44:physical_weapon_damage;64:42:big_bow_damage;64:51:health;66:50:dex;68:47:multi_shot;66:46:big_dodge;70:48:big_health;66:53:dodge;68:55:dodge;66:57:recoil_shot;62:53:big_str_gated;64:55:armor_penetration_notable;70:57:dodge;72:59:dodge;74:57:health_dodge;74:61:health;71:63:big_str_gated;77:70:iron_reflexes;76:57:health;76:55:big_health_dodge;76:60:dex;76:62:cdr;78:63:trickery;60:55:dodge;56:51:dex;55:54:poisoned_weapons;57:55:big_chance_of_poison;55:56:big_chance_of_poison;56:58:dex;55:60:health;55:62:big_health_dodge;53:54:big_attack_speed;55:64:dodge;53:65:health_dodge;51:66:health_dodge;49:66:big_armor_dodge;47:66:health_armor;45:65:health_armor;43:64:armor;43:62:big_health_armor;53:58:dex;50:58:dex;49:60:armor_dodge;51:61:armor_dodge;51:63:armor_dodge;49:64:big_armor_dodge;47:63:armor_dodge;47:61:armor_dodge;49:62:big_health;49:56:big_nature_resist;47:56:health_regen;45:54:big_health_regen;43:54:nature_balm;53:60:big_attack_speed;42:51:str;46:48:armor_dodge;48:46:armor_dodge;38:55:armor;36:53:big_dex_gated;34:55:attack_speed_notable;49:44:poison_ball;34:51:attack_speed;38:49:str;38:51:ground_slam;42:47:health;44:45:health;45:43:heavy_strike;40:45:big_health;40:42:physical_weapon_damage;40:40:cleave;36:57:nature_resist;34:59:nature_resist;36:61:thorn_armor;36:63:big_armor;38:64:big_armor;40:64:big_armor;40:62:health;38:62:big_health_armor;32:61:nature_resist;31:64:nature_penetration;27:63:big_dex_gated;67:64:spell_nature_damage;66:61:spell_nature_damage;64:59:spell_nature_damage;62:61:thorn_bush;62:63:nature_penetration;60:64:mod_slow_bush;60:60:big_spell_nature_damage;58:60:mod_poison_bush;58:62:spell_nature_damage;60:62:big_spell_nature_damage;49:54:big_nature_penetration;47:53:chance_of_poison;51:53:chance_of_poison");
 
+        // ------------------------------------------------------- 4. Божественный: некромант
+        GuideDefinition necromancer = new GuideDefinition(
+            "divine_necromancer", "Некромант",
+            "Власть над мёртвыми: поднятые враги, взрывы трупов, древо «Божественный»",
+            ChatFormatting.DARK_PURPLE, "textures/gui/spells/schools/unholy.png", "nature", 2)
+            .tree("divine")
+            .stat("intelligence", 0.45F)
+            .stat("vitality", 0.40F)
+            .stat("wisdom", 0.15F)
+            .spell("poison_ball", 16)
+            .spell("poisonball_poison", 8)
+            .spell("poison_cloud", 12)
+            .spell("thorn_armor", 8)
+            .spell("nature_balm", 8)
+            .spell("entangling_seed", 8)
+            .spell("rejuv_totem", 8)
+            .spell("refresh", 8)
+            .tip("План лежит в древе «Божественный» — это вторая вкладка древа талантов (стрелки по краям экрана).")
+            .tip("Вход в древо — «Путь некроманта» на 1 уровне: с него начинается план, дальше узлы открываются по уровню.")
+            .tip("Прислужник живёт 30 секунд плюс бонус от «Времени жизни прислужников», потолок — 5 минут.")
+            .tip("«Предел нежити» — сколько мертвецов держится рядом; лишние трупы просто не поднимаются.")
+            .tip("Сила слуг — проценты к ИХ здоровью, урону, скорости и броне: качайте узлы древа, а не свой урон.")
+            .tip("«Взрыв трупа» бьёт на 4 блока процентом от здоровья убитого — урон идёт от вас, поэтому работают крит и пробивание (ИНТ).")
+            .tip("Ветка призывателя закрыта, пока взята ветка некроманта: сброс талантов (ПКМ) возвращает выбор.")
+            .tip("До 20 уровня гайд ведёт по 13 узлам: «Властелин мертвецов» (25), «Цепная смерть» и «Власть над слугами» (30) уже за пределом гайда.")
+            .tip("Очки, которые останутся после 16 узлов, вкладывайте в основное древо талантов.")
+            .milestone("Ур. 1: Путь некроманта — первый мертвец в свите, затем Узы власти, Духовная связь, Долгий срок.")
+            .milestone("Ур. 2-4: Резвость слуг, Костяной панцирь, Восстание мёртвых, Холодная ярость, Гнилая плоть, Легион.")
+            .milestone("Ур. 5-19: свободные очки — в основное древо и заклинания природы.")
+            .milestone("Ур. 20: Взрыв трупа, Плоть и кость, Воля хозяина — план в пределах гайда закрыт.")
+            .milestone("Ур. 25-30: Властелин мертвецов, Цепная смерть, Власть над слугами — уже за пределом гайда.")
+            .talentPlan("14:13:divine_necromancer;21:13:div_shared_damage;25:13:div_shared_health;31:13:div_shared_duration;31:9:div_shared_speed;35:13:div_shared_armor;10:9:div_necro_raise;6:7:div_necro_fury;2:10:div_necro_flesh;10:17:div_necro_legion;6:19:div_necro_corpse;28:17:div_shared_health_big;25:9:div_shared_damage_big;6:13:div_necro_lord;2:16:div_necro_chain_death;28:5:divine_command");
+
+        // ----------------------------------------------------- 5. Божественный: призыватель
+        GuideDefinition summoner = new GuideDefinition(
+            "divine_summoner", "Призыватель",
+            "Стая зверей: волки, медведь или боевой мамонт, древо «Божественный»",
+            ChatFormatting.DARK_GREEN, "textures/gui/spells/schools/nature.png", "nature", 2)
+            .tree("divine")
+            .stat("vitality", 0.45F)
+            .stat("dexterity", 0.30F)
+            .stat("intelligence", 0.25F)
+            .spell("poison_ball", 16)
+            .spell("poisoned_weapons", 8)
+            .spell("thorn_armor", 8)
+            .spell("guard_totem", 8)
+            .spell("nature_balm", 8)
+            .spell("entangling_seed", 8)
+            .spell("rejuv_totem", 8)
+            .spell("refresh", 8)
+            .tip("План лежит в древе «Божественный» — это вторая вкладка древа талантов (стрелки по краям экрана).")
+            .tip("Вход в древо — «Путь призывателя» на 1 уровне: с него начинается план, дальше узлы открываются по уровню.")
+            .tip("Звери призываются сами, пока их меньше «Предела зверей», и держатся рядом с вами.")
+            .tip("Вид зверя один на выбор: стая волков, медведь-хранитель или боевой мамонт — узлы взаимоисключающие.")
+            .tip("В этом плане стая волков (3 волка + 1 от «Пути призывателя»); медведь и мамонт — замена волкам, сбросьте «Стаю волков».")
+            .tip("«Густая шерсть» и «Вожак стаи» доступны при любом звере — они связаны со всеми тремя.")
+            .tip("Ветка некроманта закрыта, пока взята ветка призывателя: сброс талантов (ПКМ) возвращает выбор.")
+            .tip("До 20 уровня гайд ведёт по 12 узлам: «Вожак стаи» (25) и «Власть над слугами» (30) уже за пределом гайда.")
+            .tip("Очки, которые останутся после 14 узлов, вкладывайте в основное древо талантов.")
+            .milestone("Ур. 1: Путь призывателя — первый волк выходит на охоту, затем Костяной панцирь, Долгий срок, Резвость слуг.")
+            .milestone("Ур. 2-3: Духовная связь, Узы власти, Звериный оскал, Быстрые лапы.")
+            .milestone("Ур. 5: Стая волков (предел зверей) и Густая шерсть.")
+            .milestone("Ур. 6-19: свободные очки — в основное древо и заклинания природы.")
+            .milestone("Ур. 20: Воля хозяина, Плоть и кость — план в пределах гайда закрыт.")
+            .milestone("Ур. 25-30: Вожак стаи, Власть над слугами — уже за пределом гайда.")
+            .talentPlan("42:13:divine_summoner;35:13:div_shared_armor;31:13:div_shared_duration;31:9:div_shared_speed;25:13:div_shared_health;21:13:div_shared_damage;46:9:div_summ_fangs;46:17:div_summ_paws;51:8:div_summ_wolves;55:10:div_summ_hide;25:9:div_shared_damage_big;28:17:div_shared_health_big;55:16:div_summ_alpha;28:5:divine_command");
+
         ALL.add(warrior);
         ALL.add(mage);
         ALL.add(hunter);
+        ALL.add(necromancer);
+        ALL.add(summoner);
     }
 }

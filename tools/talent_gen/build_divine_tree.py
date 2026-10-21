@@ -71,11 +71,11 @@ POSITIONS = {
     "divine_summoner": (42, 13),
     "div_summ_fangs": (46, 9),
     "div_summ_paws": (46, 17),
-    "div_summ_wolves": (51, 6),
+    "div_summ_wolves": (51, 8),
     "div_summ_bear": (51, 13),
-    "div_summ_mammoth": (51, 20),
-    "div_summ_hide": (55, 9),
-    "div_summ_alpha": (55, 17),
+    "div_summ_mammoth": (51, 18),
+    "div_summ_hide": (55, 10),
+    "div_summ_alpha": (55, 16),
 }
 
 # какие узлы должны быть связаны (коннекторы прокладываются автоматически)
@@ -111,7 +111,13 @@ LINKS = [
     ("div_summ_fangs", "div_summ_bear"),
     ("div_summ_paws", "div_summ_bear"),
     ("div_summ_paws", "div_summ_mammoth"),
+    # «Густая шерсть» и «Вожак стаи» должны быть доступны при любом выборе зверя
+    # (звери — one_of_a_kind), поэтому оба узла связаны со всеми тремя
     ("div_summ_wolves", "div_summ_hide"),
+    ("div_summ_bear", "div_summ_hide"),
+    ("div_summ_mammoth", "div_summ_hide"),
+    ("div_summ_wolves", "div_summ_alpha"),
+    ("div_summ_bear", "div_summ_alpha"),
     ("div_summ_mammoth", "div_summ_alpha"),
 ]
 
@@ -144,8 +150,8 @@ def build_grid():
     return grid
 
 
-def route(a, b, grid):
-    """Г-образный путь коннекторов между двумя перками."""
+def _l_cells(a, b):
+    """Клетки Г-образного пути a -> b (клетка самого b не нужна)."""
     ax, ay = POSITIONS[a]
     bx, by = POSITIONS[b]
 
@@ -159,17 +165,71 @@ def route(a, b, grid):
         y += 1 if by > ay else -1
         cells.append((bx, y))
 
-    cells = [c for c in cells if c != (bx, by)]  # клетка самого перка не нужна
+    return [c for c in cells if c != (bx, by)]
 
+
+def _free(cell, grid):
+    x, y = cell
+    if not (0 <= x < WIDTH and 0 <= y < HEIGHT):
+        return False
+    if cell in POSITIONS.values() or cell == CENTER:
+        return False
+    return grid[x][y] in (EMPTY, CONNECTOR)
+
+
+def _bfs_cells(a, b, grid):
+    """Короткий путь в обход узлов и уже занятых клеток; None, если пути нет."""
+    start, goal = POSITIONS[a], POSITIONS[b]
+    queue = deque([start])
+    prev = {start: None}
+
+    while queue:
+        cur = queue.popleft()
+        if cur == goal:
+            break
+        x, y = cur
+        for nxt in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+            if nxt in prev:
+                continue
+            if nxt != goal and not _free(nxt, grid):
+                continue
+            prev[nxt] = cur
+            queue.append(nxt)
+
+    if goal not in prev:
+        return None
+
+    path = []
+    cur = goal
+    while prev[cur] is not None:
+        path.append(cur)
+        cur = prev[cur]
+    path.reverse()
+    return path[:-1]  # клетка самого перка не нужна
+
+
+def _usable(cells):
     for (x, y) in cells:
         if not (0 <= x < WIDTH and 0 <= y < HEIGHT):
-            raise SystemExit("Путь %s -> %s вышел за сетку" % (a, b))
+            return False
         if (x, y) in POSITIONS.values():
-            raise SystemExit("Путь %s -> %s проходит через перк в (%d,%d)" % (a, b, x, y))
+            return False
         if (x, y) == CENTER:
-            raise SystemExit("Путь %s -> %s проходит через центр (%d,%d)" % (a, b, x, y))
-        if grid[x][y] == EMPTY:
-            grid[x][y] = CONNECTOR
+            return False
+    return True
+
+
+def route(a, b, grid):
+    """Путь коннекторов между перками: Г-образный, а если он упирается в узел — в обход."""
+    for cells in (_l_cells(a, b), _l_cells(b, a), _bfs_cells(a, b, grid)):
+        if cells is None or not _usable(cells):
+            continue
+        for (x, y) in cells:
+            if grid[x][y] == EMPTY:
+                grid[x][y] = CONNECTOR
+        return
+
+    raise SystemExit("Не удалось проложить путь %s -> %s" % (a, b))
 
 
 # --------------------------------------------- повтор TalentGrid.java (проверка)

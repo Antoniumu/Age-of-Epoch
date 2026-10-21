@@ -28,6 +28,16 @@ public class GuideDefinition {
     /** какой набор экипировки выдавать на Полигоне: 0 воин, 1 охотник, 2 маг, 3 бижутерия */
     public final int gearKit;
 
+    /**
+     * id древа талантов, к которому относится план (talents / divine).
+     * <p>
+     * По умолчанию {@link #DEFAULT_TREE}; координаты из {@link #talentPlan(String)} читаются
+     * именно из этого древа.
+     */
+    public String tree = DEFAULT_TREE;
+
+    public static final String DEFAULT_TREE = "talents";
+
     public final List<StatWeight> stats = new ArrayList<>();
     public final List<TalentStep> talents = new ArrayList<>();
     public final List<SpellStep> spells = new ArrayList<>();
@@ -62,6 +72,12 @@ public class GuideDefinition {
 
     public GuideDefinition milestone(String milestone) {
         this.milestones.add(milestone);
+        return this;
+    }
+
+    /** В каком древе талантов лежит план (по умолчанию «talents»). */
+    public GuideDefinition tree(String treeId) {
+        this.tree = treeId == null || treeId.isEmpty() ? DEFAULT_TREE : treeId;
         return this;
     }
 

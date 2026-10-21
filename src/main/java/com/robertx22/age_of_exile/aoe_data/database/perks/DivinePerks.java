@@ -72,7 +72,7 @@ public class DivinePerks implements ExileRegistryInit {
 
         Perk necromancer = level(perk("divine_necromancer", "Путь некроманта", Perk.PerkType.MAJOR, "textures/gui/talent_icons/necronomicon.png",
             new OptScaleExactStat(15, DivineStats.RAISE_DEAD_CHANCE.get(), ModType.FLAT),
-            new OptScaleExactStat(1, SummonStat.MAX_UNDEAD_MINIONS, ModType.FLAT)), 10);
+            new OptScaleExactStat(1, SummonStat.MAX_UNDEAD_MINIONS, ModType.FLAT)), 1);
         necromancer.is_entry = true;
         necromancer.exclusive_branch = BRANCH_NECROMANCER;
 
@@ -103,18 +103,18 @@ public class DivinePerks implements ExileRegistryInit {
 
         Perk summoner = level(perk("divine_summoner", "Путь призывателя", Perk.PerkType.MAJOR, "textures/gui/talent_icons/pack_leader.png",
             new OptScaleExactStat(1, SummonStat.MAX_BEAST_MINIONS, ModType.FLAT),
-            new OptScaleExactStat(10, SummonStat.BEAST_MINION_DAMAGE, ModType.FLAT)), 10);
+            new OptScaleExactStat(10, SummonStat.BEAST_MINION_DAMAGE, ModType.FLAT)), 1);
         summoner.is_entry = true;
         summoner.exclusive_branch = BRANCH_SUMMONER;
 
         beast(perk("div_summ_wolves", "Стая волков", Perk.PerkType.MAJOR, "textures/gui/talent_icons/wolf.png",
             new OptScaleExactStat(3, SummonStat.MAX_BEAST_MINIONS, ModType.FLAT),
-            new OptScaleExactStat(1, SummonStat.BEAST_PACK_WOLVES, ModType.FLAT)), 15);
+            new OptScaleExactStat(1, SummonStat.BEAST_PACK_WOLVES, ModType.FLAT)), 5);
 
         beast(perk("div_summ_bear", "Медведь-хранитель", Perk.PerkType.MAJOR, "textures/gui/talent_icons/bear.png",
             new OptScaleExactStat(1, SummonStat.MAX_BEAST_MINIONS, ModType.FLAT),
             new OptScaleExactStat(25, SummonStat.SUMMON_HEALTH, ModType.FLAT),
-            new OptScaleExactStat(1, SummonStat.BEAST_PACK_BEAR, ModType.FLAT)), 15);
+            new OptScaleExactStat(1, SummonStat.BEAST_PACK_BEAR, ModType.FLAT)), 5);
 
         beast(perk("div_summ_mammoth", "Боевой мамонт", Perk.PerkType.MAJOR, "textures/gui/talent_icons/predator.png",
             new OptScaleExactStat(1, SummonStat.MAX_BEAST_MINIONS, ModType.FLAT),

@@ -217,6 +217,24 @@ public class GuideAdvisor {
         }
     }
 
+    /**
+     * Древо талантов конкретного гайда.
+     * <p>
+     * У класса «Божественный» план лежит в своём древе ({@code divine}), у остальных — в основном
+     * ({@code talents}); если древо не зарегистрировано, возвращаем основное.
+     */
+    public static TalentTree talentTree(GuideDefinition guide) {
+        String id = guide == null || guide.tree == null || guide.tree.isEmpty()
+            ? TALENT_TREE_ID : guide.tree;
+        try {
+            if (ExileDB.TalentTrees().isRegistered(id)) {
+                return ExileDB.TalentTrees().get(id);
+            }
+        } catch (Exception ignored) {
+        }
+        return talentTree();
+    }
+
     public static List<PointData> allocatedPerks(Player player, TalentTree tree) {
         List<PointData> list = new ArrayList<>();
         if (player == null || tree == null) {
@@ -254,7 +272,7 @@ public class GuideAdvisor {
         if (guide == null) {
             return null;
         }
-        TalentTree tree = talentTree();
+        TalentTree tree = talentTree(guide);
         if (tree == null) {
             return null;
         }
@@ -292,9 +310,94 @@ public class GuideAdvisor {
         return rec != null && rec.equals(point);
     }
 
+    /**
+     * Уровень, с которого шаг плана реально доступен: нужны и очки талантов, и lvl_req перка.
+     * Узлы с высоким lvl_req просто выходят за охват гайда — советник их не предлагает.
+     */
+    public static int levelNeededForTalentStep(GuideDefinition guide, TalentTree tree, int index) {
+        int need = GuideDefinition.levelNeededForTalentStep(index);
+        if (guide == null || tree == null) {
+            return need;
+        }
+        PointData point = guide.pointAt(index);
+        Perk perk = point == null ? null : tree.calcData.getPerk(point);
+        return perk == null ? need : Math.max(need, perk.lvl_req);
+    }
+
+    /** Шаги плана в пределах гайда — с учётом lvl_req перков древа гайда. */
+    private static int talentStepsInScope(GuideDefinition guide, TalentTree tree) {
+        return GuideMath.talentStepsInScope(guide, i -> levelNeededForTalentStep(guide, tree, i));
+    }
+
+    /**
+     * Можно ли взять узел прямо сейчас. Perk.isLockedToPlayer учитывает и lvl_req,
+     * и блокировку one_of_a_kind — то есть ровно то, что проверит TalentsData.canAllocate.
+     * Рекомендовать узел, который игра отвергнет, смысла нет: подсветка не сработает.
+     */
+    private static boolean isTakeable(Player player, TalentTree tree, PointData point) {
+        Perk perk = tree == null || point == null ? null : tree.calcData.getPerk(point);
+        if (perk == null) {
+            return false;
+        }
+        try {
+            return !perk.isLockedToPlayer(player);
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
+    /** Первый шаг плана, который доступен сейчас, или -1. */
+    private static int nextActionableStep(Player player, GuideDefinition guide, TalentTree tree,
+                                          Set<PointData> taken, int level) {
+        int scope = talentStepsInScope(guide, tree);
+        for (int i = 0; i < scope; i++) {
+            PointData point = guide.pointAt(i);
+            if (point == null || taken.contains(point)) {
+                continue;
+            }
+            // очков талантов не хватает — и на все следующие шаги их тоже не хватит
+            if (GuideDefinition.levelNeededForTalentStep(i) > level) {
+                return -1;
+            }
+            if (isTakeable(player, tree, point)) {
+                return i;
+            }
+            // узел закрыт уровнем или выбором ветки — план продолжается со следующего
+        }
+        return -1;
+    }
+
+    /** Первый ещё не взятый шаг, который сейчас взять нельзя, или -1. */
+    private static int nextWaitingStep(Player player, GuideDefinition guide, TalentTree tree,
+                                       Set<PointData> taken, int level) {
+        int scope = talentStepsInScope(guide, tree);
+        for (int i = 0; i < scope; i++) {
+            PointData point = guide.pointAt(i);
+            if (point == null || taken.contains(point)) {
+                continue;
+            }
+            if (GuideDefinition.levelNeededForTalentStep(i) > level || !isTakeable(player, tree, point)) {
+                return i;
+            }
+            return -1;
+        }
+        return -1;
+    }
+
+    /** Человекочитаемое «узел откроется на ур. N» для шага плана. */
+    private static String waitingText(GuideDefinition guide, TalentTree tree, int index) {
+        int need = levelNeededForTalentStep(guide, tree, index);
+        PointData point = guide.pointAt(index);
+        Perk perk = point == null ? null : tree.calcData.getPerk(point);
+        String name = perk == null ? "Узел плана" : perk.locName().getString();
+        String why = GuideDefinition.levelNeededForTalentStep(index) >= need
+            ? " (очки талантов: 1 + 2×ур.)" : "";
+        return "§7«" + name + "» откроется на ур. " + need + "." + why;
+    }
+
     private static PointData computeRecommendedTalent(Player player, GuideDefinition guide,
                                                       TalentTree tree, List<PointData> allocated, int level) {
-        int inScope = GuideMath.talentStepsInScope(guide);
+        int inScope = talentStepsInScope(guide, tree);
         if (inScope <= 0) {
             return null;
         }
@@ -312,7 +415,12 @@ public class GuideAdvisor {
         // ничего не взято — рекомендуем стартовый путь гайда
         if (taken.isEmpty()) {
             PointData start = guide.pointAt(0);
-            return tree.calcData.getPerk(start) == null ? null : start;
+            if (tree.calcData.getPerk(start) == null) {
+                return null;
+            }
+            // стартовый узел может требовать уровень — тогда подсказки ещё нет,
+            // а текст гайда объяснит, с какого уровня план начнётся
+            return levelNeededForTalentStep(guide, tree, 0) > level ? null : start;
         }
 
         // если выбран другой стартовый путь, план недостижим (one_of_a_kind = start)
@@ -320,24 +428,21 @@ public class GuideAdvisor {
             return null;
         }
 
-        for (int i = 0; i < inScope; i++) {
-            PointData point = guide.pointAt(i);
-            if (point == null || taken.contains(point)) {
-                continue;
-            }
-            if (tree.calcData.getPerk(point) == null) {
-                continue;
-            }
-            if (GuideDefinition.levelNeededForTalentStep(i) > level) {
-                return null; // ещё нет нужного количества очков талантов
-            }
-            if (isAdjacent(tree, point, taken)) {
-                return point;
-            }
-            List<PointData> path = pathTo(tree, taken, point, MAX_BRIDGE_STEPS);
-            return path == null || path.isEmpty() ? null : path.get(0);
+        int next = nextActionableStep(player, guide, tree, taken, level);
+        if (next < 0) {
+            return null;
         }
-        return null;
+        PointData point = guide.pointAt(next);
+        if (isAdjacent(tree, point, taken)) {
+            return point;
+        }
+        List<PointData> path = pathTo(tree, taken, point, MAX_BRIDGE_STEPS);
+        if (path == null || path.isEmpty()) {
+            return null;
+        }
+        // мост не должен вести через узел, который сейчас взять нельзя
+        PointData first = path.get(0);
+        return isTakeable(player, tree, first) ? first : null;
     }
 
     /** Совпадает ли стартовый путь игрока со стартовым узлом гайда. */
@@ -359,7 +464,7 @@ public class GuideAdvisor {
     }
 
     public static boolean isStartCompatible(Player player, GuideDefinition guide) {
-        TalentTree tree = talentTree();
+        TalentTree tree = talentTree(guide);
         if (tree == null || guide == null) {
             return true;
         }
@@ -612,7 +717,7 @@ public class GuideAdvisor {
         if (player == null || guide == null) {
             return p;
         }
-        TalentTree tree = talentTree();
+        TalentTree tree = talentTree(guide);
         int level = Load.Unit(player).getLevel();
         int cap = GuideMath.guideMaxLevel();
         int goalLevel = GuideMath.cappedLevel(level);
@@ -629,7 +734,7 @@ public class GuideAdvisor {
         }
         List<PointData> allocated = allocatedPerks(player, tree);
         p.talentSpent = allocated.size();
-        p.planTalentsTotal = GuideMath.talentStepsInScope(guide);
+        p.planTalentsTotal = talentStepsInScope(guide, tree);
         Set<PointData> taken = new HashSet<>(allocated);
         for (int i = 0; i < p.planTalentsTotal; i++) {
             if (taken.contains(guide.pointAt(i))) {
@@ -697,18 +802,10 @@ public class GuideAdvisor {
 
         // отставание по уровню (после предела гайда неактуально)
         if (!progress.guideFinished && progress.startCompatible && !guide.talents.isEmpty()) {
-            int next = -1;
-            int inScope = GuideMath.talentStepsInScope(guide);
-            for (int i = 0; i < inScope; i++) {
-                if (!taken.contains(guide.pointAt(i))) {
-                    next = i;
-                    break;
-                }
-            }
-            if (next >= 0) {
-                int need = GuideDefinition.levelNeededForTalentStep(next);
-                if (need > level) {
-                    list.add("§7Следующий узел плана откроется на ур. " + need + " (очки талантов: 1 + 2×ур.).");
+            if (nextActionableStep(player, guide, tree, taken, level) < 0) {
+                int waiting = nextWaitingStep(player, guide, tree, taken, level);
+                if (waiting >= 0) {
+                    list.add(waitingText(guide, tree, waiting));
                 }
             }
         }
@@ -765,7 +862,7 @@ public class GuideAdvisor {
         if (talent != null) {
             int index = guide.indexOfPoint(talent);
             String name;
-            TalentTree tree = talentTree();
+            TalentTree tree = talentTree(guide);
             Perk perk = tree != null ? tree.calcData.getPerk(talent) : null;
             name = perk != null ? perk.locName().getString() : talent.toString();
             return index >= 0
@@ -788,7 +885,7 @@ public class GuideAdvisor {
         if (isBeyondGuide(player)) {
             return "";
         }
-        TalentTree tree = talentTree();
+        TalentTree tree = talentTree(guide);
         if (tree != null && !isStartCompatible(guide, new HashSet<>(allocatedPerks(player, tree)), tree)) {
             return "Гайд: выбран другой стартовый путь — соберите сборку заново";
         }
@@ -803,19 +900,17 @@ public class GuideAdvisor {
             return "";
         }
         int level = Load.Unit(player).getLevel();
-        int inScope = GuideMath.talentStepsInScope(guide);
-        for (int i = 0; i < inScope; i++) {
-            if (!Load.playerRPGData(player).talents.isAllocated(tree, guide.pointAt(i))) {
-                int need = GuideDefinition.levelNeededForTalentStep(i);
-                if (need > level) {
-                    return "Гайд: следующий узел плана с ур. " + need;
-                }
-                int free = Load.playerRPGData(player).talents.getFreePoints(Load.Unit(player), tree.getSchool_type());
-                if (free <= 0) {
-                    return "Гайд: свободных очков талантов нет";
-                }
-                return "Гайд: следующий узел плана далеко — откройте вкладку «Гайды»";
+        Set<PointData> taken = new HashSet<>(allocatedPerks(player, tree));
+        if (nextActionableStep(player, guide, tree, taken, level) >= 0) {
+            int free = Load.playerRPGData(player).talents.getFreePoints(Load.Unit(player), tree.getSchool_type());
+            if (free <= 0) {
+                return "Гайд: свободных очков талантов нет";
             }
+            return "Гайд: следующий узел плана подсвечен — откройте вкладку «Гайды»";
+        }
+        int waiting = nextWaitingStep(player, guide, tree, taken, level);
+        if (waiting >= 0) {
+            return "Гайд: " + waitingText(guide, tree, waiting).substring(2);
         }
         return "Гайд: план талантов изучен";
     }
@@ -915,13 +1010,13 @@ public class GuideAdvisor {
         }
 
         // --- таланты ---
-        TalentTree tree = talentTree();
+        TalentTree tree = talentTree(guide);
         int allocatedTalents = 0;
         if (tree != null) {
             int free = data.talents.getFreePoints(unitData, tree.getSchool_type());
             Set<PointData> taken = new HashSet<>(data.talents.getSchool(tree).getAllocatedPoints(tree));
             for (int i = 0; i < guide.talents.size() && free > 0; i++) {
-                if (GuideDefinition.levelNeededForTalentStep(i) > level) {
+                if (levelNeededForTalentStep(guide, tree, i) > level) {
                     break;
                 }
                 PointData point = guide.pointAt(i);

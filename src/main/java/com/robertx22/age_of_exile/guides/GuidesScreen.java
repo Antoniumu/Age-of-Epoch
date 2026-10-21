@@ -139,7 +139,7 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
             GuideDefinition g = GuideData.all().get(i);
             boolean active = g.id.equals(activeId);
             String prefix = active ? "§a● " : (index == selected ? "§e> " : "§7○ ");
-            addButton(new GuideButton(listX, listY + i * 22, LEFT_W, 20, prefix + g.name,
+            addButton(new GuideButton(listX, listY + i * rowPitch(), LEFT_W, rowHeight(), prefix + g.name,
                 b -> {
                     selected = index;
                     stripScroll = 0;
@@ -148,7 +148,28 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
                 tooltipFor(g)));
         }
 
-        int actionY = listY + GuideData.all().size() * 22 + 6;
+        int actionY = listY + GuideData.all().size() * rowPitch() + 6;
+
+        if (compactList()) {
+            // классов больше четырёх: две кнопки в одну линию, иначе они уезжают на полосу заклинаний
+            int half = (LEFT_W - 2) / 2;
+
+            addButton(new GuideButton(listX, actionY, half, rowHeight(), "§bВключить", b -> {
+                GuideDefinition g = guide();
+                if (g != null) {
+                    Packets.sendToServer(GuidesPacket.select(g.id));
+                }
+            }, List.of(Component.literal("Включить подсказки гайда").withStyle(ChatFormatting.AQUA),
+                Component.literal("Кнопки характеристик, талантов и заклинаний")
+                    .withStyle(ChatFormatting.GRAY),
+                Component.literal("начнут подсвечивать следующий шаг.")
+                    .withStyle(ChatFormatting.GRAY))));
+
+            addButton(new GuideButton(listX + half + 2, actionY, half, rowHeight(), "§7Выключить", b ->
+                Packets.sendToServer(GuidesPacket.clear()),
+                List.of(Component.literal("Снять подсветку").withStyle(ChatFormatting.GRAY))));
+
+        } else {
 
         addButton(new GuideButton(listX, actionY, LEFT_W, 20, "§bСделать активным", b -> {
             GuideDefinition g = guide();
@@ -164,6 +185,7 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
         addButton(new GuideButton(listX, actionY + 22, LEFT_W, 20, "§7Отключить гайд", b ->
             Packets.sendToServer(GuidesPacket.clear()),
             List.of(Component.literal("Снять подсветку").withStyle(ChatFormatting.GRAY))));
+        }
 
         int barY = guiTop + BAR_Y;
         int x = guiLeft + LEFT_X;
@@ -326,10 +348,30 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
         }
     }
 
+    /** Классов больше четырёх — список компактнее, иначе кнопки действия вылезают из колонки. */
+    private static boolean compactList() {
+        return GuideData.all().size() > 4;
+    }
+
+    /** Шаг строк списка классов. */
+    private static int rowPitch() {
+        if (!compactList()) {
+            return 22;
+        }
+        // строки + зазор + кнопки действия + подпись должны влезть в левую колонку
+        int band = COLUMNS_BOTTOM - TOP_Y - 6 - rowHeight() - LINE_T - 3;
+        return Math.max(15, Math.min(20, band / GuideData.all().size()));
+    }
+
+    private static int rowHeight() {
+        return compactList() ? 16 : 20;
+    }
+
     /** Левая колонка под кнопками: где собирается билд и сколько узлов вне плана. */
     private void renderLeftNote(PoseStack matrix, GuideDefinition guide) {
         int x = guiLeft + LEFT_X;
-        int y = guiTop + TOP_Y + GuideData.all().size() * 22 + 6 + 22 + 22 + 10;
+        int y = guiTop + TOP_Y + GuideData.all().size() * rowPitch() + 6 + rowHeight()
+            + (compactList() ? 4 : 24 + 10);
         int bottom = guiTop + COLUMNS_BOTTOM;
 
         if (!inSimulation() && y + LINE_T <= bottom) {

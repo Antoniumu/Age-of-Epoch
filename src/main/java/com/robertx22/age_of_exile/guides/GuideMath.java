@@ -75,6 +75,16 @@ public class GuideMath {
      * Очков талантов на уровне L: 1 + 2L, узел i требует уровня i / 2.
      */
     public static int talentStepsInScope(GuideDefinition guide) {
+        return talentStepsInScope(guide, GuideDefinition::levelNeededForTalentStep);
+    }
+
+    /**
+     * То же, но нужный уровень шага считает функция: так учитывается lvl_req самого перка,
+     * а не только бюджет очков талантов. Иначе в план попадают узлы, которые в пределах
+     * гайда взять нельзя, и прогресс «N из M» никогда не доходит до M.
+     */
+    public static int talentStepsInScope(GuideDefinition guide,
+                                         java.util.function.IntUnaryOperator levelNeeded) {
         if (guide == null) {
             return 0;
         }
@@ -83,7 +93,7 @@ public class GuideMath {
         int points = talentBudget(cap);
         int n = 0;
         for (int i = 0; i < guide.talents.size(); i++) {
-            if (GuideDefinition.levelNeededForTalentStep(i) > cap || i + 1 > points) {
+            if (levelNeeded.applyAsInt(i) > cap || i + 1 > points) {
                 break;
             }
             n = i + 1;

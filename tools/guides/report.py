@@ -13,8 +13,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 
 sys.path.insert(0, HERE)
+sys.path.insert(0, os.path.join(HERE, "..", "talent_gen"))
 import aoe_math as M          # noqa: E402
 import build_guides as B      # noqa: E402
+import build_divine_plans as D  # noqa: E402
 
 OUT = os.path.join(ROOT, "GUIDES.md")
 
@@ -65,7 +67,7 @@ GUIDES = {
 }
 
 # id -> локализованное имя перка (из Java-регистрации)
-NAME_RE = re.compile(r'(?:register|bigStat|gameChanger|stat)\(\s*"([a-z0-9_]+)"\s*,\s*"([^"]+)"')
+NAME_RE = re.compile(r'(?:register|bigStat|gameChanger|stat|perk|level|beast|branch)\(\s*"([a-z0-9_]+)"\s*,\s*"([^"]+)"')
 
 
 def perk_names():
@@ -98,7 +100,10 @@ def core_totals(points, level):
 
 
 def snapshot(profile, level):
-    weights = {k: v for k, v in B.GUIDES[profile]["split"]}
+    return snapshot_weights({k: v for k, v in B.GUIDES[profile]["split"]}, level)
+
+
+def snapshot_weights(weights, level):
     pts = apportion(M.stat_points(level), weights)
     t = core_totals(pts, level)
     hp = M.base_stat("health", level) + t.get("health", 0)
@@ -123,9 +128,13 @@ def fmt(x, digits=0):
 
 
 def level_table(profile):
+    return level_table_weights({k: v for k, v in B.GUIDES[profile]["split"]})
+
+
+def level_table_weights(weights):
     rows = []
     for lvl in LEVELS:
-        s = snapshot(profile, lvl)
+        s = snapshot_weights(weights, lvl)
         rows.append("| {} | {} | {} | {} | {} | {} | {} | {} |".format(
             lvl,
             " / ".join(f"{k[:3].upper()} {v}" for k, v in s["points"].items() if v),
@@ -136,6 +145,48 @@ def level_table(profile):
             f'{fmt(s["sp"], 1)} / {fmt(s["phys"], 1)}',
         ))
     return rows
+
+
+# Гайды класса «Божественный»: план лежит в древе divine, а не в основном,
+# поэтому шаги ограничены не бюджетом очков, а lvl_req узлов.
+DIVINE_GUIDES = {
+    "divine_necromancer": {
+        "title": "Некромант",
+        "role": "Власть над мёртвыми: поднятые враги, взрывы трупов, древо «Божественный».",
+        "weights": [("intelligence", 0.45), ("vitality", 0.40), ("wisdom", 0.15)],
+        "why": [
+            "ИНТ — сила заклинаний и сопротивления: урон «Взрыва трупа» идёт от вас, поэтому работают крит и пробивание.",
+            "ЖИВ — свита танкует, но вы стоите рядом: 2 HP и 0.1 регена за очко.",
+            "МУД — мана на ядовитый шар и тотемы: подъём мёртвых и взрывы тратят заклинания природы.",
+        ],
+    },
+    "divine_summoner": {
+        "title": "Призыватель",
+        "role": "Стая зверей: волки, медведь или боевой мамонт, древо «Божественный».",
+        "weights": [("vitality", 0.45), ("dexterity", 0.30), ("intelligence", 0.25)],
+        "why": [
+            "ЖИВ — звери держат удар первыми, но достают и вас: HP и реген важнее собственного урона.",
+            "ЛОВ — уклонение: стая физически не успевает перехватить каждый удар.",
+            "ИНТ — сила зверей растёт от узлов древа, а заклинания природы дают контроль и лечение.",
+        ],
+    },
+}
+
+DIVINE_KIT = "2 — Маг (магический щит, посох, скипетр)"
+DIVINE_SCHOOL = "Природа (nature)"
+DIVINE_TREE = "«Божественный» (divine) — вторая вкладка древа талантов"
+
+
+def divine_plan(guide_id):
+    """План и заклинания гайда ровно так, как они записаны в GuideData.java."""
+    entry = D.guide_entry(open(D.GUIDE_JAVA, encoding="utf-8").read(), guide_id)
+    if entry is None:
+        raise SystemExit("в GuideData.java нет гайда %s" % guide_id)
+    plan = [step.split(":")[-1]
+            for step in re.search(r'\.talentPlan\("([^"]*)"\)', entry).group(1).split(";")]
+    spells = [(m.group(1), int(m.group(2)))
+              for m in re.finditer(r'\.spell\("([a-z_]+)", (\d+)\)', entry)]
+    return plan, spells
 
 
 def plan_phases(plan):
@@ -302,6 +353,75 @@ def main():
         A("---")
         A("")
 
+    req = D.lvl_reqs()
+    cap = D.GUIDE_MAX_LEVEL
+    for idx, (profile, g) in enumerate(DIVINE_GUIDES.items(), start=len(GUIDES) + 1):
+        plan, spells = divine_plan(profile)
+        needs = [max(i // 2, req.get(pid, 1)) for i, pid in enumerate(plan)]
+        in_scope = sum(1 for n in needs if n <= cap)
+
+        A(f"## 2.{idx}. {g['title']}")
+        A("")
+        A(g["role"])
+        A("")
+        A(f"- **Древо талантов:** {DIVINE_TREE}")
+        A(f"- **Школа:** {DIVINE_SCHOOL}")
+        A(f"- **Набор экипировки на Полигоне:** {DIVINE_KIT}")
+        A("- **Веса характеристик:** "
+          + ", ".join(f"{k} {v:.0%}" for k, v in g["weights"]))
+        A("")
+        A("### Почему именно так")
+        A("")
+        for line in g["why"]:
+            A(f"- {line}")
+        A("")
+        A("### Характеристики по уровням (без экипировки)")
+        A("")
+        A("| Ур. | Разбивка очков | HP | Мана | Броня (%) | Уклонение (%) | Сопр. (%) | СП / физ. урон |")
+        A("|---|---|---|---|---|---|---|---|")
+        for row in level_table_weights(dict(g["weights"])):
+            A(row)
+        A("")
+        A("### План талантов")
+        A("")
+        A("Узел открывается, когда хватает и очков талантов (`1 + 2·ур.`), и уровня перка —")
+        A("в таблице указано большее из двух. Предел гайда — 20 уровней, поэтому узлы")
+        A("25–30 уровня остаются за пределами плана: советник их не предлагает,")
+        A("а прогресс «N из M» считается только по доступным.")
+        A("")
+        A("| № | Узел | Открывается |")
+        A("|---|---|---|")
+        for i, pid in enumerate(plan):
+            mark = "" if needs[i] <= cap else " — за пределом гайда"
+            A(f"| {i + 1} | {names.get(pid, pid)} | {needs[i]} ур.{mark} |")
+        A(f"| **Итого** | **{len(plan)}** узлов | в пределах гайда: **{in_scope}** |")
+        A("")
+        if any(needs[i] < needs[i - 1] for i in range(1, len(needs))):
+            A("Уровень в таблице не всегда растёт: порядок шагов диктует граф древа —")
+            A("«Густая шерсть» связана только со зверями, поэтому стоит после «Стаи волков».")
+            A("")
+        A("### Заклинания")
+        A("")
+        A("| Заклинание | Цель |")
+        A("|---|---|")
+        total = 0
+        for spell, target in spells:
+            total += target
+            A(f"| {spell} | {target} |")
+        A(f"| **Итого** | **{total}** из 100 |")
+        A("")
+        A("У заклинаний в этом порте нет требования по уровню (`Spell` хранит только `max_lvl = 16`),")
+        A("поэтому сборку ограничивает бюджет очков заклинаний — 2 за уровень.")
+        A("")
+        A("### Как собрать")
+        A("")
+        A("1. Вкладка **Гайды** → выбрать сборку → «Включить» (подсказки в обычном мире).")
+        A("2. Полигон (`/sim`) → «Собрать» — гайд сбросит билд, вложит статы/таланты/заклинания и выдаст экипировку.")
+        A("3. Ветку и зверя можно поменять: сброс талантов (ПКМ по узлу) возвращает выбор, советник поведёт дальше.")
+        A("")
+        A("---")
+        A("")
+
     A("## 3. Как работает адаптация")
     A("")
     A("- **Характеристики.** Цель считается от ВСЕГО бюджета уровня (вложено + свободно) по весам гайда;")
@@ -333,6 +453,19 @@ def main():
     A("- есть дубликаты узлов;")
     A("- длина плана не совпадает с бюджетом очков талантов.")
     A("")
+    A("Планы класса «Божественный» живут в отдельном древе, их проверяет")
+    A("`tools/talent_gen/build_divine_plans.py --check`:")
+    A("")
+    A("- каждый узел соседствует с уже взятым (иначе `canAllocate` его не даст);")
+    A("- в плане нет узлов чужой ветки и двух перков одной группы `one_of_a_kind`;")
+    A("- план в `GuideData.java` совпадает с сеткой `divine.json`, и у гайда указано `.tree(\"divine\")`;")
+    A("- входной узел доступен с 1 уровня, а узлы вне охвата гайда идут только в конце плана.")
+    A("")
+    A("`tools/talent_gen/simulate_divine_guide.py` прогоняет логику советника по уровням 1–40")
+    A("и сверяет её с правилами `TalentsData.canAllocate`: рекомендация не должна вести на узел,")
+    A("который игра отвергнет. Отдельно проверяется выбор другого зверя (медведь или мамонт")
+    A("вместо стаи волков) — план при этом доводится до конца.")
+    A("")
     A("Дополнительно прогоняются: комментарийно-безопасный разбор скобок и синтаксический")
     A("разбор всех изменённых Java-файлов (tree-sitter, грамматика Java).")
     A("")
@@ -341,7 +474,12 @@ def main():
     A("| Файл | Что делает |")
     A("|---|---|")
     A("| `guides/GuideDefinition.java` | модель гайда: веса статов, путь талантов, план заклинаний |")
-    A("| `guides/GuideData.java` | три готовых гайда (планы сгенерированы скриптом) |")
+    A("| `guides/GuideData.java` | пять готовых гайдов (планы сгенерированы скриптами) |")
+    A("| `guides/GuideDefinition.java` → `.tree(id)` | у какого древа лежит план гайда (по умолчанию `talents`) |")
+    A("| `aoe_data/database/perks/DivinePerks.java` | перки древа «Божественный» и их `lvl_req` |")
+    A("| `resources/data/mmorpg/talent_tree/divine.json` | сетка древа «Божественный» (24 узла) |")
+    A("| `tools/talent_gen/build_divine_plans.py` | генератор и проверка планов «Некромант»/«Призыватель» |")
+    A("| `tools/talent_gen/simulate_divine_guide.py` | прогон советника по уровням |")
     A("| `guides/GuideMath.java` | арифметика: бюджеты, разбивка статов, проценты защиты, проекция сборки |")
     A("| `guides/GuideAdvisor.java` | подсказки, адаптация и полная сборка на Полигоне |")
     A("| `guides/GuidesScreen.java` | вкладка «Гайды» |")
@@ -353,7 +491,8 @@ def main():
     A("| `simulation/SimulationManager.java` | `buildActiveGuide`, `resetBuildAndApplyGuide` |")
     A("| `capability/player/RPGPlayerData.java` | хранение `active_guide` в NBT |")
     A("")
-    A("Пересборка планов талантов: `python3 tools/guides/build_guides.py`,")
+    A("Пересборка планов талантов: `python3 tools/guides/build_guides.py` (основное древо) и")
+    A("`python3 tools/talent_gen/build_divine_plans.py` (древо «Божественный»),")
     A("отчёт: `python3 tools/guides/report.py`.")
     A("")
 
