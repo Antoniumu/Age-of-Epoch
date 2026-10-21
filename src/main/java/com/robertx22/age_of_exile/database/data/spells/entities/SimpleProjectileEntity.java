@@ -199,9 +199,9 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
     }
 
     @Override
-    public void setRemoved(Entity.RemovalReason reason) {
+    public void onRemoval(Entity.RemovalReason reason) {
         runExpireEffects();
-        super.setRemoved(reason);
+        super.onRemoval(reason);
     }
 
     // intentionally no @Override: only acts as the vanilla client-removal hook where it exists

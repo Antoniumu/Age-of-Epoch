@@ -229,17 +229,19 @@ public class MapsData {
                 return;
             }
             net.minecraft.world.level.chunk.ChunkGenerator generator = serverDim.getChunkSource().getGenerator();
-            net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager templateManager = serverDim.getStructureManager();
+            net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager templateManager = serverDim.getStructureTemplateManager();
             net.minecraft.world.level.StructureManager structureManager = serverDim.structureManager();
             net.minecraft.util.RandomSource random = serverDim.getRandom();
+            net.minecraft.world.level.levelgen.RandomState randomState = serverDim.getChunkSource().randomState();
             net.minecraft.world.level.levelgen.structure.Structure.GenerationContext ctx =
                 new net.minecraft.world.level.levelgen.structure.Structure.GenerationContext(
                     serverDim.registryAccess(),
                     generator,
                     generator.getBiomeSource(),
-                    serverDim.getChunkSource().randomState(),
+                    randomState.createClimateSampler(net.minecraft.world.level.levelgen.densityfunction.SamplerContext.EMPTY_UNCACHED),
+                    randomState,
                     templateManager,
-                    serverDim.getSeed() + cp.toLong(),
+                    serverDim.getSeed() + cp.pack(),
                     cp,
                     serverDim,
                     b -> true
