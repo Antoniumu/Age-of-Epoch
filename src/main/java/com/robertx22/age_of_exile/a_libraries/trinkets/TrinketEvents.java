@@ -1,9 +1,11 @@
 package com.robertx22.age_of_exile.a_libraries.trinkets;
 
+import com.robertx22.age_of_exile.a_libraries.trinkets.interfaces.ITrinketType;
 import com.robertx22.age_of_exile.capability.entity.EntityData;
 import com.robertx22.age_of_exile.database.data.gear_slots.GearSlot;
 import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
+import com.robertx22.age_of_exile.uncommon.datasaving.Gear;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import dev.yumi.commons.TriState;
 import eu.pb4.trinkets.api.SlotType;
