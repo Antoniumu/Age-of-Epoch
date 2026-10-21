@@ -165,19 +165,48 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
         }
     }
 
+    private boolean expireEffectsDone = false;
+
+    // In modern MC a server-initiated removal reaches the client through
+    // setRemoved()/onClientRemoval() and NOT through remove() (that changed after 1.16,
+    // where the destroy-entities packet handler called entity.remove()).
+    // So the on-expire effects (which include all the client-side impact particles)
+    // must be triggered from every removal path, guarded to run exactly once per side.
+    private void runExpireEffects() {
+        if (this.expireEffectsDone) {
+            return;
+        }
+        this.expireEffectsDone = true;
+
+        try {
+            LivingEntity caster = getCaster();
+
+            if (caster != null && this.getSpellData() != null) {
+                this.getSpellData()
+                    .getSpell()
+                    .getAttached()
+                    .tryActivate(getScoreboardName(), SpellCtx.onExpire(caster, this, getSpellData()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void remove(Entity.RemovalReason reason) {
-
-        LivingEntity caster = getCaster();
-
-        if (caster != null) {
-            this.getSpellData()
-                .getSpell()
-                .getAttached()
-                .tryActivate(getScoreboardName(), SpellCtx.onExpire(caster, this, getSpellData()));
-        }
-
+        runExpireEffects();
         super.remove(reason);
+    }
+
+    @Override
+    public void setRemoved(Entity.RemovalReason reason) {
+        runExpireEffects();
+        super.setRemoved(reason);
+    }
+
+    // intentionally no @Override: only acts as the vanilla client-removal hook where it exists
+    public void onClientRemoval() {
+        runExpireEffects();
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.robertx22.age_of_exile.database.data.spells.components.Spell;
 import com.robertx22.age_of_exile.database.data.spells.map_fields.MapField;
 import com.robertx22.age_of_exile.database.data.spells.spell_classes.SpellCtx;
 import com.robertx22.age_of_exile.database.data.spells.spell_classes.SpellUtils;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
@@ -33,10 +34,20 @@ public class SummonAtSightAction extends SpellAction {
         HitResult ray = ctx.caster.pick(distance, 0.0F, false);
         Vec3 pos = ray.getLocation();
 
+        // if the spawn point ended up inside terrain (e.g. aimed at a cliff face),
+        // lift it up until there's open air, otherwise the summoned entity
+        // instantly expires inside the ground and the spell looks like it fizzled
+        double spawnY = pos.y + height;
+        int tries = 0;
+        while (tries < 24 && !ctx.world.isEmptyBlock(BlockPos.containing(pos.x, spawnY, pos.z))) {
+            spawnY += 1.0D;
+            tries++;
+        }
+
         Entity en = projectile.get()
             .create(ctx.world, EntitySpawnReason.MOB_SUMMONED);
         SpellUtils.initSpellEntity(en, ctx.caster, ctx.calculatedSpellData, data);
-        en.setPos(pos.x, pos.y + height, pos.z);
+        en.setPos(pos.x, spawnY, pos.z);
 
         ctx.caster.level().addFreshEntity(en);
 

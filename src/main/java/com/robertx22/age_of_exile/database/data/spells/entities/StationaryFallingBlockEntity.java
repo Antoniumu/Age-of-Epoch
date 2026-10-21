@@ -82,6 +82,10 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
         removeNextTick = true;
     }
 
+    // own age counter: this class fully overrides tick() and never calls super.tick(),
+    // so vanilla tickCount can not be relied on for fall acceleration / lifespan checks
+    private int age = 0;
+
     @Override
     public void tick() {
 
@@ -90,11 +94,13 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
             return;
         }
 
+        this.age++;
+
         if (entityData.get(IS_FALLING)) {
             if (!this.isNoGravity()) {
 
                 float speed = entityData.get(FALL_SPEED);
-                speed *= 1 + 0.03F * tickCount;
+                speed *= 1 + 0.03F * this.age;
 
                 this.setDeltaMovement(this.getDeltaMovement()
                     .add(0.0D, speed, 0.0D));
@@ -103,6 +109,7 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
 
             if (this.onGround()) {
                 this.remove(Entity.RemovalReason.DISCARDED);
+                return;
             }
 
         }
@@ -117,13 +124,23 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
             this.remove(Entity.RemovalReason.DISCARDED);
         }
 
-        if (tickCount > lifespan) {
+        if (this.age > lifespan || this.getY() < this.level().getMinY() - 32) {
             this.remove(Entity.RemovalReason.DISCARDED);
         }
     }
 
-    @Override
-    public void remove(Entity.RemovalReason reason) {
+    private boolean expireEffectsDone = false;
+
+    // In modern MC a server-initiated removal reaches the client through
+    // setRemoved()/onClientRemoval() and NOT through remove() (that changed after 1.16,
+    // where the destroy-entities packet handler called entity.remove()).
+    // So the on-expire effects (which include all the client-side impact particles)
+    // must be triggered from every removal path, guarded to run exactly once per side.
+    private void runExpireEffects() {
+        if (this.expireEffectsDone) {
+            return;
+        }
+        this.expireEffectsDone = true;
 
         try {
             if (getSpellData() != null) {
@@ -139,8 +156,23 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    @Override
+    public void remove(Entity.RemovalReason reason) {
+        runExpireEffects();
         super.remove(reason);
+    }
+
+    @Override
+    public void setRemoved(Entity.RemovalReason reason) {
+        runExpireEffects();
+        super.setRemoved(reason);
+    }
+
+    // intentionally no @Override: only acts as the vanilla client-removal hook where it exists
+    public void onClientRemoval() {
+        runExpireEffects();
     }
 
     static Gson GSON = new Gson();
