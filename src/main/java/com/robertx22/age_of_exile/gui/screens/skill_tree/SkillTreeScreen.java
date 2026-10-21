@@ -538,6 +538,17 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
 
         String topHint = this.statusMessage;
         int hintColor = com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.RED);
+        if (topHint == null || topHint.isEmpty()) {
+            com.robertx22.age_of_exile.guides.GuideDefinition activeGuide =
+                com.robertx22.age_of_exile.guides.GuideAdvisor.activeGuide(mc.player);
+            if (activeGuide != null) {
+                String guideHint = com.robertx22.age_of_exile.guides.GuideAdvisor.talentHintText(mc.player);
+                if (guideHint != null && !guideHint.isEmpty()) {
+                    topHint = guideHint;
+                }
+                hintColor = com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.AQUA);
+            }
+        }
         if ((topHint == null || topHint.isEmpty()) && school != null && playerData != null && playerData.talents != null) {
             if (playerData.talents.getSchool(school).getAllocatedPoints(school).isEmpty()
                 && playerData.talents.hasFreePoints(Load.Unit(mc.player), this.schoolType)) {

@@ -1990,5 +1990,6 @@
   "mmorpg.stat_desc.water_resist": "Modifies Water Defense.",
   "mmorpg.stat_desc.water_vuln_crit": "Water Damage always crits you.",
   "mmorpg.stat_desc.water_weapon_damage": "Modifies Water Damage.",
-  "mmorpg.word.simulation": "Полигон"
+  "mmorpg.word.simulation": "Полигон",
+  "mmorpg.word.guides": "Guides"
 }

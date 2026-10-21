@@ -8,6 +8,7 @@ import com.robertx22.age_of_exile.database.registry.ExileDB;
 import com.robertx22.age_of_exile.gui.bases.BaseScreen;
 import com.robertx22.age_of_exile.gui.bases.INamedScreen;
 import com.robertx22.age_of_exile.gui.screens.ILeftRight;
+import com.robertx22.age_of_exile.guides.GuideAdvisor;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.saveclasses.PointData;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
@@ -266,6 +267,14 @@ public class SpellScreen extends BaseScreen implements INamedScreen, ILeftRight 
 
             String schoolTitle = getSchoolDisplayName(currentSchool());
             GuiUtils.renderScaledText(matrix, guiLeft + 42, guiTop + 25, 0.85D, schoolTitle, getSchoolColor(currentSchool()));
+
+            if (GuideAdvisor.activeGuide(mc.player) != null) {
+                String guideHint = GuideAdvisor.spellHintText(mc.player);
+                if (guideHint != null && !guideHint.isEmpty()) {
+                    GuiUtils.renderScaledText(matrix, guiLeft + sizeX / 2, guiTop + sizeY + 22, 0.9D,
+                        guideHint, ChatFormatting.AQUA);
+                }
+            }
 
             if (!this.statusMessage.isEmpty() && System.currentTimeMillis() - this.statusMessageTime < 4000L) {
                 GuiUtils.renderScaledText(matrix, guiLeft + sizeX / 2, guiTop + sizeY + 10, 0.9D, this.statusMessage, ChatFormatting.YELLOW);

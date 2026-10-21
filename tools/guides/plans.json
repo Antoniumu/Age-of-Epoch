@@ -1,0 +1,1583 @@
+{
+ "warrior": {
+  "name": "Стальной страж",
+  "school": "divine",
+  "split": [
+   [
+    "strength",
+    0.45
+   ],
+   [
+    "vitality",
+    0.35
+   ],
+   [
+    "dexterity",
+    0.2
+   ]
+  ],
+  "plan": "47:41:start_str;45:43:heavy_strike;43:42:physical_weapon_damage;40:42:physical_weapon_damage;40:40:cleave;40:45:big_health;42:47:health;38:49:str;38:51:ground_slam;34:51:attack_speed;36:53:big_dex_gated;34:55:attack_speed_notable;38:55:armor;42:51:str;43:54:nature_balm;45:54:big_health_regen;46:48:armor_dodge;48:46:armor_dodge;42:58:str;43:60:health;43:62:big_health_armor;36:57:nature_resist;34:59:nature_resist;36:61:thorn_armor;36:63:big_armor;38:64:big_armor;40:64:big_armor;40:62:health;38:62:big_health_armor;43:64:armor;45:65:health_armor;47:66:health_armor;49:66:big_armor_dodge;51:66:health_dodge;53:65:health_dodge;55:64:dodge;55:62:big_health_dodge;45:58:str;48:58:str;49:60:armor_dodge;51:61:armor_dodge;51:63:armor_dodge;49:64:big_armor_dodge;47:63:armor_dodge;47:61:armor_dodge;49:62:big_health;32:50:str;29:51:str;29:53:health_armor;27:53:health_armor;27:55:big_health_armor;38:46:axe_damage;36:47:axe_damage;34:48:big_axe_damage;34:46:physical_weapon_damage;31:47:big_armor;34:44:big_sword_damage;32:61:nature_resist;31:64:nature_penetration;27:63:big_dex_gated;24:61:attack_speed;22:60:str;22:62:health_armor;20:62:health;20:64:big_health_armor;49:44:poison_ball;20:59:str;22:58:attack_speed;22:56:big_attack_speed;50:58:dex;53:58:dex;53:60:big_attack_speed;56:58:dex;60:55:dodge;62:53:big_str_gated;64:51:health;60:49:big_dodge;66:50:dex;68:47:multi_shot;66:46:big_dodge;64:55:armor_penetration_notable;70:48:big_health;61:47:health_dodge;63:46:big_health_dodge;66:53:dodge;68:55:dodge;66:57:recoil_shot;70:57:dodge;72:59:dodge;74:57:health_dodge;74:61:health;71:63:big_str_gated;77:70:iron_reflexes;76:57:health;76:55:big_health_dodge;76:60:dex;76:62:cdr;78:63:trickery;56:47:dodge;54:45:health;53:43:arrow_barrage",
+  "steps": [
+   {
+    "x": 47,
+    "y": 41,
+    "perk": "start_str"
+   },
+   {
+    "x": 45,
+    "y": 43,
+    "perk": "heavy_strike"
+   },
+   {
+    "x": 43,
+    "y": 42,
+    "perk": "physical_weapon_damage"
+   },
+   {
+    "x": 40,
+    "y": 42,
+    "perk": "physical_weapon_damage"
+   },
+   {
+    "x": 40,
+    "y": 40,
+    "perk": "cleave"
+   },
+   {
+    "x": 40,
+    "y": 45,
+    "perk": "big_health"
+   },
+   {
+    "x": 42,
+    "y": 47,
+    "perk": "health"
+   },
+   {
+    "x": 38,
+    "y": 49,
+    "perk": "str"
+   },
+   {
+    "x": 38,
+    "y": 51,
+    "perk": "ground_slam"
+   },
+   {
+    "x": 34,
+    "y": 51,
+    "perk": "attack_speed"
+   },
+   {
+    "x": 36,
+    "y": 53,
+    "perk": "big_dex_gated"
+   },
+   {
+    "x": 34,
+    "y": 55,
+    "perk": "attack_speed_notable"
+   },
+   {
+    "x": 38,
+    "y": 55,
+    "perk": "armor"
+   },
+   {
+    "x": 42,
+    "y": 51,
+    "perk": "str"
+   },
+   {
+    "x": 43,
+    "y": 54,
+    "perk": "nature_balm"
+   },
+   {
+    "x": 45,
+    "y": 54,
+    "perk": "big_health_regen"
+   },
+   {
+    "x": 46,
+    "y": 48,
+    "perk": "armor_dodge"
+   },
+   {
+    "x": 48,
+    "y": 46,
+    "perk": "armor_dodge"
+   },
+   {
+    "x": 42,
+    "y": 58,
+    "perk": "str"
+   },
+   {
+    "x": 43,
+    "y": 60,
+    "perk": "health"
+   },
+   {
+    "x": 43,
+    "y": 62,
+    "perk": "big_health_armor"
+   },
+   {
+    "x": 36,
+    "y": 57,
+    "perk": "nature_resist"
+   },
+   {
+    "x": 34,
+    "y": 59,
+    "perk": "nature_resist"
+   },
+   {
+    "x": 36,
+    "y": 61,
+    "perk": "thorn_armor"
+   },
+   {
+    "x": 36,
+    "y": 63,
+    "perk": "big_armor"
+   },
+   {
+    "x": 38,
+    "y": 64,
+    "perk": "big_armor"
+   },
+   {
+    "x": 40,
+    "y": 64,
+    "perk": "big_armor"
+   },
+   {
+    "x": 40,
+    "y": 62,
+    "perk": "health"
+   },
+   {
+    "x": 38,
+    "y": 62,
+    "perk": "big_health_armor"
+   },
+   {
+    "x": 43,
+    "y": 64,
+    "perk": "armor"
+   },
+   {
+    "x": 45,
+    "y": 65,
+    "perk": "health_armor"
+   },
+   {
+    "x": 47,
+    "y": 66,
+    "perk": "health_armor"
+   },
+   {
+    "x": 49,
+    "y": 66,
+    "perk": "big_armor_dodge"
+   },
+   {
+    "x": 51,
+    "y": 66,
+    "perk": "health_dodge"
+   },
+   {
+    "x": 53,
+    "y": 65,
+    "perk": "health_dodge"
+   },
+   {
+    "x": 55,
+    "y": 64,
+    "perk": "dodge"
+   },
+   {
+    "x": 55,
+    "y": 62,
+    "perk": "big_health_dodge"
+   },
+   {
+    "x": 45,
+    "y": 58,
+    "perk": "str"
+   },
+   {
+    "x": 48,
+    "y": 58,
+    "perk": "str"
+   },
+   {
+    "x": 49,
+    "y": 60,
+    "perk": "armor_dodge"
+   },
+   {
+    "x": 51,
+    "y": 61,
+    "perk": "armor_dodge"
+   },
+   {
+    "x": 51,
+    "y": 63,
+    "perk": "armor_dodge"
+   },
+   {
+    "x": 49,
+    "y": 64,
+    "perk": "big_armor_dodge"
+   },
+   {
+    "x": 47,
+    "y": 63,
+    "perk": "armor_dodge"
+   },
+   {
+    "x": 47,
+    "y": 61,
+    "perk": "armor_dodge"
+   },
+   {
+    "x": 49,
+    "y": 62,
+    "perk": "big_health"
+   },
+   {
+    "x": 32,
+    "y": 50,
+    "perk": "str"
+   },
+   {
+    "x": 29,
+    "y": 51,
+    "perk": "str"
+   },
+   {
+    "x": 29,
+    "y": 53,
+    "perk": "health_armor"
+   },
+   {
+    "x": 27,
+    "y": 53,
+    "perk": "health_armor"
+   },
+   {
+    "x": 27,
+    "y": 55,
+    "perk": "big_health_armor"
+   },
+   {
+    "x": 38,
+    "y": 46,
+    "perk": "axe_damage"
+   },
+   {
+    "x": 36,
+    "y": 47,
+    "perk": "axe_damage"
+   },
+   {
+    "x": 34,
+    "y": 48,
+    "perk": "big_axe_damage"
+   },
+   {
+    "x": 34,
+    "y": 46,
+    "perk": "physical_weapon_damage"
+   },
+   {
+    "x": 31,
+    "y": 47,
+    "perk": "big_armor"
+   },
+   {
+    "x": 34,
+    "y": 44,
+    "perk": "big_sword_damage"
+   },
+   {
+    "x": 32,
+    "y": 61,
+    "perk": "nature_resist"
+   },
+   {
+    "x": 31,
+    "y": 64,
+    "perk": "nature_penetration"
+   },
+   {
+    "x": 27,
+    "y": 63,
+    "perk": "big_dex_gated"
+   },
+   {
+    "x": 24,
+    "y": 61,
+    "perk": "attack_speed"
+   },
+   {
+    "x": 22,
+    "y": 60,
+    "perk": "str"
+   },
+   {
+    "x": 22,
+    "y": 62,
+    "perk": "health_armor"
+   },
+   {
+    "x": 20,
+    "y": 62,
+    "perk": "health"
+   },
+   {
+    "x": 20,
+    "y": 64,
+    "perk": "big_health_armor"
+   },
+   {
+    "x": 49,
+    "y": 44,
+    "perk": "poison_ball"
+   },
+   {
+    "x": 20,
+    "y": 59,
+    "perk": "str"
+   },
+   {
+    "x": 22,
+    "y": 58,
+    "perk": "attack_speed"
+   },
+   {
+    "x": 22,
+    "y": 56,
+    "perk": "big_attack_speed"
+   },
+   {
+    "x": 50,
+    "y": 58,
+    "perk": "dex"
+   },
+   {
+    "x": 53,
+    "y": 58,
+    "perk": "dex"
+   },
+   {
+    "x": 53,
+    "y": 60,
+    "perk": "big_attack_speed"
+   },
+   {
+    "x": 56,
+    "y": 58,
+    "perk": "dex"
+   },
+   {
+    "x": 60,
+    "y": 55,
+    "perk": "dodge"
+   },
+   {
+    "x": 62,
+    "y": 53,
+    "perk": "big_str_gated"
+   },
+   {
+    "x": 64,
+    "y": 51,
+    "perk": "health"
+   },
+   {
+    "x": 60,
+    "y": 49,
+    "perk": "big_dodge"
+   },
+   {
+    "x": 66,
+    "y": 50,
+    "perk": "dex"
+   },
+   {
+    "x": 68,
+    "y": 47,
+    "perk": "multi_shot"
+   },
+   {
+    "x": 66,
+    "y": 46,
+    "perk": "big_dodge"
+   },
+   {
+    "x": 64,
+    "y": 55,
+    "perk": "armor_penetration_notable"
+   },
+   {
+    "x": 70,
+    "y": 48,
+    "perk": "big_health"
+   },
+   {
+    "x": 61,
+    "y": 47,
+    "perk": "health_dodge"
+   },
+   {
+    "x": 63,
+    "y": 46,
+    "perk": "big_health_dodge"
+   },
+   {
+    "x": 66,
+    "y": 53,
+    "perk": "dodge"
+   },
+   {
+    "x": 68,
+    "y": 55,
+    "perk": "dodge"
+   },
+   {
+    "x": 66,
+    "y": 57,
+    "perk": "recoil_shot"
+   },
+   {
+    "x": 70,
+    "y": 57,
+    "perk": "dodge"
+   },
+   {
+    "x": 72,
+    "y": 59,
+    "perk": "dodge"
+   },
+   {
+    "x": 74,
+    "y": 57,
+    "perk": "health_dodge"
+   },
+   {
+    "x": 74,
+    "y": 61,
+    "perk": "health"
+   },
+   {
+    "x": 71,
+    "y": 63,
+    "perk": "big_str_gated"
+   },
+   {
+    "x": 77,
+    "y": 70,
+    "perk": "iron_reflexes"
+   },
+   {
+    "x": 76,
+    "y": 57,
+    "perk": "health"
+   },
+   {
+    "x": 76,
+    "y": 55,
+    "perk": "big_health_dodge"
+   },
+   {
+    "x": 76,
+    "y": 60,
+    "perk": "dex"
+   },
+   {
+    "x": 76,
+    "y": 62,
+    "perk": "cdr"
+   },
+   {
+    "x": 78,
+    "y": 63,
+    "perk": "trickery"
+   },
+   {
+    "x": 56,
+    "y": 47,
+    "perk": "dodge"
+   },
+   {
+    "x": 54,
+    "y": 45,
+    "perk": "health"
+   },
+   {
+    "x": 53,
+    "y": 43,
+    "perk": "arrow_barrage"
+   }
+  ],
+  "score": 796.2
+ },
+ "mage": {
+  "name": "Ледяной маг",
+  "school": "water",
+  "split": [
+   [
+    "intelligence",
+    0.55
+   ],
+   [
+    "wisdom",
+    0.25
+   ],
+   [
+    "vitality",
+    0.2
+   ]
+  ],
+  "plan": "49:38:start_int;49:36:frostball;50:34:magic_shield;52:32:magic_shield;56:29:mana;54:27:heart_of_ice;60:25:magic_shield;54:25:magic_shield_regen;52:27:magic_shield_regen;62:27:big_dex_gated;64:29:magic_shield;60:31:int;56:33:magic_shield;56:25:heart_of_magic;60:28:faster_cast_rate_notable;52:25:heart_of_chill;51:30:faster_cast_rate;49:30:flower_of_ice;49:28:ice_flower_restore;49:32:ice_flower_dmg;50:25:big_health;54:35:critical_hit;53:37:lightning_totem;62:23:cdr;64:21:cdr;62:19:whirlpool;61:33:spell_damage;60:35:big_spell_damage;56:22:int;56:20:mana;58:19:fast_frostball;66:30:int;66:32:spell_thunder_damage;68:32:thunder_spear;68:34:spell_thunder_damage;66:27:int;68:25:spell_thunder_damage;66:23:health_mana;68:21:mana;70:19:big_health_mana;70:23:spell_thunder_damage;72:21:spell_thunder_damage;74:19:faster_cast_rate;71:17:big_dex_gated;77:10:ghost_reaver;67:16:faster_cast_rate;67:14:cdr;69:13:cdr;70:11:wizardry;54:19:water_weapon_damage;54:17:frostball_chill;58:35:big_crit_hit;53:22:int;50:22:int;48:22:int;49:19:health_mana;47:17:mana;47:15:mana;49:14:big_health_mana;45:22:int;44:25:water_resist;42:25:health_mana;46:25:chance_of_chill;48:25:big_chance_of_chill;42:22:int;38:25:spell_damage;36:27:big_str_gated;34:29:spell_damage;38:31:int;36:32:magic_shield;34:32:magic_shield;34:34:very_big_health_magic_shield;36:34:magic_shield;32:32:magic_shield;38:28:cdr_notable;42:33:faster_cast_rate;40:34:big_spell_damage;42:20:spell_water_damage;40:18:spell_water_damage;40:16:big_spell_water_damage;38:17:big_chance_of_chill;44:18:faster_cast_rate;44:35:faster_cast_rate;44:16:faster_cast_rate;36:23:critical_hit;34:21:critical_hit;32:23:tidal_wave;30:21:burning_currents;34:25:crashing_rocks;38:34:big_increase_healing;45:37:purifying_fires;32:19:critical_hit;31:16:spell_damage;27:17:big_str_gated;21:10:arcane_devotion;30:14:health;31:12:health_magic_shield;29:12:health_mana;43:38:armor;64:25:health;63:17:mana_regen",
+  "steps": [
+   {
+    "x": 49,
+    "y": 38,
+    "perk": "start_int"
+   },
+   {
+    "x": 49,
+    "y": 36,
+    "perk": "frostball"
+   },
+   {
+    "x": 50,
+    "y": 34,
+    "perk": "magic_shield"
+   },
+   {
+    "x": 52,
+    "y": 32,
+    "perk": "magic_shield"
+   },
+   {
+    "x": 56,
+    "y": 29,
+    "perk": "mana"
+   },
+   {
+    "x": 54,
+    "y": 27,
+    "perk": "heart_of_ice"
+   },
+   {
+    "x": 60,
+    "y": 25,
+    "perk": "magic_shield"
+   },
+   {
+    "x": 54,
+    "y": 25,
+    "perk": "magic_shield_regen"
+   },
+   {
+    "x": 52,
+    "y": 27,
+    "perk": "magic_shield_regen"
+   },
+   {
+    "x": 62,
+    "y": 27,
+    "perk": "big_dex_gated"
+   },
+   {
+    "x": 64,
+    "y": 29,
+    "perk": "magic_shield"
+   },
+   {
+    "x": 60,
+    "y": 31,
+    "perk": "int"
+   },
+   {
+    "x": 56,
+    "y": 33,
+    "perk": "magic_shield"
+   },
+   {
+    "x": 56,
+    "y": 25,
+    "perk": "heart_of_magic"
+   },
+   {
+    "x": 60,
+    "y": 28,
+    "perk": "faster_cast_rate_notable"
+   },
+   {
+    "x": 52,
+    "y": 25,
+    "perk": "heart_of_chill"
+   },
+   {
+    "x": 51,
+    "y": 30,
+    "perk": "faster_cast_rate"
+   },
+   {
+    "x": 49,
+    "y": 30,
+    "perk": "flower_of_ice"
+   },
+   {
+    "x": 49,
+    "y": 28,
+    "perk": "ice_flower_restore"
+   },
+   {
+    "x": 49,
+    "y": 32,
+    "perk": "ice_flower_dmg"
+   },
+   {
+    "x": 50,
+    "y": 25,
+    "perk": "big_health"
+   },
+   {
+    "x": 54,
+    "y": 35,
+    "perk": "critical_hit"
+   },
+   {
+    "x": 53,
+    "y": 37,
+    "perk": "lightning_totem"
+   },
+   {
+    "x": 62,
+    "y": 23,
+    "perk": "cdr"
+   },
+   {
+    "x": 64,
+    "y": 21,
+    "perk": "cdr"
+   },
+   {
+    "x": 62,
+    "y": 19,
+    "perk": "whirlpool"
+   },
+   {
+    "x": 61,
+    "y": 33,
+    "perk": "spell_damage"
+   },
+   {
+    "x": 60,
+    "y": 35,
+    "perk": "big_spell_damage"
+   },
+   {
+    "x": 56,
+    "y": 22,
+    "perk": "int"
+   },
+   {
+    "x": 56,
+    "y": 20,
+    "perk": "mana"
+   },
+   {
+    "x": 58,
+    "y": 19,
+    "perk": "fast_frostball"
+   },
+   {
+    "x": 66,
+    "y": 30,
+    "perk": "int"
+   },
+   {
+    "x": 66,
+    "y": 32,
+    "perk": "spell_thunder_damage"
+   },
+   {
+    "x": 68,
+    "y": 32,
+    "perk": "thunder_spear"
+   },
+   {
+    "x": 68,
+    "y": 34,
+    "perk": "spell_thunder_damage"
+   },
+   {
+    "x": 66,
+    "y": 27,
+    "perk": "int"
+   },
+   {
+    "x": 68,
+    "y": 25,
+    "perk": "spell_thunder_damage"
+   },
+   {
+    "x": 66,
+    "y": 23,
+    "perk": "health_mana"
+   },
+   {
+    "x": 68,
+    "y": 21,
+    "perk": "mana"
+   },
+   {
+    "x": 70,
+    "y": 19,
+    "perk": "big_health_mana"
+   },
+   {
+    "x": 70,
+    "y": 23,
+    "perk": "spell_thunder_damage"
+   },
+   {
+    "x": 72,
+    "y": 21,
+    "perk": "spell_thunder_damage"
+   },
+   {
+    "x": 74,
+    "y": 19,
+    "perk": "faster_cast_rate"
+   },
+   {
+    "x": 71,
+    "y": 17,
+    "perk": "big_dex_gated"
+   },
+   {
+    "x": 77,
+    "y": 10,
+    "perk": "ghost_reaver"
+   },
+   {
+    "x": 67,
+    "y": 16,
+    "perk": "faster_cast_rate"
+   },
+   {
+    "x": 67,
+    "y": 14,
+    "perk": "cdr"
+   },
+   {
+    "x": 69,
+    "y": 13,
+    "perk": "cdr"
+   },
+   {
+    "x": 70,
+    "y": 11,
+    "perk": "wizardry"
+   },
+   {
+    "x": 54,
+    "y": 19,
+    "perk": "water_weapon_damage"
+   },
+   {
+    "x": 54,
+    "y": 17,
+    "perk": "frostball_chill"
+   },
+   {
+    "x": 58,
+    "y": 35,
+    "perk": "big_crit_hit"
+   },
+   {
+    "x": 53,
+    "y": 22,
+    "perk": "int"
+   },
+   {
+    "x": 50,
+    "y": 22,
+    "perk": "int"
+   },
+   {
+    "x": 48,
+    "y": 22,
+    "perk": "int"
+   },
+   {
+    "x": 49,
+    "y": 19,
+    "perk": "health_mana"
+   },
+   {
+    "x": 47,
+    "y": 17,
+    "perk": "mana"
+   },
+   {
+    "x": 47,
+    "y": 15,
+    "perk": "mana"
+   },
+   {
+    "x": 49,
+    "y": 14,
+    "perk": "big_health_mana"
+   },
+   {
+    "x": 45,
+    "y": 22,
+    "perk": "int"
+   },
+   {
+    "x": 44,
+    "y": 25,
+    "perk": "water_resist"
+   },
+   {
+    "x": 42,
+    "y": 25,
+    "perk": "health_mana"
+   },
+   {
+    "x": 46,
+    "y": 25,
+    "perk": "chance_of_chill"
+   },
+   {
+    "x": 48,
+    "y": 25,
+    "perk": "big_chance_of_chill"
+   },
+   {
+    "x": 42,
+    "y": 22,
+    "perk": "int"
+   },
+   {
+    "x": 38,
+    "y": 25,
+    "perk": "spell_damage"
+   },
+   {
+    "x": 36,
+    "y": 27,
+    "perk": "big_str_gated"
+   },
+   {
+    "x": 34,
+    "y": 29,
+    "perk": "spell_damage"
+   },
+   {
+    "x": 38,
+    "y": 31,
+    "perk": "int"
+   },
+   {
+    "x": 36,
+    "y": 32,
+    "perk": "magic_shield"
+   },
+   {
+    "x": 34,
+    "y": 32,
+    "perk": "magic_shield"
+   },
+   {
+    "x": 34,
+    "y": 34,
+    "perk": "very_big_health_magic_shield"
+   },
+   {
+    "x": 36,
+    "y": 34,
+    "perk": "magic_shield"
+   },
+   {
+    "x": 32,
+    "y": 32,
+    "perk": "magic_shield"
+   },
+   {
+    "x": 38,
+    "y": 28,
+    "perk": "cdr_notable"
+   },
+   {
+    "x": 42,
+    "y": 33,
+    "perk": "faster_cast_rate"
+   },
+   {
+    "x": 40,
+    "y": 34,
+    "perk": "big_spell_damage"
+   },
+   {
+    "x": 42,
+    "y": 20,
+    "perk": "spell_water_damage"
+   },
+   {
+    "x": 40,
+    "y": 18,
+    "perk": "spell_water_damage"
+   },
+   {
+    "x": 40,
+    "y": 16,
+    "perk": "big_spell_water_damage"
+   },
+   {
+    "x": 38,
+    "y": 17,
+    "perk": "big_chance_of_chill"
+   },
+   {
+    "x": 44,
+    "y": 18,
+    "perk": "faster_cast_rate"
+   },
+   {
+    "x": 44,
+    "y": 35,
+    "perk": "faster_cast_rate"
+   },
+   {
+    "x": 44,
+    "y": 16,
+    "perk": "faster_cast_rate"
+   },
+   {
+    "x": 36,
+    "y": 23,
+    "perk": "critical_hit"
+   },
+   {
+    "x": 34,
+    "y": 21,
+    "perk": "critical_hit"
+   },
+   {
+    "x": 32,
+    "y": 23,
+    "perk": "tidal_wave"
+   },
+   {
+    "x": 30,
+    "y": 21,
+    "perk": "burning_currents"
+   },
+   {
+    "x": 34,
+    "y": 25,
+    "perk": "crashing_rocks"
+   },
+   {
+    "x": 38,
+    "y": 34,
+    "perk": "big_increase_healing"
+   },
+   {
+    "x": 45,
+    "y": 37,
+    "perk": "purifying_fires"
+   },
+   {
+    "x": 32,
+    "y": 19,
+    "perk": "critical_hit"
+   },
+   {
+    "x": 31,
+    "y": 16,
+    "perk": "spell_damage"
+   },
+   {
+    "x": 27,
+    "y": 17,
+    "perk": "big_str_gated"
+   },
+   {
+    "x": 21,
+    "y": 10,
+    "perk": "arcane_devotion"
+   },
+   {
+    "x": 30,
+    "y": 14,
+    "perk": "health"
+   },
+   {
+    "x": 31,
+    "y": 12,
+    "perk": "health_magic_shield"
+   },
+   {
+    "x": 29,
+    "y": 12,
+    "perk": "health_mana"
+   },
+   {
+    "x": 43,
+    "y": 38,
+    "perk": "armor"
+   },
+   {
+    "x": 64,
+    "y": 25,
+    "perk": "health"
+   },
+   {
+    "x": 63,
+    "y": 17,
+    "perk": "mana_regen"
+   }
+  ],
+  "score": 1185.9
+ },
+ "hunter": {
+  "name": "Охотник-отравитель",
+  "school": "hunting",
+  "split": [
+   [
+    "dexterity",
+    0.55
+   ],
+   [
+    "vitality",
+    0.3
+   ],
+   [
+    "strength",
+    0.15
+   ]
+  ],
+  "plan": "51:41:start_dex;53:43:arrow_barrage;54:45:health;56:47:dodge;60:49:big_dodge;61:47:health_dodge;63:46:big_health_dodge;64:44:physical_weapon_damage;64:42:big_bow_damage;64:51:health;66:50:dex;68:47:multi_shot;66:46:big_dodge;70:48:big_health;66:53:dodge;68:55:dodge;66:57:recoil_shot;62:53:big_str_gated;64:55:armor_penetration_notable;70:57:dodge;72:59:dodge;74:57:health_dodge;74:61:health;71:63:big_str_gated;77:70:iron_reflexes;76:57:health;76:55:big_health_dodge;76:60:dex;76:62:cdr;78:63:trickery;60:55:dodge;56:51:dex;55:54:poisoned_weapons;57:55:big_chance_of_poison;55:56:big_chance_of_poison;56:58:dex;55:60:health;55:62:big_health_dodge;53:54:big_attack_speed;55:64:dodge;53:65:health_dodge;51:66:health_dodge;49:66:big_armor_dodge;47:66:health_armor;45:65:health_armor;43:64:armor;43:62:big_health_armor;53:58:dex;50:58:dex;49:60:armor_dodge;51:61:armor_dodge;51:63:armor_dodge;49:64:big_armor_dodge;47:63:armor_dodge;47:61:armor_dodge;49:62:big_health;49:56:big_nature_resist;47:56:health_regen;45:54:big_health_regen;43:54:nature_balm;53:60:big_attack_speed;42:51:str;46:48:armor_dodge;48:46:armor_dodge;38:55:armor;36:53:big_dex_gated;34:55:attack_speed_notable;49:44:poison_ball;34:51:attack_speed;38:49:str;38:51:ground_slam;42:47:health;44:45:health;45:43:heavy_strike;40:45:big_health;40:42:physical_weapon_damage;40:40:cleave;36:57:nature_resist;34:59:nature_resist;36:61:thorn_armor;36:63:big_armor;38:64:big_armor;40:64:big_armor;40:62:health;38:62:big_health_armor;32:61:nature_resist;31:64:nature_penetration;27:63:big_dex_gated;67:64:spell_nature_damage;66:61:spell_nature_damage;64:59:spell_nature_damage;62:61:thorn_bush;62:63:nature_penetration;60:64:mod_slow_bush;60:60:big_spell_nature_damage;58:60:mod_poison_bush;58:62:spell_nature_damage;60:62:big_spell_nature_damage;49:54:big_nature_penetration;47:53:chance_of_poison;51:53:chance_of_poison",
+  "steps": [
+   {
+    "x": 51,
+    "y": 41,
+    "perk": "start_dex"
+   },
+   {
+    "x": 53,
+    "y": 43,
+    "perk": "arrow_barrage"
+   },
+   {
+    "x": 54,
+    "y": 45,
+    "perk": "health"
+   },
+   {
+    "x": 56,
+    "y": 47,
+    "perk": "dodge"
+   },
+   {
+    "x": 60,
+    "y": 49,
+    "perk": "big_dodge"
+   },
+   {
+    "x": 61,
+    "y": 47,
+    "perk": "health_dodge"
+   },
+   {
+    "x": 63,
+    "y": 46,
+    "perk": "big_health_dodge"
+   },
+   {
+    "x": 64,
+    "y": 44,
+    "perk": "physical_weapon_damage"
+   },
+   {
+    "x": 64,
+    "y": 42,
+    "perk": "big_bow_damage"
+   },
+   {
+    "x": 64,
+    "y": 51,
+    "perk": "health"
+   },
+   {
+    "x": 66,
+    "y": 50,
+    "perk": "dex"
+   },
+   {
+    "x": 68,
+    "y": 47,
+    "perk": "multi_shot"
+   },
+   {
+    "x": 66,
+    "y": 46,
+    "perk": "big_dodge"
+   },
+   {
+    "x": 70,
+    "y": 48,
+    "perk": "big_health"
+   },
+   {
+    "x": 66,
+    "y": 53,
+    "perk": "dodge"
+   },
+   {
+    "x": 68,
+    "y": 55,
+    "perk": "dodge"
+   },
+   {
+    "x": 66,
+    "y": 57,
+    "perk": "recoil_shot"
+   },
+   {
+    "x": 62,
+    "y": 53,
+    "perk": "big_str_gated"
+   },
+   {
+    "x": 64,
+    "y": 55,
+    "perk": "armor_penetration_notable"
+   },
+   {
+    "x": 70,
+    "y": 57,
+    "perk": "dodge"
+   },
+   {
+    "x": 72,
+    "y": 59,
+    "perk": "dodge"
+   },
+   {
+    "x": 74,
+    "y": 57,
+    "perk": "health_dodge"
+   },
+   {
+    "x": 74,
+    "y": 61,
+    "perk": "health"
+   },
+   {
+    "x": 71,
+    "y": 63,
+    "perk": "big_str_gated"
+   },
+   {
+    "x": 77,
+    "y": 70,
+    "perk": "iron_reflexes"
+   },
+   {
+    "x": 76,
+    "y": 57,
+    "perk": "health"
+   },
+   {
+    "x": 76,
+    "y": 55,
+    "perk": "big_health_dodge"
+   },
+   {
+    "x": 76,
+    "y": 60,
+    "perk": "dex"
+   },
+   {
+    "x": 76,
+    "y": 62,
+    "perk": "cdr"
+   },
+   {
+    "x": 78,
+    "y": 63,
+    "perk": "trickery"
+   },
+   {
+    "x": 60,
+    "y": 55,
+    "perk": "dodge"
+   },
+   {
+    "x": 56,
+    "y": 51,
+    "perk": "dex"
+   },
+   {
+    "x": 55,
+    "y": 54,
+    "perk": "poisoned_weapons"
+   },
+   {
+    "x": 57,
+    "y": 55,
+    "perk": "big_chance_of_poison"
+   },
+   {
+    "x": 55,
+    "y": 56,
+    "perk": "big_chance_of_poison"
+   },
+   {
+    "x": 56,
+    "y": 58,
+    "perk": "dex"
+   },
+   {
+    "x": 55,
+    "y": 60,
+    "perk": "health"
+   },
+   {
+    "x": 55,
+    "y": 62,
+    "perk": "big_health_dodge"
+   },
+   {
+    "x": 53,
+    "y": 54,
+    "perk": "big_attack_speed"
+   },
+   {
+    "x": 55,
+    "y": 64,
+    "perk": "dodge"
+   },
+   {
+    "x": 53,
+    "y": 65,
+    "perk": "health_dodge"
+   },
+   {
+    "x": 51,
+    "y": 66,
+    "perk": "health_dodge"
+   },
+   {
+    "x": 49,
+    "y": 66,
+    "perk": "big_armor_dodge"
+   },
+   {
+    "x": 47,
+    "y": 66,
+    "perk": "health_armor"
+   },
+   {
+    "x": 45,
+    "y": 65,
+    "perk": "health_armor"
+   },
+   {
+    "x": 43,
+    "y": 64,
+    "perk": "armor"
+   },
+   {
+    "x": 43,
+    "y": 62,
+    "perk": "big_health_armor"
+   },
+   {
+    "x": 53,
+    "y": 58,
+    "perk": "dex"
+   },
+   {
+    "x": 50,
+    "y": 58,
+    "perk": "dex"
+   },
+   {
+    "x": 49,
+    "y": 60,
+    "perk": "armor_dodge"
+   },
+   {
+    "x": 51,
+    "y": 61,
+    "perk": "armor_dodge"
+   },
+   {
+    "x": 51,
+    "y": 63,
+    "perk": "armor_dodge"
+   },
+   {
+    "x": 49,
+    "y": 64,
+    "perk": "big_armor_dodge"
+   },
+   {
+    "x": 47,
+    "y": 63,
+    "perk": "armor_dodge"
+   },
+   {
+    "x": 47,
+    "y": 61,
+    "perk": "armor_dodge"
+   },
+   {
+    "x": 49,
+    "y": 62,
+    "perk": "big_health"
+   },
+   {
+    "x": 49,
+    "y": 56,
+    "perk": "big_nature_resist"
+   },
+   {
+    "x": 47,
+    "y": 56,
+    "perk": "health_regen"
+   },
+   {
+    "x": 45,
+    "y": 54,
+    "perk": "big_health_regen"
+   },
+   {
+    "x": 43,
+    "y": 54,
+    "perk": "nature_balm"
+   },
+   {
+    "x": 53,
+    "y": 60,
+    "perk": "big_attack_speed"
+   },
+   {
+    "x": 42,
+    "y": 51,
+    "perk": "str"
+   },
+   {
+    "x": 46,
+    "y": 48,
+    "perk": "armor_dodge"
+   },
+   {
+    "x": 48,
+    "y": 46,
+    "perk": "armor_dodge"
+   },
+   {
+    "x": 38,
+    "y": 55,
+    "perk": "armor"
+   },
+   {
+    "x": 36,
+    "y": 53,
+    "perk": "big_dex_gated"
+   },
+   {
+    "x": 34,
+    "y": 55,
+    "perk": "attack_speed_notable"
+   },
+   {
+    "x": 49,
+    "y": 44,
+    "perk": "poison_ball"
+   },
+   {
+    "x": 34,
+    "y": 51,
+    "perk": "attack_speed"
+   },
+   {
+    "x": 38,
+    "y": 49,
+    "perk": "str"
+   },
+   {
+    "x": 38,
+    "y": 51,
+    "perk": "ground_slam"
+   },
+   {
+    "x": 42,
+    "y": 47,
+    "perk": "health"
+   },
+   {
+    "x": 44,
+    "y": 45,
+    "perk": "health"
+   },
+   {
+    "x": 45,
+    "y": 43,
+    "perk": "heavy_strike"
+   },
+   {
+    "x": 40,
+    "y": 45,
+    "perk": "big_health"
+   },
+   {
+    "x": 40,
+    "y": 42,
+    "perk": "physical_weapon_damage"
+   },
+   {
+    "x": 40,
+    "y": 40,
+    "perk": "cleave"
+   },
+   {
+    "x": 36,
+    "y": 57,
+    "perk": "nature_resist"
+   },
+   {
+    "x": 34,
+    "y": 59,
+    "perk": "nature_resist"
+   },
+   {
+    "x": 36,
+    "y": 61,
+    "perk": "thorn_armor"
+   },
+   {
+    "x": 36,
+    "y": 63,
+    "perk": "big_armor"
+   },
+   {
+    "x": 38,
+    "y": 64,
+    "perk": "big_armor"
+   },
+   {
+    "x": 40,
+    "y": 64,
+    "perk": "big_armor"
+   },
+   {
+    "x": 40,
+    "y": 62,
+    "perk": "health"
+   },
+   {
+    "x": 38,
+    "y": 62,
+    "perk": "big_health_armor"
+   },
+   {
+    "x": 32,
+    "y": 61,
+    "perk": "nature_resist"
+   },
+   {
+    "x": 31,
+    "y": 64,
+    "perk": "nature_penetration"
+   },
+   {
+    "x": 27,
+    "y": 63,
+    "perk": "big_dex_gated"
+   },
+   {
+    "x": 67,
+    "y": 64,
+    "perk": "spell_nature_damage"
+   },
+   {
+    "x": 66,
+    "y": 61,
+    "perk": "spell_nature_damage"
+   },
+   {
+    "x": 64,
+    "y": 59,
+    "perk": "spell_nature_damage"
+   },
+   {
+    "x": 62,
+    "y": 61,
+    "perk": "thorn_bush"
+   },
+   {
+    "x": 62,
+    "y": 63,
+    "perk": "nature_penetration"
+   },
+   {
+    "x": 60,
+    "y": 64,
+    "perk": "mod_slow_bush"
+   },
+   {
+    "x": 60,
+    "y": 60,
+    "perk": "big_spell_nature_damage"
+   },
+   {
+    "x": 58,
+    "y": 60,
+    "perk": "mod_poison_bush"
+   },
+   {
+    "x": 58,
+    "y": 62,
+    "perk": "spell_nature_damage"
+   },
+   {
+    "x": 60,
+    "y": 62,
+    "perk": "big_spell_nature_damage"
+   },
+   {
+    "x": 49,
+    "y": 54,
+    "perk": "big_nature_penetration"
+   },
+   {
+    "x": 47,
+    "y": 53,
+    "perk": "chance_of_poison"
+   },
+   {
+    "x": 51,
+    "y": 53,
+    "perk": "chance_of_poison"
+   }
+  ],
+  "score": 579.4
+ }
+}

@@ -1,6 +1,7 @@
 package com.robertx22.age_of_exile.mmorpg.registers.common;
 
 import com.robertx22.age_of_exile.dimension.packets.StartDelveMapPacket;
+import com.robertx22.age_of_exile.guides.GuidesPacket;
 import com.robertx22.age_of_exile.dimension.packets.StartDungeonPacket;
 import com.robertx22.age_of_exile.mmorpg.MMORPG;
 import com.robertx22.age_of_exile.simulation.SimulationPacket;
@@ -30,6 +31,7 @@ public class C2SPacketRegister {
         Packets.registerClientToServerPacket(MMORPG.NETWORK, new TellServerToCancelSpellCast(), i++);
         Packets.registerClientToServerPacket(MMORPG.NETWORK, new SetupHotbarPacket(), i++);
         Packets.registerClientToServerPacket(MMORPG.NETWORK, new SimulationPacket(), i++);
+        Packets.registerClientToServerPacket(MMORPG.NETWORK, new GuidesPacket(), i++);
     }
 
 }

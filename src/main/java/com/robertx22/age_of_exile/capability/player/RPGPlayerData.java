@@ -69,6 +69,7 @@ public class RPGPlayerData implements ICommonPlayerCap {
     private static final String DEATH_STATS = "death_stats";
     private static final String PROFESSIONS = "profs";
     private static final String DIFF = "diff";
+    private static final String ACTIVE_GUIDE = "active_guide";
 
     Player player;
 
@@ -80,6 +81,12 @@ public class RPGPlayerData implements ICommonPlayerCap {
     public DeathStatsData deathStats = new DeathStatsData();
     public ProfessionsData professions = new ProfessionsData();
     public ScalingPlayerDiffData scalingDifficulty = new ScalingPlayerDiffData();
+
+    /**
+     * id выбранного гайда (см. guides/GuideData). Пустая строка = гайд не выбран.
+     * Хранится в кэпе, поэтому автоматически синхронизируется на клиент.
+     */
+    public String active_guide = "";
 
     public RPGPlayerData(Player player) {
         this.player = player;
@@ -113,6 +120,7 @@ public class RPGPlayerData implements ICommonPlayerCap {
         LoadSave.Save(deathStats, nbt, DEATH_STATS);
         LoadSave.Save(professions, nbt, PROFESSIONS);
         LoadSave.Save(scalingDifficulty, nbt, DIFF);
+        nbt.putString(ACTIVE_GUIDE, active_guide == null ? "" : active_guide);
 
         return nbt;
     }
@@ -128,6 +136,7 @@ public class RPGPlayerData implements ICommonPlayerCap {
         this.deathStats = loadOrBlank(DeathStatsData.class, new DeathStatsData(), nbt, DEATH_STATS, new DeathStatsData());
         this.professions = loadOrBlank(ProfessionsData.class, new ProfessionsData(), nbt, PROFESSIONS, new ProfessionsData());
         this.scalingDifficulty = loadOrBlank(ScalingPlayerDiffData.class, new ScalingPlayerDiffData(), nbt, DIFF, new ScalingPlayerDiffData());
+        this.active_guide = nbt.getStringOr(ACTIVE_GUIDE, "");
 
     }
 

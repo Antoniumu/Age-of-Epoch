@@ -23,7 +23,11 @@ public class SimulationPacket extends MyPacket<SimulationPacket> {
         HEAL_FULL,
         TEST_DEFENSE_BURST,
         PRINT_MOB_SCALING_TABLE,
-        RUN_FULL_AUDIT
+        RUN_FULL_AUDIT,
+        /** собрать активный гайд на Полигоне (param1: выдать экипировку) */
+        GUIDE_BUILD,
+        /** сброс билда и сразу сборка активного гайда */
+        RESET_AND_GUIDE
     }
 
     public Action action = Action.TOGGLE_SIMULATION;
@@ -89,6 +93,8 @@ public class SimulationPacket extends MyPacket<SimulationPacket> {
             case TEST_DEFENSE_BURST -> SimulationManager.runDefenseStressTest(serverPlayer, this.param1, this.param2);
             case PRINT_MOB_SCALING_TABLE -> SimulationManager.printMobScalingTable(serverPlayer);
             case RUN_FULL_AUDIT -> SimulationManager.runFullAudit(serverPlayer);
+            case GUIDE_BUILD -> SimulationManager.buildActiveGuide(serverPlayer, true, this.param1 > 0);
+            case RESET_AND_GUIDE -> SimulationManager.resetBuildAndApplyGuide(serverPlayer);
         }
     }
 

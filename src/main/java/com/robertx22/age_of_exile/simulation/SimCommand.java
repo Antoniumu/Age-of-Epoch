@@ -120,6 +120,24 @@ public class SimCommand {
             .then(literal("audit").executes(ctx -> {
                 SimulationManager.runFullAudit(ctx.getSource().getPlayerOrException());
                 return 1;
-            }));
+            }))
+            .then(literal("guide").executes(ctx -> {
+                SimulationManager.buildActiveGuide(ctx.getSource().getPlayerOrException(), true, true);
+                return 1;
+            }).then(argument("id", com.mojang.brigadier.arguments.StringArgumentType.word())
+                .executes(ctx -> {
+                    ServerPlayer p = ctx.getSource().getPlayerOrException();
+                    String id = com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "id");
+                    com.robertx22.age_of_exile.guides.GuideDefinition guide =
+                        com.robertx22.age_of_exile.guides.GuideData.byId(id);
+                    if (guide == null) {
+                        p.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                            "§c[Гайд] Неизвестный гайд: " + id));
+                        return 0;
+                    }
+                    com.robertx22.age_of_exile.guides.GuideAdvisor.setActiveGuide(p, guide.id);
+                    SimulationManager.buildActiveGuide(p, true, true);
+                    return 1;
+                })));
     }
 }
