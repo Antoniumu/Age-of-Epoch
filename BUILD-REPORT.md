@@ -170,26 +170,68 @@ Remove-Item -Recurse -Force .gradle, .gradle-home
 .\gradlew.bat build --refresh-dependencies --no-problems-report
 ```
 
-Обычно помогает сразу: пересборка скачивает манифест версии, библиотеки и заново ремапит
-Minecraft (это самый долгий шаг, 1–3 минуты). Кэш пересоздаётся и целиком, поэтому обрезанный
-jar (нехватка места, антивирус, прерванный/OOM-нутый ремап при `-Xmx4G` из `gradle.properties`)
-больше не используется.
+Сброс кэшей помогает, когда виноват **залежавшийся** (обрезанный) jar: пересборка скачивает
+манифест версии, библиотеки и заново ремапит Minecraft (самый долгий шаг, 1–3 минуты).
+Если же jar каждый раз создаётся заново пустым (см. следующий раздел), сброс сам по себе
+не поможет — нужна причина.
+
+### Что было в реальном прогоне (2026-10-21)
+
+После `build.bat repair` кэши пересоздались, но проверка показала:
+
+```
+Minecraft classes are missing from the compile classpath
+(the Minecraft jar(s) on the compile classpath are empty or truncated:
+ minecraft-merged-80b2a6d18e-26.3.jar (22 bytes))
+```
+
+**22 байта — это пустой zip** (только end-of-central-directory, ни одной записи).
+Файл с таким именем — не скачанный Minecraft, а результат обработки:
+Loom берёт `minecraft-merged.jar` (слияние client+server), ремапит его и прогоняет через
+jar-процессоры, результат кладёт в `minecraftMaven` как `minecraft-merged-<hash>-26.3.jar`.
+Если там 22 байта, значит **на этапе записи не добавилось ни одной записи**, а не «кэш
+залежался» — поэтому простой сброс кэшей и не помогает, jar честно создаётся заново пустым.
+
+Вероятные причины (по убыванию):
+
+1. **место на диске** — zip пишется, но данные не помещаются;
+2. **антивирус** (Windows Defender и т.п.) удаляет/блокирует содержимое при записи в
+   `.gradle-home` — лечится исключением для папки проекта и `GRADLE_USER_HOME`;
+3. **нехватка памяти у Gradle** при ремапе (`org.gradle.jvmargs=-Xmx4G` → попробовать `-Xmx6G`);
+4. сбой jar-процессора (mixin annotation processor / access widener), который виден только в `--info`.
 
 ### Если не помогло
 
 ```bat
-build.bat diagnose    :: пишет build-diagnose.txt
+build.bat diagnose                                  :: пишет build-diagnose.txt
+build.bat build --info --stacktrace > build-log.txt :: подробный лог (приложить к issue)
 ```
 
-Отчёт содержит версию JDK, содержимое `.gradle\loom-cache`, разобранный compile classpath и
-проверку самого jar (`net/minecraft/...` записи). Ищите строку `=== Verdict`:
+`build-diagnose.txt` проходит всю цепочку и показывает, какое звено пустое:
 
-- `Minecraft is NOT on the compile classpath` — Loom не смог разрешить зависимость
-  (`minecraft "com.mojang:minecraft:26.3"`); смотреть `gradlew dependencies --configuration compileClasspath`;
-- `holds no net/minecraft classes` — jar скачался битым (место на диске, антивирус,
-  прерванный ремап): повторить `build.bat repair`, при повторе поднять `-Xmx` в `gradle.properties`;
-- `[OK]` — Minecraft на месте, значит ошибки действительно в исходниках; полный их список
-  без ограничения в 100 штук: `build.bat compileJava -PdshMaxErrs=4000`.
+| Звено | Файл |
+|---|---|
+| скачивание клиента | `caches\fabric-loom\26.3\minecraft-client.jar` |
+| скачивание сервера | `caches\fabric-loom\26.3\minecraft-server.jar` |
+| слияние | `caches\fabric-loom\26.3\minecraft-merged.jar` |
+| ремап + jar-процессоры | `...\minecraftMaven\net\minecraft\minecraft-merged-<hash>\26.3\*.jar` |
+
+В конце отчёта — блок `=== Verdict` с конкретной причиной, например
+«The merge step is the broken link» (тогда виноваты скачанные client/server jar) или
+«The remap/jar-processing step is the broken link» (merge в порядке, пустой уже
+обработанный jar → диск/антивирус/память/процессор).
+
+Вердикты отчёта:
+
+- `[OK] Minecraft classes are on the compile classpath` — Minecraft на месте, значит ошибки
+  действительно в исходниках; полный их список без ограничения в 100 штук:
+  `build.bat compileJava -PdshMaxErrs=4000`;
+- `Minecraft is NOT on the compile classpath` — ни один minecraft-jar не разрешился;
+  смотреть `gradlew dependencies --configuration compileClasspath`;
+- `The merge step is the broken link` — виноваты скачанные client/server jar (в норме это
+  десятки МБ, а не килобайты) или само слияние;
+- `The remap/jar-processing step is the broken link` — merge в порядке, пустой уже
+  обработанный jar: диск / антивирус / память Gradle / сбой jar-процессора.
 
 С этого момента сборка сама проверяет это состояние: задача `checkMinecraftClasspath`
 (перед `compileJava`) падает с одной понятной строкой вместо сотни ложных ошибок.

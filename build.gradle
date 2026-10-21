@@ -105,18 +105,27 @@ tasks.register('checkMinecraftClasspath') {
             if (mcNamed.isEmpty()) {
                 detail = 'no jar with "minecraft" in its name is on the compile classpath at all'
             } else {
-                detail = 'the Minecraft jar(s) on the compile classpath are empty or truncated: ' +
-                    mcNamed.collect { it.name + ' (' + it.length() + ' bytes)' }.join(', ')
+                detail = 'the Minecraft jar(s) on the compile classpath are empty or truncated:\n' +
+                    mcNamed.collect { '      ' + it.absolutePath + '  (' + it.length() + ' bytes)' }.join('\n')
             }
+
+            def freeMb = (project.rootProject.projectDir.usableSpace / 1024L / 1024L)
+            def diskNote = freeMb < 1024
+                ? '\nNOTE: only ' + freeMb + ' MB free on ' + project.rootProject.projectDir + ' - this alone\n' +
+                  'can produce empty jars while Loom remaps Minecraft. Free some space first.\n'
+                : ''
+
             throw new GradleException(
                 'Minecraft classes are missing from the compile classpath (' + detail + ').\n' +
-                'This is a broken Loom/Gradle cache, not a source problem - the\n' +
-                '"package net.minecraft.* does not exist" errors below are bogus.\n' +
+                'This is a broken Loom cache/artifact, not a source problem - any\n' +
+                '"package net.minecraft.* does not exist" errors are bogus.\n' +
+                diskNote +
                 '\n' +
                 'Fix it with:\n' +
                 '    build.bat repair      (wipes the Loom/Minecraft caches, rebuilds with --refresh-dependencies)\n' +
-                'Diagnose it with:\n' +
-                '    build.bat diagnose    (writes build-diagnose.txt)\n' +
+                'Still a ~22 byte jar after that? Then the jar is not cached but produced empty:\n' +
+                '    build.bat diagnose    (writes build-diagnose.txt - see "Verdict" at the end)\n' +
+                '    build.bat build --info --stacktrace > build-log.txt   (keep/attach that log)\n' +
                 'Bypass this check with:\n' +
                 '    -PskipMcCheck'
             )

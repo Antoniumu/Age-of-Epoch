@@ -151,7 +151,8 @@ echo.
 echo   Collecting build diagnostics ...
 echo.
 call :find_jdk
-if defined JAVA_HOME (echo   JDK    : %JAVA_HOME%  (Java %JAVA_MAJOR%)) else (echo   JDK    : JDK 25 not found)
+if defined JAVA_HOME echo   JDK    : %JAVA_HOME%  [Java %JAVA_MAJOR%]
+if not defined JAVA_HOME echo   JDK    : JDK 25 not found
 echo   Caches : %GRADLE_USER_HOME%
 echo.
 powershell -NoProfile -ExecutionPolicy Bypass -File "%PROJECT_DIR%\tools\diagnose-build.ps1" -ProjectDir "%PROJECT_DIR%"
