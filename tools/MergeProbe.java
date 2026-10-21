@@ -60,6 +60,7 @@ import java.util.zip.ZipOutputStream;
 public final class MergeProbe {
 	private static int failures;
 	private static int depth;
+	private static boolean zipfsReadOnly;
 
 	public static void main(String[] args) throws Exception {
 		final Path projectDir = resolveProjectDir();
@@ -113,7 +114,18 @@ public final class MergeProbe {
 		writeWithZipOutputStream(workDir.resolve("probe-control.jar"));
 
 		// ---------------------------------------------------------------
-		header("5. Result");
+		header("5. What the file system says about writability");
+		describeWritability("probe dir", workDir);
+		describeWritability("loom dir", loomDir);
+		describeWritability("client jar", clientJar);
+		describeWritability("merged jar", loomDir.resolve("minecraft-merged.jar"));
+
+		// ---------------------------------------------------------------
+		header("6. Re-opening a copy read-write (JDK 25 accessMode)");
+		checkAccessMode(loomDir.resolve("minecraft-merged.jar"), workDir);
+
+		// ---------------------------------------------------------------
+		header("7. Result");
 		line("  zipfs write test   : " + describe(workDir.resolve("probe-zipfs.jar")));
 		line("  control write test : " + describe(workDir.resolve("probe-control.jar")));
 		line("  client jar         : " + describe(clientJar));
@@ -125,7 +137,30 @@ public final class MergeProbe {
 
 		line("");
 
-		if (failures == 0) {
+		if (zipfsReadOnly) {
+			line("  Cause found: the JDK zip file system reports the freshly created jar as");
+			line("  READ-ONLY, so MinecraftJarMerger.add() cannot write a single entry.");
+			line("");
+			line("  On JDK 25 ZipFileSystem's constructor ends with");
+			line("      this.readOnly = forceReadOnly || multiRelease.isPresent() || !Files.isWritable(zfpath);");
+			line("  i.e. one Files.isWritable() returning false is enough to make the zip");
+			line("  read-only, and every write then throws ReadOnlyFileSystemException. Loom");
+			line("  does not look at its futures, so the exception is lost and the already");
+			line("  created file stays empty - the 22 byte minecraft-merged.jar.");
+			line("");
+			line("  Something on this machine makes a just-created file look non-writable.");
+			line("  Check, in this order:");
+			line("    1) antivirus / EDR: exclude the project folder and " + gradleHome);
+			line("       (Windows Security > Virus & threat protection > Exclusions)");
+			line("    2) Ransomware protection > Controlled folder access: allow this JDK's");
+			line("       java.exe, or turn the feature off");
+			line("    3) backup/sync agents (OneDrive, Dropbox, Acronis...) holding new files");
+			line("    4) the folder's permissions or a dos:readonly attribute set by policy");
+			line("");
+			line("  Until it is fixed, the build can run without the merge:");
+			line("      build.bat singlejar client");
+			line("  (development workaround: server-side classes are then missing from the classpath)");
+		} else if (failures == 0) {
 			line("  All primitives work with this JVM.");
 			line("  If Loom still writes an empty merged jar, the failure is inside Loom's own");
 			line("  merge (a swallowed exception in its async tasks). Attach this output with");
@@ -133,10 +168,10 @@ public final class MergeProbe {
 		} else {
 			line("  Something above failed. The exception printed there is what Loom hides, and");
 			line("  it is the reason minecraft-merged.jar comes out empty. Most likely causes:");
-			line("    1) antivirus blocking or deleting zip content - add an exclusion for the");
-			line("       project folder and for the Gradle cache (" + System.getenv("GRADLE_USER_HOME") + ")");
-			line("    2) a corrupted download - delete the jars listed under section 1 and rerun");
+			line("    1) a corrupted download - delete the jars listed under section 1 and rerun");
 			line("       build.bat repair");
+			line("    2) antivirus blocking or deleting zip content - add an exclusion for the");
+			line("       project folder and for the Gradle cache (" + gradleHome + ")");
 			line("    3) the jar really is empty upstream (section 1 shows 0 entries for a download)");
 		}
 
@@ -326,6 +361,119 @@ public final class MergeProbe {
 		}
 	}
 
+	/** Prints what the file system thinks about a path: writable, attributes, ACL. */
+	private static void describeWritability(final String what, final Path path) {
+		line("");
+		line("  " + what + ": " + path);
+
+		if (!Files.exists(path)) {
+			line("    does not exist");
+			return;
+		}
+
+		line("    Files.isWritable   : " + Files.isWritable(path));
+		line("    Files.isReadable   : " + Files.isReadable(path));
+
+		if (Files.isRegularFile(path)) {
+			try {
+				line("    Files.size         : " + Files.size(path) + " bytes");
+			} catch (IOException e) {
+				line("    Files.size         : " + e);
+			}
+
+			try {
+				line("    dos:readonly       : " + Files.getAttribute(path, "dos:readonly"));
+			} catch (Exception e) {
+				line("    dos:readonly       : n/a (" + e.getClass().getSimpleName() + ")");
+			}
+
+			// The real question: can this JVM open the file for writing right now?
+			try {
+				final java.nio.channels.FileChannel channel =
+						java.nio.channels.FileChannel.open(path, java.nio.file.StandardOpenOption.WRITE,
+								java.nio.file.StandardOpenOption.APPEND);
+
+				channel.close();
+				line("    open for WRITE     : OK");
+			} catch (IOException e) {
+				line("    open for WRITE     : FAILED - " + e);
+			}
+
+			return;
+		}
+
+		// Directory: the meaningful test is creating a file in it.
+		try {
+			final Path probe = Files.createTempFile(path, ".aoe-probe", ".tmp");
+			Files.delete(probe);
+			line("    create+delete file : OK");
+		} catch (IOException e) {
+			line("    create+delete file : FAILED - " + e);
+		}
+	}
+
+	/**
+	 * Copies the merged jar next to the project and opens the copy with
+	 * accessMode=readWrite. On JDK 25 zipfs refuses that loudly ("the ZIP file is
+	 * not writable") when Files.isWritable() says false for it - the same state in
+	 * which Loom's merge writes nothing.
+	 *
+	 * A copy is used so that a healthy cache is never rewritten by the probe.
+	 */
+	private static void checkAccessMode(final Path source, final Path workDir) {
+		line("");
+
+		if (!Files.exists(source)) {
+			line("  " + source.getFileName() + ": does not exist - nothing to copy");
+			return;
+		}
+
+		final Path copy = workDir.resolve("probe-accessmode.jar");
+
+		try {
+			Files.deleteIfExists(copy);
+			Files.copy(source, copy);
+			line("  copy of " + source.getFileName() + " -> " + copy + "  (" + describe(copy) + ")");
+		} catch (IOException e) {
+			line("  cannot copy " + source + ": " + e);
+			return;
+		}
+
+		final Map<String, Object> env = new HashMap<String, Object>();
+		env.put("accessMode", "readWrite");
+
+		try {
+			final FileSystem fs = FileSystems.newFileSystem(jarUri(copy), env);
+
+			try {
+				line("    accessMode=readWrite : accepted");
+				line("    isReadOnly           : " + fs.isReadOnly());
+
+				if (fs.isReadOnly()) {
+					zipfsReadOnly = true;
+				}
+
+				try {
+					final Path marker = fs.getPath("/probe-marker.txt");
+					Files.write(marker, "x".getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+					Files.delete(marker);
+					line("    write into the zip   : OK");
+				} catch (Throwable t) {
+					line("    write into the zip   : FAILED - " + t.getClass().getName() + ": " + t.getMessage());
+					zipfsReadOnly = true;
+				}
+			} finally {
+				fs.close();
+			}
+		} catch (Throwable t) {
+			line("    accessMode=readWrite : REJECTED");
+			line("    " + t.getClass().getName() + ": " + t.getMessage());
+			line("    (JDK 25 throws this when the file is not writable - the same state");
+			line("     that makes Loom's merge silently produce an empty jar)");
+			zipfsReadOnly = true;
+		}
+	}
+
 	/** Creates a jar through zipfs, the way MinecraftJarMerger.add() does. */
 	private static void writeWithZipFileSystem(final Path out) {
 		line("  target: " + out);
@@ -357,6 +505,7 @@ public final class MergeProbe {
 		} catch (Throwable t) {
 			line("    FAILED while writing:");
 			printThrowable(t, "    ");
+			noteReadOnly(t);
 			failures++;
 			return;
 		}
@@ -434,6 +583,22 @@ public final class MergeProbe {
 	// -----------------------------------------------------------------------
 	// Helpers
 	// -----------------------------------------------------------------------
+
+	/** Marks the run as "zip refused to write" when the throwable chain says so. */
+	private static void noteReadOnly(final Throwable throwable) {
+		Throwable current = throwable;
+		int guard = 0;
+
+		while (current != null && guard < 12) {
+			if (current instanceof java.nio.file.ReadOnlyFileSystemException) {
+				zipfsReadOnly = true;
+				return;
+			}
+
+			current = current.getCause();
+			guard++;
+		}
+	}
 
 	private static FileSystem openJar(final Path jar) throws IOException {
 		Throwable first;

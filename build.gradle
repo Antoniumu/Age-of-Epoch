@@ -26,6 +26,39 @@ dependencies {
     implementation "eu.pb4:trinkets:4.2.1+26.3"
 }
 
+// ---------------------------------------------------------------------------
+// Escape hatch: skip Loom's client+server merge.
+//
+// MinecraftProvider.mergeJars() writes minecraft-merged.jar through the JDK zip
+// filesystem (MinecraftJarMerger). On JDK 25 that filesystem declares itself
+// read-only when Files.isWritable() says false for the freshly created jar - which
+// on Windows happens when antivirus/EDR or Controlled folder access touches it.
+// Loom swallows the resulting exception, leaving a 22 byte (empty) jar behind and
+// printing nothing. See BUILD-REPORT.md section 6.
+//
+//   build.bat singlejar client   ->  -PmcSingleJar=client
+//   build.bat singlejar server   ->  -PmcSingleJar=server
+//
+// Development-only workaround: classes of the other side are not on the classpath.
+// ---------------------------------------------------------------------------
+if (project.hasProperty('mcSingleJar')) {
+    def side = project.property('mcSingleJar').toString().trim().toLowerCase()
+
+    if (!(side in ['client', 'server'])) {
+        throw new GradleException("Unknown -PmcSingleJar value '${side}' - use 'client' or 'server'")
+    }
+
+    loom {
+        if (side == 'client') {
+            clientOnlyMinecraftJar()
+        } else {
+            serverOnlyMinecraftJar()
+        }
+    }
+
+    logger.lifecycle("Loom: ${side} jar only, the client+server merge is skipped (-PmcSingleJar=${side})")
+}
+
 processResources {
     inputs.property 'version', project.version
     filesMatching('fabric.mod.json') {

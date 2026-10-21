@@ -295,6 +295,12 @@ if ($cpHasMc) {
         Say '       Run the probe - it repeats the same zip/zipfs operations with the same JDK'
         Say '       and prints the exception Loom throws away:'
         Say '           build.bat probe'
+        Say ''
+        Say '       Known cause (JDK 25): the zip file system marks a freshly created jar'
+        Say '       read-only when Files.isWritable() says false, then every write throws'
+        Say '       ReadOnlyFileSystemException. Usually antivirus / Controlled folder'
+        Say '       access; meanwhile the build can run with:'
+        Say '           build.bat singlejar client'
     } else {
         Say '       client.jar itself looks empty or truncated, so the merge had nothing to work with.'
         Say '       Delete the files above and re-run:  build.bat repair'

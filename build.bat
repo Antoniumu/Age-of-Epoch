@@ -13,6 +13,7 @@ rem    build.bat getjdk         download Temurin JDK 25 into .jdks\
 rem    build.bat repair         wipe Loom/Minecraft caches, then rebuild from scratch
 rem    build.bat diagnose       write build-diagnose.txt (why compileJava cannot see net.minecraft)
 rem    build.bat probe          reproduce Loom's merge step and show the exception it swallows
+rem    build.bat singlejar [c]  build without Loom's client+server merge (client or server jar only)
 rem    build.bat <task> ...     any other Gradle task is passed through
 rem
 rem  Environment (all optional):
@@ -30,6 +31,7 @@ if /i "%~1"=="getjdk" goto :getjdk
 if /i "%~1"=="repair" goto :repair
 if /i "%~1"=="diagnose" goto :diagnose
 if /i "%~1"=="probe" goto :probe
+if /i "%~1"=="singlejar" goto :singlejar
 
 set "ORIGINAL_JAVA_HOME=%JAVA_HOME%"
 call :find_jdk
@@ -167,6 +169,39 @@ if not "%RC%"=="0" (
     echo   Diagnose failed. Run it manually to see the error:
     echo       powershell -ExecutionPolicy Bypass -File tools\diagnose-build.ps1
 )
+goto :done
+
+rem ----------------------------------------------------------------------
+:singlejar
+rem  Builds with only one Minecraft jar, skipping the client+server merge -
+rem  the only Loom step that writes through the JDK zip filesystem, which on
+rem  JDK 25 can refuse to write and leave a 22 byte minecraft-merged.jar.
+rem  Development-only workaround: the other side's classes are not available.
+rem ----------------------------------------------------------------------
+set "SIDE=%~2"
+if "%SIDE%"=="" set "SIDE=client"
+if /i not "%SIDE%"=="client" if /i not "%SIDE%"=="server" (
+    echo.
+    echo   Usage: build.bat singlejar [client^|server]
+    set "RC=2"
+    goto :done
+)
+call :find_jdk
+if not defined JAVA_HOME goto :no_jdk
+
+echo.
+echo   JDK    : %JAVA_HOME%  [Java %JAVA_MAJOR%]
+echo   Caches : %GRADLE_USER_HOME%
+echo.
+echo   Minecraft jar: %SIDE% only (client+server merge skipped)
+echo   gradlew build -PmcSingleJar=%SIDE%
+echo.
+call "%PROJECT_DIR%\gradlew.bat" build -PmcSingleJar=%SIDE% --no-problems-report
+set "RC=%ERRORLEVEL%"
+if not "%RC%"=="0" goto :failed
+call :list_jar
+echo.
+echo   BUILD SUCCESSFUL
 goto :done
 
 rem ----------------------------------------------------------------------
