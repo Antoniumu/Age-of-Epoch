@@ -8,6 +8,9 @@
 - **Library of Exile** — общая библиотека (реестры JSON-базы данных, пакеты, капабилити, события);
 - **Divine Missions** и **Infinite Dungeons** — аддоны, интегрированные в исходниках Age of Exile.
 - **Тематические башни** — 16 тем по биомам, 3 уровня сложности и 80 боссов; см. [`TOWERS.md`](TOWERS.md).
+- **GameMaster** — динамическая подстройка опыта: догоняющий режим для отстающих и растягивание
+  развития до заданных реальных часов (по умолчанию 100) с локальной веб-панелью и графиками;
+  см. [`GAMEMASTER.md`](GAMEMASTER.md).
 
 ## Статус
 
@@ -67,6 +70,7 @@ build.bat singlejar client        :: собрать без слияния client
 
 ```
 src/main/java/com/robertx22/age_of_exile/     — ядро мода (перенесено и мигрировано)
+src/main/java/com/robertx22/age_of_exile/gamemaster/ — GameMaster: подстройка опыта, статистика, веб-панель
 src/main/java/com/robertx22/library_of_exile/ — библиотека
 src/main/java/com/robertx22/divine_missions/   — аддон «Божественные миссии»
 src/main/java/com/robertx22/infinite_dungeons/ — аддон «Бесконечные подземелья»
@@ -77,6 +81,7 @@ tools/port_to_fabric.py                        — воспроизводимы�
 tools/ru_work/                                 — исходники перевода (генерация ru_ru.json)
 tools/tower_gen/                               — генератор тематических башен (NBT + JSON), см. TOWERS.md
 TOWERS.md                                      — описание тем, сложности и боссов башен
+GAMEMASTER.md                                  — настройка опыта: уравнивание, темп, панель, команды
 ```
 
 ## Авторство

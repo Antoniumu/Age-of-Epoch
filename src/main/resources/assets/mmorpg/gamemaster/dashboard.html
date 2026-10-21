@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Age of Epoch — GameMaster</title>
+<style>
+  :root {
+    --bg: #0e1117;
+    --panel: #161b24;
+    --panel2: #1d2430;
+    --line: #2a3442;
+    --text: #e6edf3;
+    --muted: #91a0b3;
+    --green: #4ade80;
+    --red: #f87171;
+    --gold: #fbbf24;
+    --blue: #60a5fa;
+    --violet: #a78bfa;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(1200px 600px at 20% -10%, #1b2637 0%, var(--bg) 60%);
+    color: var(--text);
+    font: 14px/1.45 "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    min-height: 100vh;
+  }
+  header {
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    padding: 20px 28px 10px;
+  }
+  header h1 { font-size: 21px; margin: 0; letter-spacing: .3px; }
+  header h1 span { color: var(--gold); }
+  .pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 4px 11px; border-radius: 999px; font-size: 12px;
+    background: var(--panel2); border: 1px solid var(--line); color: var(--muted);
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
+  .dot.off { background: var(--red); box-shadow: 0 0 8px var(--red); }
+  main { padding: 8px 28px 40px; max-width: 1400px; }
+  .grid { display: grid; gap: 16px; }
+  .cols-3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .cols-4 { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+  .cols-2 { grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); }
+  section { margin-top: 18px; }
+  h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 1.1px; color: var(--muted); margin: 0 0 10px; font-weight: 600; }
+  .card {
+    background: linear-gradient(180deg, var(--panel2), var(--panel));
+    border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px;
+    box-shadow: 0 10px 26px rgba(0,0,0,.22);
+  }
+  .toggle { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+  .toggle h3 { margin: 0 0 4px; font-size: 15px; }
+  .toggle p { margin: 0; color: var(--muted); font-size: 12.5px; }
+  .switch {
+    flex: 0 0 auto; width: 52px; height: 28px; border-radius: 999px; border: 1px solid var(--line);
+    background: #0c1118; position: relative; cursor: pointer; transition: background .18s;
+  }
+  .switch::after {
+    content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%;
+    background: #7b8797; transition: transform .18s, background .18s;
+  }
+  .switch.on { background: #14351f; border-color: #2f6d45; }
+  .switch.on::after { transform: translateX(24px); background: var(--green); }
+  .switch.busy { opacity: .55; pointer-events: none; }
+  .stat .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .7px; }
+  .stat .value { font-size: 25px; font-weight: 650; margin-top: 3px; }
+  .stat .hint { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .inline-inputs { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+  label.field { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); }
+  input[type=number], input[type=text] {
+    background: #0c1118; border: 1px solid var(--line); color: var(--text);
+    border-radius: 9px; padding: 7px 9px; font-size: 13px; width: 120px; outline: none;
+  }
+  input:focus { border-color: #3d516d; }
+  button.apply {
+    align-self: flex-end; background: #1f2a3a; border: 1px solid var(--line); color: var(--text);
+    border-radius: 9px; padding: 8px 13px; cursor: pointer; font-size: 13px;
+  }
+  button.apply:hover { background: #26344a; }
+  .chart-card { padding: 12px 12px 8px; }
+  .chart-head { display: flex; justify-content: space-between; align-items: baseline; padding: 2px 6px 8px; gap: 10px; flex-wrap: wrap; }
+  .chart-head h3 { margin: 0; font-size: 14px; }
+  .chart-head .sub { color: var(--muted); font-size: 12px; }
+  canvas { width: 100%; display: block; }
+  #levelChart { height: 360px; }
+  #multiChart { height: 300px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 10px 16px; padding: 8px 6px 2px; font-size: 12px; color: var(--muted); }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    text-align: left; color: var(--muted); font-weight: 600; font-size: 11px; letter-spacing: .8px;
+    text-transform: uppercase; padding: 8px 10px; border-bottom: 1px solid var(--line);
+  }
+  td { padding: 9px 10px; border-bottom: 1px solid rgba(42,52,66,.55); }
+  tr:last-child td { border-bottom: none; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .who { display: flex; align-items: center; gap: 8px; }
+  .online-dot { width: 7px; height: 7px; border-radius: 50%; background: #48566a; }
+  .online-dot.on { background: var(--green); box-shadow: 0 0 7px var(--green); }
+  .badge { padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .badge.up { background: rgba(74,222,128,.12); color: var(--green); }
+  .badge.down { background: rgba(248,113,113,.12); color: var(--red); }
+  .badge.flat { background: rgba(148,163,184,.12); color: var(--muted); }
+  .muted { color: var(--muted); }
+  .note { color: var(--muted); font-size: 12px; margin-top: 10px; }
+  code { background: #0c1118; border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; font-size: 12px; }
+  .empty { color: var(--muted); padding: 24px 6px; text-align: center; }
+  @media (max-width: 620px) { main, header { padding-left: 14px; padding-right: 14px; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Age of Epoch <span>— GameMaster</span></h1>
+  <div class="pill"><span class="dot" id="statusDot"></span><span id="statusText">подключение…</span></div>
+  <div class="pill" id="clock">—</div>
+</header>
+
+<main>
+  <section>
+    <h2>Переключатели</h2>
+    <div class="grid cols-3">
+      <div class="card toggle">
+        <div>
+          <h3>Уравнивание игроков</h3>
+          <p>Отстающие получают больше опыта, ушедшие вперёд — немного меньше. Группа развивается вместе.</p>
+          <div class="muted" style="margin-top:8px;font-size:12px" id="catchupInfo">—</div>
+        </div>
+        <div class="switch" id="swCatchUp" data-key="catch_up" title="Догоняющий опыт"></div>
+      </div>
+
+      <div class="card toggle">
+        <div>
+          <h3>Темп развития</h3>
+          <p>Общий штраф к опыту после стартового уровня, чтобы путь до максимума занимал заданные реальные часы.</p>
+          <div class="muted" style="margin-top:8px;font-size:12px" id="pacingInfo">—</div>
+        </div>
+        <div class="switch" id="swPacing" data-key="pacing" title="Темп развития"></div>
+      </div>
+
+      <div class="card toggle">
+        <div>
+          <h3>Мастер-выключатель</h3>
+          <p>Полностью отключает вмешательство в опыт. Статистика и графики продолжают собираться.</p>
+          <div class="muted" style="margin-top:8px;font-size:12px" id="masterInfo">—</div>
+        </div>
+        <div class="switch" id="swEnabled" data-key="enabled" title="Вся система"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Параметры темпа</h2>
+    <div class="card">
+      <div class="inline-inputs">
+        <label class="field">Цель, реальных часов
+          <input type="number" id="inpTarget" min="1" max="100000" step="1">
+        </label>
+        <label class="field">Штраф начинается с уровня
+          <input type="number" id="inpStart" min="1" max="1000" step="1">
+        </label>
+        <label class="field">Макс. штраф (0–0.9)
+          <input type="number" id="inpPenalty" min="0" max="0.9" step="0.05">
+        </label>
+        <label class="field">Кривая
+          <input type="number" id="inpCurve" min="0.1" max="10" step="0.1">
+        </label>
+        <label class="field">Бонус за уровень отставания
+          <input type="number" id="inpCatchLevel" min="0" max="10" step="0.05">
+        </label>
+        <label class="field">Макс. бонус догоняющего
+          <input type="number" id="inpCatchMax" min="0" max="20" step="0.1">
+        </label>
+        <button class="apply" id="btnApply">Применить</button>
+      </div>
+      <div class="note">Значения сохраняются в <code>config/age_of_epoch/gamemaster.json</code>. Те же переключатели доступны командой <code>/mine_and_slash gm</code>.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Сводка</h2>
+    <div class="grid cols-4">
+      <div class="card stat">
+        <div class="label">Базовое время</div>
+        <div class="value" id="statBaseline">—</div>
+        <div class="hint">оценка пути до макс. уровня без штрафов</div>
+      </div>
+      <div class="card stat">
+        <div class="label">Прогноз с настройкой</div>
+        <div class="value" id="statPredicted">—</div>
+        <div class="hint" id="statPredictedHint">сколько реально займёт путь</div>
+      </div>
+      <div class="card stat">
+        <div class="label">Цель</div>
+        <div class="value" id="statTarget">—</div>
+        <div class="hint" id="statTargetHint">реальных часов до максимума</div>
+      </div>
+      <div class="card stat">
+        <div class="label">Ориентир группы</div>
+        <div class="value" id="statReference">—</div>
+        <div class="hint" id="statReferenceHint">средний уровень с поправкой на лидера</div>
+      </div>
+      <div class="card stat">
+        <div class="label">Игроков</div>
+        <div class="value" id="statPlayers">—</div>
+        <div class="hint" id="statPlayersHint">онлайн / в сезоне</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Графики</h2>
+    <div class="grid cols-2">
+      <div class="card chart-card">
+        <div class="chart-head">
+          <h3>Уровень от реального времени игры</h3>
+          <div class="sub" id="levelChartSub">—</div>
+        </div>
+        <canvas id="levelChart"></canvas>
+        <div class="legend" id="levelLegend"></div>
+      </div>
+      <div class="card chart-card">
+        <div class="chart-head">
+          <h3>Текущий множитель опыта</h3>
+          <div class="sub">1.0× — без изменений</div>
+        </div>
+        <canvas id="multiChart"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Игроки</h2>
+    <div class="card" style="padding:6px 8px 4px">
+      <table>
+        <thead>
+          <tr>
+            <th>Игрок</th>
+            <th class="num">Уровень</th>
+            <th class="num">Время игры</th>
+            <th class="num">Опыт (факт / база)</th>
+            <th class="num">Темп</th>
+            <th class="num">Догоняющий</th>
+            <th class="num">Итог</th>
+            <th class="num">Был(а)</th>
+          </tr>
+        </thead>
+        <tbody id="playerRows">
+          <tr><td colspan="8" class="empty">данных пока нет</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">
+      Время считается по реальному времени игры и не учитывает AFK. Всё хранится в
+      <code>config/age_of_epoch/gamemaster_data.json</code>. Страница обновляется каждые 5 секунд.
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  "use strict";
+
+  const TOKEN = new URLSearchParams(location.search).get("token") || "";
+  const COLORS = ["#60a5fa", "#4ade80", "#fbbf24", "#f472b6", "#a78bfa", "#22d3ee", "#fb923c", "#84cc16", "#e879f9", "#38bdf8"];
+  let state = null;
+  let busy = false;
+
+  const api = (path) => path + (TOKEN ? (path.includes("?") ? "&" : "?") + "token=" + encodeURIComponent(TOKEN) : "");
+
+  async function getJson() {
+    const res = await fetch(api("/api/state"), { cache: "no-store" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    return res.json();
+  }
+
+  async function postConfig(patch) {
+    const res = await fetch(api("/api/config"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(patch)
+    });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    return res.json();
+  }
+
+  function fmt(value, digits = 1) {
+    if (value === null || value === undefined || Number.isNaN(value)) return "—";
+    return Number(value).toFixed(digits).replace(/\.0+$/, "");
+  }
+
+  function fmtInt(value) {
+    return Number(value || 0).toLocaleString("ru-RU");
+  }
+
+  function ago(minutes) {
+    if (minutes === null || minutes === undefined || minutes < 0) return "—";
+    if (minutes < 1) return "только что";
+    if (minutes < 60) return fmtInt(Math.round(minutes)) + " мин назад";
+    if (minutes < 60 * 48) return fmtInt(Math.round(minutes / 60)) + " ч назад";
+    return fmtInt(Math.round(minutes / 1440)) + " дн назад";
+  }
+
+  function setSwitch(el, on, busyNow) {
+    el.classList.toggle("on", !!on);
+    el.classList.toggle("busy", !!busyNow);
+  }
+
+  function multiplierClass(value) {
+    if (value > 1.02) return "up";
+    if (value < 0.98) return "down";
+    return "flat";
+  }
+
+  function render() {
+    if (!state) return;
+    const cfg = state.config || {};
+    const summary = state.summary || {};
+    const players = state.players || [];
+
+    setSwitch(document.getElementById("swCatchUp"), cfg.catch_up && cfg.enabled, busy);
+    setSwitch(document.getElementById("swPacing"), cfg.pacing && cfg.enabled, busy);
+    setSwitch(document.getElementById("swEnabled"), cfg.enabled, busy);
+
+    document.getElementById("catchupInfo").textContent =
+      "+" + fmt((cfg.catch_up_per_level || 0) * 100, 0) + "% за уровень отставания, максимум +" +
+      fmt((cfg.catch_up_max_bonus || 0) * 100, 0) + "%; ориентир " + fmt(summary.reference_level, 1) + " ур.";
+    document.getElementById("pacingInfo").textContent =
+      "штраф после " + (cfg.pacing_start_level ?? "—") + " уровня; прогноз " + fmt(summary.predicted_hours, 1) + " ч, k=" + fmt(summary.k, 2);
+    document.getElementById("masterInfo").textContent = cfg.enabled ? "система активна" : "вмешательство в опыт отключено";
+
+    document.getElementById("statBaseline").textContent = fmt(summary.baseline_hours, 1) + " ч";
+    document.getElementById("statPredicted").textContent = fmt(summary.predicted_hours, 1) + " ч";
+    document.getElementById("statTarget").textContent = fmt(summary.target_hours, 1) + " ч";
+    document.getElementById("statReference").textContent = fmt(summary.reference_level, 1) + " ур.";
+    document.getElementById("statPlayers").textContent = (summary.online ?? 0) + " / " + (summary.tracked ?? 0);
+    document.getElementById("statPlayersHint").textContent = "онлайн / в сезоне";
+    document.getElementById("statPredictedHint").textContent =
+      summary.measured_baseline_hours > 0
+        ? "по замерам: " + fmt(summary.measured_baseline_hours, 1) + " ч базовых"
+        : "замеров мало — используется оценка из конфига";
+
+    document.getElementById("levelChartSub").textContent =
+      "линия цели: " + fmt(summary.target_hours, 1) + " ч → " + (state.max_level ?? "?") + " ур.";
+    document.getElementById("clock").textContent = new Date().toLocaleTimeString("ru-RU");
+
+    document.getElementById("playerRows").innerHTML = players.length
+      ? players.map(p => `
+        <tr>
+          <td>
+            <div class="who">
+              <span class="online-dot ${p.online ? "on" : ""}"></span>
+              <span>${escapeHtml(p.name || "—")}</span>
+            </div>
+          </td>
+          <td class="num">${p.level}</td>
+          <td class="num">${fmt(p.playtime_hours, 1)} ч</td>
+          <td class="num muted">${fmtInt(p.exp_gained)} / ${fmtInt(p.raw_exp_gained)}</td>
+          <td class="num">×${fmt(p.pacing_multiplier, 2)}</td>
+          <td class="num">×${fmt(p.catch_up_multiplier, 2)}</td>
+          <td class="num"><span class="badge ${multiplierClass(p.multiplier)}">×${fmt(p.multiplier, 2)}</span></td>
+          <td class="num muted">${p.online ? "в сети" : ago(p.last_seen_minutes)}</td>
+        </tr>`).join("")
+      : `<tr><td colspan="8" class="empty">данных пока нет</td></tr>`;
+
+    if (!document.activeElement || !document.activeElement.matches("input")) {
+      document.getElementById("inpTarget").value = cfg.target_hours ?? "";
+      document.getElementById("inpStart").value = cfg.pacing_start_level ?? "";
+      document.getElementById("inpPenalty").value = cfg.pacing_max_penalty ?? "";
+      document.getElementById("inpCurve").value = cfg.pacing_curve ?? "";
+      document.getElementById("inpCatchLevel").value = cfg.catch_up_per_level ?? "";
+      document.getElementById("inpCatchMax").value = cfg.catch_up_max_bonus ?? "";
+    }
+
+    drawLevelChart(players, summary, state.max_level || 50);
+    drawMultiplierChart(players);
+    renderLegend(players);
+  }
+
+  function escapeHtml(text) {
+    return String(text).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  function setupCanvas(canvas) {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+    canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: rect.width, h: rect.height };
+  }
+
+  function niceMax(value) {
+    if (value <= 1) return 1;
+    const power = Math.pow(10, Math.floor(Math.log10(value)));
+    const scaled = value / power;
+    const step = scaled <= 2 ? 2 : scaled <= 5 ? 5 : 10;
+    return step * power;
+  }
+
+  function drawAxes(ctx, box, xTicks, yTicks, xLabel, yLabel, xFmt, yFmt) {
+    ctx.font = "11px Segoe UI, Arial, sans-serif";
+    ctx.textBaseline = "middle";
+    for (let i = 0; i <= 5; i++) {
+      const t = i / 5;
+      const y = box.y + box.h - box.h * t;
+      ctx.strokeStyle = i === 0 ? "rgba(120,140,165,.5)" : "rgba(66,82,102,.35)";
+      ctx.beginPath();
+      ctx.moveTo(box.x, y);
+      ctx.lineTo(box.x + box.w, y);
+      ctx.stroke();
+      const value = box.yMin + (box.yMax - box.yMin) * t;
+      ctx.fillStyle = "#91a0b3";
+      ctx.textAlign = "right";
+      ctx.fillText(yFmt(value), box.x - 8, y);
+    }
+    ctx.textBaseline = "top";
+    for (let i = 0; i <= 5; i++) {
+      const t = i / 5;
+      const x = box.x + box.w * t;
+      ctx.strokeStyle = "rgba(66,82,102,.18)";
+      ctx.beginPath();
+      ctx.moveTo(x, box.y);
+      ctx.lineTo(x, box.y + box.h);
+      ctx.stroke();
+      const value = box.xMin + (box.xMax - box.xMin) * t;
+      ctx.fillStyle = "#91a0b3";
+      ctx.textAlign = i === 0 ? "left" : i === 5 ? "right" : "center";
+      ctx.fillText(xFmt(value), x, box.y + box.h + 7);
+    }
+    ctx.fillStyle = "#91a0b3";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    ctx.fillText(xLabel, box.x + box.w / 2, box.y + box.h + 21);
+    ctx.save();
+    ctx.translate(11, box.y + box.h / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = "center";
+    ctx.fillText(yLabel, 0, 0);
+    ctx.restore();
+  }
+
+  function drawLevelChart(players, summary, maxLevel) {
+    const canvas = document.getElementById("levelChart");
+    const { ctx, w, h } = setupCanvas(canvas);
+    ctx.clearRect(0, 0, w, h);
+
+    const targetHours = Math.max(1, summary.target_hours || 100);
+    let maxHours = targetHours * 1.05;
+    players.forEach(p => {
+      maxHours = Math.max(maxHours, p.playtime_hours || 0);
+      (p.history || []).forEach(pt => maxHours = Math.max(maxHours, pt.playtime_hours || 0));
+    });
+    maxHours = Math.ceil(maxHours * 1.05);
+
+    const box = { x: 46, y: 12, w: Math.max(40, w - 66), h: Math.max(40, h - 46), xMin: 0, xMax: maxHours, yMin: 1, yMax: maxLevel };
+    drawAxes(ctx, box, [], [],
+      "реальных часов игры", "уровень",
+      v => fmt(v, 0) + " ч", v => fmt(v, 0));
+
+    // линия цели
+    ctx.save();
+    ctx.setLineDash([6, 6]);
+    ctx.strokeStyle = "rgba(251,191,36,.55)";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(box.x, box.y + box.h);
+    ctx.lineTo(box.x + box.w * (targetHours / box.xMax), box.y);
+    ctx.stroke();
+    ctx.restore();
+
+    players.forEach((p, index) => {
+      const color = COLORS[index % COLORS.length];
+      const points = (p.history || []).map(pt => ({ x: pt.playtime_hours, y: pt.level }));
+      points.push({ x: p.playtime_hours || 0, y: p.level });
+
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.globalAlpha = 0.95;
+      ctx.beginPath();
+      points.forEach((pt, i) => {
+        const x = box.x + box.w * ((pt.x - box.xMin) / (box.xMax - box.xMin));
+        const y = box.y + box.h - box.h * ((pt.y - box.yMin) / (box.yMax - box.yMin));
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      const last = points[points.length - 1];
+      const lx = box.x + box.w * ((last.x - box.xMin) / (box.xMax - box.xMin));
+      const ly = box.y + box.h - box.h * ((last.y - box.yMin) / (box.yMax - box.yMin));
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(lx, ly, 3.6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    });
+
+    if (!players.length) {
+      ctx.fillStyle = "#91a0b3";
+      ctx.font = "13px Segoe UI, Arial, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("Пока нет данных: зайдите в игру, чтобы появилась статистика", box.x + box.w / 2, box.y + box.h / 2);
+    }
+  }
+
+  function drawMultiplierChart(players) {
+    const canvas = document.getElementById("multiChart");
+    const { ctx, w, h } = setupCanvas(canvas);
+    ctx.clearRect(0, 0, w, h);
+
+    if (!players.length) {
+      ctx.fillStyle = "#91a0b3";
+      ctx.font = "13px Segoe UI, Arial, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("Нет игроков", w / 2, h / 2);
+      return;
+    }
+
+    const shown = players.slice(0, 14);
+    let maxMulti = 2;
+    shown.forEach(p => maxMulti = Math.max(maxMulti, p.multiplier || 1));
+    maxMulti = Math.max(2, Math.ceil(maxMulti * 10) / 10);
+
+    const labelWidth = Math.min(170, Math.max(90, w * 0.32));
+    const box = { x: labelWidth, y: 10, w: Math.max(50, w - labelWidth - 54), h: Math.max(30, h - 34) };
+    const rowH = Math.min(26, box.h / Math.max(1, shown.length));
+    const xOf = value => box.x + box.w * (value / maxMulti);
+
+    // сетка
+    ctx.font = "11px Segoe UI, Arial, sans-serif";
+    ctx.textBaseline = "top";
+    for (let i = 0; i <= 4; i++) {
+      const value = maxMulti * (i / 4);
+      const x = xOf(value);
+      ctx.strokeStyle = "rgba(66,82,102,.35)";
+      ctx.beginPath();
+      ctx.moveTo(x, box.y);
+      ctx.lineTo(x, box.y + box.h);
+      ctx.stroke();
+      ctx.fillStyle = "#91a0b3";
+      ctx.textAlign = i === 0 ? "left" : i === 4 ? "right" : "center";
+      ctx.fillText("×" + fmt(value, 1), x, box.y + box.h + 6);
+    }
+
+    // линия «×1»
+    const one = xOf(1);
+    ctx.strokeStyle = "rgba(251,191,36,.7)";
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(one, box.y);
+    ctx.lineTo(one, box.y + box.h);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    shown.forEach((p, i) => {
+      const y = box.y + rowH * i + rowH * 0.18;
+      const barH = Math.max(6, rowH * 0.62);
+      const multi = p.multiplier || 1;
+      const zero = xOf(0);
+      const end = xOf(Math.min(multi, maxMulti));
+
+      ctx.fillStyle = "rgba(60,74,94,.45)";
+      ctx.fillRect(zero, y, end - zero, barH);
+
+      const color = p.online ? (multi >= 1 ? "#4ade80" : "#f87171") : "#60a5fa";
+      ctx.fillStyle = color;
+      ctx.globalAlpha = p.online ? 1 : 0.62;
+      ctx.fillRect(zero, y, Math.max(1, end - zero), barH);
+      ctx.globalAlpha = 1;
+
+      ctx.fillStyle = "#cbd5e1";
+      ctx.textAlign = "right";
+      ctx.textBaseline = "middle";
+      ctx.font = "12px Segoe UI, Arial, sans-serif";
+      let name = p.name || "—";
+      if (name.length > 16) name = name.slice(0, 15) + "…";
+      ctx.fillText(name, box.x - 10, y + barH / 2);
+
+      ctx.fillStyle = "#e6edf3";
+      ctx.textAlign = "left";
+      ctx.fillText("×" + fmt(multi, 2), Math.min(end + 7, box.x + box.w + 42), y + barH / 2);
+    });
+  }
+
+  function renderLegend(players) {
+    const legend = document.getElementById("levelLegend");
+    legend.innerHTML = players.slice(0, 12).map((p, i) =>
+      `<span><i style="background:${COLORS[i % COLORS.length]}"></i>${escapeHtml(p.name || "—")} · ${p.level} ур.</span>`
+    ).join("") + `<span><i style="background:rgba(251,191,36,.7)"></i>цель ${fmt(state?.summary?.target_hours, 0)} ч</span>`;
+  }
+
+  async function refresh() {
+    try {
+      state = await getJson();
+      document.getElementById("statusDot").classList.remove("off");
+      document.getElementById("statusText").textContent = "панель подключена";
+      render();
+    } catch (e) {
+      document.getElementById("statusDot").classList.add("off");
+      document.getElementById("statusText").textContent = "нет связи с сервером";
+    }
+  }
+
+  async function toggle(el) {
+    if (busy) return;
+    const key = el.dataset.key;
+    const next = !el.classList.contains("on");
+    busy = true;
+    setSwitch(el, next, true);
+    try {
+      await postConfig({ [key]: next });
+      await refresh();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      busy = false;
+      document.querySelectorAll(".switch").forEach(s => s.classList.remove("busy"));
+      if (state) render();
+    }
+  }
+
+  async function applyInputs() {
+    const patch = {
+      target_hours: Number(document.getElementById("inpTarget").value),
+      pacing_start_level: Number(document.getElementById("inpStart").value),
+      pacing_max_penalty: Number(document.getElementById("inpPenalty").value),
+      pacing_curve: Number(document.getElementById("inpCurve").value),
+      catch_up_per_level: Number(document.getElementById("inpCatchLevel").value),
+      catch_up_max_bonus: Number(document.getElementById("inpCatchMax").value)
+    };
+    Object.keys(patch).forEach(k => {
+      if (!Number.isFinite(patch[k])) delete patch[k];
+    });
+    busy = true;
+    try {
+      await postConfig(patch);
+      await refresh();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      busy = false;
+      render();
+    }
+  }
+
+  document.querySelectorAll(".switch").forEach(el => el.addEventListener("click", () => toggle(el)));
+  document.getElementById("btnApply").addEventListener("click", applyInputs);
+  window.addEventListener("resize", () => { if (state) render(); });
+
+  refresh();
+  setInterval(() => {
+    if (!document.hidden) refresh();
+  }, 5000);
+})();
+</script>
+</body>
+</html>

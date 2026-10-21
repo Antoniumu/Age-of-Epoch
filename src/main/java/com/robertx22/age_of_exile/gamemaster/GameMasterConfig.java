@@ -1,0 +1,234 @@
+package com.robertx22.age_of_exile.gamemaster;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Настройки «GameMaster» — системы динамической подстройки опыта.
+ * <p>
+ * Файл: {@code config/age_of_epoch/gamemaster.json}
+ * <p>
+ * Два независимых переключателя:
+ * <ul>
+ *     <li>{@code catch_up} — догоняющий опыт: отстающие от группы игроки получают больше опыта,
+ *     ушедшие вперёд — чуть меньше. Цель — развиваться вместе.</li>
+ *     <li>{@code pacing} — темп развития: после {@code pacing_start_level} всем выдаётся
+ *     прогрессивный штраф к опыту так, чтобы игрок наигрывал около {@code target_hours}
+ *     <b>реальных</b> часов до максимального уровня.</li>
+ * </ul>
+ * Если включены оба, множители перемножаются, а догоняющий режим работает и тогда,
+ * когда общий темп ещё не растянут до целевых часов.
+ */
+public class GameMasterConfig {
+
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting()
+        .create();
+
+    /** Мастер-выключатель всей системы. */
+    public boolean enabled = true;
+
+    // ------------------------------------------------------------------
+    // 1. Догоняющий опыт (catch-up)
+    // ------------------------------------------------------------------
+
+    /** Первый переключатель: подстраивать опыт игроков под группу. */
+    public boolean catch_up = true;
+
+    /** Бонус к опыту за каждый уровень отставания (0.25 = +25% за уровень). */
+    public double catch_up_per_level = 0.25;
+
+    /** Максимальный бонус отстающему игроку (2.0 = +200%). */
+    public double catch_up_max_bonus = 2.0;
+
+    /** Штрафовать ли игроков, ушедших вперёд от группы. */
+    public boolean catch_up_penalize_ahead = true;
+
+    /** Штраф к опыту за каждый уровень опережения (0.05 = -5% за уровень). */
+    public double catch_up_penalty_per_level = 0.05;
+
+    /** Нижняя граница множителя для ушедших вперёд (0.5 = не ниже x0.5). */
+    public double catch_up_min_multiplier = 0.5;
+
+    /**
+     * Ориентир группы: 0 = средний уровень, 1 = уровень самого высокого игрока.
+     * 0.35 — «подтягиваемся к чуть выше среднего».
+     */
+    public double catch_up_reference_blend = 0.35;
+
+    /** Игроки с меньшим временем игры не участвуют в расчёте ориентира. */
+    public int catch_up_min_playtime_minutes = 30;
+
+    /** Игроки, не заходившие дольше N дней, не участвуют в расчёте ориентира. */
+    public int catch_up_activity_window_days = 30;
+
+    // ------------------------------------------------------------------
+    // 2. Темп развития (pacing)
+    // ------------------------------------------------------------------
+
+    /** Второй переключатель: растягивать развитие до целевых реальных часов. */
+    public boolean pacing = true;
+
+    /** Целевое время игры в реальных часах до максимального уровня. */
+    public double target_hours = 100.0;
+
+    /** С какого уровня начинается штраф (уровни ниже не трогаем). */
+    public int pacing_start_level = 20;
+
+    /** Максимальный штраф на последнем уровне (0.9 = -90% опыта к максимуму). */
+    public double pacing_max_penalty = 0.95;
+
+    /** Максимальное ускорение, если сборка проходится быстрее цели (1.0 = +100%). */
+    public double pacing_max_bonus = 1.0;
+
+    /** Кривая роста штрафа: 1 = линейно, 2 = мягкий старт и резкий конец. */
+    public double pacing_curve = 2.0;
+
+    /** Автоматически подбирать силу штрафа по реальным замерам времени. */
+    public boolean pacing_auto_calibrate = true;
+
+    /** Оценка «базового» времени до максимума, пока нет своих замеров. */
+    public double assumed_baseline_hours = 40.0;
+
+    /** Нижняя граница итогового множителя опыта. */
+    public double exp_multiplier_min = 0.05;
+
+    /** Верхняя граница итогового множителя опыта. */
+    public double exp_multiplier_max = 5.0;
+
+    // ------------------------------------------------------------------
+    // 3. Учёт времени
+    // ------------------------------------------------------------------
+
+    /** Не считать AFK-время: если игрок не двигался N секунд, секунды не идут в статистику. */
+    public boolean afk_exclusion = true;
+
+    /** Порог AFK в секундах. */
+    public int afk_threshold_seconds = 300;
+
+    /** Как часто писать точку на графиках (в секундах реального времени игры). */
+    public int snapshot_interval_seconds = 300;
+
+    /** Как часто сохранять данные на диск (в секундах). */
+    public int save_interval_seconds = 180;
+
+    // ------------------------------------------------------------------
+    // 4. Сообщения игрокам
+    // ------------------------------------------------------------------
+
+    /** Показывать множитель опыта в сообщении о полученном опыте. */
+    public boolean show_multiplier_in_actionbar = true;
+
+    /** Сообщать игроку его множитель при входе. */
+    public boolean announce_on_login = true;
+
+    // ------------------------------------------------------------------
+    // 5. Веб-панель GameMaster
+    // ------------------------------------------------------------------
+
+    /** Поднимать локальную веб-панель с графиками. */
+    public boolean web_enabled = true;
+
+    /** Адрес, на котором слушает панель. 127.0.0.1 — только с этой машины. */
+    public String web_host = "127.0.0.1";
+
+    /** Порт панели. */
+    public int web_port = 8787;
+
+    /** Необязательный токен доступа (пусто — без проверки). */
+    public String web_token = "";
+
+    public GameMasterConfig() {
+    }
+
+    /** Приводит значения в безопасные границы. */
+    public GameMasterConfig sanitize() {
+        target_hours = clamp(target_hours, 1, 100000);
+        pacing_start_level = (int) clamp(pacing_start_level, 1, 1000);
+        pacing_max_penalty = clamp(pacing_max_penalty, 0, 0.99);
+        pacing_max_bonus = clamp(pacing_max_bonus, 0, 100);
+        pacing_curve = clamp(pacing_curve, 0.1, 10);
+        assumed_baseline_hours = clamp(assumed_baseline_hours, 0.5, 100000);
+        catch_up_per_level = clamp(catch_up_per_level, 0, 100);
+        catch_up_max_bonus = clamp(catch_up_max_bonus, 0, 100);
+        catch_up_penalty_per_level = clamp(catch_up_penalty_per_level, 0, 10);
+        catch_up_min_multiplier = clamp(catch_up_min_multiplier, 0.01, 1);
+        catch_up_reference_blend = clamp(catch_up_reference_blend, 0, 1);
+        catch_up_min_playtime_minutes = (int) clamp(catch_up_min_playtime_minutes, 0, 100000);
+        catch_up_activity_window_days = (int) clamp(catch_up_activity_window_days, 1, 100000);
+        exp_multiplier_min = clamp(exp_multiplier_min, 0.001, 1000);
+        exp_multiplier_max = clamp(exp_multiplier_max, exp_multiplier_min, 1000);
+        afk_threshold_seconds = (int) clamp(afk_threshold_seconds, 5, 86400);
+        snapshot_interval_seconds = (int) clamp(snapshot_interval_seconds, 10, 86400);
+        save_interval_seconds = (int) clamp(save_interval_seconds, 5, 3600);
+        if (web_host == null || web_host.isEmpty()) {
+            web_host = "127.0.0.1";
+        }
+        web_port = (int) clamp(web_port, 1, 65535);
+        if (web_token == null) {
+            web_token = "";
+        }
+        return this;
+    }
+
+    public static double clamp(double v, double min, double max) {
+        if (Double.isNaN(v) || Double.isInfinite(v)) {
+            return min;
+        }
+        return Math.max(min, Math.min(max, v));
+    }
+
+    /**
+     * Применяет к конфигу поля из JSON (используется веб-панелью).
+     *
+     * @return список реально изменённых полей
+     */
+    public List<String> applyJson(JsonObject json) {
+        List<String> changed = new ArrayList<>();
+        if (json == null) {
+            return changed;
+        }
+        for (String key : json.keySet()) {
+            JsonElement el = json.get(key);
+            if (el == null || el.isJsonNull()) {
+                continue;
+            }
+            try {
+                switch (key) {
+                    case "enabled" -> this.enabled = el.getAsBoolean();
+                    case "catch_up" -> this.catch_up = el.getAsBoolean();
+                    case "catch_up_per_level" -> this.catch_up_per_level = el.getAsDouble();
+                    case "catch_up_max_bonus" -> this.catch_up_max_bonus = el.getAsDouble();
+                    case "catch_up_penalize_ahead" -> this.catch_up_penalize_ahead = el.getAsBoolean();
+                    case "catch_up_penalty_per_level" -> this.catch_up_penalty_per_level = el.getAsDouble();
+                    case "catch_up_min_multiplier" -> this.catch_up_min_multiplier = el.getAsDouble();
+                    case "catch_up_reference_blend" -> this.catch_up_reference_blend = el.getAsDouble();
+                    case "pacing" -> this.pacing = el.getAsBoolean();
+                    case "target_hours" -> this.target_hours = el.getAsDouble();
+                    case "pacing_start_level" -> this.pacing_start_level = el.getAsInt();
+                    case "pacing_max_penalty" -> this.pacing_max_penalty = el.getAsDouble();
+                    case "pacing_curve" -> this.pacing_curve = el.getAsDouble();
+                    case "pacing_auto_calibrate" -> this.pacing_auto_calibrate = el.getAsBoolean();
+                    case "assumed_baseline_hours" -> this.assumed_baseline_hours = el.getAsDouble();
+                    case "show_multiplier_in_actionbar" -> this.show_multiplier_in_actionbar = el.getAsBoolean();
+                    case "announce_on_login" -> this.announce_on_login = el.getAsBoolean();
+                    case "web_enabled" -> this.web_enabled = el.getAsBoolean();
+                    case "web_port" -> this.web_port = el.getAsInt();
+                    case "web_token" -> this.web_token = el.getAsString();
+                    default -> {
+                        continue;
+                    }
+                }
+                changed.add(key);
+            } catch (Exception e) {
+                // игнорируем кривые значения из ручного JSON
+            }
+        }
+        sanitize();
+        return changed;
+    }
+}

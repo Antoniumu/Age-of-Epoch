@@ -21,6 +21,7 @@ import com.robertx22.age_of_exile.dimension.dungeon_data.DungeonData;
 import com.robertx22.age_of_exile.dimension.dungeon_data.WorldDungeonCap;
 import com.robertx22.age_of_exile.event_hooks.my_events.CollectGearEvent;
 import com.robertx22.age_of_exile.event_hooks.player.OnLogin;
+import com.robertx22.age_of_exile.gamemaster.GameMaster;
 import com.robertx22.age_of_exile.mmorpg.MMORPG;
 import com.robertx22.age_of_exile.saveclasses.CustomExactStatsData;
 import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
@@ -701,16 +702,38 @@ public class EntityData implements ICommonPlayerCap, INeededForClient {
 
     public int GiveExp(Player player, int i) {
 
-        MutableComponent txt = Component.literal("+" + (int) i + " опыта").withStyle(ChatFormatting.GREEN);
+        int given = i;
+        double multiplier = 1;
+
+        if (player instanceof ServerPlayer serverPlayer && !player.level().isClientSide()) {
+            given = GameMaster.get()
+                .tuneExp(serverPlayer, i);
+            if (i > 0) {
+                multiplier = (double) given / (double) i;
+            }
+        }
+
+        String text = "+" + given + " опыта";
+
+        boolean showMultiplier = multiplier != 1
+            && GameMaster.isActive()
+            && GameMaster.get()
+            .config().show_multiplier_in_actionbar;
+
+        if (showMultiplier) {
+            text += " x" + GameMaster.fmt(multiplier);
+        }
+
+        MutableComponent txt = Component.literal(text).withStyle(ChatFormatting.GREEN);
         OnScreenMessageUtils.sendMessage((ServerPlayer) player, txt, ClientboundTitleCompatPacket.Type.ACTIONBAR);
 
-        setExp(exp + i);
+        setExp(exp + given);
 
         while (exp >= this.getExpRequiredForLevelUp() && this.CheckIfCanLevelUp() && this.CheckLevelCap()) {
             this.LevelUp(player);
         }
         this.syncToClient(player);
-        return i;
+        return given;
     }
 
     public boolean CheckIfCanLevelUp() {

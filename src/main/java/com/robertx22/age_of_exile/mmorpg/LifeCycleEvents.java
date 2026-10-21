@@ -1,5 +1,6 @@
 package com.robertx22.age_of_exile.mmorpg;
 
+import com.robertx22.age_of_exile.gamemaster.GameMasterEvents;
 import com.robertx22.age_of_exile.mmorpg.registers.server.CommandRegister;
 import com.robertx22.age_of_exile.uncommon.testing.TestManager;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.LevelUtils;
@@ -14,6 +15,8 @@ public class LifeCycleEvents {
     static boolean regenDefault = true;
 
     public static void register() {
+
+        GameMasterEvents.register();
 
         ForgeEvents.registerForgeEvent(FMLServerStartingEvent.class, event -> {
             if (MMORPG.RUN_DEV_TOOLS) {
