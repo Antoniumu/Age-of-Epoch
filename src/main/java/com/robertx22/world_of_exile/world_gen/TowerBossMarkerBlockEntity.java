@@ -1,6 +1,7 @@
 package com.robertx22.world_of_exile.world_gen;
 
 import com.robertx22.age_of_exile.mmorpg.registers.common.SlashBlockEntities;
+import com.robertx22.forge_compat.blocks.ITickableBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -8,12 +9,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
-public class TowerBossMarkerBlockEntity extends BlockEntity {
+public class TowerBossMarkerBlockEntity extends BlockEntity implements ITickableBlockEntity {
 
     public boolean restoreCampfire = false;
 
     public TowerBossMarkerBlockEntity(BlockPos pos, BlockState state) {
         super(SlashBlockEntities.TOWER_BOSS_MARKER.get(), pos, state);
+    }
+
+    @Override
+    public void tick() {
+        serverTick();
     }
 
     public void serverTick() {
