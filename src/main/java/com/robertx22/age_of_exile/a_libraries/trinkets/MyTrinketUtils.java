@@ -1,5 +1,6 @@
 package com.robertx22.age_of_exile.a_libraries.trinkets;
 
+import com.robertx22.age_of_exile.a_libraries.trinkets.interfaces.ITrinketType;
 import com.robertx22.age_of_exile.a_libraries.trinkets.interfaces.INecklace;
 import com.robertx22.age_of_exile.a_libraries.trinkets.interfaces.IRing;
 import com.robertx22.age_of_exile.database.data.gear_slots.GearSlot;
