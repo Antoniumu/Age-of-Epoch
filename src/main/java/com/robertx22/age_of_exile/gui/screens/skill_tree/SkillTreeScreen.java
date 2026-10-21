@@ -552,7 +552,19 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
         if ((topHint == null || topHint.isEmpty()) && school != null && playerData != null && playerData.talents != null) {
             if (playerData.talents.getSchool(school).getAllocatedPoints(school).isEmpty()
                 && playerData.talents.hasFreePoints(Load.Unit(mc.player), this.schoolType)) {
-                topHint = "Выберите один из 6 начальных путей в центре древа";
+
+                // сколько в этом древе стартовых узлов (в «Божественном» их два: некромант и призыватель)
+                int entryCount = 0;
+                for (String perkId : school.calcData.perks.values()) {
+                    Perk entryPerk = ExileDB.Perks().isRegistered(perkId) ? ExileDB.Perks().get(perkId) : null;
+                    if (entryPerk != null && entryPerk.is_entry) {
+                        entryCount++;
+                    }
+                }
+
+                topHint = entryCount > 0
+                    ? "Выберите один из " + entryCount + " начальных путей этого древа"
+                    : "Выберите начальный узел этого древа";
                 hintColor = com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.GOLD);
             }
         }
