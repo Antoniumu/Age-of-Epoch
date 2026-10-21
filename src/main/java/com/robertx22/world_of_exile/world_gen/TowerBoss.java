@@ -44,7 +44,7 @@ public final class TowerBoss {
 
     public static final String TAG = "aoe_tower_boss";
     private static final String HOME_PREFIX = "aoe_tower_home:";
-    private static final int LEASH = 5;
+    private static final int LEASH = 12;
     private static final int SCAN_RADIUS_CHUNKS = 3;
 
     private static final Set<BlockPos> SPAWNING = ConcurrentHashMap.newKeySet();
@@ -186,14 +186,20 @@ public final class TowerBoss {
         double dx = entity.getX() - (home.getX() + 0.5D);
         double dz = entity.getZ() - (home.getZ() + 0.5D);
         boolean outside = dx * dx + dz * dz > (LEASH * LEASH)
-            || entity.getY() < home.getY() - 1.0D
-            || entity.getY() > home.getY() + 3.5D;
+            || entity.getY() < home.getY() - 4.0D
+            || entity.getY() > home.getY() + 5.0D;
         if (outside) {
             entity.teleportTo(home.getX() + 0.5D, home.getY(), home.getZ() + 0.5D);
             entity.setDeltaMovement(Vec3.ZERO);
             entity.resetFallDistance();
             if (entity instanceof Mob mob) {
                 mob.getNavigation().stop();
+            }
+        }
+        if (entity instanceof Mob mob && (mob.getTarget() == null || !mob.getTarget().isAlive())) {
+            var nearest = entity.level().getNearestPlayer(entity, LEASH + 4.0D);
+            if (nearest != null && !nearest.isSpectator() && !nearest.isCreative()) {
+                mob.setTarget(nearest);
             }
         }
         if ((entity.tickCount % 40) == 0) {
@@ -249,7 +255,7 @@ public final class TowerBoss {
             try {
                 var follow = mob.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.FOLLOW_RANGE);
                 if (follow != null) {
-                    follow.setBaseValue(LEASH + 2.0D);
+                    follow.setBaseValue(24.0D);
                 }
             } catch (Exception ignored) {
             }
@@ -280,10 +286,17 @@ public final class TowerBoss {
 
     private static BlockPos findAir(ServerLevel level, BlockPos pos) {
         BlockPos[] candidates = new BlockPos[] {
-            pos, pos.above(), pos.north(), pos.south(), pos.east(), pos.west(),
-            pos.above().north(), pos.above().south(), pos.above().east(), pos.above().west(),
-            pos.below()
+            pos, pos.below(), pos.above(), pos.north(), pos.south(), pos.east(), pos.west(),
+            pos.below().north(), pos.below().south(), pos.below().east(), pos.below().west(),
+            pos.above().north(), pos.above().south(), pos.above().east(), pos.above().west()
         };
+        for (BlockPos candidate : candidates) {
+            if (level.getBlockState(candidate).isAir()
+                && level.getBlockState(candidate.above()).isAir()
+                && !level.getBlockState(candidate.below()).isAir()) {
+                return candidate;
+            }
+        }
         for (BlockPos candidate : candidates) {
             if (level.getBlockState(candidate).isAir() && level.getBlockState(candidate.above()).isAir()) {
                 return candidate;
