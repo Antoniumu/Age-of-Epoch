@@ -134,6 +134,10 @@ if (Get-Command java -ErrorAction SilentlyContinue) {
 Say '                   (Gradle and the probe use JAVA_HOME; PATH only matters for tools you run by hand)'
 Say ('Minecraft        : ' + $mcVersion)
 
+# JDK 25's zipfs trusts Files.isWritable(); when that lies, every jar write fails.
+# Only Java can report that value, so point at the check instead of guessing here.
+Say ('folder attrs     : ' + (Get-Item $ProjectDir).Attributes)
+Say '                   (Java''s Files.isWritable is what matters - run: build.bat jcheck)'
 $drive = (Get-Item $ProjectDir).PSDrive
 $freeMb = [math]::Round((Get-PSDrive $drive.Name).Free / 1MB)
 $script:Facts['FreeMb'] = $freeMb
@@ -298,9 +302,13 @@ if ($cpHasMc) {
         Say ''
         Say '       Known cause (JDK 25): the zip file system marks a freshly created jar'
         Say '       read-only when Files.isWritable() says false, then every write throws'
-        Say '       ReadOnlyFileSystemException. Usually antivirus / Controlled folder'
-        Say '       access; meanwhile the build can run with:'
-        Say '           build.bat singlejar client'
+        Say '       ReadOnlyFileSystemException. On some JDKs Files.isWritable() itself'
+        Say '       misreports (false for paths that are writable) - compare the JDKs on'
+        Say '       this machine with:'
+        Say '           build.bat jcheck'
+        Say '       If it is a real permission problem, exclude the project folder and'
+        Say '       GRADLE_USER_HOME in the antivirus. Until then: build.bat singlejar client'
+        Say '       (only useful when Files.isWritable is sane - jar processors use zipfs too)'
     } else {
         Say '       client.jar itself looks empty or truncated, so the merge had nothing to work with.'
         Say '       Delete the files above and re-run:  build.bat repair'
