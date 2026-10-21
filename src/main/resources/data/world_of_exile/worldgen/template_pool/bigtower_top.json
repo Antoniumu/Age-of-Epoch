@@ -1,0 +1,14 @@
+{
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "world_of_exile:blackstone_tower/middle/top",
+        "processors": "world_of_exile:tower_processor",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

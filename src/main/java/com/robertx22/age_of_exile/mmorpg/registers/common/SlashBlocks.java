@@ -1,6 +1,7 @@
 package com.robertx22.age_of_exile.mmorpg.registers.common;
 
 import com.robertx22.age_of_exile.dimension.spawner.ModSpawnerBlock;
+import com.robertx22.world_of_exile.world_gen.TowerBossMarkerBlock;
 import com.robertx22.age_of_exile.dimension.teleporter.TeleporterBlock;
 import com.robertx22.age_of_exile.dimension.teleporter.portal_block.PortalBlock;
 import com.robertx22.age_of_exile.mmorpg.registers.deferred_wrapper.Def;
@@ -26,6 +27,7 @@ public class SlashBlocks {
 
     public static RegObj<BlackHoleBlock> BLACK_HOLE = Def.block("black_hole", () -> new BlackHoleBlock());
     public static RegObj<ModSpawnerBlock> SPAWNER = Def.block("spawner", () -> new ModSpawnerBlock());
+    public static RegObj<TowerBossMarkerBlock> TOWER_BOSS_MARKER = Def.block("tower_boss_marker", () -> new TowerBossMarkerBlock());
     public static RegObj<TotemBlock> BLUE_TOTEM = Def.block("blue_totem", () -> new TotemBlock());
     public static RegObj<TotemBlock> GREEN_TOTEM = Def.block("green_totem", () -> new TotemBlock());
     public static RegObj<TotemBlock> GUARD_TOTEM = Def.block("guard_totem", () -> new TotemBlock());

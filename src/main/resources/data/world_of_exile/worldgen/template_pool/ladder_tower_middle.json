@@ -1,5 +1,5 @@
 {
-  "fallback": "minecraft:empty",
+  "fallback": "world_of_exile:ladder_tower_top",
   "elements": [
     {
       "weight": 2,
@@ -32,15 +32,6 @@
       "weight": 2,
       "element": {
         "location": "world_of_exile:ladder_tower/middle/web_halls0",
-        "processors": "world_of_exile:tower_processor",
-        "projection": "rigid",
-        "element_type": "minecraft:single_pool_element"
-      }
-    },
-    {
-      "weight": 1,
-      "element": {
-        "location": "world_of_exile:ladder_tower/middle/topsmall",
         "processors": "world_of_exile:tower_processor",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"

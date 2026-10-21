@@ -1,19 +1,10 @@
 {
-  "fallback": "minecraft:empty",
+  "fallback": "world_of_exile:bigtower_top",
   "elements": [
     {
       "weight": 3,
       "element": {
         "location": "world_of_exile:blackstone_tower/middle/middle0",
-        "processors": "world_of_exile:tower_processor",
-        "projection": "rigid",
-        "element_type": "minecraft:single_pool_element"
-      }
-    },
-    {
-      "weight": 1,
-      "element": {
-        "location": "world_of_exile:blackstone_tower/middle/top",
         "processors": "world_of_exile:tower_processor",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"

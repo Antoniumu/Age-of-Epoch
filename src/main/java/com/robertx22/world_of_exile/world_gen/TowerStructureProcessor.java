@@ -68,6 +68,10 @@ public class TowerStructureProcessor implements StructureProcessor {
             }
         }
 
+        if (processedBlockInfo.state().is(Blocks.SOUL_CAMPFIRE)) {
+            return createBossMarker(processedBlockInfo.pos(), true);
+        }
+
         if (processedBlockInfo.state().is(BlockTags.ALL_SIGNS)) {
             String raw = processedBlockInfo.nbt() != null ? processedBlockInfo.nbt().toString() : "";
 
@@ -83,7 +87,7 @@ public class TowerStructureProcessor implements StructureProcessor {
             }
 
             if (raw.contains("[boss]")) {
-                return createBossSpawnerInfo(processedBlockInfo.pos());
+                return createBossMarker(processedBlockInfo.pos(), false);
             }
             if (raw.contains("[spawner]")) {
                 return createSpawnerInfo(processedBlockInfo.pos(), random);
@@ -100,6 +104,15 @@ public class TowerStructureProcessor implements StructureProcessor {
         }
 
         return processedBlockInfo;
+    }
+
+    private static StructureTemplate.StructureBlockInfo createBossMarker(BlockPos pos, boolean restoreCampfire) {
+        CompoundTag data = new CompoundTag();
+        data.putBoolean("restore_campfire", restoreCampfire);
+        CompoundTag tag = new CompoundTag();
+        tag.putString("id", "mmorpg:tower_boss_marker");
+        tag.put("AgeOfEpochData", data);
+        return new StructureTemplate.StructureBlockInfo(pos, SlashBlocks.TOWER_BOSS_MARKER.get().defaultBlockState(), tag);
     }
 
     private static StructureTemplate.StructureBlockInfo createChestInfo(BlockPos pos, String lootTable, RandomSource random) {

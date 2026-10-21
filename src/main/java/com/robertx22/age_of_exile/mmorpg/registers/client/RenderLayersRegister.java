@@ -19,6 +19,7 @@ public class RenderLayersRegister {
 
         ItemBlockRenderTypes.setRenderLayer(SlashBlocks.RUNEWORD.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(SlashBlocks.SPAWNER.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(SlashBlocks.TOWER_BOSS_MARKER.get(), RenderType.cutout());
 
     }
 }
