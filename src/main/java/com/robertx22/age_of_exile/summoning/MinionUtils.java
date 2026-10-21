@@ -9,6 +9,7 @@ import com.robertx22.library_of_exile.utils.RandomUtils;
 import com.robertx22.library_of_exile.utils.SoundUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
@@ -16,6 +17,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -27,7 +29,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -40,8 +44,9 @@ import java.util.UUID;
  * <li><b>Призыватель</b> — держит рядом стаю зверей ({@link #summonBeast}), лимит:
  * {@link SummonStat#MAX_BEAST_MINIONS}, вид зверя выбирается перком (волки / медведь / мамонт).</li>
  * </ul>
- * Прислужник помечается тегами сущности (они же пишутся в NBT и переживают перезаход):
- * {@link #TAG}, владелец, время исчезновения и вид. Сила прислужника — это характеристики хозяина
+ * Прислужник помечается тегами сущности (в MC 26.3 читаются через {@code entityTags()}, пишутся —
+ * {@code addTag}/{@code removeTag}; они же попадают в NBT и переживают перезаход): {@link #TAG},
+ * владелец, время исчезновения и вид. Сила прислужника — это характеристики хозяина
  * ({@link SummonStat}), которые навешиваются модификаторами атрибутов при призыве.
  */
 public class MinionUtils {
@@ -97,21 +102,27 @@ public class MinionUtils {
 
     public static boolean isMinion(LivingEntity en) {
         try {
-            return en != null && en.getTags()
+            return en != null && en.entityTags()
                 .contains(TAG);
         } catch (Exception e) {
             return false;
         }
     }
 
-    private static String tagValue(LivingEntity en, String prefix) {
+    /** Теги сущности в MC 26.3 читаются методом {@code entityTags()}. */
+    private static Set<String> tags(LivingEntity en) {
         try {
-            for (String tag : en.getTags()) {
-                if (tag.startsWith(prefix)) {
-                    return tag.substring(prefix.length());
-                }
-            }
+            return en.entityTags();
         } catch (Exception e) {
+            return Collections.emptySet();
+        }
+    }
+
+    private static String tagValue(LivingEntity en, String prefix) {
+        for (String tag : tags(en)) {
+            if (tag.startsWith(prefix)) {
+                return tag.substring(prefix.length());
+            }
         }
         return null;
     }
@@ -231,16 +242,32 @@ public class MinionUtils {
         return null;
     }
 
+    /**
+     * Тип сущности из реестра.
+     * <p>
+     * В MC 26.3 ванильные типы лежат в {@link EntityTypes}, и константы есть не для каждого моба —
+     * чего нет, достаём из {@link BuiltInRegistries} по идентификатору (тот же способ, что и в
+     * {@code DungeonMobList.spawnBoss}).
+     */
+    private static EntityType<?> vanillaType(String path, EntityType<?> fallback) {
+        try {
+            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse("minecraft:" + path));
+            return type != null ? type : fallback;
+        } catch (Exception e) {
+            return fallback;
+        }
+    }
+
     private static EntityType<?> beastType(Kind kind) {
         switch (kind) {
             case BEAR:
-                return EntityType.POLAR_BEAR;
+                return EntityTypes.POLAR_BEAR;
             case MAMMOTH:
                 // самого мамонта в ванили нет — берём самое крупное боевое животное
-                return EntityType.RAVAGER;
+                return vanillaType("ravager", EntityTypes.POLAR_BEAR);
             case WOLF:
             default:
-                return EntityType.WOLF;
+                return EntityTypes.WOLF;
         }
     }
 
@@ -253,18 +280,18 @@ public class MinionUtils {
         }
 
         List<EntityType<?>> list = new ArrayList<>();
-        list.add(EntityType.ZOMBIE);
-        list.add(EntityType.SKELETON);
+        list.add(EntityTypes.ZOMBIE);
+        list.add(EntityTypes.SKELETON);
 
         if (lvl >= 10) {
-            list.add(EntityType.HUSK);
-            list.add(EntityType.STRAY);
+            list.add(vanillaType("husk", EntityTypes.ZOMBIE));
+            list.add(EntityTypes.STRAY);
         }
         if (lvl >= 25) {
-            list.add(EntityType.DROWNED);
+            list.add(EntityTypes.DROWNED);
         }
         if (lvl >= 40) {
-            list.add(EntityType.WITHER_SKELETON);
+            list.add(EntityTypes.WITHER_SKELETON);
         }
 
         return list.get(RandomUtils.RandomRange(0, list.size() - 1));
@@ -291,8 +318,8 @@ public class MinionUtils {
 
             Mob mob = (Mob) created;
 
-            mob.snapTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, world.random.nextFloat() * 360F, 0F);
-            mob.setPersistenceRequired();
+            mob.snapTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, world.getRandom()
+                .nextFloat() * 360F, 0F);
 
             try {
                 mob.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), EntitySpawnReason.MOB_SUMMONED, null);
@@ -300,6 +327,10 @@ public class MinionUtils {
                 // сигнатура finalizeSpawn differs between versions, прислужник и без неё рабочий
             }
 
+            mob.setPersistenceRequired();
+
+            // теги сущности попадают в её NBT, поэтому прислужник переживает перезаход на сервер;
+            // если хозяина нет в сети, первый же тик его развеет (см. onMinionTick)
             mob.addTag(TAG);
             setTag(mob, OWNER_PREFIX, owner.getUUID()
                 .toString());
@@ -328,7 +359,11 @@ public class MinionUtils {
                 return null;
             }
 
-            SoundUtils.playSound(mob, kind == Kind.UNDEAD ? SoundEvents.EVOKER_PREPARE_SUMMON : SoundEvents.WOLF_HOWL);
+            if (kind == Kind.UNDEAD) {
+                SoundUtils.playSound(mob, SoundEvents.EVOKER_PREPARE_SUMMON);
+            } else {
+                SoundUtils.playSound(mob, SoundEvents.RAVAGER_ROAR);
+            }
 
             return mob;
         } catch (Exception e) {
