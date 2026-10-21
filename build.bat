@@ -10,6 +10,8 @@ rem    build.bat                assemble the mod  (gradlew build)
 rem    build.bat clean          clean, then assemble
 rem    build.bat runClient      launch the development client
 rem    build.bat getjdk         download Temurin JDK 25 into .jdks\
+rem    build.bat repair         wipe Loom/Minecraft caches, then rebuild from scratch
+rem    build.bat diagnose       write build-diagnose.txt (why compileJava cannot see net.minecraft)
 rem    build.bat <task> ...     any other Gradle task is passed through
 rem
 rem  Environment (all optional):
@@ -24,6 +26,8 @@ rem Gradle caches stay inside the project by default (see .gitignore)
 if not defined GRADLE_USER_HOME set "GRADLE_USER_HOME=%PROJECT_DIR%\.gradle-home"
 
 if /i "%~1"=="getjdk" goto :getjdk
+if /i "%~1"=="repair" goto :repair
+if /i "%~1"=="diagnose" goto :diagnose
 
 set "ORIGINAL_JAVA_HOME=%JAVA_HOME%"
 call :find_jdk
@@ -58,6 +62,10 @@ echo   BUILD FAILED (exit code %RC%)
 if not "%JAVA_MAJOR%"=="" if %JAVA_MAJOR% LSS 25 echo   Note: the build used Java %JAVA_MAJOR%, Minecraft 26.3 needs Java 25+.
 echo   Full log: run the same command with more output, e.g.
 echo       build.bat build --stacktrace
+echo.
+echo   Errors like "package net.minecraft.* does not exist" (with a NullPointerException
+echo   in TypeElement.getNestingKind) are a broken Loom cache, not the sources:
+echo       build.bat repair
 goto :done
 
 rem ----------------------------------------------------------------------
@@ -89,6 +97,69 @@ if errorlevel 1 (
 ) else (
     echo   Done. Run build.bat again.
     set "RC=0"
+)
+goto :done
+
+rem ----------------------------------------------------------------------
+:repair
+rem  Removes the caches whose corruption makes javac lose the Minecraft
+rem  classpath ("package net.minecraft.* does not exist" in every file,
+rem  followed by a NullPointerException in the mixin annotation processor).
+rem ----------------------------------------------------------------------
+echo.
+echo   Repairing the build caches ...
+echo.
+call :find_jdk
+if not defined JAVA_HOME goto :no_jdk
+
+echo   JDK    : %JAVA_HOME%  (Java %JAVA_MAJOR%)
+echo   Caches : %GRADLE_USER_HOME%
+echo.
+call :wipe "%PROJECT_DIR%\.gradle\loom-cache"
+call :wipe "%GRADLE_USER_HOME%\caches\fabric-loom"
+call :wipe "%GRADLE_USER_HOME%\caches\modules-2\files-2.1\com.mojang"
+call :wipe "%GRADLE_USER_HOME%\caches\modules-2\files-2.1\net.minecraft"
+call :wipe "%GRADLE_USER_HOME%\caches\modules-2\files-2.1\net.fabricmc"
+echo.
+echo   gradlew build --refresh-dependencies
+echo.
+call "%PROJECT_DIR%\gradlew.bat" build --refresh-dependencies --no-problems-report
+set "RC=%ERRORLEVEL%"
+
+if not "%RC%"=="0" goto :failed
+
+call :list_jar
+echo.
+echo   BUILD SUCCESSFUL
+goto :done
+
+rem ----------------------------------------------------------------------
+rem  %1 = directory to delete (silently skipped when it does not exist)
+rem ----------------------------------------------------------------------
+:wipe
+if not exist "%~1" goto :eof
+echo   Removing %~1
+rmdir /s /q "%~1"
+goto :eof
+
+rem ----------------------------------------------------------------------
+:diagnose
+rem  Writes build-diagnose.txt: JDK/Gradle info, Loom cache content and the
+rem  resolved compile classpath, so it is obvious whether Minecraft is there.
+rem ----------------------------------------------------------------------
+echo.
+echo   Collecting build diagnostics ...
+echo.
+call :find_jdk
+if defined JAVA_HOME (echo   JDK    : %JAVA_HOME%  (Java %JAVA_MAJOR%)) else (echo   JDK    : JDK 25 not found)
+echo   Caches : %GRADLE_USER_HOME%
+echo.
+powershell -NoProfile -ExecutionPolicy Bypass -File "%PROJECT_DIR%\tools\diagnose-build.ps1" -ProjectDir "%PROJECT_DIR%"
+set "RC=%ERRORLEVEL%"
+if not "%RC%"=="0" (
+    echo.
+    echo   Diagnose failed. Run it manually to see the error:
+    echo       powershell -ExecutionPolicy Bypass -File tools\diagnose-build.ps1
 )
 goto :done
 

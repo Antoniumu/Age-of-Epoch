@@ -52,6 +52,83 @@ tasks.register('dshClasspath') {
     }
 }
 
+// ---------------------------------------------------------------------------
+// Fail fast when Loom's Minecraft artifact is missing from the compile classpath.
+//
+// Loom puts the remapped Minecraft jar on the compile classpath as a plain file
+// ("minecraft-merged-...jar"). When a Gradle/Loom cache is corrupted the jar
+// disappears or shrinks to an empty stub, and javac then prints ~100 pointless
+// "package net.minecraft.* does not exist" errors in perfectly fine sources,
+// followed by a NullPointerException inside the mixin annotation processor
+// (it looks up Mixin targets and gets null back).
+//
+// This task turns that wall of noise into one line telling what to do.
+// It never blocks a healthy build: unless it can prove that no jar on the
+// classpath contains Minecraft classes, it stays silent.
+// Skip it with -PskipMcCheck.
+// ---------------------------------------------------------------------------
+def jarHasMinecraftClasses = { File jar ->
+    try {
+        def zip = new java.util.zip.ZipFile(jar)
+        try {
+            return zip.getEntry('net/minecraft/resources/Identifier.class') != null
+                || zip.getEntry('net/minecraft/ChatFormatting.class') != null
+                || zip.getEntry('net/minecraft/server/MinecraftServer.class') != null
+        } finally {
+            zip.close()
+        }
+    } catch (Throwable ignored) {
+        return false
+    }
+}
+
+tasks.register('checkMinecraftClasspath') {
+    group = 'verification'
+    description = 'Fails early, with an actionable message, when the Minecraft jar is missing from the compile classpath.'
+    def classpath = configurations.compileClasspath
+    def checkEnabled = !project.hasProperty('skipMcCheck')
+    def hasMcClasses = jarHasMinecraftClasses
+    doLast {
+        if (!checkEnabled) {
+            logger.lifecycle('checkMinecraftClasspath skipped (-PskipMcCheck)')
+            return
+        }
+        def jars = classpath.files.findAll { it.isFile() && it.name.toLowerCase().endsWith('.jar') }
+        def mcNamed = jars.findAll { it.name.toLowerCase().contains('minecraft') }
+        def found = mcNamed.find { hasMcClasses(it) }
+        if (found == null) {
+            // Slow fallback: some Loom versions name the artifact differently.
+            found = jars.find { hasMcClasses(it) }
+        }
+        if (found == null) {
+            def detail
+            if (mcNamed.isEmpty()) {
+                detail = 'no jar with "minecraft" in its name is on the compile classpath at all'
+            } else {
+                detail = 'the Minecraft jar(s) on the compile classpath are empty or truncated: ' +
+                    mcNamed.collect { it.name + ' (' + it.length() + ' bytes)' }.join(', ')
+            }
+            throw new GradleException(
+                'Minecraft classes are missing from the compile classpath (' + detail + ').\n' +
+                'This is a broken Loom/Gradle cache, not a source problem - the\n' +
+                '"package net.minecraft.* does not exist" errors below are bogus.\n' +
+                '\n' +
+                'Fix it with:\n' +
+                '    build.bat repair      (wipes the Loom/Minecraft caches, rebuilds with --refresh-dependencies)\n' +
+                'Diagnose it with:\n' +
+                '    build.bat diagnose    (writes build-diagnose.txt)\n' +
+                'Bypass this check with:\n' +
+                '    -PskipMcCheck'
+            )
+        }
+        logger.lifecycle('Minecraft on compile classpath: ' + found.name + ' (' + (found.length() / 1024 / 1024) + ' MB)')
+    }
+}
+
+tasks.named('compileJava') {
+    dependsOn 'checkMinecraftClasspath'
+}
+
 java {
     withSourcesJar()
     sourceCompatibility = JavaVersion.VERSION_25
