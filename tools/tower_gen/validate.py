@@ -93,6 +93,27 @@ def check_nbt(path):
         return
     size = [int(v) for v in root["size"]]
     palette = root["palette"]
+    # Do not accept the old keys even though an NBT parser can read them.
+    # 26.3 resolves a palette entry without `id` to AIR; DataVersion 5023
+    # prevents the legacy data fixer from rescuing mislabeled templates.
+    if int(root.get("DataVersion", -1)) != 5023:
+        fail(f"{path}: expected DataVersion 5023 for the 26.3 palette schema")
+        return
+    invalid_palette = False
+    for index, state in enumerate(palette):
+        if not isinstance(state.get("id"), nbtlib.String) or not str(state["id"]).startswith("minecraft:"):
+            fail(f"{path}: palette {index} missing valid 26.3 block id (would load as air)")
+            invalid_palette = True
+        if "Name" in state or "Properties" in state:
+            fail(f"{path}: palette {index} uses legacy Name/Properties with current DataVersion")
+            invalid_palette = True
+        props = state.get("properties")
+        if props is not None and (not isinstance(props, nbtlib.Compound)
+                                  or any(not isinstance(v, nbtlib.String) for v in props.values())):
+            fail(f"{path}: palette {index} properties must be a compound of strings")
+            invalid_palette = True
+    if invalid_palette:
+        return
     blocks = root["blocks"]
     positions = set()
     for block in blocks:
@@ -105,15 +126,15 @@ def check_nbt(path):
         state = int(block["state"])
         if state < 0 or state >= len(palette):
             fail(f"{path}: palette index {state} out of range")
-        name = str(palette[state]["Name"])
+            return
     if len(positions) != size[0] * size[1] * size[2]:
         fail(f"{path}: missing explicit air cells: terrain can fill the tower interior")
-    states = {tuple(int(v) for v in block["pos"]): str(palette[int(block["state"])]["Name"])
+    states = {tuple(int(v) for v in block["pos"]): str(palette[int(block["state"])]["id"])
               for block in blocks}
 
     names = {}
     for block in blocks:
-        name = str(palette[int(block["state"])]["Name"])
+        name = str(palette[int(block["state"])]["id"])
         names.setdefault(name, []).append(block)
 
     # four rotation-invariant ladder columns
@@ -140,7 +161,7 @@ def check_nbt(path):
         if tag is None:
             fail(f"{path}: jigsaw without nbt")
             continue
-        orientation = str(palette[int(block["state"])]["Properties"]["orientation"])
+        orientation = str(palette[int(block["state"])].get("properties", {}).get("orientation", ""))
         expected_orientation = "down_north" if int(block["pos"][1]) == 0 else "up_east"
         if orientation != expected_orientation:
             fail(f"{path}: connector has wrong orientation {orientation}")

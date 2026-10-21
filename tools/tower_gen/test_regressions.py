@@ -90,14 +90,39 @@ class TemplateRegressionTests(unittest.TestCase):
     def test_complete_template_passes(self):
         self.assertEqual(self.check(), "")
 
+    def test_current_version_with_legacy_palette_is_rejected(self):
+        # Reproduce the shipped bug: valid NBT, current version, all blocks
+        # silently decoded as AIR by the game's id-only palette reader.
+        for state in self.nbt["palette"]:
+            state["Name"] = state.pop("id")
+            if "properties" in state:
+                state["Properties"] = state.pop("properties")
+        decoded = [str(state.get("id", "minecraft:air")) for state in self.nbt["palette"]]
+        self.assertEqual(set(decoded), {"minecraft:air"})
+        self.assertIn("would load as air", self.check())
+
+    def test_legacy_property_key_is_rejected_even_with_valid_id(self):
+        state = next(s for s in self.nbt["palette"] if str(s["id"]) == "minecraft:jigsaw")
+        state["Properties"] = state.pop("properties")
+        self.assertIn("legacy Name/Properties", self.check())
+
+    def test_missing_connector_orientation_is_rejected(self):
+        state = next(s for s in self.nbt["palette"] if str(s["id"]) == "minecraft:jigsaw")
+        state.pop("properties")
+        self.assertIn("wrong orientation", self.check())
+
+    def test_wrong_data_version_is_rejected(self):
+        self.nbt["DataVersion"] = nbtlib.Int(2567)
+        self.assertIn("expected DataVersion 5023", self.check())
+
     def test_omitted_air_would_preserve_terrain(self):
         palette = self.nbt["palette"]
-        air = next(b for b in self.nbt["blocks"] if str(palette[int(b["state"])]["Name"]) == "minecraft:air")
+        air = next(b for b in self.nbt["blocks"] if str(palette[int(b["state"])]["id"]) == "minecraft:air")
         self.nbt["blocks"].remove(air)
         self.assertIn("explicit air", self.check())
 
     def test_floating_boss_platform_is_rejected(self):
-        air = next(i for i, state in enumerate(self.nbt["palette"]) if str(state["Name"]) == "minecraft:air")
+        air = next(i for i, state in enumerate(self.nbt["palette"]) if str(state["id"]) == "minecraft:air")
         floor = next(b for b in self.nbt["blocks"] if tuple(b["pos"]) == (8, 1, 12))
         floor["state"] = nbtlib.Int(air)
         self.assertIn("unsafe boss platform", self.check())
@@ -107,6 +132,36 @@ class TemplateRegressionTests(unittest.TestCase):
         head = next(b for b in self.nbt["blocks"] if tuple(b["pos"]) == (8, 3, 12))
         head["state"] = floor["state"]
         self.assertIn("obstructed boss headroom", self.check())
+
+
+class PaletteWireFormatTests(unittest.TestCase):
+    def test_writer_matches_26_3_vanilla_palette_keys(self):
+        # Expectations are literal 26.3 wire fields, not imported writer keys.
+        from nbt_writer import Structure
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "probe.nbt"
+            structure = Structure(3, 1, 1)
+            structure.put(0, 0, 0, "minecraft:stone_bricks")
+            structure.put(1, 0, 0, "minecraft:jigsaw", {"orientation": "up_east"})
+            structure.save(path)
+            nbt = nbtlib.load(path)
+        self.assertEqual(int(nbt["DataVersion"]), 5023)
+        self.assertEqual(nbt["palette"].unpack(), [
+            {"id": "minecraft:stone_bricks"},
+            {"id": "minecraft:jigsaw", "properties": {"orientation": "up_east"}},
+            {"id": "minecraft:air"},
+        ])
+
+    def test_every_shipped_piece_loads_solid_blocks_and_connectors_by_id(self):
+        paths = list((DATA / "structure/towers").rglob("*.nbt"))
+        self.assertEqual(len(paths), 96)
+        for path in paths:
+            with self.subTest(piece=path.relative_to(DATA)):
+                nbt = nbtlib.load(path)
+                palette = [str(state.get("id", "minecraft:air")) for state in nbt["palette"]]
+                decoded = [palette[int(block["state"])] for block in nbt["blocks"]]
+                self.assertGreater(sum(name != "minecraft:air" for name in decoded), 100)
+                self.assertEqual(decoded.count("minecraft:jigsaw"), 1 if path.stem.startswith("top") else 2)
 
 
 class SourceSafetyContracts(unittest.TestCase):
