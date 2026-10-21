@@ -7,6 +7,8 @@ import com.robertx22.age_of_exile.capability.player.RPGPlayerData;
 import com.robertx22.age_of_exile.capability.player.data.StatPointsData;
 import com.robertx22.age_of_exile.database.OptScaleExactStat;
 import com.robertx22.age_of_exile.database.data.game_balance_config.GameBalanceConfig;
+import com.robertx22.age_of_exile.database.data.gear_slots.GearSlot;
+import com.robertx22.age_of_exile.database.data.gear_types.bases.BaseGearType;
 import com.robertx22.age_of_exile.database.data.perks.Perk;
 import com.robertx22.age_of_exile.database.data.rarities.GearRarity;
 import com.robertx22.age_of_exile.database.data.rarities.MobRarity;
@@ -21,9 +23,11 @@ import com.robertx22.age_of_exile.database.data.talent_tree.TalentTree;
 import com.robertx22.age_of_exile.database.registry.ExileDB;
 import com.robertx22.age_of_exile.dimension.DimensionIds;
 import com.robertx22.age_of_exile.loot.blueprints.GearBlueprint;
+import com.robertx22.age_of_exile.loot.generators.util.GearCreationUtils;
 import com.robertx22.age_of_exile.mmorpg.registers.common.SlashBlocks;
 import com.robertx22.age_of_exile.mmorpg.registers.common.items.CurrencyItems;
 import com.robertx22.age_of_exile.mmorpg.registers.common.items.SlashItems;
+import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
 import com.robertx22.age_of_exile.saveclasses.perks.TalentsData;
 import com.robertx22.age_of_exile.saveclasses.stat_soul.StatSoulData;
 import com.robertx22.age_of_exile.saveclasses.unit.ResourceType;
@@ -369,6 +373,8 @@ public class SimulationManager {
         rpgData.talents.bonus_points += 50;
         rpgData.talents.reset_points = 999;
 
+        Load.spells(player).getSpellsData().bonus_spell_points += 50;
+
         EntityData unitData = Load.Unit(player);
         unitData.getCustomExactStats().addExactStat(
             "sim_bonus_all_stats",
@@ -381,7 +387,7 @@ public class SimulationManager {
         healPlayerFull(player);
         syncAll(player);
 
-        player.sendSystemMessage(Component.literal("§a[Полигон] Выдано +50 бонусных очков талантов, 999 очков сброса и +50 ко всем базовым характеристикам!"));
+        player.sendSystemMessage(Component.literal("§a[Полигон] Выдано +50 бонусных очков талантов, +50 очков заклинаний, 999 очков сброса и +50 ко всем базовым характеристикам!"));
     }
 
     public static void resetBuildInSimulation(ServerPlayer player) {
@@ -396,6 +402,7 @@ public class SimulationManager {
         Load.spells(player).getSpellsData().allocated_lvls.clear();
         Load.spells(player).getSpellsData().schools.clear();
         Load.spells(player).getSpellsData().hotbars.clear();
+        Load.spells(player).getSpellsData().bonus_spell_points = 0;
 
         EntityData unitData = Load.Unit(player);
         unitData.getCustomExactStats().removeExactStat("sim_bonus_all_stats");
@@ -409,6 +416,33 @@ public class SimulationManager {
     }
 
     private record KitEntry(String slotHint, Item item) {
+    }
+
+    private static BaseGearType resolveGearTypeForKit(String slotHint, Item item) {
+        if (slotHint != null && !slotHint.isEmpty()) {
+            if (ExileDB.GearTypes().isRegistered(slotHint)) {
+                return ExileDB.GearTypes().get(slotHint);
+            }
+            for (BaseGearType g : ExileDB.GearTypes().getList()) {
+                if (slotHint.equals(g.GUID()) || slotHint.equals(g.gear_slot)) {
+                    return g;
+                }
+            }
+        }
+        if (item != null && item != Items.AIR) {
+            GearSlot slot = GearSlot.getSlotOf(item);
+            if (slot != null) {
+                if (ExileDB.GearTypes().isRegistered(slot.GUID())) {
+                    return ExileDB.GearTypes().get(slot.GUID());
+                }
+                for (BaseGearType g : ExileDB.GearTypes().getList()) {
+                    if (slot.GUID().equals(g.gear_slot) || slot.GUID().equals(g.GUID())) {
+                        return g;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -460,34 +494,34 @@ public class SimulationManager {
         String kitName;
         if (kitType == 0) {
             kitName = "Воин (Тяжёлая броня + Меч + Топор + Щит)";
-            entries.add(new KitEntry("plate_helmet", Items.DIAMOND_HELMET));
-            entries.add(new KitEntry("plate_chest", Items.DIAMOND_CHESTPLATE));
-            entries.add(new KitEntry("plate_pants", Items.DIAMOND_LEGGINGS));
-            entries.add(new KitEntry("plate_boots", Items.DIAMOND_BOOTS));
+            entries.add(new KitEntry("helmet", Items.DIAMOND_HELMET));
+            entries.add(new KitEntry("chest", Items.DIAMOND_CHESTPLATE));
+            entries.add(new KitEntry("pants", Items.DIAMOND_LEGGINGS));
+            entries.add(new KitEntry("boots", Items.DIAMOND_BOOTS));
             entries.add(new KitEntry("sword", Items.DIAMOND_SWORD));
             entries.add(new KitEntry("axe", Items.DIAMOND_AXE));
-            entries.add(new KitEntry("armor_shield", Items.SHIELD));
+            entries.add(new KitEntry("shield", Items.SHIELD));
         } else if (kitType == 1) {
             kitName = "Охотник (Уклонение + Лук + Арбалет)";
-            entries.add(new KitEntry("leather_helmet", Items.LEATHER_HELMET));
-            entries.add(new KitEntry("leather_chest", Items.LEATHER_CHESTPLATE));
-            entries.add(new KitEntry("leather_pants", Items.LEATHER_LEGGINGS));
-            entries.add(new KitEntry("leather_boots", Items.LEATHER_BOOTS));
+            entries.add(new KitEntry("helmet", Items.LEATHER_HELMET));
+            entries.add(new KitEntry("chest", Items.LEATHER_CHESTPLATE));
+            entries.add(new KitEntry("pants", Items.LEATHER_LEGGINGS));
+            entries.add(new KitEntry("boots", Items.LEATHER_BOOTS));
             entries.add(new KitEntry("bow", Items.BOW));
             entries.add(new KitEntry("crossbow", Items.CROSSBOW));
-            entries.add(new KitEntry("dodge_shield", Items.SHIELD));
+            entries.add(new KitEntry("shield", Items.SHIELD));
         } else if (kitType == 2) {
             kitName = "Маг (Магический щит + Посох + Скипетр)";
             Item staffItem = SlashItems.GearItems.STAFFS.containsKey(VanillaMaterial.DIAMOND)
                 ? SlashItems.GearItems.STAFFS.get(VanillaMaterial.DIAMOND).get()
                 : Items.STICK;
-            entries.add(new KitEntry("cloth_helmet", Items.GOLDEN_HELMET));
-            entries.add(new KitEntry("cloth_chest", Items.GOLDEN_CHESTPLATE));
-            entries.add(new KitEntry("cloth_pants", Items.GOLDEN_LEGGINGS));
-            entries.add(new KitEntry("cloth_boots", Items.GOLDEN_BOOTS));
+            entries.add(new KitEntry("helmet", Items.GOLDEN_HELMET));
+            entries.add(new KitEntry("chest", Items.GOLDEN_CHESTPLATE));
+            entries.add(new KitEntry("pants", Items.GOLDEN_LEGGINGS));
+            entries.add(new KitEntry("boots", Items.GOLDEN_BOOTS));
             entries.add(new KitEntry("staff", staffItem));
             entries.add(new KitEntry("scepter", staffItem));
-            entries.add(new KitEntry("ms_shield", Items.SHIELD));
+            entries.add(new KitEntry("shield", Items.SHIELD));
         } else {
             kitName = "Бижутерия и Валюта (2 Кольца + Ожерелье + Души + Валюта)";
             Item ringItem = SlashItems.GearItems.RINGS.containsKey(VanillaMaterial.DIAMOND)
@@ -508,15 +542,24 @@ public class SimulationManager {
             if (ExileDB.GearRarities().isRegistered(bestRarity)) {
                 bp.rarity.set(ExileDB.GearRarities().get(bestRarity));
             }
-            ExileDB.GearTypes().getList().stream()
-                .filter(g -> g.GUID().contains(entry.slotHint()) || (g.gear_slot != null && g.gear_slot.contains(entry.slotHint())))
-                .findFirst()
-                .ifPresent(bp.gearItemSlot::set);
-            ItemStack stack = bp.createStack();
+            BaseGearType resolvedType = resolveGearTypeForKit(entry.slotHint(), entry.item());
+            if (resolvedType != null) {
+                bp.gearItemSlot.set(resolvedType);
+            }
+            GearItemData gearData = bp.createData();
+            gearData.lvl = lvl;
+            if (resolvedType != null) {
+                gearData.gear_type = resolvedType.GUID();
+            }
+            ItemStack stack = GearCreationUtils.CreateStack(gearData, entry.item());
             if (!stack.isEmpty()) {
                 PlayerUtils.giveItem(stack, player);
                 given++;
             }
+        }
+
+        if (kitType == 1) {
+            PlayerUtils.giveItem(new ItemStack(Items.ARROW, 64), player);
         }
 
         if (kitType == 3) {

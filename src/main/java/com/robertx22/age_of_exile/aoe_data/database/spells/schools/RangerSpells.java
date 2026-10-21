@@ -228,7 +228,7 @@ public class RangerSpells implements ExileRegistryInit {
             )
             .build();
 
-        SpellBuilder.of(MAKE_ARROWS, SpellConfiguration.Builder.nonInstant(10, 20 * 60 * 5, 80)
+        SpellBuilder.of(MAKE_ARROWS, SpellConfiguration.Builder.instant(10, 20 * 10)
                     .setScaleManaToPlayer(), "Produce Arrows",
                 Arrays.asList())
             .manualDesc("Produce a stack of arrows.")

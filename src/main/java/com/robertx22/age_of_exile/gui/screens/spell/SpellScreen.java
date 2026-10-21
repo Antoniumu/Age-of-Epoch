@@ -223,7 +223,27 @@ public class SpellScreen extends BaseScreen implements INamedScreen, ILeftRight 
                     } else {
                         setStatusMessage("Сначала изучите это заклинание!");
                     }
+                } else if (button == 1) {
+                    if (Load.spells(mc.player).getSpellsData().allocated_lvls.getOrDefault(spell.GUID(), 0) > 0) {
+                        Packets.sendToServer(new AllocateSpellPacket(currentSchool(), spell, AllocateSpellPacket.ACTION.REMOVE));
+                        setStatusMessage("Уровень навыка сброшен (-1)");
+                    } else {
+                        setStatusMessage("Этот навык ещё не изучен");
+                    }
                 } else {
+                    if (!Load.spells(mc.player).canLearn(currentSchool(), spell)) {
+                        if (Load.spells(mc.player).getFreeSpellPoints() < 1) {
+                            setStatusMessage("Нет свободных очков заклинаний! (ПКМ по изученному навыку — сбросить 1 ур.)");
+                        } else if (!currentSchool().isLevelEnoughForSpell(mc.player, spell)) {
+                            setStatusMessage("Недостаточный уровень персонажа для изучения этого навыка!");
+                        } else if (Load.spells(mc.player).getSpellsData().allocated_lvls.getOrDefault(spell.GUID(), 0) >= spell.getMaxLevel()) {
+                            setStatusMessage("Достигнут максимальный уровень навыка! Перетащите его на панель внизу.");
+                        } else {
+                            setStatusMessage("Можно изучать навыки максимум из 2 школ одновременно!");
+                        }
+                    } else {
+                        setStatusMessage("Навык изучен! Перетащите иконку на панель внизу для использования.");
+                    }
                     Packets.sendToServer(new AllocateSpellPacket(currentSchool(), spell, AllocateSpellPacket.ACTION.ALLOCATE));
                 }
             }

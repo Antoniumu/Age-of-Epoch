@@ -22,6 +22,8 @@ public class SpellsData {
     public HashMap<Integer, String> hotbars = new HashMap<>();
     @Store
     public Set<String> schools = new HashSet<>();
+    @Store
+    public int bonus_spell_points = 0;
 
     public void addToLevelsFromStat(String id, int num) {
         this.extra_lvls.put(id, extra_lvls.getOrDefault(id, 0) + num);
@@ -40,6 +42,23 @@ public class SpellsData {
         schools.add(school.GUID());
         int current = allocated_lvls.getOrDefault(synergy.GUID(), 0);
         allocated_lvls.put(synergy.GUID(), current + 1);
+    }
+
+    public boolean unlearnNode(String id, SpellSchool school) {
+        int current = allocated_lvls.getOrDefault(id, 0);
+        if (current <= 0) {
+            return false;
+        }
+        if (current == 1) {
+            allocated_lvls.remove(id);
+            hotbars.entrySet().removeIf(e -> id.equals(e.getValue()));
+        } else {
+            allocated_lvls.put(id, current - 1);
+        }
+        if (school != null && getAllocatedPointsInSchool(school) <= 0) {
+            schools.remove(school.GUID());
+        }
+        return true;
     }
 
     public int getLevelOf(String id) {
