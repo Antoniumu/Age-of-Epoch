@@ -88,7 +88,23 @@ public class ServerContainer {
 
         List<String> list = new ArrayList<>();
 
+        list.add("minecraft:wooden_sword:sword");
+        list.add("minecraft:stone_sword:sword");
+        list.add("minecraft:copper_sword:sword");
         list.add("minecraft:iron_sword:sword");
+        list.add("minecraft:golden_sword:sword");
+        list.add("minecraft:diamond_sword:sword");
+        list.add("minecraft:netherite_sword:sword");
+        list.add("minecraft:wooden_axe:axe");
+        list.add("minecraft:stone_axe:axe");
+        list.add("minecraft:copper_axe:axe");
+        list.add("minecraft:iron_axe:axe");
+        list.add("minecraft:golden_axe:axe");
+        list.add("minecraft:diamond_axe:axe");
+        list.add("minecraft:netherite_axe:axe");
+        list.add("minecraft:bow:bow");
+        list.add("minecraft:crossbow:crossbow");
+        list.add("minecraft:shield:shield");
 
         GEAR_COMPATS = b.comment("This is for modded gear that can't be automatically recognized by the mod." +
                 " If there's say a weapon like a staff in another mod, but this mod doesn't recognize it. " +

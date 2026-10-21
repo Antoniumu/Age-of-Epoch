@@ -44,17 +44,21 @@ public class GearSlot implements JsonExileRegistry<GearSlot>, IAutoGson<GearSlot
 
     public static GearSlot getSlotOf(Item item) {
 
-        if (CACHED.containsKey(item)) {
-            return CACHED.get(item);
+        GearSlot cached = CACHED.get(item);
+        if (cached != null) {
+            return cached;
         }
 
         if (ServerContainer.get()
             .getCompatMap()
             .containsKey(item)) {
-            CACHED.put(item, ServerContainer.get()
+            GearSlot compatSlot = ServerContainer.get()
                 .getCompatMap()
-                .get(item));
-            return CACHED.get(item);
+                .get(item);
+            if (compatSlot != null) {
+                CACHED.put(item, compatSlot);
+                return compatSlot;
+            }
         }
 
         for (GearSlot slot : ExileDB.GearSlots()
@@ -64,8 +68,6 @@ public class GearSlot implements JsonExileRegistry<GearSlot>, IAutoGson<GearSlot
                 return slot;
             }
         }
-
-        CACHED.put(item, null);
 
         return null;
     }
@@ -88,10 +90,8 @@ public class GearSlot implements JsonExileRegistry<GearSlot>, IAutoGson<GearSlot
         if (!CACHED_GEAR_SLOTS.containsKey(id)) {
             CACHED_GEAR_SLOTS.put(id, new HashMap<>());
         }
-        if (CACHED_GEAR_SLOTS.get(id)
-            .containsKey(item)) {
-            return CACHED_GEAR_SLOTS.get(id)
-                .get(item);
+        if (Boolean.TRUE.equals(CACHED_GEAR_SLOTS.get(id).get(item))) {
+            return true;
         }
 
         boolean bool = false;
@@ -108,7 +108,9 @@ public class GearSlot implements JsonExileRegistry<GearSlot>, IAutoGson<GearSlot
                     .equals(slot.GUID())) {
                     bool = true;
                 }
-            } else {
+            }
+
+            if (!bool) {
                 String itemPath = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item).getPath();
                 ItemStack defaultStack = item.getDefaultInstance();
 
@@ -135,28 +137,29 @@ public class GearSlot implements JsonExileRegistry<GearSlot>, IAutoGson<GearSlot
                 } else if (id.equals(GearSlots.SWORD)) {
                     bool = item instanceof SwordItem || itemPath.endsWith("_sword") || defaultStack.is(net.minecraft.tags.ItemTags.SWORDS);
                 } else if (id.equals(GearSlots.BOW)) {
-                    bool = item instanceof BowItem;
+                    bool = item instanceof BowItem || itemPath.equals("bow") || itemPath.endsWith("_bow");
                 } else if (id.equals(GearSlots.AXE)) {
                     bool = item instanceof AxeItem || item instanceof net.minecraft.world.item.AxeItem || itemPath.endsWith("_axe") || defaultStack.is(net.minecraft.tags.ItemTags.AXES);
                 } else if (id.equals(GearSlots.SHIELD)) {
-                    bool = item instanceof ShieldItem;
+                    bool = item instanceof ShieldItem || itemPath.equals("shield") || itemPath.endsWith("_shield");
                 } else if (id.equals(GearSlots.CROSBOW)) {
-                    bool = item instanceof CrossbowItem;
+                    bool = item instanceof CrossbowItem || itemPath.equals("crossbow") || itemPath.endsWith("_crossbow");
                 } else if (id.equals(GearSlots.SCEPTER) || id.equals(GearSlots.STAFF)) {
                     bool = item instanceof StaffWeapon;
                 } else if (id.equals(GearSlots.NECKLACE)) {
-                    bool = CuriosApi.getCuriosHelper()
-                        .getCurioTags(item)
-                        .contains(RefCurio.NECKLACE);
+                    bool = item instanceof com.robertx22.age_of_exile.vanilla_mc.items.gearitems.baubles.ItemNecklace
+                        || itemPath.contains("necklace")
+                        || CuriosApi.getCuriosHelper().getCurioTags(item).contains(RefCurio.NECKLACE);
                 } else if (id.equals(GearSlots.RING)) {
-                    bool = CuriosApi.getCuriosHelper()
-                        .getCurioTags(item)
-                        .contains(RefCurio.RING);
+                    bool = item instanceof com.robertx22.age_of_exile.vanilla_mc.items.gearitems.baubles.ItemRing
+                        || itemPath.contains("ring")
+                        || CuriosApi.getCuriosHelper().getCurioTags(item).contains(RefCurio.RING);
                 }
             }
 
-            CACHED_GEAR_SLOTS.get(id)
-                .put(item, bool);
+            if (bool) {
+                CACHED_GEAR_SLOTS.get(id).put(item, true);
+            }
 
             return bool;
 

@@ -63,11 +63,8 @@ public class ItemstackDataSaver<T> implements IGUID {
             return;
         }
 
-        if (!StackNBT.has(stack)) {
-            StackNBT.set(stack, new CompoundTag());
-        }
         if (object != null) {
-            LoadSave.Save(object, StackNBT.get(stack), id);
+            LoadSave.Save(object, StackNBT.getOrCreate(stack), id);
         }
 
     }

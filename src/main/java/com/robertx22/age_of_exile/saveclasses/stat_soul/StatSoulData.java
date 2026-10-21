@@ -77,7 +77,13 @@ public class StatSoulData implements ISalvagable, IRarity, ISettableLevelTier {
         if (gear != null) {
             Gear.Save(stack, gear);
         } else {
-            LoadSave.Save(this, StackNBT.getOrCreate(stack), StatSoulItem.TAG);
+            try {
+                GearItemData created = createGearData(stack);
+                StackNBT.getOrCreate(stack).remove(StatSoulItem.TAG);
+                Gear.Save(stack, created);
+            } catch (Exception e) {
+                LoadSave.Save(this, StackNBT.getOrCreate(stack), StatSoulItem.TAG);
+            }
         }
     }
 

@@ -53,6 +53,12 @@ public class OnItemInteract {
                     return;
                 }
 
+                if (player.level().isClientSide()) {
+                    ci.setReturnValue(ItemStack.EMPTY);
+                    ci.cancel();
+                    return;
+                }
+
                 SalvagedDustItem essence = (SalvagedDustItem) cursor.getItem();
 
                 SoundUtils.playSound(player, SoundEvents.ANVIL_USE, 1, 1);
@@ -63,6 +69,7 @@ public class OnItemInteract {
                     repair /= 5;
                 }
                 stack.setDamageValue(stack.getDamageValue() - repair);
+                slot.set(stack.copy());
                 success = true;
 
             } else if (cursor.getItem() instanceof StatSoulItem) {
@@ -70,16 +77,27 @@ public class OnItemInteract {
 
                 if (data != null) {
                     if (data.canInsertIntoStack(stack)) {
+                        if (player.level().isClientSide()) {
+                            ci.setReturnValue(ItemStack.EMPTY);
+                            ci.cancel();
+                            return;
+                        }
                         data.insertAsUnidentifiedOn(stack);
+                        slot.set(stack.copy());
                         success = true;
                     }
                 }
             } else if (cursor.getItem() instanceof ICurrencyItemEffect) {
                 LocReqContext ctx = new LocReqContext(player, stack, cursor);
                 if (ctx.effect.canItemBeModified(ctx)) {
+                    if (player.level().isClientSide()) {
+                        ci.setReturnValue(ItemStack.EMPTY);
+                        ci.cancel();
+                        return;
+                    }
                     ItemStack result = ctx.effect.modifyItem(ctx).stack;
                     stack.shrink(1);
-                    slot.set(result);
+                    slot.set(result.copy());
                     success = true;
                 }
             } else if (cursor.getItem() == SlashItems.SALVAGE_HAMMER.get()) {
@@ -90,11 +108,19 @@ public class OnItemInteract {
                 }
 
                 if (data != null) {
+                    if (player.level().isClientSide()) {
+                        ci.setReturnValue(ItemStack.EMPTY);
+                        ci.cancel();
+                        return;
+                    }
                     SoundUtils.playSound(player, SoundEvents.ANVIL_USE, 1, 1);
 
                     stack.shrink(1);
+                    slot.set(stack.copy());
                     data.getSalvageResult(stack)
                         .forEach(x -> PlayerUtils.giveItem(x, player));
+                    slot.setChanged();
+                    screen.broadcastChanges();
                     ci.setReturnValue(ItemStack.EMPTY);
                     ci.cancel();
                     return;
@@ -105,16 +131,24 @@ public class OnItemInteract {
 
                 if (gear != null) {
                     if (gear.sockets != null && gear.sockets.sockets.size() > 0) {
+                        if (player.level().isClientSide()) {
+                            ci.setReturnValue(ItemStack.EMPTY);
+                            ci.cancel();
+                            return;
+                        }
                         try {
                             ItemStack gem = new ItemStack(gear.sockets.sockets.get(0)
                                 .getGem()
                                 .getItem());
                             gear.sockets.sockets.remove(0);
                             Gear.Save(stack, gear);
+                            slot.set(stack.copy());
                             PlayerUtils.giveItem(gem, player);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        slot.setChanged();
+                        screen.broadcastChanges();
                         ci.setReturnValue(ItemStack.EMPTY);
                         ci.cancel();
                         return;
@@ -127,6 +161,8 @@ public class OnItemInteract {
                 SoundUtils.playSound(player.level(), player.blockPosition(), SoundEvents.ANVIL_USE, 1, 1);
 
                 cursor.shrink(1);
+                slot.setChanged();
+                screen.broadcastChanges();
                 ci.setReturnValue(ItemStack.EMPTY);
                 ci.cancel();
             }
