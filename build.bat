@@ -10,6 +10,7 @@ rem    build.bat                assemble the mod  (gradlew build)
 rem    build.bat clean          clean, then assemble
 rem    build.bat runClient      launch the development client
 rem    build.bat getjdk         download Temurin JDK 25 into .jdks\
+rem    build.bat cleanloom      wipe the Minecraft cache, then assemble
 rem    build.bat <task> ...     any other Gradle task is passed through
 rem
 rem  Environment (all optional):
@@ -24,6 +25,7 @@ rem Gradle caches stay inside the project by default (see .gitignore)
 if not defined GRADLE_USER_HOME set "GRADLE_USER_HOME=%PROJECT_DIR%\.gradle-home"
 
 if /i "%~1"=="getjdk" goto :getjdk
+if /i "%~1"=="cleanloom" goto :cleanloom
 
 set "ORIGINAL_JAVA_HOME=%JAVA_HOME%"
 call :find_jdk
@@ -75,6 +77,36 @@ echo     2) install Temurin 25 and set JAVA_HOME to it
 echo     3) drop an existing JDK 25 into .jdks\ or %%USERPROFILE%%\.jdks\
 echo.
 set "RC=1"
+goto :done
+
+rem ----------------------------------------------------------------------
+rem  Wipe the cache parts that hold Minecraft itself. Needed after an
+rem  interrupted download: compileJava then reports hundreds of
+rem  "package net.minecraft.* does not exist" errors and finally a
+rem  NullPointerException from the Mixin annotation processor.
+rem ----------------------------------------------------------------------
+:cleanloom
+echo.
+echo   Removing the Loom / Minecraft cache ...
+set "RC=0"
+if exist "%GRADLE_USER_HOME%\caches\fabric-loom" rmdir /s /q "%GRADLE_USER_HOME%\caches\fabric-loom"
+if exist "%GRADLE_USER_HOME%\caches\modules-2\files-2.1\com.mojang" rmdir /s /q "%GRADLE_USER_HOME%\caches\modules-2\files-2.1\com.mojang"
+echo   Done. Re-downloading (a cold cache is a few hundred MB).
+echo.
+rem shift does not update %*, so extra arguments are not forwarded here on purpose
+rem --refresh-dependencies: force a fresh look at the Minecraft artifacts
+set "TASKS=build --refresh-dependencies"
+call :find_jdk
+if not defined JAVA_HOME goto :no_jdk
+echo   JDK    : %JAVA_HOME%  (Java %JAVA_MAJOR%)
+echo   gradlew %TASKS%
+echo.
+call "%PROJECT_DIR%\gradlew.bat" %TASKS% --no-problems-report
+set "RC=%ERRORLEVEL%"
+if not "%RC%"=="0" goto :failed
+call :list_jar
+echo.
+echo   BUILD SUCCESSFUL
 goto :done
 
 rem ----------------------------------------------------------------------

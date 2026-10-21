@@ -42,6 +42,86 @@ tasks.withType(JavaCompile).configureEach {
     }
 }
 
+// ---------------------------------------------------------------------------
+//  Проверка, что Minecraft вообще попал в compileClasspath.
+//
+//  Типовой отказ выглядит так: сотня ошибок "package net.minecraft.* does not
+//  exist" и в конце NullPointerException из аннотационного процессора Mixin
+//  (он падает как раз на отсутствующих классах Minecraft). Настоящая причина —
+//  пустой или битый артефакт Minecraft в кэше Loom, а не ошибки в коде.
+//  Эта задача падает первой и говорит, что делать.
+// ---------------------------------------------------------------------------
+def dshHasMinecraftClasses = { File file ->
+    if (file == null) {
+        return false
+    }
+    // каталог с распакованными классами (Loom так тоже умеет)
+    if (file.isDirectory()) {
+        def classes = new File(file, 'net/minecraft')
+        return classes.isDirectory() && classes.list() != null && classes.list().length > 0
+    }
+    if (!file.isFile() || !file.name.toLowerCase().endsWith('.jar')) {
+        return false
+    }
+    def zip = null
+    try {
+        zip = new java.util.zip.ZipFile(file)
+        def entries = zip.entries()
+        int seen = 0
+        while (entries.hasMoreElements() && seen < 40000) {
+            if (entries.nextElement().name.startsWith('net/minecraft/')) {
+                return true
+            }
+            seen++
+        }
+        return false
+    } catch (Exception ignored) {
+        return false
+    } finally {
+        if (zip != null) {
+            try { zip.close() } catch (Exception ignored) { }
+        }
+    }
+}
+
+tasks.register('dshMcCheck') {
+    group = 'verification'
+    description = 'Проверяет, что jar-ы Minecraft с классами net/minecraft есть в compileClasspath.'
+    notCompatibleWithConfigurationCache('резолвит compileClasspath во время выполнения')
+    doLast {
+        def jars
+        try {
+            jars = configurations.compileClasspath.files.findAll { it.name.toLowerCase().endsWith('.jar') || it.isDirectory() }
+        } catch (Exception e) {
+            logger.warn("dshMcCheck: не удалось получить compileClasspath: ${e.message}")
+            return
+        }
+        def mcJars = jars.findAll { dshHasMinecraftClasses(it) }
+        if (mcJars.isEmpty()) {
+            def candidates = jars.findAll {
+                def n = it.name.toLowerCase()
+                n.contains('minecraft') || n.contains('loom') || n.contains('intermediary')
+            }
+            def list = candidates.isEmpty()
+                ? 'в classpath нет ни одного артефакта с "minecraft" в имени'
+                : 'найдены артефакты без классов Minecraft: ' + candidates.collect { it.name }.join(', ')
+            throw new GradleException(
+                "Minecraft не попал в compileClasspath (${list}).\n" +
+                "Обычно это недокачанный или битый кэш Loom. Закройте игру и выполните:\n" +
+                "    build.bat cleanloom\n" +
+                "    (вручную: rmdir /s /q .gradle-home\\caches\\fabric-loom, затем build --refresh-dependencies)\\n" +
+                "Если не помогло — запустите build.bat dshClasspath и посмотрите build/dsh-cp.txt,\n" +
+                "есть ли там minecraft-*.jar и сколько он весит (нормальный — десятки МБ)."
+            )
+        }
+        logger.lifecycle("dshMcCheck: классы Minecraft найдены в " + mcJars.collect { it.name }.join(', '))
+    }
+}
+
+tasks.named('compileJava').configure {
+    dependsOn 'dshMcCheck'
+}
+
 tasks.register('dshClasspath') {
     doLast {
         def buildDirFile = layout.buildDirectory.get().asFile

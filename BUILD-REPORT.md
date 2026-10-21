@@ -75,6 +75,7 @@ build.bat                 :: собрать мод
 build.bat clean           :: чистая сборка
 build.bat runClient       :: запустить клиент для проверки
 build.bat getjdk          :: скачать Temurin JDK 25 в .jdks (нужен только один раз)
+build.bat cleanloom       :: снести кэш Loom/Minecraft и пересобрать (см. 5b)
 ```
 
 Вручную:
@@ -124,3 +125,54 @@ javac -J-Xmx3G -Xmaxerrs 20000 -encoding UTF-8 --release 25 -proc:none `
 ```
 
 Задача `dshClasspath` и флаг `-PdshMaxErrs` — вспомогательные, добавлены в `build.gradle`.
+
+## 5b. `compileJava` падает: «package net.minecraft.* does not exist»
+
+Симптомы (типовой лог, Windows, JDK 25, Gradle 9.7.1, Loom 1.18):
+
+- `:compileJava FAILED`, сотни ошибок `package net.minecraft.network.chat does not exist`,
+  `package net.minecraft.resources does not exist`, `cannot find symbol: Player / ItemStack /
+  Identifier / CompoundTag / MutableComponent`, причём **во всех** файлах подряд, включая те,
+  которые никто не менял (`divine_missions`, `library_of_exile`, `info.loenwind.autosave`);
+- в конце — `java.lang.NullPointerException: Cannot invoke
+  "javax.lang.model.element.TypeElement.getNestingKind()" because "typeElement is null"`;
+- предупреждения JVM про restricted `System::load` — обычные для Gradle 9 + JDK 25, к делу
+  не относятся.
+
+**Почему так.** Ошибки «пакета нет» относятся ко всем Minecraft-классам сразу, а не к одному
+API. Значит на classpath компиляции нет самого Minecraft. NPE — вторичный сбой: аннотационный
+процессор Mixin падает на отсутствующих классах уже после первой сотни ошибок. Конфиг сборки
+здесь не виноват: `build.gradle` на коммите `666b9af4` (успешная сборка 2026-10-20) идентичен
+текущему. Причина — пустой/битый артефакт Minecraft в кэше Loom (недокачанный
+`com.mojang:minecraft:26.3` или `.gradle-home/caches/fabric-loom/26.3/`).
+
+**Что делать.**
+
+```bat
+build.bat cleanloom       :: сносит кэш Loom и Minecraft, качает заново, собирает
+```
+
+или вручную:
+
+```bat
+rmdir /s /q .gradle-home\caches\fabric-loom
+gradlew.bat build --refresh-dependencies
+```
+
+Проверить, что проблема именно в этом:
+
+```bat
+gradlew.bat dshClasspath
+findstr /i minecraft build\dsh-cp.txt
+dir .gradle-home\caches\fabric-loom\26.3
+```
+
+Если в `dsh-cp.txt` Minecraft-артефакт есть, но подозрительно маленький (килобайты, а не
+десятки мегабайт) — он докачался не до конца: повторите `build.bat cleanloom`.
+Блок `mappings` в `build.gradle` добавлять не нужно: код уже переписан под имена Mojang,
+и явные маппинги только изменят окружение.
+
+Начиная с этой версии `build.gradle` содержит задачу `dshMcCheck`, от которой зависит
+`compileJava`: она открывает jar-ы из `compileClasspath` и, если классов `net/minecraft/`
+нет ни в одном, падает первой с понятным сообщением и командой для починки — вместо
+сотни ложных ошибок компиляции.
