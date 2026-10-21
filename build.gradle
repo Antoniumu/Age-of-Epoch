@@ -13,12 +13,50 @@ base {
 repositories {
     mavenCentral()
     // Loom automatically provides the Mojang and Fabric maven repositories.
+    maven { url = 'https://maven.nucleoid.xyz/releases' }
+    maven { url = 'https://maven.gnomecraft.net/releases' }
+    maven { url = 'https://maven.architectury.dev' }
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    // Trinkets Updated (replaces Curios for trinket/accessory slots)
+    implementation "eu.pb4:trinkets:4.2.1+26.3"
+}
+
+// ---------------------------------------------------------------------------
+// Escape hatch: skip Loom's client+server merge.
+//
+// MinecraftProvider.mergeJars() writes minecraft-merged.jar through the JDK zip
+// filesystem (MinecraftJarMerger). On JDK 25 that filesystem declares itself
+// read-only when Files.isWritable() says false for the freshly created jar - which
+// on Windows happens when antivirus/EDR or Controlled folder access touches it.
+// Loom swallows the resulting exception, leaving a 22 byte (empty) jar behind and
+// printing nothing. See BUILD-REPORT.md section 6.
+//
+//   build.bat singlejar client   ->  -PmcSingleJar=client
+//   build.bat singlejar server   ->  -PmcSingleJar=server
+//
+// Development-only workaround: classes of the other side are not on the classpath.
+// ---------------------------------------------------------------------------
+if (project.hasProperty('mcSingleJar')) {
+    def side = project.property('mcSingleJar').toString().trim().toLowerCase()
+
+    if (!(side in ['client', 'server'])) {
+        throw new GradleException("Unknown -PmcSingleJar value '${side}' - use 'client' or 'server'")
+    }
+
+    loom {
+        if (side == 'client') {
+            clientOnlyMinecraftJar()
+        } else {
+            serverOnlyMinecraftJar()
+        }
+    }
+
+    logger.lifecycle("Loom: ${side} jar only, the client+server merge is skipped (-PmcSingleJar=${side})")
 }
 
 processResources {
@@ -45,6 +83,93 @@ tasks.register('dshClasspath') {
         def srcs = sourceSets.main.allJava.files.collect { '"' + it.absolutePath.replace('\\', '/') + '"' }.join('\n')
         new File(buildDirFile, 'dsh-sources.txt').text = srcs
     }
+}
+
+// ---------------------------------------------------------------------------
+// Fail fast when Loom's Minecraft artifact is missing from the compile classpath.
+//
+// Loom puts the remapped Minecraft jar on the compile classpath as a plain file
+// ("minecraft-merged-...jar"). When a Gradle/Loom cache is corrupted the jar
+// disappears or shrinks to an empty stub, and javac then prints ~100 pointless
+// "package net.minecraft.* does not exist" errors in perfectly fine sources,
+// followed by a NullPointerException inside the mixin annotation processor
+// (it looks up Mixin targets and gets null back).
+//
+// This task turns that wall of noise into one line telling what to do.
+// It never blocks a healthy build: unless it can prove that no jar on the
+// classpath contains Minecraft classes, it stays silent.
+// Skip it with -PskipMcCheck.
+// ---------------------------------------------------------------------------
+def jarHasMinecraftClasses = { File jar ->
+    try {
+        def zip = new java.util.zip.ZipFile(jar)
+        try {
+            return zip.getEntry('net/minecraft/resources/Identifier.class') != null
+                || zip.getEntry('net/minecraft/ChatFormatting.class') != null
+                || zip.getEntry('net/minecraft/server/MinecraftServer.class') != null
+        } finally {
+            zip.close()
+        }
+    } catch (Throwable ignored) {
+        return false
+    }
+}
+
+tasks.register('checkMinecraftClasspath') {
+    group = 'verification'
+    description = 'Fails early, with an actionable message, when the Minecraft jar is missing from the compile classpath.'
+    def classpath = configurations.compileClasspath
+    def checkEnabled = !project.hasProperty('skipMcCheck')
+    def hasMcClasses = jarHasMinecraftClasses
+    doLast {
+        if (!checkEnabled) {
+            logger.lifecycle('checkMinecraftClasspath skipped (-PskipMcCheck)')
+            return
+        }
+        def jars = classpath.files.findAll { it.isFile() && it.name.toLowerCase().endsWith('.jar') }
+        def mcNamed = jars.findAll { it.name.toLowerCase().contains('minecraft') }
+        def found = mcNamed.find { hasMcClasses(it) }
+        if (found == null) {
+            // Slow fallback: some Loom versions name the artifact differently.
+            found = jars.find { hasMcClasses(it) }
+        }
+        if (found == null) {
+            def detail
+            if (mcNamed.isEmpty()) {
+                detail = 'no jar with "minecraft" in its name is on the compile classpath at all'
+            } else {
+                detail = 'the Minecraft jar(s) on the compile classpath are empty or truncated:\n' +
+                    mcNamed.collect { '      ' + it.absolutePath + '  (' + it.length() + ' bytes)' }.join('\n')
+            }
+
+            def freeMb = (project.rootProject.projectDir.usableSpace / 1024L / 1024L)
+            def diskNote = freeMb < 1024
+                ? '\nNOTE: only ' + freeMb + ' MB free on ' + project.rootProject.projectDir + ' - this alone\n' +
+                  'can produce empty jars while Loom remaps Minecraft. Free some space first.\n'
+                : ''
+
+            throw new GradleException(
+                'Minecraft classes are missing from the compile classpath (' + detail + ').\n' +
+                'This is a broken Loom cache/artifact, not a source problem - any\n' +
+                '"package net.minecraft.* does not exist" errors are bogus.\n' +
+                diskNote +
+                '\n' +
+                'Fix it with:\n' +
+                '    build.bat repair      (wipes the Loom/Minecraft caches, rebuilds with --refresh-dependencies)\n' +
+                'Still a ~22 byte jar after that? Then the jar is not cached but produced empty:\n' +
+                '    build.bat diagnose    (writes build-diagnose.txt - see "Verdict" at the end)\n' +
+                '    build.bat probe       (replays Loom\'s merge and prints the exception it swallows)\n' +
+                '    build.bat build --info --stacktrace > build-log.txt   (keep/attach that log)\n' +
+                'Bypass this check with:\n' +
+                '    -PskipMcCheck'
+            )
+        }
+        logger.lifecycle('Minecraft on compile classpath: ' + found.name + ' (' + (found.length() / 1024 / 1024) + ' MB)')
+    }
+}
+
+tasks.named('compileJava') {
+    dependsOn 'checkMinecraftClasspath'
 }
 
 java {

@@ -3,6 +3,7 @@ package com.robertx22.infinite_dungeons.block;
 import com.robertx22.forge_compat.blocks.ITickableBlockEntity;
 import com.robertx22.forge_compat.network.ClientboundTitleCompatPacket;
 import com.robertx22.infinite_dungeons.components.MobIDCap;
+import com.robertx22.age_of_exile.questbook.QuestBookService;
 import com.robertx22.infinite_dungeons.components.PlayerIDCap;
 import com.robertx22.infinite_dungeons.database.CompletitionScore;
 import com.robertx22.infinite_dungeons.database.DungeonsDB;
@@ -276,6 +277,13 @@ public class ControlBlockEntity extends BlockEntity implements ITickableBlockEnt
 
         if (!this.data.quest_finished) {
             this.data.quest_finished = true;
+
+            if (score != CompletitionScore.FAIL) {
+                String layoutId = data.getDungeonLayout().GUID();
+                for (Player player : getAllPlayers()) {
+                    QuestBookService.onInfiniteDungeonCompleted(player, layoutId);
+                }
+            }
 
             BlockPos pos = data.chests_pos.get(0);
             if (data.getDungeonLayout().score_configs.containsKey(score)) {

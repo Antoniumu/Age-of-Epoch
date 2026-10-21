@@ -20,6 +20,39 @@ public class CompatChatFormatting {
         }
     }
 
+    /**
+     * Код цвета/стиля без "§" (например, 'c' для RED).
+     * В 26.3 у ChatFormatting больше нет получения символа кодом, поэтому таблица своя.
+     */
+    public static char getCode(ChatFormatting fmt) {
+        if (fmt == null) return 'f';
+        return switch (fmt) {
+            case BLACK -> '0';
+            case DARK_BLUE -> '1';
+            case DARK_GREEN -> '2';
+            case DARK_AQUA -> '3';
+            case DARK_RED -> '4';
+            case DARK_PURPLE -> '5';
+            case GOLD -> '6';
+            case GRAY -> '7';
+            case DARK_GRAY -> '8';
+            case BLUE -> '9';
+            case GREEN -> 'a';
+            case AQUA -> 'b';
+            case RED -> 'c';
+            case LIGHT_PURPLE -> 'd';
+            case YELLOW -> 'e';
+            case WHITE -> 'f';
+            case OBFUSCATED -> 'k';
+            case BOLD -> 'l';
+            case STRIKETHROUGH -> 'm';
+            case UNDERLINE -> 'n';
+            case ITALIC -> 'o';
+            case RESET -> 'r';
+            default -> 'f';
+        };
+    }
+
     public static int getColor(ChatFormatting fmt) {
         if (fmt == null) return 0xFFFFFFFF;
         return switch (fmt) {

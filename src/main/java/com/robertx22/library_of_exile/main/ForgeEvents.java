@@ -2,10 +2,12 @@ package com.robertx22.library_of_exile.main;
 
 import com.robertx22.library_of_exile.components.PlayerCapabilities;
 import com.robertx22.library_of_exile.events.base.ExileEvents;
+import com.robertx22.library_of_exile.events.base.StaticServerPlayerTickEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import com.robertx22.forge_compat.common.MinecraftForge;
 import com.robertx22.forge_compat.event.AddReloadListenerEvent;
+import com.robertx22.forge_compat.event.TickEvent;
 import com.robertx22.forge_compat.event.entity.living.LivingDamageEvent;
 import com.robertx22.forge_compat.event.entity.living.LivingDeathEvent;
 import com.robertx22.forge_compat.event.entity.living.LivingEvent;
@@ -35,6 +37,12 @@ public class ForgeEvents {
     }
 
     public static void register() {
+
+        // ВАЖНО: подписываемся на серверный тик явно.
+        // @Mod.EventBusSubscriber в этом порте не сканирует экземплярные методы,
+        // поэтому раньше watchdog телепорта не работал и флаг неуязвимости
+        // ("Invulnerable") оставался на игроке навсегда.
+        registerForgeEvent(TickEvent.ServerTickEvent.class, StaticServerPlayerTickEvent::onServerTick);
 
         registerForgeEvent(LivingDamageEvent.class, event -> {
             ExileEvents.OnDamageEntity after = ExileEvents.DAMAGE_BEFORE_CALC.callEvents(

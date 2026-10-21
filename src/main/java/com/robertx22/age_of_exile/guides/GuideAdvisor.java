@@ -14,6 +14,7 @@ import com.robertx22.age_of_exile.saveclasses.perks.TalentsData;
 import com.robertx22.age_of_exile.saveclasses.spells.SpellsData;
 import com.robertx22.age_of_exile.simulation.SimulationManager;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import com.robertx22.age_of_exile.questbook.QuestBookService;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.WorldUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -40,6 +41,53 @@ public class GuideAdvisor {
 
     public static final String TALENT_TREE_ID = "talents";
     public static final int MAX_BRIDGE_STEPS = 4;
+
+    // ------------------------------------------------------------------ охват гайда
+    /** До какого уровня гайд ведёт игрока (настраивается хостом, по умолчанию 20). */
+    public static int maxLevel() {
+        return GuideMath.guideMaxLevel();
+    }
+
+    /** Персонаж уже прошёл гайд: подсказки и подсветка выключены. */
+    public static boolean isBeyondGuide(Player player) {
+        if (player == null) {
+            return true;
+        }
+        try {
+            return GuideMath.beyondGuide(Load.Unit(player)
+                .getLevel());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /** Строка «STR 45%, VIT 35%, DEX 20%» — что держать после гайда. */
+    public static String statWeightsLine(GuideDefinition guide) {
+        if (guide == null) {
+            return "";
+        }
+        float sum = 0;
+        for (GuideDefinition.StatWeight w : guide.stats) {
+            sum += w.weight;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (GuideDefinition.StatWeight w : guide.stats) {
+            if (sb.length() > 0) {
+                sb.append(", ");
+            }
+            int pct = sum <= 0 ? 0 : Math.round(w.weight / sum * 100F);
+            sb.append(GuideMath.shortName(w.stat))
+                .append(" ")
+                .append(pct)
+                .append("%");
+        }
+        return sb.toString();
+    }
+
+    /** Текст «гайд закончился» — один и тот же в окне, чате и подсказках. */
+    public static String finishedText() {
+        return "Гайд пройден до ур. " + maxLevel() + " — дальше прокачивайтесь сами";
+    }
 
     // ------------------------------------------------------------------ активный гайд
     public static GuideDefinition activeGuide(Player player) {
@@ -72,6 +120,8 @@ public class GuideAdvisor {
         }
         player.sendSystemMessage(Component.literal("§a[Гайд] Активен: §f" + guide.name
             + "§a. Подсказки подсвечиваются у характеристик, талантов и заклинаний."));
+        player.sendSystemMessage(Component.literal("§7Гайд ведёт до ур. " + maxLevel()
+            + " — дальше прокачивайтесь сами."));
         player.sendSystemMessage(Component.literal("§7На Полигоне этот гайд собирается в готовую сборку целиком."));
 
         // советы советника — в чат, чтобы длинный текст не обрезался в окне
@@ -121,13 +171,16 @@ public class GuideAdvisor {
         if (guide == null || player == null) {
             return null;
         }
+        if (isBeyondGuide(player)) {
+            return null;
+        }
         try {
             RPGPlayerData data = Load.playerRPGData(player);
             if (data.statPoints.getFreePoints(player) <= 0) {
                 return null;
             }
             int level = Load.Unit(player).getLevel();
-            int budget = GuideMath.statBudget(level);
+            int budget = GuideMath.statBudget(GuideMath.cappedLevel(level));
             Map<String, Integer> ideal = GuideMath.idealSplit(guide, budget);
             Map<String, Integer> current = currentStats(player);
 
@@ -205,6 +258,9 @@ public class GuideAdvisor {
         if (tree == null) {
             return null;
         }
+        if (isBeyondGuide(player)) {
+            return null;
+        }
         List<PointData> allocated = allocatedPerks(player, tree);
         int level = Load.Unit(player).getLevel();
         String signature = player.getUUID() + "|" + guide.id + "|" + level + "|" + allocated.size();
@@ -238,7 +294,8 @@ public class GuideAdvisor {
 
     private static PointData computeRecommendedTalent(Player player, GuideDefinition guide,
                                                       TalentTree tree, List<PointData> allocated, int level) {
-        if (guide.talents.isEmpty()) {
+        int inScope = GuideMath.talentStepsInScope(guide);
+        if (inScope <= 0) {
             return null;
         }
         int free;
@@ -263,7 +320,7 @@ public class GuideAdvisor {
             return null;
         }
 
-        for (int i = 0; i < guide.talents.size(); i++) {
+        for (int i = 0; i < inScope; i++) {
             PointData point = guide.pointAt(i);
             if (point == null || taken.contains(point)) {
                 continue;
@@ -386,9 +443,10 @@ public class GuideAdvisor {
     /** Следующее заклинание/синергия, в которое стоит вложить очко (или null). */
     public static String recommendedSpell(Player player) {
         GuideDefinition guide = activeGuide(player);
-        if (guide == null || player == null) {
+        if (guide == null || player == null || isBeyondGuide(player)) {
             return null;
         }
+        int cap = maxLevel();
         try {
             EntitySpellCap.ISpellsCap spells = Load.spells(player);
             if (spells.getFreeSpellPoints() <= 0) {
@@ -401,6 +459,9 @@ public class GuideAdvisor {
             SpellsData data = spells.getSpellsData();
             for (GuideDefinition.SpellStep step : guide.spells) {
                 if (data.getLevelOf(step.spell) >= step.targetLevel) {
+                    continue;
+                }
+                if (!spellInScope(school, step.spell, cap)) {
                     continue;
                 }
                 Spell spell = ExileDB.Spells().isRegistered(step.spell) ? ExileDB.Spells().get(step.spell) : null;
@@ -427,16 +488,29 @@ public class GuideAdvisor {
         return rec != null && rec.equals(spellId);
     }
 
+    /** Открывается ли заклинание плана в пределах охвата гайда. */
+    private static boolean spellInScope(SpellSchool school, String spellId, int cap) {
+        PointData point = school.spells.get(spellId);
+        if (point == null) {
+            point = school.synergies.get(spellId);
+        }
+        return point == null || school.getLevelNeededToAllocate(point) <= cap;
+    }
+
     /** Какой уровень нужен для следующего заклинания плана (0 если всё изучено). */
     public static int requiredLevelForNextSpell(Player player) {
         GuideDefinition guide = activeGuide(player);
         SpellSchool school = spellSchool(guide);
-        if (guide == null || school == null) {
+        if (guide == null || school == null || isBeyondGuide(player)) {
             return 0;
         }
+        int cap = maxLevel();
         SpellsData data = Load.spells(player).getSpellsData();
         for (GuideDefinition.SpellStep step : guide.spells) {
             if (data.getLevelOf(step.spell) >= step.targetLevel) {
+                continue;
+            }
+            if (!spellInScope(school, step.spell, cap)) {
                 continue;
             }
             PointData point = school.spells.get(step.spell);
@@ -524,6 +598,10 @@ public class GuideAdvisor {
         public int talentSpent, talentBudget;
         public int spellSpent, spellBudget;
         public int planTalentsTaken, planTalentsTotal;
+        /** уровень персонажа и предел, до которого ведёт гайд */
+        public int level, guideMaxLevel = GuideMath.DEFAULT_GUIDE_MAX_LEVEL;
+        /** персонаж выше предела — гайд закончен */
+        public boolean guideFinished;
         public boolean startCompatible = true;
         public List<String> advice = new ArrayList<>();
     }
@@ -536,19 +614,24 @@ public class GuideAdvisor {
         }
         TalentTree tree = talentTree();
         int level = Load.Unit(player).getLevel();
-        p.statBudget = GuideMath.statBudget(level);
+        int cap = GuideMath.guideMaxLevel();
+        int goalLevel = GuideMath.cappedLevel(level);
+        p.level = level;
+        p.guideMaxLevel = cap;
+        p.guideFinished = level > cap;
+        p.statBudget = GuideMath.statBudget(goalLevel);
         p.statSpent = spentStatPoints(player);
-        p.talentBudget = GuideMath.talentBudget(level);
-        p.spellBudget = GuideMath.spellBudget(level);
+        p.talentBudget = GuideMath.talentBudget(goalLevel);
+        p.spellBudget = GuideMath.spellBudget(goalLevel);
         try {
             p.spellSpent = p.spellBudget - Load.spells(player).getFreeSpellPoints();
         } catch (Exception ignored) {
         }
         List<PointData> allocated = allocatedPerks(player, tree);
         p.talentSpent = allocated.size();
-        p.planTalentsTotal = guide.talents.size();
+        p.planTalentsTotal = GuideMath.talentStepsInScope(guide);
         Set<PointData> taken = new HashSet<>(allocated);
-        for (int i = 0; i < guide.talents.size(); i++) {
+        for (int i = 0; i < p.planTalentsTotal; i++) {
             if (taken.contains(guide.pointAt(i))) {
                 p.planTalentsTaken++;
             }
@@ -565,6 +648,13 @@ public class GuideAdvisor {
         List<String> list = new ArrayList<>();
         RPGPlayerData data = Load.playerRPGData(player);
         int level = Load.Unit(player).getLevel();
+
+        if (progress.guideFinished) {
+            // Гайд закончился: дальше игрок решает сам, но советы по откату
+            // лишних талантов остаются полезными и остаются в списке ниже.
+            list.add("§a" + finishedText() + ". Ориентир по характеристикам: "
+                + statWeightsLine(guide) + ". Таланты продолжайте от последнего взятого узла.");
+        }
 
         if (!progress.startCompatible) {
             list.add("§cСтартовый путь не совпадает с гайдом. Взять можно только один стартовый путь, "
@@ -605,10 +695,11 @@ public class GuideAdvisor {
             }
         }
 
-        // отставание по уровню
-        if (progress.startCompatible && !guide.talents.isEmpty()) {
+        // отставание по уровню (после предела гайда неактуально)
+        if (!progress.guideFinished && progress.startCompatible && !guide.talents.isEmpty()) {
             int next = -1;
-            for (int i = 0; i < guide.talents.size(); i++) {
+            int inScope = GuideMath.talentStepsInScope(guide);
+            for (int i = 0; i < inScope; i++) {
                 if (!taken.contains(guide.pointAt(i))) {
                     next = i;
                     break;
@@ -648,7 +739,7 @@ public class GuideAdvisor {
         } catch (Exception e) {
             spellFree = 0;
         }
-        if (spellFree > 0) {
+        if (!progress.guideFinished && spellFree > 0) {
             int need = requiredLevelForNextSpell(player);
             if (need > level) {
                 list.add("§7Следующее заклинание плана откроется на ур. " + need + ".");
@@ -662,6 +753,9 @@ public class GuideAdvisor {
         GuideDefinition guide = activeGuide(player);
         if (guide == null) {
             return "Гайд не выбран";
+        }
+        if (isBeyondGuide(player)) {
+            return finishedText();
         }
         String stat = recommendedStat(player);
         if (stat != null) {
@@ -691,6 +785,9 @@ public class GuideAdvisor {
         if (guide == null) {
             return "";
         }
+        if (isBeyondGuide(player)) {
+            return "";
+        }
         TalentTree tree = talentTree();
         if (tree != null && !isStartCompatible(guide, new HashSet<>(allocatedPerks(player, tree)), tree)) {
             return "Гайд: выбран другой стартовый путь — соберите сборку заново";
@@ -706,7 +803,8 @@ public class GuideAdvisor {
             return "";
         }
         int level = Load.Unit(player).getLevel();
-        for (int i = 0; i < guide.talents.size(); i++) {
+        int inScope = GuideMath.talentStepsInScope(guide);
+        for (int i = 0; i < inScope; i++) {
             if (!Load.playerRPGData(player).talents.isAllocated(tree, guide.pointAt(i))) {
                 int need = GuideDefinition.levelNeededForTalentStep(i);
                 if (need > level) {
@@ -729,7 +827,7 @@ public class GuideAdvisor {
             return "";
         }
         SpellSchool school = spellSchool(guide);
-        if (school == null) {
+        if (school == null || isBeyondGuide(player)) {
             return "";
         }
         String spell = recommendedSpell(player);
@@ -762,7 +860,12 @@ public class GuideAdvisor {
         if (player == null || guide == null || guide.milestones.isEmpty()) {
             return "";
         }
-        int level = Load.Unit(player).getLevel();
+        int rawLevel = Load.Unit(player)
+            .getLevel();
+        if (GuideMath.beyondGuide(rawLevel)) {
+            return ""; // гайд закончился — вехи больше не «сейчас»
+        }
+        int level = GuideMath.cappedLevel(rawLevel);
         int[] bounds = {5, 10, 20, 30, 40, 50};
         int index = 0;
         for (int i = 0; i < bounds.length; i++) {
@@ -915,6 +1018,8 @@ public class GuideAdvisor {
         player.sendSystemMessage(Component.literal("§7• Таланты: §f" + allocatedTalents
             + " §7новых, узлов плана: §f" + planTaken + "/" + guide.talents.size()));
         player.sendSystemMessage(Component.literal("§7• Очки заклинаний вложено: §f" + learned));
+        player.sendSystemMessage(Component.literal("§8Гайд ведёт до ур. " + maxLevel()
+            + "; здесь сборка собрана целиком — это её финальная форма."));
         player.sendSystemMessage(Component.literal("§6══════════════════════════════════"));
 
         if (gear) {
@@ -937,6 +1042,8 @@ public class GuideAdvisor {
             }
         } catch (Exception ignored) {
         }
+
+        QuestBookService.onSimulationGuideApplied(player, guide.id);
     }
 
     public static String splitLine(Map<String, Integer> split) {
@@ -960,7 +1067,8 @@ public class GuideAdvisor {
         if (player == null || guide == null) {
             return lines;
         }
-        int level = Load.Unit(player).getLevel();
+        int level = GuideMath.cappedLevel(Load.Unit(player)
+            .getLevel());
         Map<String, Integer> ideal = GuideMath.idealSplit(guide, GuideMath.statBudget(level));
         Map<String, Integer> current = currentStats(player);
         for (GuideDefinition.StatWeight w : guide.stats) {

@@ -23,6 +23,29 @@ public class GameBalanceConfig implements JsonExileRegistry<GameBalanceConfig>, 
 
     public int MAX_LEVEL = 50;
 
+    /**
+     * До какого уровня гайд ведёт игрока. Дальше подсказки, подсветка кнопок и
+     * цели по характеристикам/талантам/заклинаниям отключаются — игрок решает сам.
+     *
+     * Настраивается хостом: датапак, файл
+     * {@code data/mmorpg/game_balance/game_balance.json} (поле GUIDE_MAX_LEVEL).
+     * 0 или отрицательное значение означает «как задумано по умолчанию» (20),
+     * чтобы старые датапаки без этого поля не отключали гайды совсем.
+     */
+    public static final int DEFAULT_GUIDE_MAX_LEVEL = 20;
+
+    public int GUIDE_MAX_LEVEL = DEFAULT_GUIDE_MAX_LEVEL;
+
+    /** Предел гайда с защитой от 0/мусора и от выхода за MAX_LEVEL. */
+    public int guideMaxLevel() {
+        int cap = GUIDE_MAX_LEVEL;
+        if (cap <= 0) {
+            cap = DEFAULT_GUIDE_MAX_LEVEL; // поля не было в датапаке — GSON оставил 0
+        }
+        int max = MAX_LEVEL > 0 ? MAX_LEVEL : 50;
+        return Math.min(cap, max);
+    }
+
     public LevelScalingConfig NORMAL_STAT_SCALING = new LevelScalingConfig(1, 0.2F, false);
     public LevelScalingConfig SLOW_STAT_SCALING = new LevelScalingConfig(1, 0.01F, true);
     public LevelScalingConfig MANA_COST_SCALING = new LevelScalingConfig(1, 0.2F, true);
@@ -73,6 +96,13 @@ public class GameBalanceConfig implements JsonExileRegistry<GameBalanceConfig>, 
     @Override
     public Class<GameBalanceConfig> getClassForSerialization() {
         return GameBalanceConfig.class;
+    }
+
+    @Override
+    public void onLoadedFromJson() {
+        // GSON создаёт объект без конструктора: если в датапаке нет GUIDE_MAX_LEVEL,
+        // поле станет 0. Нормализуем, чтобы гайды не выключились молча.
+        GUIDE_MAX_LEVEL = guideMaxLevel();
     }
 
     @Override

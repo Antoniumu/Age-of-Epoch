@@ -30,6 +30,18 @@ public class ClientConfigs {
         SHOW_DURABILITY = b.define("show_durability", true);
         ENABLE_FLOATING_DMG = b.define("render_floating_damage", true);
 
+        b.comment("Mob plates: nameplates rendered above mobs.")
+            .push("mob_plates");
+        MOB_PLATE_STYLE = b.defineEnum("mob_plate_style", MobPlateStyle.MODERN);
+        MOB_PLATE_SCALE = b.defineInRange("mob_plate_scale", 1.0D, 0.6D, 1.8D);
+        MOB_PLATE_MAX_DISTANCE = b.defineInRange("mob_plate_max_distance", 24, 8, 64);
+        MOB_PLATE_SHOW_LEVEL = b.define("mob_plate_show_level", true);
+        MOB_PLATE_SHOW_HP_TEXT = b.define("mob_plate_show_hp_text", true);
+        MOB_PLATE_ONLY_LOOKED_AT = b.define("mob_plate_only_looked_at", false);
+        MOB_PLATE_HIDE_FULL_HEALTH = b.define("mob_plate_hide_full_health", false);
+        MOB_PLATE_SHOW_PLAYERS = b.define("mob_plate_show_players", true);
+        b.pop();
+
         ITEM_RARITY_OPACITY = b.defineInRange("ITEM_RARITY_OPACITY", 0.75F, 0, 1F);
 
         GUI_POSITION = b.defineEnum("GUI_POSITION", GuiPosition.TOP_LEFT);
@@ -47,6 +59,15 @@ public class ClientConfigs {
     public ForgeConfigSpec.BooleanValue SHOW_DURABILITY;
     public ForgeConfigSpec.BooleanValue RENDER_MOB_HEALTH_GUI;
     public ForgeConfigSpec.BooleanValue ONLY_RENDER_MOB_LOOKED_AT;
+
+    public ForgeConfigSpec.EnumValue<MobPlateStyle> MOB_PLATE_STYLE;
+    public ForgeConfigSpec.DoubleValue MOB_PLATE_SCALE;
+    public ForgeConfigSpec.IntValue MOB_PLATE_MAX_DISTANCE;
+    public ForgeConfigSpec.BooleanValue MOB_PLATE_SHOW_LEVEL;
+    public ForgeConfigSpec.BooleanValue MOB_PLATE_SHOW_HP_TEXT;
+    public ForgeConfigSpec.BooleanValue MOB_PLATE_ONLY_LOOKED_AT;
+    public ForgeConfigSpec.BooleanValue MOB_PLATE_HIDE_FULL_HEALTH;
+    public ForgeConfigSpec.BooleanValue MOB_PLATE_SHOW_PLAYERS;
 
     public ForgeConfigSpec.EnumValue<GlintType> ITEM_RARITY_BACKGROUND_TYPE;
     public ForgeConfigSpec.EnumValue<GuiPosition> GUI_POSITION;

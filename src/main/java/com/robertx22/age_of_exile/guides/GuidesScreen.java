@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.robertx22.age_of_exile.capability.entity.EntityData;
 import com.robertx22.age_of_exile.capability.player.EntitySpellCap;
 import com.robertx22.age_of_exile.database.data.perks.Perk;
+import com.robertx22.age_of_exile.database.data.spell_school.SpellSchool;
 import com.robertx22.age_of_exile.database.data.talent_tree.TalentTree;
 import com.robertx22.age_of_exile.gui.bases.BaseScreen;
 import com.robertx22.age_of_exile.gui.bases.INamedScreen;
@@ -32,34 +33,58 @@ import java.util.List;
 /**
  * Вкладка «Гайды».
  *
- * Слева — список сборок и советы советника, справа — что именно качать:
- * характеристики, таланты, заклинания. Кнопка «Собрать» работает только
- * на Полигоне и собирает билд целиком.
+ * Слева — список сборок и кнопки, справа — прогресс, характеристики и талант.
+ * Внизу отдельной полосой во всю ширину — заклинания и советы советника:
+ * так текст укладывается в 2–3 строки вместо шести и не требует обрезки.
  *
- * Вёрстка: панель 300×220 под отдельную текстуру guides_panel.png
- * (та же рамка 8 px, что у full_stats_panel.png, но без тайлинга — иначе на
- * стыках полос видны швы). Любой текст режется по ширине и по нижней границе
- * области — за панель ничего не выезжает, длинные строки получают «…».
+ * Вёрстка подобрана так, чтобы текст никогда не обрезался:
+ *  - всё переносится по словам (никаких «…»);
+ *  - справочные блоки рисуются кеглем 0.85 — это +18% символов в строке;
+ *  - если текста всё-таки больше, чем места (маленький GUI scale или очень
+ *    длинный совет), полоса прокручивается колесом, а не режется.
  */
 public class GuidesScreen extends BaseScreen implements INamedScreen {
 
     private static final Identifier PANEL = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/guides_panel.png");
     private static final Identifier ICON = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/icons/guides.png");
 
-    static final int SIZE_X = 300;
-    static final int SIZE_Y = 220;
+    static final int SIZE_X = 360;
+    static final int SIZE_Y = 300;
 
+    /** высота строки полным кеглем */
     private static final int LINE = 9;
+    /** кегль справочного текста */
+    private static final float SMALL = 0.85F;
+    /** высота строки мелким кеглем */
+    private static final int LINE_S = 8;
+    /** кегль советов в левой колонке */
+    private static final float TINY = 0.8F;
+    private static final int LINE_T = 7;
 
-    // --- геометрия колонок (относительно guiLeft / guiTop)
+    // --- геометрия (относительно guiLeft / guiTop)
+    private static final int TOP_Y = 26;
     private static final int LEFT_X = 16;
-    private static final int LEFT_W = 126;
-    private static final int RIGHT_X = 150;
-    private static final int RIGHT_W = 134;
-    private static final int TOP_Y = 24;
+    private static final int LEFT_W = 132;
+    private static final int RIGHT_X = 160;
+    private static final int RIGHT_W = 186;
+    private static final int DIVIDER_X = 152;
+    /** низ колонок: ниже начинаются полосы во всю ширину */
+    private static final int COLUMNS_BOTTOM = 150;
+    private static final int STRIP_X = 16;
+    private static final int STRIP_W = SIZE_X - STRIP_X * 2;
+    /** полоса «Заклинания» */
+    private static final int SPELLS_Y = 156;
+    private static final int SPELLS_BOTTOM = 192;
+    /** полоса «Советник» / «Советы» */
+    private static final int NOTES_Y = 196;
+    private static final int NOTES_BOTTOM = SIZE_Y - 34;
     private static final int BAR_Y = SIZE_Y - 30;
 
     public int selected = 0;
+
+    /** прокрутка нижней полосы, если текст не влез (строки) */
+    private int stripScroll = 0;
+    private int stripMaxScroll = 0;
 
     public GuidesScreen() {
         super(SIZE_X, SIZE_Y);
@@ -117,6 +142,7 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
             addButton(new GuideButton(listX, listY + i * 22, LEFT_W, 20, prefix + g.name,
                 b -> {
                     selected = index;
+                    stripScroll = 0;
                     this.init();
                 },
                 tooltipFor(g)));
@@ -139,12 +165,11 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
             Packets.sendToServer(GuidesPacket.clear()),
             List.of(Component.literal("Снять подсветку").withStyle(ChatFormatting.GRAY))));
 
-        // нижняя полоса: собрать / перейти к талантам, заклинаниям, статам
         int barY = guiTop + BAR_Y;
         int x = guiLeft + LEFT_X;
 
-        addButton(new GuideButton(x, barY, 72, 22,
-            inSimulation() ? "§6Собрать" : "§8Собрать", b -> {
+        addButton(new GuideButton(x, barY, 92, 22,
+            inSimulation() ? "§6Собрать сборку" : "§8Собрать сборку", b -> {
             GuideDefinition g = guide();
             if (g != null) {
                 Packets.sendToServer(GuidesPacket.applyInSimulation(g.id, true));
@@ -157,34 +182,36 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
                 .withStyle(ChatFormatting.GRAY),
             Component.literal("и выдаёт экипировку под гайд.")
                 .withStyle(ChatFormatting.GRAY))));
-        x += 76;
+        x += 96;
 
-        addButton(new GuideButton(x, barY, 58, 22, "§eТаланты", b ->
+        addButton(new GuideButton(x, barY, 74, 22, "§eТаланты", b ->
             mc.gui.setScreen(new TalentsScreen()),
             List.of(Component.literal("Открыть Дерево талантов").withStyle(ChatFormatting.YELLOW))));
-        x += 62;
+        x += 78;
 
-        addButton(new GuideButton(x, barY, 60, 22, "§bСпеллы", b ->
+        addButton(new GuideButton(x, barY, 74, 22, "§bСпеллы", b ->
             mc.gui.setScreen(new SpellScreen()),
             List.of(Component.literal("Открыть экран заклинаний").withStyle(ChatFormatting.AQUA))));
-        x += 64;
+        x += 78;
 
-        addButton(new GuideButton(x, barY, 56, 22, "§aСтаты", b ->
+        addButton(new GuideButton(x, barY, 70, 22, "§aСтаты", b ->
             mc.gui.setScreen(new CharacterScreen()),
             List.of(Component.literal("Открыть экран персонажа").withStyle(ChatFormatting.GREEN))));
     }
 
-    /** Тултип кнопки сборки: название, слоган и ключевые советы гайда. */
+    /** Тултип кнопки сборки: полное название, слоган, статы и все советы гайда. */
     private static List<Component> tooltipFor(GuideDefinition g) {
         List<Component> lines = new ArrayList<>();
         lines.add(Component.literal(g.name).withStyle(g.color));
         lines.add(Component.literal(g.tagline).withStyle(ChatFormatting.GRAY));
-        lines.add(Component.literal("§8Статы на 50 ур.: "
+        lines.add(Component.literal("§8Статы в финальной сборке (50 ур.): "
             + GuideAdvisor.splitLine(GuideMath.idealSplit(g, GuideMath.statBudget(50)))));
-        for (int i = 0; i < g.tips.size() && i < 2; i++) {
-            lines.add(Component.literal("§7• " + g.tips.get(i)));
+        for (String tip : g.tips) {
+            lines.add(Component.literal("§7• " + tip));
         }
-        lines.add(Component.literal("§eЛКМ — посмотреть, «Сделать активным» — включить").withStyle(ChatFormatting.YELLOW));
+        lines.add(Component.literal("§8Ведёт до ур. " + GuideAdvisor.maxLevel()
+            + " (настраивается хостом)"));
+        lines.add(Component.literal("§eЛКМ — посмотреть, «Сделать активным» — включить"));
         return lines;
     }
 
@@ -197,8 +224,8 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
 
         GuideDefinition guide = guide();
 
-        AbstractGui.drawShadow(mc.font, matrix, "§6ГАЙДЫ §7— готовые сборки",
-            guiLeft + LEFT_X, guiTop + 10, 0xFFFFFF);
+        full(matrix, "§6ГАЙДЫ §7— готовые сборки §8(до ур. " + GuideAdvisor.maxLevel() + ")",
+            guiLeft + LEFT_X, guiTop + 10);
 
         if (guide == null) {
             AbstractGui.drawShadow(mc.font, matrix, "§cГайды не загружены",
@@ -207,19 +234,28 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
             return;
         }
 
-        // разделитель колонок
-        int dividerX = guiLeft + RIGHT_X - 6;
-        AbstractGui.fill(matrix, dividerX, guiTop + TOP_Y - 2, dividerX + 1,
-            guiTop + BAR_Y - 6, 0x40FFFFFF);
+        // разделители колонок и полосы
+        fillVertical(matrix, guiLeft + DIVIDER_X, guiTop + TOP_Y - 2, guiTop + COLUMNS_BOTTOM);
+        fillHorizontal(matrix, guiTop + COLUMNS_BOTTOM + 2, guiLeft + LEFT_X, guiLeft + SIZE_X - LEFT_X);
 
         renderDetails(matrix, guide);
-        renderAdvice(matrix, guide);
+        renderLeftNote(matrix, guide);
+        renderSpells(matrix, guide);
+        renderNotes(matrix, guide);
 
         super.render(matrix, mouseX, mouseY, partialTicks);
         buttons.forEach(b -> b.renderToolTip(matrix, mouseX, mouseY));
     }
 
-    /** Правая колонка: что качать. Строго до нижней полосы с кнопками. */
+    private void fillVertical(PoseStack matrix, int x, int y0, int y1) {
+        AbstractGui.fill(matrix, x, y0, x + 1, y1, 0x40FFFFFF);
+    }
+
+    private void fillHorizontal(PoseStack matrix, int y, int x0, int x1) {
+        AbstractGui.fill(matrix, x0, y, x1, y + 1, 0x40FFFFFF);
+    }
+
+    /** Правая колонка: прогресс, характеристики, следующий талант. */
     private void renderDetails(PoseStack matrix, GuideDefinition guide) {
         EntityData unitData = Load.Unit(mc.player);
         int level = unitData.getLevel();
@@ -227,66 +263,183 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
 
         int x = guiLeft + RIGHT_X;
         int y = guiTop + TOP_Y;
-        int contentBottom = guiTop + BAR_Y - 8;
+        int bottom = guiTop + COLUMNS_BOTTOM;
 
-        AbstractGui.drawShadow(mc.font, matrix, clip("§l" + guide.name, RIGHT_W), x, y,
+        AbstractGui.drawShadow(mc.font, matrix, "§l" + guide.name, x, y,
             CompatChatFormatting.getColor(guide.color));
-        y += LINE + 2;
+        y += LINE + 3;
 
-        // слоган — до двух строк
-        y = wrap(matrix, guide.tagline, x, y, RIGHT_W, y + LINE * 2, 0xA0A0A0);
-
-        // прогресс: две короткие строки вместо одной «простыни»
-        line(matrix, "§7Таланты: §f" + progress.planTalentsTaken + "§7/§f" + progress.planTalentsTotal,
-            x, y, RIGHT_W, 0xFFFFFF);
-        y += LINE;
-        line(matrix, "§7Статы: §f" + progress.statSpent + "§7/§f" + progress.statBudget
-            + " §7| Спеллы: §f" + progress.spellSpent + "§7/§f" + progress.spellBudget,
-            x, y, RIGHT_W, 0xFFFFFF);
-        y += LINE;
-
-        // веха по уровню — до двух строк
-        String milestone = GuideAdvisor.milestoneText(mc.player, guide);
-        if (!milestone.isEmpty()) {
-            y = wrap(matrix, "§6Сейчас: §7" + milestone, x, y, RIGHT_W, y + LINE * 2, 0xC0C0C0);
+        for (String row : wrap(guide.tagline, RIGHT_W, SMALL)) {
+            if (y + LINE_S > bottom) {
+                return;
+            }
+            small(matrix, row, x, y);
+            y += LINE_S;
         }
         y += 2;
 
-        if (y + LINE > contentBottom) {
-            return;
+        // прогресс одной строкой; после предела гайда цели уже не растут
+        if (progress.guideFinished) {
+            small(matrix, "§aГайд пройден до ур. §f" + progress.guideMaxLevel
+                + "§a — дальше сами", x, y);
+        } else {
+            small(matrix, "§7Таланты §f" + progress.planTalentsTaken + "§7/§f" + progress.planTalentsTotal
+                + " §7• Статы §f" + progress.statSpent + "§7/§f" + progress.statBudget
+                + " §7• Спеллы §f" + progress.spellSpent + "§7/§f" + progress.spellBudget, x, y);
+        }
+        y += LINE_S + 2;
+
+        String milestone = GuideAdvisor.milestoneText(mc.player, guide);
+        if (!milestone.isEmpty()) {
+            for (String row : wrap("§6Сейчас: §7" + milestone, RIGHT_W, SMALL)) {
+                if (y + LINE_S > bottom) {
+                    return;
+                }
+                small(matrix, row, x, y);
+                y += LINE_S;
+            }
+            y += 3;
         }
 
-        line(matrix, "§eХарактеристики §7сейчас/цель", x, y, RIGHT_W, 0xFFFFFF);
-        y += LINE;
+        small(matrix, "§eХарактеристики §7сейчас/цель", x, y);
+        y += LINE_S;
         for (String statLine : GuideAdvisor.statPlanLines(mc.player, guide)) {
-            if (y + LINE > contentBottom) {
+            if (y + LINE_S > bottom) {
                 return;
             }
-            line(matrix, "§f" + statLine, x + 4, y, RIGHT_W - 4, 0xFFFFFF);
-            y += LINE;
+            small(matrix, "§f" + statLine, x + 4, y);
+            y += LINE_S;
         }
 
-        if (y + LINE > contentBottom) {
+        y += 2;
+        if (y + LINE_S > bottom) {
             return;
         }
-        line(matrix, "§eТаланты", x, y, RIGHT_W, 0xFFFFFF);
-        y += LINE;
-        if (y + LINE <= contentBottom) {
-            line(matrix, talentLine(guide, level, progress), x + 4, y, RIGHT_W - 4, 0xFFFFFF);
-            y += LINE;
+        small(matrix, "§eТаланты", x, y);
+        y += LINE_S;
+        for (String row : wrap(talentLine(guide, level, progress), RIGHT_W - 4, SMALL)) {
+            if (y + LINE_S > bottom) {
+                return;
+            }
+            small(matrix, row, x + 4, y);
+            y += LINE_S;
+        }
+    }
+
+    /** Левая колонка под кнопками: где собирается билд и сколько узлов вне плана. */
+    private void renderLeftNote(PoseStack matrix, GuideDefinition guide) {
+        int x = guiLeft + LEFT_X;
+        int y = guiTop + TOP_Y + GuideData.all().size() * 22 + 6 + 22 + 22 + 10;
+        int bottom = guiTop + COLUMNS_BOTTOM;
+
+        if (!inSimulation() && y + LINE_T <= bottom) {
+            tiny(matrix, "§8Сборка — на Полигоне", x, y);
+            y += LINE_T + 3;
         }
 
-        if (y + LINE > contentBottom) {
+        GuideAdvisor.Progress progress = GuideAdvisor.progress(mc.player);
+        if (progress == null || y + LINE_T > bottom) {
             return;
         }
-        line(matrix, "§eЗаклинания", x, y, RIGHT_W, 0xFFFFFF);
-        y += LINE;
-        wrap(matrix, spellLine(guide), x + 4, y, RIGHT_W - 4, contentBottom, 0xFFFFFF);
+        String state = progress.startCompatible
+            ? "§7Узлов плана: §f" + progress.planTalentsTaken + "§7/§f" + progress.planTalentsTotal
+            : "§cСтартовый путь другой";
+        tiny(matrix, state, x, y);
+    }
+
+    /** Полоса «Заклинания» во всю ширину — короткие строки вместо узкой колонки. */
+    private void renderSpells(PoseStack matrix, GuideDefinition guide) {
+        int x = guiLeft + STRIP_X;
+        int y = guiTop + SPELLS_Y;
+        int bottom = guiTop + SPELLS_BOTTOM;
+
+        if (y + LINE_S > bottom) {
+            return;
+        }
+        small(matrix, "§eЗаклинания §7(уровень / цель)", x, y);
+        y += LINE_S;
+        for (String row : wrap(spellLine(guide), STRIP_W, SMALL)) {
+            if (y + LINE_S > bottom) {
+                return;
+            }
+            small(matrix, "§f" + row, x + 4, y);
+            y += LINE_S;
+        }
+    }
+
+    /**
+     * Полоса «Советник» (или «Советы», если советнику нечего сказать).
+     * Текст переносится целиком; если строк больше, чем места — прокрутка колесом.
+     */
+    private void renderNotes(PoseStack matrix, GuideDefinition guide) {
+        int x = guiLeft + STRIP_X;
+        int top = guiTop + NOTES_Y;
+        int bottom = guiTop + NOTES_BOTTOM;
+
+        List<Row> rows = new ArrayList<>();
+        GuideAdvisor.Progress progress = GuideAdvisor.progress(mc.player);
+        boolean hasAdvice = progress != null && !progress.advice.isEmpty();
+
+        if (hasAdvice) {
+            rows.add(new Row("§6Советник", 0));
+            for (String advice : progress.advice) {
+                for (String row : wrap(advice, STRIP_W - 4, SMALL)) {
+                    rows.add(new Row(row, 4));
+                }
+            }
+        } else {
+            rows.add(new Row("§6Советы по сборке", 0));
+            for (String tip : guide.tips) {
+                for (String row : wrap("§7• " + tip, STRIP_W - 4, SMALL)) {
+                    rows.add(new Row(row, 4));
+                }
+            }
+        }
+
+        int available = (bottom - top) / LINE_S;
+        stripMaxScroll = Math.max(0, rows.size() - available);
+        stripScroll = Math.max(0, Math.min(stripScroll, stripMaxScroll));
+
+        int y = top;
+        for (int i = stripScroll; i < rows.size(); i++) {
+            if (y + LINE_S > bottom) {
+                break;
+            }
+            Row row = rows.get(i);
+            if (!row.text.isEmpty()) {
+                small(matrix, row.text, x + row.indent, y);
+            }
+            y += LINE_S;
+        }
+
+        if (stripMaxScroll > 0) {
+            int trackHeight = bottom - top;
+            int thumb = Math.max(10, trackHeight * available / rows.size());
+            int thumbY = top + (trackHeight - thumb) * stripScroll / stripMaxScroll;
+            int sx = guiLeft + SIZE_X - 12;
+            AbstractGui.fill(matrix, sx, top, sx + 2, top + trackHeight, 0x40000000);
+            AbstractGui.fill(matrix, sx, thumbY, sx + 2, thumbY + thumb, 0x80FFFFFF);
+        }
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scroll) {
+        if (stripMaxScroll > 0) {
+            stripScroll = Math.max(0, Math.min(stripMaxScroll, stripScroll - (int) Math.signum(scroll) * 2));
+            return true;
+        }
+        return super.mouseScrolled(mouseX, mouseY, scroll);
+    }
+
+    private record Row(String text, int indent) {
     }
 
     private String talentLine(GuideDefinition guide, int level, GuideAdvisor.Progress progress) {
         if (!progress.startCompatible) {
             return "§cДругой стартовый путь — план недостижим";
+        }
+        if (progress.guideFinished) {
+            return "§7Гайд закончен — выбор ваш";
         }
         PointData nextTalent = GuideAdvisor.recommendedTalent(mc.player);
         if (nextTalent == null) {
@@ -302,171 +455,106 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
     private String spellLine(GuideDefinition guide) {
         StringBuilder sb = new StringBuilder();
         EntitySpellCap.ISpellsCap spells = Load.spells(mc.player);
+        SpellSchool school = GuideAdvisor.spellSchool(guide);
+        int cap = GuideAdvisor.maxLevel();
         for (GuideDefinition.SpellStep step : guide.spells) {
             int lvl = spells.getLevelOf(step.spell);
             if (sb.length() > 0) {
                 sb.append("§7, ");
             }
-            sb.append(lvl >= step.targetLevel ? "§a" : "§7")
+            // Заклинания, которые открываются уже после предела гайда, — тёмные:
+            // план их не ведёт, это выбор игрока.
+            boolean inScope = true;
+            if (school != null) {
+                PointData point = school.spells.get(step.spell);
+                if (point == null) {
+                    point = school.synergies.get(step.spell);
+                }
+                inScope = point == null || school.getLevelNeededToAllocate(point) <= cap;
+            }
+            sb.append(inScope ? (lvl >= step.targetLevel ? "§a" : "§7") : "§8")
                 .append(GuideAdvisor.spellName(step.spell)).append(" ").append(lvl)
                 .append("/").append(step.targetLevel);
         }
         return sb.toString();
     }
 
-    /** Левая колонка под кнопками: советы советника (откат талантов и т.п.). */
-    private void renderAdvice(PoseStack matrix, GuideDefinition guide) {
-        GuideAdvisor.Progress progress = GuideAdvisor.progress(mc.player);
-
-        int x = guiLeft + LEFT_X;
-        int y = guiTop + TOP_Y + GuideData.all().size() * 22 + 6 + 22 + 22 + 12;
-        int contentBottom = guiTop + BAR_Y - 6;
-
-        if (y + LINE > contentBottom) {
-            return;
-        }
-
-        if (!inSimulation()) {
-            line(matrix, "§8Сборка — на Полигоне", x, y, LEFT_W, 0x808080);
-            y += LINE + 2;
-        }
-
-        boolean hasAdvice = progress != null && !progress.advice.isEmpty();
-        if (!hasAdvice) {
-            // советника нет (гайд не активен или всё по плану) — показываем советы сборки
-            if (y + LINE > contentBottom) {
-                return;
-            }
-            line(matrix, "§6Советы", x, y, LEFT_W, 0xFFFFFF);
-            y += LINE;
-            int lines = 0;
-            for (int i = 0; i < guide.tips.size() && y + LINE <= contentBottom; i++) {
-                String tip = guide.tips.get(i);
-                y = wrap(matrix, "§7• " + tip, x, y, LEFT_W, Math.min(contentBottom, y + LINE * 3), 0xA0A0A0);
-                if (++lines >= 2) {
-                    break;
-                }
-            }
-            return;
-        }
-
-        if (y + LINE > contentBottom) {
-            return;
-        }
-
-        line(matrix, "§6Советник", x, y, LEFT_W, 0xFFFFFF);
-        y += LINE;
-
-        int lines = 1;
-        for (String advice : progress.advice) {
-            if (y + LINE > contentBottom) {
-                break;
-            }
-            y = wrap(matrix, advice, x, y, LEFT_W, contentBottom, 0xC0C0C0) + 1;
-            if (++lines > 4) {
-                break;
-            }
-        }
-    }
-
     // ------------------------------------------------------------------ панель
     /** Размер текстуры панели (assets/mmorpg/textures/gui/guides_panel.png). */
-    private static final int PANEL_TEX_W = 300;
-    private static final int PANEL_TEX_H = 220;
+    private static final int PANEL_TEX_W = 360;
+    private static final int PANEL_TEX_H = 300;
 
     /**
      * Панель целиком одним blit'ом.
      *
      * Размер атласа передаём явно: короткий blit(x, y, u, v, w, h) считает текстуру
-     * 256×256, а наша — 300×220. Из-за этого правые 44 px панели сэмплировались
-     * за краем текстуры с заворотом на её начало, и справа рисовалась вторая
-     * рамка с полосой фона (ровно то, что было видно на скриншоте).
+     * 256×256, а наша — 360×280. Иначе правые пиксели сэмплируются за краем
+     * текстуры с заворотом на её начало и справа появляется вторая рамка.
      */
     static void drawPanel(PoseStack matrix, int x, int y, int width, int height) {
         AbstractGui.blit(matrix, x, y, width, height, 0F, 0F, width, height, PANEL_TEX_W, PANEL_TEX_H);
     }
 
     // ------------------------------------------------------------------ текст
-    /** Одна строка, обрезанная по ширине с «…». */
-    private void line(PoseStack matrix, String text, int x, int y, int maxWidth, int color) {
-        AbstractGui.drawShadow(mc.font, matrix, clip(text, maxWidth), x, y, color);
+    /** Строка полным кеглем. */
+    private void full(PoseStack matrix, String text, int x, int y) {
+        AbstractGui.drawShadow(mc.font, matrix, text, x, y, 0xFFFFFF);
+    }
+
+    /** Строка мелким кеглем (справочные блоки). */
+    private void small(PoseStack matrix, String text, int x, int y) {
+        scaled(matrix, text, x, y, SMALL);
+    }
+
+    /** Строка самым мелким кеглем (советы в левой колонке). */
+    private void tiny(PoseStack matrix, String text, int x, int y) {
+        scaled(matrix, text, x, y, TINY);
     }
 
     /**
-     * Перенос по словам с жёсткими границами: не шире maxWidth и не ниже maxY.
-     * Если текст не влез — последняя строка обрезается и получает «…».
-     * Возвращает Y следующей строки.
+     * Текст в масштабе. Цвет берётся из §-кодов внутри строки, поэтому одним
+     * вызовом можно рисовать разноцветный текст.
      */
-    private int wrap(PoseStack matrix, String text, int x, int y, int maxWidth, int maxY, int color) {
-        if (text == null || text.isEmpty() || y + LINE > maxY) {
-            return y;
+    private void scaled(PoseStack matrix, String text, int x, int y, float scale) {
+        if (text == null || text.isEmpty()) {
+            return;
         }
+        matrix.pushPose();
+        matrix.scale(scale, scale, 1F);
+        AbstractGui.drawShadow(mc.font, matrix, text, x / scale, y / scale, 0xFFFFFF);
+        matrix.popPose();
+    }
 
-        List<String> lines = new ArrayList<>();
+    /**
+     * Перенос по словам БЕЗ обрезки: возвращает все строки целиком.
+     * Ширина учитывается с поправкой на масштаб (текст рисуется в scale раз меньше).
+     */
+    private List<String> wrap(String text, int maxWidth, float scale) {
+        List<String> out = new ArrayList<>();
+        if (text == null || text.isEmpty()) {
+            return out;
+        }
+        float limit = maxWidth / scale;
         for (String paragraph : text.split("\n")) {
             StringBuilder current = new StringBuilder();
             for (String word : paragraph.split(" ")) {
                 String probe = current.length() == 0 ? word : current + " " + word;
-                if (mc.font.width(probe) > maxWidth && current.length() > 0) {
-                    lines.add(current.toString());
+                if (mc.font.width(probe) > limit && current.length() > 0) {
+                    out.add(current.toString());
                     current = new StringBuilder(word);
                 } else {
                     current = new StringBuilder(probe);
                 }
             }
             if (current.length() > 0) {
-                lines.add(current.toString());
+                out.add(current.toString());
             }
         }
-
-        for (int i = 0; i < lines.size(); i++) {
-            if (y + LINE > maxY) {
-                return y;
-            }
-            boolean last = i == lines.size() - 1;
-            // есть ли ещё место хотя бы на одну строку после этой
-            boolean roomBelow = y + LINE * 2 <= maxY;
-            String row = lines.get(i);
-            if (!last && !roomBelow) {
-                AbstractGui.drawShadow(mc.font, matrix, clip(row, maxWidth - 6) + "…", x, y, color);
-                return y + LINE;
-            }
-            AbstractGui.drawShadow(mc.font, matrix, clip(row, maxWidth), x, y, color);
-            y += LINE;
-        }
-        return y;
-    }
-
-    /** Обрезает строку по фактической ширине шрифта, сохраняя §-коды целиком. */
-    static String clip(String text, int maxWidth) {
-        if (text == null) {
-            return "";
-        }
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.font.width(text) <= maxWidth) {
-            return text;
-        }
-        StringBuilder sb = new StringBuilder();
-        int i = 0;
-        while (i < text.length()) {
-            String chunk;
-            if (text.charAt(i) == '§' && i + 1 < text.length()) {
-                chunk = text.substring(i, i + 2);
-                i += 2;
-            } else {
-                chunk = String.valueOf(text.charAt(i));
-                i++;
-            }
-            if (mc.font.width(sb.toString() + chunk + "…") > maxWidth) {
-                break;
-            }
-            sb.append(chunk);
-        }
-        return sb + "…";
+        return out;
     }
 
     // ------------------------------------------------------------------ кнопка
-    /** Кнопка с фоном, текстом в одну строку (с обрезкой) и тултипом. */
+    /** Кнопка с фоном, текстом в одну строку и тултипом. */
     private static class GuideButton extends Button {
         private final String label;
         private final List<Component> tooltip;
@@ -488,9 +576,19 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
                 AbstractGui.fill(matrix, this.x, this.y + this.height - 1,
                     this.x + this.width, this.y + this.height, 0x60FFD24A);
             }
-            AbstractGui.drawShadow(Minecraft.getInstance().font, matrix,
-                clip(label, this.width - 8),
-                this.x + 4, this.y + (this.height - 8) / 2, 0xFFFFFF);
+            Minecraft mc = Minecraft.getInstance();
+            String text = label;
+            // если название не влезает — уменьшаем кегль, но не режем текст
+            float scale = 1F;
+            while (mc.font.width(text) * scale > this.width - 8 && scale > 0.6F) {
+                scale -= 0.05F;
+            }
+            PoseStack pose = matrix;
+            pose.pushPose();
+            pose.scale(scale, scale, 1F);
+            AbstractGui.drawShadow(mc.font, pose, text,
+                (this.x + 4) / scale, (this.y + (this.height - 8) / 2F) / scale, 0xFFFFFF);
+            pose.popPose();
         }
 
         @Override

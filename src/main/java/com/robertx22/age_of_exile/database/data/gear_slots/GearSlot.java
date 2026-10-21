@@ -1,6 +1,6 @@
 package com.robertx22.age_of_exile.database.data.gear_slots;
 
-import com.robertx22.age_of_exile.a_libraries.curios.RefCurio;
+import com.robertx22.age_of_exile.a_libraries.trinkets.MyTrinketUtils;
 import com.robertx22.age_of_exile.aoe_data.database.gear_slots.GearSlots;
 import com.robertx22.age_of_exile.config.forge.ServerContainer;
 import com.robertx22.age_of_exile.database.data.gear_types.bases.SlotFamily;
@@ -16,8 +16,6 @@ import com.robertx22.forge_compat.common.AxeItem;
 import com.robertx22.forge_compat.common.SwordItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
-import top.theillusivec4.curios.api.CuriosApi;
-
 import java.util.HashMap;
 
 public class GearSlot implements JsonExileRegistry<GearSlot>, IAutoGson<GearSlot>, IAutoLocName {
@@ -149,11 +147,11 @@ public class GearSlot implements JsonExileRegistry<GearSlot>, IAutoGson<GearSlot
                 } else if (id.equals(GearSlots.NECKLACE)) {
                     bool = item instanceof com.robertx22.age_of_exile.vanilla_mc.items.gearitems.baubles.ItemNecklace
                         || itemPath.contains("necklace")
-                        || CuriosApi.getCuriosHelper().getCurioTags(item).contains(RefCurio.NECKLACE);
+                        || MyTrinketUtils.isTrinketOfSlot(item, "necklace");
                 } else if (id.equals(GearSlots.RING)) {
                     bool = item instanceof com.robertx22.age_of_exile.vanilla_mc.items.gearitems.baubles.ItemRing
                         || itemPath.contains("ring")
-                        || CuriosApi.getCuriosHelper().getCurioTags(item).contains(RefCurio.RING);
+                        || MyTrinketUtils.isTrinketOfSlot(item, "ring");
                 }
             }
 

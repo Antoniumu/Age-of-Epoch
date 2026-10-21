@@ -87,7 +87,14 @@ public class ProjectileCastHelper {
             }
             en.setSilent(silent);
 
-            caster.level().addFreshEntity(en);
+            boolean added = caster.level().addFreshEntity(en);
+            com.robertx22.age_of_exile.uncommon.utilityclasses.SpellLogger.logProjectileShot(
+                    caster,
+                    data != null ? data.spell_id : "unknown",
+                    projectile != null ? projectile.toString() : "unknown",
+                    shootSpeed,
+                    1
+            );
         }
 
     }

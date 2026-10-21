@@ -1,0 +1,901 @@
+package com.robertx22.age_of_exile.gamemaster;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.robertx22.age_of_exile.gamemaster.PlayerProgress.HistoryPoint;
+import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Ядро системы GameMaster.
+ * <p>
+ * Считает реальное время игры, хранит историю прогресса, вычисляет множители опыта
+ * (догоняющий и «темповый»), сохраняет всё в JSON и обслуживает веб-панель.
+ * <p>
+ * Все методы, работающие с {@link PlayerProgress}/{@link GameMasterData}, вызываются
+ * только из серверного потока. Веб-сервер маршалит свои запросы в основной поток.
+ */
+public class GameMaster {
+
+    private static GameMaster INSTANCE;
+
+    public static GameMaster get() {
+        if (INSTANCE == null) {
+            INSTANCE = new GameMaster();
+        }
+        return INSTANCE;
+    }
+
+    /** true, если система загружена и может вмешиваться в опыт. */
+    public static boolean isActive() {
+        return INSTANCE != null && INSTANCE.loaded && INSTANCE.server != null;
+    }
+
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting()
+        .create();
+
+    private final GameMasterConfig config = new GameMasterConfig();
+    private final GameMasterData data = new GameMasterData();
+
+    private boolean loaded = false;
+    private boolean dirty = false;
+
+    private MinecraftServer server;
+    private GameMasterWebServer webServer;
+    private String webStartedHost = null;
+    private int webStartedPort = -1;
+    private String webStartedToken = null;
+
+    /** Кэш максимального уровня, чтобы не дёргать реестр в горячем пути. */
+    private int maxLevelCache = 50;
+
+    /** Кэш калибровки. */
+    private double cachedK = 0;
+    private double cachedBaselineHours = 40;
+    private double measuredBaselineHours = -1;
+    private double measuredObservedHours = 0;
+    private double cachedReferenceLevel = 1;
+    private boolean cachedHasPeers = false;
+    private int cachedPeers = 0;
+
+    private long lastSecondTick = 0;
+    private long lastStatsTick = 0;
+    private long lastSaveTick = 0;
+
+    // ------------------------------------------------------------------
+    // Жизненный цикл
+    // ------------------------------------------------------------------
+
+    public static Path baseDir() {
+        return FabricLoader.getInstance()
+            .getConfigDir()
+            .resolve("age_of_epoch");
+    }
+
+    public static Path configPath() {
+        return baseDir().resolve("gamemaster.json");
+    }
+
+    public static Path dataPath() {
+        return baseDir().resolve("gamemaster_data.json");
+    }
+
+    public void start(MinecraftServer server) {
+        this.server = server;
+        if (loaded) {
+            restartWeb();
+            return;
+        }
+        loadConfig();
+        loadData();
+
+        long now = now();
+        cachedK = 0;
+        cachedBaselineHours = Math.max(0.01, config.assumed_baseline_hours);
+        lastSecondTick = 0;
+        lastStatsTick = 0;
+        lastSaveTick = now;
+        dirty = true;
+        loaded = true;
+
+        recomputeStats(now);
+        restartWeb();
+        save();
+
+        System.out.println("[GameMaster] Система запущена. Отслежено игроков: " + data.players.size()
+            + ", базовое время до макс. уровня: " + fmt(cachedBaselineHours) + " ч"
+            + ", множитель-калибровка k=" + fmt(cachedK));
+
+        if (config.web_enabled) {
+            System.out.println("[GameMaster] Панель: http://" + config.web_host + ":" + config.web_port + "/");
+        }
+    }
+
+    public void stop() {
+        stopWeb();
+        save();
+        for (PlayerProgress progress : data.players.values()) {
+            progress.online = false;
+        }
+        loaded = false;
+        server = null;
+    }
+
+    public boolean isLoaded() {
+        return loaded;
+    }
+
+    public GameMasterConfig config() {
+        return config;
+    }
+
+    public GameMasterData data() {
+        return data;
+    }
+
+    // ------------------------------------------------------------------
+    // Сохранение / загрузка
+    // ------------------------------------------------------------------
+
+    public void loadConfig() {
+        try {
+            Files.createDirectories(baseDir());
+            if (Files.exists(configPath())) {
+                try (BufferedReader reader = Files.newBufferedReader(configPath(), StandardCharsets.UTF_8)) {
+                    GameMasterConfig parsed = GameMasterConfig.GSON.fromJson(reader, GameMasterConfig.class);
+                    if (parsed != null) {
+                        copyConfig(parsed);
+                    }
+                }
+            } else {
+                saveConfig();
+            }
+        } catch (Exception e) {
+            System.out.println("[GameMaster] Не удалось прочитать конфиг: " + e);
+            e.printStackTrace();
+        }
+        config.sanitize();
+    }
+
+    private void copyConfig(GameMasterConfig parsed) {
+        config.enabled = parsed.enabled;
+        config.catch_up = parsed.catch_up;
+        config.catch_up_per_level = parsed.catch_up_per_level;
+        config.catch_up_max_bonus = parsed.catch_up_max_bonus;
+        config.catch_up_penalize_ahead = parsed.catch_up_penalize_ahead;
+        config.catch_up_penalty_per_level = parsed.catch_up_penalty_per_level;
+        config.catch_up_min_multiplier = parsed.catch_up_min_multiplier;
+        config.catch_up_reference_blend = parsed.catch_up_reference_blend;
+        config.catch_up_min_playtime_minutes = parsed.catch_up_min_playtime_minutes;
+        config.catch_up_activity_window_days = parsed.catch_up_activity_window_days;
+        config.pacing = parsed.pacing;
+        config.target_hours = parsed.target_hours;
+        config.pacing_start_level = parsed.pacing_start_level;
+        config.pacing_max_penalty = parsed.pacing_max_penalty;
+        config.pacing_max_bonus = parsed.pacing_max_bonus;
+        config.pacing_curve = parsed.pacing_curve;
+        config.pacing_auto_calibrate = parsed.pacing_auto_calibrate;
+        config.assumed_baseline_hours = parsed.assumed_baseline_hours;
+        config.exp_multiplier_min = parsed.exp_multiplier_min;
+        config.exp_multiplier_max = parsed.exp_multiplier_max;
+        config.afk_exclusion = parsed.afk_exclusion;
+        config.afk_threshold_seconds = parsed.afk_threshold_seconds;
+        config.snapshot_interval_seconds = parsed.snapshot_interval_seconds;
+        config.save_interval_seconds = parsed.save_interval_seconds;
+        config.show_multiplier_in_actionbar = parsed.show_multiplier_in_actionbar;
+        config.announce_on_login = parsed.announce_on_login;
+        config.web_enabled = parsed.web_enabled;
+        config.web_host = parsed.web_host;
+        config.web_port = parsed.web_port;
+        config.web_token = parsed.web_token;
+    }
+
+    public void loadData() {
+        data.reset();
+        try {
+            Files.createDirectories(baseDir());
+            if (Files.exists(dataPath())) {
+                try (BufferedReader reader = Files.newBufferedReader(dataPath(), StandardCharsets.UTF_8)) {
+                    GameMasterData parsed = GSON.fromJson(reader, GameMasterData.class);
+                    if (parsed != null) {
+                        data.version = parsed.version;
+                        data.players = parsed.players != null ? parsed.players : new java.util.HashMap<>();
+                        data.level_times = parsed.level_times != null ? parsed.level_times : new java.util.HashMap<>();
+                        data.observed_seconds = parsed.observed_seconds;
+                    }
+                }
+            }
+            for (PlayerProgress progress : data.players.values()) {
+                if (progress.history == null) {
+                    progress.history = new ArrayList<>();
+                }
+                if (progress.level < 1) {
+                    progress.level = 1;
+                }
+                progress.online = false;
+                progress.last_snapshot_playtime = progress.playtime_seconds;
+                progress.last_snapshot_epoch = progress.last_seen;
+            }
+        } catch (Exception e) {
+            System.out.println("[GameMaster] Не удалось прочитать данные: " + e);
+            e.printStackTrace();
+        }
+    }
+
+    public void save() {
+        if (!loaded) {
+            return;
+        }
+        try {
+            Files.createDirectories(baseDir());
+            saveConfig();
+            writeAtomic(dataPath(), GSON.toJson(data));
+            dirty = false;
+        } catch (Exception e) {
+            System.out.println("[GameMaster] Не удалось сохранить данные: " + e);
+            e.printStackTrace();
+        }
+    }
+
+    private void saveConfig() {
+        try {
+            Files.createDirectories(baseDir());
+            writeAtomic(configPath(), GameMasterConfig.GSON.toJson(config));
+        } catch (Exception e) {
+            System.out.println("[GameMaster] Не удалось сохранить конфиг: " + e);
+        }
+    }
+
+    private static void writeAtomic(Path target, String json) throws Exception {
+        Path tmp = target.resolveSibling(target.getFileName() + ".tmp");
+        try (BufferedWriter writer = Files.newBufferedWriter(tmp, StandardCharsets.UTF_8)) {
+            writer.write(json);
+        }
+        try {
+            Files.move(tmp, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+        } catch (AtomicMoveNotSupportedException e) {
+            Files.move(tmp, target, StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+
+    /** Перечитать файл конфига (команда /gm reload). */
+    public void reloadConfig() {
+        loadConfig();
+        onConfigEdited();
+    }
+
+    /** Вызывается после любого изменения конфига (команда или веб-панель). */
+    public void onConfigEdited() {
+        config.sanitize();
+        saveConfig();
+        restartWeb();
+        long now = now();
+        recomputeStats(now);
+        dirty = true;
+        save();
+    }
+
+    public void resetData() {
+        data.reset();
+        cachedK = 0;
+        cachedBaselineHours = Math.max(0.01, config.assumed_baseline_hours);
+        measuredBaselineHours = -1;
+        measuredObservedHours = 0;
+        recomputeStats(now());
+        dirty = true;
+        save();
+    }
+
+    // ------------------------------------------------------------------
+    // Тики и учёт времени
+    // ------------------------------------------------------------------
+
+    public void onServerTick(MinecraftServer server) {
+        if (!loaded || this.server == null) {
+            return;
+        }
+        this.server = server;
+
+        long nowMs = System.currentTimeMillis();
+        long deltaMs = nowMs - lastSecondTick;
+        if (deltaMs < 1000L) {
+            return;
+        }
+        lastSecondTick = nowMs;
+        long now = nowMs / 1000L;
+
+        // если сервер лагал, честно засчитываем пропущенные реальные секунды
+        int seconds = (int) Math.min(60, Math.max(1, deltaMs / 1000L));
+
+        for (ServerPlayer player : server.getPlayerList()
+            .getPlayers()) {
+            try {
+                tickPlayer(player, now, seconds);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (now - lastStatsTick >= 5) {
+            recomputeStats(now);
+        }
+        if (now - lastSaveTick >= Math.max(5, config.save_interval_seconds)) {
+            lastSaveTick = now;
+            if (dirty) {
+                save();
+            }
+        }
+    }
+
+    /** Возвращает запись игрока, при первом появлении сразу запоминая его уровень. */
+    private PlayerProgress progressFor(ServerPlayer player) {
+        PlayerProgress progress = data.getOrCreate(player.getUUID()
+            .toString(), player.getGameProfile()
+            .name());
+        if (progress.history.isEmpty() && progress.playtime_seconds <= 0) {
+            try {
+                progress.level = Load.Unit(player)
+                    .getLevel();
+            } catch (Exception ignored) {
+            }
+            progress.level_baseline_seconds = 0;
+        }
+        return progress;
+    }
+
+    private void tickPlayer(ServerPlayer player, long now, int seconds) {
+        PlayerProgress progress = progressFor(player);
+
+        checkLevel(player, progress);
+        progress.last_seen = now;
+        progress.online = true;
+
+        boolean moved = updateMovement(player, progress, now);
+        boolean afk = config.afk_exclusion && !moved
+            && now - progress.last_moved_epoch > Math.max(5, config.afk_threshold_seconds);
+
+        if (!afk) {
+            progress.playtime_seconds += seconds;
+
+            // нормируем время так, как будто все множители были равны 1 —
+            // это и есть «базовое» время сборки, по которому мы калибруемся
+            double normalizer = config.enabled ? Math.max(0.05, progress.multiplier) : 1.0;
+            double baseSeconds = seconds / normalizer;
+            progress.baseline_seconds += baseSeconds;
+            progress.level_baseline_seconds += baseSeconds;
+
+            maybeSnapshot(progress, now);
+        }
+
+        progress.multiplier = computeMultiplier(progress);
+        dirty = true;
+    }
+
+    private boolean updateMovement(ServerPlayer player, PlayerProgress progress, long now) {
+        double x = player.getX();
+        double y = player.getY();
+        double z = player.getZ();
+
+        boolean moved = false;
+        if (!progress.has_pos) {
+            progress.has_pos = true;
+            progress.last_moved_epoch = now;
+            moved = true;
+        } else {
+            double dx = x - progress.last_x;
+            double dy = y - progress.last_y;
+            double dz = z - progress.last_z;
+            if (dx * dx + dy * dy + dz * dz > 0.0025) {
+                progress.last_moved_epoch = now;
+                moved = true;
+            }
+        }
+        progress.last_x = x;
+        progress.last_y = y;
+        progress.last_z = z;
+        return moved;
+    }
+
+    private void maybeSnapshot(PlayerProgress progress, long now) {
+        if (progress.last_snapshot_playtime < 0) {
+            progress.last_snapshot_playtime = progress.playtime_seconds;
+            progress.last_snapshot_epoch = now;
+        }
+        int interval = Math.max(10, config.snapshot_interval_seconds);
+        if (progress.playtime_seconds - progress.last_snapshot_playtime >= interval) {
+            progress.last_snapshot_playtime = progress.playtime_seconds;
+            progress.last_snapshot_epoch = now;
+            progress.addHistory(progress.multiplier, now);
+            dirty = true;
+        }
+        if (progress.history.isEmpty()) {
+            progress.addHistory(progress.multiplier, now);
+        }
+    }
+
+    /** Фиксирует переход на новый уровень и засчитывает время, проведённое на старом. */
+    private void checkLevel(ServerPlayer player, PlayerProgress progress) {
+        int level;
+        try {
+            level = Load.Unit(player)
+                .getLevel();
+        } catch (Exception e) {
+            return;
+        }
+        if (level == progress.level) {
+            return;
+        }
+        long now = now();
+        if (level > progress.level) {
+            int completions = level - progress.level;
+            data.commitLevelTime(progress.level, progress.level_baseline_seconds, completions);
+            progress.level_baseline_seconds = 0;
+            progress.level = level;
+            progress.addHistory(progress.multiplier, now);
+            progress.last_snapshot_playtime = progress.playtime_seconds;
+            progress.last_snapshot_epoch = now;
+            dirty = true;
+            recomputeStats(now);
+        } else {
+            // админ понизил уровень — просто запоминаем, без замеров
+            progress.level = level;
+            progress.level_baseline_seconds = 0;
+        }
+    }
+
+    public void onLogin(ServerPlayer player) {
+        if (!loaded) {
+            return;
+        }
+        PlayerProgress progress = progressFor(player);
+        progress.online = true;
+        progress.last_seen = now();
+        checkLevel(player, progress);
+        progress.multiplier = computeMultiplier(progress);
+        if (progress.history.isEmpty()) {
+            progress.addHistory(progress.multiplier, progress.last_seen);
+        }
+        dirty = true;
+
+        if (config.enabled && config.announce_on_login && (config.pacing || config.catch_up)) {
+            MultiplierBreakdown breakdown = breakdown(progress);
+            String text = "GameMaster: множитель опыта x" + fmt(breakdown.total)
+                + " (темп x" + fmt(breakdown.pacing) + ", догоняющий x" + fmt(breakdown.catchUp) + ")";
+            player.sendSystemMessage(Component.literal(text)
+                .withStyle(ChatFormatting.GOLD));
+        }
+    }
+
+    public void onLogout(ServerPlayer player) {
+        if (!loaded) {
+            return;
+        }
+        PlayerProgress progress = data.get(player.getUUID()
+            .toString());
+        if (progress == null) {
+            return;
+        }
+        progress.online = false;
+        progress.last_seen = now();
+        checkLevel(player, progress);
+        progress.addHistory(progress.multiplier, progress.last_seen);
+        progress.last_snapshot_playtime = progress.playtime_seconds;
+        progress.last_snapshot_epoch = progress.last_seen;
+        dirty = true;
+        recomputeStats(now());
+        save();
+    }
+
+    // ------------------------------------------------------------------
+    // Расчёт множителей
+    // ------------------------------------------------------------------
+
+    public void recomputeStats(long now) {
+        lastStatsTick = now;
+        maxLevelCache = ExpTuner.maxLevel();
+        int maxLevel = maxLevelCache;
+
+        double minSeconds = Math.max(0, config.catch_up_min_playtime_minutes) * 60.0;
+        long windowSeconds = Math.max(1, config.catch_up_activity_window_days) * 86400L;
+
+        double sum = 0;
+        double max = 0;
+        int peers = 0;
+
+        for (PlayerProgress progress : data.players.values()) {
+            if (progress.playtime_seconds < minSeconds) {
+                continue;
+            }
+            if (progress.last_seen < now - windowSeconds) {
+                continue;
+            }
+            sum += progress.level;
+            max = Math.max(max, progress.level);
+            peers++;
+        }
+
+        cachedPeers = peers;
+        cachedHasPeers = peers >= 2;
+
+        if (peers == 0) {
+            cachedReferenceLevel = 1;
+        } else {
+            double average = sum / peers;
+            double blend = ExpTuner.clamp(config.catch_up_reference_blend, 0, 1);
+            cachedReferenceLevel = average + blend * (max - average);
+        }
+
+        double measured = measureBaselineHours(maxLevel);
+        measuredBaselineHours = measured;
+        measuredObservedHours = data.observed_seconds / 3600.0;
+
+        double baseline = Math.max(0.01, config.assumed_baseline_hours);
+        if (measured > 0) {
+            double confidence = ExpTuner.clamp(measuredObservedHours / 6.0, 0, 1);
+            baseline = baseline * (1 - confidence) + measured * confidence;
+        }
+        cachedBaselineHours = Math.max(0.01, baseline);
+
+        if (config.pacing_auto_calibrate) {
+            cachedK = ExpTuner.solveK(config, cachedBaselineHours, maxLevel);
+        } else {
+            cachedK = -Math.max(0, Math.min(0.99, config.pacing_max_penalty));
+        }
+
+        for (ServerPlayer player : onlinePlayers()) {
+            PlayerProgress progress = data.get(player.getUUID()
+                .toString());
+            if (progress != null) {
+                progress.multiplier = computeMultiplier(progress);
+            }
+        }
+    }
+
+    /** Оценка времени до максимума по замерам (в часах), либо -1, если замеров нет. */
+    private double measureBaselineHours(int maxLevel) {
+        if (data.level_times.isEmpty()) {
+            return -1;
+        }
+        double[] weights = ExpTuner.expWeights(maxLevel);
+        double seconds = 0;
+        double weightedExp = 0;
+
+        for (Map.Entry<String, LevelTimeStat> entry : data.level_times.entrySet()) {
+            int level;
+            try {
+                level = Integer.parseInt(entry.getKey());
+            } catch (NumberFormatException e) {
+                continue;
+            }
+            if (level < 1 || level >= maxLevel) {
+                continue;
+            }
+            LevelTimeStat stat = entry.getValue();
+            if (stat == null || stat.seconds <= 0 || stat.completions <= 0) {
+                continue;
+            }
+            seconds += stat.seconds;
+            weightedExp += weights[level - 1] * stat.completions;
+        }
+
+        if (seconds <= 0 || weightedExp <= 0) {
+            return -1;
+        }
+
+        double secondsPerExp = seconds / weightedExp;
+        double totalExp = 0;
+        for (double weight : weights) {
+            totalExp += weight;
+        }
+        return secondsPerExp * totalExp / 3600.0;
+    }
+
+    public double computeMultiplier(PlayerProgress progress) {
+        if (!config.enabled) {
+            return 1;
+        }
+        double multiplier = 1.0;
+
+        if (config.pacing) {
+            multiplier *= ExpTuner.pacingMultiplier(progress.level, cachedK, config.pacing_start_level,
+                maxLevelCache, config.pacing_curve);
+        }
+        if (config.catch_up) {
+            multiplier *= ExpTuner.catchUpMultiplier(progress.level, cachedReferenceLevel, cachedHasPeers, config);
+        }
+
+        return ExpTuner.clamp(multiplier, config.exp_multiplier_min, config.exp_multiplier_max);
+    }
+
+    /** Разбивка множителя для сообщений и панели. */
+    public MultiplierBreakdown breakdown(PlayerProgress progress) {
+        MultiplierBreakdown breakdown = new MultiplierBreakdown();
+        if (!config.enabled) {
+            return breakdown;
+        }
+        if (config.pacing) {
+            breakdown.pacing = ExpTuner.pacingMultiplier(progress.level, cachedK, config.pacing_start_level,
+                maxLevelCache, config.pacing_curve);
+        }
+        if (config.catch_up) {
+            breakdown.catchUp = ExpTuner.catchUpMultiplier(progress.level, cachedReferenceLevel, cachedHasPeers,
+                config);
+        }
+        breakdown.total = ExpTuner.clamp(breakdown.pacing * breakdown.catchUp, config.exp_multiplier_min,
+            config.exp_multiplier_max);
+        return breakdown;
+    }
+
+    /**
+     * Применяет множители к выдаваемому опыту.
+     * Возвращает изменённое количество опыта.
+     */
+    public int tuneExp(ServerPlayer player, int rawExp) {
+        if (!loaded || player == null) {
+            return rawExp;
+        }
+        try {
+            PlayerProgress progress = progressFor(player);
+            checkLevel(player, progress);
+
+            double multiplier = computeMultiplier(progress);
+            progress.multiplier = multiplier;
+
+            int result = rawExp;
+            if (rawExp > 0) {
+                long scaled = Math.round(rawExp * multiplier);
+                result = (int) Math.max(1, Math.min(Integer.MAX_VALUE, scaled));
+            }
+
+            progress.raw_exp_gained += Math.max(0, rawExp);
+            progress.exp_gained += Math.max(0, result);
+            progress.last_seen = now();
+            dirty = true;
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return rawExp;
+        }
+    }
+
+    /** Множитель игрока на текущий момент (для отображения). */
+    public double multiplierFor(ServerPlayer player) {
+        if (!loaded) {
+            return 1;
+        }
+        PlayerProgress progress = data.get(player.getUUID()
+            .toString());
+        if (progress == null) {
+            return 1;
+        }
+        return computeMultiplier(progress);
+    }
+
+    private List<ServerPlayer> onlinePlayers() {
+        if (server == null) {
+            return new ArrayList<>();
+        }
+        return server.getPlayerList()
+            .getPlayers();
+    }
+
+    // ------------------------------------------------------------------
+    // Веб-панель
+    // ------------------------------------------------------------------
+
+    private void restartWeb() {
+        if (!config.web_enabled || server == null) {
+            stopWeb();
+            return;
+        }
+        boolean same = webServer != null
+            && java.util.Objects.equals(webStartedHost, config.web_host)
+            && webStartedPort == config.web_port
+            && java.util.Objects.equals(webStartedToken, config.web_token);
+        if (same) {
+            return;
+        }
+        stopWeb();
+        try {
+            webServer = new GameMasterWebServer(this, config.web_host, config.web_port, config.web_token);
+            webServer.start();
+            webStartedHost = config.web_host;
+            webStartedPort = config.web_port;
+            webStartedToken = config.web_token;
+        } catch (Exception e) {
+            System.out.println("[GameMaster] Не удалось поднять веб-панель на " + config.web_host + ":"
+                + config.web_port + " — " + e);
+            webServer = null;
+        }
+    }
+
+    private void stopWeb() {
+        if (webServer != null) {
+            try {
+                webServer.stop();
+            } catch (Exception ignored) {
+            }
+            webServer = null;
+        }
+        webStartedHost = null;
+        webStartedPort = -1;
+        webStartedToken = null;
+    }
+
+    /** Применяет JSON из веб-панели: переключатели и параметры. */
+    public List<String> applyConfigJson(JsonObject json) {
+        List<String> changed = config.applyJson(json);
+        if (!changed.isEmpty()) {
+            onConfigEdited();
+        }
+        return changed;
+    }
+
+    public MinecraftServer server() {
+        return server;
+    }
+
+    // ------------------------------------------------------------------
+    // JSON для панели
+    // ------------------------------------------------------------------
+
+    public String buildStateJson() {
+        JsonObject root = new JsonObject();
+        root.addProperty("server_time", now());
+        root.addProperty("max_level", maxLevelCache);
+
+        JsonObject cfg = GameMasterConfig.GSON.toJsonTree(config)
+            .getAsJsonObject();
+        cfg.remove("web_token");
+        cfg.addProperty("has_web_token", config.web_token != null && !config.web_token.isEmpty());
+        root.add("config", cfg);
+
+        JsonObject summary = new JsonObject();
+        summary.addProperty("baseline_hours", round2(cachedBaselineHours));
+        summary.addProperty("measured_baseline_hours", measuredBaselineHours > 0 ? round2(measuredBaselineHours) : -1);
+        summary.addProperty("observed_hours", round2(measuredObservedHours));
+        summary.addProperty("predicted_hours",
+            round2(ExpTuner.predictedHours(config, cachedBaselineHours, cachedK, maxLevelCache)));
+        summary.addProperty("target_hours", round2(config.target_hours));
+        summary.addProperty("k", round2(cachedK));
+        summary.addProperty("reference_level", round2(cachedReferenceLevel));
+        summary.addProperty("peers", cachedPeers);
+        summary.addProperty("tracked", data.players.size());
+        summary.addProperty("online", onlinePlayers().size());
+        root.add("summary", summary);
+
+        List<PlayerProgress> sorted = new ArrayList<>(data.players.values());
+        sorted.sort(Comparator.comparingDouble((PlayerProgress p) -> p.level)
+            .thenComparingDouble(p -> p.playtime_seconds)
+            .reversed());
+
+        JsonArray players = new JsonArray();
+        for (PlayerProgress progress : sorted) {
+            players.add(progressJson(progress));
+        }
+        root.add("players", players);
+
+        return GSON.toJson(root);
+    }
+
+    private JsonObject progressJson(PlayerProgress progress) {
+        JsonObject json = new JsonObject();
+        json.addProperty("uuid", progress.uuid);
+        json.addProperty("name", progress.name);
+        json.addProperty("level", progress.level);
+        json.addProperty("playtime_hours", round2(progress.playtimeHours()));
+        json.addProperty("baseline_hours", round2(progress.baselineHours()));
+        json.addProperty("exp_gained", Math.round(progress.exp_gained));
+        json.addProperty("raw_exp_gained", Math.round(progress.raw_exp_gained));
+        json.addProperty("online", progress.online);
+        json.addProperty("last_seen", progress.last_seen);
+        json.addProperty("last_seen_minutes", progress.last_seen > 0 ? (now() - progress.last_seen) / 60 : -1);
+
+        MultiplierBreakdown breakdown = breakdown(progress);
+        json.addProperty("multiplier", round2(breakdown.total));
+        json.addProperty("pacing_multiplier", round2(breakdown.pacing));
+        json.addProperty("catch_up_multiplier", round2(breakdown.catchUp));
+
+        // для графика хватает ~300 точек, не гоняем весь массив в браузер
+        JsonArray history = new JsonArray();
+        int size = progress.history.size();
+        int step = Math.max(1, size / 300);
+        for (int i = 0; i < size; i++) {
+            if (i % step != 0 && i != size - 1) {
+                continue;
+            }
+            HistoryPoint point = progress.history.get(i);
+            JsonObject h = new JsonObject();
+            h.addProperty("playtime_hours", round2(point.playtime_hours));
+            h.addProperty("level", point.level);
+            h.addProperty("multiplier", round2(point.multiplier));
+            h.addProperty("time", point.time);
+            history.add(h);
+        }
+        json.add("history", history);
+        return json;
+    }
+
+    public static double round2(double value) {
+        if (Double.isNaN(value) || Double.isInfinite(value)) {
+            return 0;
+        }
+        return Math.round(value * 100.0) / 100.0;
+    }
+
+    public static String fmt(double value) {
+        if (Double.isNaN(value) || Double.isInfinite(value)) {
+            return "0";
+        }
+        if (Math.abs(value - Math.round(value)) < 0.005) {
+            return String.valueOf(Math.round(value));
+        }
+        return String.format(java.util.Locale.ROOT, "%.2f", value);
+    }
+
+    public String describeMultiplier(ServerPlayer player) {
+        PlayerProgress progress = data.get(player.getUUID()
+            .toString());
+        if (progress == null) {
+            return "нет данных";
+        }
+        MultiplierBreakdown breakdown = breakdown(progress);
+        return "x" + fmt(breakdown.total) + " (темп x" + fmt(breakdown.pacing) + ", догоняющий x"
+            + fmt(breakdown.catchUp) + ", уровень " + progress.level + ", время " + fmt(progress.playtimeHours())
+            + " ч)";
+    }
+
+    /** Геттеры для панели/команд. */
+    public double baselineHours() {
+        return cachedBaselineHours;
+    }
+
+    public double measuredBaselineHours() {
+        return measuredBaselineHours;
+    }
+
+    public double calibrationK() {
+        return cachedK;
+    }
+
+    public double referenceLevel() {
+        return cachedReferenceLevel;
+    }
+
+    public int peerCount() {
+        return cachedPeers;
+    }
+
+    public double predictedHours() {
+        return ExpTuner.predictedHours(config, cachedBaselineHours, cachedK, maxLevelCache);
+    }
+
+    public static long now() {
+        return System.currentTimeMillis() / 1000L;
+    }
+
+    /** Итоговый множитель и его составляющие. */
+    public static class MultiplierBreakdown {
+        public double pacing = 1;
+        public double catchUp = 1;
+        public double total = 1;
+    }
+}

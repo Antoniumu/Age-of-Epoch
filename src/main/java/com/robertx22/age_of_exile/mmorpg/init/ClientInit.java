@@ -2,6 +2,7 @@ package com.robertx22.age_of_exile.mmorpg.init;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.robertx22.age_of_exile.a_libraries.dmg_number_particle.DamageParticleRenderer;
+import com.robertx22.age_of_exile.a_libraries.mob_plates.MobPlateSettings;
 import com.robertx22.age_of_exile.mixin_methods.RenderMobInfo;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.mmorpg.event_registers.Client;
@@ -63,6 +64,7 @@ public class ClientInit implements net.fabricmc.api.ClientModInitializer {
         }
         clientSetupDone = true;
 
+        MobPlateSettings.load();
         ClientSetup.setup();
         KeybindsRegister.register();
         Client.register();

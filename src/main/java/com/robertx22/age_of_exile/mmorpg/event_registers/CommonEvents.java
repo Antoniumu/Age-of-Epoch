@@ -18,6 +18,7 @@ import com.robertx22.age_of_exile.event_hooks.ontick.OnTickDungeonWorld;
 import com.robertx22.world_of_exile.world_gen.TowerBoss;
 import com.robertx22.world_of_exile.world_gen.TowerCollapse;
 import com.robertx22.age_of_exile.event_hooks.player.OnLogin;
+import com.robertx22.age_of_exile.questbook.QuestBookEvents;
 import com.robertx22.age_of_exile.mixin_methods.OnItemStoppedUsingCastImbuedSpell;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.error_checks.base.ErrorChecks;
@@ -42,6 +43,7 @@ public class CommonEvents {
 
     public static void register() {
 
+        QuestBookEvents.register();
         OnItemStoppedUsingCastImbuedSpell.register();
 
         ForgeEvents.registerForgeEvent(EntityJoinWorldEvent.class, event -> {

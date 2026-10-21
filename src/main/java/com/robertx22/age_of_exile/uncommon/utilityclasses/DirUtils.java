@@ -62,7 +62,11 @@ public class DirUtils {
         return modDir() + "/main/resources/assets/mmorpg/models/";
     }
 
-    public static String curiosItemTagsPath() {
-        return modDir() + "/main/resources/data/curios/tags/items/";
+    public static String trinketEntitiesPath() {
+        return modDir() + "/main/resources/data/trinkets/entities/";
+    }
+
+    public static String trinketItemTagsPath() {
+        return modDir() + "/main/resources/data/trinkets/tags/item/";
     }
 }

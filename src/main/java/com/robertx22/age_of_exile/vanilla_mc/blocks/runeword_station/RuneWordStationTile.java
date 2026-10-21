@@ -7,6 +7,7 @@ import com.robertx22.age_of_exile.loot.blueprints.GearBlueprint;
 import com.robertx22.age_of_exile.mmorpg.registers.common.SlashBlockEntities;
 import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import com.robertx22.age_of_exile.questbook.QuestBookService;
 import com.robertx22.age_of_exile.uncommon.datasaving.StackSaving;
 import com.robertx22.age_of_exile.vanilla_mc.blocks.bases.BaseModificationStation;
 import com.robertx22.age_of_exile.vanilla_mc.items.gemrunes.RuneItem;
@@ -95,6 +96,7 @@ public class RuneWordStationTile extends BaseModificationStation {
             GearItemData gear = b.createData();
 
             gear.saveToStack(stack);
+            QuestBookService.onRunewordCreated(player, word);
 
             System.out.println("sdsdsd");
         }

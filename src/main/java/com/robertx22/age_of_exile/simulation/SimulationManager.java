@@ -1,6 +1,6 @@
 package com.robertx22.age_of_exile.simulation;
 
-import com.robertx22.age_of_exile.a_libraries.curios.MyCurioUtils;
+import com.robertx22.age_of_exile.a_libraries.trinkets.MyTrinketUtils;
 import com.robertx22.age_of_exile.capability.entity.EntityData;
 import com.robertx22.age_of_exile.capability.player.EntitySpellCap;
 import com.robertx22.age_of_exile.capability.player.RPGPlayerData;
@@ -883,7 +883,7 @@ public class SimulationManager {
             allocatedCount += rpgData.talents.getSchool(tree).getAllocatedPointsInSchool(tree);
         }
 
-        List<ItemStack> trinkets = MyCurioUtils.getAllSlots(player);
+        List<ItemStack> trinkets = MyTrinketUtils.getAllSlots(player);
         int activeTrinkets = 0;
         for (ItemStack st : trinkets) {
             if (!st.isEmpty()) {
