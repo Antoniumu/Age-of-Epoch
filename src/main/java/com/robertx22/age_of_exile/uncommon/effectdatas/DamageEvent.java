@@ -478,6 +478,20 @@ public class DamageEvent extends EffectEvent {
                 }
             }
 
+        } else if (target instanceof ServerPlayer defPlayer) {
+            for (Entry<Elements, Float> entry : info.dmgmap.entrySet()) {
+                if (entry.getValue() != null && entry.getValue() > 0.05F) {
+                    Elements ele = entry.getKey() != null ? entry.getKey() : Elements.Physical;
+                    int intVal = entry.getValue().intValue();
+                    String numStr = intVal > 0
+                        ? NumberUtils.formatDamageNumber(this, intVal)
+                        : NumberUtils.singleDigitFloat(entry.getValue());
+                    text = ele.format + "-" + numStr + " (" + ele.dmgName + ")";
+
+                    DmgNumPacket packet = new DmgNumPacket(target, text, data.isCrit(), ele.format);
+                    Packets.sendToClient(defPlayer, packet);
+                }
+            }
         }
     }
 
