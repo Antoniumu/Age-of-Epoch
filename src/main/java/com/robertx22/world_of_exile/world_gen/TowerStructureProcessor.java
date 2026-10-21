@@ -43,7 +43,7 @@ public class TowerStructureProcessor implements StructureProcessor {
         LevelReader level,
         BlockPos targetPosition,
         BlockPos referencePos,
-        StructureTemplate.StructureBlockInfo originalBlockInfo,
+        BlockPos templateRelativePos,
         StructureTemplate.StructureBlockInfo processedBlockInfo,
         StructurePlaceSettings settings
     ) {
