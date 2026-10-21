@@ -37,7 +37,7 @@ public class SlashEntities {
         ResourceKey<EntityType<?>> key = ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(SlashRef.MODID, id));
         EntityType<T> type = EntityType.Builder.of(factory, MobCategory.MISC)
             .sized(0.7F, 0.7F)
-            .updateInterval(20)
+            .updateInterval(1)
             .clientTrackingRange(10)
             .build(key);
 

@@ -147,9 +147,11 @@ public class AbstractGui {
         GuiGraphicsExtractor g = CURRENT_GRAPHICS;
         Identifier tex = BOUND_TEXTURE;
         if (g != null && tex != null) {
+            float wrappedU = (textureWidth > 0 && u >= textureWidth) ? (u % textureWidth) : u;
+            float wrappedV = (textureHeight > 0 && v >= textureHeight) ? (v % textureHeight) : v;
             boolean pushed = pushPoseIfTransformed(g, matrices);
             try {
-                g.blit(RenderPipelines.GUI_TEXTURED, tex, x, y, u, v, width, height, regionWidth, regionHeight, textureWidth, textureHeight);
+                g.blit(RenderPipelines.GUI_TEXTURED, tex, x, y, wrappedU, wrappedV, width, height, regionWidth, regionHeight, textureWidth, textureHeight);
             } finally {
                 popPoseIfTransformed(g, pushed);
             }

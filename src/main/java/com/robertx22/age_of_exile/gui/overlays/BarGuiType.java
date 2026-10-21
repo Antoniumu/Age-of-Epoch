@@ -45,7 +45,7 @@ public enum BarGuiType {
 
         @Override
         public String getText(EntityData data, Player en) {
-            return "Level " + data.getLevel() + " " + (int) (getMulti(data, en) * 100) + "%";
+            return "Ур. " + data.getLevel() + " (" + (int) (getMulti(data, en) * 100) + "%)";
         }
     },
     ENERGY {
@@ -66,6 +66,11 @@ public enum BarGuiType {
         @Override
         public Identifier getTexture(EntityData data, Player en) {
             return SlashRef.id("textures/gui/overlay/energy.png");
+        }
+
+        @Override
+        public String getText(EntityData data, Player en) {
+            return "Энергия: " + (int) getCurrent(data, en) + "/" + (int) getMax(data, en);
         }
     },
 
@@ -104,6 +109,12 @@ public enum BarGuiType {
                 return SlashRef.id("textures/gui/overlay/mana.png");
             }
         }
+
+        @Override
+        public String getText(EntityData data, Player en) {
+            String label = data.getUnit().isBloodMage() ? "Кровь: " : "Мана: ";
+            return label + (int) getCurrent(data, en) + "/" + (int) getMax(data, en);
+        }
     },
     HEALTH {
         @Override
@@ -119,6 +130,11 @@ public enum BarGuiType {
         @Override
         public Identifier getTexture(EntityData data, Player en) {
             return SlashRef.id("textures/gui/overlay/health.png");
+        }
+
+        @Override
+        public String getText(EntityData data, Player en) {
+            return "Здоровье: " + (int) getCurrent(data, en) + "/" + (int) getMax(data, en);
         }
 
     },

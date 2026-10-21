@@ -82,7 +82,7 @@ public class LearnSynergyButton extends ImageButton {
             int reqlvl = screen.currentSchool()
                 .getLevelNeededToAllocate(screen.currentSchool().synergies.get(synergy.GUID()));
 
-            tooltip.add(Component.literal("Required Level: " + reqlvl).withStyle(ChatFormatting.RED));
+            tooltip.add(Component.literal("Требуемый уровень: " + reqlvl).withStyle(ChatFormatting.RED));
 
             GuiUtils.renderTooltip(matrix, tooltip, x, y);
 

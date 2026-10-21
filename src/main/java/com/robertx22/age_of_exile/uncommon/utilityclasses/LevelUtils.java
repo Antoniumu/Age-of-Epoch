@@ -175,6 +175,18 @@ public class LevelUtils {
 
         LevelDetermInfo info = new LevelDetermInfo();
 
+        if (WorldUtils.isMapWorldClass(world)) {
+            try {
+                com.robertx22.age_of_exile.dimension.dungeon_data.DungeonData data = Load.dungeonData(world).data.get(pos).data;
+                if (data != null && !data.isEmpty()) {
+                    info.levelWithoutScalingDifficulty = data.lv;
+                    info.level = data.lv;
+                    return info;
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
         ServerLevel sw = (ServerLevel) world;
 
         DimensionConfig dimConfig = ExileDB.getDimensionConfig(world);
@@ -228,38 +240,33 @@ public class LevelUtils {
         return info;
     }
 
-    public static boolean isInMinLevelArea(ServerLevel world, BlockPos pos, DimensionConfig config) {
-        double distance = world.getRespawnData().pos()
-            .distManhattan(pos);
+    public static double getHorizontalDistanceFromSpawn(ServerLevel world, BlockPos pos) {
+        BlockPos spawn = world.getRespawnData().pos();
+        double dx = pos.getX() - spawn.getX();
+        double dz = pos.getZ() - spawn.getZ();
+        double distance = Math.hypot(dx, dz);
 
         double scale = Mth.clamp(world.dimensionType()
             .coordinateScale() / 3F, 1, Integer.MAX_VALUE);
 
-        distance *= scale;
+        return distance * scale;
+    }
 
-        if (distance < config.min_lvl_area) {
-            return true;
-        }
-        return false;
+    public static boolean isInMinLevelArea(ServerLevel world, BlockPos pos, DimensionConfig config) {
+        double distance = getHorizontalDistanceFromSpawn(world, pos);
+        return distance < config.min_lvl_area;
     }
 
     public static int determineLevelPerDistanceFromSpawn(ServerLevel world, BlockPos pos, DimensionConfig config) {
 
-        double distance = world.getRespawnData().pos()
-            .distManhattan(pos);
-
-        double scale = Mth.clamp(world.dimensionType()
-            .coordinateScale() / 3F, 1, Integer.MAX_VALUE);
-
-        distance *= scale;
+        double distance = getHorizontalDistanceFromSpawn(world, pos);
 
         if (distance < config.min_lvl_area) {
             return config.min_lvl;
         }
 
-        int lvl = 1;
-
-        lvl = (int) (config.min_lvl + ((distance - config.min_lvl_area) / (config.mob_lvl_per_distance)));
+        int step = Math.max(1, config.mob_lvl_per_distance);
+        int lvl = (int) (config.min_lvl + ((distance - config.min_lvl_area) / step));
 
         return Mth.clamp(lvl, config.min_lvl, config.max_lvl);
 

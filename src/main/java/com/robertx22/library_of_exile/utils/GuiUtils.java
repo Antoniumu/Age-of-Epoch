@@ -15,23 +15,22 @@ import java.util.List;
 public class GuiUtils {
 
     public static void renderScaledText(PoseStack matrix, int x, int y, double scale, String text, ChatFormatting format) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.font == null || text == null) {
+            return;
+        }
+        int width = mc.font.width(text);
+        int height = mc.font.lineHeight;
 
-        double antiScale = 1 / scale;
+        PoseStack pose = matrix != null ? matrix : new PoseStack();
+        pose.pushPose();
+        pose.scale((float) scale, (float) scale, 1.0F);
 
-        RenderSystem.scaled(scale, scale, scale);
+        float xf = (float) (x / scale - width / 2.0D);
+        float yf = (float) (y / scale - height / 2.0D);
 
-        double textWidthMinus = Minecraft.getInstance().font.width(text) / 2F * scale;
-        double textHeightMinus = Minecraft.getInstance().font.lineHeight * scale / 2;
-
-        float xp = (float) (x - textWidthMinus);
-        float yp = (float) (y - textHeightMinus);
-
-        float xf = (float) (xp * antiScale);
-        float yf = (float) (yp * antiScale);
-
-        AbstractGui.drawShadow(Minecraft.getInstance().font, matrix, text, xf, yf, CompatChatFormatting.getColor(format));
-        RenderSystem.scaled(antiScale, antiScale, antiScale);
-
+        AbstractGui.drawShadow(mc.font, pose, text, xf, yf, CompatChatFormatting.getColor(format));
+        pose.popPose();
     }
 
     public static <T extends Component> void renderTooltip(PoseStack matrix, List<T> tooltip, int mouseX, int mouseY) {

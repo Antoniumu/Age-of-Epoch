@@ -55,6 +55,14 @@ public class OnMobSpawn {
                 endata.forceRecalculateStats();
             }
 
+            try {
+                if (Unit.shouldSendUpdatePackets(entity)) {
+                    com.robertx22.library_of_exile.main.Packets.sendToTracking(Unit.getUpdatePacketFor(entity, endata), entity);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
 
     }
