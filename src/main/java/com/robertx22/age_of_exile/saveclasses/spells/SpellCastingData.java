@@ -3,14 +3,18 @@ package com.robertx22.age_of_exile.saveclasses.spells;
 import com.robertx22.age_of_exile.capability.entity.EntityData;
 import com.robertx22.age_of_exile.capability.player.EntitySpellCap;
 import com.robertx22.age_of_exile.config.forge.ServerContainer;
+import com.robertx22.age_of_exile.database.data.spells.SpellCastType;
 import com.robertx22.age_of_exile.database.data.spells.components.Spell;
 import com.robertx22.age_of_exile.database.data.spells.spell_classes.bases.SpellCastContext;
 import com.robertx22.age_of_exile.database.registry.ExileDB;
 import com.robertx22.age_of_exile.mmorpg.MMORPG;
 import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
+import com.robertx22.age_of_exile.saveclasses.unit.ResourceType;
 import com.robertx22.age_of_exile.uncommon.datasaving.Gear;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import com.robertx22.age_of_exile.uncommon.effectdatas.EventBuilder;
 import com.robertx22.age_of_exile.uncommon.effectdatas.SpendResourceEvent;
+import com.robertx22.age_of_exile.uncommon.effectdatas.rework.RestoreType;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.OnScreenMessageUtils;
 import com.robertx22.age_of_exile.vanilla_mc.packets.NoManaPacket;
 import com.robertx22.library_of_exile.main.Packets;
@@ -64,6 +68,16 @@ public class SpellCastingData {
     }
 
     public boolean tryCastImbuedSpell(LivingEntity en) {
+        if (imbued_spell_stacks <= 0 && isCasting()) {
+            Spell castingSpell = getSpellBeingCast();
+            if (castingSpell != null && castingSpell.config.cast_type == SpellCastType.USE_ITEM) {
+                SpellCastContext ctx = new SpellCastContext(en, castingTicksDone, castingSpell);
+                castingSpell.cast(ctx, true);
+                onSpellCast(ctx);
+                spellBeingCast = "";
+            }
+        }
+
         if (imbued_spell_stacks > 0) {
 
             Spell spell = ExileDB.Spells()
@@ -72,6 +86,10 @@ public class SpellCastingData {
             if (spell != null) {
                 spell.cast(new SpellCastContext(en, 0, spell), false);
                 consumeImbuedSpell();
+                if (en instanceof ServerPlayer) {
+                    Load.spells(en)
+                        .syncToClient((Player) en);
+                }
                 return true;
             }
         }
@@ -81,15 +99,23 @@ public class SpellCastingData {
     public void cancelCast(LivingEntity entity) {
         try {
             if (isCasting()) {
-                SpellCastContext ctx = new SpellCastContext(entity, 0, getSpellBeingCast());
-
                 Spell spell = getSpellBeingCast();
                 if (spell != null) {
-                    int cd = ctx.spell.getCooldownTicks(ctx);
-                    Load.Unit(entity)
-                        .getCooldowns()
-                        .setOnCooldown(spell.GUID(), cd);
-
+                    SpellCastContext ctx = new SpellCastContext(entity, 0, spell);
+                    if (spell.getConfig().times_to_cast > 1) {
+                        int cd = ctx.spell.getCooldownTicks(ctx);
+                        Load.Unit(entity)
+                            .getCooldowns()
+                            .setOnCooldown(spell.GUID(), cd);
+                    } else {
+                        int refund = spell.getCalculatedManaCost(ctx);
+                        if (refund > 0) {
+                            EventBuilder.ofRestore(entity, entity, ResourceType.mana, RestoreType.heal, refund)
+                                .setSpell(spell)
+                                .build()
+                                .Activate();
+                        }
+                    }
                 }
 
                 spellBeingCast = "";
@@ -97,6 +123,13 @@ public class SpellCastingData {
                 lastSpellCastTimeInTicks = 0;
                 castingTicksDone = 0;
                 this.casting = false;
+
+                if (entity instanceof ServerPlayer) {
+                    Load.Unit(entity)
+                        .syncToClient((Player) entity);
+                    Load.spells(entity)
+                        .syncToClient((Player) entity);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -124,16 +157,6 @@ public class SpellCastingData {
                 if (spell != null && spells != null && ExileDB.Spells()
                     .isRegistered(spell)) {
                     spell.onCastingTick(ctx);
-
-                    /*
-                    // slow down player when casting spells
-                    Vector3d v = entity.getDeltaMovement();
-                    entity.setDeltaMovement(new Vector3d(0.25D * v.x, v.y, 0.25D * v.z));
-                    // slow down player when casting spells
-
-
-                     */
-
                 }
 
                 tryCast(ctx);
@@ -239,7 +262,7 @@ public class SpellCastingData {
         if (spell.config.charges > 0) {
             if (!charges.hasCharge(spell.config.charge_name)) {
                 return false;
-            }
+        }
         }
 
         SpellCastContext ctx = new SpellCastContext(player, 0, spell);
@@ -280,17 +303,16 @@ public class SpellCastingData {
                 .hasEnough(rctx)) {
 
                 if (!spell.getConfig().castingWeapon.predicate.predicate.test(caster)) {
+                    if (caster instanceof ServerPlayer) {
+                        OnScreenMessageUtils.sendMessage((ServerPlayer) caster, spell.getConfig().castingWeapon.predicate.text, ClientboundTitleCompatPacket.Type.ACTIONBAR);
+                    }
                     return false;
                 }
 
                 GearItemData wep = Gear.Load(ctx.caster.getMainHandItem());
 
-                if (wep == null) {
-                    return false;
-                }
-
-                if (!wep.canPlayerWear(ctx.data)) {
-                    if (ctx.caster instanceof Player) {
+                if (wep != null && !wep.canPlayerWear(ctx.data)) {
+                    if (ctx.caster instanceof ServerPlayer) {
                         OnScreenMessageUtils.sendMessage((ServerPlayer) ctx.caster, Component.literal("Требования оружия не выполнены"), ClientboundTitleCompatPacket.Type.ACTIONBAR);
                     }
                     return false;
@@ -336,6 +358,8 @@ public class SpellCastingData {
 
         if (ctx.caster instanceof ServerPlayer) {
             Load.Unit(ctx.caster)
+                .syncToClient((Player) ctx.caster);
+            Load.spells(ctx.caster)
                 .syncToClient((Player) ctx.caster);
         }
     }

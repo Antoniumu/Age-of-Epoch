@@ -1,9 +1,11 @@
 package com.robertx22.age_of_exile.database.data.spells.components;
 
 import com.google.gson.Gson;
+import com.robertx22.age_of_exile.aoe_data.database.gear_slots.GearSlots;
 import com.robertx22.age_of_exile.aoe_data.database.spells.SpellDesc;
 import com.robertx22.age_of_exile.database.data.StatModifier;
 import com.robertx22.age_of_exile.database.data.exile_effects.ExileEffect;
+import com.robertx22.age_of_exile.database.data.gear_slots.GearSlot;
 import com.robertx22.age_of_exile.database.data.spells.SpellCastType;
 import com.robertx22.age_of_exile.database.data.spells.SpellTag;
 import com.robertx22.age_of_exile.database.data.spells.map_fields.MapField;
@@ -33,7 +35,6 @@ import com.robertx22.library_of_exile.registry.JsonExileRegistry;
 import com.robertx22.forge_compat.client.Screen;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
@@ -111,6 +112,31 @@ public final class Spell implements IGUID, IAutoGson<Spell>, JsonExileRegistry<S
 
                 if (gear != null) {
                     return gear.GetBaseGearType().weapon_type;
+                }
+
+                if (!stack.isEmpty()) {
+                    GearSlot slot = GearSlot.getSlotOf(stack.getItem());
+                    if (slot != null) {
+                        String id = slot.GUID();
+                        if (GearSlots.BOW.equals(id)) {
+                            return WeaponTypes.bow;
+                        }
+                        if (GearSlots.CROSBOW.equals(id)) {
+                            return WeaponTypes.crossbow;
+                        }
+                        if (GearSlots.SWORD.equals(id)) {
+                            return WeaponTypes.sword;
+                        }
+                        if (GearSlots.AXE.equals(id)) {
+                            return WeaponTypes.axe;
+                        }
+                        if (GearSlots.STAFF.equals(id)) {
+                            return WeaponTypes.staff;
+                        }
+                        if (GearSlots.SCEPTER.equals(id)) {
+                            return WeaponTypes.scepter;
+                        }
+                    }
                 }
 
             }
