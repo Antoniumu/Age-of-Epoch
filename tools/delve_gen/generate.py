@@ -191,7 +191,10 @@ def main():
         write_json(DATA/'worldgen/structure_set'/f'delve_{tid}.json',dict(structures=[dict(structure=f'world_of_exile:delve_{tid}',weight=1)],
                    placement=dict(type='minecraft:random_spread',spacing=48,separation=16,salt=907710+index)))
     write_json(DATA/'worldgen/processor_list/delve_processor.json',dict(processors=[dict(processor_type='world_of_exile:delve_processor')]))
-    write_json(ROOT/'tools/delve_gen/layouts.json',manifest)
+    # Machine-readable generated topology, compact to keep code review focused on logic.
+    (ROOT/'tools/delve_gen/layouts.json').write_text(
+        '[\n' + ',\n'.join(json.dumps(plan, ensure_ascii=False, separators=(',', ':')) for plan in manifest) + '\n]\n',
+        encoding='utf-8')
     for depth in range(1,5):
         items=[('bread',8+depth*2),('torch',16),('iron_ingot',3+depth*2),('emerald',2+depth*2),('golden_apple',1 if depth<4 else 3)]
         if depth>=3: items.append(('diamond',depth-1))
