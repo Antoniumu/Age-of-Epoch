@@ -61,6 +61,7 @@ public final class MergeProbe {
 	private static int failures;
 	private static int depth;
 	private static boolean zipfsReadOnly;
+	private static boolean isWritableLies;
 
 	public static void main(String[] args) throws Exception {
 		final Path projectDir = resolveProjectDir();
@@ -120,6 +121,14 @@ public final class MergeProbe {
 		describeWritability("client jar", clientJar);
 		describeWritability("merged jar", loomDir.resolve("minecraft-merged.jar"));
 
+		if (isWritableLies) {
+			line("");
+			line("  [!!] Files.isWritable() is false while the very same paths can be written.");
+			line("       That is the JVM misreporting it, not a permission problem - and");
+			line("       zipfs turns it into a read-only file system. Compare JDKs with:");
+			line("           build.bat jcheck");
+		}
+
 		// ---------------------------------------------------------------
 		header("6. Re-opening a copy read-write (JDK 25 accessMode)");
 		checkAccessMode(loomDir.resolve("minecraft-merged.jar"), workDir);
@@ -137,7 +146,26 @@ public final class MergeProbe {
 
 		line("");
 
-		if (zipfsReadOnly) {
+		if (isWritableLies) {
+			line("  Cause found: this JVM's Files.isWritable() returns false for every path -");
+			line("  the project folder, the Loom cache, even the jars it can open for writing.");
+			line("  On JDK 25 that single value makes every zip file system read-only:");
+			line("      this.readOnly = ... || !Files.isWritable(zfpath);");
+			line("  so MinecraftJarMerger.add() throws ReadOnlyFileSystemException, Loom loses");
+			line("  the exception (it never looks at its futures) and the jar stays empty.");
+			line("");
+			line("  Antivirus exclusions and folder permissions will NOT change this value -");
+			line("  writes already succeed. Use another JDK 25 build:");
+			line("      1) build.bat jcheck                     (compare every JDK on the machine)");
+			line("      2) install Microsoft / Corretto / Zulu / Oracle JDK 25 and either put it in");
+			line("         .jdks\\ or point JAVA_HOME at it - build.bat picks up either one");
+			line("      3) report it to OpenJDK (JDK-8350880 family): Files.isWritable() == false");
+			line("         for paths that are definitely writable, breaking zipfs with create=true");
+			line("");
+			line("  Note: build.bat singlejar is not a workaround here - the jar processors");
+			line("  (tiny-remapper OutputConsumerPath) write through the same zipfs and fail too:");
+			line("      'Failed to process CLIENT only jar'");
+		} else if (zipfsReadOnly) {
 			line("  Cause found: the JDK zip file system reports the freshly created jar as");
 			line("  READ-ONLY, so MinecraftJarMerger.add() cannot write a single entry.");
 			line("");
@@ -371,8 +399,15 @@ public final class MergeProbe {
 			return;
 		}
 
-		line("    Files.isWritable   : " + Files.isWritable(path));
+		final boolean writable = Files.isWritable(path);
+		line("    Files.isWritable   : " + writable);
 		line("    Files.isReadable   : " + Files.isReadable(path));
+
+		try {
+			line("    real path          : " + path.toRealPath());
+		} catch (IOException e) {
+			line("    real path          : " + e);
+		}
 
 		if (Files.isRegularFile(path)) {
 			try {
@@ -387,6 +422,12 @@ public final class MergeProbe {
 				line("    dos:readonly       : n/a (" + e.getClass().getSimpleName() + ")");
 			}
 
+			try {
+				line("    owner              : " + Files.getOwner(path));
+			} catch (Exception e) {
+				line("    owner              : n/a (" + e.getClass().getSimpleName() + ")");
+			}
+
 			// The real question: can this JVM open the file for writing right now?
 			try {
 				final java.nio.channels.FileChannel channel =
@@ -395,6 +436,10 @@ public final class MergeProbe {
 
 				channel.close();
 				line("    open for WRITE     : OK");
+
+				if (!writable) {
+					isWritableLies = true;
+				}
 			} catch (IOException e) {
 				line("    open for WRITE     : FAILED - " + e);
 			}
@@ -407,6 +452,10 @@ public final class MergeProbe {
 			final Path probe = Files.createTempFile(path, ".aoe-probe", ".tmp");
 			Files.delete(probe);
 			line("    create+delete file : OK");
+
+			if (!writable) {
+				isWritableLies = true;
+			}
 		} catch (IOException e) {
 			line("    create+delete file : FAILED - " + e);
 		}

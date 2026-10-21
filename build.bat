@@ -14,6 +14,7 @@ rem    build.bat repair         wipe Loom/Minecraft caches, then rebuild from sc
 rem    build.bat diagnose       write build-diagnose.txt (why compileJava cannot see net.minecraft)
 rem    build.bat probe          reproduce Loom's merge step and show the exception it swallows
 rem    build.bat singlejar [c]  build without Loom's client+server merge (client or server jar only)
+rem    build.bat jcheck         compare JDKs: is Files.isWritable telling the truth?
 rem    build.bat <task> ...     any other Gradle task is passed through
 rem
 rem  Environment (all optional):
@@ -32,6 +33,7 @@ if /i "%~1"=="repair" goto :repair
 if /i "%~1"=="diagnose" goto :diagnose
 if /i "%~1"=="probe" goto :probe
 if /i "%~1"=="singlejar" goto :singlejar
+if /i "%~1"=="jcheck" goto :jcheck
 
 set "ORIGINAL_JAVA_HOME=%JAVA_HOME%"
 call :find_jdk
@@ -41,6 +43,8 @@ echo.
 echo   JDK    : %JAVA_HOME%  (Java %JAVA_MAJOR%)
 echo   Caches : %GRADLE_USER_HOME%
 echo.
+
+call :jdk_sanity
 
 set "TASKS=%*"
 if "%TASKS%"=="" set "TASKS=build"
@@ -73,6 +77,7 @@ echo   not that the sources are wrong:
 echo       build.bat diagnose    what Loom produced, step by step
 echo       build.bat probe       why the merge produced nothing (shows the hidden error)
 echo       build.bat repair      wipe the caches and rebuild
+echo       build.bat jcheck      is this JDK's Files.isWritable lying? (zipfs read-only)
 goto :done
 
 rem ----------------------------------------------------------------------
@@ -122,6 +127,7 @@ if not defined JAVA_HOME goto :no_jdk
 echo   JDK    : %JAVA_HOME%  (Java %JAVA_MAJOR%)
 echo   Caches : %GRADLE_USER_HOME%
 echo.
+call :jdk_sanity
 call :wipe "%PROJECT_DIR%\.gradle\loom-cache"
 call :wipe "%GRADLE_USER_HOME%\caches\fabric-loom"
 call :wipe "%GRADLE_USER_HOME%\caches\modules-2\files-2.1\com.mojang"
@@ -172,6 +178,57 @@ if not "%RC%"=="0" (
 goto :done
 
 rem ----------------------------------------------------------------------
+:jcheck
+rem  Runs tools\WritableCheck.java with every JDK that can be found. Loom's
+rem  zipfs (JDK 25) marks a jar read-only as soon as Files.isWritable() says
+rem  false, so a JDK that misreports it cannot produce minecraft-merged.jar.
+rem ----------------------------------------------------------------------
+echo.
+echo   Checking Files.isWritable with every JDK found ...
+set "JC_PATHS="%PROJECT_DIR%" "%TEMP%" "%GRADLE_USER_HOME%""
+set "JC_ANY=0"
+call :find_jdk
+if defined JAVA_HOME call :jcheck_one "%JAVA_HOME%"
+for /d %%d in ("%PROJECT_DIR%\.jdks\*") do call :jcheck_one "%%~fd"
+for /f "delims=" %%j in ('where java 2^>nul') do call :jcheck_exe "%%j"
+if "%JC_ANY%"=="0" (
+    echo   No JDK found.
+    set "RC=1"
+) else (
+    echo.
+    echo   MISREPORT means: Files.isWritable^=false while real writes work, so the
+    echo   JDK makes every zip read-only. Use a JDK that reports OK.
+    set "RC=0"
+)
+goto :done
+
+rem  %1 = JDK home
+:jcheck_one
+if not exist "%~1\bin\java.exe" goto :eof
+if not exist "%~1\bin\javac.exe" (
+    echo.
+    echo   --- %~1   ^(no javac - skipped, cannot run single-file sources^)
+    goto :eof
+)
+set "JC_ANY=1"
+echo.
+echo   --- %~1
+"%~1\bin\java.exe" "%PROJECT_DIR%\tools\WritableCheck.java" %JC_PATHS%
+goto :eof
+
+rem  %1 = java.exe path (from PATH)
+:jcheck_exe
+echo.
+echo   --- %~1
+if not exist "%~dp1javac.exe" (
+    echo   ^(no javac next to it - skipped, cannot run single-file sources^)
+    goto :eof
+)
+set "JC_ANY=1"
+"%~1" "%PROJECT_DIR%\tools\WritableCheck.java" %JC_PATHS%
+goto :eof
+
+rem ----------------------------------------------------------------------
 :singlejar
 rem  Builds with only one Minecraft jar, skipping the client+server merge -
 rem  the only Loom step that writes through the JDK zip filesystem, which on
@@ -196,6 +253,7 @@ echo.
 echo   Minecraft jar: %SIDE% only (client+server merge skipped)
 echo   gradlew build -PmcSingleJar=%SIDE%
 echo.
+call :jdk_sanity
 call "%PROJECT_DIR%\gradlew.bat" build -PmcSingleJar=%SIDE% --no-problems-report
 set "RC=%ERRORLEVEL%"
 if not "%RC%"=="0" goto :failed
@@ -222,7 +280,28 @@ echo.
 set "RC=%ERRORLEVEL%"
 echo.
 if not "%RC%"=="0" echo   The failure above is the reason minecraft-merged.jar is empty - Loom hides it.
+if not "%RC%"=="0" echo   If section 5 shows Files.isWritable = false while writes succeed, the JDK
+if not "%RC%"=="0" echo   is misreporting it - compare JDKs with:  build.bat jcheck
 goto :done
+
+rem ----------------------------------------------------------------------
+rem  Warn before a build that cannot work: JDK 25's zipfs trusts
+rem  Files.isWritable(), and on some JDK builds that value is wrong for paths
+rem  that are perfectly writable. Loom then writes nothing and hides the error.
+rem  tools\WritableCheck.java exits with 3 in exactly that case.
+rem ----------------------------------------------------------------------
+:jdk_sanity
+"%JAVA_HOME%\bin\java.exe" "%PROJECT_DIR%\tools\WritableCheck.java" "%PROJECT_DIR%" "%TEMP%" >nul 2>&1
+set "WC=%ERRORLEVEL%"
+if not "%WC%"=="3" goto :eof
+echo.
+echo   [warning] This JDK reports Files.isWritable = false for paths it can write to.
+echo             JDK 25 zipfs then declares every jar read-only, Loom's merge writes
+echo             nothing and you get an empty minecraft-merged.jar and bogus
+echo             "package net.minecraft.* does not exist" errors.
+echo             Compare the JDKs on this machine:   build.bat jcheck
+echo.
+goto :eof
 
 rem ----------------------------------------------------------------------
 rem  Locate a JDK 25+: JAVA_HOME first, then the usual install directories.

@@ -44,17 +44,19 @@ build.bat diagnose       :: build-diagnose.txt: видит ли javac Minecraft 
 
 ```bat
 build.bat diagnose                :: build-diagnose.txt: на каком шаге jar стал пустым
-build.bat repair                  :: сброс кэшей + --refresh-dependencies
 build.bat probe                   :: повторяет шаг слияния Loom и печатает скрытое исключение
-build.bat singlejar client        :: собрать без слияния client+server (обход, пока merge не работает)
+build.bat jcheck                  :: сравнить JDK: не врёт ли Files.isWritable()
+build.bat repair                  :: сброс кэшей + --refresh-dependencies
+build.bat singlejar client        :: собрать без слияния client+server (если zipfs в порядке)
 ```
 
 `minecraft-merged-<hash>-26.3.jar (22 bytes)` — пустой zip: скачанные client/server целы,
 а слияние Loom пишет пустоту и молча теряет исключение (`MinecraftJarMerger` не сохраняет
-`Future` своих задач). Причина на JDK 25 — zipfs объявляет только что созданный jar
-read-only, если `Files.isWritable()` вернул `false` (антивирус / Controlled folder access);
-первая же запись падает с `ReadOnlyFileSystemException`. `build.bat probe` это показывает.
-Подробности и порядок действий — [`BUILD-REPORT.md`](BUILD-REPORT.md) §6.
+`Future` своих задач). На JDK 25 zipfs объявляет jar read-only, как только
+`Files.isWritable()` вернёт `false`, и первая же запись падает с `ReadOnlyFileSystemException`.
+Если `build.bat probe` показывает `Files.isWritable = false` там, где запись реально проходит —
+врёт сам JDK: `build.bat jcheck` сравнит все установленные JDK, рабочий нужно поставить
+в `.jdks\` или указать в `JAVA_HOME`. Подробности — [`BUILD-REPORT.md`](BUILD-REPORT.md) §6.
 
 ## Управление
 
