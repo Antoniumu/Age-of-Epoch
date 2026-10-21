@@ -76,7 +76,7 @@ public class DungeonInfoScreen extends BaseScreen {
             int y = yoff + LOOT_Y;
 
             ItemStack randomitem = new ItemStack(Items.CHEST);
-            randomitem.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME, Component.literal(ChatFormatting.DARK_PURPLE + "Random Unique"));
+            randomitem.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME, Component.literal(ChatFormatting.DARK_PURPLE + "Случайный уникальный предмет"));
             this.publicAddButton(new ItemSlotButton(randomitem, x, y));
 
         } catch (Exception e) {

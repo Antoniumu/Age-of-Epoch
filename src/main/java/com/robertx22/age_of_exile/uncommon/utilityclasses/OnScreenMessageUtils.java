@@ -15,8 +15,8 @@ public class OnScreenMessageUtils {
             .withStyle(ChatFormatting.BOLD);
 
         ServerPlayer p = (ServerPlayer) player;
-        new ClientboundTitleCompatPacket(ClientboundTitleCompatPacket.Type.TITLE, Component.literal(ChatFormatting.YELLOW + "" + ChatFormatting.BOLD + "Leveled Up!"), 5, 15, 8).sendTo(p);
-        new ClientboundTitleCompatPacket(ClientboundTitleCompatPacket.Type.SUBTITLE, levelType.append(Component.literal(ChatFormatting.GREEN + "" + ChatFormatting.BOLD + " Level: " + before + " > " + now + "!")), 5, 15, 8).sendTo(p);
+        new ClientboundTitleCompatPacket(ClientboundTitleCompatPacket.Type.TITLE, Component.literal(ChatFormatting.YELLOW + "" + ChatFormatting.BOLD + "Новый уровень!"), 5, 15, 8).sendTo(p);
+        new ClientboundTitleCompatPacket(ClientboundTitleCompatPacket.Type.SUBTITLE, levelType.append(Component.literal(ChatFormatting.GREEN + "" + ChatFormatting.BOLD + " Уровень: " + before + " > " + now + "!")), 5, 15, 8).sendTo(p);
 
         SoundUtils.ding(player.level(), player.blockPosition());
     }

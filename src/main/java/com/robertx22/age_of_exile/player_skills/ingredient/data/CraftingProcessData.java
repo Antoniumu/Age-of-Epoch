@@ -152,7 +152,7 @@ public class CraftingProcessData {
         if (MMORPG.RUN_DEV_TOOLS) {
             ingredients.forEach(x -> {
                 if (x.ing != null && x.multi != 1) {
-                    tip.add(Component.literal(x.ing.id + " has " + x.multi + "x stats"));
+                    tip.add(Component.literal(x.ing.id + " даёт " + x.multi + "x характеристик"));
                 }
             });
         }

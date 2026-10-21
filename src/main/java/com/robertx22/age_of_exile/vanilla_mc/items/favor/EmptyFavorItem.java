@@ -34,6 +34,7 @@ public class EmptyFavorItem extends Item {
 
                     if (rpg.favor.getFavor() >= FullFavorItem.FAVOR_CAPACITY) {
                         rpg.favor.setFavor(rpg.favor.getFavor() - FullFavorItem.FAVOR_CAPACITY);
+                        rpg.syncToClient(player);
 
                         stack.shrink(1);
 

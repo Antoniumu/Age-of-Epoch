@@ -130,7 +130,7 @@ public class SlotRequirement extends BaseRequirement<SlotRequirement> {
 
         List<Component> list = new ArrayList<>();
 
-        list.add(net.minecraft.network.chat.Component.literal(ChatFormatting.GREEN + "Allowed on: "));
+        list.add(net.minecraft.network.chat.Component.literal(ChatFormatting.GREEN + "Подходит для: "));
 
         List<BaseGearType> copy = new ArrayList<>(this.slots);
 

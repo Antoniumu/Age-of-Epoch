@@ -109,6 +109,8 @@ public class GearSlot implements JsonExileRegistry<GearSlot>, IAutoGson<GearSlot
                     bool = true;
                 }
             } else {
+                String itemPath = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item).getPath();
+                ItemStack defaultStack = item.getDefaultInstance();
 
                 if (item instanceof ArmorItem) {
                     EquipmentSlot eqslot = ((ArmorItem) item).getSlot();
@@ -122,12 +124,20 @@ public class GearSlot implements JsonExileRegistry<GearSlot>, IAutoGson<GearSlot
                         bool = true;
                     }
 
+                } else if (id.equals(GearSlots.HELMET) && (itemPath.endsWith("_helmet") || defaultStack.is(net.minecraft.tags.ItemTags.HEAD_ARMOR))) {
+                    bool = true;
+                } else if (id.equals(GearSlots.CHEST) && (itemPath.endsWith("_chestplate") || defaultStack.is(net.minecraft.tags.ItemTags.CHEST_ARMOR))) {
+                    bool = true;
+                } else if (id.equals(GearSlots.PANTS) && (itemPath.endsWith("_leggings") || defaultStack.is(net.minecraft.tags.ItemTags.LEG_ARMOR))) {
+                    bool = true;
+                } else if (id.equals(GearSlots.BOOTS) && (itemPath.endsWith("_boots") || defaultStack.is(net.minecraft.tags.ItemTags.FOOT_ARMOR))) {
+                    bool = true;
                 } else if (id.equals(GearSlots.SWORD)) {
-                    bool = item instanceof SwordItem;
+                    bool = item instanceof SwordItem || itemPath.endsWith("_sword") || defaultStack.is(net.minecraft.tags.ItemTags.SWORDS);
                 } else if (id.equals(GearSlots.BOW)) {
                     bool = item instanceof BowItem;
                 } else if (id.equals(GearSlots.AXE)) {
-                    bool = item instanceof AxeItem;
+                    bool = item instanceof AxeItem || item instanceof net.minecraft.world.item.AxeItem || itemPath.endsWith("_axe") || defaultStack.is(net.minecraft.tags.ItemTags.AXES);
                 } else if (id.equals(GearSlots.SHIELD)) {
                     bool = item instanceof ShieldItem;
                 } else if (id.equals(GearSlots.CROSBOW)) {

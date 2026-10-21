@@ -25,7 +25,7 @@ public class SkillRequirement {
 
     public MutableComponent getUnmetReqText() {
         return Component.literal("Требуется: ").append(skill.word.locName())
-            .append(" level " + level)
+            .append(" ур. " + level)
             .withStyle(ChatFormatting.RED);
     }
 }

@@ -24,7 +24,7 @@ public class RollCommand {
                     TeamUtils.getOnlineMembers(player)
                         .forEach(p -> {
                             p.sendSystemMessage(Component.literal("").append(player.getDisplayName())
-                                .append(" rolled a " + roll));
+                                .append(" выбросил(а) " + roll));
                         });
 
                     return 0;

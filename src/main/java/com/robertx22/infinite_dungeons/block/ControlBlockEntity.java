@@ -122,7 +122,7 @@ public class ControlBlockEntity extends BlockEntity implements ITickableBlockEnt
 
                     if (data.ticks_until_destruction % 100 == 0 || (data.ticks_until_destruction % 20 == 0 && data.ticks_until_destruction < 100)) {
                         int sec = data.ticks_until_destruction / 20;
-                        sendMessage(Component.literal(sec + "s until Self Destruction"));
+                        sendMessage(Component.literal("До самоуничтожения: " + sec + " с"));
                     }
                     if (data.ticks_until_destruction < 1) {
                         this.destroyDungeon();
@@ -313,7 +313,7 @@ public class ControlBlockEntity extends BlockEntity implements ITickableBlockEnt
             for (int i = 0; i <= score.tier; i++) {
                 stars += STAR;
             }
-            Component scoretxt = Component.literal("Score: " + stars).withStyle(score.format);
+            Component scoretxt = Component.literal("Оценка: " + stars).withStyle(score.format);
             sendTitleMessage(scoretxt, ClientboundTitleCompatPacket.Type.SUBTITLE);
         }
     }

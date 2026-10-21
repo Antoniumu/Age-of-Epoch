@@ -217,22 +217,22 @@ public final class Spell implements IGUID, IAutoGson<Spell>, JsonExileRegistry<S
 
         TooltipUtils.addEmpty(list);
 
-        list.add(Component.literal(ChatFormatting.BLUE + "Mana Cost: " + getCalculatedManaCost(ctx)));
+        list.add(Component.literal(ChatFormatting.BLUE + "Стоимость маны: " + getCalculatedManaCost(ctx)));
         if (config.usesCharges()) {
-            list.add(Component.literal(ChatFormatting.YELLOW + "Max Charges: " + config.charges));
-            list.add(Component.literal(ChatFormatting.YELLOW + "Charge Regen: " + config.charge_regen / 20 + "s"));
+            list.add(Component.literal(ChatFormatting.YELLOW + "Макс. зарядов: " + config.charges));
+            list.add(Component.literal(ChatFormatting.YELLOW + "Восстановление заряда: " + config.charge_regen / 20 + " с"));
 
         } else {
-            list.add(Component.literal(ChatFormatting.YELLOW + "Cooldown: " + (getCooldownTicks(ctx) / 20) + "s"));
+            list.add(Component.literal(ChatFormatting.YELLOW + "Перезарядка: " + (getCooldownTicks(ctx) / 20) + " с"));
         }
 
         int casttime = getCastTimeTicks(ctx);
 
         if (casttime == 0) {
-            list.add(Component.literal(ChatFormatting.GREEN + "Cast time: " + "Instant"));
+            list.add(Component.literal(ChatFormatting.GREEN + "Время применения: Мгновенно"));
 
         } else {
-            list.add(Component.literal(ChatFormatting.GREEN + "Cast time: " + casttime / 20 + "s"));
+            list.add(Component.literal(ChatFormatting.GREEN + "Время применения: " + casttime / 20 + " с"));
 
         }
 
@@ -282,7 +282,7 @@ public final class Spell implements IGUID, IAutoGson<Spell>, JsonExileRegistry<S
             .getLevelOf(GUID());
         int maxlvl = getMaxLevel();
 
-        list.add(Component.literal("Level: " + currentlvl + "/" + maxlvl).withStyle(ChatFormatting.YELLOW));
+        list.add(Component.literal("Уровень: " + currentlvl + "/" + maxlvl).withStyle(ChatFormatting.YELLOW));
 
         TooltipUtils.removeDoubleBlankLines(list);
 

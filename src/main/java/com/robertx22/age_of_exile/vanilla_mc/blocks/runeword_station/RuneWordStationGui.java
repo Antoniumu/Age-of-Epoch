@@ -239,7 +239,7 @@ public class RuneWordStationGui extends ModificationGui<RuneWordStationContainer
                             .get(slot)
                             .translate();
                     }
-                    tooltip.add(Component.literal(ChatFormatting.GREEN + "Can be used on: " + usedOn));
+                    tooltip.add(Component.literal(ChatFormatting.GREEN + "Можно применить к: " + usedOn));
 
                     GuiUtils.renderTooltip(matrix,
                         tooltip, x, y);

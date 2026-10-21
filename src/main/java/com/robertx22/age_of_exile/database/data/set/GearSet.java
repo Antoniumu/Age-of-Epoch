@@ -76,7 +76,7 @@ public class GearSet implements JsonExileRegistry<GearSet>, IAutoGson<GearSet>, 
                     format = ChatFormatting.GREEN;
                 }
 
-                list.add(Component.literal(format + "[" + num + "/" + num + "]" + " Set Bonus:"));
+                list.add(Component.literal(format + "[" + num + "/" + num + "]" + " Бонус комплекта:"));
 
                 x.getValue()
                     .forEach(s -> {

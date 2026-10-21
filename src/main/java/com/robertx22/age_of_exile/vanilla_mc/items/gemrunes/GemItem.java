@@ -109,11 +109,11 @@ public class GemItem extends BaseGemRuneItem implements IGUID, IAutoModel, IAuto
             Player p = (Player) en;
 
             if (!getGem().hasHigherTierGem()) {
-                p.sendSystemMessage(Component.literal(ChatFormatting.RED + "These gems are already maximum rank."));
+                p.sendSystemMessage(Component.literal(ChatFormatting.RED + "Эти самоцветы уже максимального ранга."));
                 return stack;
             }
             if (stack.getCount() < 3) {
-                p.sendSystemMessage(Component.literal(ChatFormatting.RED + "You need 3 gems to attempt upgrade."));
+                p.sendSystemMessage(Component.literal(ChatFormatting.RED + "Для попытки улучшения нужно 3 самоцвета."));
                 return stack;
             }
 

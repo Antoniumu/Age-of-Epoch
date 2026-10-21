@@ -63,7 +63,7 @@ public class QuestProgression {
                 return; // don't check for completition if dungeon didn't finish generating
             }
 
-            player.sendSystemMessage(Component.literal("Dungeon Progress: " + this.num + "/" + target));
+            player.sendSystemMessage(Component.literal("Прогресс подземелья: " + this.num + "/" + target));
 
             if (this.num >= target) {
                 fini = true;

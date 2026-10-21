@@ -35,7 +35,7 @@ public class WaveBasedDungeon extends DungeonType {
                     en.spawnMob();
                 }
 
-                Component text = Component.literal("Wave " + currentwave + " / " + totalwaves).withStyle(ChatFormatting.YELLOW);
+                Component text = Component.literal("Волна " + currentwave + " / " + totalwaves).withStyle(ChatFormatting.YELLOW);
                 en.sendTitleMessage(text);
 
                 //  en.sendMessage(Component.literal("Wave " + currentwave + "/" + totalwaves));

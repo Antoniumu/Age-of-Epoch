@@ -90,7 +90,8 @@ public class AlchemyPotionItem extends TieredItem implements IShapelessRecipe {
 
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
-        tooltip.add(Component.literal("Restores " + (int) tier.percent_healed + "% " + type.word).withStyle(ChatFormatting.LIGHT_PURPLE));
+        String resName = this.type == PotionType.HEALTH ? "здоровья" : "маны";
+        tooltip.add(Component.literal("Восстанавливает " + (int) tier.percent_healed + "% " + resName).withStyle(ChatFormatting.LIGHT_PURPLE));
     }
 
     @Override

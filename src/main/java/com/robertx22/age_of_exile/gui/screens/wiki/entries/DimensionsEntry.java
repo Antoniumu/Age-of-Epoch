@@ -28,7 +28,7 @@ public class DimensionsEntry extends WikiEntry {
     @Override
     public List<Component> getExtraInfo() {
         List<Component> list = new ArrayList<>();
-        list.add(Component.literal("Mob levels: " + dim.min_lvl + "-" + dim.max_lvl));
+        list.add(Component.literal("Уровни существ: " + dim.min_lvl + "-" + dim.max_lvl));
         return list;
     }
 

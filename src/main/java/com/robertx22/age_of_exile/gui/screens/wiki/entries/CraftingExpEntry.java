@@ -29,13 +29,13 @@ public class CraftingExpEntry extends WikiEntry {
     @Override
     public List<Component> getExtraInfo() {
         List<Component> list = new ArrayList<>();
-        list.add(Component.literal("Exp Given for Crafting " + exp));
+        list.add(Component.literal("Опыт за создание: " + exp));
         return list;
     }
 
     @Override
     public String getName() {
-        return cutName(CLOC.translate(Component.translatable(item.getDescriptionId()))) + " " + exp + " Exp";
+        return cutName(CLOC.translate(Component.translatable(item.getDescriptionId()))) + " (" + exp + " опыта)";
     }
 
     @Override

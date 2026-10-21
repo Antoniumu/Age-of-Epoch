@@ -39,7 +39,7 @@ public class SlaughterDungeon extends DungeonType {
 
                     if (horde) {
                         tospawn *= config.horde_multi;
-                        en.sendTitleMessage(Component.literal(ChatFormatting.RED + " A Horde Approaches."));
+                        en.sendTitleMessage(Component.literal(ChatFormatting.RED + " Приближается орда!"));
                     }
 
                     for (int i = 0; i < tospawn; i++) {

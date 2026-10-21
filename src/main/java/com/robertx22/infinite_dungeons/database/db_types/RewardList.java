@@ -46,7 +46,7 @@ public class RewardList implements JsonExileRegistry<RewardList>, IAutoGson<Rewa
 
         List<Component> list = new ArrayList<>();
 
-        list.add(Component.literal(ChatFormatting.GREEN + "Chance Of: "));
+        list.add(Component.literal(ChatFormatting.GREEN + "Возможная награда: "));
 
         for (WeightedReward reward : this.rewards) {
             list.add(reward.reward.type.getStackNameForTooltip(reward.reward));
@@ -54,7 +54,7 @@ public class RewardList implements JsonExileRegistry<RewardList>, IAutoGson<Rewa
 
         list.add(Component.literal(""));
 
-        list.add(Component.literal(ChatFormatting.DARK_PURPLE + "Jackpot: "));
+        list.add(Component.literal(ChatFormatting.DARK_PURPLE + "Джекпот: "));
 
         list.add(jackpot.reward.type.getStackNameForTooltip(jackpot.reward));
 

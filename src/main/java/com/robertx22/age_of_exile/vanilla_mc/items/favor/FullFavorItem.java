@@ -29,6 +29,7 @@ public class FullFavorItem extends Item {
                 Load.playerRPGData(player).favor
                     .setFavor(Load.playerRPGData(player).favor
                         .getFavor() + FAVOR_CAPACITY);
+                Load.playerRPGData(player).syncToClient(player);
 
             } catch (Exception e) {
                 e.printStackTrace();
