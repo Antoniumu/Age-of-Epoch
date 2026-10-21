@@ -69,8 +69,14 @@ public class PerkChangePacket extends MyPacket<PerkChangePacket> {
         }
 
         PointData point = new PointData(x, y);
+        boolean canAllocBefore = playerData.talents.canAllocate(sc, point, Load.Unit(ctx.getPlayer()), ctx.getPlayer());
+        System.out.println("[AOE-PACKET] PerkChangePacket.onReceived: player=" + (ctx.getPlayer() != null ? ctx.getPlayer().getName().getString() : "null")
+            + " school=" + school + " point=" + point + " action=" + action
+            + " canAllocate=" + canAllocBefore
+            + " freePointsBefore=" + playerData.talents.getFreePoints(Load.Unit(ctx.getPlayer()), sc.getSchool_type())
+            + " allocatedBefore=" + playerData.talents.getSchool(sc).getAllocatedPoints(sc));
         if (action == ACTION.ALLOCATE) {
-            if (playerData.talents.canAllocate(sc, point, Load.Unit(ctx.getPlayer()), ctx.getPlayer())) {
+            if (canAllocBefore) {
                 playerData.talents.allocate(ctx.getPlayer(), sc, new PointData(x, y));
             } else {
                 PointData entryPoint = playerData.talents.findAllocatableEntryConnection(sc, point, Load.Unit(ctx.getPlayer()), ctx.getPlayer());
@@ -79,6 +85,9 @@ public class PerkChangePacket extends MyPacket<PerkChangePacket> {
                     if (playerData.talents.canAllocate(sc, point, Load.Unit(ctx.getPlayer()), ctx.getPlayer())) {
                         playerData.talents.allocate(ctx.getPlayer(), sc, new PointData(x, y));
                     }
+                } else {
+                    System.out.println("[AOE-PACKET] PerkChangePacket.onReceived REJECTED: reason="
+                        + playerData.talents.getFailAllocateReason(sc, point, Load.Unit(ctx.getPlayer()), ctx.getPlayer()));
                 }
             }
         } else if (action == ACTION.REMOVE) {
@@ -87,6 +96,9 @@ public class PerkChangePacket extends MyPacket<PerkChangePacket> {
                 playerData.talents.reset_points--;
             }
         }
+        System.out.println("[AOE-PACKET] PerkChangePacket.onReceived AFTER: freePointsAfter="
+            + playerData.talents.getFreePoints(Load.Unit(ctx.getPlayer()), sc.getSchool_type())
+            + " allocatedAfter=" + playerData.talents.getSchool(sc).getAllocatedPoints(sc));
 
         Load.Unit(ctx.getPlayer())
             .setEquipsChanged(true);

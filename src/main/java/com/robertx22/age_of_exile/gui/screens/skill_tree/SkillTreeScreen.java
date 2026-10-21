@@ -330,7 +330,34 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
         updateButtonPositions();
-        return super.mouseClicked(event, doubleClick);
+        int mx = (int) (1F / zoom * event.x());
+        int my = (int) (1F / zoom * event.y());
+        System.out.println("[AOE-CLICK] SkillTreeScreen.mouseClicked: raw=(" + event.x() + "," + event.y() + ")"
+            + " zoom=" + zoom + " zoomed=(" + mx + "," + my + ")"
+            + " scroll=(" + scrollX + "," + scrollY + ")"
+            + " screenSize=(" + this.width + "," + this.height + ")"
+            + " perkButtons=" + this.perkButtons.size());
+        boolean res = super.mouseClicked(event, doubleClick);
+        if (!res && !this.perkButtons.isEmpty()) {
+            PerkButton closest = null;
+            double bestDist = Double.MAX_VALUE;
+            for (PerkButton pb : this.perkButtons) {
+                double cx = pb.x + pb.getWidth() / 2.0;
+                double cy = pb.y + pb.getHeight() / 2.0;
+                double d = Math.hypot(mx - cx, my - cy);
+                if (d < bestDist) {
+                    bestDist = d;
+                    closest = pb;
+                }
+            }
+            if (closest != null) {
+                System.out.println("[AOE-CLICK] PerkButton MISS! Closest button: point=" + closest.point
+                    + " perk=" + (closest.perk != null ? closest.perk.GUID() : "null")
+                    + " pos=(" + closest.x + "," + closest.y + ") size=(" + closest.getWidth() + "," + closest.getHeight() + ")"
+                    + " orig=(" + closest.origX + "," + closest.origY + ") dist=" + bestDist);
+            }
+        }
+        return res;
     }
 
     @Override

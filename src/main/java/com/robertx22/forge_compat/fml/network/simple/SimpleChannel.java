@@ -101,13 +101,15 @@ public class SimpleChannel {
 
         try {
             ServerPlayNetworking.registerGlobalReceiver(payloadType, (payload, context) -> {
+                System.out.println("[AOE-PACKET] ServerPlayNetworking received payload: id=" + msgId + " class=" + reg.clazz.getSimpleName() + " bytes=" + payload.data().length);
                 FriendlyByteBuf buf = new FriendlyByteBuf(io.netty.buffer.Unpooled.wrappedBuffer(payload.data()));
                 Object msg = reg.decoder.apply(buf);
                 NetworkEvent.Context ctx = new NetworkEvent.Context(context.player(), null, false);
                 reg.handler.accept(msg, () -> ctx);
                 ctx.runWork();
             });
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            System.out.println("[AOE-PACKET] Failed to register ServerPlayNetworking receiver for " + msgId + ": " + t);
         }
         try {
             ClientPlayNetworking.registerGlobalReceiver(payloadType, (payload, context) -> {
@@ -168,8 +170,14 @@ public class SimpleChannel {
 
     public void sendToServer(Object msg) {
         Registration reg = byClass.get(msg.getClass());
-        if (reg == null) return;
-        ClientPlayNetworking.send(new MsgPayload(new CustomPacketPayload.Type<>(idOf(reg)), encode(reg, msg)));
+        if (reg == null) {
+            System.out.println("[AOE-PACKET] sendToServer FAILED: no registration for " + msg.getClass().getName() + " in channel " + this.id);
+            return;
+        }
+        Identifier msgId = idOf(reg);
+        byte[] bytes = encode(reg, msg);
+        System.out.println("[AOE-PACKET] sendToServer: id=" + msgId + " class=" + msg.getClass().getSimpleName() + " bytes=" + bytes.length);
+        ClientPlayNetworking.send(new MsgPayload(new CustomPacketPayload.Type<>(msgId), bytes));
     }
 
     @SuppressWarnings("unchecked")
