@@ -23,7 +23,9 @@ public class WorldDungeonCap implements ICommonCap {
     public static class EventHandler {
         @SubscribeEvent
         public static void onEntityConstruct(AttachCapabilitiesEvent<Level> event) {
-            event.addCapability(RESOURCE, new Provider(event.getObject()));
+            if ((Object) event.getObject() instanceof Level level) {
+                event.addCapability(RESOURCE, new Provider(level));
+            }
         }
     }
 

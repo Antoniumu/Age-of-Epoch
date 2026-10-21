@@ -21,7 +21,9 @@ public class ChunkPopulatedCap implements ICommonCap {
     public static class EventHandler {
         @SubscribeEvent
         public static void onEntityConstruct(AttachCapabilitiesEvent<LevelChunk> event) {
-            event.addCapability(RESOURCE, new Provider());
+            if ((Object) event.getObject() instanceof LevelChunk) {
+                event.addCapability(RESOURCE, new Provider());
+            }
         }
     }
 
