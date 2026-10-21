@@ -8,6 +8,7 @@ import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.datasaving.StackSaving;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.AllyOrEnemy;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.EntityFinder;
+import com.robertx22.age_of_exile.uncommon.utilityclasses.ItemUtils;
 import com.robertx22.age_of_exile.vanilla_mc.items.misc.AutoItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,7 +32,11 @@ public abstract class BaseCraftedConsumableItem extends AutoItem {
     public boolean isAOE = false;
 
     public BaseCraftedConsumableItem(PlayerSkillEnum skill) {
-        super(new Item.Properties());
+        this(skill, new Item.Properties());
+    }
+
+    public BaseCraftedConsumableItem(PlayerSkillEnum skill, Item.Properties properties) {
+        super(properties);
         this.skill = skill;
     }
 
@@ -84,6 +89,8 @@ public abstract class BaseCraftedConsumableItem extends AutoItem {
 
                     Load.Unit(p).statusEffects.addConsumableEffect(skill, data);
                 }
+
+                ItemUtils.playConsumeSound(world, en, stack);
             }
 
         }
@@ -92,7 +99,7 @@ public abstract class BaseCraftedConsumableItem extends AutoItem {
     }
 
     @Override public int getUseDuration(ItemStack stack, net.minecraft.world.entity.LivingEntity entity) {
-        return 40;
+        return ItemUtils.useDuration(stack, 40);
     }
 
     @OnlyIn(Dist.CLIENT)
