@@ -85,11 +85,11 @@ public class SpellSchool implements JsonExileRegistry<SpellSchool>, IAutoGson<Sp
 
     @Override
     public String locNameLangFileGUID() {
-        return locname;
+        return SlashRef.MODID + ".spell_school." + id;
     }
 
     @Override
     public String locNameForLangFile() {
-        return SlashRef.MODID + ".spell_school." + id;
+        return locname;
     }
 }

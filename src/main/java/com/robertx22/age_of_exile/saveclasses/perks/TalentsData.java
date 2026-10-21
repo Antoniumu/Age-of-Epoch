@@ -183,29 +183,72 @@ public class TalentsData implements IApplyableStats {
     }
 
     public boolean canRemove(TalentTree school, PointData point) {
+        if (reset_points < 1) {
+            return false;
+        }
+        return canRemoveIgnoringResetPoints(school, point);
+    }
+
+    public boolean canRemoveIgnoringResetPoints(TalentTree school, PointData point) {
 
         if (!getSchool(school).isAllocated(point)) {
             return false;
         }
 
-        if (reset_points < 1) {
-            return false;
-        }
+        Map<PointData, Integer> distFromStart = getDistancesFromStart(school);
+        int pointDist = distFromStart.getOrDefault(point, Integer.MAX_VALUE);
 
-        for (PointData con : school.calcData.connections.get(point)) {
-            if (getSchool(school).isAllocated(con)) {
-                Perk perk = school.calcData.getPerk(con);
-                if (perk.is_entry) {
-                    continue;
-                }
-                if (!hasPathToStart(school, con, point)) {
-                    return false;
+        Set<PointData> connections = school.calcData.connections.get(point);
+        if (connections != null) {
+            for (PointData con : connections) {
+                if (getSchool(school).isAllocated(con)) {
+                    int conDist = distFromStart.getOrDefault(con, Integer.MAX_VALUE);
+                    if (conDist > pointDist) {
+                        return false;
+                    }
+                    Perk perk = school.calcData.getPerk(con);
+                    if (perk != null && perk.is_entry) {
+                        continue;
+                    }
+                    if (!hasPathToStart(school, con, point)) {
+                        return false;
+                    }
                 }
             }
         }
 
         return true;
 
+    }
+
+    private Map<PointData, Integer> getDistancesFromStart(TalentTree school) {
+        Map<PointData, Integer> dist = new HashMap<>();
+        Queue<PointData> queue = new ArrayDeque<>();
+
+        for (PointData pt : getSchool(school).getAllocatedPoints(school)) {
+            Perk p = school.calcData.getPerk(pt);
+            if (p != null && p.is_entry) {
+                dist.put(pt, 0);
+                queue.add(pt);
+            }
+        }
+
+        while (!queue.isEmpty()) {
+            PointData curr = queue.poll();
+            int currDist = dist.get(curr);
+            Set<PointData> cons = school.calcData.connections.get(curr);
+            if (cons == null) {
+                continue;
+            }
+            for (PointData next : cons) {
+                if (getSchool(school).isAllocated(next) && !dist.containsKey(next)) {
+                    dist.put(next, currDist + 1);
+                    queue.add(next);
+                }
+            }
+        }
+
+        return dist;
     }
 
     private boolean hasPathToStart(TalentTree school, PointData check, PointData toRemove) {

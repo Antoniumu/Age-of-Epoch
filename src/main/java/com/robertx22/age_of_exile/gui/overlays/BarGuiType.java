@@ -45,6 +45,9 @@ public enum BarGuiType {
 
         @Override
         public String getText(EntityData data, Player en) {
+            if (data.getLevel() >= com.robertx22.age_of_exile.database.data.game_balance_config.GameBalanceConfig.get().MAX_LEVEL) {
+                return "Ур. " + data.getLevel() + " (МАКС.)";
+            }
             return "Ур. " + data.getLevel() + " (" + (int) (getMulti(data, en) * 100) + "%)";
         }
     },

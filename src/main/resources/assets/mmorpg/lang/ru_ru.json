@@ -1988,5 +1988,10 @@
   "mmorpg.stat_desc.water_penetration": "Игнорирует часть сопротивления воде у врагов.",
   "mmorpg.stat_desc.water_resist": "Снижает получаемый урон стихии воды.",
   "mmorpg.stat_desc.water_vuln_crit": "Входящий урон водой по вам всегда становится критическим.",
-  "mmorpg.stat_desc.water_weapon_damage": "Увеличивает урон оружия стихией воды."
+  "mmorpg.stat_desc.water_weapon_damage": "Увеличивает урон оружия стихией воды.",
+  "mmorpg.spell_school.divine": "Божественность",
+  "mmorpg.spell_school.hunting": "Охота",
+  "mmorpg.spell_school.nature": "Природа",
+  "mmorpg.spell_school.fire": "Огонь",
+  "mmorpg.spell_school.water": "Вода"
 }

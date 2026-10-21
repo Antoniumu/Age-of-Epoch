@@ -264,6 +264,9 @@ public class SpellScreen extends BaseScreen implements INamedScreen, ILeftRight 
                 .getFreeSpellPoints();
             GuiUtils.renderScaledText(matrix, guiLeft + 125, guiTop + 215, 1D, txt, ChatFormatting.GREEN);
 
+            String schoolTitle = getSchoolDisplayName(currentSchool());
+            GuiUtils.renderScaledText(matrix, guiLeft + 42, guiTop + 25, 0.85D, schoolTitle, getSchoolColor(currentSchool()));
+
             if (!this.statusMessage.isEmpty() && System.currentTimeMillis() - this.statusMessageTime < 4000L) {
                 GuiUtils.renderScaledText(matrix, guiLeft + sizeX / 2, guiTop + sizeY + 10, 0.9D, this.statusMessage, ChatFormatting.YELLOW);
             }
@@ -287,11 +290,98 @@ public class SpellScreen extends BaseScreen implements INamedScreen, ILeftRight 
                 blit(matrix, x - 8, y - 8, 16, 16, 0, 0, 16, 16, 16, 16);
             } else {
                 buttons.forEach(b -> b.renderToolTip(matrix, x, y));
+                renderSchoolHeaderTooltip(matrix, x, y);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+    private String getSchoolDisplayName(SpellSchool school) {
+        if (school == null) {
+            return "";
+        }
+        return switch (school.GUID()) {
+            case "divine" -> "Божественность";
+            case "hunting" -> "Охота";
+            case "nature" -> "Природа";
+            case "fire" -> "Огонь";
+            case "water" -> "Вода";
+            default -> school.locName().getString();
+        };
+    }
+
+    private String getSchoolSubtitle(SpellSchool school) {
+        if (school == null) {
+            return "";
+        }
+        return switch (school.GUID()) {
+            case "divine" -> "Паладин / Жрец — свет, исцеление, ауры и мощные удары ближнего боя";
+            case "hunting" -> "Охотник / Следопыт — стрельба из лука, ловушки, кровотечение и манёвренность";
+            case "nature" -> "Друид / Шаман — силы природы, яды, шипы, тотемы и восстановление";
+            case "fire" -> "Пиромант — разрушительная огненная магия, метеоры и поджоги";
+            case "water" -> "Маг воды и льда — заморозка, контроль толпы и магия океана";
+            default -> "Школа навыков и заклинаний";
+        };
+    }
+
+    private ChatFormatting getSchoolColor(SpellSchool school) {
+        if (school == null) {
+            return ChatFormatting.GOLD;
+        }
+        return switch (school.GUID()) {
+            case "divine" -> ChatFormatting.YELLOW;
+            case "hunting" -> ChatFormatting.GREEN;
+            case "nature" -> ChatFormatting.DARK_GREEN;
+            case "fire" -> ChatFormatting.RED;
+            case "water" -> ChatFormatting.AQUA;
+            default -> ChatFormatting.GOLD;
+        };
+    }
+
+    private void renderSchoolHeaderTooltip(PoseStack matrix, int mouseX, int mouseY) {
+        int leftBtnX = guiLeft + 100 - LeftRightButton.xSize - 5;
+        int rightBtnX = guiLeft + 150 + 5;
+        int btnY = guiTop + 25 - LeftRightButton.ySize / 2;
+
+        if (GuiUtils.isInRect(leftBtnX, btnY, LeftRightButton.xSize, LeftRightButton.ySize, mouseX, mouseY)) {
+            int prevIdx = currentIndex - 1 < 0 ? maxIndex : currentIndex - 1;
+            SpellSchool prev = orderedSchools.get(prevIdx);
+            java.util.List<net.minecraft.network.chat.Component> tooltip = new java.util.ArrayList<>();
+            tooltip.add(net.minecraft.network.chat.Component.literal("Предыдущий класс: " + getSchoolDisplayName(prev)).withStyle(getSchoolColor(prev)));
+            tooltip.add(net.minecraft.network.chat.Component.literal(getSchoolSubtitle(prev)).withStyle(ChatFormatting.GRAY));
+            tooltip.add(net.minecraft.network.chat.Component.literal("ЛКМ — переключить школу навыков").withStyle(ChatFormatting.DARK_GRAY));
+            GuiUtils.renderTooltip(matrix, tooltip, mouseX, mouseY);
+            return;
+        }
+
+        if (GuiUtils.isInRect(rightBtnX, btnY, LeftRightButton.xSize, LeftRightButton.ySize, mouseX, mouseY)) {
+            int nextIdx = currentIndex + 1 > maxIndex ? 0 : currentIndex + 1;
+            SpellSchool next = orderedSchools.get(nextIdx);
+            java.util.List<net.minecraft.network.chat.Component> tooltip = new java.util.ArrayList<>();
+            tooltip.add(net.minecraft.network.chat.Component.literal("Следующий класс: " + getSchoolDisplayName(next)).withStyle(getSchoolColor(next)));
+            tooltip.add(net.minecraft.network.chat.Component.literal(getSchoolSubtitle(next)).withStyle(ChatFormatting.GRAY));
+            tooltip.add(net.minecraft.network.chat.Component.literal("ЛКМ — переключить школу навыков").withStyle(ChatFormatting.DARK_GRAY));
+            GuiUtils.renderTooltip(matrix, tooltip, mouseX, mouseY);
+            return;
+        }
+
+        boolean overIcon = GuiUtils.isInRect(guiLeft + 108, guiTop + 8, 34, 34, mouseX, mouseY);
+        boolean overLeftBanner = GuiUtils.isInRect(guiLeft + 7, guiTop + 7, 93, 36, mouseX, mouseY);
+        boolean overRightBanner = GuiUtils.isInRect(guiLeft + 150, guiTop + 7, 93, 36, mouseX, mouseY);
+
+        if (overIcon || overLeftBanner || overRightBanner) {
+            SpellSchool school = currentSchool();
+            java.util.List<net.minecraft.network.chat.Component> tooltip = new java.util.ArrayList<>();
+            tooltip.add(net.minecraft.network.chat.Component.literal("Класс: " + getSchoolDisplayName(school)).withStyle(getSchoolColor(school), ChatFormatting.BOLD));
+            tooltip.add(net.minecraft.network.chat.Component.literal(getSchoolSubtitle(school)).withStyle(ChatFormatting.GRAY));
+            int spent = Load.spells(mc.player).getSpellsData().getAllocatedPointsInSchool(school);
+            tooltip.add(net.minecraft.network.chat.Component.literal("Вложено очков в этой школе: " + spent).withStyle(ChatFormatting.AQUA));
+            tooltip.add(net.minecraft.network.chat.Component.literal("Стрелки влево/вправо переключают класс").withStyle(ChatFormatting.DARK_GRAY));
+            tooltip.add(net.minecraft.network.chat.Component.literal("Перетащите изученный навык на нижнюю панель").withStyle(ChatFormatting.YELLOW));
+            GuiUtils.renderTooltip(matrix, tooltip, mouseX, mouseY);
+        }
     }
 
     @Override
