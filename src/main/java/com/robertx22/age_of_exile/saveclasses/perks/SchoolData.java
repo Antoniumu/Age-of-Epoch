@@ -24,24 +24,38 @@ public class SchoolData {
         return map.entrySet()
             .stream()
             .filter(x -> {
-                return x.getValue() && school.calcData.getPerk(x.getKey()) != null;
+                return Boolean.TRUE.equals(x.getValue()) && school != null && school.calcData.getPerk(x.getKey()) != null;
             })
             .map(x -> x.getKey())
             .collect(Collectors.toList());
     }
 
-    public int getAllocatedPointsInSchool() {
+    public void cleanupInvalidPoints(TalentTree school) {
+        if (school == null || school.calcData == null || school.calcData.perks.isEmpty()) {
+            return;
+        }
+        map.entrySet().removeIf(x -> x.getKey() == null || school.calcData.getPerk(x.getKey()) == null);
+    }
 
+    public int getAllocatedPointsInSchool(TalentTree school) {
+        if (school != null && school.calcData != null && !school.calcData.perks.isEmpty()) {
+            cleanupInvalidPoints(school);
+        }
         int points = 0;
 
         for (Map.Entry<PointData, Boolean> x : map.entrySet()) {
-            if (x.getValue()) {
-                points++;
+            if (Boolean.TRUE.equals(x.getValue())) {
+                if (school == null || school.calcData.getPerk(x.getKey()) != null) {
+                    points++;
+                }
             }
         }
 
         return points;
+    }
 
+    public int getAllocatedPointsInSchool() {
+        return getAllocatedPointsInSchool(null);
     }
 
 }

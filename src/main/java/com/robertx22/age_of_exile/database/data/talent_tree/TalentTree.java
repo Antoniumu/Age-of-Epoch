@@ -113,8 +113,15 @@ public class TalentTree implements JsonExileRegistry<TalentTree>, IAutoGson<Tale
         public transient HashMap<PointData, String> perks = new HashMap<>();
 
         public Perk getPerk(PointData point) {
+            if (point == null) {
+                return null;
+            }
+            String id = perks.get(point);
+            if (id == null || id.isEmpty() || !ExileDB.Perks().isRegistered(id)) {
+                return null;
+            }
             return ExileDB.Perks()
-                .get(perks.get(point));
+                .get(id);
         }
 
         public boolean isConnected(PointData one, PointData two) {

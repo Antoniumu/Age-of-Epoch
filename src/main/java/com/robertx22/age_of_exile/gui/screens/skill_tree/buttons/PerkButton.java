@@ -79,7 +79,23 @@ public class PerkButton extends ImageButton {
         int MmouseY = (int) (1F / screen.zoom * mouseY);
 
         if (this.isInside(MmouseX, MmouseY)) {
-            List<Component> tooltip = perk.GetTooltipString(new TooltipInfo(Minecraft.getInstance().player));
+            List<Component> tooltip = new java.util.ArrayList<>(perk.GetTooltipString(new TooltipInfo(Minecraft.getInstance().player)));
+            RPGPlayerData data = Load.playerRPGData(mc.player);
+            if (data != null && data.talents != null && mc.player != null) {
+                PerkStatus status = cachedStatus != null ? cachedStatus : data.talents.getStatus(mc.player, school, point);
+                if (status == PerkStatus.POSSIBLE) {
+                    tooltip.add(Component.literal("ЛКМ — Изучить талант").withStyle(net.minecraft.ChatFormatting.GREEN));
+                } else if (status == PerkStatus.CONNECTED) {
+                    tooltip.add(Component.literal("Изучено (ПКМ — сбросить)").withStyle(net.minecraft.ChatFormatting.AQUA));
+                } else if (data.talents.findAllocatableEntryConnection(school, point, Load.Unit(mc.player), mc.player) != null) {
+                    tooltip.add(Component.literal("ЛКМ — Выбрать этот начальный путь").withStyle(net.minecraft.ChatFormatting.GOLD));
+                } else {
+                    String reason = data.talents.getFailAllocateReason(school, point, Load.Unit(mc.player), mc.player);
+                    if (reason != null && !reason.isEmpty()) {
+                        tooltip.add(Component.literal(reason).withStyle(net.minecraft.ChatFormatting.RED));
+                    }
+                }
+            }
             GuiUtils.renderTooltip(matrices, tooltip, mouseX, mouseY);
         }
     }
@@ -105,18 +121,41 @@ public class PerkButton extends ImageButton {
 
             this.playDownSound(Minecraft.getInstance().getSoundManager());
 
-            if (button == 0) {
-                if (this.playerData != null && this.playerData.talents.canAllocate(school, point, Load.Unit(mc.player), mc.player)) {
+            if (button == 0 && this.playerData != null) {
+                if (this.playerData.talents.canAllocate(school, point, Load.Unit(mc.player), mc.player)) {
                     this.playerData.talents.allocate(mc.player, school, point);
+                    screen.setStatusMessage("");
+                    Packets.sendToServer(new PerkChangePacket(school, point, PerkChangePacket.ACTION.ALLOCATE));
+                } else {
+                    PointData entryPoint = this.playerData.talents.findAllocatableEntryConnection(school, point, Load.Unit(mc.player), mc.player);
+                    if (entryPoint != null) {
+                        this.playerData.talents.allocate(mc.player, school, entryPoint);
+                        if (this.playerData.talents.canAllocate(school, point, Load.Unit(mc.player), mc.player)) {
+                            this.playerData.talents.allocate(mc.player, school, point);
+                            screen.setStatusMessage("");
+                        } else {
+                            screen.setStatusMessage("Начальный путь выбран! Для следующего узла нужны очки талантов.");
+                        }
+                        Packets.sendToServer(new PerkChangePacket(school, point, PerkChangePacket.ACTION.ALLOCATE));
+                    } else {
+                        String reason = this.playerData.talents.getFailAllocateReason(school, point, Load.Unit(mc.player), mc.player);
+                        screen.setStatusMessage(reason);
+                    }
                 }
-                Packets.sendToServer(new PerkChangePacket(school, point, PerkChangePacket.ACTION.ALLOCATE));
                 screen.markDirty();
-            } else if (button == 1) {
-                if (this.playerData != null && this.playerData.talents.canRemove(school, point)) {
+            } else if (button == 1 && this.playerData != null) {
+                if (this.playerData.talents.canRemove(school, point)) {
                     this.playerData.talents.remove(school, point);
                     this.playerData.talents.reset_points--;
+                    screen.setStatusMessage("");
+                    Packets.sendToServer(new PerkChangePacket(school, point, PerkChangePacket.ACTION.REMOVE));
+                } else if (this.playerData.talents.isAllocated(school, point)) {
+                    if (this.playerData.talents.reset_points < 1) {
+                        screen.setStatusMessage("Недостаточно очков сброса");
+                    } else {
+                        screen.setStatusMessage("Нельзя сбросить: от этого таланта зависят другие изученные узлы");
+                    }
                 }
-                Packets.sendToServer(new PerkChangePacket(school, point, PerkChangePacket.ACTION.REMOVE));
                 screen.markDirty();
             }
             this.onClick(mx, my);

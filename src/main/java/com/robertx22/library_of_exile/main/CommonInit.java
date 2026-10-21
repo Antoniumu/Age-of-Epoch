@@ -68,12 +68,19 @@ public class CommonInit {
 
     public static void onDatapacksReloaded() {
         try {
-
+            Database.getAllRegistries()
+                .forEach(x -> x.registerSerializables());
             Database.backup();
             Database.checkGuidValidity();
             Database.unregisterInvalidEntries();
             Database.getAllRegistries()
-                .forEach(x -> x.onAllDatapacksLoaded());
+                .forEach(x -> {
+                    try {
+                        x.onAllDatapacksLoaded();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
             ExileEvents.AFTER_DATABASE_LOADED.callEvents(new ExileEvents.AfterDatabaseLoaded());
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -23,29 +23,30 @@ public class RegistryPackets {
     }
 
     public static void registerAll(SyncTime sync) {
+        if (net.minecraft.client.Minecraft.getInstance().hasSingleplayerServer()) {
+            Database.getAllRegistries().forEach(ExileRegistryContainer::registerSerializables);
+            map.clear();
+            return;
+        }
+
         Watch watch = new Watch();
         watch.min = 50000;
 
         ExileRegistryType.getInRegisterOrder(sync)
             .forEach(type -> {
 
-                if (type.getLoader() != null && type.ser instanceof IByteBuf == false) {
+                if (type.isDatapack() && type.getLoader() != null && type.ser instanceof IByteBuf == false) {
 
                     ExileRegistryContainer reg = Database.getRegistry(type);
-
-                    reg.unregisterAllEntriesFromDatapacks();
-
-                    for (Object s : reg.getSerializable()) {
-                        if (s instanceof ExileRegistry entry && !reg.isRegistered(entry)) {
-                            reg.register(entry);
-                        }
-                    }
 
                     List<JsonObject> list = map.get(type);
 
                     if (list == null || list.isEmpty()) {
-                        throw new RuntimeException("Registry list sent from server is empty! " + type.id);
+                        reg.registerSerializables();
+                        return;
                     }
+
+                    reg.unregisterAllEntriesFromDatapacks();
 
                     list.forEach(x -> {
 
@@ -55,19 +56,17 @@ public class RegistryPackets {
                             reg.unRegister(entry);
                             entry.registerToExileRegistry();
 
-                        } catch (JsonSyntaxException e) {
+                        } catch (Exception e) {
                             System.out.println("Failed to parse Age of Exile registry Json!!!");
                             e.printStackTrace();
                         }
 
                     });
 
-                    if (reg
-                        .isEmpty()) {
-                        throw new RuntimeException("Age of Exile Registry of type " + reg.getType() + " is EMPTY after datapack loading!");
-                    } else {
-                        // System.out.println(type.name() + " registry load on client succeeded with: " + reg.getSize() + " entries.");
+                    reg.registerSerializables();
 
+                    if (reg.isEmpty()) {
+                        System.out.println("Age of Exile Registry of type " + reg.getType() + " is EMPTY after datapack loading!");
                     }
                 }
             });

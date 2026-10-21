@@ -44,50 +44,67 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
     FriendlyByteBuf cachedBuf = null;
 
     public void sendUpdatePacket(ServerPlayer player) {
-        if (type.ser == null) {
+        if (type.ser == null || !type.isDatapack()) {
             return;
         }
-        if (cachedBuf == null) {
-            onAllDatapacksLoaded();
-        }
-        if (cachedBuf == null) {
-            return;
-        }
+        try {
+            if (cachedBuf == null) {
+                onAllDatapacksLoaded();
+            }
+            if (cachedBuf == null) {
+                return;
+            }
 
-        if (type.ser instanceof IByteBuf) {
-            Packets.sendToClient(player, new EfficientRegistryPacket(this.type, getList()));
-        } else {
-            ListStringData data = new ListStringData(getFromDatapacks()
-                .stream()
-                .map(x -> ((ISerializable) x).toJsonString())
-                .collect(Collectors.toList()));
-            Packets.sendToClient(player, new RegistryPacket(this.type, data));
+            if (type.ser instanceof IByteBuf) {
+                Packets.sendToClient(player, new EfficientRegistryPacket(this.type, getList()));
+            } else {
+                ListStringData data = new ListStringData(getFromDatapacks()
+                    .stream()
+                    .map(x -> ((ISerializable) x).toJsonString())
+                    .collect(Collectors.toList()));
+                Packets.sendToClient(player, new RegistryPacket(this.type, data));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void registerSerializables() {
+        if (!serializables.isEmpty()) {
+            serializables.forEach(map::putIfAbsent);
         }
     }
 
     public void onAllDatapacksLoaded() {
-        if (!serializables.isEmpty()) {
-            serializables.forEach(map::putIfAbsent);
+        registerSerializables();
+
+        if (!type.isDatapack() || type.ser == null) {
+            return;
         }
 
         fromDatapacks = null;
         getFromDatapacks();
 
         if (fromDatapacks != null && !fromDatapacks.isEmpty()) {
-            cachedBuf = new FriendlyByteBuf(Unpooled.buffer());
-            // save the packetbytebuf, this should save at least 0.1 sec for each time anyone logs in.
-            // SUPER important for big mmorpg servers!
-            if (type.ser instanceof IByteBuf) {
-                new EfficientRegistryPacket(type, Database.getRegistry(type)
-                    .getFromDatapacks()).saveToData(cachedBuf);
-            } else {
-                ListStringData data = new ListStringData(getFromDatapacks()
-                    .stream()
-                    .map(x -> ((ISerializable) x).toJsonString())
-                    .collect(Collectors.toList()));
-                new RegistryPacket(type, data).saveToData(cachedBuf);
+            try {
+                FriendlyByteBuf tmpBuf = new FriendlyByteBuf(Unpooled.buffer());
+                // save the packetbytebuf, this should save at least 0.1 sec for each time anyone logs in.
+                // SUPER important for big mmorpg servers!
+                if (type.ser instanceof IByteBuf) {
+                    new EfficientRegistryPacket(type, Database.getRegistry(type)
+                        .getFromDatapacks()).saveToData(tmpBuf);
+                } else {
+                    ListStringData data = new ListStringData(getFromDatapacks()
+                        .stream()
+                        .map(x -> ((ISerializable) x).toJsonString())
+                        .collect(Collectors.toList()));
+                    new RegistryPacket(type, data).saveToData(tmpBuf);
+                }
+                Preconditions.checkNotNull(tmpBuf);
+                cachedBuf = tmpBuf;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            Preconditions.checkNotNull(cachedBuf);
         }
     }
 
@@ -145,7 +162,7 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
     }
 
     public int getSize() {
-        return map.size();
+        return !map.isEmpty() ? map.size() : serializables.size();
     }
 
     public boolean isRegistrationDone() {
@@ -184,6 +201,9 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
     }
 
     public List<C> getList() {
+        if (map.isEmpty() && !serializables.isEmpty()) {
+            registerSerializables();
+        }
         if (!map.isEmpty()) {
             return new ArrayList<C>(map.values());
         }
@@ -271,7 +291,7 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
     }
 
     public boolean isRegistered(String guid) {
-        return map.containsKey(guid);
+        return map.containsKey(guid) || serializables.containsKey(guid);
     }
 
     public void register(C c) {
