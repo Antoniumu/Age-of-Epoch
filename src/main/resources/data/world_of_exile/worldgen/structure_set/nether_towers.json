@@ -2,13 +2,18 @@
   "structures": [
     {
       "structure": "world_of_exile:blackstone_tower",
+      "weight": 2
+    },
+    {
+      "structure": "world_of_exile:shortfatfortress",
       "weight": 1
     }
   ],
   "placement": {
     "type": "minecraft:random_spread",
-    "spacing": 10,
-    "separation": 4,
-    "salt": 14357620
+    "spacing": 12,
+    "separation": 5,
+    "salt": 14357620,
+    "spread_type": "linear"
   }
 }

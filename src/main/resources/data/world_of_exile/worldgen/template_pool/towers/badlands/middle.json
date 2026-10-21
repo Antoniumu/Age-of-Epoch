@@ -1,0 +1,32 @@
+{
+  "fallback": "world_of_exile:towers/badlands/top",
+  "elements": [
+    {
+      "weight": 3,
+      "element": {
+        "location": "world_of_exile:towers/badlands/middle0",
+        "processors": "world_of_exile:tower_processor",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "location": "world_of_exile:towers/badlands/middle1",
+        "processors": "world_of_exile:tower_processor",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "location": "world_of_exile:towers/badlands/middle2",
+        "processors": "world_of_exile:tower_processor",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

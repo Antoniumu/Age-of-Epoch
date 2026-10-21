@@ -5,6 +5,12 @@ import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.interfaces.data_items.IRarity;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.SignUtils;
 import com.robertx22.forge_compat.event.entity.living.LivingDeathEvent;
+import com.robertx22.world_of_exile.tower.TowerAbility;
+import com.robertx22.world_of_exile.tower.TowerBossDef;
+import com.robertx22.world_of_exile.tower.TowerMaterials;
+import com.robertx22.world_of_exile.tower.TowerRoster;
+import com.robertx22.world_of_exile.tower.TowerTheme;
+import com.robertx22.world_of_exile.tower.TowerThemes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -33,6 +39,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.util.RandomSource;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -51,8 +58,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class TowerBoss {
 
     public static final String TAG = "aoe_tower_boss";
+    public static final String CHAMPION_TAG = "aoe_tower_champion";
     public static final String MOB_TAG = "aoe_tower_mob";
     private static final String HOME_PREFIX = "aoe_tower_home:";
+    private static final String THEME_PREFIX = "aoe_tower_theme:";
+    private static final String RANK_PREFIX = "aoe_tower_rank:";
     private static final int SCAN_RADIUS_CHUNKS = 3;
     private static final int SAME_TOWER = 48;
 
@@ -72,7 +82,6 @@ public final class TowerBoss {
         }
         List<TowerBossMarkerBlockEntity> markers = new ArrayList<>();
         List<BlockPos> campfires = new ArrayList<>();
-        List<BlockPos> openSpawners = new ArrayList<>();
         List<BlockPos> towerSpawners = new ArrayList<>();
         for (ServerPlayer player : level.players()) {
             if (player.isSpectator()) {
@@ -97,9 +106,6 @@ public final class TowerBoss {
                             campfires.add(pos);
                         } else if (be != null && level.getBlockState(pos).is(Blocks.SPAWNER) && nearTowerMaterial(level, pos)) {
                             towerSpawners.add(pos);
-                            if (isOpenTowerSpawner(level, pos)) {
-                                openSpawners.add(pos);
-                            }
                         }
                     }
                 }
@@ -112,7 +118,7 @@ public final class TowerBoss {
                 liveMarkers.add(marker.getBlockPos());
             }
         }
-        placeOneFallbackMarker(level, openSpawners, campfires, liveMarkers);
+        placeOneFallbackMarker(level, campfires, liveMarkers);
         aggroTowerMobs(level);
         pumpTowerSpawners(level, towerSpawners);
     }
@@ -136,10 +142,14 @@ public final class TowerBoss {
         }
     }
 
-    private static void placeOneFallbackMarker(ServerLevel level, List<BlockPos> openSpawners, List<BlockPos> campfires, List<BlockPos> liveMarkers) {
+    /**
+     * Legacy safety net: the old World of Exile towers marked their boss with a
+     * soul campfire.  Only campfires are converted - never spawners, because the
+     * themed tower halls are full of real spawners.
+     */
+    private static void placeOneFallbackMarker(ServerLevel level, List<BlockPos> campfires, List<BlockPos> liveMarkers) {
         List<BlockPos> placed = new ArrayList<>(liveMarkers);
-        List<BlockPos> candidates = new ArrayList<>(openSpawners);
-        candidates.addAll(campfires);
+        List<BlockPos> candidates = new ArrayList<>(campfires);
         candidates.sort((a, b) -> Integer.compare(b.getY(), a.getY()));
         for (BlockPos pos : candidates) {
             if (!level.getChunkSource().hasChunk(pos.getX() >> 4, pos.getZ() >> 4)) {
@@ -156,18 +166,6 @@ public final class TowerBoss {
             }
             placed.add(pos);
         }
-    }
-
-    private static boolean isOpenTowerSpawner(ServerLevel level, BlockPos pos) {
-        if (!level.getBlockState(pos).is(Blocks.SPAWNER) || !nearTowerMaterial(level, pos)) {
-            return false;
-        }
-        for (int dy = 1; dy <= 4; dy++) {
-            if (TowerCollapse.isTowerMaterial(level.getBlockState(pos.above(dy)))) {
-                return false;
-            }
-        }
-        return true;
     }
 
     public static void trySpawnFromMarker(TowerBossMarkerBlockEntity marker) {
@@ -200,9 +198,7 @@ public final class TowerBoss {
                 return;
             }
             level.removeBlock(pos, false);
-            if (spawn(level, pos) != null) {
-                tell(level, pos, "Страж башни пробудился.", ChatFormatting.DARK_RED);
-            } else if (restoreCampfire) {
+            if (spawn(level, pos, marker.theme) == null && restoreCampfire) {
                 level.setBlock(pos, Blocks.SOUL_CAMPFIRE.defaultBlockState(), 3);
             }
         } finally {
@@ -256,6 +252,13 @@ public final class TowerBoss {
                 mob.setAggressive(true);
             }
         }
+        if (entity instanceof Mob mob && (entity.tickCount % 10) == 0) {
+            TowerTheme theme = themeOf(entity);
+            if (theme == null) {
+                theme = TowerThemes.forDimension(level);
+            }
+            TowerAbility.tick(level, mob, theme, rankOf(entity));
+        }
         if ((entity.tickCount % 40) == 0) {
             entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 80, 0, false, false));
             if (entity instanceof Mob mob) {
@@ -305,37 +308,87 @@ public final class TowerBoss {
         if (!(entity.level() instanceof ServerLevel level)) {
             return;
         }
-        if (!COLLAPSED.add(entity.getUUID())) {
-            return;
-        }
-        entity.removeTag(TAG);
         BlockPos home = readHome(entity);
         if (home == null) {
             home = entity.blockPosition();
         }
+        TowerAbility.forget(entity.getUUID());
+        if (entity.entityTags().contains(CHAMPION_TAG)) {
+            entity.removeTag(TAG);
+            tell(level, home, "Прислужник стража пал.", ChatFormatting.YELLOW);
+            return;
+        }
+        if (!COLLAPSED.add(entity.getUUID())) {
+            return;
+        }
+        entity.removeTag(TAG);
         COLLAPSED_AT.put(home.immutable(), level.getGameTime());
         TowerCollapse.start(level, home);
         tell(level, home, "Страж пал. Башня рушится.", ChatFormatting.RED);
     }
 
-    private static LivingEntity spawn(ServerLevel level, BlockPos pos) {
-        String mobId = Level.NETHER.equals(level.dimension()) ? "minecraft:wither_skeleton" : "minecraft:vindicator";
-        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(mobId));
+    /**
+     * Spawns the tower's main boss - picked from the theme roster by the rank
+     * derived from the tower's height and the biome danger - plus its
+     * champions.  Champions are weaker named bosses with their own abilities
+     * but do not collapse the tower when they die.
+     */
+    private static LivingEntity spawn(ServerLevel level, BlockPos pos, String themeId) {
+        TowerTheme theme = TowerThemes.exists(themeId) ? TowerThemes.byId(themeId) : TowerThemes.forDimension(level);
+        int rank = rankAt(level, pos, theme);
+        RandomSource random = level.getRandom();
+        TowerBossDef def = TowerRoster.mainBoss(theme.id(), rank, random);
+        LivingEntity boss = createBoss(level, pos, def, theme, rank, false);
+        if (boss == null) {
+            return null;
+        }
+        int championCount = Math.min(3, Math.max(1, rank - 1));
+        int spawnedChampions = 0;
+        for (TowerBossDef champion : TowerRoster.champions(theme.id(), rank, championCount, def, random)) {
+            BlockPos spot = pos.offset(random.nextInt(9) - 4, random.nextInt(3) - 1, random.nextInt(9) - 4);
+            if (createBoss(level, spot, champion, theme, Math.max(1, rank - 1), true) != null) {
+                spawnedChampions++;
+            }
+        }
+        String suffix = spawnedChampions > 0 ? " Со свитой из " + spawnedChampions + " прислужников." : "";
+        tell(level, pos, "Страж «" + theme.name() + "» пробудился: " + def.name() + "." + suffix,
+            rank >= 3 ? ChatFormatting.DARK_RED : ChatFormatting.GOLD);
+        return boss;
+    }
+
+    private static LivingEntity createBoss(ServerLevel level, BlockPos pos, TowerBossDef def, TowerTheme theme,
+                                           int rank, boolean champion) {
+        EntityType<?> type = null;
+        try {
+            type = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(def.entity()));
+        } catch (Exception ignored) {
+        }
         if (type == null) {
-            type = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse("minecraft:vindicator"));
+            type = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(
+                Level.NETHER.equals(level.dimension()) ? "minecraft:wither_skeleton" : "minecraft:vindicator"));
         }
         if (type == null) {
             return null;
         }
-        LivingEntity entity = (LivingEntity) type.create(level, EntitySpawnReason.MOB_SUMMONED);
-        if (entity == null) {
+        Entity created = type.create(level, EntitySpawnReason.MOB_SUMMONED);
+        if (!(created instanceof LivingEntity entity)) {
             return null;
         }
         BlockPos stand = findAir(level, pos);
         entity.setPos(stand.getX() + 0.5D, stand.getY(), stand.getZ() + 0.5D);
         entity.addTag(TAG);
         entity.addTag(HOME_PREFIX + stand.getX() + "," + stand.getY() + "," + stand.getZ());
-        entity.setCustomName(Component.literal("Страж башни").withStyle(ChatFormatting.DARK_RED));
+        entity.addTag(THEME_PREFIX + theme.id());
+        entity.addTag(RANK_PREFIX + rank);
+        if (champion) {
+            entity.addTag(CHAMPION_TAG);
+        }
+        ChatFormatting colour = rank >= 4 ? ChatFormatting.DARK_PURPLE
+            : rank == 3 ? ChatFormatting.DARK_RED
+            : rank == 2 ? ChatFormatting.GOLD
+            : ChatFormatting.YELLOW;
+        String title = champion ? def.name() + " (прислужник)" : def.name();
+        entity.setCustomName(Component.literal(title).withStyle(colour));
         entity.setCustomNameVisible(true);
         if (entity instanceof Mob mob) {
             mob.setPersistenceRequired();
@@ -344,6 +397,7 @@ public final class TowerBoss {
                 mob.finalizeSpawn(level, level.getCurrentDifficultyAt(stand), EntitySpawnReason.MOB_SUMMONED, null);
             } catch (Exception ignored) {
             }
+            equip(mob, def);
             arm(mob);
             Player target = nearestFighter(level, entity, arenaOf(level, stand));
             if (target != null) {
@@ -355,16 +409,151 @@ public final class TowerBoss {
         try {
             var data = Load.Unit(entity);
             if (data != null) {
+                data.setLevel(Math.max(data.getLevel(), rank + 2));
                 data.setRarity(IRarity.BOSS_ID);
                 data.forceRecalculateStats();
-                entity.setHealth(entity.getMaxHealth());
             }
         } catch (Exception ignored) {
         }
-        entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 80, 0, false, false));
+        scale(entity, def, rank, champion);
+        entity.setHealth(entity.getMaxHealth());
+        entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 120, 0, false, false));
         level.sendParticles(net.minecraft.core.particles.ParticleTypes.SOUL_FIRE_FLAME,
             entity.getX(), entity.getY() + 1.0D, entity.getZ(), 24, 0.4D, 0.6D, 0.4D, 0.02D);
         return entity;
+    }
+
+    /** Applies the roster multipliers on top of the vanilla mob attributes. */
+    private static void scale(LivingEntity entity, TowerBossDef def, int rank, boolean champion) {
+        double rankBonus = 1.0D + (rank - 1) * 0.12D;
+        double championPenalty = champion ? 0.55D : 1.0D;
+        try {
+            var health = entity.getAttribute(Attributes.MAX_HEALTH);
+            if (health != null) {
+                health.setBaseValue(health.getBaseValue() * def.health() * rankBonus * championPenalty);
+            }
+            var damage = entity.getAttribute(Attributes.ATTACK_DAMAGE);
+            if (damage != null) {
+                damage.setBaseValue(Math.max(damage.getBaseValue(), 4.0D) * def.damage()
+                    * (1.0D + (rank - 1) * 0.08D) * championPenalty);
+            }
+            var speed = entity.getAttribute(Attributes.MOVEMENT_SPEED);
+            if (speed != null) {
+                speed.setBaseValue(speed.getBaseValue() * Math.max(0.6D, def.speed()));
+            }
+            var armor = entity.getAttribute(Attributes.ARMOR);
+            if (armor != null) {
+                armor.setBaseValue(armor.getBaseValue() + def.armor() * championPenalty);
+            }
+            var knockback = entity.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
+            if (knockback != null) {
+                knockback.setBaseValue(Math.min(0.9D, 0.15D + rank * 0.12D));
+            }
+            var follow = entity.getAttribute(Attributes.FOLLOW_RANGE);
+            if (follow != null) {
+                follow.setBaseValue(48.0D);
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    private static void equip(Mob mob, TowerBossDef def) {
+        if (def.weapon() == null || def.weapon().isEmpty()) {
+            return;
+        }
+        try {
+            var item = BuiltInRegistries.ITEM.getValue(Identifier.parse(def.weapon()));
+            if (item != null) {
+                mob.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(item));
+                mob.setDropChance(EquipmentSlot.MAINHAND, 0.0F);
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    private static int rankAt(ServerLevel level, BlockPos pos, TowerTheme theme) {
+        int height = towerHeight(level, pos);
+        int bonus = height >= 50 ? 2 : height >= 38 ? 1 : 0;
+        int rank = (theme.baseRank() - 1) + bonus;
+        return Math.max(1, Math.min(4, rank));
+    }
+
+    /** Height of the structure the boss was caged in, used for its rank. */
+    public static int towerHeight(ServerLevel level, BlockPos pos) {
+        int lowest = pos.getY();
+        int gap = 0;
+        int limit = Math.max(level.getMinY(), pos.getY() - 140);
+        for (int y = pos.getY(); y > limit; y--) {
+            BlockState state = level.getBlockState(new BlockPos(pos.getX(), y, pos.getZ()));
+            if (TowerCollapse.isTowerMaterial(state)) {
+                lowest = y;
+                gap = 0;
+            } else if (state.isAir()) {
+                gap++;
+                if (gap > 6) {
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+        return pos.getY() - lowest;
+    }
+
+    public static TowerTheme themeOf(LivingEntity entity) {
+        for (String tag : entity.entityTags()) {
+            if (tag.startsWith(THEME_PREFIX)) {
+                return TowerThemes.byId(tag.substring(THEME_PREFIX.length()));
+            }
+        }
+        return null;
+    }
+
+    private static int rankOf(LivingEntity entity) {
+        for (String tag : entity.entityTags()) {
+            if (tag.startsWith(RANK_PREFIX)) {
+                try {
+                    return Integer.parseInt(tag.substring(RANK_PREFIX.length()));
+                } catch (NumberFormatException ignored) {
+                    return 1;
+                }
+            }
+        }
+        return 1;
+    }
+
+    /** Called by {@link TowerAbility#SUMMON_MINIONS}. */
+    public static LivingEntity summonMinion(ServerLevel level, LivingEntity boss, TowerTheme theme) {
+        String mobId = theme.randomMob(level.getRandom());
+        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(mobId));
+        if (type == null) {
+            return null;
+        }
+        Entity created = type.create(level, EntitySpawnReason.MOB_SUMMONED);
+        if (!(created instanceof Mob mob)) {
+            return null;
+        }
+        RandomSource random = level.getRandom();
+        BlockPos stand = findAir(level, boss.blockPosition().offset(random.nextInt(7) - 3, 0, random.nextInt(7) - 3));
+        mob.setPos(stand.getX() + 0.5D, stand.getY(), stand.getZ() + 0.5D);
+        mob.addTag(MOB_TAG);
+        mob.setPersistenceRequired();
+        level.addFreshEntity(mob);
+        arm(mob);
+        Player target = nearestPlayer(level, stand, 24.0D);
+        if (target != null) {
+            mob.setTarget(target);
+            mob.setAggressive(true);
+        }
+        level.sendParticles(net.minecraft.core.particles.ParticleTypes.POOF,
+            mob.getX(), mob.getY() + 0.6D, mob.getZ(), 12, 0.3D, 0.3D, 0.3D, 0.02D);
+        return mob;
+    }
+
+    /** Called by {@link TowerAbility#SUMMON_ELITE}. */
+    public static LivingEntity summonChampion(ServerLevel level, LivingEntity boss, TowerTheme theme, int rank) {
+        TowerBossDef def = TowerRoster.mainBoss(theme.id(), Math.max(1, rank), level.getRandom());
+        return createBoss(level, boss.blockPosition(), def, theme, Math.max(1, rank), true);
     }
 
     private static BlockPos findAir(ServerLevel level, BlockPos pos) {
@@ -411,7 +600,7 @@ public final class TowerBoss {
         for (int dx = -2; dx <= 2; dx++) {
             for (int dy = -2; dy <= 2; dy++) {
                 for (int dz = -2; dz <= 2; dz++) {
-                    if (TowerCollapse.isTowerMaterial(level.getBlockState(pos.offset(dx, dy, dz)))) {
+                    if (TowerMaterials.isTowerSignature(level.getBlockState(pos.offset(dx, dy, dz)))) {
                         found++;
                         if (found >= 6) {
                             return true;
@@ -584,7 +773,7 @@ public final class TowerBoss {
     }
 
     private static LivingEntity spawnTowerMob(ServerLevel level, BlockPos pos) {
-        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(mobFor(level)));
+        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(mobFor(level, pos)));
         if (type == null) {
             return null;
         }
@@ -610,15 +799,29 @@ public final class TowerBoss {
         return mob;
     }
 
-    private static String mobFor(ServerLevel level) {
-        if (Level.NETHER.equals(level.dimension())) {
-            return level.getRandom().nextBoolean() ? "minecraft:wither_skeleton" : "minecraft:blaze";
+    /**
+     * Spawner mobs always match the tower theme around them.  Nether mobs are
+     * never rolled in the overworld and vice versa.
+     */
+    private static String mobFor(ServerLevel level, BlockPos pos) {
+        TowerTheme around = themeAround(level, pos);
+        if (around != null) {
+            return around.randomMob(level.getRandom());
         }
-        String[] mobs = {
-            "minecraft:zombie", "minecraft:skeleton", "minecraft:vindicator",
-            "minecraft:pillager", "minecraft:witch", "minecraft:cave_spider"
-        };
-        return mobs[level.getRandom().nextInt(mobs.length)];
+        TowerTheme fallback = TowerThemes.forDimension(level);
+        return fallback.randomMob(level.getRandom());
+    }
+
+    private static TowerTheme themeAround(ServerLevel level, BlockPos pos) {
+        AABB box = new AABB(pos).inflate(36.0D);
+        for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, box,
+            e -> e.isAlive() && e.entityTags().contains(TAG))) {
+            TowerTheme theme = themeOf(entity);
+            if (theme != null) {
+                return theme;
+            }
+        }
+        return null;
     }
 
     private static void arm(Mob mob) {
@@ -705,15 +908,16 @@ public final class TowerBoss {
         Set<BlockPos> seen = new HashSet<>();
         queue.add(home);
         int found = 0;
+        int lowest = home.getY() - Math.min(120, towerHeight(level, home) + 6);
         while (!queue.isEmpty() && found < 8000) {
             BlockPos cursor = queue.removeFirst();
             if (!seen.add(cursor)) {
                 continue;
             }
-            if (Math.abs(cursor.getX() - home.getX()) > 40 || Math.abs(cursor.getZ() - home.getZ()) > 40) {
+            if (Math.abs(cursor.getX() - home.getX()) > 20 || Math.abs(cursor.getZ() - home.getZ()) > 20) {
                 continue;
             }
-            if (cursor.getY() < home.getY() - 120 || cursor.getY() > home.getY() + 24) {
+            if (cursor.getY() < lowest || cursor.getY() > home.getY() + 24) {
                 continue;
             }
             if (!cursor.equals(home) && !TowerCollapse.isTowerMaterial(level.getBlockState(cursor))) {
@@ -794,12 +998,7 @@ public final class TowerBoss {
                     if (state.isAir()) {
                         continue;
                     }
-                    Identifier id = BuiltInRegistries.BLOCK.getKey(state.getBlock());
-                    if (id == null) {
-                        continue;
-                    }
-                    String path = id.getPath();
-                    if (path.contains("stone_brick") || path.contains("blackstone") || path.contains("nether_brick") || path.contains("smooth_stone")) {
+                    if (TowerMaterials.isTowerBlock(state) && !state.is(net.minecraft.tags.BlockTags.ALL_SIGNS)) {
                         return state.getBlock().defaultBlockState();
                     }
                 }
