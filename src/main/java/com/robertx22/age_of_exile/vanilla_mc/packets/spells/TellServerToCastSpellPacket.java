@@ -42,6 +42,10 @@ public class TellServerToCastSpellPacket extends MyPacket<TellServerToCastSpellP
         EntitySpellCap.ISpellsCap spells = Load.spells(player);
 
         if (player.isBlocking()) {
+            if (spell != null) {
+                com.robertx22.age_of_exile.uncommon.utilityclasses.SpellLogger.logCastAttempt(
+                        player, spell.GUID(), 0, false, "Player is blocking with shield");
+            }
             return false;
         }
 
@@ -50,14 +54,21 @@ public class TellServerToCastSpellPacket extends MyPacket<TellServerToCastSpellP
             if (spells.getCastingData()
                 .canCast(spell, player)) {
 
-                spells.getCastingData()
-                    .setToCast(spell, player);
                 SpellCastContext c = new SpellCastContext(player, 0, spell);
+                int cost = spell.getCalculatedManaCost(c);
 
                 spell.spendResources(c);
+                spells.getCastingData()
+                    .setToCast(spell, player);
                 spells.syncToClient(player);
 
+                com.robertx22.age_of_exile.uncommon.utilityclasses.SpellLogger.logCastAttempt(
+                        player, spell.GUID(), cost, true, "OK");
+
                 return true;
+            } else {
+                com.robertx22.age_of_exile.uncommon.utilityclasses.SpellLogger.logCastAttempt(
+                        player, spell.GUID(), 0, false, "canCast check failed");
             }
 
         }

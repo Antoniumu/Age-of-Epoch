@@ -97,9 +97,14 @@ public class SpellCastingData {
     }
 
     public void cancelCast(LivingEntity entity) {
+        cancelCast(entity, "cancelled");
+    }
+
+    public void cancelCast(LivingEntity entity, String reason) {
         try {
             if (isCasting()) {
                 Spell spell = getSpellBeingCast();
+                int refund = 0;
                 if (spell != null) {
                     SpellCastContext ctx = new SpellCastContext(entity, 0, spell);
                     if (spell.getConfig().times_to_cast > 1) {
@@ -108,7 +113,7 @@ public class SpellCastingData {
                             .getCooldowns()
                             .setOnCooldown(spell.GUID(), cd);
                     } else {
-                        int refund = spell.getCalculatedManaCost(ctx);
+                        refund = spell.getCalculatedManaCost(ctx);
                         if (refund > 0) {
                             EventBuilder.ofRestore(entity, entity, ResourceType.mana, RestoreType.heal, refund)
                                 .setSpell(spell)
@@ -116,6 +121,8 @@ public class SpellCastingData {
                                 .Activate();
                         }
                     }
+                    com.robertx22.age_of_exile.uncommon.utilityclasses.SpellLogger.logCastCancelled(
+                            entity, spell.GUID(), refund, reason);
                 }
 
                 spellBeingCast = "";
@@ -195,6 +202,10 @@ public class SpellCastingData {
         this.lastSpellCastTimeInTicks = this.castingTicksLeft;
         this.castingTicksDone = 0;
         this.casting = true;
+
+        if (this.castingTicksLeft <= 0) {
+            tryCast(ctx);
+        }
     }
 
     public void tryCast(SpellCastContext ctx) {
@@ -208,6 +219,9 @@ public class SpellCastingData {
                 if (timesToCast == 1) {
                     spell.cast(ctx, true);
                 }
+
+                com.robertx22.age_of_exile.uncommon.utilityclasses.SpellLogger.logSpellExecute(
+                        ctx.caster, spell.GUID(), timesToCast);
 
                 onSpellCast(ctx);
                 spellBeingCast = "";
@@ -235,6 +249,9 @@ public class SpellCastingData {
         }
 
         if (isCasting()) {
+            com.robertx22.age_of_exile.uncommon.utilityclasses.SpellLogger.logCastAttempt(
+                    player, spell != null ? spell.GUID() : "null", 0, false,
+                    "Already casting another spell: " + spellBeingCast + " (ticksLeft=" + castingTicksLeft + ")");
             return false;
         }
 
@@ -245,6 +262,8 @@ public class SpellCastingData {
         if (Load.Unit(player)
             .getCooldowns()
             .isOnCooldown(spell.GUID())) {
+            com.robertx22.age_of_exile.uncommon.utilityclasses.SpellLogger.logCastAttempt(
+                    player, spell.GUID(), 0, false, "Spell is on cooldown");
             return false;
         }
 
@@ -261,8 +280,10 @@ public class SpellCastingData {
 
         if (spell.config.charges > 0) {
             if (!charges.hasCharge(spell.config.charge_name)) {
+                com.robertx22.age_of_exile.uncommon.utilityclasses.SpellLogger.logCastAttempt(
+                        player, spell.GUID(), 0, false, "Not enough charges (" + spell.config.charge_name + ")");
                 return false;
-        }
+            }
         }
 
         SpellCastContext ctx = new SpellCastContext(player, 0, spell);
@@ -282,6 +303,8 @@ public class SpellCastingData {
 
             if (ServerContainer.get().BLACKLIST_SPELLS_IN_DIMENSIONS.stream()
                 .anyMatch(x -> x.equals(id.toString()))) {
+                com.robertx22.age_of_exile.uncommon.utilityclasses.SpellLogger.logCastAttempt(
+                        player, spell.GUID(), 0, false, "Spell blacklisted in dimension " + id);
                 return false;
             }
         }
@@ -294,6 +317,8 @@ public class SpellCastingData {
                 if (caster instanceof Player) {
                     ((Player) caster).sendSystemMessage(Component.literal("Вы чувствуете чей-то взгляд. [Заклинание нельзя применить в этом измерении]"));
                 }
+                com.robertx22.age_of_exile.uncommon.utilityclasses.SpellLogger.logCastAttempt(
+                        player, spell.GUID(), 0, false, "Spell not allowed in dimension");
                 return false;
             }
 
@@ -306,6 +331,8 @@ public class SpellCastingData {
                     if (caster instanceof ServerPlayer) {
                         OnScreenMessageUtils.sendMessage((ServerPlayer) caster, spell.getConfig().castingWeapon.predicate.text, ClientboundTitleCompatPacket.Type.ACTIONBAR);
                     }
+                    com.robertx22.age_of_exile.uncommon.utilityclasses.SpellLogger.logCastAttempt(
+                            player, spell.GUID(), 0, false, "Weapon requirement not met: " + spell.getConfig().castingWeapon.predicate.text.getString());
                     return false;
                 }
 
@@ -315,6 +342,8 @@ public class SpellCastingData {
                     if (ctx.caster instanceof ServerPlayer) {
                         OnScreenMessageUtils.sendMessage((ServerPlayer) ctx.caster, Component.literal("Требования оружия не выполнены"), ClientboundTitleCompatPacket.Type.ACTIONBAR);
                     }
+                    com.robertx22.age_of_exile.uncommon.utilityclasses.SpellLogger.logCastAttempt(
+                            player, spell.GUID(), 0, false, "Player cannot wear equipped weapon stats");
                     return false;
                 }
 
@@ -323,6 +352,8 @@ public class SpellCastingData {
                 if (caster instanceof ServerPlayer) {
                     Packets.sendToClient((Player) caster, new NoManaPacket());
                 }
+                com.robertx22.age_of_exile.uncommon.utilityclasses.SpellLogger.logCastAttempt(
+                        player, spell.GUID(), (int) rctx.data.getNumber(), false, "Not enough mana");
             }
         }
 
