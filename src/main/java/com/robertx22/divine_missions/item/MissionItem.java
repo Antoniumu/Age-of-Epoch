@@ -5,6 +5,7 @@ import com.robertx22.divine_missions.database.TaskTypeIds;
 import com.robertx22.divine_missions.main.DivineMissions;
 import com.robertx22.divine_missions.mission_gen.MissionUtil;
 import com.robertx22.divine_missions.saving.MissionItemData;
+import com.robertx22.age_of_exile.questbook.QuestBookService;
 import com.robertx22.divine_missions.util.ClientOnly;
 import com.robertx22.library_of_exile.utils.SoundUtils;
 import net.minecraft.world.item.TooltipFlag;
@@ -89,6 +90,9 @@ public class MissionItem extends Item {
             if (data.canFinish(user)) {
                 try {
                     data.giveRewards(user);
+                    if (user instanceof ServerPlayer serverPlayer && data.getGod() != null) {
+                        QuestBookService.onMissionCompleted(serverPlayer, data.getGod().GUID());
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

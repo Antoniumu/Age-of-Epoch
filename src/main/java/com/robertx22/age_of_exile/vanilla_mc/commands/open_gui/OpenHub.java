@@ -15,10 +15,13 @@ public class OpenHub {
             literal(CommandRefs.ID)
                 .then(literal("open").requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_ALL))
                     .then(literal("hub")
-                        .executes(ctx -> run(ctx.getSource())))));
+                        .executes(ctx -> run(ctx.getSource())))
+                    .then(literal("questbook")
+                        .executes(ctx -> runQuestBook(ctx.getSource()))));
     }
 
     public static final String COMMAND = "slash open hub";
+    public static final String QUESTBOOK_COMMAND = "slash open questbook";
 
     private static int run(CommandSourceStack source) {
 
@@ -33,6 +36,18 @@ public class OpenHub {
             e.printStackTrace();
         }
 
+        return 1;
+    }
+
+    private static int runQuestBook(CommandSourceStack source) {
+        try {
+            if (source.getEntity() instanceof ServerPlayer) {
+                Packets.sendToClient(source.getPlayerOrException(),
+                    new OpenGuiPacket(OpenGuiPacket.GuiType.QUESTBOOK));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return 1;
     }
 }

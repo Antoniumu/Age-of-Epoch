@@ -6,6 +6,7 @@ import com.robertx22.age_of_exile.database.data.tiers.base.Difficulty;
 import com.robertx22.age_of_exile.dimension.dungeon_data.DungeonData;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.saveclasses.DeathStatsData;
+import com.robertx22.age_of_exile.questbook.QuestBookData;
 import com.robertx22.age_of_exile.saveclasses.perks.TalentsData;
 import com.robertx22.age_of_exile.saveclasses.player_skills.ProfessionsData;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
@@ -70,6 +71,7 @@ public class RPGPlayerData implements ICommonPlayerCap {
     private static final String PROFESSIONS = "profs";
     private static final String DIFF = "diff";
     private static final String ACTIVE_GUIDE = "active_guide";
+    private static final String QUEST_BOOK = "quest_book";
 
     Player player;
 
@@ -81,6 +83,7 @@ public class RPGPlayerData implements ICommonPlayerCap {
     public DeathStatsData deathStats = new DeathStatsData();
     public ProfessionsData professions = new ProfessionsData();
     public ScalingPlayerDiffData scalingDifficulty = new ScalingPlayerDiffData();
+    public QuestBookData questBook = new QuestBookData();
 
     /**
      * id выбранного гайда (см. guides/GuideData). Пустая строка = гайд не выбран.
@@ -120,6 +123,7 @@ public class RPGPlayerData implements ICommonPlayerCap {
         LoadSave.Save(deathStats, nbt, DEATH_STATS);
         LoadSave.Save(professions, nbt, PROFESSIONS);
         LoadSave.Save(scalingDifficulty, nbt, DIFF);
+        LoadSave.Save(questBook, nbt, QUEST_BOOK);
         nbt.putString(ACTIVE_GUIDE, active_guide == null ? "" : active_guide);
 
         return nbt;
@@ -136,6 +140,7 @@ public class RPGPlayerData implements ICommonPlayerCap {
         this.deathStats = loadOrBlank(DeathStatsData.class, new DeathStatsData(), nbt, DEATH_STATS, new DeathStatsData());
         this.professions = loadOrBlank(ProfessionsData.class, new ProfessionsData(), nbt, PROFESSIONS, new ProfessionsData());
         this.scalingDifficulty = loadOrBlank(ScalingPlayerDiffData.class, new ScalingPlayerDiffData(), nbt, DIFF, new ScalingPlayerDiffData());
+        this.questBook = loadOrBlank(QuestBookData.class, new QuestBookData(), nbt, QUEST_BOOK, new QuestBookData());
         this.active_guide = nbt.getStringOr(ACTIVE_GUIDE, "");
 
     }

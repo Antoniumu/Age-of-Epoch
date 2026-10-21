@@ -5,6 +5,7 @@ import com.robertx22.age_of_exile.capability.entity.EntityData;
 import com.robertx22.age_of_exile.mmorpg.MMORPG;
 import com.robertx22.age_of_exile.mmorpg.registers.common.items.SlashItems;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import com.robertx22.age_of_exile.questbook.QuestBookService;
 import com.robertx22.age_of_exile.uncommon.localization.Chats;
 import com.robertx22.library_of_exile.utils.Watch;
 import net.minecraft.world.entity.player.Player;
@@ -40,6 +41,7 @@ public class OnLogin {
             data.onLogin(player);
 
             CapSyncUtil.syncAll(player);
+            QuestBookService.onLogin(player);
 
             com.robertx22.library_of_exile.main.Packets.sendToClient(
                 player,

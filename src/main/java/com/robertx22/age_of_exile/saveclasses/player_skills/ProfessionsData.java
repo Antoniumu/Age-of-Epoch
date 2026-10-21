@@ -9,6 +9,7 @@ import com.robertx22.age_of_exile.saveclasses.gearitem.gear_bases.IApplyableStat
 import com.robertx22.age_of_exile.saveclasses.unit.stat_ctx.MiscStatCtx;
 import com.robertx22.age_of_exile.saveclasses.unit.stat_ctx.StatContext;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import com.robertx22.age_of_exile.questbook.QuestBookService;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.LevelUtils;
 import com.robertx22.age_of_exile.vanilla_mc.packets.SkillLevelUpToClient;
 import com.robertx22.library_of_exile.main.Packets;
@@ -96,8 +97,14 @@ public class ProfessionsData implements IApplyableStats {
             .getMultiplier(); // bonus exp needs to happen here because otherwise it counts towards droprates
 
         PlayerSkillData sd = getDataFor(skill);
+        int previousLevel = sd.getLvl();
+        int previousExp = sd.getExp();
+        boolean leveledUp = sd.addExp(player, exp);
 
-        if (sd.addExp(player, exp)) {
+        if (exp > 0 && (sd.getLvl() != previousLevel || sd.getExp() != previousExp)) {
+            QuestBookService.onProfessionUsed(player, skill);
+        }
+        if (leveledUp) {
             onLevelUp(player, skill);
         }
     }

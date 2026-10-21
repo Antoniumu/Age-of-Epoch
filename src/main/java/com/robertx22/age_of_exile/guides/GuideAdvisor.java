@@ -14,6 +14,7 @@ import com.robertx22.age_of_exile.saveclasses.perks.TalentsData;
 import com.robertx22.age_of_exile.saveclasses.spells.SpellsData;
 import com.robertx22.age_of_exile.simulation.SimulationManager;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import com.robertx22.age_of_exile.questbook.QuestBookService;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.WorldUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -1041,6 +1042,8 @@ public class GuideAdvisor {
             }
         } catch (Exception ignored) {
         }
+
+        QuestBookService.onSimulationGuideApplied(player, guide.id);
     }
 
     public static String splitLine(Map<String, Integer> split) {

@@ -13,7 +13,8 @@ public class OpenGuiPacket extends MyPacket<OpenGuiPacket> {
         TALENTS,
         PICK_STATS,
         SPELLS,
-        MAIN_HUB
+        MAIN_HUB,
+        QUESTBOOK
     }
 
     GuiType type;
@@ -40,6 +41,8 @@ public class OpenGuiPacket extends MyPacket<OpenGuiPacket> {
     public void onReceived(ExilePacketContext ctx) {
         if (type == GuiType.MAIN_HUB) {
             OpenGuiWrapper.openMainHub();
+        } else if (type == GuiType.QUESTBOOK) {
+            OpenGuiWrapper.openQuestBook();
         }
 
     }

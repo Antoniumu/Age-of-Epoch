@@ -1996,5 +1996,8 @@
   "mmorpg.spell_school.fire": "Огонь",
   "mmorpg.spell_school.water": "Вода",
   "mmorpg.word.simulation": "Полигон",
-  "mmorpg.word.guides": "Гайды"
+  "mmorpg.word.guides": "Гайды",
+  "mmorpg.word.questbook": "Квестбук",
+  "key.mmorpg.open_questbook": "Открыть квестбук",
+  "key.categories.mmorpg.keys": "Age of Epoch"
 }
