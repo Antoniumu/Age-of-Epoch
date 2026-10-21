@@ -35,14 +35,15 @@ public class OnLootChestEvent extends EventConsumer<ExileEvents.OnChestLooted> {
             info.multi += 10;
         }
 
+        Load.playerRPGData(player).favor
+            .onOpenNewLootChest(info);
+        Load.playerRPGData(player).syncToClient(player);
+
         if (LootUtils.preventLootDueToLevelPenalty(info.level, Load.Unit(player)
             .getLevel())) {
             event.canceled = true;
             return;
         }
-
-        Load.playerRPGData(player).favor
-            .onOpenNewLootChest(info);
 
         List<ItemStack> items = MasterLootGen.generateLoot(info);
 

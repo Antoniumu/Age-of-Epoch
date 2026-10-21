@@ -37,18 +37,18 @@ public class IDAddonEventRegister {
                 int reqlvl = (int) (event.difficulty.mns_lvl_req * GameBalanceConfig.get().MAX_LEVEL);
 
                 event.tooltip.add(Component.literal(""));
-                event.tooltip.add(Component.literal("Requires Level: " + reqlvl));
+                event.tooltip.add(Component.literal("Требуется уровень: " + reqlvl));
 
                 int ilvl = getAverageILVLReq(event.difficulty, event.player);
 
                 if (ilvl > 0) {
                     if (ServerContainer.get().TURN_REQ_ILVL_INTO_RECCOMENDATION.get()) {
                         event.tooltip.add(Component.literal(""));
-                        event.tooltip.add(Component.literal("Recommended Average Item Level: " + ilvl));
+                        event.tooltip.add(Component.literal("Рекомендуемый средний уровень предметов: " + ilvl));
 
                     } else {
                         event.tooltip.add(Component.literal(""));
-                        event.tooltip.add(Component.literal("Requires Average Item Level: " + ilvl));
+                        event.tooltip.add(Component.literal("Требуется средний уровень предметов: " + ilvl));
                     }
                 }
             }

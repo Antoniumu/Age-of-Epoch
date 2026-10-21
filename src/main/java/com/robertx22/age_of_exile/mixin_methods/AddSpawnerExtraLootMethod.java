@@ -64,6 +64,7 @@ public class AddSpawnerExtraLootMethod {
                 .favor
                 .addFavor(ServerContainer.get().FAVOR_GAIN_PER_SPAWNER_DESTROYED.get()
                     .floatValue());
+            Load.playerRPGData(player).syncToClient(player);
 
             LootInfo info = LootInfo.ofSpawner(player, context.getLevel(), pos);
             info.multi += 2;

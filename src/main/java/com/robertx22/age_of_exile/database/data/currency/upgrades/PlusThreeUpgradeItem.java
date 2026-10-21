@@ -60,7 +60,7 @@ public class PlusThreeUpgradeItem extends CurrencyItem implements ICurrencyItemE
                 ctx.player.sendSystemMessage(Words.FailedButSafe.locName()
                     .withStyle(ChatFormatting.GOLD));
             } else {
-                ctx.player.sendSystemMessage(Component.literal(ChatFormatting.RED + "Upgrade failed, item was destroyed in the process."));
+                ctx.player.sendSystemMessage(Component.literal(ChatFormatting.RED + "Улучшение не удалось, предмет был разрушен."));
                 return new ItemStack(Items.GUNPOWDER);
             }
         }

@@ -50,11 +50,11 @@ public class SpellPredicates {
         return true;
     };
 
-    public static SpellPredicate REQUIRE_SHOOTABLE = new SpellPredicate(SHOOTABLE_PRED, net.minecraft.network.chat.Component.literal(ChatFormatting.GREEN + "Requires Ranged Weapon to use."));
-    public static SpellPredicate REQUIRE_MAGE_WEAPON = new SpellPredicate(MAGE_PRED, net.minecraft.network.chat.Component.literal(ChatFormatting.GREEN + "Requires Mage Weapon to use."));
-    public static SpellPredicate REQUIRE_MELEE = new SpellPredicate(MELEE_PRED, net.minecraft.network.chat.Component.literal(ChatFormatting.GOLD + "Requires Melee weapon to use."));
-    public static SpellPredicate ANY_ITEM = new SpellPredicate(ANY, net.minecraft.network.chat.Component.literal(ChatFormatting.GOLD + "Any weapon can use."));
-    public static SpellPredicate NON_MAGE_WEAPON = new SpellPredicate(NON_MAGE_PRED, net.minecraft.network.chat.Component.literal(ChatFormatting.GOLD + "Non Mage weapons can use."));
+    public static SpellPredicate REQUIRE_SHOOTABLE = new SpellPredicate(SHOOTABLE_PRED, net.minecraft.network.chat.Component.literal(ChatFormatting.GREEN + "Требуется оружие дальнего боя."));
+    public static SpellPredicate REQUIRE_MAGE_WEAPON = new SpellPredicate(MAGE_PRED, net.minecraft.network.chat.Component.literal(ChatFormatting.GREEN + "Требуется магическое оружие."));
+    public static SpellPredicate REQUIRE_MELEE = new SpellPredicate(MELEE_PRED, net.minecraft.network.chat.Component.literal(ChatFormatting.GOLD + "Требуется оружие ближнего боя."));
+    public static SpellPredicate ANY_ITEM = new SpellPredicate(ANY, net.minecraft.network.chat.Component.literal(ChatFormatting.GOLD + "Можно применять с любым оружием."));
+    public static SpellPredicate NON_MAGE_WEAPON = new SpellPredicate(NON_MAGE_PRED, net.minecraft.network.chat.Component.literal(ChatFormatting.GOLD + "Можно применять с немагическим оружием."));
 
 }
 

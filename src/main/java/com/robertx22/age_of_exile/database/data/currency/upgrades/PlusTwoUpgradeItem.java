@@ -59,7 +59,7 @@ public class PlusTwoUpgradeItem extends CurrencyItem implements ICurrencyItemEff
                     .withStyle(ChatFormatting.GOLD));
             } else {
                 gear.up.regenerate(gear.getRarity());
-                ctx.player.sendSystemMessage(Component.literal(ChatFormatting.RED + "Failure, all upgrades wiped."));
+                ctx.player.sendSystemMessage(Component.literal(ChatFormatting.RED + "Неудача, все улучшения сброшены."));
             }
         }
         Gear.Save(stack, gear);

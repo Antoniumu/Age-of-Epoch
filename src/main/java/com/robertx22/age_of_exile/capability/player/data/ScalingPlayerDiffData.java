@@ -25,8 +25,8 @@ public class ScalingPlayerDiffData {
 
         List<Component> list = new ArrayList<>();
 
-        list.add(Component.literal("Difficulty: " + (int) diff));
-        list.add(Component.literal("Extra Mob Levels: " + getBonusLevels()));
+        list.add(Component.literal("Сложность: " + (int) diff));
+        list.add(Component.literal("Доп. уровни существ: " + getBonusLevels()));
         list.add(Component.literal("Урон существ на макс. ур.: " + NumberUtils.singleDigitFloat(getDMGMulti(getMobDifficultyAdder(GameBalanceConfig.get().MAX_LEVEL))) + "x"));
         list.add(Component.literal("Здоровье существ на макс. ур.: " + NumberUtils.singleDigitFloat(getDMGMulti(getMobDifficultyAdder(GameBalanceConfig.get().MAX_LEVEL))) + "x"));
 

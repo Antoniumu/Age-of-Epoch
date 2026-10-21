@@ -30,6 +30,7 @@ public class GiveFavor {
         try {
             Load.playerRPGData(player).favor
                 .addFavor(favor);
+            Load.playerRPGData(player).syncToClient(player);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -39,7 +39,7 @@ public class OnLogin {
 
             data.onLogin(player);
 
-            data.syncToClient(player);
+            CapSyncUtil.syncAll(player);
 
             com.robertx22.library_of_exile.main.Packets.sendToClient(
                 player,

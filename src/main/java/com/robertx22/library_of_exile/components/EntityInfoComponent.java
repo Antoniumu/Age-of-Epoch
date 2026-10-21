@@ -108,7 +108,7 @@ public class EntityInfoComponent {
 
         @Override
         public MySpawnReason getSpawnReason() {
-            return spawnReason == null ? MySpawnReason.OTHER : spawnReason;
+            return spawnReason == null ? MySpawnReason.NATURAL : spawnReason;
         }
 
         @Override
@@ -134,7 +134,7 @@ public class EntityInfoComponent {
                     nbt.putLong(SPAWN_POS, spawnPos.asLong());
                 }
 
-                nbt.putString(getSpawnReason().name(), SPAWN_REASON);
+                nbt.putString(SPAWN_REASON, getSpawnReason().name());
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -156,7 +156,7 @@ public class EntityInfoComponent {
                 if (res != null && !res.isEmpty()) {
                     this.spawnReason = MySpawnReason.valueOf(res);
                 } else {
-                    this.spawnReason = MySpawnReason.OTHER;
+                    this.spawnReason = MySpawnReason.NATURAL;
                 }
 
             } catch (Exception e) {

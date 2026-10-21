@@ -144,7 +144,7 @@ public class GearTooltipUtils {
         MutableComponent lvl = TooltipUtils.gearLevel(gear.lvl);
 
         if (Screen.hasShiftDown()) {
-            lvl.append(Component.literal(ChatFormatting.YELLOW + " [ILvl:" + (int) gear.getILVL() + "]"));
+            lvl.append(Component.literal(ChatFormatting.YELLOW + " [Ур. предм.:" + (int) gear.getILVL() + "]"));
         }
 
         if (gear.up.getTimesCanBeUpgradedInTotal() > 0) {
@@ -182,9 +182,9 @@ public class GearTooltipUtils {
 
         if (ClientConfigs.getConfig().SHOW_DURABILITY.get()) {
             if (stack.isDamageableItem()) {
-                tip.add(net.minecraft.network.chat.Component.literal(ChatFormatting.WHITE + "Durability: " + (stack.getMaxDamage() - stack.getDamageValue()) + "/" + stack.getMaxDamage()));
+                tip.add(net.minecraft.network.chat.Component.literal(ChatFormatting.WHITE + "Прочность: " + (stack.getMaxDamage() - stack.getDamageValue()) + "/" + stack.getMaxDamage()));
             } else {
-                tip.add(net.minecraft.network.chat.Component.literal(ChatFormatting.WHITE + "Unbreakable"));
+                tip.add(net.minecraft.network.chat.Component.literal(ChatFormatting.WHITE + "Неразрушимый"));
             }
         }
 

@@ -55,7 +55,7 @@ public class GearSocketsData implements IStatsContainer, IGearPartTooltip {
         }
 
         for (int i = 0; i < gear.getEmptySockets(); i++) {
-            list.add(net.minecraft.network.chat.Component.literal(ChatFormatting.YELLOW + "[Socket]"));
+            list.add(net.minecraft.network.chat.Component.literal(ChatFormatting.YELLOW + "[Гнездо]"));
         }
 
         return list;

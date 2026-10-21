@@ -9,14 +9,14 @@ public enum MySpawnReason {
 
     public static MySpawnReason get(EntitySpawnReason reason) {
 
-        if (reason == EntitySpawnReason.SPAWNER) {
+        if (reason == EntitySpawnReason.SPAWNER || reason == EntitySpawnReason.TRIAL_SPAWNER) {
             return SPAWNER;
         }
-        if (reason == EntitySpawnReason.NATURAL || reason == EntitySpawnReason.CHUNK_GENERATION || reason == EntitySpawnReason.STRUCTURE) {
-            return NATURAL;
+        if (reason == EntitySpawnReason.BREEDING || reason == EntitySpawnReason.BUCKET || reason == EntitySpawnReason.DISPENSER) {
+            return OTHER;
         }
 
-        return OTHER;
+        return NATURAL;
     }
 
 }

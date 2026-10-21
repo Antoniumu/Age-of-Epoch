@@ -58,7 +58,7 @@ public class CraftedConsumableData {
 
         tip.add(name);
         if (!crafter.isEmpty()) {
-            tip.add(Component.literal(ChatFormatting.DARK_GRAY + "Crafted by: " + ChatFormatting.LIGHT_PURPLE + crafter));
+            tip.add(Component.literal(ChatFormatting.DARK_GRAY + "Создано: " + ChatFormatting.LIGHT_PURPLE + crafter));
         }
 
         tip.add(Component.literal(""));
@@ -72,7 +72,7 @@ public class CraftedConsumableData {
 
         tip.add(Component.literal(""));
 
-        tip.add(Component.literal(ChatFormatting.DARK_GRAY + "Duration: " + ChatFormatting.BLUE + seconds + "s"));
+        tip.add(Component.literal(ChatFormatting.DARK_GRAY + "Длительность: " + ChatFormatting.BLUE + seconds + " с"));
 
         tip.add(Component.literal(""));
 

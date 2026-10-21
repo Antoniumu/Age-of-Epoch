@@ -19,7 +19,7 @@ import java.util.Optional;
 public class FavorData {
 
     @Store
-    float favor = 0;
+    float favor = 100;
 
     private FavorRank getDefault() {
         return ExileDB.FavorRanks()
@@ -55,11 +55,17 @@ public class FavorData {
 
     public void addFavor(float favor) {
         this.favor += favor;
+        if (this.favor < 0) {
+            this.favor = 0;
+        }
     }
 
     public void onAnyMobKilledSpendFavor() {
         if (favor > 0) {
             this.favor -= 0.25F;
+            if (this.favor < 0) {
+                this.favor = 0;
+            }
         }
     }
 
@@ -86,6 +92,9 @@ public class FavorData {
 
             if (favorCost > 0) {
                 this.favor -= favorCost * amount;
+                if (this.favor < 0) {
+                    this.favor = 0;
+                }
 
                 if (this.favor < 5) {
                     lowfavor = true;

@@ -125,7 +125,7 @@ public class GearItemData implements ICommonDataItem<GearRarity> {
         }
 
         if (type.upgradeLevel > 0) {
-            player.sendSystemMessage(Component.literal("Upgraded Item to +" + up.getUpgradeLevel() + " with a +" + type.upgradeLevel).withStyle(ChatFormatting.GREEN));
+            player.sendSystemMessage(Component.literal("Предмет улучшен до +" + up.getUpgradeLevel() + " (+" + type.upgradeLevel + ")").withStyle(ChatFormatting.GREEN));
         } else {
             player.sendSystemMessage(Component.literal("Улучшение не удалось").withStyle(ChatFormatting.RED));
         }

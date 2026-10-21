@@ -52,10 +52,10 @@ public class ShopRewardButton extends ImageButton {
 
             int left = entry.max_uses - PlayerIDCap.get(mc.player).data.buy_history.getOrCreateHistoryOf(entry).amount;
 
-            tooltip.add(Component.literal("Buys Left: " + left + "/" + this.entry.max_uses));
+            tooltip.add(Component.literal("Осталось покупок: " + left + "/" + this.entry.max_uses));
 
             if (left == 0) {
-                tooltip.add(Component.literal(ChatFormatting.RED + "Can't buy anymore."));
+                tooltip.add(Component.literal(ChatFormatting.RED + "Больше нельзя купить."));
             }
 
             GuiUtils.renderTooltip(matrix, tooltip, x, y);

@@ -29,13 +29,13 @@ public class MiningBlockExpEntry extends WikiEntry {
     @Override
     public List<Component> getExtraInfo() {
         List<Component> list = new ArrayList<>();
-        list.add(Component.literal("Exp Given " + exp));
+        list.add(Component.literal("Получаемый опыт: " + exp));
         return list;
     }
 
     @Override
     public String getName() {
-        return CLOC.translate(block.getName()) + ", " + exp + " Exp";
+        return CLOC.translate(block.getName()) + ", " + exp + " опыта";
     }
 
     @Override

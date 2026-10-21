@@ -123,14 +123,14 @@ public class ExileEffect implements JsonExileRegistry<ExileEffect>, IAutoGson<Ex
         }
 
         if (max_stacks > 1) {
-            list.add(Component.literal("Maximum Stacks: " + max_stacks));
+            list.add(Component.literal("Максимум зарядов: " + max_stacks));
         }
 
         List<EffectTags> tags = this.tags.stream()
             .map(x -> EffectTags.valueOf(x))
             .collect(Collectors.toList());
 
-        String string = "Tags: ";
+        String string = "Теги: ";
 
         for (EffectTags x : tags) {
             string += x.name + " ";
