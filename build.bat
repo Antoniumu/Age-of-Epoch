@@ -9,7 +9,7 @@ rem
 rem    build.bat                assemble the mod  (gradlew build)
 rem    build.bat clean          clean, then assemble
 rem    build.bat runClient      launch the development client
-rem    build.bat getjdk         download Temurin JDK 25 into .jdks\
+rem    build.bat getjdk [temurin^|microsoft]  install and check JDK 25
 rem    build.bat repair         wipe Loom/Minecraft caches, then rebuild from scratch
 rem    build.bat diagnose       write build-diagnose.txt (why compileJava cannot see net.minecraft)
 rem    build.bat probe          reproduce Loom's merge step and show the exception it swallows
@@ -18,7 +18,8 @@ rem    build.bat jcheck         compare JDKs: is Files.isWritable telling the tr
 rem    build.bat <task> ...     any other Gradle task is passed through
 rem
 rem  Environment (all optional):
-rem    JAVA_HOME   JDK 25+; ignored when it points to an older Java
+rem    JAVA_HOME   JDK 25+; ignored if old or failing the writability check
+rem    AOE_JDK_URL  trusted HTTPS JDK ZIP URL; overrides getjdk provider
 rem    NOPAUSE=1   do not wait for a key press at the end (for scripts)
 rem ======================================================================
 
@@ -83,9 +84,9 @@ goto :done
 rem ----------------------------------------------------------------------
 :no_jdk
 echo.
-echo   JDK 25 not found.
+echo   No build-ready JDK 25+ found. Run build.bat jcheck for details.
 echo.
-if defined ORIGINAL_JAVA_HOME echo   JAVA_HOME points to "%ORIGINAL_JAVA_HOME%", which is not a JDK 25+.
+if defined ORIGINAL_JAVA_HOME echo   JAVA_HOME points to "%ORIGINAL_JAVA_HOME%", which was not usable for this build.
 if defined ORIGINAL_JAVA_HOME echo.
 echo   Minecraft 26.3 needs Java 25 (Gradle 9.7 + Loom 1.18 refuse older ones).
 echo   Pick one of these:
@@ -99,17 +100,38 @@ goto :done
 
 rem ----------------------------------------------------------------------
 :getjdk
-echo.
-echo   Downloading Temurin JDK 25 into "%PROJECT_DIR%\.jdks" ...
-if not exist "%PROJECT_DIR%\.jdks" mkdir "%PROJECT_DIR%\.jdks"
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='SilentlyContinue'; $zip=Join-Path $env:TEMP 'temurin25.zip'; Invoke-WebRequest -UseBasicParsing -Uri 'https://api.adoptium.net/v3/binary/latest/25/ga/windows/x64/jdk/hotspot/normal/eclipse' -OutFile $zip; Expand-Archive -Path $zip -DestinationPath '%PROJECT_DIR%\.jdks' -Force; Remove-Item $zip -Force"
-if errorlevel 1 (
-    echo   Download failed. Check the network or install JDK 25 manually.
-    set "RC=1"
-) else (
-    echo   Done. Run build.bat again.
-    set "RC=0"
+if defined AOE_JDK_URL goto :getjdk_url
+if "%~2"=="" goto :getjdk_temurin
+if /i "%~2"=="temurin" goto :getjdk_temurin
+if /i not "%~2"=="microsoft" (
+    echo   Usage: build.bat getjdk [temurin^|microsoft]
+    set "RC=2"
+    goto :done
 )
+winget install --id Microsoft.OpenJDK.25 -e
+if errorlevel 1 (
+    echo   Installation failed. Install JDK 25 manually or set AOE_JDK_URL to a ZIP URL.
+    set "RC=1"
+    goto :done
+)
+goto :getjdk_verify
+
+:getjdk_temurin
+set "AOE_JDK_URL=https://api.adoptium.net/v3/binary/latest/25/ga/windows/x64/jdk/hotspot/normal/eclipse"
+:getjdk_url
+echo   Downloading JDK ZIP into "%PROJECT_DIR%\.jdks" ...
+powershell -NoProfile -ExecutionPolicy Bypass -File "%PROJECT_DIR%\tools\install-jdk.ps1" -ProjectDir "%PROJECT_DIR%"
+if errorlevel 1 (
+    set "RC=1"
+    goto :done
+)
+:getjdk_verify
+echo   Checking installed JDKs ...
+powershell -NoProfile -ExecutionPolicy Bypass -File "%PROJECT_DIR%\tools\check-jdks.ps1" -ProjectDir "%PROJECT_DIR%"
+call :find_jdk
+if not defined JAVA_HOME goto :no_jdk
+echo   Build-ready JDK: %JAVA_HOME%
+set "RC=0"
 goto :done
 
 rem ----------------------------------------------------------------------
@@ -183,56 +205,15 @@ rem  Runs tools\WritableCheck.java with every JDK that can be found. Loom's
 rem  zipfs (JDK 25) marks a jar read-only as soon as Files.isWritable() says
 rem  false, so a JDK that misreports it cannot produce minecraft-merged.jar.
 rem ----------------------------------------------------------------------
-echo.
-echo   Checking Files.isWritable with every JDK found ...
-set "JC_PATHS="%PROJECT_DIR%" "%TEMP%" "%GRADLE_USER_HOME%""
-set "JC_ANY=0"
-call :find_jdk
-if defined JAVA_HOME call :jcheck_one "%JAVA_HOME%"
-for /d %%d in ("%PROJECT_DIR%\.jdks\*") do call :jcheck_one "%%~fd"
-for /f "delims=" %%j in ('where java 2^>nul') do call :jcheck_exe "%%j"
-if "%JC_ANY%"=="0" (
-    echo   No JDK found.
-    set "RC=1"
-) else (
-    echo.
-    echo   MISREPORT means: Files.isWritable^=false while real writes work, so the
-    echo   JDK makes every zip read-only. Use a JDK that reports OK.
-    set "RC=0"
-)
+powershell -NoProfile -ExecutionPolicy Bypass -File "%PROJECT_DIR%\tools\check-jdks.ps1" -ProjectDir "%PROJECT_DIR%"
+set "RC=%ERRORLEVEL%"
 goto :done
-
-rem  %1 = JDK home
-:jcheck_one
-if not exist "%~1\bin\java.exe" goto :eof
-if not exist "%~1\bin\javac.exe" (
-    echo.
-    echo   --- %~1   ^(no javac - skipped, cannot run single-file sources^)
-    goto :eof
-)
-set "JC_ANY=1"
-echo.
-echo   --- %~1
-"%~1\bin\java.exe" "%PROJECT_DIR%\tools\WritableCheck.java" %JC_PATHS%
-goto :eof
-
-rem  %1 = java.exe path (from PATH)
-:jcheck_exe
-echo.
-echo   --- %~1
-if not exist "%~dp1javac.exe" (
-    echo   ^(no javac next to it - skipped, cannot run single-file sources^)
-    goto :eof
-)
-set "JC_ANY=1"
-"%~1" "%PROJECT_DIR%\tools\WritableCheck.java" %JC_PATHS%
-goto :eof
 
 rem ----------------------------------------------------------------------
 :singlejar
 rem  Builds with only one Minecraft jar, skipping the client+server merge -
-rem  the only Loom step that writes through the JDK zip filesystem, which on
-rem  JDK 25 can refuse to write and leave a 22 byte minecraft-merged.jar.
+rem  but jar processors still need a writable zip filesystem. This does not
+rem  work around a broken Files.isWritable check.
 rem  Development-only workaround: the other side's classes are not available.
 rem ----------------------------------------------------------------------
 set "SIDE=%~2"
@@ -335,19 +316,28 @@ rem ----------------------------------------------------------------------
 rem  %1 = candidate JDK home; keeps it if its major version is 25 or newer
 rem ----------------------------------------------------------------------
 :try_jdk
+if defined FOUND_JDK goto :eof
 set "CAND=%~1"
 if "%CAND:~-1%"=="\" set "CAND=%CAND:~0,-1%"
 if not exist "%CAND%\bin\javac.exe" goto :eof
 if not exist "%CAND%\release" goto :eof
+set "CAND_MAJOR="
 set "CAND_VER="
 for /f "tokens=2 delims== " %%v in ('findstr /b "JAVA_VERSION=" "%CAND%\release"') do set "CAND_VER=%%~v"
 if not defined CAND_VER goto :eof
 for /f "tokens=1 delims=._-+ " %%m in ("%CAND_VER%") do set "CAND_MAJOR=%%m"
 if not defined CAND_MAJOR goto :eof
-if %CAND_MAJOR% GEQ 25 (
-    set "FOUND_JDK=%CAND%"
-    set "FOUND_MAJOR=%CAND_MAJOR%"
+if %CAND_MAJOR% LSS 25 goto :eof
+rem Check actual build locations, not TEMP: a failure there is reported by jcheck.
+if not exist "%GRADLE_USER_HOME%" mkdir "%GRADLE_USER_HOME%"
+"%CAND%\bin\java.exe" "%PROJECT_DIR%\tools\WritableCheck.java" "%PROJECT_DIR%" "%GRADLE_USER_HOME%" >nul 2>&1
+set "CAND_CHECK=%ERRORLEVEL%"
+if not "%CAND_CHECK%"=="0" (
+    echo   Skipping JDK: %CAND% [writability check exit %CAND_CHECK%; run build.bat jcheck]
+    goto :eof
 )
+set "FOUND_JDK=%CAND%"
+set "FOUND_MAJOR=%CAND_MAJOR%"
 goto :eof
 
 rem ----------------------------------------------------------------------

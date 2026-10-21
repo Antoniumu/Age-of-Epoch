@@ -83,3 +83,20 @@ TOWERS.md                                      — описание тем, сл
 
 Оригинальный мод: **mcrobertx22 (Robert Skalko)** — [RobertSkalko/Age-of-Exile](https://github.com/RobertSkalko/Age-of-Exile).
 Порт на Minecraft 26.3 и русская локализация: **Antoniumu**, 2026.
+
+#### Выбор рабочего JDK 25
+
+`build.bat` пропускает JDK, не прошедшие проверку записи в проект и Gradle-кэш.
+`build.bat jcheck` выдаёт сводку без дублей: JDK 21 можно сравнить, но собирать нужно 25+.
+Ошибки отдельных путей больше не скрываются успешной проверкой другого пути.
+
+```bat
+build.bat getjdk microsoft
+build.bat jcheck
+build.bat repair
+```
+
+Для установки Microsoft требуется winget с пакетом `Microsoft.OpenJDK.25`.
+`getjdk` без аргумента по-прежнему скачивает Temurin; переменная `AOE_JDK_URL`
+позволяет указать доверенный HTTPS ZIP другого JDK. После установки выполняется проверка.
+Подробности и ограничения диагностики — в дополнении к §6 `BUILD-REPORT.md`.
