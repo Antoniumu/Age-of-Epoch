@@ -170,8 +170,8 @@ public abstract class Screen extends net.minecraft.client.gui.screens.Screen {
             return true;
         }
         try {
-            return com.mojang.blaze3d.platform.InputConstants.isKeyDown(mc.getWindow(), 342)
-                || com.mojang.blaze3d.platform.InputConstants.isKeyDown(mc.getWindow(), 346);
+            return com.mojang.blaze3d.platform.InputConstants.isKeyDown(342)
+                || com.mojang.blaze3d.platform.InputConstants.isKeyDown(346);
         } catch (Throwable ignored) {
             return false;
         }
