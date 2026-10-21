@@ -557,7 +557,8 @@ public enum Words implements IAutoLocName {
 
     Repair_Station("Repair Station"),
     Simulation("Полигон"),
-    Guides("Гайды");
+    Guides("Гайды"),
+    QuestBook("Квестбук");
 
     private String localization = "";
 

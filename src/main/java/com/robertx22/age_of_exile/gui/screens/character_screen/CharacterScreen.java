@@ -33,6 +33,7 @@ import com.robertx22.age_of_exile.gui.buttons.ScalingDifficultyButton;
 import com.robertx22.age_of_exile.guides.GuideAdvisor;
 import com.robertx22.age_of_exile.guides.GuideDefinition;
 import com.robertx22.age_of_exile.guides.GuidesScreen;
+import com.robertx22.age_of_exile.questbook.QuestBookScreen;
 import com.robertx22.age_of_exile.gui.screens.player_skills.ProfessionsScreen;
 import com.robertx22.age_of_exile.gui.screens.skill_tree.TalentsScreen;
 import com.robertx22.age_of_exile.gui.screens.spell.SpellScreen;
@@ -247,14 +248,15 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
             screens.add(new WikiScreen());
             screens.add(new com.robertx22.age_of_exile.simulation.SimulationScreen());
             screens.add(new GuidesScreen());
+            screens.add(new QuestBookScreen());
 
             int x = guiLeft + sizeX - 1;
-            // 6 вкладок: начинаем чуть выше, чтобы все влезли в панель
+            // Семь вкладок помещаются по высоте панели.
             int y = guiTop + 4;
 
             for (INamedScreen screen : screens) {
                 addButton(new MainHubButton(screen, x, y));
-                y += MainHubButton.ySize + 0;
+                y += MainHubButton.ySize;
             }
         }
 

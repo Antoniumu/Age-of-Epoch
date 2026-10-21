@@ -3,6 +3,7 @@ package com.robertx22.age_of_exile.dimension.dungeon_data;
 import com.robertx22.age_of_exile.mmorpg.MMORPG;
 import com.robertx22.age_of_exile.mmorpg.registers.common.items.SlashItems;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import com.robertx22.age_of_exile.questbook.QuestBookService;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.PlayerUtils;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.TeamUtils;
 import com.robertx22.age_of_exile.vanilla_mc.commands.TeamCommand;
@@ -71,6 +72,7 @@ public class QuestProgression {
                 for (Player x : members) {
                     x.sendSystemMessage(Component.literal("Задание выполнено! Теперь вы можете перейти к следующему подземелью.")
                         );
+                    QuestBookService.onStandardDungeonCompleted(x);
                     PlayerUtils.giveItem(new ItemStack(SlashItems.TELEPORT_BACK.get()), x);
                     TeamCommand.sendDpsCharts(x);
                 }

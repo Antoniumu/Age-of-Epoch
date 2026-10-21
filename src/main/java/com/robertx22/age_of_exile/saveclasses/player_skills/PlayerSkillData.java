@@ -15,7 +15,7 @@ public class PlayerSkillData {
     @Store
     private int exp = 0;
 
-    static int MAX_LEVEL = 999;
+    public static final int MAX_LEVEL = 999;
 
     public boolean addExp(Player player, int addExp) {
 

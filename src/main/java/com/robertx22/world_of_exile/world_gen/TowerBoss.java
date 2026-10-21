@@ -2,6 +2,7 @@ package com.robertx22.world_of_exile.world_gen;
 
 import com.robertx22.age_of_exile.mmorpg.registers.common.SlashBlocks;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import com.robertx22.age_of_exile.questbook.QuestBookService;
 import com.robertx22.age_of_exile.uncommon.interfaces.data_items.IRarity;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.SignUtils;
 import com.robertx22.forge_compat.event.entity.living.LivingDeathEvent;
@@ -62,8 +63,8 @@ public final class TowerBoss {
     public static final String CHAMPION_TAG = "aoe_tower_champion";
     public static final String MOB_TAG = "aoe_tower_mob";
     private static final String HOME_PREFIX = "aoe_tower_home:";
-    private static final String THEME_PREFIX = "aoe_tower_theme:";
-    private static final String DEF_PREFIX = "aoe_tower_def:";
+    public static final String THEME_TAG_PREFIX = "aoe_tower_theme:";
+    public static final String DEFINITION_TAG_PREFIX = "aoe_tower_def:";
     private static final String RANK_PREFIX = "aoe_tower_rank:";
     private static final int SCAN_RADIUS_CHUNKS = 3;
     private static final int SAME_TOWER = 48;
@@ -282,6 +283,9 @@ public final class TowerBoss {
         if (home == null) {
             home = entity.blockPosition();
         }
+        if (event.getSource() != null && event.getSource().getEntity() instanceof LivingEntity killer) {
+            QuestBookService.onTowerBossKilled(entity, killer);
+        }
         TowerAbility.forget(entity.getUUID());
         if (entity.entityTags().contains(CHAMPION_TAG)) {
             entity.removeTag(TAG);
@@ -358,8 +362,8 @@ public final class TowerBoss {
         entity.setPos(stand.getX() + 0.5D, stand.getY(), stand.getZ() + 0.5D);
         entity.addTag(TAG);
         entity.addTag(HOME_PREFIX + home.getX() + "," + home.getY() + "," + home.getZ());
-        entity.addTag(THEME_PREFIX + theme.id());
-        entity.addTag(DEF_PREFIX + def.id());
+        entity.addTag(THEME_TAG_PREFIX + theme.id());
+        entity.addTag(DEFINITION_TAG_PREFIX + def.id());
         entity.addTag(RANK_PREFIX + rank);
         if (champion) {
             entity.addTag(CHAMPION_TAG);
@@ -479,8 +483,8 @@ public final class TowerBoss {
 
     public static TowerTheme themeOf(LivingEntity entity) {
         for (String tag : entity.entityTags()) {
-            if (tag.startsWith(THEME_PREFIX)) {
-                return TowerThemes.byId(tag.substring(THEME_PREFIX.length()));
+            if (tag.startsWith(THEME_TAG_PREFIX)) {
+                return TowerThemes.byId(tag.substring(THEME_TAG_PREFIX.length()));
             }
         }
         return null;
@@ -506,7 +510,7 @@ public final class TowerBoss {
             return List.of();
         }
         for (TowerBossDef def : TowerRoster.all(theme.id())) {
-            if (entity.entityTags().contains(DEF_PREFIX + def.id())) {
+            if (entity.entityTags().contains(DEFINITION_TAG_PREFIX + def.id())) {
                 return def.abilities();
             }
         }
@@ -515,7 +519,7 @@ public final class TowerBoss {
         if (name != null) {
             for (TowerBossDef def : TowerRoster.all(theme.id())) {
                 if (name.getString().equals(def.name()) || name.getString().equals(def.name() + " (прислужник)")) {
-                    entity.addTag(DEF_PREFIX + def.id());
+                    entity.addTag(DEFINITION_TAG_PREFIX + def.id());
                     return def.abilities();
                 }
             }

@@ -15,7 +15,7 @@ import net.minecraft.ChatFormatting;
 public class MainHubButton extends ImageButton {
 
     public static int xSize = 105;
-    public static int ySize = 28;
+    public static int ySize = 24;
     public static Identifier EXLAMATION_MARK_TEX = Identifier.fromNamespaceAndPath(
         SlashRef.MODID, "textures/gui/main_hub/exclamation_mark.png");
 
@@ -47,9 +47,12 @@ public class MainHubButton extends ImageButton {
 
     @Override
     public void renderButton(PoseStack matrix, int x, int y, float ticks) {
-        super.renderButton(matrix, x, y, ticks);
+        com.robertx22.forge_compat.client.AbstractGui.bindTexture(buttonLoc);
+        float textureY = isHovered() ? 29F : 0F;
+        com.robertx22.forge_compat.client.AbstractGui.blit(matrix, this.x, this.y, this.width, this.height,
+            0F, textureY, this.width, 28, 256, 256);
 
-        RenderUtils.render16Icon(matrix, screen.iconLocation(), this.x + 9, this.y + 6);
+        RenderUtils.render16Icon(matrix, screen.iconLocation(), this.x + 9, this.y + 4);
 
         if (shouldAlert) {
             RenderUtils.render16Icon(matrix, EXLAMATION_MARK_TEX, this.x + 5, this.y + 6);
