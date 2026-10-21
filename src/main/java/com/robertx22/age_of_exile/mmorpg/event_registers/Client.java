@@ -1,6 +1,7 @@
 package com.robertx22.age_of_exile.mmorpg.event_registers;
 
 import com.robertx22.age_of_exile.a_libraries.dmg_number_particle.DamageParticleRenderer;
+import com.robertx22.age_of_exile.a_libraries.mob_plates.MobPlateStyleHud;
 import com.robertx22.age_of_exile.a_libraries.neat.AnotherTry;
 import com.robertx22.age_of_exile.event_hooks.ontick.OnClientTick;
 import com.robertx22.age_of_exile.event_hooks.player.OnKeyPress;
@@ -45,6 +46,7 @@ public class Client {
             rpggui.onHudRender(event.getMatrixStack(), event.getPartialTicks());
             mobBar.onHudRender(event.getMatrixStack(), event.getPartialTicks());
             DamageParticleRenderer.renderHudParticles(event.getMatrixStack());
+            MobPlateStyleHud.render(event.getMatrixStack());
 
         });
     }
