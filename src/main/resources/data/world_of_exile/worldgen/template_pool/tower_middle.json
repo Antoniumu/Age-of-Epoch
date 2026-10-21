@@ -1,0 +1,14 @@
+{
+  "fallback": "world_of_exile:tower_top",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "world_of_exile:stone_brick_tower/middle/middle0",
+        "processors": "world_of_exile:tower_processor",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}
