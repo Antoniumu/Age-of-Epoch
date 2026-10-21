@@ -1,33 +1,50 @@
 package com.robertx22.age_of_exile.database.data.spells.spell_classes.bases;
 
+import com.robertx22.age_of_exile.aoe_data.database.gear_slots.GearSlots;
+import com.robertx22.age_of_exile.database.data.gear_slots.GearSlot;
 import com.robertx22.age_of_exile.database.data.gear_types.bases.BaseGearType;
 import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
 import com.robertx22.age_of_exile.uncommon.datasaving.Gear;
-import com.robertx22.age_of_exile.uncommon.wrappers.SText;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.ChatFormatting;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Predicate;
 
 public class SpellPredicates {
     private static Predicate<LivingEntity> SHOOTABLE_PRED = x -> {
         try {
-            GearItemData data = Gear.Load(x.getMainHandItem());
-            return data != null && data.GetBaseGearType()
-                .getTags()
-                .contains(BaseGearType.SlotTag.ranger_casting_weapon);
+            ItemStack stack = x.getMainHandItem();
+            if (stack.isEmpty()) {
+                return false;
+            }
+            GearItemData data = Gear.Load(stack);
+            if (data != null) {
+                return data.GetBaseGearType()
+                    .getTags()
+                    .contains(BaseGearType.SlotTag.ranger_casting_weapon);
+            }
+            GearSlot slot = GearSlot.getSlotOf(stack.getItem());
+            return slot != null && (GearSlots.BOW.equals(slot.GUID()) || GearSlots.CROSBOW.equals(slot.GUID()));
         } catch (Exception e) {
             return false;
         }
-
     };
 
     private static Predicate<LivingEntity> MELEE_PRED = x -> {
         try {
-            GearItemData data = Gear.Load(x.getMainHandItem());
-            return data != null && data.GetBaseGearType()
-                .getTags()
-                .contains(BaseGearType.SlotTag.melee_weapon);
+            ItemStack stack = x.getMainHandItem();
+            if (stack.isEmpty()) {
+                return false;
+            }
+            GearItemData data = Gear.Load(stack);
+            if (data != null) {
+                return data.GetBaseGearType()
+                    .getTags()
+                    .contains(BaseGearType.SlotTag.melee_weapon);
+            }
+            GearSlot slot = GearSlot.getSlotOf(stack.getItem());
+            return slot != null && (GearSlots.SWORD.equals(slot.GUID()) || GearSlots.AXE.equals(slot.GUID()));
         } catch (Exception e) {
             return false;
         }
@@ -35,17 +52,27 @@ public class SpellPredicates {
 
     private static Predicate<LivingEntity> MAGE_PRED = x -> {
         try {
-            GearItemData data = Gear.Load(x.getMainHandItem());
-            return data != null && data.GetBaseGearType()
-                .getTags()
-                .contains(BaseGearType.SlotTag.mage_weapon);
+            ItemStack stack = x.getMainHandItem();
+            if (stack.isEmpty()) {
+                return false;
+            }
+            GearItemData data = Gear.Load(stack);
+            if (data != null) {
+                return data.GetBaseGearType()
+                    .getTags()
+                    .contains(BaseGearType.SlotTag.mage_weapon);
+            }
+            GearSlot slot = GearSlot.getSlotOf(stack.getItem());
+            return slot != null && (GearSlots.STAFF.equals(slot.GUID()) || GearSlots.SCEPTER.equals(slot.GUID()));
         } catch (Exception e) {
             return false;
         }
     };
+
     private static Predicate<LivingEntity> NON_MAGE_PRED = x -> {
         return !MAGE_PRED.test(x);
     };
+
     private static Predicate<LivingEntity> ANY = x -> {
         return true;
     };
@@ -57,4 +84,3 @@ public class SpellPredicates {
     public static SpellPredicate NON_MAGE_WEAPON = new SpellPredicate(NON_MAGE_PRED, net.minecraft.network.chat.Component.literal(ChatFormatting.GOLD + "Можно применять с немагическим оружием."));
 
 }
-

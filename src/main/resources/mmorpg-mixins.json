@@ -12,6 +12,7 @@
     "HolderReferenceComponentsMixin",
     "ItemInteractionHook",
     "ItemPropertiesIdMixin",
+    "ItemStackUseMixin",
     "LivingDamageBridgeMixin",
     "LivingEntityMixin",
     "LivingTickBridgeMixin",

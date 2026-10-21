@@ -369,10 +369,17 @@ public final class TowerBoss {
 
     private static BlockPos findAir(ServerLevel level, BlockPos pos) {
         BlockPos[] candidates = new BlockPos[] {
-            pos, pos.above(), pos.north(), pos.south(), pos.east(), pos.west(),
-            pos.above().north(), pos.above().south(), pos.above().east(), pos.above().west(),
-            pos.below()
+            pos, pos.below(), pos.above(), pos.north(), pos.south(), pos.east(), pos.west(),
+            pos.below().north(), pos.below().south(), pos.below().east(), pos.below().west(),
+            pos.above().north(), pos.above().south(), pos.above().east(), pos.above().west()
         };
+        for (BlockPos candidate : candidates) {
+            if (level.getBlockState(candidate).isAir()
+                && level.getBlockState(candidate.above()).isAir()
+                && !level.getBlockState(candidate.below()).isAir()) {
+                return candidate;
+            }
+        }
         for (BlockPos candidate : candidates) {
             if (level.getBlockState(candidate).isAir() && level.getBlockState(candidate.above()).isAir()) {
                 return candidate;
