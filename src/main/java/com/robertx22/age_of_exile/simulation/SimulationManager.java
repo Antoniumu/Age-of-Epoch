@@ -135,6 +135,10 @@ public class SimulationManager {
             TeleportUtils.teleport(player, ARENA_CENTER, DimensionIds.SIMULATION_DIMENSION);
         }
 
+        if (player.isCreative() || player.isSpectator()) {
+            player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+        }
+
         RPGPlayerData rpgData = Load.playerRPGData(player);
         rpgData.talents.reset_points = Math.max(rpgData.talents.reset_points, 999);
 
@@ -206,6 +210,7 @@ public class SimulationManager {
         snap.putInt("orig_xp_lvl", player.experienceLevel);
         snap.putFloat("orig_xp_prog", player.experienceProgress);
         snap.putInt("orig_total_xp", player.totalExperience);
+        snap.putInt("orig_gamemode", player.gameMode.getGameModeForPlayer().getId());
 
         EntityData unitData = Load.Unit(player);
         RPGPlayerData rpgData = Load.playerRPGData(player);
@@ -306,6 +311,9 @@ public class SimulationManager {
         player.totalExperience = snap.getIntOr("orig_total_xp", 0);
         player.getFoodData().setFoodLevel(snap.getIntOr("orig_food", 20));
         player.getFoodData().setSaturation(snap.getFloatOr("orig_sat", 5F));
+        if (snap.contains("orig_gamemode")) {
+            player.setGameMode(net.minecraft.world.level.GameType.byId(snap.getIntOr("orig_gamemode", 0)));
+        }
 
         EntityData unitData = Load.Unit(player);
         unitData.getStatusEffectsData().exileMap.clear();
@@ -579,9 +587,24 @@ public class SimulationManager {
             return;
         }
 
-        BlockPos pos = DUMMY_POS;
+        if (player.isCreative() || player.isSpectator()) {
+            player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+        }
+
+        BlockPos pos = new BlockPos(0, 64, 4);
         mob.snapTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 180F, 0F);
         mob.setPersistenceRequired();
+        try {
+            mob.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(pos), EntitySpawnReason.COMMAND, null);
+        } catch (Exception ignored) {
+        }
+        try {
+            var follow = mob.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.FOLLOW_RANGE);
+            if (follow != null) {
+                follow.setBaseValue(48.0D);
+            }
+        } catch (Exception ignored) {
+        }
 
         List<MobRarity> sortedRarities = new ArrayList<>(ExileDB.MobRarities().getList());
         sortedRarities.sort(Comparator.comparingDouble(MobRarity::ExtraHealthMulti));
@@ -601,9 +624,9 @@ public class SimulationManager {
         data.setEquipsChanged(true);
         data.forceRecalculateStats();
         mob.setHealth(mob.getMaxHealth());
-        mob.setTarget(player);
 
         serverLevel.addFreshEntity(mob);
+        mob.setTarget(player);
 
         float realHp = data.getUnit().healthData().getValue();
         float armorVal = data.getUnit().armorData().getValue();

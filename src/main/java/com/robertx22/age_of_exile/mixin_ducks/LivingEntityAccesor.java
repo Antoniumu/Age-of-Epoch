@@ -15,17 +15,26 @@ public interface LivingEntityAccesor {
 
     float myGetHurtPitch();
 
-    default void setMyInvulnerableTime(int time) {}
+    void setMyLastHurt(float lastHurt);
 
-    default int getMyInvulnerableTime() { return 0; }
+    float getMyLastHurt();
 
     static void setInvulnerableTime(Entity entity, int time) {
-        if (entity instanceof LivingEntityAccesor acc) {
-            acc.setMyInvulnerableTime(time);
+        if (entity != null) {
+            entity.setInvulnerableTime(time);
+        }
+        if (entity instanceof LivingEntity living) {
+            living.damageCooldownTime = time;
+            if (time <= 0 && entity instanceof LivingEntityAccesor acc) {
+                acc.setMyLastHurt(0.0F);
+            }
         }
     }
 
     static int getInvulnerableTime(Entity entity) {
+        if (entity instanceof LivingEntity living) {
+            return Math.max(entity.getInvulnerableTime(), living.damageCooldownTime);
+        }
         if (entity != null) {
             return entity.getInvulnerableTime();
         }
