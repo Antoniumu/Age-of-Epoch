@@ -64,6 +64,7 @@ public class CommonEvents {
         });
 
         ForgeEvents.registerForgeEvent(LivingDeathEvent.class, TowerBoss::onDeath);
+        ForgeEvents.registerForgeEvent(LivingDeathEvent.class, com.robertx22.world_of_exile.delve.DelveMarkerBlockEntity::onDeath);
 
         ForgeEvents.registerForgeEvent(PlayerEvent.StartTracking.class, event -> {
             if (event.getPlayer() instanceof ServerPlayer) {

@@ -18,6 +18,10 @@ public class DimensionInit {
                 if (!BuiltInRegistries.STRUCTURE_PROCESSOR.containsKey(id)) {
                     Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, id, TowerStructureProcessor.CODEC);
                 }
+                Identifier delveId = Identifier.fromNamespaceAndPath("world_of_exile", "delve_processor");
+                if (!BuiltInRegistries.STRUCTURE_PROCESSOR.containsKey(delveId)) {
+                    Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, delveId, com.robertx22.world_of_exile.delve.DelveStructureProcessor.CODEC);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

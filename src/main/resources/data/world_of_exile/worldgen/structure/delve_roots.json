@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:jigsaw",
+  "biomes": [
+    "minecraft:jungle",
+    "minecraft:sparse_jungle",
+    "minecraft:bamboo_jungle",
+    "minecraft:swamp",
+    "minecraft:mangrove_swamp",
+    "minecraft:mushroom_fields"
+  ],
+  "step": "underground_structures",
+  "spawn_overrides": {},
+  "terrain_adaptation": "none",
+  "start_pool": "world_of_exile:delves/roots/entrance",
+  "size": 1,
+  "start_height": {
+    "absolute": 0
+  },
+  "project_start_to_heightmap": "WORLD_SURFACE_WG",
+  "use_expansion_hack": false,
+  "max_distance_from_center": 80
+}
