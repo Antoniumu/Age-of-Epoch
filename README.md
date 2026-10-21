@@ -46,12 +46,15 @@ build.bat diagnose       :: build-diagnose.txt: видит ли javac Minecraft 
 build.bat diagnose                :: build-diagnose.txt: на каком шаге jar стал пустым
 build.bat repair                  :: сброс кэшей + --refresh-dependencies
 build.bat probe                   :: повторяет шаг слияния Loom и печатает скрытое исключение
+build.bat singlejar client        :: собрать без слияния client+server (обход, пока merge не работает)
 ```
 
 `minecraft-merged-<hash>-26.3.jar (22 bytes)` — пустой zip: скачанные client/server целы,
 а слияние Loom пишет пустоту и молча теряет исключение (`MinecraftJarMerger` не сохраняет
-`Future` своих задач). `build.bat probe` показывает настоящую ошибку. Подробности —
-[`BUILD-REPORT.md`](BUILD-REPORT.md) §6.
+`Future` своих задач). Причина на JDK 25 — zipfs объявляет только что созданный jar
+read-only, если `Files.isWritable()` вернул `false` (антивирус / Controlled folder access);
+первая же запись падает с `ReadOnlyFileSystemException`. `build.bat probe` это показывает.
+Подробности и порядок действий — [`BUILD-REPORT.md`](BUILD-REPORT.md) §6.
 
 ## Управление
 

@@ -219,6 +219,94 @@ try (ExecutorService service = Executors.newWorkStealingPool()) {
 javac не видит `net.minecraft.*`, а annotation processor миксинов падает с тем самым
 `NullPointerException ... getNestingKind()`.
 
+### Причина найдена: JDK 25 объявляет только что созданный jar read-only
+
+`build.bat probe` воспроизвёл падение на той же машине и показал исключение, которое
+Loom теряет:
+
+```
+=== 3. Writing a zip through the same zipfs API Loom uses ===
+  target: C:\Code\Age-of-Epoch\build\probe\probe-zipfs.jar
+    FAILED while writing:
+    java.nio.file.ReadOnlyFileSystemException: null
+        at jdk.zipfs/jdk.nio.zipfs.ZipFileSystem.checkWritable(ZipFileSystem.java:405)
+        at jdk.zipfs/jdk.nio.zipfs.ZipFileSystem.createDirectory(ZipFileSystem.java:739)
+        ...
+=== 4. Control: writing the same entries with java.util.zip ===
+    on disk: 712 bytes
+    reopened: 5 entries (expected 5)
+```
+
+То есть **запись через zipfs невозможна, а обычная запись в ту же папку проходит** — значит
+дело не в правах на папку, а в том, как JDK 25 решает, «только для чтения» ли zip.
+
+В `jdk.nio.zipfs.ZipFileSystem` (JDK 25, после JDK-8350880/8350881) конструктор заканчивается
+так:
+
+```java
+// We only allow read-write zip/jar files if they are not multi-release
+// JARs and the underlying file is writable.
+this.readOnly = forceReadOnly || multiReleaseVersion.isPresent() || !Files.isWritable(zfpath);
+if (readOnly && accessMode == ZipAccessMode.READ_WRITE) {
+    throw new IOException("the ZIP file is not writable");
+}
+```
+
+Достаточно одного `Files.isWritable(...) == false` на только что созданном файле — и вся
+файловая система zip становится read-only, а первый же `Files.createDirectories` внутри
+`MinecraftJarMerger.add()` бросает `ReadOnlyFileSystemException`.
+
+Дальше цепочка замыкается:
+
+1. `MinecraftJarMerger.add()` → `ReadOnlyFileSystemException`;
+2. `merge()` отправляет задачи в executor **без сохранения `Future`** → исключение исчезает;
+3. в `minecraft-merged.jar` остаётся только END-запись, записанная конструктором, — **22 байта,
+   0 записей**, ни одной строки в лог;
+4. ремап «успешно» перемапывает пустоту → на compile classpath 22-байтный jar →
+   `package net.minecraft.* does not exist` + `NullPointerException ... getNestingKind()`.
+
+Почему `Files.isWritable()` возвращает `false` для только что созданного файла — это уже
+вопрос окружения (Windows): антивирус/EDR, «Защита от программ-шантажистов» (Controlled folder
+access), агент бэкапа/синхронизации или выставленный атрибут `readonly`.
+
+### Что делать
+
+1. **Исключения в антивирусе**: `C:\Code\Age-of-Epoch` и `C:\Code\Age-of-Epoch\.gradle-home`
+   (Windows Security → Virus & threat protection → Exclusions). Там же Ransomware protection →
+   Controlled folder access: разрешить `java.exe` этого JDK или выключить.
+2. **Проверить окружение** тем же JDK:
+
+   ```bat
+   build.bat probe
+   ```
+
+   Секции `5. What the file system says about writability` (`Files.isWritable`, `dos:readonly`,
+   реальное открытие на запись для `probe dir` / `loom dir` / `client jar` / `merged jar`) и
+   `6. Re-opening a copy read-write` (что отвечает `accessMode=readWrite` на JDK 25) показывают,
+   системная это проблема или локальная для папки.
+3. **Собрать, не дожидаясь починки** — обойти слияние (единственный шаг Loom, который пишет
+   через zipfs):
+
+   ```bat
+   build.bat singlejar client     :: gradlew build -PmcSingleJar=client
+   build.bat singlejar server     :: gradlew build -PmcSingleJar=server
+   ```
+
+   В `build.gradle` это `loom { clientOnlyMinecraftJar() / serverOnlyMinecraftJar() }`.
+   Ограничение: классы другой стороны в classpath не попадают, поэтому это отладочный обход —
+   для релизной сборки нужно, чтобы merge работал.
+
+### Что сообщить наверх
+
+- **Fabric Loom**: (1) `MinecraftJarMerger` не проверяет `Future` своих задач — ошибка
+  слияния полностью теряется и на выходе получается валидный пустой jar; (2)
+  `FileSystemUtil.getJarFileSystem(..., create = true)` стоит передавать
+  `accessMode=readWrite`, тогда JDK 25 падает с внятным `IOException: the ZIP file is not
+  writable` вместо тихого пустого jar.
+- **OpenJDK** (к JDK-8350880): `Files.isWritable()` на только что созданном zip-файле даёт
+  `false` на Windows, из-за чего `create=true` возвращает read-only файловую систему; раньше
+  файл молча оставался пустым.
+
 ### `build.bat probe` — показать то, что Loom скрывает
 
 `tools/MergeProbe.java` повторяет те же примитивы тем же JDK 25 и печатает настоящее
@@ -237,7 +325,10 @@ build.bat probe
    `MinecraftJarMerger.add()`, — затем переоткрывает и считает записи;
 4. контроль: те же данные через `java.util.zip` — чтобы отличить проблему zipfs от
    проблемы диска/антивируса;
-5. печатает итог и код возврата: `0` — все примитивы работают, `1` — что-то упало.
+5. показывает, что файловая система думает о путях (`Files.isWritable`, `dos:readonly`,
+   реальное открытие на запись) и что отвечает `accessMode=readWrite` на JDK 25 (на копии
+   `minecraft-merged.jar` — кэш проба не меняет);
+6. печатает итог и код возврата: `0` — все примитивы работают, `1` — что-то упало.
 
 Запуск в режиме одного файла (`java tools\MergeProbe.java`), компилятор не нужен, пишет
 только в `build\probe\`. Файл можно запустить и руками:
@@ -250,8 +341,9 @@ build.bat probe
 
 - упало в п.2 (открытие client.jar) → битый **скачанный** jar: удалить `minecraft-client.jar`,
   `minecraft-server.jar`, `minecraft-merged.jar` и `build.bat repair`;
-- упало только в п.3, а п.4 прошёл → виноват zipfs самого JDK: попробовать другой JDK 25
-  (Corretto/Zulu/Microsoft) в `.jdks\`, `build.bat` подхватит его автоматически;
+- упало только в п.3, а п.4 прошёл → zipfs объявил файл read-only (JDK 25): смотреть п.5–6,
+  разбираться с антивирусом / Controlled folder access / агентом бэкапа; пока — 
+  `build.bat singlejar client`;
 - упало и в п.3, и в п.4 → диск/антивирус: исключение для папки проекта и `.gradle-home`,
   проверить свободное место;
 - всё прошло → ошибка внутри Loom; приложить вывод пробы и
