@@ -1,5 +1,6 @@
 package com.robertx22.age_of_exile.database.data.spells.components.actions.vanity;
 
+import com.robertx22.age_of_exile.database.data.spells.components.EntityActivation;
 import com.robertx22.age_of_exile.database.data.spells.components.MapHolder;
 import com.robertx22.age_of_exile.database.data.spells.components.actions.SpellAction;
 import com.robertx22.age_of_exile.database.data.spells.spell_classes.SpellCtx;
@@ -64,7 +65,9 @@ public class ParticleInRadiusAction extends SpellAction {
                 .floatValue();
 
             if (shape == Shape.CIRCLE) {
-                if (ctx.sourceEntity.tickCount > 1) {
+                // the tickCount check avoids spawning at a stale position on the first tick,
+                // but expiry bursts (e.g. meteor ground impact) must never be suppressed by it
+                if (ctx.sourceEntity.tickCount > 1 || ctx.activation == EntityActivation.ON_EXPIRE) {
                     for (int i = 0; i < amount; i++) {
 
                         // todo unsure if this helps

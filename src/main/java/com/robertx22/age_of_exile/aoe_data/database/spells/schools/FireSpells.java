@@ -84,17 +84,25 @@ public class FireSpells implements ExileRegistryInit {
 
             .weaponReq(CastingWeapon.MAGE_WEAPON)
             .onCast(PartBuilder.playSound(SoundEvents.ILLUSIONER_CAST_SPELL, 1D, 1D))
-            .onCast(PartBuilder.justAction(SpellAction.SUMMON_AT_SIGHT.create(SlashEntities.SIMPLE_PROJECTILE.get(), 1D, 6D)))
-            .onExpire(PartBuilder.justAction(SpellAction.SUMMON_BLOCK.create(Blocks.MAGMA_BLOCK, 200D)
+            // long sight range (40) + spawn high in the sky (20) so the meteor
+            // actually falls on the aimed spot instead of 10 blocks in front of the caster
+            .onCast(PartBuilder.justAction(SpellAction.SUMMON_AT_SIGHT.create(SlashEntities.SIMPLE_PROJECTILE.get(), 1D, 20D)
+                .put(MapField.DISTANCE, 40D)))
+            .onExpire(PartBuilder.justAction(SpellAction.SUMMON_BLOCK.create(Blocks.MAGMA_BLOCK, 140D)
                 .put(MapField.ENTITY_NAME, "block")
-                .put(MapField.BLOCK_FALL_SPEED, -0.03D)
+                .put(MapField.BLOCK_FALL_SPEED, -0.08D)
                 .put(MapField.FIND_NEAREST_SURFACE, false)
                 .put(MapField.IS_BLOCK_FALLING, true)))
-            .onTick("block", PartBuilder.particleOnTick(2D, ParticleTypes.LAVA, 2D, 0.5D))
+            .onTick("block", PartBuilder.particleOnTick(1D, ParticleTypes.FLAME, 6D, 0.6D))
+            .onTick("block", PartBuilder.particleOnTick(2D, ParticleTypes.LAVA, 4D, 0.5D))
+            .onTick("block", PartBuilder.particleOnTick(2D, ParticleTypes.LARGE_SMOKE, 2D, 0.4D))
             .onExpire("block", PartBuilder.damageInAoe(SpellCalcs.METEOR, Elements.Fire, 3D))
+            .onExpire("block", PartBuilder.aoeParticles(ParticleTypes.EXPLOSION_EMITTER, 2D, 1D))
+            .onExpire("block", PartBuilder.aoeParticles(ParticleTypes.FLAME, 120D, 3D))
             .onExpire("block", PartBuilder.aoeParticles(ParticleTypes.LAVA, 150D, 3D))
+            .onExpire("block", PartBuilder.groundParticles(ParticleTypes.FLAME, 60D, 3D, 0.5D))
+            .onExpire("block", PartBuilder.aoeParticles(ParticleTypes.LARGE_SMOKE, 40D, 3D))
             .onExpire("block", PartBuilder.aoeParticles(ParticleTypes.ASH, 25D, 3D))
-            .onExpire("block", PartBuilder.aoeParticles(ParticleTypes.EXPLOSION, 1D, 1D))
             .onExpire("block", PartBuilder.playSound(SoundEvents.GENERIC_EXPLODE.value(), 1D, 1D))
             .build();
 
