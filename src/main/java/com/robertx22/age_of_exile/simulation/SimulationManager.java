@@ -673,6 +673,8 @@ public class SimulationManager {
         float totalShieldAbsorbed = 0F;
         float totalManaAbsorbed = 0F;
 
+        float flatDamageShield = playerData.getUnit().magicShieldData().getValue();
+
         for (int i = 0; i < totalHits; i++) {
             healPlayerFull(player);
             float msBefore = playerData.getResources().getShield();
@@ -701,6 +703,9 @@ public class SimulationManager {
                 float manaAfter = playerData.getResources().getMana();
                 if (msBefore > msAfter) {
                     totalShieldAbsorbed += (msBefore - msAfter);
+                }
+                if (flatDamageShield > 0F) {
+                    totalShieldAbsorbed += Math.min(baseScale, flatDamageShield);
                 }
                 if (manaBefore > manaAfter) {
                     totalManaAbsorbed += (manaBefore - manaAfter);
