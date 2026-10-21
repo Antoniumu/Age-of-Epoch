@@ -1,12 +1,10 @@
 package com.robertx22.age_of_exile.simulation;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.robertx22.age_of_exile.capability.entity.EntityData;
 import com.robertx22.age_of_exile.database.data.stats.types.defense.Armor;
 import com.robertx22.age_of_exile.database.data.stats.types.defense.DodgeRating;
 import com.robertx22.age_of_exile.database.data.stats.types.defense.SpellDodge;
-import com.robertx22.forge_compat.client.AbstractGui;
 import com.robertx22.age_of_exile.gui.bases.BaseScreen;
 import com.robertx22.age_of_exile.gui.bases.INamedScreen;
 import com.robertx22.age_of_exile.gui.screens.character_screen.CharacterScreen;
@@ -16,9 +14,10 @@ import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.saveclasses.unit.Unit;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.localization.Words;
-import com.robertx22.age_of_exile.uncommon.utilityclasses.NumberUtils;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.WorldUtils;
+import com.robertx22.forge_compat.client.AbstractGui;
 import com.robertx22.forge_compat.client.Button;
+import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.forge_compat.common.CompatChatFormatting;
 import com.robertx22.library_of_exile.main.Packets;
 import com.robertx22.library_of_exile.utils.GuiUtils;
@@ -285,26 +284,26 @@ public class SimulationScreen extends BaseScreen implements INamedScreen {
         addButton(new SimButton(
             left, y, 78, 18,
             "Дерево талантов",
-            b -> Minecraft.getInstance().setScreen(new TalentsScreen()),
+            b -> Minecraft.getInstance().gui.setScreen(new TalentsScreen()),
             List.of(Component.literal("Открыть Дерево талантов (свободный сброс ПКМ)").withStyle(ChatFormatting.YELLOW))
         ));
         addButton(new SimButton(
             left + 81, y, 78, 18,
             "Заклинания",
-            b -> Minecraft.getInstance().setScreen(new SpellScreen()),
+            b -> Minecraft.getInstance().gui.setScreen(new SpellScreen()),
             List.of(Component.literal("Открыть Экран заклинаний и хотбара").withStyle(ChatFormatting.AQUA))
         ));
         addButton(new SimButton(
             left + 162, y, 78, 18,
             "Персонаж и статы",
-            b -> Minecraft.getInstance().setScreen(new CharacterScreen()),
+            b -> Minecraft.getInstance().gui.setScreen(new CharacterScreen()),
             List.of(Component.literal("Вернуться к Экрану персонажа").withStyle(ChatFormatting.GREEN))
         ));
     }
 
     @Override
     public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-        com.robertx22.forge_compat.client.AbstractGui.bindTexture(PANEL_BG);
+        AbstractGui.bindTexture(PANEL_BG);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         blit(matrix, guiLeft, guiTop, 0, 0, sizeX, sizeY);
 
@@ -328,7 +327,7 @@ public class SimulationScreen extends BaseScreen implements INamedScreen {
             String title = inSim
                 ? "§a● ПОЛИГОН СИМУЛЯЦИИ АКТИВЕН (Ур. " + lvl + ")"
                 : "§e○ ПОЛИГОН СИМУЛЯЦИИ БИЛДОВ (Ур. " + lvl + ")";
-            com.robertx22.forge_compat.client.AbstractGui.drawShadow(
+            AbstractGui.drawShadow(
                 mc.font, matrix, title,
                 guiLeft + 10, guiTop + 8,
                 CompatChatFormatting.getColor(ChatFormatting.WHITE)
@@ -339,7 +338,7 @@ public class SimulationScreen extends BaseScreen implements INamedScreen {
                 + " §dЩит:" + (int) ms
                 + " §eБр:" + (int) armorPct + "%"
                 + " §aУкл:" + (int) dodgePct + "%/" + (int) spellDodgePct + "%";
-            com.robertx22.forge_compat.client.AbstractGui.drawShadow(
+            AbstractGui.drawShadow(
                 mc.font, matrix, summary,
                 guiLeft + 10, guiTop + 20,
                 CompatChatFormatting.getColor(ChatFormatting.GRAY)
@@ -348,7 +347,7 @@ public class SimulationScreen extends BaseScreen implements INamedScreen {
 
         super.render(matrix, mouseX, mouseY, partialTicks);
 
-        for (com.robertx22.forge_compat.client.AbstractWidget b : this.buttons) {
+        for (Button b : this.buttons) {
             b.renderToolTip(matrix, mouseX, mouseY);
         }
     }

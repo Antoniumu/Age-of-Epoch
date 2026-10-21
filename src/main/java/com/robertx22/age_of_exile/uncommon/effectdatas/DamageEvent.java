@@ -457,10 +457,6 @@ public class DamageEvent extends EffectEvent {
             if (target instanceof ServerPlayer defPlayer && defPlayer != source) {
                 DmgNumPacket packet = new DmgNumPacket(target, text, false, ChatFormatting.GOLD);
                 Packets.sendToClient(defPlayer, packet);
-                defPlayer.displayClientMessage(
-                    net.minecraft.network.chat.Component.literal("✦ " + text + "!").withStyle(ChatFormatting.GOLD),
-                    true
-                );
             }
             return;
         }
