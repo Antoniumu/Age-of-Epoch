@@ -15,16 +15,24 @@ public abstract class EntityNbtCapBridgeMixin {
 
     @Inject(method = "saveWithoutId", at = @At("RETURN"))
     private void ageOfEpoch$saveCaps(ValueOutput output, CallbackInfo ci) {
+        Entity self = (Entity) (Object) this;
         CompoundTag tag = new CompoundTag();
-        CapabilityProvider.saveAll((Entity) (Object) this, tag);
+        CapabilityProvider.saveAll(self, tag);
         if (!tag.isEmpty()) {
             output.store("AgeOfEpochCaps", CompoundTag.CODEC, tag);
+        }
+        CompoundTag simSnap = com.robertx22.age_of_exile.simulation.SimulationManager.getSnapshotForSave(self);
+        if (simSnap != null && !simSnap.isEmpty()) {
+            output.store("AgeOfEpochSimSnapshot", CompoundTag.CODEC, simSnap);
         }
     }
 
     @Inject(method = "load", at = @At("TAIL"))
     private void ageOfEpoch$loadCaps(ValueInput input, CallbackInfo ci) {
+        Entity self = (Entity) (Object) this;
         input.read("AgeOfEpochCaps", CompoundTag.CODEC)
-            .ifPresent(tag -> CapabilityProvider.loadAll((Entity) (Object) this, tag));
+            .ifPresent(tag -> CapabilityProvider.loadAll(self, tag));
+        input.read("AgeOfEpochSimSnapshot", CompoundTag.CODEC)
+            .ifPresent(simSnap -> com.robertx22.age_of_exile.simulation.SimulationManager.loadSnapshotFromSave(self, simSnap));
     }
 }

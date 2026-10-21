@@ -11,14 +11,14 @@ import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.effectdatas.EventBuilder;
 import com.robertx22.age_of_exile.uncommon.effectdatas.RestoreResourceEvent;
 import com.robertx22.age_of_exile.uncommon.effectdatas.rework.RestoreType;
+import com.robertx22.age_of_exile.uncommon.utilityclasses.ItemUtils;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.PlayerUtils;
 import com.robertx22.forge_compat.api.distmarker.Dist;
 import com.robertx22.forge_compat.api.distmarker.OnlyIn;
 import com.robertx22.forge_compat.data.ShapelessRecipeBuilder;
-import com.robertx22.library_of_exile.utils.SoundUtils;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,7 +37,8 @@ public class AlchemyPotionItem extends TieredItem implements IShapelessRecipe {
 
     public AlchemyPotionItem(PotionType type, SkillItemTier tier) {
         super(tier, new Properties()
-            .stacksTo(16));
+            .stacksTo(16)
+            .component(DataComponents.CONSUMABLE, ItemUtils.drinkConsumable(1F)));
         this.type = type;
     }
 
@@ -71,7 +72,7 @@ public class AlchemyPotionItem extends TieredItem implements IShapelessRecipe {
                 .build();
             event.Activate();
 
-            SoundUtils.playSound(player, SoundEvents.GENERIC_DRINK.value(), 1, 1);
+            ItemUtils.playConsumeSound(world, player, stack);
         }
 
         return stack;
@@ -85,7 +86,7 @@ public class AlchemyPotionItem extends TieredItem implements IShapelessRecipe {
 
     @Override
     public int getUseDuration(ItemStack stack, LivingEntity entity) {
-        return 20;
+        return ItemUtils.useDuration(stack, 20);
     }
 
     @OnlyIn(Dist.CLIENT)

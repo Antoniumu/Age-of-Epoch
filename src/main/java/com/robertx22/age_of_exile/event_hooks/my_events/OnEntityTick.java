@@ -75,6 +75,10 @@ public class OnEntityTick extends EventConsumer<ExileEvents.OnEntityTick> {
             gears.put(s, now);
         }
 
+        if (entity instanceof Player player && entity.tickCount % 20 == 0) {
+            calc = true;
+        }
+
         if (calc) {
             on$change(entity);
         }

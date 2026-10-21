@@ -152,7 +152,7 @@ public class EntityData implements ICommonPlayerCap, INeededForClient {
     EntityTypeUtils.MobCategory type = EntityTypeUtils.MobCategory.PLAYER;
     // sync these for mobs
 
-    boolean setMobStats = false;
+    public boolean setMobStats = false;
     String uuid = "";
     boolean isNewbie = true;
     boolean equipsChanged = true;

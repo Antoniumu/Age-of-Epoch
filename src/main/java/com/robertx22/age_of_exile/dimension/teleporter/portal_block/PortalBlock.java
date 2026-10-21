@@ -88,6 +88,17 @@ public class PortalBlock extends OpaqueBlock implements EntityBlock {
                     return;
                 }
 
+                if (WorldUtils.isSimulationWorld(world) && entity instanceof ServerPlayer sp) {
+                    if (maps.maps.ticksinPortal < 20) {
+                        maps.maps.ticksinPortal++;
+                    } else {
+                        maps.maps.ticksinPortal = 0;
+                        com.robertx22.age_of_exile.simulation.SimulationManager.exitSimulation(sp);
+                        SoundUtils.playSound(entity, SoundEvents.PORTAL_TRAVEL, world.getRandom().nextFloat() * 0.4F + 0.8F, 0.25F);
+                    }
+                    return;
+                }
+
                 if (WorldUtils.isMapWorldClass(world)) {
                     if (maps.maps.ticksinPortal < 40) {
                         maps.maps.ticksinPortal++;

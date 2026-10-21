@@ -7,5 +7,6 @@ public class DimensionIds {
 
     public static Identifier DUNGEON_STRUCTURE = SlashRef.id("dungeon");
     public static Identifier DUNGEON_DIMENSION = SlashRef.id("dungeon");
+    public static Identifier SIMULATION_DIMENSION = SlashRef.id("simulation");
 
 }

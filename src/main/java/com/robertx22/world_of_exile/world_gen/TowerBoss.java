@@ -166,7 +166,7 @@ public final class TowerBoss {
     }
 
     public static void contain(LivingEntity entity) {
-        if (entity.level().isClientSide() || !entity.getTags().contains(TAG) || !entity.isAlive()) {
+        if (entity.level().isClientSide() || !entity.entityTags().contains(TAG) || !entity.isAlive()) {
             return;
         }
         BlockPos home = readHome(entity);
@@ -206,7 +206,7 @@ public final class TowerBoss {
 
     public static void onDeath(LivingDeathEvent event) {
         LivingEntity entity = event.getEntityLiving();
-        if (entity == null || !entity.getTags().contains(TAG)) {
+        if (entity == null || !entity.entityTags().contains(TAG)) {
             return;
         }
         if (!(entity.level() instanceof ServerLevel level)) {
@@ -336,7 +336,7 @@ public final class TowerBoss {
     private static boolean bossNearby(ServerLevel level, BlockPos pos) {
         AABB box = new AABB(pos).inflate(48.0D);
         for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, box)) {
-            if (entity.getTags().contains(TAG) && entity.isAlive()) {
+            if (entity.entityTags().contains(TAG) && entity.isAlive()) {
                 return true;
             }
         }
@@ -353,7 +353,7 @@ public final class TowerBoss {
     }
 
     static BlockPos readHome(LivingEntity entity) {
-        for (String tag : entity.getTags()) {
+        for (String tag : entity.entityTags()) {
             if (!tag.startsWith(HOME_PREFIX)) {
                 continue;
             }

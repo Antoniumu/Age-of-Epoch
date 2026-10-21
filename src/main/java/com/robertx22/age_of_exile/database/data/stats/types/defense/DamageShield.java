@@ -11,6 +11,8 @@ import com.robertx22.age_of_exile.uncommon.interfaces.EffectSides;
 
 public class DamageShield extends Stat {
 
+    public static String GUID = "damage_shield";
+
     private DamageShield() {
         this.scaling = StatScaling.NORMAL;
         this.statEffect = new Effect();

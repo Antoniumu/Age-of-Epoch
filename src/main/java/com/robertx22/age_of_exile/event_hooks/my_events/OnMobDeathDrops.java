@@ -89,6 +89,17 @@ public class OnMobDeathDrops extends EventConsumer<ExileEvents.OnMobDeath> {
                         }
                     }
 
+                    if (mobKilled.entityTags().contains("woe_tower_boss")) {
+                        com.robertx22.world_of_exile.world_gen.TowerDestroyer.start(
+                            mobKilled.level(),
+                            mobKilled.blockPosition().above(4)
+                        );
+                        player.sendSystemMessage(
+                            net.minecraft.network.chat.Component.literal("Босс башни повержен! Забирайте сокровища — башня начнёт обрушаться через 8 секунд!")
+                                .withStyle(net.minecraft.ChatFormatting.GOLD)
+                        );
+                    }
+
                 }
 
             }

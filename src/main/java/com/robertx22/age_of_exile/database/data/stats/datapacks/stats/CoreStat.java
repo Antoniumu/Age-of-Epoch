@@ -65,30 +65,35 @@ public class CoreStat extends BaseDatapackStat implements ICoreStat {
         TooltipInfo info = new TooltipInfo(unitdata, null);
 
         int val = (int) getValue(data);
+        int lvl = unitdata != null ? unitdata.getLevel() : 1;
 
         List<Component> list = new ArrayList<>();
 
         list.add(
             Component.literal("За каждое очко: ").withStyle(ChatFormatting.GREEN));
-        getMods(1).forEach(x -> list.addAll(x.GetTooltipString(info)));
+        getMods(1, lvl).forEach(x -> list.addAll(x.GetTooltipString(info)));
 
         list.add(net.minecraft.network.chat.Component.literal(""));
 
         list.add(
             Component.literal("Всего: ").withStyle(ChatFormatting.GREEN));
-        getMods(val).forEach(x -> list.addAll(x.GetTooltipString(info)));
+        getMods(val, lvl).forEach(x -> list.addAll(x.GetTooltipString(info)));
 
         return list;
 
     }
 
     public List<ExactStatData> getMods(int amount) {
+        return getMods(amount, 1);
+    }
+
+    public List<ExactStatData> getMods(int amount, int lvl) {
 
         return data.stats.stream()
             .map(x -> {
                 ExactStatData exact = ExactStatData.of(amount * x.v1, x.getStat()
                     .getStat(), x.getStat()
-                    .getModType(), 1);
+                    .getModType(), Math.max(1, lvl));
                 return exact;
             })
             .collect(Collectors.toList());
@@ -104,8 +109,8 @@ public class CoreStat extends BaseDatapackStat implements ICoreStat {
 
     @Override
     public void addToOtherStats(EntityData unitdata, InCalcStatData data) {
-
-        for (ExactStatData x : getMods((int) data.getValue())) {
+        int lvl = unitdata != null ? unitdata.getLevel() : 1;
+        for (ExactStatData x : getMods((int) data.getValue(), lvl)) {
             x.applyStats(unitdata);
         }
     }

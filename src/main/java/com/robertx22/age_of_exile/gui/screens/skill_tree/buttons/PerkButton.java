@@ -169,13 +169,16 @@ public class PerkButton extends ImageButton {
                     }
                     screen.markDirty();
                 } else if (alreadyAllocated && button == 1) {
-                    if (this.playerData.talents.canRemove(school, point)) {
+                    boolean inSim = com.robertx22.age_of_exile.uncommon.utilityclasses.WorldUtils.isSimulationWorld(mc.player.level());
+                    if (inSim ? this.playerData.talents.canRemoveIgnoringResetPoints(school, point) : this.playerData.talents.canRemove(school, point)) {
                         this.playerData.talents.remove(school, point);
-                        this.playerData.talents.reset_points--;
+                        if (!inSim && this.playerData.talents.reset_points > 0) {
+                            this.playerData.talents.reset_points--;
+                        }
                         screen.setStatusMessage("");
                         Packets.sendToServer(new PerkChangePacket(school, point, PerkChangePacket.ACTION.REMOVE));
                     } else {
-                        if (this.playerData.talents.reset_points < 1) {
+                        if (!inSim && this.playerData.talents.reset_points < 1) {
                             screen.setStatusMessage("Недостаточно очков сброса");
                         } else {
                             screen.setStatusMessage("Нельзя сбросить: от этого таланта зависят другие изученные узлы");

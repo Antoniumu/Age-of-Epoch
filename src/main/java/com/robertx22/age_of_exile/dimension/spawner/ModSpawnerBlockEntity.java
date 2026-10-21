@@ -44,6 +44,7 @@ public class ModSpawnerBlockEntity extends BlockEntity implements ITickableBlock
     int ticks = 0;
     public int spawnsLeft = DEFAULT_SPAWNS;
     public boolean spawnAllAtOnce = false;
+    public boolean spawnBoss = false;
     public int requiredPlayerRange = 16;
 
     @Override
@@ -107,7 +108,12 @@ public class ModSpawnerBlockEntity extends BlockEntity implements ITickableBlock
                                     EntityType type = list.getRandomMob();
 
                                     if (SpawnUtil.canPlaceMob(level, type, blockPos)) {
-                                        list.spawnMob((ServerLevel) level, type, blockPos);
+                                        if (this.spawnBoss) {
+                                            this.spawnBoss = false;
+                                            list.spawnBoss((ServerLevel) level, blockPos);
+                                        } else {
+                                            list.spawnMob((ServerLevel) level, type, blockPos);
+                                        }
                                         spawns--;
                                     }
 
@@ -150,6 +156,7 @@ public class ModSpawnerBlockEntity extends BlockEntity implements ITickableBlock
         nbt.putInt("spawnsLeft", spawnsLeft);
         nbt.putInt("range", requiredPlayerRange);
         nbt.putBoolean("at_once", spawnAllAtOnce);
+        nbt.putBoolean("spawn_boss", spawnBoss);
         return nbt;
     }
 
@@ -159,6 +166,7 @@ public class ModSpawnerBlockEntity extends BlockEntity implements ITickableBlock
             spawnsLeft = nbt.getIntOr("spawnsLeft", DEFAULT_SPAWNS);
             requiredPlayerRange = nbt.getIntOr("range", 16);
             spawnAllAtOnce = nbt.getBooleanOr("at_once", false);
+            spawnBoss = nbt.getBooleanOr("spawn_boss", false);
         } catch (Exception e) {
             e.printStackTrace();
         }

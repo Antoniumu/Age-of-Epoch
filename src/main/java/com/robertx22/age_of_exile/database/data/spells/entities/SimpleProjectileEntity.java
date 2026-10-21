@@ -32,6 +32,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -39,6 +40,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAsItem, IDatapackSpellEntity {
@@ -119,30 +121,35 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
             enres = (EntityHitResult) result;
         }
 
-        if (enres == null) {
-            return null;
-        }
-
-        if (enres.getEntity() != null) {
+        if (enres != null && enres.getEntity() != null) {
             if (enres.getEntity() != this.getCaster()) {
                 return enres.getEntity();
             }
         }
 
-        if (getCaster() != null) {
-            List<LivingEntity> entities = EntityFinder.start(getCaster(), LivingEntity.class, position())
+        // Fallback for block impacts (and self hits): the swept ray is clipped at the
+        // first block face, so a target right in front of the caster (point blank,
+        // ground/steps/walls between caster and target) is never found by the ray.
+        // Without this, spells like Fireball fizzle with zero damage in melee range.
+        LivingEntity caster = getCaster();
+
+        if (caster != null) {
+            Vec3 center = result != null ? result.getLocation() : position();
+
+            List<LivingEntity> entities = EntityFinder.start(caster, LivingEntity.class, center)
                 .radius(radius)
                 .build();
 
             if (entities.size() > 0) {
 
                 LivingEntity closest = entities.get(0);
+                double closestDist = center.distanceToSqr(closest.position());
 
                 for (LivingEntity en : entities) {
-                    if (en != closest) {
-                        if (this.distanceTo(en) < this.distanceTo(closest)) {
-                            closest = en;
-                        }
+                    double dist = center.distanceToSqr(en.position());
+                    if (dist < closestDist) {
+                        closest = en;
+                        closestDist = dist;
                     }
                 }
 
@@ -167,11 +174,12 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
 
     private boolean expireEffectsDone = false;
 
-    // In modern MC a server-initiated removal reaches the client through
-    // setRemoved()/onClientRemoval() and NOT through remove() (that changed after 1.16,
-    // where the destroy-entities packet handler called entity.remove()).
-    // So the on-expire effects (which include all the client-side impact particles)
-    // must be triggered from every removal path, guarded to run exactly once per side.
+    // In modern MC a server-initiated removal reaches the client through the
+    // onRemoval() hook (invoked by the final setRemoved()), NOT through remove()
+    // (that changed after 1.16, where the destroy-entities packet handler called
+    // entity.remove()). So the on-expire effects (which include all the client-side
+    // impact particles) must run from both remove() and onRemoval(),
+    // guarded to run exactly once per side.
     private void runExpireEffects() {
         if (this.expireEffectsDone) {
             return;
@@ -198,6 +206,9 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
         super.remove(reason);
     }
 
+    // Entity.setRemoved() is final in modern MC; onRemoval() is the hook it invokes
+    // when the entity is removed (incl. server-initiated removal reaching the client,
+    // where remove() is skipped)
     @Override
     public void onRemoval(Entity.RemovalReason reason) {
         runExpireEffects();
@@ -265,6 +276,13 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
                 return !e.isSpectator() && e.isPickable() && e != this.getCaster() && e != this.ignoreEntity;
             });
 
+        if (res == null && this.tickCount <= 2) {
+            // Point blank forgiveness: the exact ray can graze past a hugging enemy.
+            // During the first ticks (melee range) fatten the sweep slightly so
+            // close range casts reliably register hits.
+            res = findForgivenHitEntity(pos, posPlusMotion);
+        }
+
         if (!this.entityData.get(HIT_ALLIES)) {
             if (res != null && getCaster() != null && res.getEntity() instanceof LivingEntity) {
                 if (AllyOrEnemy.allies.is(getCaster(), (LivingEntity) res.getEntity())) {
@@ -273,6 +291,43 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
             }
         }
         return res;
+    }
+
+    private EntityHitResult findForgivenHitEntity(Vec3 pos, Vec3 posPlusMotion) {
+        LivingEntity caster = getCaster();
+
+        List<LivingEntity> list = this.level()
+            .getEntitiesOfClass(LivingEntity.class, this.getBoundingBox()
+                .expandTowards(posPlusMotion.subtract(pos))
+                .inflate(1D), (e) -> {
+                return e.isAlive() && !e.isSpectator() && e.isPickable()
+                    && e != caster && e != this.ignoreEntity
+                    && (this.entityData.get(HIT_ALLIES) || caster == null
+                    || !AllyOrEnemy.allies.is(caster, e));
+            });
+
+        EntityHitResult best = null;
+        double bestDist = Double.MAX_VALUE;
+
+        for (LivingEntity en : list) {
+            AABB box = en.getBoundingBox()
+                .inflate(0.25D);
+
+            if (box.contains(pos)) {
+                return new EntityHitResult(en);
+            }
+
+            Optional<Vec3> hit = box.clip(pos, posPlusMotion);
+            if (hit.isPresent()) {
+                double dist = pos.distanceToSqr(hit.get());
+                if (dist < bestDist) {
+                    bestDist = dist;
+                    best = new EntityHitResult(en);
+                }
+            }
+        }
+
+        return best;
     }
 
     @Override
@@ -308,7 +363,7 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
 
     protected void onImpact(HitResult result) {
 
-        Entity entityHit = getEntityHit(result, 0.3D);
+        Entity entityHit = getEntityHit(result, 1.0D);
 
         if (entityHit != null) {
             if (this.level().isClientSide()) {
@@ -348,12 +403,12 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
             }
         }
 
+        if (entityHit != null && !entityData.get(EXPIRE_ON_ENTITY_HIT)) {
+            return;
+        }
+
         if (entityHit != null) {
-            if (!entityData.get(EXPIRE_ON_ENTITY_HIT)) {
-                return;
-            } else {
-                scheduleRemoval();
-            }
+            scheduleRemoval();
         }
 
         if (result instanceof BlockHitResult && entityData.get(EXPIRE_ON_BLOCK_HIT)) {

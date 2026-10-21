@@ -61,6 +61,7 @@ public class CommonEvents {
                 OnTickDungeonWorld.onEndTick((ServerLevel) event.world);
                 TowerBoss.tickLevel((ServerLevel) event.world);
                 TowerCollapse.tick((ServerLevel) event.world);
+                com.robertx22.world_of_exile.world_gen.TowerDestroyer.tickAll(event.world);
             }
         });
 

@@ -77,8 +77,27 @@ public class OnMobSpawn {
 
         String rar = endata.getRarity();
 
-        rar = mob.randomRarity(entity, endata);
+        if (com.robertx22.age_of_exile.uncommon.interfaces.data_items.IRarity.BOSS_ID.equals(rar)
+            || entity.entityTags().contains("woe_tower_boss")) {
+            rar = com.robertx22.age_of_exile.uncommon.interfaces.data_items.IRarity.BOSS_ID;
+        } else {
+            rar = mob.randomRarity(entity, endata);
+        }
         endata.setRarity(rar);
+
+        if (entity.entityTags().contains("woe_tower_boss") && entity.level() instanceof ServerLevel sw) {
+            net.minecraft.core.BlockPos center = entity.blockPosition();
+            for (int dx = -3; dx <= 3; dx++) {
+                for (int dy = -2; dy <= 2; dy++) {
+                    for (int dz = -3; dz <= 3; dz++) {
+                        net.minecraft.core.BlockPos p = center.offset(dx, dy, dz);
+                        if (sw.getBlockState(p).is(net.minecraft.world.level.block.Blocks.SPAWNER)) {
+                            sw.setBlockAndUpdate(p, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+                        }
+                    }
+                }
+            }
+        }
 
         MobRarity rarity = ExileDB.MobRarities()
             .get(rar);

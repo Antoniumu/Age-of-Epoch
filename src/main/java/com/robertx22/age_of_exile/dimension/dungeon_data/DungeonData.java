@@ -88,6 +88,9 @@ public class DungeonData {
     }
 
     public DungeonMobList getMobList() {
+        if (!ExileDB.DungeonMobLists().isRegistered(m)) {
+            return ExileDB.DungeonMobLists().random();
+        }
         return ExileDB.DungeonMobLists()
             .get(m);
     }

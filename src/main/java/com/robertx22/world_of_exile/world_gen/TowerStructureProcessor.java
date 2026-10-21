@@ -134,4 +134,27 @@ public class TowerStructureProcessor implements StructureProcessor {
         tag.put("SpawnData", spawnData);
         return new StructureTemplate.StructureBlockInfo(pos, Blocks.SPAWNER.defaultBlockState(), tag);
     }
+
+    private static StructureTemplate.StructureBlockInfo createBossSpawnerInfo(BlockPos pos) {
+        CompoundTag tag = new CompoundTag();
+        tag.putString("id", "minecraft:mob_spawner");
+        tag.putShort("Delay", (short) 20);
+        tag.putShort("MinSpawnDelay", (short) 800);
+        tag.putShort("MaxSpawnDelay", (short) 800);
+        tag.putShort("SpawnCount", (short) 1);
+        tag.putShort("MaxNearbyEntities", (short) 1);
+        tag.putShort("RequiredPlayerRange", (short) 14);
+        tag.putShort("SpawnRange", (short) 2);
+
+        CompoundTag spawnData = new CompoundTag();
+        CompoundTag entityTag = new CompoundTag();
+        entityTag.putString("id", "minecraft:wither_skeleton");
+        entityTag.putBoolean("PersistenceRequired", true);
+        net.minecraft.nbt.ListTag tagsList = new net.minecraft.nbt.ListTag();
+        tagsList.add(net.minecraft.nbt.StringTag.valueOf("woe_tower_boss"));
+        entityTag.put("Tags", tagsList);
+        spawnData.put("entity", entityTag);
+        tag.put("SpawnData", spawnData);
+        return new StructureTemplate.StructureBlockInfo(pos, Blocks.SPAWNER.defaultBlockState(), tag);
+    }
 }

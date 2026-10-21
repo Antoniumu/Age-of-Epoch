@@ -555,7 +555,8 @@ public enum Words implements IAutoLocName {
 
     World_Type("World Type"),
 
-    Repair_Station("Repair Station");
+    Repair_Station("Repair Station"),
+    Simulation("Полигон");
 
     private String localization = "";
 
