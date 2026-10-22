@@ -102,8 +102,7 @@ python3 tools/check_java_syntax.py src/main/java/com/robertx22/age_of_exile/data
 ## Открытые пункты
 
 - Иконки классов и школ переделаны под цветную плитку в цвете класса (128×128): `class_divine`,
-  `class_blightcaller`, школы `divine`, `fire`, `hunting`, `nature`. Остались школы `storm`, `unholy`,
-  `water`: они пока 34×34 старого стиля и будут заменены в следующем проходе.
+  `class_blightcaller`, и все 7 школ (`divine`, `fire`, `hunting`, `nature`, `storm`, `unholy`, `water`).
 - Иконки талантов Скверноводца (`blight_lord`, `brown_bear`, `bandit_mammoth`, `alpha_fang`, и 5 остальных)
   переделаны в 128×128 с прозрачным фоном, как у остальных талантов.
 - Иконки талантов «Божественного» и общих талантов не переделывались (область работ — классы и школы).
