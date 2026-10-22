@@ -45,7 +45,7 @@ public class ObeliskBlock extends BaseEntityBlock {
     public List<ItemStack> getDrops(BlockState pState, LootParams.Builder pParams) {
 
         List<ItemStack> all = new ArrayList<>();
-        BlockEntity blockentity = pParams.getOptional(LootContextParams.BLOCK_ENTITY);
+        BlockEntity blockentity = pParams.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
 
         if (blockentity instanceof ObeliskBE be) {
             all.add(asItem().getDefaultInstance());

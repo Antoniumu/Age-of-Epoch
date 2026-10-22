@@ -61,7 +61,7 @@ public class MapChunkGenerator extends ChunkGenerator {
 
     // MC 26.3: fillFromNoise was replaced by buildTerrain
     @Override
-    public CompletableFuture<ChunkAccess> buildTerrain(ChunkAccess chunk, Blender blender, RandomState random, StructureManager structureManager, BiomeManager biomeManager, @javax.annotation.Nullable WorldGenRegion region, java.util.Set<net.minecraft.core.Holder<net.minecraft.world.level.biome.Biome>> biomes) {
+    public CompletableFuture<ChunkAccess> buildTerrain(ChunkAccess chunk, Blender blender, RandomState random, StructureManager structureManager, BiomeManager biomeManager, @org.jspecify.annotations.Nullable WorldGenRegion region, java.util.Set<net.minecraft.core.Holder<net.minecraft.world.level.biome.Biome>> biomes) {
         return CompletableFuture.completedFuture(chunk);
     }
 

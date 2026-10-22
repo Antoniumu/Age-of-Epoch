@@ -34,7 +34,7 @@ public class EditBox extends net.minecraft.client.gui.components.EditBox {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        super.extractContents(graphics, mouseX, mouseY, partialTicks);
+    public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTicks);
     }
 }

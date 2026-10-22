@@ -26,7 +26,7 @@ public class TextUtils {
         float yf = (float) ((double) yp * antiScale);
 
 
-        gui.text(mc.font, text, (int) xf, (int) yf, (CompatChatFormatting.getColor(color) == null ? 0xFFFFFFFF : CompatChatFormatting.getColor(color)), true);
+        gui.text(mc.font, text, (int) xf, (int) yf, CompatChatFormatting.getColor(color), true);
 
 
         gui.pose().scale((float)(antiScale), (float)(antiScale));

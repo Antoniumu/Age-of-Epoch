@@ -69,7 +69,7 @@ public abstract class ObjectSelectionList<E extends ObjectSelectionList.Entry<E>
     protected void renderBackground(GuiGraphicsExtractor graphics) {}
 
     @Override
-    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         GuiGraphics wrapped = GuiGraphics.wrap(graphics);
         this.renderBackground(graphics);
         this.renderBackground(wrapped);

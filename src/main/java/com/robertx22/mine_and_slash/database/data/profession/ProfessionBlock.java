@@ -67,7 +67,7 @@ public class ProfessionBlock extends BaseEntityBlock  {
 
         List<ItemStack> all = new ArrayList<>();
 
-        BlockEntity blockentity = pParams.getOptional(LootContextParams.BLOCK_ENTITY);
+        BlockEntity blockentity = pParams.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
 
         if (blockentity instanceof ProfessionBlockEntity be) {
             all.add(asItem().getDefaultInstance());

@@ -13,11 +13,11 @@ public class TipsWidget extends AbstractWidget {
     }
 
     public void render(GuiGraphicsExtractor gui, int mx, int my, float pt) {
-        extractContents(gui, mx, my, pt);
+        extractWidgetRenderState(gui, mx, my, pt);
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor gui, int mx, int my, float pt) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int mx, int my, float pt) {
         gui.text(Minecraft.getInstance().font, Component.literal("[?]"), getX(), getY(), 0xFFFFFF55, true);
     }
 

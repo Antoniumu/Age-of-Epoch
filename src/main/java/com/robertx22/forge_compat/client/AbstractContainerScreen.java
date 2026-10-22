@@ -38,7 +38,7 @@ public abstract class AbstractContainerScreen<T extends AbstractContainerMenu> e
     public int getYSize() { return this.guiHeight; }
 
     @Override
-    public void init() {
+    protected void init() {
         super.init();
         // position relative to the compat size, not vanilla's final imageWidth/imageHeight
         this.leftPos = (this.width - this.guiWidth) / 2;
