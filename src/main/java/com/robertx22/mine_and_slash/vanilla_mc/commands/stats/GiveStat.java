@@ -36,9 +36,9 @@ public class GiveStat {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(
                 literal(CommandRefs.ID)
-                        .then(literal("stat").requires(e -> e.hasPermission(2))
+                        .then(literal("stat").requires(e -> e.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER))
                                 .then(literal("give")
-                                        .requires(e -> e.hasPermission(2))
+                                        .requires(e -> e.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER))
                                         .then(argument("target", EntityArgument.entity())
                                                 .then(argument("scaling", StringArgumentType.string())
                                                         .suggests(new ModOrExact())
@@ -73,8 +73,8 @@ public class GiveStat {
 
                 if (scaling.equals("exact")) {
                     data.getCustomExactStats().addExactStat(GUID, statGUID, v1, ModType.valueOf(statType));
-                    if (!silent) {
-                        e.sendSystemMessage(Component.literal("Stat Applied."));
+                    if (!silent && e instanceof net.minecraft.world.entity.player.Player pl) {
+                        pl.sendSystemMessage(Component.literal("Stat Applied."));
                     }
                 }
             }

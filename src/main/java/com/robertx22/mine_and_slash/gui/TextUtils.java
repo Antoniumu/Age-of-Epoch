@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.gui;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -24,7 +26,7 @@ public class TextUtils {
         float yf = (float) ((double) yp * antiScale);
 
 
-        gui.text(mc.font, text, (int) xf, (int) yf, (color.getColor() == null ? 0xFFFFFFFF : color.getColor()), true);
+        gui.text(mc.font, text, (int) xf, (int) yf, (CompatChatFormatting.getColor(color) == null ? 0xFFFFFFFF : CompatChatFormatting.getColor(color)), true);
 
 
         gui.pose().scale((float)(antiScale), (float)(antiScale));

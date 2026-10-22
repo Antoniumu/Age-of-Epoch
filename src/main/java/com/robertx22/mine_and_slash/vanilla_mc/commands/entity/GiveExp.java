@@ -19,9 +19,9 @@ public class GiveExp {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(
                 literal(CommandRefs.ID)
-                        .then(literal("give").requires(e -> e.hasPermission(2))
+                        .then(literal("give").requires(e -> e.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER))
                                 .then(literal("exp")
-                                        .requires(e -> e.hasPermission(2))
+                                        .requires(e -> e.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER))
                                         .then(argument("target", EntityArgument.player())
                                                 .then(argument("exp", IntegerArgumentType.integer())
                                                         .executes(ctx -> run(EntityArgument.getPlayer(ctx, "target"), IntegerArgumentType

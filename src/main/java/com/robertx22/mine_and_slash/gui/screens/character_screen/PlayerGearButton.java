@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.gui.screens.character_screen;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.mine_and_slash.gui.bases.BaseScreen;
 import com.robertx22.mine_and_slash.mmorpg.SlashRef;
 import com.robertx22.mine_and_slash.uncommon.datasaving.Load;
@@ -50,8 +52,8 @@ public class PlayerGearButton extends ImageButton {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int x, int y, float ticks) {
-        super.extractWidgetRenderState(gui, x, y, ticks);
+    public void extractContents(GuiGraphicsExtractor gui, int x, int y, float ticks) {
+        super.extractContents(gui, x, y, ticks);
 
         MutableComponent str = Gui.MAINHUB_LEVEL.locName().append(String.valueOf(Load.Unit(player).getLevel()));
 
@@ -61,7 +63,7 @@ public class PlayerGearButton extends ImageButton {
         // player 3d view
         
 
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, str, this.getX() + xSize / 2 - mc.font.width(str) / 2, this.getY() + 6, ChatFormatting.YELLOW.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, str, this.getX() + xSize / 2 - mc.font.width(str) / 2, this.getY() + 6, CompatChatFormatting.getColor(ChatFormatting.YELLOW));
 
 
     }

@@ -38,7 +38,7 @@ public class ProphecyAffixButton extends ImageButton {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void extractContents(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         com.robertx22.forge_compat.client.GuiBlitHelper.blit(pGuiGraphics, SlashRef.guiId("prophecy/icon"), getX(), getY(), 0, 0, 16, 16, 16, 16);
 
         var stats = data.getStats(100, Load.Unit(ClientOnly.getPlayer()).getLevel());
@@ -66,7 +66,7 @@ public class ProphecyAffixButton extends ImageButton {
         this.setTooltip(Tooltip.create(TextUTIL.mergeList(tip)));
 
 
-        super.extractWidgetRenderState(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        super.extractContents(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
 
 
     }

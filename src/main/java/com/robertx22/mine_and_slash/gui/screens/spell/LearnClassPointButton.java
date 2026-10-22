@@ -124,12 +124,12 @@ public class LearnClassPointButton extends ImageButton {
         String lvltext = currentlvl + "/" + maxlvl;
         TextUtils.renderText(gui, 0.8F, lvltext, getX() + BUTTON_SIZE_X / 2, (int) (getY() + BUTTON_SIZE_Y * 0.85F), color);
 
-        super.extractWidgetRenderState(gui, mouseX, mouseY, delta);
+        super.extractContents(gui, mouseX, mouseY, delta);
 
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void extractContents(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         // this.renderTexture(pGuiGraphics, this.resourceLocation, this.getX(), this.getY(), this.xTexStart, this.yTexStart, this.yDiffTex, this.width, this.height, this.textureWidth, this.textureHeight);
     }
 

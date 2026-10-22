@@ -1,5 +1,6 @@
 package com.robertx22.mine_and_slash.database.data.spells.spell_classes;
 
+import net.minecraft.world.entity.EntityTypes;
 import com.robertx22.mine_and_slash.database.data.spells.components.MapHolder;
 import com.robertx22.mine_and_slash.database.data.spells.entities.CalculatedSpellData;
 import com.robertx22.mine_and_slash.database.data.spells.entities.IDatapackSpellEntity;

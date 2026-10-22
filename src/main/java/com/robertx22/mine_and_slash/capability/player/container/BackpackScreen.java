@@ -22,8 +22,8 @@ public class BackpackScreen extends AbstractContainerScreen<BackpackMenu> {
 
     public BackpackScreen(BackpackMenu pMenu, Inventory pPlayerInventory, Component txt) {
         super(pMenu, pPlayerInventory, Component.literal(""));
-        this.imageWidth = 199;
-        this.imageHeight = 222;
+        this.setGuiSize(199, 222);
+
 
 
     }

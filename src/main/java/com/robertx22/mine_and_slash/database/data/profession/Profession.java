@@ -253,7 +253,7 @@ public class Profession implements JsonExileRegistry<Profession>, IAutoGson<Prof
 
 
         if (data == null) {
-            for (TagKey<Block> drop : state.builtInRegistryHolder().tags().toList()) {
+            for (TagKey<Block> drop : state.typeHolder().tags().toList()) {
                 if (exp_sources.getData(drop) != null) {
                     data = exp_sources.getData(drop);
                     break;

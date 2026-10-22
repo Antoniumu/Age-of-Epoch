@@ -32,7 +32,7 @@ public class SchoolButton extends ImageButton {
         }
     }
 
-    public void extractWidgetRenderState(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void extractContents(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         if (school != null) {
             this.renderTexture(pGuiGraphics, this.school.getIconLoc(), this.getX(), this.getY(), 0, 0, this.yDiffTex, SIZE, SIZE, SIZE, SIZE);
 

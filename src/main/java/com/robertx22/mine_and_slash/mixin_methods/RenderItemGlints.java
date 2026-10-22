@@ -21,7 +21,7 @@ public class RenderItemGlints {
 
             var mc = Minecraft.getInstance();
 
-            if (mc.screen == null) {
+            if (mc.gui.screen() == null) {
                 return;
             }
 
@@ -54,7 +54,7 @@ public class RenderItemGlints {
                 if (ClientConfigs.getConfig().ITEM_RARITY_BACKGROUND_TYPE.get() == ClientConfigs.GlintType.BORDER) {
                     tex = rar.getGlintTextureBorder();
                 }
-                if (Minecraft.getInstance().screen instanceof SkillGemsScreen && data instanceof SkillGemData) {
+                if (Minecraft.getInstance().gui.screen() instanceof SkillGemsScreen && data instanceof SkillGemData) {
                     tex = rar.getGlintTextureCircle();
                 }
 

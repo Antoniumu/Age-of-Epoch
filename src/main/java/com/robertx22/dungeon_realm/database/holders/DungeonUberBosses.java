@@ -1,5 +1,6 @@
 package com.robertx22.dungeon_realm.database.holders;
 
+import net.minecraft.world.entity.EntityTypes;
 import com.robertx22.dungeon_realm.database.uber_arena.UberBossArena;
 import com.robertx22.dungeon_realm.main.DungeonMain;
 import com.robertx22.library_of_exile.database.map_data_block.MapDataBlock;

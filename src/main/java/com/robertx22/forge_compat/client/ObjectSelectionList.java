@@ -69,7 +69,7 @@ public abstract class ObjectSelectionList<E extends ObjectSelectionList.Entry<E>
     protected void renderBackground(GuiGraphicsExtractor graphics) {}
 
     @Override
-    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         GuiGraphics wrapped = GuiGraphics.wrap(graphics);
         this.renderBackground(graphics);
         this.renderBackground(wrapped);
@@ -81,7 +81,7 @@ public abstract class ObjectSelectionList<E extends ObjectSelectionList.Entry<E>
             if (rowTop + this.itemHeight < this.getY() || rowTop > this.getY() + this.height) continue;
             E entry = this.children.get(i);
             boolean hovered = mouseX >= rowLeft && mouseX <= rowLeft + rowWidth && mouseY >= rowTop && mouseY <= rowTop + this.itemHeight;
-            entry.extractWidgetRenderState(graphics, i, rowTop, rowLeft, rowWidth, this.itemHeight, mouseX, mouseY, hovered, partialTicks);
+            entry.extractContents(graphics, i, rowTop, rowLeft, rowWidth, this.itemHeight, mouseX, mouseY, hovered, partialTicks);
             entry.render(wrapped, i, rowTop, rowLeft, rowWidth, this.itemHeight, mouseX, mouseY, hovered, partialTicks);
         }
         graphics.disableScissor();
@@ -124,7 +124,7 @@ public abstract class ObjectSelectionList<E extends ObjectSelectionList.Entry<E>
         public static final Identifier WIDGETS_LOCATION = Identifier.withDefaultNamespace("textures/gui/widgets.png");
         private boolean focused;
         public void render(GuiGraphics graphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean hovering, float partialTick) {}
-        public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean hovering, float partialTick) {}
+        public void extractContents(GuiGraphicsExtractor graphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean hovering, float partialTick) {}
         public Component getNarration() { return Component.empty(); }
         @Override public void setFocused(boolean f) { this.focused = f; }
         @Override public boolean isFocused() { return this.focused; }

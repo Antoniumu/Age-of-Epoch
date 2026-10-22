@@ -41,13 +41,13 @@ public class ItemSlotButton extends ImageButton {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void extractContents(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         // todo would this work?
         setTooltip(Tooltip.create(TextUTIL.mergeList(com.robertx22.forge_compat.common.CompatHelper.getTooltipLines(stack, mc.player, TooltipFlag.Default.NORMAL))));
 
         RenderUtils.renderStack(pGuiGraphics, stack, this.getX(), this.getY());
 
-        super.extractWidgetRenderState(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        super.extractContents(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
     }
 
     /*

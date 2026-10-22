@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.gui.screens.character_screen;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.library_of_exile.utils.GuiUtils;
 import com.robertx22.library_of_exile.utils.RenderUtils;
 import com.robertx22.library_of_exile.utils.TextUTIL;
@@ -46,8 +48,8 @@ public class HubStatButton extends ImageButton {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int x, int y, float ticks) {
-        super.extractWidgetRenderState(gui, x, y, ticks);
+    public void extractContents(GuiGraphicsExtractor gui, int x, int y, float ticks) {
+        super.extractContents(gui, x, y, ticks);
 
 
         if (stat == null || stat.GetStat() == null) {
@@ -95,7 +97,7 @@ public class HubStatButton extends ImageButton {
 
         String stattext = CharacterStatsButtons.getHubStatString(stat.GetStat(), Load.Unit(ClientOnly.getPlayer()));
 
-        // com.robertx22.forge_compat.client.GuiBlitHelper.drawCenteredString(gui, Minecraft.getInstance().font, stattext, getX() + numX, getY() + numY, ChatFormatting.YELLOW.getColor());
+        // com.robertx22.forge_compat.client.GuiBlitHelper.drawCenteredString(gui, Minecraft.getInstance().font, stattext, getX() + numX, getY() + numY, CompatChatFormatting.getColor(ChatFormatting.YELLOW));
 
 
         GuiUtils.renderScaledText(gui, getX() + numX, getY() + numY, 0.75F, stattext, ChatFormatting.YELLOW);

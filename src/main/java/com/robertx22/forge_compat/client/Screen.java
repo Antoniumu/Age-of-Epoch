@@ -7,6 +7,19 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public abstract class Screen extends net.minecraft.client.gui.screens.Screen {
+
+    // MC 26.3: Screen.renderables is private now - helpers over children()/removeWidget()
+    public void removeWidgetsMatching(Class<?> type) {
+        for (net.minecraft.client.gui.components.events.GuiEventListener l : new java.util.ArrayList<>(this.children())) {
+            if (type.isInstance(l)) this.removeWidget(l);
+        }
+    }
+
+    public void removeWidgetsExcept(Class<?> type) {
+        for (net.minecraft.client.gui.components.events.GuiEventListener l : new java.util.ArrayList<>(this.children())) {
+            if (l instanceof net.minecraft.client.gui.components.Renderable && !type.isInstance(l)) this.removeWidget(l);
+        }
+    }
     protected Screen(Component title) {
         super(title);
     }

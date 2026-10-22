@@ -37,11 +37,11 @@ public class ProfessionLevelsButton extends ImageButton {
 
     public void renderLegacyUnused(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
         setModTooltip();
-        super.extractWidgetRenderState(gui, mouseX, mouseY, delta);
+        super.extractContents(gui, mouseX, mouseY, delta);
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
+    public void extractContents(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
         com.robertx22.forge_compat.client.RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         com.robertx22.forge_compat.client.GuiBlitHelper.blit(gui, SlashRef.guiId("profession/button"), getX(), getY(), SX, SX, SX, SX, SX, SX);
 

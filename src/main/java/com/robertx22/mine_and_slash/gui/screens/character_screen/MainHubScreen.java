@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.gui.screens.character_screen;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.dungeon_realm.main.DungeonMain;
 import com.robertx22.library_of_exile.main.Packets;
 import com.robertx22.library_of_exile.utils.RenderUtils;
@@ -371,12 +373,12 @@ public class MainHubScreen extends BaseScreen implements INamedScreen {
         int p = PlayerPointsType.STATS.getFreePoints(mc.player);
         if (p > 0) {
             MutableComponent points = Gui.STATS_POINTS.locName().append(String.valueOf(p));
-            com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, points, guiLeft + 40 - mc.font.width(points) / 2, guiTop + 10, ChatFormatting.GREEN.getColor());
+            com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, points, guiLeft + 40 - mc.font.width(points) / 2, guiTop + 10, CompatChatFormatting.getColor(ChatFormatting.GREEN));
         }
 
         int lvl = Load.player(mc.player).miscInfo.area_lvl;
         MutableComponent areaLevel = Gui.AREA_LEVEL.locName().append(String.valueOf(lvl));
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, areaLevel, guiLeft + sizeX / 2 - mc.font.width(areaLevel) / 2, guiTop + sizeY + 5, ChatFormatting.YELLOW.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, areaLevel, guiLeft + sizeX / 2 - mc.font.width(areaLevel) / 2, guiTop + sizeY + 5, CompatChatFormatting.getColor(ChatFormatting.YELLOW));
 
     }
 
@@ -448,7 +450,7 @@ public class MainHubScreen extends BaseScreen implements INamedScreen {
 
 
         @Override
-        protected void extractWidgetRenderState(GuiGraphicsExtractor gui, int x, int y, float f) {
+        protected void extractContents(GuiGraphicsExtractor gui, int x, int y, float f) {
 
             setTooltipMod();
 

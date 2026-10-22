@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.gui.screens.character_screen;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 
 import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.library_of_exile.utils.RenderUtils;
@@ -58,8 +60,8 @@ public class MainHubButton extends ImageButton {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int x, int y, float ticks) {
-        super.extractWidgetRenderState(gui, x, y, ticks);
+    public void extractContents(GuiGraphicsExtractor gui, int x, int y, float ticks) {
+        super.extractContents(gui, x, y, ticks);
 
 
         if (right) {
@@ -85,9 +87,9 @@ public class MainHubButton extends ImageButton {
 
         if (isHovered()) {
             if (right) {
-                com.robertx22.forge_compat.client.GuiBlitHelper.drawCenteredString(gui, Minecraft.getInstance().font, str, this.getX() + 65, this.getY() + 10, ChatFormatting.YELLOW.getColor());
+                com.robertx22.forge_compat.client.GuiBlitHelper.drawCenteredString(gui, Minecraft.getInstance().font, str, this.getX() + 65, this.getY() + 10, CompatChatFormatting.getColor(ChatFormatting.YELLOW));
             } else {
-                com.robertx22.forge_compat.client.GuiBlitHelper.drawCenteredString(gui, Minecraft.getInstance().font, str, this.getX() + 40, this.getY() + 10, ChatFormatting.YELLOW.getColor());
+                com.robertx22.forge_compat.client.GuiBlitHelper.drawCenteredString(gui, Minecraft.getInstance().font, str, this.getX() + 40, this.getY() + 10, CompatChatFormatting.getColor(ChatFormatting.YELLOW));
 
             }
         }

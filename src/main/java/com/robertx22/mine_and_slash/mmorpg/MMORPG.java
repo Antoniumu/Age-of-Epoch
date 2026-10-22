@@ -214,7 +214,8 @@ public class MMORPG {
             public void accept(GatherDataEvent x) {
                 for (ExileRegistryType type : ExileRegistryType.getAllInRegisterOrder()) {
                     // MC 26.3: DataGenerator.addProvider(run, provider) is now addProvider(Factory<PackOutput>)
-                    x.getGenerator().addProvider(out -> type.getDatapackGenerator());
+                    // MC 26.3: addProvider lives on PackGenerator now
+                    x.getGenerator().getVanillaPack(true).addProvider(out -> type.getDatapackGenerator());
                 }
             }
         });

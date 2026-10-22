@@ -3,6 +3,7 @@ package com.robertx22.mine_and_slash.gui.wiki.reworked.filters;
 import com.robertx22.mine_and_slash.gui.wiki.reworked.NewWikiScreen;
 import com.robertx22.mine_and_slash.uncommon.localization.Words;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -37,6 +38,13 @@ public class FilterGroupButton extends AbstractButton {
         }
     }
 
+
+
+    // MC 26.3: AbstractButton's abstract render hook is extractContents now
+    @Override
+    protected void extractContents(GuiGraphicsExtractor gui, int mouseX, int mouseY, float partialTicks) {
+        gui.text(Minecraft.getInstance().font, this.getMessage(), this.getX() + this.getWidth() / 2, this.getY() + (this.getHeight() - 8) / 2, 0xFFFFFFFF, false);
+    }
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {

@@ -59,7 +59,7 @@ public class CommandBuilder {
 
 
         for (LiteralWrapper literal : literals) {
-            var next = literal(literal.id).requires(e -> e.hasPermission(literal.perm.perm));
+            var next = literal(literal.id).requires(e -> CommandBuilder.hasPermLevel(e, literal.perm.perm));
             list.add(next);
             x++;
         }
@@ -121,3 +121,14 @@ public class CommandBuilder {
     }
 
 }
+
+    // MC 26.3: CommandSourceStack.hasPermission(int) was removed; permissions are PermissionSet-based now
+    public static boolean hasPermLevel(net.minecraft.commands.CommandSourceStack src, int level) {
+        if (level <= 0) return true;
+        net.minecraft.server.permissions.PermissionLevel pl =
+            level >= 4 ? net.minecraft.server.permissions.PermissionLevel.OWNERS
+            : level == 3 ? net.minecraft.server.permissions.PermissionLevel.ADMINS
+            : level >= 2 ? net.minecraft.server.permissions.PermissionLevel.GAMEMASTERS
+            : net.minecraft.server.permissions.PermissionLevel.MODERATORS;
+        return src.permissions().hasPermission(new net.minecraft.server.permissions.Permission.HasCommandLevel(pl));
+    }

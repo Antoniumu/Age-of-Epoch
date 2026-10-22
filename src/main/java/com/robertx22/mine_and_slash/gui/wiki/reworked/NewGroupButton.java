@@ -41,9 +41,9 @@ public class NewGroupButton extends ImageButton {
 
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
+    public void extractContents(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
         setModTooltip();
-        super.extractWidgetRenderState(gui, mouseX, mouseY, delta);
+        super.extractContents(gui, mouseX, mouseY, delta);
         RenderUtils.render16Icon(gui, group.getTextureLoc(), this.getX() + 2, this.getY() + 2);
     }
 

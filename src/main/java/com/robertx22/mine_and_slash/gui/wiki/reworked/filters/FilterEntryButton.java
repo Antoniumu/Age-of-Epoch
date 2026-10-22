@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.gui.wiki.reworked.filters;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -35,7 +37,7 @@ public class FilterEntryButton extends ObjectSelectionList.Entry<FilterEntryButt
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pHovering, float pPartialTick) {
+    public void extractContents(GuiGraphicsExtractor gui, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pHovering, float pPartialTick) {
 
         var mc = Minecraft.getInstance();
 
@@ -50,7 +52,7 @@ public class FilterEntryButton extends ObjectSelectionList.Entry<FilterEntryButt
             text.withStyle(ChatFormatting.GRAY);
 
         }
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, text, xp, yp, ChatFormatting.YELLOW.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, text, xp, yp, CompatChatFormatting.getColor(ChatFormatting.YELLOW));
 
     }
 }

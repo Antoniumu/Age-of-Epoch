@@ -48,7 +48,7 @@ public class ModWolfRender<T extends Mob> extends EntityRenderer<T, ModWolfRende
         poseStack.pushPose();
         poseStack.mulPose(new Matrix4f().rotationY((float) Math.toRadians(-state.bodyYaw)));
         int light = state.lightCoords;
-        collector.order(0).submitCustomGeometry(poseStack, RenderTypes.entityCutoutNoCull(this.texture), (pose, vc) -> {
+        collector.order(0).submitCustomGeometry(poseStack, RenderTypes.entityCutout(this.texture, true), (pose, vc) -> {
             MySpriteRenderer.drawTexturedBox(pose, vc, HEAD, light);
             MySpriteRenderer.drawTexturedBox(pose, vc, BODY, light);
             MySpriteRenderer.drawTexturedBox(pose, vc, LEG_FL, light);

@@ -97,6 +97,63 @@ MC 26.3 закрыл следующие группы:
 12. `-Xmaxerrs` поднят до 5000 по умолчанию (`-PdshMaxErrs=N` для переопределения),
     чтобы хвосты ошибок больше не прятались за лимитом в 100.
 
+## 1c. Четвёртый проход — полный список: все 258 ошибок (258 → 0 ставится этой правкой)
+
+Полный (нелимитированный) лог впервые показал весь масштаб: 258 ошибок ~40 шаблонов.
+Правки 127 файлов:
+
+1. **EntityTypes**: импорты добавлены в 7 файлов (MapDimensionConfig, SimulationManager,
+   DungeonUberBosses, LibMobLists, EntityConfigs, SpellUtils, SlashEntities) — константы
+   были переименованы в 3-м проходе, но без импортов.
+2. **ChunkPos-хвосты**: строковые конкатенации и присваивания полей
+   (`cp.x()`, `c.x()`, `cpos.x()`, `start.x()`, `count.x()`, `be.x()`) в
+   MapPlayerDataSaver, MapDeviceBlock, AllMapConnectionData, ProcessMapChunks,
+   MapGenerationUTIL, HarvestBlock (включая вызов `getStartFromCounter`).
+3. **Кнопки**: финальный `AbstractButton.extractWidgetRenderState` → абстрактный
+   `extractContents` — переименовано в ~40 классах кнопок (+ compat Button,
+   ObjectSelectionList, EditBox); ToonActionButton/FilterGroupButton получили
+   реализацию `extractContents` (рисует `getMessage()` по центру).
+4. **Экраны-контейнеры**: `AbstractContainerScreen.tick()` финален (ваниль сама зовёт
+   `containerTick()`) — переопределение удалено; `imageWidth/imageHeight` финальны —
+   в compat добавлены `guiWidth/guiHeight`, `setGuiSize`, `getGuiLeft/getGuiTop/
+   getXSize/getYSize` и перецентровка в `init()`; `Screen.renderables` приватен —
+   хелперы `removeWidgetsMatching/removeWidgetsExcept` поверх `children()`/
+   `removeWidget` (compat Screen + AbstractContainerScreen); SkillTreeScreen
+   итерирует снапшот `children()`.
+5. **Команды**: `CommandSourceStack.hasPermission(int)` удалён →
+   `permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)` (уровень 2; 0 → true),
+   CommandBuilder.hasPermLevel(int) маппит уровни 1–4 на MODERATORS..OWNERS через
+   `Permission.HasCommandLevel(PermissionLevel)`; GiveStat шлёт сообщение только Player.
+6. **Лут**: `LootContext.params()` → `hasParameter`/`getOptional(ContextKey)`;
+   `getOptionalParameter` → `getOptional` (5 файлов с блоками: Obelisk, MapDevice,
+   Profession, Harvest, спавнер-экстра).
+7. **MapChunkGenerator**: `fillFromNoise` → `buildTerrain(ChunkAccess, Blender,
+   RandomState, StructureManager, BiomeManager, @Nullable WorldGenRegion,
+   Set<Holder<Biome>>)`; хуки `applyCarvers`/`buildSurface` больше не существуют;
+   `addDebugScreenInfo(..., SamplerContext)` (4 аргумента); `createStructures`
+   6-аргументный с `ChunkGeneratorStructureState` и `ResourceKey<Level>`.
+8. **Игровые правила**: `RULE_NATURAL_REGENERATION`/`getRule().get()/.set()`
+   → `NATURAL_HEALTH_REGENERATION` + `GameRules.get(rule)`/`set(rule, v, server)`;
+   MapGameRules больше не наследует GameRules (у него нет конструктора без аргументов).
+9. **Однострочники**: `Enchantments.INFINITY` (ResourceKey); датаген через
+   `DataGenerator.getVanillaPack(true).addProvider(factory)`; сид через
+   `ServerLevel.getSeed()`; шаблоны данжей через
+   `getStructureTemplateManager().get(id)` + `filterBlocks` без 4-го аргумента;
+   `world.getRandom()`; `DustParticleOptions(int ARGB, scale)` (RGB.getIntR/G/B);
+   `Camera.position()`; `!isDarkOutside()` вместо `isDay()`; `Entity.level()`;
+   `BlockState.typeHolder()`; `noCollision()`; `Blocks.GLAZED_TERRACOTTA.purple()`;
+   рудные теги через `BlockItemTags.X_ORES.block()`; `ParticleTypes.WITCH` вместо
+   EFFECT (6 файлов спеллов); `CharacterEvent(codePoint)`; `Slot.index` вместо
+   `getSlotIndex()`; `RenderTypes.entityCutout(tex, true)` (4 файла); пакеты через
+   `SimpleChannel.sendToPlayer(player, msg)` (поле `connection` у листенера приватно).
+10. **Сущности**: `Entity.hurt` финален → AutoAimingProj переопределяет `hurtServer`;
+    `Animal.isFood` абстрактен → SummonEntity возвращает false (наследуют все
+    саммоны, включая GolemSummon); `AgeableMob.isBaby` финален → переопределение в
+    GolemSummon удалено; SimpleProjectileEntity реализует абстрактный
+    `getDefaultPickupItem()` (стрела); `EntityDataSerializers.COMPOUND_TAG` удалён →
+    `EntityDataSerializer.forValueType(ByteBufCodecs.COMPOUND_TAG)` в
+    SimpleProjectileEntity и StationaryFallingBlockEntity.
+
 ## 2. Состав порта
 
 Монорепозиторий одного Fabric-мода `mmorpg` («Age of Epoch»), объединяющий исходники:

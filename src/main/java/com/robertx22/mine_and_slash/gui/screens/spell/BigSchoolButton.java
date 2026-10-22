@@ -28,7 +28,7 @@ public class BigSchoolButton extends ImageButton {
 
     }
 
-    public void extractWidgetRenderState(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void extractContents(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         var school = scren.currentSchool();
 
         if (school != null) {

@@ -21,9 +21,9 @@ public class GiveProfessionExp {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(
                 literal(CommandRefs.ID)
-                        .then(literal("give").requires(e -> e.hasPermission(2))
+                        .then(literal("give").requires(e -> e.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER))
                                 .then(literal("prof_exp")
-                                        .requires(e -> e.hasPermission(2))
+                                        .requires(e -> e.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER))
                                         .then(argument("target", EntityArgument.player())
                                                 .then(argument("professionId", StringArgumentType.string()) // Changed argument type to string and name to professionId
                                                         .then(argument("exp", IntegerArgumentType.integer())

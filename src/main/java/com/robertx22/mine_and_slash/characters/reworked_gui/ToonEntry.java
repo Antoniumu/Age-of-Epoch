@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.characters.reworked_gui;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.library_of_exile.utils.TextUTIL;
 import com.robertx22.mine_and_slash.database.data.spell_school.SpellSchool;
 import net.minecraft.ChatFormatting;
@@ -51,7 +53,7 @@ public class ToonEntry extends ObjectSelectionList.Entry<ToonEntry> {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pHovering, float pPartialTick) {
+    public void extractContents(GuiGraphicsExtractor gui, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pHovering, float pPartialTick) {
 
 
         // taken from abstractbutton
@@ -71,9 +73,9 @@ public class ToonEntry extends ObjectSelectionList.Entry<ToonEntry> {
         int y = pTop;
 
         Component lvl = Component.literal("" + data.lvl).withStyle(ChatFormatting.YELLOW);
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawCenteredString(gui, mc.font, lvl, x + 10, y + 5, ChatFormatting.YELLOW.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawCenteredString(gui, mc.font, lvl, x + 10, y + 5, CompatChatFormatting.getColor(ChatFormatting.YELLOW));
         Component nameTxt = Component.literal("" + data.name).withStyle(ChatFormatting.GREEN);
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, nameTxt, x + 75, y + 5, ChatFormatting.GREEN.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, nameTxt, x + 75, y + 5, CompatChatFormatting.getColor(ChatFormatting.GREEN));
 
 
         x = 25;

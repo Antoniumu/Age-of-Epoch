@@ -1,5 +1,6 @@
 package com.robertx22.mine_and_slash.mmorpg.registers.common;
 
+import net.minecraft.world.entity.EntityTypes;
 import com.robertx22.library_of_exile.deferred.RegObj;
 import com.robertx22.mine_and_slash.database.data.spells.entities.*;
 import com.robertx22.mine_and_slash.database.data.spells.summons.entity.SkeletonSummon;

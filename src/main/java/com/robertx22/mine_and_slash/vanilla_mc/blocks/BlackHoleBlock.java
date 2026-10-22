@@ -13,7 +13,7 @@ public class BlackHoleBlock extends OpaqueBlock {
 
     public BlackHoleBlock() {
         super(Properties.of()
-                .noCollission()
+                .noCollision()
                 .strength(5F, 2));
     }
 

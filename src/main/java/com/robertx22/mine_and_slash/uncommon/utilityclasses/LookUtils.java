@@ -47,7 +47,7 @@ public class LookUtils {
         Vec3 reachVector = positionVector.add(lookVector.x * distance, lookVector.y * distance, lookVector.z * distance);
 
         Entity lookedEntity = null;
-        List<Entity> entitiesInBoundingBox = e.getCommandSenderWorld()
+        List<Entity> entitiesInBoundingBox = e.level()
             .getEntities(e, e.getBoundingBox()
                 .inflate(lookVector.x * distance, lookVector.y * distance, lookVector.z * distance)
                 .expandTowards(1.2F, 1.2F, 1.2F));
@@ -101,7 +101,7 @@ public class LookUtils {
         if (look == null)
             return null;
 
-        return raycast(e.getCommandSenderWorld(), vec, look, e, len);
+        return raycast(e.level(), vec, look, e, len);
     }
 
     public static HitResult raycast(Level world, Vec3 origin, Vec3 ray, Entity e,

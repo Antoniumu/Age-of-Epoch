@@ -65,6 +65,6 @@ public class MapPlayerDataSaver<T> {
     }
 
     public String getKey(ChunkPos cp) {
-        return cp.x + "_" + cp.z;
+        return cp.x() + "_" + cp.z();
     }
 }

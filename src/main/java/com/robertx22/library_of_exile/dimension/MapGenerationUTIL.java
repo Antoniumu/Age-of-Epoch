@@ -17,9 +17,9 @@ import java.util.Random;
 
 public class MapGenerationUTIL {
     public static Random createRandom(Level level, ChunkPos start) {
-        long worldSeed = level.getServer().getWorldData().worldGenOptions().seed();
-        int chunkX = start.x;
-        int chunkZ = start.z;
+        long worldSeed = ((net.minecraft.server.level.ServerLevel) level).getSeed();
+        int chunkX = start.x();
+        int chunkZ = start.z();
         long newSeed = (worldSeed + (long) (chunkX * chunkX * 4987142) + (long) (chunkX * 5947611) + (long) (chunkZ * chunkZ) * 4392871L + (long) (chunkZ * 389711) ^ worldSeed);
         return new Random(newSeed);
     }

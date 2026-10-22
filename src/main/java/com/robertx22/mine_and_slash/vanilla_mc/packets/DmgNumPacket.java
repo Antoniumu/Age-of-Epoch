@@ -66,7 +66,7 @@ public class DmgNumPacket extends MyPacket<DmgNumPacket> {
         tag.writeUtf(string);
         tag.writeInt(id);
         tag.writeBoolean(iscrit);
-        tag.writeUtf(format.getName());
+        tag.writeUtf(CompatChatFormatting.getName(format));
 
     }
 

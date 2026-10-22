@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.stats.types;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.mine_and_slash.database.data.stats.Stat;
 import com.robertx22.mine_and_slash.database.data.stats.types.core_stats.base.ITransferToOtherStats;
 import com.robertx22.mine_and_slash.saveclasses.unit.InCalcStatContainer;
@@ -21,7 +23,7 @@ public abstract class ElementalStat extends Stat implements IElementalGenerated<
         this.show_in_gui = element != Elements.Elemental;
 
         if (getElement() != null) {
-            this.format = getElement().format.getName();
+            this.format = CompatChatFormatting.getName(getElement().format);
             this.icon = getElement().icon;
         }
     }

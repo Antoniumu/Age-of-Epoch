@@ -13,6 +13,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.Identifier;
@@ -66,7 +67,8 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
 
     CalculatedSpellData spellData;
 
-    private static final EntityDataAccessor<CompoundTag> SPELL_DATA = SynchedEntityData.defineId(StationaryFallingBlockEntity.class, EntityDataSerializers.COMPOUND_TAG);
+    // MC 26.3: EntityDataSerializers.COMPOUND_TAG was removed - custom serializer
+    private static final EntityDataAccessor<CompoundTag> SPELL_DATA = SynchedEntityData.defineId(StationaryFallingBlockEntity.class, EntityDataSerializer.forValueType(ByteBufCodecs.COMPOUND_TAG));
     private static final EntityDataAccessor<String> ENTITY_NAME = SynchedEntityData.defineId(StationaryFallingBlockEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<String> BLOCK = SynchedEntityData.defineId(StationaryFallingBlockEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Boolean> IS_FALLING = SynchedEntityData.defineId(StationaryFallingBlockEntity.class, EntityDataSerializers.BOOLEAN);

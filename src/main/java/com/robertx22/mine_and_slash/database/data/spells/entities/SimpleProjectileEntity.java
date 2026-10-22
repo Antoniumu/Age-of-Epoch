@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.spells.entities;
 
+import net.minecraft.network.codec.ByteBufCodecs;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.robertx22.library_of_exile.utils.SoundUtils;
@@ -22,6 +24,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.Identifier;
@@ -61,7 +64,13 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
 
     public boolean moveTowardsEnemies = false;
 
-    private static final EntityDataAccessor<CompoundTag> SPELL_DATA = SynchedEntityData.defineId(SimpleProjectileEntity.class, EntityDataSerializers.COMPOUND_TAG);
+    @Override
+    protected net.minecraft.world.item.ItemStack getDefaultPickupItem() {
+        return new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.ARROW);
+    }
+
+    // MC 26.3: EntityDataSerializers.COMPOUND_TAG was removed - custom serializer
+    private static final EntityDataAccessor<CompoundTag> SPELL_DATA = SynchedEntityData.defineId(SimpleProjectileEntity.class, EntityDataSerializer.forValueType(ByteBufCodecs.COMPOUND_TAG));
     private static final EntityDataAccessor<String> ENTITY_NAME = SynchedEntityData.defineId(SimpleProjectileEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Boolean> EXPIRE_ON_ENTITY_HIT = SynchedEntityData.defineId(SimpleProjectileEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> HIT_ALLIES = SynchedEntityData.defineId(SimpleProjectileEntity.class, EntityDataSerializers.BOOLEAN);

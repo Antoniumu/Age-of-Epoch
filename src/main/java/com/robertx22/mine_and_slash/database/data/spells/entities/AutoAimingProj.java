@@ -25,7 +25,9 @@ public class AutoAimingProj extends AbstractHurtingProjectile {
     public float speed = 1;
 
 
-    public boolean hurt(DamageSource pSource, float pAmount) {
+    // MC 26.3: Entity.hurt(DamageSource,float) is final; hurtServer is the override point now
+    @Override
+    public boolean hurtServer(net.minecraft.server.level.ServerLevel sl, DamageSource pSource, float pAmount) {
         return true;
     }
 

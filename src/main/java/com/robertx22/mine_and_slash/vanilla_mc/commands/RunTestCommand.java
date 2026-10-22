@@ -15,7 +15,7 @@ public class RunTestCommand {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(
                 literal(CommandRefs.ID)
-                        .then(literal("runtest").requires(e -> e.hasPermission(2))
+                        .then(literal("runtest").requires(e -> e.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER))
                                 .then(argument("test", StringArgumentType.string()).suggests(new CommandsSuggestions())
                                         .executes(
                                                 ctx -> run(ctx.getSource()

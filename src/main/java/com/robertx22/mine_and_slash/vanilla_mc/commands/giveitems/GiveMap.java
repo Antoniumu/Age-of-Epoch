@@ -24,7 +24,7 @@ public class GiveMap {
 
         commandDispatcher.register(
                 literal(CommandRefs.ID)
-                        .then(literal("give").requires(e -> e.hasPermission(2))
+                        .then(literal("give").requires(e -> e.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER))
                                 .then(literal("map")
                                         .then(argument("target", EntityArgument.player())
                                                 .then(argument("level", IntegerArgumentType.integer()).then(argument(

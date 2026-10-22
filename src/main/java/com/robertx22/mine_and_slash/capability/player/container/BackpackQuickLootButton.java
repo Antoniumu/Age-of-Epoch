@@ -26,7 +26,7 @@ public class BackpackQuickLootButton extends ImageButton {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void extractContents(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         super.renderWidget(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         if (InputConstants.isKeyDown(InputConstants.KEY_LSHIFT)){
             this.setTooltip(Tooltip.create(Gui.MASTER_BACKPACK_LOOT_BUTTON_2.locName()));
@@ -37,7 +37,7 @@ public class BackpackQuickLootButton extends ImageButton {
 
     public static void addLootButton(ScreenEvent.Init event){
         if (!(event instanceof ScreenEvent.Init.Post)) return;
-        if (Minecraft.getInstance().screen instanceof ContainerScreen containerScreen && ClientConfigs.getConfig().ENABLE_QUICK_LOOT_BUTTON.get()){
+        if (Minecraft.getInstance().gui.screen() instanceof ContainerScreen containerScreen && ClientConfigs.getConfig().ENABLE_QUICK_LOOT_BUTTON.get()){
             event.addListener(new BackpackQuickLootButton(containerScreen.getGuiLeft() + containerScreen.getXSize(), containerScreen.getGuiTop(), containerScreen));
         }
     }

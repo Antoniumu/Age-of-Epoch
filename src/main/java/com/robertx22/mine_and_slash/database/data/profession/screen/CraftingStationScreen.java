@@ -47,10 +47,10 @@ public abstract class CraftingStationScreen extends AbstractContainerScreen<Craf
     public CraftingStationScreen(String prof, CraftingStationMenu pMenu, Inventory pPlayerInventory, Component txt) {
         super(pMenu, pPlayerInventory, ExileDB.Professions().get(prof).locName());
         this.prof = ExileDB.Professions().get(prof);
-        this.imageWidth = 176;
-        this.imageHeight = 182;
+        this.setGuiSize(176, 182);
 
-        this.titleLabelX = this.getGuiLeft() + imageWidth / 2;
+
+        this.titleLabelX = this.getGuiLeft() + guiWidth / 2;
         this.titleLabelY = -15;
     }
 
@@ -112,7 +112,7 @@ public abstract class CraftingStationScreen extends AbstractContainerScreen<Craf
 
 
         this.children().removeIf(x -> x instanceof ItemButton);
-        this.renderables.removeIf(x -> x instanceof ItemButton);
+        this.removeWidgetsMatching(ItemButton.class);
 
         int xoff = 0;
         int yoff = 0;
@@ -147,7 +147,7 @@ public abstract class CraftingStationScreen extends AbstractContainerScreen<Craf
             possible = str;
 
             this.children().removeIf(x -> x instanceof RecipeButton);
-            this.renderables.removeIf(x -> x instanceof RecipeButton);
+            this.removeWidgetsMatching(RecipeButton.class);
 
             int xoff = 0;
             int yoff = 0;

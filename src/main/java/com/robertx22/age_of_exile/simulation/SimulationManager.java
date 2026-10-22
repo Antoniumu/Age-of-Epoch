@@ -1,5 +1,6 @@
 package com.robertx22.age_of_exile.simulation;
 
+import net.minecraft.world.entity.EntityTypes;
 import com.robertx22.mine_and_slash.capability.entity.EntityData;
 import com.robertx22.mine_and_slash.capability.player.PlayerData;
 import com.robertx22.mine_and_slash.database.data.game_balance_config.GameBalanceConfig;

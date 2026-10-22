@@ -19,9 +19,9 @@ public class RemoveStat {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(
                 literal(CommandRefs.ID)
-                        .then(literal("stat").requires(e -> e.hasPermission(2))
+                        .then(literal("stat").requires(e -> e.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER))
                                 .then(literal("remove")
-                                        .requires(e -> e.hasPermission(2))
+                                        .requires(e -> e.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER))
                                         .then(argument("target", EntityArgument.entity())
                                                 .then(argument("scaling", StringArgumentType.string())
                                                         .suggests(new GiveStat.ModOrExact())

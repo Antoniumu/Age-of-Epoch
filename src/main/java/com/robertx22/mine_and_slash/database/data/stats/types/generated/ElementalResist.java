@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.stats.types.generated;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.mine_and_slash.database.data.stats.IUsableStat;
 import com.robertx22.mine_and_slash.database.data.stats.Stat;
 import com.robertx22.mine_and_slash.database.data.stats.StatGuiGroup;
@@ -40,7 +42,7 @@ public class ElementalResist extends ElementalStat implements IUsableStat {
         this.is_perc = true;
         this.scaling = StatScaling.NONE;
 
-        this.format = element.format.getName();
+        this.format = CompatChatFormatting.getName(element.format);
         this.icon = element.icon;
         this.statEffect = new ElementalResistEffect();
 

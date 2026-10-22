@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.gui.screens.stat_gui;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.mine_and_slash.database.data.stats.Stat;
 import com.robertx22.mine_and_slash.mmorpg.SlashRef;
 import com.robertx22.mine_and_slash.saveclasses.unit.StatData;
@@ -52,8 +54,8 @@ public class StatPanelButton extends ImageButton {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int x, int y, float ticks) {
-        super.extractWidgetRenderState(gui, x, y, ticks);
+    public void extractContents(GuiGraphicsExtractor gui, int x, int y, float ticks) {
+        super.extractContents(gui, x, y, ticks);
 
         if (this.isHoveredOrFocused()) {
             List<MutableComponent> tooltip = new ArrayList<>();
@@ -82,7 +84,7 @@ public class StatPanelButton extends ImageButton {
 
         RenderUtils.render16Icon(gui, stat.GetStat().getIconForRenderingWithDefault(), getX() + iconX, getY() + iconY);
 
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, Minecraft.getInstance().font, Component.literal(stattext), getX() + numX, getY() + numY, ChatFormatting.AQUA.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, Minecraft.getInstance().font, Component.literal(stattext), getX() + numX, getY() + numY, CompatChatFormatting.getColor(ChatFormatting.AQUA));
 
 //        GuiUtils.renderScaledText(gui, getX() + numX, getY() + numY, 1F, stattext, ChatFormatting.YELLOW);
 

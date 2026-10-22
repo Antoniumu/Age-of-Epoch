@@ -15,8 +15,8 @@ public class SkillGemsScreen extends AbstractContainerScreen<SkillGemsMenu> {
 
     public SkillGemsScreen(SkillGemsMenu pMenu, Inventory pPlayerInventory, Component txt) {
         super(pMenu, pPlayerInventory, Component.literal(""));
-        this.imageWidth = 230;
-        this.imageHeight = 256;
+        this.setGuiSize(230, 256);
+
 
     }
 

@@ -132,7 +132,7 @@ public class RangerSpells implements ExileRegistryInit {
                         .addActions(SpellAction.EXILE_EFFECT.create(ModEffects.BLIND.resourcePath, ExileEffectAction.GiveOrTake.GIVE_STACKS, 20D * 5))
                         .addTarget(TargetSelector.AOE.create(10D, EntityFinder.SelectionType.RADIUS, AllyOrEnemy.enemies)))
                 .onCast(PartBuilder.aoeParticles(ParticleTypes.SMOKE, 200D, 3D))
-                .onCast(PartBuilder.aoeParticles(ParticleTypes.EFFECT, 50D, 3D))
+                .onCast(PartBuilder.aoeParticles(ParticleTypes.WITCH, 50D, 3D))
                 .levelReq(20)
                 .build();
 
@@ -185,7 +185,8 @@ public class RangerSpells implements ExileRegistryInit {
                         .setChargesAndRegen("quickdraw", 3, 20 * 60), "Quickdraw", Arrays.asList())
                 .manualDesc("Your bow now fires instantly, and you gain a stack of arrows if you don't have infinity.")
 
-                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.WOLF_HOWL), 1D, 1D))
+                // MC 26.3: adult WOLF_GROWL/HOWL live in WolfSoundVariants now; baby growl is the closest constant
+                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.WOLF_GROWL_BABY), 1D, 1D))
                 .onCast(PartBuilder.giveSelfEffect(SlashPotions.INSTANT_ARROWS.get(), 20D * 10, 16D))
                 .onCast(PartBuilder.giveSelfEffect(MobEffects.SPEED, 20D * 3))
                 .onCast(PartBuilder.justAction(SpellAction.GIVE_ARROWS.create()))

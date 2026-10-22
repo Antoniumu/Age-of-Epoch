@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.gui.screens.skill_tree;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.google.common.collect.HashMultimap;
 import com.robertx22.forge_compat.client.RenderSystem;
 import com.mojang.math.Axis;
@@ -450,7 +452,7 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
             float addx = (1F / zoom - 1) * this.width / 2F;
             float addy = (1F / zoom - 1) * this.height / 2F;
 
-            for (Renderable e : this.renderables) {
+            for (Renderable e : new java.util.ArrayList<>(this.children().stream().filter(l -> l instanceof Renderable).map(l -> (Renderable) l).toList())) {
                 if (e instanceof PerkButton b)
                     if (originalButtonLocMap.containsKey(b)) {
 
@@ -507,7 +509,7 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
         // todo test
         //com.robertx22.forge_compat.client.RenderSystem.setShaderColor(0.25F, 0.25F, 0.25F, 1.0F);
         int i = 32;
-        com.robertx22.forge_compat.client.GuiBlitHelper.blit(gui, BACKGROUND, 0, 0, -10, 0.0F, 0.0F, mc.screen.width, mc.screen.height, 32, 32);
+        com.robertx22.forge_compat.client.GuiBlitHelper.blit(gui, BACKGROUND, 0, 0, -10, 0.0F, 0.0F, mc.gui.screen().width, mc.gui.screen().height, 32, 32);
         //com.robertx22.forge_compat.client.RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
     }
@@ -540,9 +542,9 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
 
         int yx = 4;
 
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, text, savedx + 15, yx, ChatFormatting.YELLOW.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, text, savedx + 15, yx, CompatChatFormatting.getColor(ChatFormatting.YELLOW));
         text = Gui.TALENT_RESET_POINTS.locName().append(String.valueOf(this.schoolType.getPointType().getResetPoints(mc.player)));
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, text, savedx + (BG_WIDTH) - mc.font.width(text) - 15, yx, ChatFormatting.YELLOW.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, text, savedx + (BG_WIDTH) - mc.font.width(text) - 15, yx, CompatChatFormatting.getColor(ChatFormatting.YELLOW));
 
         int tx = savedx + BG_WIDTH;
         tx = (tx - savedx) / 2 + savedx - SEARCH_WIDTH / 2;
@@ -558,7 +560,7 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
 
         if (MMORPG.RUN_DEV_TOOLS) {
             MutableComponent debug = Component.literal("Widgets: " + this.children().size() + " - " + msstring);
-            com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, debug, savedx + 277, yx, ChatFormatting.GREEN.getColor());
+            com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, debug, savedx + 277, yx, CompatChatFormatting.getColor(ChatFormatting.GREEN));
         }
 
 

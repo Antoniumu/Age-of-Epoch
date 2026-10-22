@@ -25,9 +25,9 @@ public class GiveExactUnique {
 
         commandDispatcher.register(
                 literal(CommandRefs.ID)
-                        .then(literal("give").requires(e -> e.hasPermission(2))
+                        .then(literal("give").requires(e -> e.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER))
                                 .then(literal("unique_gear")
-                                        .requires(e -> e.hasPermission(2))
+                                        .requires(e -> e.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER))
                                         .then(argument("target", EntityArgument.player())
                                                 .then(argument("uniqueID", StringArgumentType.word())
                                                         .suggests(new DatabaseSuggestions(ExileRegistryTypes.UNIQUE_GEAR, "random"))

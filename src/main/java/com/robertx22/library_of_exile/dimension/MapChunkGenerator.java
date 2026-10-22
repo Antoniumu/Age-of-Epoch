@@ -49,14 +49,7 @@ public class MapChunkGenerator extends ChunkGenerator {
         return MAP_CODEC;
     }
 
-    @Override
-    public void applyCarvers(WorldGenRegion pLevel, long pSeed, RandomState pRandom, BiomeManager pBiomeManager, StructureManager pStructureManager, ChunkAccess pChunk) {
-    }
-
-    @Override
-    public void buildSurface(WorldGenRegion pLevel, StructureManager pStructureManager, RandomState pRandom, ChunkAccess pChunk) {
-    }
-
+    // MC 26.3: applyCarvers/buildSurface were folded into buildTerrain; spawnOriginalMobs stays
     @Override
     public void spawnOriginalMobs(WorldGenRegion pLevel) {
     }
@@ -66,9 +59,10 @@ public class MapChunkGenerator extends ChunkGenerator {
         return 384;
     }
 
+    // MC 26.3: fillFromNoise was replaced by buildTerrain
     @Override
-    public CompletableFuture<ChunkAccess> fillFromNoise(Blender blender, RandomState pRandomState, StructureManager pStructureManager, ChunkAccess pChunk) {
-        return CompletableFuture.completedFuture(pChunk);
+    public CompletableFuture<ChunkAccess> buildTerrain(ChunkAccess chunk, Blender blender, RandomState random, StructureManager structureManager, BiomeManager biomeManager, @javax.annotation.Nullable WorldGenRegion region, java.util.Set<net.minecraft.core.Holder<net.minecraft.world.level.biome.Biome>> biomes) {
+        return CompletableFuture.completedFuture(chunk);
     }
 
     @Override
@@ -92,9 +86,11 @@ public class MapChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public void addDebugScreenInfo(List<String> pInfo, RandomState pRandom, BlockPos pPos) {
+    public void addDebugScreenInfo(List<String> pInfo, RandomState pRandom, BlockPos pPos, net.minecraft.world.level.levelgen.densityfunction.SamplerContext pContext) {
     }
 
-    public void createStructures(RegistryAccess pRegistryAccess, Object pStructureState, StructureManager pStructureManager, ChunkAccess pChunk, StructureTemplateManager pStructureTemplateManager) {
+    // MC 26.3: createStructures signature changed; nothing to generate
+    @Override
+    public void createStructures(RegistryAccess pRegistryAccess, net.minecraft.world.level.chunk.ChunkGeneratorStructureState pStructureState, StructureManager pStructureManager, ChunkAccess pChunk, StructureTemplateManager pStructureTemplateManager, net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> pLevel) {
     }
 }

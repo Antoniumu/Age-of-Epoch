@@ -53,12 +53,12 @@ public class InvGuiButton extends ImageButton {
         setModTooltip();
 
 
-        super.extractWidgetRenderState(gui, mouseX, mouseY, delta);
+        super.extractContents(gui, mouseX, mouseY, delta);
 
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int pMouseX, int pMouseY, float pPartialTick) {
+    public void extractContents(GuiGraphicsExtractor gui, int pMouseX, int pMouseY, float pPartialTick) {
 
 
         if (data.getAction().getBackGroundIcon() != null) {

@@ -20,7 +20,7 @@ public class ReportMapIssue {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(
                 literal(CommandRefs.ID)
-                        .then(literal("report").requires(e -> e.hasPermission(0))
+                        .then(literal("report").requires(e -> true)
                                 .then(literal("map_bug")
                                         .executes(ctx -> run(ctx.getSource())))));
     }

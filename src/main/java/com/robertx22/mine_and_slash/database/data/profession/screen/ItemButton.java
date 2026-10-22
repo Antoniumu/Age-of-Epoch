@@ -41,7 +41,7 @@ public class ItemButton extends ImageButton {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void extractContents(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
 
     }
 
@@ -61,7 +61,7 @@ public class ItemButton extends ImageButton {
         this.setTooltip(Tooltip.create(TextUTIL.mergeList(tip)));
 
 
-        super.extractWidgetRenderState(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        super.extractContents(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
 
         //pGuiGraphics.renderite
         // RenderUtils.renderStack(pGuiGraphics, this.stack, this.getX(), this.getY());

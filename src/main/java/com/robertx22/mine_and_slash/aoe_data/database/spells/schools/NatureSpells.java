@@ -80,7 +80,7 @@ public class NatureSpells implements ExileRegistryInit {
                 .onTick("totem", PartBuilder.groundEdgeParticles(ParticleTypes.WITCH, 100D, 3D, 0.5D).tick(2D))
 
                 .onTick("totem", PartBuilder.aoeSelectEnemies(10D, 50D).tick(20D)
-                        .addPerEntityHit(PartBuilder.justAction(SpellAction.SUMMON_BLOCK.create(Blocks.PURPLE_GLAZED_TERRACOTTA, 200D)
+                        .addPerEntityHit(PartBuilder.justAction(SpellAction.SUMMON_BLOCK.create(Blocks.GLAZED_TERRACOTTA.purple(), 200D)
                                 .put(MapField.ENTITY_NAME, "meteor")
                                 .put(MapField.BLOCK_FALL_SPEED, -0.05D)
                                 .put(MapField.HEIGHT, 4D)
@@ -158,7 +158,7 @@ public class NatureSpells implements ExileRegistryInit {
 
                 .onCast(PartBuilder.aoeParticles(ParticleTypes.FALLING_WATER, 100D, 1.5D))
                 .onCast(PartBuilder.aoeParticles(ParticleTypes.DRIPPING_WATER, 50D, 1.5D))
-                .onCast(PartBuilder.aoeParticles(ParticleTypes.EFFECT, 50D, 1.5D))
+                .onCast(PartBuilder.aoeParticles(ParticleTypes.WITCH, 50D, 1.5D))
                 .levelReq(30)
                 .build();
 

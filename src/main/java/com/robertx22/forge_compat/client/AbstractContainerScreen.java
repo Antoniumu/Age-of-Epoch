@@ -21,13 +21,41 @@ public abstract class AbstractContainerScreen<T extends AbstractContainerMenu> e
         return this.addRenderableWidget(widget);
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-        this.containerTick();
+    // MC 26.3: AbstractContainerScreen.tick() is final; vanilla already calls containerTick()
+
+    // MC 26.3: imageWidth/imageHeight are final now - compat screens use these instead
+    public int guiWidth = 176;
+    public int guiHeight = 166;
+
+    protected void setGuiSize(int width, int height) {
+        this.guiWidth = width;
+        this.guiHeight = height;
     }
 
-    public void containerTick() {
+    public int getGuiLeft() { return this.leftPos; }
+    public int getGuiTop() { return this.topPos; }
+    public int getXSize() { return this.guiWidth; }
+    public int getYSize() { return this.guiHeight; }
+
+    @Override
+    public void init() {
+        super.init();
+        // position relative to the compat size, not vanilla's final imageWidth/imageHeight
+        this.leftPos = (this.width - this.guiWidth) / 2;
+        this.topPos = (this.height - this.guiHeight) / 2;
+    }
+
+    // MC 26.3: Screen.renderables is private now - helpers over children()/removeWidget()
+    public void removeWidgetsMatching(Class<?> type) {
+        for (GuiEventListener l : new java.util.ArrayList<>(this.children())) {
+            if (type.isInstance(l)) this.removeWidget(l);
+        }
+    }
+
+    public void removeWidgetsExcept(Class<?> type) {
+        for (GuiEventListener l : new java.util.ArrayList<>(this.children())) {
+            if (l instanceof net.minecraft.client.gui.components.Renderable && !type.isInstance(l)) this.removeWidget(l);
+        }
     }
 
     @Override

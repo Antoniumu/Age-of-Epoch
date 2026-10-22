@@ -1,4 +1,6 @@
 package com.robertx22.mine_and_slash.a_libraries.dmg_number_particle.particle.impl;
+
+import com.robertx22.forge_compat.common.CompatChatFormatting;
 import net.minecraft.world.InteractionResult;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -13,7 +15,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 
 public class HealParticle extends ExileInteractionResultParticle {
     private final float amount;
-    public static final int color = ChatFormatting.GREEN.getColor();
+    public static final int color = CompatChatFormatting.getColor(ChatFormatting.GREEN);
 
     public HealParticle(ClientLevel clientLevel, double x, double y, double z, IParticleRenderStrategy strategy, float amount) {
         super(clientLevel, x, y, z, strategy);

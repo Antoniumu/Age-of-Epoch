@@ -49,11 +49,11 @@ public class PrimaryMatInfoButton extends ImageButton {
 
     public void renderLegacyUnused(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
         setModTooltip();
-        super.extractWidgetRenderState(gui, mouseX, mouseY, delta);
+        super.extractContents(gui, mouseX, mouseY, delta);
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
+    public void extractContents(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
 
 
         Identifier tex = SlashRef.guiId("primary_info");

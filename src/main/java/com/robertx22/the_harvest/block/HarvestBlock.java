@@ -46,7 +46,7 @@ public class HarvestBlock extends BaseEntityBlock {
 
         List<ItemStack> all = new ArrayList<>();
 
-        BlockEntity blockentity = pParams.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        BlockEntity blockentity = pParams.getOptional(LootContextParams.BLOCK_ENTITY);
 
         if (blockentity instanceof HarvestBE be) {
             all.add(asItem().getDefaultInstance());
@@ -71,11 +71,11 @@ public class HarvestBlock extends BaseEntityBlock {
         data.onStartMap(p);
 
         data.item = map;
-        data.x = start.x;
-        data.z = start.z;
+        data.x = start.x();
+        data.z = start.z();
 
-        be.x = count.x;
-        be.z = count.z;
+        be.x = count.x();
+        be.z = count.z();
 
         be.currentWorldUUID = HarvestMapCap.get(p.level()).data.data.uuid;
 
@@ -91,7 +91,7 @@ public class HarvestBlock extends BaseEntityBlock {
 
     public static void joinCurrentMap(Player p, HarvestBE be) {
 
-        var start = HarvestMain.HARVEST_MAP_STRUCTURE.getStartFromCounter(be.x, be.z);
+        var start = HarvestMain.HARVEST_MAP_STRUCTURE.getStartFromCounter(be.x(), be.z());
         var pos = TeleportUtils.getSpawnTeleportPos(HarvestMain.HARVEST_MAP_STRUCTURE, start.getMiddleBlockPosition(5));
         var pdata = PlayerDataCapability.get(p);
         pdata.mapTeleports.entranceTeleportLogic(p, HarvestMain.DIMENSION_KEY, pos);

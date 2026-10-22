@@ -1,5 +1,6 @@
 package com.robertx22.library_of_exile.database.mob_list;
 
+import net.minecraft.world.entity.EntityTypes;
 import com.robertx22.library_of_exile.main.Ref;
 import com.robertx22.library_of_exile.registry.helpers.ExileKey;
 import com.robertx22.library_of_exile.registry.helpers.ExileKeyHolder;

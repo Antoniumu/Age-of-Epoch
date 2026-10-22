@@ -159,7 +159,7 @@ public class LevelUtils {
     }
 
     public static boolean isInMinLevelArea(ServerLevel world, BlockPos pos, DimensionConfig config) {
-        double distance = world.getSharedSpawnPos()
+        double distance = world.getRespawnData().globalPos().pos()
                 .distManhattan(pos);
 
         double scale = Mth.clamp(world.dimensionType()
@@ -175,7 +175,7 @@ public class LevelUtils {
 
     public static int determineLevelPerDistanceFromSpawn(ServerLevel world, BlockPos pos, DimensionConfig config) {
 
-        double distance = world.getSharedSpawnPos().distManhattan(pos);
+        double distance = world.getRespawnData().globalPos().pos().distManhattan(pos);
 
         double scale = Mth.clamp(world.dimensionType().coordinateScale() / 3F, 1, Integer.MAX_VALUE);
 

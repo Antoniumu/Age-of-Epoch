@@ -22,7 +22,7 @@ public enum ParticleEnum {
 
             for (int i = 0; i < data.amount; i++) {
                 Vector3d p = GeometryUtils.randomPos(center, world.getRandom(), data.radius);
-                Vector3d m = GeometryUtils.randomMotion(center, world.random);
+                Vector3d m = GeometryUtils.randomMotion(center, world.getRandom());
 
                 world.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.BIRCH_LEAVES.defaultBlockState()),
                         p.x, p.y, p.z, m.x, m.y, m.z
@@ -117,7 +117,7 @@ public enum ParticleEnum {
 
     public void spawnRedstone(Level world, RGB color, double xpos, double ypos, double zpos) {
 
-        DustParticleOptions data = new DustParticleOptions(new Vector3f(color.getR(), color.getG(), color.getB()), 1F);
+        DustParticleOptions data = new DustParticleOptions(0xFF000000 | (color.getIntR() << 16) | (color.getIntG() << 8) | color.getIntB(), 1F);
         world.addAlwaysVisibleParticle(data, xpos, ypos, zpos, 1, 1, 1);
     }
 

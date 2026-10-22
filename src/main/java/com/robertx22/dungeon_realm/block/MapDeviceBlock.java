@@ -59,7 +59,7 @@ public class MapDeviceBlock extends BaseEntityBlock {
 
         List<ItemStack> all = new ArrayList<>();
 
-        BlockEntity blockentity = pParams.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        BlockEntity blockentity = pParams.getOptional(LootContextParams.BLOCK_ENTITY);
 
         if (blockentity instanceof MapDeviceBE be) {
             all.add(asItem().getDefaultInstance());
@@ -106,8 +106,8 @@ public class MapDeviceBlock extends BaseEntityBlock {
 
             var data = new DungeonMapData();
             data.item = map;
-            data.x = start.x;
-            data.z = start.z;
+            data.x = start.x();
+            data.z = start.z();
 
             be.pos = pos;
             be.currentWorldUUID = DungeonMapCapability.getFromServer().data.data.uuid;

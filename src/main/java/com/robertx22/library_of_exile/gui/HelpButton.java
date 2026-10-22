@@ -21,9 +21,9 @@ public class HelpButton extends ImageButton {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void extractContents(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         setTooltip(Tooltip.create(Component.literal("test button text")));
-        super.extractWidgetRenderState(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        super.extractContents(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
     }
 
 

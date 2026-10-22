@@ -154,7 +154,7 @@ public class PerkButton extends ImageButton {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int mouseX, int mouseY, float pPartialTick) {
+    public void extractContents(GuiGraphicsExtractor gui, int mouseX, int mouseY, float pPartialTick) {
 
 
         if (!screen.shouldRender(getX(), getY(), screen.ctx)) {

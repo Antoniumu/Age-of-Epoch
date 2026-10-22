@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.stats.effects.defense;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.mine_and_slash.database.data.stats.Stat;
 import com.robertx22.mine_and_slash.database.data.stats.StatGuiGroup;
 import com.robertx22.mine_and_slash.database.data.stats.StatScaling;
@@ -28,7 +30,7 @@ public class MaxElementalResist extends ElementalStat {
         this.is_perc = true;
         this.scaling = StatScaling.NONE;
 
-        this.format = element.format.getName();
+        this.format = CompatChatFormatting.getName(element.format);
         this.icon = element.icon;
 
         this.max = 15;

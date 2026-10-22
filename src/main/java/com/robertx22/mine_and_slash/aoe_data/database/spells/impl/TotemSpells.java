@@ -60,7 +60,7 @@ public class TotemSpells implements ExileRegistryInit {
     public void registerAll() {
 /*
         of(SlashBlocks.GUARD_TOTEM.get(), GUARD_TOTEM_ID, SpellConfiguration.Builder.instant(18, 20 * 30), "Guarding Totem",
-                Arrays.asList(SpellTag.totem, SpellTag.area), ParticleTypes.EFFECT)
+                Arrays.asList(SpellTag.totem, SpellTag.area), ParticleTypes.WITCH)
                 .manualDesc(
                         "Summon a totem which gives " + SpellCalcs.TOTEM_GUARD.getLocDmgTooltip() + " shield to allies around it."
                 )

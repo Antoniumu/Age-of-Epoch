@@ -91,7 +91,7 @@ public class Button extends AbstractButton {
     }
 
     @Override
-    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         this.renderWidget(graphics, mouseX, mouseY, partialTicks);
     }
 

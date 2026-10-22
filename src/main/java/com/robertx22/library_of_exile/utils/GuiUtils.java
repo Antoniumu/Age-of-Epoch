@@ -1,5 +1,7 @@
 package com.robertx22.library_of_exile.utils;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.library_of_exile.wrappers.ExileText;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -27,7 +29,7 @@ public class GuiUtils {
         float xf = (float) (xp * antiScale);
         float yf = (float) (yp * antiScale);
 
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(matrix, Minecraft.getInstance().font, ExileText.ofText(text).format(format).get(), (int) xf, (int) yf, format.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(matrix, Minecraft.getInstance().font, ExileText.ofText(text).format(format).get(), (int) xf, (int) yf, CompatChatFormatting.getColor(format));
         matrix.pose().scale((float)(antiScale), (float)(antiScale));
 
     }

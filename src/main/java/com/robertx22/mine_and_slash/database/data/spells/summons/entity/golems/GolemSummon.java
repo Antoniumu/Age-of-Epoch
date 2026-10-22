@@ -63,8 +63,5 @@ public abstract class GolemSummon extends SummonEntity {
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData);
     }
 
-    @Override
-    public boolean isBaby() {
-        return true;
-    }
+    // MC 26.3: AgeableMob.isBaby() is final now, override removed
 }

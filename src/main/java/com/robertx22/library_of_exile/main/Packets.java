@@ -27,12 +27,8 @@ public class Packets {
             FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
             packet.saveToData(buf);
 
-            channels.get(packet.getIdentifier())
-                    .sendTo(
-                            packet,
-                            ((ServerPlayer) player).connection.connection,
-                            NetworkDirection.PLAY_TO_CLIENT
-                    );
+// MC 26.3: ServerGamePacketListenerImpl.connection is protected; use the channel's player overload
+            channels.get(packet.getIdentifier()).sendToPlayer((ServerPlayer) player, packet);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,5 +1,6 @@
 package com.robertx22.mine_and_slash.aoe_data.database.entity_configs;
 
+import net.minecraft.world.entity.EntityTypes;
 import com.robertx22.library_of_exile.registry.ExileRegistryInit;
 import com.robertx22.mine_and_slash.database.data.EntityConfig;
 import com.robertx22.mine_and_slash.database.data.EntityConfig.SpecialMobStats;

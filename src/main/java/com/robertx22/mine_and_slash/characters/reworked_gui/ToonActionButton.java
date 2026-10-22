@@ -8,6 +8,7 @@ import com.robertx22.mine_and_slash.characters.ToonActionPacket;
 import com.robertx22.mine_and_slash.uncommon.localization.Words;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -78,6 +79,13 @@ public class ToonActionButton extends AbstractButton {
                 }
             }
         }
+    }
+
+
+    // MC 26.3: AbstractButton's abstract render hook is extractContents now
+    @Override
+    protected void extractContents(GuiGraphicsExtractor gui, int mouseX, int mouseY, float partialTicks) {
+        gui.text(Minecraft.getInstance().font, this.getMessage(), this.getX() + this.getWidth() / 2, this.getY() + (this.getHeight() - 8) / 2, 0xFFFFFFFF, false);
     }
 
     @Override

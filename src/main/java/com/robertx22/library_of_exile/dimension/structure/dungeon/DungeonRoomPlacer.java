@@ -23,11 +23,12 @@ public class DungeonRoomPlacer {
 
     public static boolean generatePiece(LevelAccessor world, BlockPos position, RandomSource random, Rotation rota, Identifier id) {
 
-        var template = world.getServer().getStructureManager().get(id).get();
+        // MC 26.3: template lookup moved to StructureTemplateManager (Optional<StructureTemplate>)
+        var template = ((net.minecraft.server.level.ServerLevel) world).getStructureTemplateManager().get(id).get();
         StructurePlaceSettings settings = new StructurePlaceSettings().setMirror(Mirror.NONE)
                 .setRotation(rota)
                 .setIgnoreEntities(false);
-        List<StructureTemplate.StructureBlockInfo> commandBlocks = template.filterBlocks(BlockPos.ZERO, new StructurePlaceSettings(), Blocks.COMMAND_BLOCK, true);
+        List<StructureTemplate.StructureBlockInfo> commandBlocks = template.filterBlocks(BlockPos.ZERO, new StructurePlaceSettings(), Blocks.COMMAND_BLOCK);
         List<StructureTemplate.StructureBlockInfo> structureBlocks = template.filterBlocks(BlockPos.ZERO, new StructurePlaceSettings(), Blocks.STRUCTURE_BLOCK, true);
 
         final BlockPos finalPosition = position;

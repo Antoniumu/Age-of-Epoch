@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.gui.card_picker;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.library_of_exile.utils.TextUTIL;
 import com.robertx22.mine_and_slash.mmorpg.SlashRef;
 import com.robertx22.mine_and_slash.uncommon.utilityclasses.ClientOnly;
@@ -30,17 +32,17 @@ public class CardPickButton extends ImageButton {
 
     public void renderLegacyUnused(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
         setModTooltip();
-        super.extractWidgetRenderState(gui, mouseX, mouseY, delta);
+        super.extractContents(gui, mouseX, mouseY, delta);
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
+    public void extractContents(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
         com.robertx22.forge_compat.client.RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         com.robertx22.forge_compat.client.GuiBlitHelper.blit(gui, this.resourceLocation, getX(), getY(), 0, 0, SIZE_X, SIZE_Y);
         Identifier tex = card.getIcon();
         com.robertx22.forge_compat.client.GuiBlitHelper.blit(gui, tex, getX() + 45, getY() + 38, iconSize, iconSize, iconSize, iconSize, iconSize, iconSize);
 
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, card.getName(), this.getX() + SIZE_X / 2 - mc.font.width(card.getName()) / 2, getY() + 20, ChatFormatting.RED.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, card.getName(), this.getX() + SIZE_X / 2 - mc.font.width(card.getName()) / 2, getY() + 20, CompatChatFormatting.getColor(ChatFormatting.RED));
 
 
         var tip = TextUTIL.mergeList(card.getScreenText(mc.player));

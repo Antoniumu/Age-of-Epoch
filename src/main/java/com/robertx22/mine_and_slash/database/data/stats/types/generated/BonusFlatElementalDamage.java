@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.stats.types.generated;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.mine_and_slash.database.data.stats.Stat;
 import com.robertx22.mine_and_slash.database.data.stats.StatScaling;
 import com.robertx22.mine_and_slash.database.data.stats.effects.base.BaseDamageEffect;
@@ -32,7 +34,7 @@ public class BonusFlatElementalDamage extends ElementalStat {
         this.group = StatGroup.ELEMENTAL;
         this.statEffect = new Effect();
 
-        this.format = element.format.getName();
+        this.format = CompatChatFormatting.getName(element.format);
         this.icon = element.icon;
 
     }

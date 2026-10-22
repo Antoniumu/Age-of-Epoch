@@ -1,5 +1,6 @@
 package com.robertx22.library_of_exile.config.map_dimension;
 
+import net.minecraft.world.entity.EntityTypes;
 import com.robertx22.library_of_exile.components.PlayerDataCapability;
 import com.robertx22.library_of_exile.dimension.MapDimensionInfo;
 import com.robertx22.library_of_exile.dimension.MapDimensions;

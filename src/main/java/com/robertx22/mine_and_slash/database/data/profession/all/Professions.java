@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.profession.all;
 
+import net.minecraft.tags.BlockItemTags;
+
 import com.robertx22.library_of_exile.deferred.RegObj;
 import com.robertx22.library_of_exile.vanilla_util.main.VanillaUTIL;
 import com.robertx22.mine_and_slash.database.data.profession.ExpSources;
@@ -126,14 +128,14 @@ public class Professions {
         Builder.of(MINING, "Mining", "Mining gives you chance to obtain extra custom materials by mining ores. You can see which ores give experience in the Mine and Slash HUB > Library screen.")
                 .tool(SlotTags.mining_tool)
 
-                .blockTag(SkillItemTier.TIER0, 15, BlockTags.COAL_ORES)
-                .blockTag(SkillItemTier.TIER1, 20, BlockTags.COPPER_ORES)
-                .blockTag(SkillItemTier.TIER1, 15, BlockTags.REDSTONE_ORES)
-                .blockTag(SkillItemTier.TIER1, 25, BlockTags.LAPIS_ORES)
-                .blockTag(SkillItemTier.TIER2, 50, BlockTags.IRON_ORES)
-                .blockTag(SkillItemTier.TIER3, 75, BlockTags.GOLD_ORES)
-                .blockTag(SkillItemTier.TIER4, 100, BlockTags.EMERALD_ORES)
-                .blockTag(SkillItemTier.TIER5, 200, BlockTags.DIAMOND_ORES)
+                .blockTag(SkillItemTier.TIER0, 15, BlockItemTags.COAL_ORES.block())
+                .blockTag(SkillItemTier.TIER1, 20, BlockItemTags.COPPER_ORES.block())
+                .blockTag(SkillItemTier.TIER1, 15, BlockItemTags.REDSTONE_ORES.block())
+                .blockTag(SkillItemTier.TIER1, 25, BlockItemTags.LAPIS_ORES.block())
+                .blockTag(SkillItemTier.TIER2, 50, BlockItemTags.IRON_ORES.block())
+                .blockTag(SkillItemTier.TIER3, 75, BlockItemTags.GOLD_ORES.block())
+                .blockTag(SkillItemTier.TIER4, 100, BlockItemTags.EMERALD_ORES.block())
+                .blockTag(SkillItemTier.TIER5, 200, BlockItemTags.DIAMOND_ORES.block())
 
                 .dropTiered(ProfessionMatItems.TIERED_MAIN_MATS.get(MINING), 1)
 

@@ -23,7 +23,7 @@ public class ClearFilterButton extends AbstractButton {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
+    public void extractContents(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
         
         Identifier tex = SlashRef.guiId("bestiary/cancel");
 

@@ -184,4 +184,10 @@ public abstract class SummonEntity extends TamableAnimal implements RangedAttack
     public AgeableMob getBreedOffspring(ServerLevel pLevel, AgeableMob pOtherParent) {
         return null;
     }
+
+    // MC 26.3: Animal.isFood(ItemStack) is abstract
+    @Override
+    public boolean isFood(net.minecraft.world.item.ItemStack stack) {
+        return false;
+    }
 }

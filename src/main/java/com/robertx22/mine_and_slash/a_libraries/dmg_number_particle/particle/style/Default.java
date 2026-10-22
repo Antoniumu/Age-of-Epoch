@@ -37,7 +37,7 @@ public class Default implements IParticleRenderStrategy {
 
     @Override
     public void setupParticle(ExileInteractionResultParticle particle, VertexConsumer vertexConsumer, Camera camera, float partialTick, PoseStack posestack) {
-        Vec3 cameraPos = camera.getPosition();
+        Vec3 cameraPos = camera.position();
         Vec3 pos = particle.getPos();
         Vec3 original = particle.getOriginalPosition();
         double x = (float) (Mth.lerp(partialTick, original.x, pos.x));

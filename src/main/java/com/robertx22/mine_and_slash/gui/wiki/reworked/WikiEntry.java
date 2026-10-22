@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.gui.wiki.reworked;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.library_of_exile.utils.TextUTIL;
 import com.robertx22.mine_and_slash.gui.wiki.BestiaryEntry;
 import net.minecraft.ChatFormatting;
@@ -52,7 +54,7 @@ public class WikiEntry extends ObjectSelectionList.Entry<WikiEntry> {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pHovering, float pPartialTick) {
+    public void extractContents(GuiGraphicsExtractor gui, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pHovering, float pPartialTick) {
 
 
         // taken from abstractbutton
@@ -77,7 +79,7 @@ public class WikiEntry extends ObjectSelectionList.Entry<WikiEntry> {
         int xp = (int) (pLeft + 37);
         int yp = (int) pTop + 5;
 
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, entry.getCutName(), xp, yp, ChatFormatting.GREEN.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, entry.getCutName(), xp, yp, CompatChatFormatting.getColor(ChatFormatting.GREEN));
 
     }
 }
