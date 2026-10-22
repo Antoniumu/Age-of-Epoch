@@ -31,7 +31,7 @@ PERKS_JAVA = os.path.join(REPO, "src", "main", "java", "com", "robertx22", "age_
                           "aoe_data", "database", "perks", "DivinePerks.java")
 
 TREE_ID = "divine"
-TREE_ICON = "mmorpg:textures/gui/talent_icons/big_divine_light.png"
+TREE_ICON = "mmorpg:textures/gui/talent_icons/class_divine.png"
 
 WIDTH = 57
 HEIGHT = 27
