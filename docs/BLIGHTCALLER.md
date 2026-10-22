@@ -53,8 +53,10 @@ Java-логика проверяется только сборкой (`build.bat
 
 ## Иконки
 
-Все иконки класса — собственный пиксель-арт 16×16 в `textures/gui/talent_icons/`, нарисованный
-вручную в `tools/talent_gen/draw_blightcaller_icons.py` (каждая строка — 16 символов палитры).
+Иконки класса сгенерированы ИИ по образцу оригинальных иконок талантов (фон, манера, «дух») и
+сохранены в `textures/gui/talent_icons/` размером 128×128 с прозрачным фоном. Игра рисует их в слот
+16×16: `RenderUtils.render16Icon` и `TalentTreeButton` используют `blit` с `textureWidth` = размер
+слота, UV нормализованы, поэтому файл любого квадратного размера отображается целиком.
 Обычные стат-узлы используют общие иконки `textures/gui/stat_icons/`, как и «Божественный».
 
 | Узел | Иконка |
@@ -83,14 +85,11 @@ Java-логика проверяется только сборкой (`build.bat
 | `saveclasses/perks/TalentsData.java` | сообщение о конфликте веток при `canAllocate` |
 | `assets/mmorpg/lang/{ru_ru,en_us}.json` | названия узлов, класса и веток (`mmorpg.branch.*`) |
 | `textures/gui/talent_icons/*.png` | иконки класса и умений |
-| `tools/talent_gen/draw_blightcaller_icons.py` | пиксель-арт иконок: рисует PNG из палитры |
 | `tools/talent_gen/verify_blightcaller.py` | сетка, регистрация, иконки, локализация, связность, ветки, матрица конфликтов |
 
 ## Проверка
 
 ```bash
-python3 tools/talent_gen/draw_blightcaller_icons.py --preview /tmp/preview.png   # посмотреть иконки
-python3 tools/talent_gen/draw_blightcaller_icons.py                              # записать PNG
 python3 tools/talent_gen/verify_blightcaller.py
 python3 tools/talent_gen/verify_divine.py
 python3 tools/check_java_syntax.py src/main/java/com/robertx22/age_of_exile/database/data/perks/Perk.java \
@@ -102,5 +101,7 @@ python3 tools/check_java_syntax.py src/main/java/com/robertx22/age_of_exile/data
 
 ## Открытые пункты
 
-- Иконки «Серой стаи» и «Мамонта» читаются хуже остальных в 16×16: контуры могут потребовать
-  доработки после взгляда в игре.
+- Ещё 4 иконки временные, 16×16 пиксель-арт, и должны быть заменены на 128×128 в стиле остальных:
+  «Владыка скверны» (`blight_lord`: в генерации остался тёмный квадрат-подложка), «Бурый страж»
+  (`brown_bear`), «Мамонт разбойников» (`bandit_mammoth`), «Альфа-хищник» (`alpha_fang`).
+  Генерация ограничена 10 изображениями за ход, поэтому они идут отдельным ходом.

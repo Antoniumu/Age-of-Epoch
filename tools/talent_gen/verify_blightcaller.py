@@ -92,6 +92,14 @@ def main():
         icon = os.path.join(ASSETS, paths[0])
         if not os.path.exists(icon):
             err("нет файла иконки для %s: %s" % (pid, paths[0]))
+        else:
+            # квадрат и 16 или 128 пикселей: 128 масштабируется в слот 16×16 без правок кода
+            import struct
+            with open(icon, "rb") as f:
+                head = f.read(24)
+            w, h = struct.unpack(">II", head[16:24])
+            if w != h or w not in (16, 128):
+                err("иконка %s: %dx%d — нужен квадрат 16 или 128" % (pid, w, h))
         for lg, d in lang.items():
             if ("mmorpg.talent." + pid) not in d:
                 err("нет ключа mmorpg.talent.%s в %s" % (pid, lg))
