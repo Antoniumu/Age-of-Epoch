@@ -43,7 +43,7 @@ public class SummonPetAction extends SpellAction {
 
             TamableAnimal en = (TamableAnimal) type.get().create(ctx.world, net.minecraft.world.entity.EntitySpawnReason.MOB_SUMMONED);
 
-            en.finalizeSpawn((ServerLevel) ctx.world, ctx.world.getCurrentDifficultyAt(ctx.getBlockPos()), net.minecraft.world.entity.EntitySpawnReason.MOB_SUMMONED, null);
+            en.finalizeSpawn((ServerLevel) ctx.world, ((ServerLevel) ctx.world).getCurrentDifficultyAt(ctx.getBlockPos()), net.minecraft.world.entity.EntitySpawnReason.MOB_SUMMONED, null);
 
             en.tame((Player) ctx.caster);
 

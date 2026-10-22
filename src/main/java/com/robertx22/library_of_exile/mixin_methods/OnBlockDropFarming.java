@@ -28,18 +28,18 @@ public class OnBlockDropFarming {
                 return;
             }
 
-            ItemStack stack = ctx.getOptionalParameter(LootContextParams.TOOL) instanceof ItemStack __st ? __st : ItemStack.EMPTY;
+            ItemStack stack = ctx.getOptional(LootContextParams.TOOL) instanceof ItemStack __st ? __st : ItemStack.EMPTY;
             if (stack != null) {
                 if (com.robertx22.forge_compat.common.CompatHelper.getEnchantLevel(null, Enchantments.SILK_TOUCH, stack) > 0) {
                     return;
                 }
             }
 
-            BlockState state = ctx.getOptionalParameter(LootContextParams.BLOCK_STATE);
+            BlockState state = ctx.getOptional(LootContextParams.BLOCK_STATE);
 
-            Entity en = ctx.getOptionalParameter(LootContextParams.THIS_ENTITY);
+            Entity en = ctx.getOptional(LootContextParams.THIS_ENTITY);
 
-            var p = ctx.getOptionalParameter(LootContextParams.ORIGIN);
+            var p = ctx.getOptional(LootContextParams.ORIGIN);
             BlockPos pos = new BlockPos((int) p.x, (int) p.y, (int) p.z);
 
             Player player = null;

@@ -163,7 +163,7 @@ public class GearSlot implements JsonExileRegistry<GearSlot>, IAutoGson<GearSlot
                 } else if (id.equals(GearSlots.STAFF)) {
                     bool = item instanceof StaffWeapon;
                 } else if (id.equals(GearSlots.TRIDENT)) {
-                    bool = item instanceof TridentItem;
+                    bool = item == Items.TRIDENT;
                 } else if (id.equals(GearSlots.NECKLACE)) {
                     bool = CuriosApi.getCuriosHelper()
                             .getCurioTags(item)

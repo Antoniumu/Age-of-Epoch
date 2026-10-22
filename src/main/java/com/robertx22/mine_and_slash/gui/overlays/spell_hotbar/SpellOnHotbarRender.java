@@ -173,29 +173,22 @@ public class SpellOnHotbarRender {
         com.robertx22.forge_compat.client.RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1);
 
 
-        String txt = CLOC.translate(KeybindsRegister.getSpellHotbar(keyNum).key.getTranslatedKeyMessage()).toUpperCase(Locale.ROOT);
-        txt = txt.substring(0, 1);
-        if (KeybindsRegister.getSpellHotbar(keyNum).key.isUnbound()) {
-            if (disableKeyRender) {
-                txt = "";
-            } else {
-                //txt = "UNBOUND KEY";
-                txt = "";
-            }
+        var key = KeybindsRegister.getSpellHotbar(keyNum);
+        boolean shiftFallback = key.key.isUnbound() && keyNum >= 4;
+        var displayMapping = shiftFallback ? KeybindsRegister.getSpellHotbar(keyNum - 4).key : key.key;
+        String txt = CLOC.translate(displayMapping.getTranslatedKeyMessage()).toUpperCase(Locale.ROOT);
+        txt = txt.isEmpty() ? "" : txt.substring(0, 1);
+        if (displayMapping.isUnbound()) {
+            txt = "";
         }
-        // todo renderScaledText doesnt do push and pop but does antiscale.. FIX THIS
         GuiUtils.renderScaledText(gui, xkey - 1, ykey, 1, txt, ChatFormatting.GREEN);
 
-        var key = KeybindsRegister.getSpellHotbar(keyNum);
-        if (false) {
-
-            RenderSystem.enableBlend(); // enables transparency
+        if (shiftFallback && !txt.isEmpty()) {
+            RenderSystem.enableBlend();
             com.robertx22.forge_compat.client.RenderSystem.setShaderColor(alpha, alpha, alpha, alpha);
             com.robertx22.forge_compat.client.GuiBlitHelper.blit(gui, MOD_BG, xkey - 18, ykey - 6, 0, 0, 13, bgsize, 13, bgsize);
             com.robertx22.forge_compat.client.RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1F);
-
-            String modtext = "";
-            GuiUtils.renderScaledText(gui, xkey - 11, ykey, 0.6F, modtext, ChatFormatting.YELLOW);
+            GuiUtils.renderScaledText(gui, xkey - 11, ykey, 0.6F, "SHF", ChatFormatting.YELLOW);
         }
 
 

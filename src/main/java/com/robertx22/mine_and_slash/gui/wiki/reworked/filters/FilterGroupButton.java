@@ -39,6 +39,12 @@ public class FilterGroupButton extends AbstractButton {
 
 
     @Override
+    protected void extractContents(net.minecraft.client.gui.GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+        this.extractDefaultSprite(graphics);
+        this.extractDefaultLabel(graphics.textRendererForWidget(this, net.minecraft.client.gui.GuiGraphicsExtractor.HoveredTextEffects.NONE));
+    }
+
+    @Override
     protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
 
     }

@@ -27,7 +27,7 @@ public class VanillaRequirement extends ItemRequirement {
     public VanillaRequirement(String id, String desc, TagKey<Item> tag) {
         super(ItemReqSers.VANILLA_CONDITION, id);
         this.desc = desc;
-        this.itemTagId = tag.identifier().toString();
+        this.itemTagId = tag.location().toString();
     }
 
     @Override

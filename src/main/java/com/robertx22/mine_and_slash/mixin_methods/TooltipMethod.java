@@ -57,7 +57,7 @@ public class TooltipMethod {
             }
 
 
-            if (Screen.hasControlDown()) {
+            if (net.minecraft.client.Minecraft.getInstance().hasControlDown()) {
                 GearItemData gear = StackSaving.GEARS.loadFrom(stack);
 
                 if (gear != null) {
@@ -99,7 +99,7 @@ public class TooltipMethod {
 
                     tooltip.addAll(splitLongText(Chats.SOULLESS_GEAR_INFO.locName()));
 
-                    if (Screen.hasShiftDown()) {
+                    if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
                         tooltip.addAll(splitLongText(Chats.SOULLESS_GEAR_MORE_INFO.locName()));
                     }
                 }

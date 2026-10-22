@@ -227,11 +227,7 @@ public class MapDeviceBlock extends BaseEntityBlock {
     }
 
 
-    @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public com.mojang.serialization.MapCodec<? extends net.minecraft.world.level.block.BaseEntityBlock> codec() {
-        return (com.mojang.serialization.MapCodec) simpleCodec(p -> this);
-    }
+    
 
 
     @Override

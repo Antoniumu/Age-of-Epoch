@@ -30,11 +30,12 @@ public class CardPickButton extends ImageButton {
 
     public void renderLegacyUnused(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
         setModTooltip();
-        super.extractWidgetRenderState(gui, mouseX, mouseY, delta);
+        super.extractContents(gui, mouseX, mouseY, delta);
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
+    protected void extractContents(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
+        if (this.isHovered()) setModTooltip();
         com.robertx22.forge_compat.client.RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         com.robertx22.forge_compat.client.GuiBlitHelper.blit(gui, this.resourceLocation, getX(), getY(), 0, 0, SIZE_X, SIZE_Y);
         Identifier tex = card.getIcon();

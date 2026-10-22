@@ -50,8 +50,8 @@ public class PlayerGearButton extends ImageButton {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int x, int y, float ticks) {
-        super.extractWidgetRenderState(gui, x, y, ticks);
+    protected void extractContents(GuiGraphicsExtractor gui, int x, int y, float ticks) {
+        super.extractContents(gui, x, y, ticks);
 
         MutableComponent str = Gui.MAINHUB_LEVEL.locName().append(String.valueOf(Load.Unit(player).getLevel()));
 

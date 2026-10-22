@@ -2,7 +2,6 @@ package com.robertx22.library_of_exile.dimension.structure;
 
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ChunkPos;
-import org.joml.Vector3i;
 
 // simple prebuilt map assuming a size * size 2d map of 1 chunk rooms
 public class SimplePrebuiltMapData {

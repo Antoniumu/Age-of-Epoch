@@ -36,12 +36,12 @@ public class ProphecyButton extends ImageButton {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    protected void extractContents(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         com.robertx22.forge_compat.client.GuiBlitHelper.blit(pGuiGraphics, iconTexture, getX(), getY(), 0, 0, 16, 16, 16, 16);
 
         this.setTooltip(Tooltip.create(TextUTIL.mergeList(data.getTooltip())));
 
-        super.extractWidgetRenderState(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        super.extractContents(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
 
 
     }

@@ -1,104 +1,45 @@
-# PORTING.md — технический отчёт о порте Age of Exile → Minecraft 26.3 (Fabric)
+# PORTING.md — технический отчёт о полном порте 6-модового пакета Mine and Slash 2025 → Minecraft 26.3 (Fabric, Java 25)
 
-Документ описывает архитектуру порта, методику миграции и результаты доводки кодовой базы
-до компиляции под реальный **Minecraft 26.3** (задачи ANT-47, ANT-48, ANT-49, ANT-50).
+Документ описывает архитектуру единого Fabric-мода **Age of Epoch** (`mmorpg`) для **Minecraft 26.3** (Data Version `5023`, Fabric API `0.163.0+26.3`, Trinkets `4.2.1+26.3`, Java `25`), в котором устаревшие подсистемы `1.16.5` полностью заменены актуальным 6-репозиторным стеком **Mine and Slash Rework (2025)** с сохранением уникальных механик **Age of Epoch**.
 
 ## 1. Целевой тулчейн
 
 | Компонент | Версия |
 |---|---|
-| Minecraft | 26.3 «Wilderness Bound» (Java Edition, data version 5023) |
-| Java | 25 (`JDK 25.0.4.1`, обязательное требование MC 26.x) |
-| Fabric Loader | 0.19.5 |
-| Fabric API | 0.163.0+26.3 |
-| Loom | 1.18.4 (`1.18-SNAPSHOT`, `net.fabricmc.fabric-loom`, необфусцированный режим — Mojmap в комплекте) |
-| Gradle | 9.7.1 (wrapper) |
-| pack.mcmeta | resource format 97 / data format 121 |
+| Minecraft | `26.3` (Java Edition, Mojmap без обфускации, `DataVersion = 5023`) |
+| Java | `25` (`OpenJDK 25` / language level `25`) |
+| Fabric Loader | `0.19.5` |
+| Fabric API | `0.163.0+26.3` |
+| Trinkets | `4.2.1+26.3` (`eu.pb4:trinkets`) |
+| Loom / Gradle | `1.18.4` / `9.7.1` |
 
-В `build.gradle` добавлены опции `-PdshMaxErrs=<N>` (для полного дампа ошибок компилятора без стандартного лимита 100) и `-PdshClasspath=true` (для печати resolved compileClasspath при диагностике).
+## 2. Состав объединённого мода (`2 209` `.java` файлов → `2 983` `.class`)
 
-### NBT структур в 26.3
+1. **`library_of_exile`** (`Library-of-Exile-Rework`) — реестры датапаков `ExileRegistry`, сжатая сетевая синхронизация `EfficientRegistryPacket`, `ICap` капабилити на `DataComponents.CUSTOM_DATA` / `ValueInput` / `ValueOutput`, реликвии и каркас измерений карт.
+2. **`orbs_of_crafting`** — `43` валютных сферы крафта, `64` модификации предметов и `61` требование.
+3. **`mmorpg`** (`Mine-And-Slash-Rework`) — `741` стат, `645` перков дерева талантов и классов Восхождения, `99` заклинаний в `6` школах, души статов (`Stat Souls`), `51` уникальный предмет, `63` камня умений, `59` камней поддержки, `24` ауры, `22` руны, `9` рунных слов, `8` знамений (`Omens`), пророчества, статы Хаоса, сундуки добычи и все `9` профессий (`798` рецептов станций + `137` рецептов верстака).
+4. **`dungeon_realm`** — устройство карт (`Map Device`), `17` подземелий, фрагменты и арены Убер-боссов.
+5. **`ancient_obelisks`** — обелиски волн, тиры наград и структуры измерения обелисков.
+6. **`the_harvest`** — порталы, арены и валютные награды Жатвы.
+7. **Сохранённые механики `Age-of-Epoch`** — Башни (`Towers`: `TowerStructureProcessor`, `TowerBoss`, `TowerCollapse`, `TowerDestroyer`), Спуски (`Delves`: `DelveStructureProcessor`, `DelveMarkerBlockEntity`), адаптивный `GameMaster`, `QuestBook` (`19` квестов), `Guides` (`3` гайда), `MobPlates` и камера `Simulation` (`mmorpg:simulation`).
 
-Для `DataVersion=5023` палитра использует `id` и `properties`, а не старые
-`Name`/`Properties`. Неверная схема с текущей версией загружает блоки как воздух.
-Генератор башен пишет новую схему; оригинальные старые NBT сохраняют свою старую
-версию для штатной миграции. Источники и регрессия: [`tools/tower_gen/FORMAT.md`](tools/tower_gen/FORMAT.md).
+## 3. Ключевые адаптации под API Minecraft 26.3
 
-## 2. Состав порта
+1. **GUI, экраны, виджеты и оверлеи (`GuiGraphicsExtractor`)**:
+   - Экраны `GuidesScreen`, `QuestBookScreen`, `SimulationScreen` переведены на `extractRenderState(GuiGraphicsExtractor, int, int, float)`; в `MainHubScreen` кнопки `Квесты`, `Гайды`, `Симуляция` регистрируются после `clearWidgets()`, а `AllocateStatButton` вызывает `super.extractContents(...)` без рекурсивного `StackOverflowError`;
+   - `CraftingStationScreen` переведён на `tick()` / `super.tick()`, `extractTooltip(...)` и `Screens.getWidgets(this)`;
+   - Восстановлена отрисовка иконок, клики (`MouseButtonEvent`) и тултипы во всех `15` классах кнопок (`BackpackButton`, `SpellButton`, `SuppGemOverlayButton`, `CraftButton`, `ItemButton`, `LockButton`, `PrimaryMatInfoButton`, `RecipeButton`, `CharacterStatsButtons`, `FavorButton`, `ProfessionLevelsButton`, `CardPickButton`, `InvGuiButton`, `LearnClassPointButton`, `MainProphecyButton`);
+   - В `AgeOfEpochClientMod` подключены `GuiOverlays.registerOverlay(new RegisterGuiOverlaysEvent())` (все `4` HUD-оверлея MNS) и `ScreenEvents.AFTER_INIT` (кнопка быстрого сбора рюкзака в сундуках);
+   - Исправлены привязки клавиш в `KeybindsRegister` / `SpellKeybind` (`R/V/C/G` — слоты `1–4`, `Shift + R/V/C/G` или `F7` — слоты `5–8`, `H` — Хаб, `K` — Квесты, `J` — стиль табличек мобов, `P` — быстрое зелье).
+2. **Боевая система, добыча, миксины, сущности и генерация мира**:
+   - `DamageEvent` переведён на 3-аргументный `DamageSource` и `LivingEntityAccesor` (`damageCooldownTime` + сброс `lastHurt`); в `LivingDamageBridgeMixin` подключён `LivingAttackEvent` (`hurtServer`), защита бессмертия в `SimulationManager` и `LivingDeathEvent`; в `library_of_exile/mixins/LivingEntityMixin` восстановлен учёт урона игрока (`onDamagedBy`) для генерации лута и опыта;
+   - В `AddSpawnerExtraLootMethod`, `OnBlockDropMining` и `OnBlockDropFarming` вызовы удалённого `LootContext.getOptionalParameter(...)` заменены на `LootContext.getOptional(...)`;
+   - `DungeonRoomPlacer` и процессоры `world_of_exile` используют точную 6-аргументную сигнатуру `StructureProcessor.processBlock(..., BlockPos templateRelativePos, ...)`, а `world_of_exile:tower_processor` и `world_of_exile:delve_processor` зарегистрированы в `BuiltInRegistries.STRUCTURE_PROCESSOR`;
+   - `LevelMixin` настраивает `WorldBorder` из `cir.getReturnValue()` без вызова удалённого конструктора `new WorldBorder()`; удалены устаревшие заглушки `MixinConnector.java`.
 
-Монорепозиторий одного Fabric-мода `mmorpg` («Age of Epoch»), объединяющий исходники:
+## 4. Итоги верификации
 
-- `Age-of-Exile` (RobertSkalko/Age-of-Exile, master) — 1076 файлов / ~73k строк;
-- `Library-of-Exile` — 132 файла / ~7.3k строк (перенесена исходниками);
-- `Divine-Missions` — 82 файла / ~3.7k строк; `Infinite-Dungeons` — 106 файлов / ~5.5k строк
-  (используются аддон-склеевкой `com.robertx22.addon.*` внутри Age of Exile);
-- **World of Exile** — минимальные совместимые классы `com.robertx22.world_of_exile.*` (4 класса)
-  для `DungeonDimensionJigsaw` и `SignUtils`.
-
-## 3. Миграция кода и закрытие всех 2 583 ошибок компиляции MC 26.3 (ANT-50)
-
-По результатам реального прогона `compileJava` на JDK 25.0.4.1 / Gradle 9.7.1 / Fabric Loom 1.18.4 / Minecraft 26.3 (`BUILD-REPORT.md` и `javac-err.txt`, 2 583 ошибки в 524 файлах) выполнены следующие системные исправления:
-
-1. **Идентификаторы и реестры MC 26.3 (`Identifier` & `BuiltInRegistries`)**:
-   - `net.minecraft.resources.ResourceLocation` → `net.minecraft.resources.Identifier` (`Identifier.fromNamespaceAndPath`, `Identifier.parse`);
-   - `ResourceKey.location()` / `TagKey.location()` → `.identifier()`;
-   - `BuiltInRegistries.*.get(id)` → `.getValue(id)`;
-   - `EntityType.byString(id)` → `BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.parse(id))`;
-   - `LootTables.*` → `BuiltInLootTables.*.identifier()`.
-2. **Переехавшие пакеты и переименованные классы MC 26.3**:
-   - `Villager` / `VillagerProfession` / `VillagerData` → `net.minecraft.world.entity.npc.villager.*`;
-   - `Slime` → `net.minecraft.world.entity.monster.cubemob.Slime`;
-   - `AbstractArrow` / `ThrownTrident` → `net.minecraft.world.entity.projectile.arrow.*`;
-   - `TamableAnimal` → `net.minecraft.world.entity.TamableAnimal`;
-   - `UseAnim` → `net.minecraft.world.item.ItemUseAnimation`;
-   - `ClickType` → `net.minecraft.world.inventory.ContainerInput`;
-   - `MenuScreens` → `net.minecraft.client.gui.screens.MenuScreens`;
-   - `MobSpawnType` → `net.minecraft.world.entity.EntitySpawnReason`;
-   - `ClipContext` → `net.minecraft.world.level.ClipContext`;
-   - `LootContextParams` / `LootContextParamSets` → `net.minecraft.world.level.storage.loot.parameters.*`;
-   - `SimpleReloadableResourceManager` → `net.minecraft.server.packs.resources.ReloadableResourceManager`;
-   - `GameRules` → `net.minecraft.world.level.gamerules.GameRules`;
-   - `ItemTransform` → `net.minecraft.client.resources.model.cuboid.ItemTransform`;
-   - `ItemPredicate` → `net.minecraft.advancements.criterion.ItemPredicate`;
-   - `EnderChestInventory` → `net.minecraft.world.inventory.PlayerEnderChestContainer`;
-   - `IAngerable` → `net.minecraft.world.entity.NeutralMob`, `INPC` → `net.minecraft.world.entity.npc.Npc`.
-3. **Инкапсуляция полей в MC 26.3 (переход на геттеры/сеттеры)**:
-   - `entity.level` → `entity.level()`;
-   - `level.isClientSide` → `level.isClientSide()`;
-   - `level.random` / `entity.random` → `.getRandom()`;
-   - `entity.xRot` / `entity.yRot` → `getXRot()` / `setXRot(...)` / `getYRot()` / `setYRot(...)`;
-   - `entity.onGround` → `entity.onGround()`;
-   - `chunkPos.x` / `chunkPos.z` → `chunkPos.x()` / `chunkPos.z()`, `new ChunkPos(blockPos)` → `ChunkPos.containing(blockPos)`;
-   - `widget.x` / `widget.y` → `getX()` / `getY()` / `setX(...)` / `setY(...)`;
-   - `player.getInventory().items` → обход через `getContainerSize()` / `getItem(i)`;
-   - `player.getServer()` → `player.level().getServer()`.
-4. **Изменившиеся сигнатуры API в 1.21.2+ / 26.3**:
-   - **CompoundTag**: переход на Optional-безопасные методы `getIntOr(k, 0)`, `getStringOr(k, "")`, `getBooleanOr(k, false)`, `getFloatOr(k, 0F)`, `getDoubleOr(k, 0D)`, `getLongOr(k, 0L)`, `getByteOr(k, (byte) 0)`, `getShortOr(k, (short) 0)`, `getCompoundOrEmpty(k)`, `getListOrEmpty(k, type)`, `keySet()`, а также `StackNBT` поверх `DataComponents.CUSTOM_DATA`;
-   - **BlockEntity & Entity save/load**: переход на `ValueInput` / `ValueOutput` (`loadAdditional`/`saveAdditional` и `readAdditionalSaveData`/`addAdditionalSaveData`), конструкторы `BlockEntity(type, pos, state)`, `EntityBlock.newBlockEntity(pos, state)` и `FabricBlockEntityTypeBuilder`;
-   - **Сущности и рендереры**: `EntityTypes.<T>Builder.of(...)`, `.build(ResourceKey)`, `EntityType.create(Level, EntitySpawnReason)`, `Entity.hurtServer(ServerLevel, DamageSource, float)`, `Entity.kill(ServerLevel)`, `Entity.remove(RemovalReason)`, `Entity.spawnAtLocation(ServerLevel, ItemStack, float)`, `SynchedEntityData.Builder`, `EntityRenderer<T, EntityRenderState>` (`extractRenderState` / `submit`);
-   - **Эффекты, атрибуты и звуки**: `Holder<Attribute>`, `Holder<MobEffect>`, `Holder<SoundEvent>` (`SoundEvents.*.value()`), `AttributeModifier(Identifier, double, Operation)` (`ADD_VALUE`, `ADD_MULTIPLIED_BASE`, `ADD_MULTIPLIED_TOTAL`), `MobEffect` (`shouldApplyEffectTickThisTick`, `applyEffectTick(ServerLevel, LivingEntity, int)`), `MobEffects.{SLOWNESS,SPEED,RESISTANCE,STRENGTH}`;
-   - **Компоненты текста и чат**: `Component` неизменяем (`comp.copy().withStyle(...)`), `CompatChatFormatting` для `getName`/`getByName`/`getColor`, `player.sendSystemMessage(msg)` и `player.sendOverlayMessage(msg)`;
-   - **Взаимодействия и предметы**: `InteractionResult` без generic-параметра (`InteractionResult.{SUCCESS,PASS,FAIL,CONSUME}`), удаление `.tab(...)` из `Item.Properties`, `BlockBehaviour.Properties.of()`;
-   - **Выпивание/поедание**: в 26.x звук и анимацию питья берёт **компонент** `minecraft:consumable` (`Consumable`: `consumeSeconds`, `animation`, `sound`, `hasConsumeParticles`), а не сам предмет: `Item#use`/`#finishUsingItem`/`#getUseDuration`/`#getUseAnimation` смотрят в `DataComponents.CONSUMABLE`, а звук во время питья проигрывается из `ItemStack#onUseTick`. Модовые зелья без этого компонента пьются молча — поэтому всем выпиваемым предмета мода (`AlchemyPotionItem`, `AlchemyConsumableItem`, `CookingConsumableItem`, зелья сброса, зелье смерти) задан свой `Consumable` со стандартным звуком `entity.generic.drink` / `entity.generic.eat` (хелперы `ItemUtils.drinkConsumable` / `ItemUtils.eatConsumable`), а финальный «глоток» проигрывается в `finishUsingItem` через `ItemUtils.playConsumeSound`;
-   - **Клиент, GUI и клавиши**: `Minecraft.getInstance().gui.setScreen(...)` и `.gui.screen()`, `GuiGraphicsExtractor` в `HudRenderCallback` и `Screen.extractRenderState`, `KeyMapping(name, keyCode, KeyMapping.Category)` + `KeyMappingHelper.registerKeyMapping`, `SingleQuadParticle`.
-
-## 4. Слой совместимости `com.robertx22.forge_compat` (~95 классов)
-
-Сохраняет архитектуру мода и переводит вызовы на Fabric API 0.163.0+26.3:
-
-| Подсистема | Реализация |
-|---|---|
-| **GUI и рендеринг** (`forge_compat.client`: `Screen`, `AbstractContainerScreen`, `Button`, `ImageButton`, `AbstractGui`, `RenderSystem`, `Tessellator`, `DefaultVertexFormats`, `MultiBufferSource`, `ItemBlockRenderTypes`, `RenderType`, `LightTexture`) | Мост между классическим `PoseStack`/`Screen`/`Button` API мода и новым `GuiGraphicsExtractor` / `RenderPipelines` в MC 26.3 |
-| **Предметы и материалы** (`forge_compat.common`: `ArmorItem`, `ArmorMaterial`, `ArmorMaterials`, `SwordItem`, `AxeItem`, `ItemNameBlockItem`, `Tier`, `Tiers`, `CreativeModeTab`, `CompatChatFormatting`) | Совместимые базовые классы взамен удалённых в 1.21.2+/26.3 иерархий инструментов/брони/вкладок |
-| **Датаген** (`forge_compat.data`: `ShapedRecipeBuilder`, `ShapelessRecipeBuilder`, `CookingRecipeBuilder`, `IFinishedRecipe`, `CriterionTriggerInstance`, `EnchantedItemTrigger`, `HashCache`, `DataProvider`) | Совместимые генераторы JSON-рецептов и датапаков мода |
-| **EventBus и события** (`MinecraftForge.EVENT_BUS`, `LivingHurtEvent`, `LivingDamageEvent`, `LivingDeathEvent`, `LivingEvent`, `PlayerEvent.*`, `PlayerInteractEvent.*`, `AttackEntityEvent`, `TickEvent.*`, `EntityJoinWorldEvent`) | Fabric callbacks + mixin-мосты (`LivingTickBridgeMixin`, `LivingDamageBridgeMixin`) |
-| **Капабилити** (`Capability`, `CapabilityManager`, `@CapabilityInject`, `ICapabilitySerializable`, `LazyOptional`, `AttachCapabilitiesEvent`) | Ленивое привязывание к объектам при первом обращении, NBT-сериализация через `EntityNbtCapBridgeMixin` (`ValueInput`/`ValueOutput`), перенос при смерти через `ServerPlayerEvents.COPY_FROM` |
-| **Сеть и реестры** (`SimpleChannel`, `NetworkRegistry`, `PacketDistributor`, `NetworkHooks`, `DeferredRegister`, `RegistryObject`, `ForgeRegistries`) | Fabric Networking API v1 (`PayloadTypeRegistry.clientboundPlay()`/`serverboundPlay()`, `ServerPlayNetworking`/`ClientPlayNetworking`), `ExtendedScreenHandlerType`, `BuiltInRegistries` |
-
-## 5. Локализация (ANT-49) — выполнена полностью
-
-- `assets/mmorpg/lang/ru_ru.json` — **1622 ключа** (100% покрытие `en_us.json`);
-- `assets/divine_missions/lang/ru_ru.json` — **51 ключ**;
-- `assets/infinite_dungeons/lang/ru_ru.json` — **39 ключей**;
-- **0 пропусков и 0 лишних ключей**, все плейсхолдеры (`%1$s`, `%2$s`, `[VAL1]`, `[calc:…]`)
-  и цветовые коды `§` сохранены.
+- **Компиляция Java 25 (`ECJ 3.45.0` / `OpenJDK 25.0.2`)**: `2 209` `.java` → `2 983` `.class`, **`EXIT CODE: 0`, `0` ошибок** (`bb7437b` baseline `1 565` `.java` → `2 011` `.class`, **`EXIT CODE: 0`**).
+- **Аудит байткода (`Constant Pool`)**: `0` устаревших сигнатур `1.20.1` во всех `2 983` `.class` файлах.
+- **Живой запуск `AgeOfEpochMod.onInitialize()` и перезагрузка датапаков (`OpenJDK 25.0.2`)**: **`EXIT CODE: 0`**, выполнены `56` загрузчиков, заполнены **`60 / 60`** реестров `ExileRegistry` (**`3 658` записей**, `0` пустых реестров), `2 091` предмет (`423` модовых), `1 325` блоков (`31` модовый).
+- **Ресурсы и локализация**: `2 448` валидных JSON-файлов (`RFC 8259`), `423` client item definitions, `1 948` PNG текстур, `640` `.nbt` структур, **`3 548` EN / `3 548` RU ключей (`100.00%` паритет)**, `0` пустых файлов.

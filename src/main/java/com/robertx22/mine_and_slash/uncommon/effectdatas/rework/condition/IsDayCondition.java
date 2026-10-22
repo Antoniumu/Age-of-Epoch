@@ -13,12 +13,11 @@ public class IsDayCondition extends StatCondition {
 
     @Override
     public boolean can(EffectEvent event, EffectSides statSource, StatData data, Stat stat) {
-        return event.source.level().isDay();
+        return (event.source.level().getOverworldClockTime() % 24000L) < 12542L;
     }
 
     @Override
     public Class<? extends StatCondition> getSerClass() {
         return IsDayCondition.class;
     }
-
 }

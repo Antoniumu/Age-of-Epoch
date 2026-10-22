@@ -40,7 +40,7 @@ public class PointsDisplayButton extends ImageButton {
 
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int pMouseX, int pMouseY, float pPartialTick) {
+    protected void extractContents(GuiGraphicsExtractor gui, int pMouseX, int pMouseY, float pPartialTick) {
 
         var p = ClientOnly.getPlayer();
 

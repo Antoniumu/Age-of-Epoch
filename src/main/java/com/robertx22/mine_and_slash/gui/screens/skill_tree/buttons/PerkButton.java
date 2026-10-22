@@ -91,7 +91,7 @@ public class PerkButton extends ImageButton {
             if (perk.stats.stream().anyMatch(x -> x.stat.equals(new UnknownStat().GUID()))) {
                 tooltip.add(Component.literal("No Perk of this ID found: " + perkid));
             } else {
-                if (MMORPG.RUN_DEV_TOOLS || Screen.hasShiftDown()) {
+                if (MMORPG.RUN_DEV_TOOLS || net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
                     tooltip.add(Component.literal("Perk ID: " + perkid));
                 }
             }
@@ -107,7 +107,8 @@ public class PerkButton extends ImageButton {
 
     // copied from abstractbutton
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent __ev, boolean __dbl) {
+        double mouseX = __ev.x(); double mouseY = __ev.y(); int button = __ev.button();
 
 
         screen.mouseRecentlyClickedTicks = 25;
@@ -117,7 +118,7 @@ public class PerkButton extends ImageButton {
         mouseY = 1F / screen.zoom * mouseY;
 
         if (this.active && this.visible) {
-            boolean bl = this.clicked(mouseX, mouseY);
+            boolean bl = this.isMouseOver(mouseX, mouseY);
             if (bl) {
 //                ExileLog.get().log(this.getX() + "_" + getY() + " : " + perk.GUID());
 
@@ -152,7 +153,7 @@ public class PerkButton extends ImageButton {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int mouseX, int mouseY, float pPartialTick) {
+    protected void extractContents(GuiGraphicsExtractor gui, int mouseX, int mouseY, float pPartialTick) {
 
 
         if (!screen.shouldRender(getX(), getY(), screen.ctx)) {

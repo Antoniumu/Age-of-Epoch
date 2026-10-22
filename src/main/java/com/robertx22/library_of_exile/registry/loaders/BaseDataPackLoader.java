@@ -50,6 +50,10 @@ public class BaseDataPackLoader<T extends ExileRegistry> extends SimplePreparabl
 
     public LoaderType loaderType = LoaderType.REPLACE_FULLY;
 
+    public void reloadSync(ResourceManager manager) {
+        this.apply(this.prepare(manager, null), manager, null);
+    }
+
     @Override
     protected Map<Identifier, JsonElement> prepare(ResourceManager manager, ProfilerFiller profiler) {
         Map<Identifier, JsonElement> result = new LinkedHashMap<>();

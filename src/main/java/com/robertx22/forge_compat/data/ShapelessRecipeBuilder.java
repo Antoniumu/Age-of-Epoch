@@ -41,7 +41,7 @@ public class ShapelessRecipeBuilder implements RecipeBuilder {
     }
 
     public ShapelessRecipeBuilder requires(TagKey<Item> tag) {
-        this.ingredients.add("#" + tag.identifier().toString());
+        this.ingredients.add("#" + tag.location().toString());
         return this;
     }
 

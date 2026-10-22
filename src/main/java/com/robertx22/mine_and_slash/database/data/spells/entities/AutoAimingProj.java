@@ -61,7 +61,7 @@ public class AutoAimingProj extends AbstractHurtingProjectile {
                     }
 
                     if (i > 0) {
-                        livingentity1.addEffect(new MobEffectInstance(com.robertx22.forge_compat.common.CompatHelper.wrapEffect(MobEffects.WITHER), 20 * i, 1), this.getEffectSource());
+                        livingentity1.addEffect(new MobEffectInstance(com.robertx22.forge_compat.common.CompatHelper.wrapEffect(MobEffects.WITHER), 20 * i, 1), this);
                     }
                 }
 
@@ -91,7 +91,7 @@ public class AutoAimingProj extends AbstractHurtingProjectile {
                 move = move.normalize().multiply(speed, speed, speed);
 
                 this.setDeltaMovement(move);
-                this.hurtMarked = true;
+                this.needsSync = true;
             }
 
             if (this.tickCount > (20 * 15)) {

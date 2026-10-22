@@ -25,7 +25,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.contents.PlainTextContents.LiteralContents;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import com.robertx22.forge_compat.client.event.RenderGuiOverlayEvent;
 import com.robertx22.forge_compat.client.event.RenderLivingEvent;
@@ -105,8 +104,8 @@ public class ClientInit {
                         List<Either<FormattedText, TooltipComponent>> list = x.getTooltipElements();
                         for (int i = 0; i < list.size(); i++) {
                             Optional<FormattedText> o = list.get(i).left();
-                            if (o.isPresent() && o.get() instanceof Component comp && comp.getContents() instanceof LiteralContents tc) {
-                                if (tc.text().contains("[SOCKET_PLACEHOLDER]")) {
+                            if (o.isPresent() && o.get() instanceof Component comp && comp.getString().contains("[SOCKET_PLACEHOLDER]")) {
+                                if (true) {
                                     if (e < gems.size()) {
                                         if (!new StatRangeInfo(ModRange.hide()).shouldShowDescriptions()) {
                                             list.set(i, Either.right(new SocketTooltip.SocketComponent(x.getItemStack(), Collections.singletonList(gems.get(e)))));

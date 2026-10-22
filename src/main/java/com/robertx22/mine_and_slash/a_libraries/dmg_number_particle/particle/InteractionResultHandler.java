@@ -41,9 +41,9 @@ public class InteractionResultHandler {
             for (Map.Entry<Elements, Float> entry : dmgMap.entrySet()) {
                 Float damage = entry.getValue();
                 if (damage.intValue() > 0) {
-                    double x = entity.getRandomX(0.5D);
+                    double x = (entity.getX() + (entity.getRandom().nextDouble() - 0.5D) * entity.getBbWidth());
                     double y = entity.getEyeY();
-                    double z = entity.getRandomZ(0.5D);
+                    double z = (entity.getZ() + (entity.getRandom().nextDouble() - 0.5D) * entity.getBbWidth());
                     String txt = (entry.getKey() != null ? entry.getKey().format + entry.getKey().icon : "") + NumberUtils.format(damage) + (crit ? "!" : "");
                     DamageParticleRenderer.spawn(Component.literal(txt), x, y, z, 0.0D, 0.05D, 0.0D, crit ? 1.35F : 1.0F, crit);
                 }
@@ -52,15 +52,15 @@ public class InteractionResultHandler {
         (type, entity) -> {
             if (Minecraft.getInstance().level == null) return;
             var mat = (IParticleSpawnMaterial.Type) type;
-            DamageParticleRenderer.spawn(mat.text.copy().withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD), entity.getRandomX(0.5D), entity.getEyeY(), entity.getRandomZ(0.5D), 0.0D, 0.045D, 0.0D, 1.0F, false);
+            DamageParticleRenderer.spawn(mat.text.copy().withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD), (entity.getX() + (entity.getRandom().nextDouble() - 0.5D) * entity.getBbWidth()), entity.getEyeY(), (entity.getZ() + (entity.getRandom().nextDouble() - 0.5D) * entity.getBbWidth()), 0.0D, 0.045D, 0.0D, 1.0F, false);
             if (ClientOnly.getPlayer() != null) {
-                ClientOnly.getPlayer().level().playLocalSound(entity.blockPosition(), mat.sound, SoundSource.PLAYERS, 1, 1.5F, true);
+                ClientOnly.getPlayer().level().playLocalSound(entity.getX(), entity.getY(), entity.getZ(), mat.sound, SoundSource.PLAYERS, 1.0F, 1.5F, true);
             }
         },
         (type, entity) -> {
             if (Minecraft.getInstance().level == null) return;
             var mat = (IParticleSpawnMaterial.HealNumber) type;
-            DamageParticleRenderer.spawn(Component.literal("+" + NumberUtils.format(mat.number())).withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD), entity.getRandomX(0.5D), entity.getEyeY(), entity.getRandomZ(0.5D), 0.0D, 0.05D, 0.0D, 1.05F, false);
+            DamageParticleRenderer.spawn(Component.literal("+" + NumberUtils.format(mat.number())).withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD), (entity.getX() + (entity.getRandom().nextDouble() - 0.5D) * entity.getBbWidth()), entity.getEyeY(), (entity.getZ() + (entity.getRandom().nextDouble() - 0.5D) * entity.getBbWidth()), 0.0D, 0.05D, 0.0D, 1.05F, false);
         }),
 
         IN_A_ROW((info, entity) -> {

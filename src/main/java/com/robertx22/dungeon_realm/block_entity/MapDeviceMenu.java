@@ -100,7 +100,7 @@ public class MapDeviceMenu extends AbstractContainerMenu {
                 RelicItemData newRelicData = DungeonItemNbt.RELIC.loadFrom(stack);
                 
                 // Check if adding this relic would exceed the type limit
-                if (wouldExceedTypeLimit(newRelicData.getType().id, this.getSlotIndex(), stack)) {
+                if (wouldExceedTypeLimit(newRelicData.getType().id, this.getContainerSlot(), stack)) {
                     return false;
                 }
                 

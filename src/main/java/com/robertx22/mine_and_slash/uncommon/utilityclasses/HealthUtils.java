@@ -44,7 +44,7 @@ public class HealthUtils {
 
             var at = com.robertx22.forge_compat.common.CompatHelper.getAttribute(en, Attributes.MAX_HEALTH);
 
-            if (en.getAttributes().hasModifier(Attributes.MAX_HEALTH, mod.id())) {
+            if (at.hasModifier(mod.id())) {
                 at.removeModifier(mod.id());
             }
             data.heartsWithoutMnsHealth = (int) en.getMaxHealth();
@@ -60,7 +60,7 @@ public class HealthUtils {
         } else {
             var mod = getHeartsAttributeMod(0);
             var at = com.robertx22.forge_compat.common.CompatHelper.getAttribute(en, Attributes.MAX_HEALTH);
-            if (en.getAttributes().hasModifier(Attributes.MAX_HEALTH, mod.id())) {
+            if (at.hasModifier(mod.id())) {
                 at.removeModifier(mod.id());
             }
         }

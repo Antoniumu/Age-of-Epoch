@@ -15,7 +15,7 @@ import java.util.List;
 public class OrbTooltips {
 
     public static void callMethod(ItemStack stack, Player entity, TooltipFlag tooltipContext, CallbackInfoReturnable<List<Component>> list) {
-        if (Screen.hasControlDown()) {
+        if (net.minecraft.client.Minecraft.getInstance().hasControlDown()) {
             return;
         }
         // apparently i cant clear the entire thing with the forge event so.. ItemTooltipEvent

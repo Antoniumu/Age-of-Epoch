@@ -30,11 +30,12 @@ public class EditBox extends net.minecraft.client.gui.components.EditBox {
     }
 
     public boolean charTyped(char codePoint, int modifiers) {
-        return super.charTyped(new CharacterEvent(codePoint, modifiers));
+        return super.charTyped(new CharacterEvent(codePoint));
     }
 
     @Override
     public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTicks);
     }
+    public void setCanLoseFocus(boolean canLoseFocus) {}
 }

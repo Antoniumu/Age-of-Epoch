@@ -60,8 +60,7 @@ public class ToonEntry extends ObjectSelectionList.Entry<ToonEntry> {
         }
 
         if (this.isMouseOver(pMouseX, pMouseY)) {
-            var tip = Tooltip.create(TextUTIL.mergeList(entry.data.getTooltip()));
-            list.screen.setTooltipForNextRenderPass(tip, DefaultTooltipPositioner.INSTANCE, true);
+            gui.setComponentTooltipForNextFrame(Minecraft.getInstance().font, new java.util.ArrayList<>(entry.data.getTooltip()), pMouseX, pMouseY);
         }
 
         var mc = Minecraft.getInstance();

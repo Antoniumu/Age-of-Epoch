@@ -11,7 +11,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import org.joml.Vector3d;
-import org.joml.Vector3f;
 
 public enum ParticleEnum {
 
@@ -117,7 +116,8 @@ public enum ParticleEnum {
 
     public void spawnRedstone(Level world, RGB color, double xpos, double ypos, double zpos) {
 
-        DustParticleOptions data = new DustParticleOptions(new Vector3f(color.getR(), color.getG(), color.getB()), 1F);
+        int packedRgb = (((int) (color.getR() * 255) & 0xFF) << 16) | (((int) (color.getG() * 255) & 0xFF) << 8) | ((int) (color.getB() * 255) & 0xFF);
+        DustParticleOptions data = new DustParticleOptions(packedRgb, 1F);
         world.addAlwaysVisibleParticle(data, xpos, ypos, zpos, 1, 1, 1);
     }
 

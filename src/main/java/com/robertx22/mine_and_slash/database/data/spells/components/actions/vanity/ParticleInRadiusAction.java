@@ -6,7 +6,7 @@ import com.robertx22.mine_and_slash.database.data.spells.components.packets.Part
 import com.robertx22.mine_and_slash.database.data.spells.spell_classes.SpellCtx;
 import com.robertx22.mine_and_slash.uncommon.effectdatas.rework.EventData;
 import com.robertx22.library_of_exile.main.Packets;
-import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
@@ -30,7 +30,7 @@ public class ParticleInRadiusAction extends SpellAction {
 
             ParticleShape shape = data.getParticleShape();
 
-            //SimpleParticleType particle = data.getParticle();
+            //ParticleType<?> particle = data.getParticle();
 
             float radius = data.get(RADIUS).floatValue();
 
@@ -111,11 +111,11 @@ public class ParticleInRadiusAction extends SpellAction {
     }
 
 
-    public MapHolder create(SimpleParticleType particle, Double count, Double radius) {
+    public MapHolder create(ParticleType<?> particle, Double count, Double radius) {
         return create(particle, count, radius, ParticleMotion.None);
     }
 
-    public MapHolder create(SimpleParticleType particle, Double count, Double radius, ParticleMotion motion) {
+    public MapHolder create(ParticleType<?> particle, Double count, Double radius, ParticleMotion motion) {
         MapHolder dmg = new MapHolder();
         dmg.type = GUID();
         dmg.put(RADIUS, radius);

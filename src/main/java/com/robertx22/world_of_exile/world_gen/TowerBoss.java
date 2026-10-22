@@ -352,7 +352,7 @@ public final class TowerBoss {
         // Check the final bounding box, not the type's default dimensions.
         entity.setPos(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
         if (entity instanceof Mob mob) {
-            mob.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.MOB_SUMMONED, null);
+            mob.finalizeSpawn(level, ((net.minecraft.server.level.ServerLevel) level).getCurrentDifficultyAt(pos), EntitySpawnReason.MOB_SUMMONED, null);
         }
         Arena arena = arenaOf(level, home);
         BlockPos stand = findStand(level, entity, pos, arena);

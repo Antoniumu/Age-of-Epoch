@@ -249,7 +249,7 @@ public final class Spell implements ISkillGem, IGUID, IAutoGson<Spell>, JsonExil
         list.add(locName().withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
         list.add(ExileText.emptyLine().get());
 
-        if (true || Screen.hasShiftDown()) {
+        if (true || net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
             SpellDesc.getTooltip(ctx.caster, this)
                     .forEach(x -> list.add(Component.literal(x)));
         }
@@ -310,7 +310,7 @@ public final class Spell implements ISkillGem, IGUID, IAutoGson<Spell>, JsonExil
             list.add(Words.CASTED_TIMES_CHANNEL.locName(config.times_to_cast).withStyle(ChatFormatting.RED));
         }
 
-        boolean showeffect = Screen.hasShiftDown();
+        boolean showeffect = net.minecraft.client.Minecraft.getInstance().hasShiftDown();
 
         // --- FIX: Use a map to keep only the effect with the greatest duration ---
         LinkedHashMap<ExileEffect, String> effectsWithDurations = new LinkedHashMap<>();

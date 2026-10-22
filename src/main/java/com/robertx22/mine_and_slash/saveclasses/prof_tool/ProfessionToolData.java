@@ -71,7 +71,7 @@ public class ProfessionToolData implements ITooltip {
             return stack.is(ItemTags.HOES);
         }
         if (prof.id.equals(Professions.FISHING)) {
-            return stack.getItem() instanceof FishingRodItem;
+            return stack.is(Items.FISHING_ROD);
         }
         if (prof.id.equals(Professions.HUSBANDRY)) {
             return stack.is(ItemTags.SWORDS);
@@ -142,7 +142,7 @@ public class ProfessionToolData implements ITooltip {
         while (ctx.tooltip.get(ctx.tooltip.size() - 1).getString().isBlank()){
             ctx.tooltip.remove(ctx.tooltip.size() - 1);
         }*/
-        if (Screen.hasControlDown()) {
+        if (net.minecraft.client.Minecraft.getInstance().hasControlDown()) {
             return;
         }
 

@@ -193,7 +193,7 @@ public class DelveMarkerBlockEntity extends BlockEntity {
         if (type == null || !(type.create(world, EntitySpawnReason.MOB_SUMMONED) instanceof Mob mob)) return null;
         BlockPos center = point("center");
         mob.setPos(center.getX()+0.5, center.getY(), center.getZ()+0.5);
-        mob.finalizeSpawn(world, world.getCurrentDifficultyAt(center), EntitySpawnReason.MOB_SUMMONED, null);
+        mob.finalizeSpawn(world, ((net.minecraft.server.level.ServerLevel) world).getCurrentDifficultyAt(center), EntitySpawnReason.MOB_SUMMONED, null);
         BlockPos stand = null;
         // Keep all spawns inside this room and away from its controller/reward/shaft.
         for (int dx=-2; dx<=2 && stand==null; dx++) {

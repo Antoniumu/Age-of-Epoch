@@ -1,5 +1,7 @@
 package com.robertx22.library_of_exile.main;
 
+import com.robertx22.forge_compat.fml.network.PacketDistributor;
+import com.robertx22.forge_compat.fml.network.simple.SimpleChannel;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -8,9 +10,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import com.robertx22.forge_compat.fml.network.NetworkDirection;
-import com.robertx22.forge_compat.fml.network.PacketDistributor;
-import com.robertx22.forge_compat.fml.network.simple.SimpleChannel;
 
 import java.util.HashMap;
 
@@ -19,20 +18,12 @@ public class Packets {
     static HashMap<Identifier, SimpleChannel> channels = new HashMap<>();
 
     public static <T> void sendToClient(Player player, MyPacket<T> packet) {
-        if (!(player instanceof ServerPlayer)) {
-            ExileLog.get().debug("skip sending packet " + packet.getIdentifier().getPath() + "　to client!");
-            return;
-        }
         try {
             FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
             packet.saveToData(buf);
 
             channels.get(packet.getIdentifier())
-                    .sendTo(
-                            packet,
-                            ((ServerPlayer) player).connection.connection,
-                            NetworkDirection.PLAY_TO_CLIENT
-                    );
+                .sendToPlayer((ServerPlayer) player, packet);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -44,7 +35,7 @@ public class Packets {
             packet.saveToData(buf);
 
             channels.get(packet.getIdentifier())
-                    .sendToServer(packet);
+                .sendToServer(packet);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -54,11 +45,11 @@ public class Packets {
         channels.put(packet.getIdentifier(), channel);
 
         channel.registerMessage(
-                id,
-                (Class<MyPacket<T>>) packet.getClass(), // todo
-                MyPacket::saveToData,
-                packet::loadFromDataUSETHIS,
-                MyPacket::handle
+            id,
+            (Class<MyPacket<T>>) packet.getClass(),
+            MyPacket::saveToData,
+            packet::loadFromDataUSETHIS,
+            MyPacket::handle
         );
     }
 
@@ -66,19 +57,17 @@ public class Packets {
         channels.put(packet.getIdentifier(), channel);
 
         channel.registerMessage(
-                id,
-                (Class<MyPacket<T>>) packet.getClass(), // todo
-                MyPacket::saveToData,
-                packet::loadFromDataUSETHIS,
-                MyPacket::handle
+            id,
+            (Class<MyPacket<T>>) packet.getClass(),
+            MyPacket::saveToData,
+            packet::loadFromDataUSETHIS,
+            MyPacket::handle
         );
-
-        // ClientSidePacketRegistry.INSTANCE.register(packet.getIdentifier(), packet);
     }
 
     public static void sendToTracking(MyPacket msg, BlockPos pos, Level world) {
         channels.get(msg.getIdentifier())
-                .send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), msg);
+            .send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)), msg);
     }
 
     public static void sendToTracking(MyPacket msg, Entity en) {
@@ -91,7 +80,7 @@ public class Packets {
             }
 
             channels.get(msg.getIdentifier())
-                    .send(PacketDistributor.TRACKING_ENTITY.with(() -> en), msg);
+                .send(PacketDistributor.TRACKING_ENTITY.with(() -> en), msg);
 
         }
     }

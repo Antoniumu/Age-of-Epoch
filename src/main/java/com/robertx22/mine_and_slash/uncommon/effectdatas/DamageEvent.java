@@ -645,7 +645,7 @@ public class DamageEvent extends EffectEvent {
             }
         }
 
-        DamageSource dmgsource = new DamageSource(source.level().registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DAMAGE_TYPE), source, source, source.position());
+        DamageSource dmgsource = new DamageSource(source.level().registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DAMAGE_TYPE), source, source);
 
 
         if (this.data.isSpellEffect()) {
@@ -687,10 +687,10 @@ public class DamageEvent extends EffectEvent {
                 duck.setMnsDamage(vanillaDamage);
 
                 if (target instanceof Player == false) {
-                    int inv = target.invulnerableTime;
-                    target.invulnerableTime = 0;
+                    int inv = LivingEntityAccesor.getInvulnerableTime(target);
+                    LivingEntityAccesor.setInvulnerableTime(target, 0);
                     if (target.level() instanceof net.minecraft.server.level.ServerLevel sl) target.hurtServer(sl, dmgsource, vanillaDamage);
-                    target.invulnerableTime = inv;
+                    LivingEntityAccesor.setInvulnerableTime(target, inv);
                 } else {
                     if (target.level() instanceof net.minecraft.server.level.ServerLevel sl) target.hurtServer(sl, dmgsource, vanillaDamage);
                 }
@@ -699,7 +699,7 @@ public class DamageEvent extends EffectEvent {
 
         if (attri.hasModifier(NO_KNOCKBACK.id())) {
             attri.removeModifier(NO_KNOCKBACK);
-            target.hurtMarked = false;
+
         }
 
         if (dmg > 0) {
@@ -746,12 +746,12 @@ public class DamageEvent extends EffectEvent {
             }
             //sendDamageParticle(info);
 
-            // target.invulnerableTime = 20;
+            // target.setInvulnerableTime(20);
 
             if (CompatConfig.get().disableMobIframes()) {
                 if (attackInfo == null) {
                     if (target instanceof Player == false) {
-                        target.invulnerableTime = 0;
+                        LivingEntityAccesor.setInvulnerableTime(target, 0);
                     }
                 }
             }

@@ -27,7 +27,7 @@ public class LeagueBlock extends AbstractTextBlock {
 
         list.add(Component.literal(UNICODE.SKULL + " ").withStyle(league.getTextColor()).append(league.getTranslation(TranslationType.NAME).getTranslatedName().withStyle(league.getTextColor())));
 
-        if (Screen.hasShiftDown()) {
+        if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
             list.add(Chats.ITEM_AQUIRED_THROUGH_LEAGUE.locName().withStyle(league.getTextColor()));
         }
         return list;

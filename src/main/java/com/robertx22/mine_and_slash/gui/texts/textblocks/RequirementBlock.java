@@ -71,7 +71,7 @@ public class RequirementBlock extends AbstractTextBlock {
             } else {
                 builder.add(Component.literal("").append(Component.literal(NO_ICON).withStyle(ChatFormatting.RED, ChatFormatting.BOLD)).append(Component.literal(" ")).append(Itemtips.LEVEL_REQ.locName(levelRequirement).withStyle().withStyle(ChatFormatting.DARK_GRAY)));
             }
-            if (Screen.hasAltDown()) {
+            if (net.minecraft.client.Minecraft.getInstance().hasAltDown()) {
                 builder.add(Chats.LEVEL_EXPLANATION.locName());
             }
         }

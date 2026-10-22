@@ -12,8 +12,8 @@ public class StatRangeInfo implements Cloneable {
 
 
     public StatRangeInfo(ModRange minmax) {
-        this.hasAltDown = Screen.hasAltDown();
-        this.hasShiftDown = Screen.hasShiftDown();
+        this.hasAltDown = net.minecraft.client.Minecraft.getInstance().hasAltDown();
+        this.hasShiftDown = net.minecraft.client.Minecraft.getInstance().hasShiftDown();
 
         this.player = ClientOnly.getPlayer();
         this.unitdata = Load.Unit(player);

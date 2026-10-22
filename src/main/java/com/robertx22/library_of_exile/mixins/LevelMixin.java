@@ -10,9 +10,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Level.class)
 public class LevelMixin {
-    private WorldBorder mnsCachedMapBorder;
+    private WorldBorder mnsConfiguredBorder;
 
-    @Inject(method = "getWorldBorder", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "getWorldBorder", at = @At("RETURN"))
     private void hook2(CallbackInfoReturnable<WorldBorder> cir) {
         try {
             Level world = (Level) (Object) this;
@@ -21,12 +21,12 @@ public class LevelMixin {
                 if (c == null || c.config.DISABLE_WORLDBORDER_OVERRIDE.get()) {
                     return;
                 }
-                if (mnsCachedMapBorder == null) {
-                    mnsCachedMapBorder = new WorldBorder();
-                    mnsCachedMapBorder.setCenter(0.0, 0.0);
-                    mnsCachedMapBorder.setSize(59999968);
+                WorldBorder border = cir.getReturnValue();
+                if (border != null && mnsConfiguredBorder != border) {
+                    border.setCenter(0.0, 0.0);
+                    border.setSize(59999968.0);
+                    mnsConfiguredBorder = border;
                 }
-                cir.setReturnValue(mnsCachedMapBorder);
             }
         } catch (Exception e) {
             e.printStackTrace();

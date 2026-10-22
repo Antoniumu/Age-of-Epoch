@@ -66,7 +66,7 @@ public class SpellMotionAction extends SpellAction {
                     PlayerUtils.getNearbyPlayers(ctx.world, ctx.getBlockPos(), 100)
                             .forEach(p -> {
                                 ((ServerPlayer) p).connection.send(new ClientboundSetEntityMotionPacket(x));
-                                x.hurtMarked = false;
+
                             });
 
                 }

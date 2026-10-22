@@ -27,9 +27,9 @@ public class DamageParticle {
         this.component = Component.literal(this.renderString);
         if (entity != null) {
             this.hasWorldPos = true;
-            this.x = entity.getRandomX(0.5D);
+            this.x = (entity.getX() + (entity.getRandom().nextDouble() - 0.5D) * entity.getBbWidth());
             this.y = entity.getEyeY();
-            this.z = entity.getRandomZ(0.5D);
+            this.z = (entity.getZ() + (entity.getRandom().nextDouble() - 0.5D) * entity.getBbWidth());
         }
         this.isCrit = packet != null && packet.iscrit;
     }

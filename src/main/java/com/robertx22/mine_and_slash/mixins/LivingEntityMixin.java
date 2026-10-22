@@ -69,7 +69,7 @@ public abstract class LivingEntityMixin implements LivingEntityAccesor {
     @Inject(method = "getDamageAfterMagicAbsorb", at = @At(value = "RETURN"), cancellable = true)
     public void hookenchreturn(DamageSource source, float amount, CallbackInfoReturnable<Float> ci) {
         LivingEntity en = (LivingEntity) (Object) this;
-        if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
+        if (!source.is(DamageTypeTags.BYPASSES_EFFECTS)) {
             LivingHurtUtils.damageCurioItems(en, amount);
         }
         if (DmgSourceUtils.isMyDmgSource(source)) {
