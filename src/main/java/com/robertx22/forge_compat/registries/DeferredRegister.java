@@ -62,6 +62,14 @@ public class DeferredRegister<T> {
             }
             PropertiesIdHelper.fixRegisteredDescriptionId(value, id);
             if (registry != null) {
+                // MC 26.3: vanilla MappedRegistry throws "Adding duplicate value" when the
+                // same instance is registered under a second key - skip instead of crashing
+                Identifier existing = registry.getKey(value);
+                if (existing != null) {
+                    System.out.println("[AOE-REGISTRY] " + value.getClass().getSimpleName()
+                            + " already registered as " + existing + ", skipping duplicate registration as " + id);
+                    return value;
+                }
                 Registry.register((Registry<I>) registry, id, value);
             }
             return value;

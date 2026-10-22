@@ -25,7 +25,7 @@ public class MapChunkGens {
 
         DEF.register(bus);
         
-        RegistryObject<Codec<? extends ChunkGenerator>> CHUNK_GEN = DEF.register(id.getPath(), () -> MapChunkGenerator.CODEC);
+        RegistryObject<Codec<? extends ChunkGenerator>> CHUNK_GEN = DEF.register(id.getPath(), () -> MapChunkGenerator.buildCodec().codec());
 
         MapGenEvents.MAP_CHUNK_GEN.register(e);
 

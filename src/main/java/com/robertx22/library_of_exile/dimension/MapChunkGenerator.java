@@ -28,10 +28,17 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class MapChunkGenerator extends ChunkGenerator {
-    public static final MapCodec<MapChunkGenerator> MAP_CODEC = RecordCodecBuilder.mapCodec(b -> b.group(
-        RegistryOps.retrieveElement(Biomes.THE_VOID),
-        Codec.STRING.fieldOf("map_id").forGetter(x -> x.mapId)
-    ).apply(b, b.stable(MapChunkGenerator::new)));
+    public static MapCodec<MapChunkGenerator> buildCodec() {
+        return RecordCodecBuilder.mapCodec(b -> b.group(
+            RegistryOps.retrieveElement(Biomes.THE_VOID),
+            Codec.STRING.fieldOf("map_id").forGetter(x -> x.mapId)
+        ).apply(b, b.stable(MapChunkGenerator::new)));
+    }
+
+    // MC 26.3: MappedRegistry keeps an IdentityHashMap of values - one shared codec
+    // instance cannot be registered under several ids (each map mod registers its own),
+    // so every registration builds a FRESH codec via buildCodec().
+    public static final MapCodec<MapChunkGenerator> MAP_CODEC = buildCodec();
 
     public static final Codec<MapChunkGenerator> CODEC = MAP_CODEC.codec();
 
