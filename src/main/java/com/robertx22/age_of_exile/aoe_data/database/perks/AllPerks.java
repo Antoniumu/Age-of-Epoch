@@ -12,6 +12,7 @@ public class AllPerks implements ExileRegistryInit {
         new BigEleDotAndLeechPerks().registerAll();
         new TalentTreePerks().registerAll();
         new DivinePerks().registerAll(); // древо «Божественный»: некромант / общие / призыватель
+        new BlightcallerPerks().registerAll(); // древо «Скверноводец»: та же схема, свои названия
 
     }
 }
