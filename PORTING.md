@@ -218,6 +218,14 @@ MC 26.3 закрыл следующие группы:
    - Косметика: для блока portal добавлена директория-форма blockstate
      `blockstates/portal/mmorpg.json` (26.3 пробует её); удалены файлы-мусор
      « - Copy» (один ломал путь в ресурс-паке).
+5. **Реестр генераторов чанков хранит MapCodec** (`Registry<MapCodec<?
+   extends ChunkGenerator>>` :251): регистрация обёртки `.codec()` ломала
+   dispatch поля `generator` у `LevelStem` («MapCodecCodec cannot be cast to
+   MapCodec»). Регистрируется сам `MapCodec` (buildCodec()). Заодно: в 26.3
+   `carvers`/`features` грузятся только из биомов, а WARN
+   «blockstate definition 'mmorpg:portal/mmorpg'» — это `definition id/имя
+   ресурс-пака`, а не путь; блок portal не имеет свойства facing → один вариант
+   `""`.
 
 ## 2. Состав порта
 
