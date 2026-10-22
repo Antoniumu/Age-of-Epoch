@@ -134,14 +134,35 @@ public final class PropertiesIdHelper {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private static void remapDataComponentInitializer(ResourceKey<?> oldKey, ResourceKey<?> newKey) {
+    private static java.util.List<?> initializerEntries() {
+        // MC 26.3: BuiltInRegistries.DATA_COMPONENT_INITIALIZERS holds a private
+        // List<InitializerEntry(key, initializer)> - entries are appended by the
+        // Item/Block CONSTRUCTOR using properties.itemIdOrThrow()
         try {
-            for (Map map : findResourceKeyMaps()) {
-                if (map.containsKey(oldKey)) {
-                    Object val = map.remove(oldKey);
-                    if (val != null) {
-                        map.put(newKey, val);
+            Field f = net.minecraft.core.component.DataComponentInitializers.class.getDeclaredField("initializers");
+            f.setAccessible(true);
+            return (java.util.List<?>) f.get(BuiltInRegistries.DATA_COMPONENT_INITIALIZERS);
+        } catch (Throwable ignored) {
+            return null;
+        }
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static void remapDataComponentInitializer(ResourceKey<?> oldKey, ResourceKey<?> newKey) {
+        // 26.3: swap the key in place on every entry recorded under the auto-minted id
+        try {
+            java.util.List<?> entries = initializerEntries();
+            if (entries == null) {
+                return;
+            }
+            for (Object entry : entries) {
+                try {
+                    Field kf = entry.getClass().getDeclaredField("key");
+                    kf.setAccessible(true);
+                    if (oldKey.equals(kf.get(entry))) {
+                        kf.set(entry, newKey);
                     }
+                } catch (Throwable ignored) {
                 }
             }
         } catch (Throwable ignored) {
@@ -150,127 +171,41 @@ public final class PropertiesIdHelper {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static void cleanupDataComponentInitializers() {
+        // 26.3: prune initializer entries whose key was auto-minted but never registered;
+        // DataComponentInitializers.build() throws "Missing element" on those at world start
         try {
-            for (Map map : findResourceKeyMaps()) {
-                List<Object> toRemove = new ArrayList<>();
-                for (Object k : map.keySet()) {
-                    if (k instanceof ResourceKey<?> rk) {
-                        Identifier loc = rk.identifier();
-                        if ("mmorpg".equals(loc.getNamespace())
-                            && (loc.getPath().startsWith("auto_item_") || loc.getPath().startsWith("auto_block_"))) {
-                            if (!BuiltInRegistries.ITEM.containsKey(loc) && !BuiltInRegistries.BLOCK.containsKey(loc)) {
-                                toRemove.add(k);
-                            }
-                        }
-                    }
-                }
-                for (Object k : toRemove) {
-                    map.remove(k);
-                }
-            }
-        } catch (Throwable ignored) {
-        }
-    }
-
-    @SuppressWarnings("rawtypes")
-    private static List<Map> findResourceKeyMaps() {
-        List<Map> result = new ArrayList<>();
-        try {
-            for (Field sf : BuiltInRegistries.class.getDeclaredFields()) {
-                if (!Modifier.isStatic(sf.getModifiers())) {
-                    continue;
-                }
-                sf.setAccessible(true);
-                Object root = sf.get(null);
-                if (root == null || !root.getClass().getSimpleName().contains("DataComponentInitializers")) {
-                    continue;
-                }
-                collectResourceKeyMaps(root, result, 0);
-            }
-        } catch (Throwable ignored) {
-        }
-        return result;
-    }
-
-    @SuppressWarnings("rawtypes")
-    private static void collectResourceKeyMaps(Object obj, List<Map> result, int depth) {
-        if (obj == null || depth > 3) {
-            return;
-        }
-        if (obj instanceof Map map) {
-            boolean hasResourceKeyValues = false;
-            for (Object entryObj : map.entrySet()) {
-                if (entryObj instanceof Map.Entry entry) {
-                    Object k = entry.getKey();
-                    Object v = entry.getValue();
-                    if (v instanceof Map || (v != null && v.getClass().getName().startsWith("net.minecraft."))) {
-                        hasResourceKeyValues = true;
-                        collectResourceKeyMaps(v, result, depth + 1);
-                    }
-                    if (k instanceof ResourceKey<?> && !(v instanceof Map)) {
-                        result.add(map);
-                        break;
-                    }
-                }
-            }
-            if (hasResourceKeyValues) {
+            java.util.List<?> entries = initializerEntries();
+            if (entries == null) {
                 return;
             }
-        }
-        Class<?> c = obj.getClass();
-        while (c != null && c != Object.class) {
-            for (Field f : c.getDeclaredFields()) {
-                if (Modifier.isStatic(f.getModifiers())) {
-                    continue;
-                }
+            List<Object> toRemove = new ArrayList<>();
+            for (Object entry : entries) {
                 try {
-                    f.setAccessible(true);
-                    Object fieldVal = f.get(obj);
-                    if (fieldVal instanceof Map) {
-                        collectResourceKeyMaps(fieldVal, result, depth + 1);
+                    Field kf = entry.getClass().getDeclaredField("key");
+                    kf.setAccessible(true);
+                    Object k = kf.get(entry);
+                    if (!(k instanceof ResourceKey<?> rk)) {
+                        continue;
+                    }
+                    Identifier loc = rk.identifier();
+                    if (!"mmorpg".equals(loc.getNamespace())) {
+                        continue;
+                    }
+                    if (!loc.getPath().startsWith("auto_item_") && !loc.getPath().startsWith("auto_block_")) {
+                        continue;
+                    }
+                    boolean inItem = rk.registry() == Registries.ITEM && BuiltInRegistries.ITEM.containsKey((ResourceKey) rk);
+                    boolean inBlock = rk.registry() == Registries.BLOCK && BuiltInRegistries.BLOCK.containsKey((ResourceKey) rk);
+                    if (!inItem && !inBlock) {
+                        toRemove.add(entry);
                     }
                 } catch (Throwable ignored) {
                 }
             }
-            c = c.getSuperclass();
-        }
-    }
-
-    private static synchronized void resolveBlockProps() {
-        if (blockPropsResolved) {
-            return;
-        }
-        blockPropsResolved = true;
-        try {
-            blockPropsSetId = BlockBehaviour.Properties.class.getMethod("setId", ResourceKey.class);
-            blockPropsSetId.setAccessible(true);
-        } catch (Throwable ignored) {
-        }
-        for (Field f : BlockBehaviour.Properties.class.getDeclaredFields()) {
-            if (ResourceKey.class.isAssignableFrom(f.getType())) {
-                f.setAccessible(true);
-                blockPropsIdField = f;
-                break;
+            if (!toRemove.isEmpty()) {
+                entries.removeAll(toRemove);
             }
-        }
-    }
-
-    private static synchronized void resolveItemProps() {
-        if (itemPropsResolved) {
-            return;
-        }
-        itemPropsResolved = true;
-        try {
-            itemPropsSetId = Item.Properties.class.getMethod("setId", ResourceKey.class);
-            itemPropsSetId.setAccessible(true);
         } catch (Throwable ignored) {
-        }
-        for (Field f : Item.Properties.class.getDeclaredFields()) {
-            if (ResourceKey.class.isAssignableFrom(f.getType())) {
-                f.setAccessible(true);
-                itemPropsIdField = f;
-                break;
-            }
         }
     }
 }
