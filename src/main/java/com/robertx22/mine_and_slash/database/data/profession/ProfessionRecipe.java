@@ -342,7 +342,11 @@ public class ProfessionRecipe implements JsonExileRegistry<ProfessionRecipe>, IA
 
                     var id = VanillaUTIL.REGISTRY.items().getKey(stack.getItem());
 
-                    if (stack.getCount() > stack.getMaxStackSize()) {
+                    if (stack.getCount() > net.minecraft.world.item.Item.ABSOLUTE_MAX_STACK_SIZE) {
+                        // MC 26.3: stack.getMaxStackSize() reads the MAX_STACK_SIZE data component,
+                        // which is only bound to item holders AFTER all mod entrypoints - during
+                        // early bootstrap it reads as 1 for every item and this check would always
+                        // throw. The hard vanilla cap (99) keeps the guard's intent.
                         throw new RuntimeException(id.toString() + " has more than max stack size");
                     }
 
