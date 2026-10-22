@@ -30,7 +30,7 @@ public class ProcSpells {
 
                 .onCast(ParticleBuilder.of(ParticleTypes.CRIT, 2F).shape(ParticleShape.CIRCLE_2D_EDGE).height(1).amount(300).build())
                 .onCast(ParticleBuilder.of(ParticleTypes.CRIT, 1.5F).shape(ParticleShape.CIRCLE_2D_EDGE).height(1).amount(150).build())
-                .onCast(ParticleBuilder.of(ParticleTypes.CRIMSON_SPORE, 1F).shape(ParticleShape.CIRCLE_2D_EDGE).height(1).amount(55).build())
+                .onCast(ParticleBuilder.of(((net.minecraft.core.particles.SimpleParticleType) net.minecraft.core.registries.BuiltInRegistries.PARTICLE_TYPE.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("crimson_spore"))), 1F).shape(ParticleShape.CIRCLE_2D_EDGE).height(1).amount(55).build())
 
                 .onCast(DamageBuilder.radius(Elements.Physical, 2, SpellCalcs.BLOOD_EXPLOSION).build().noKnock())
 

@@ -10,7 +10,7 @@ public class JewelEffect extends Stat {
 
     private JewelEffect() {
         this.icon = "\u2663";
-        this.format = ChatFormatting.GOLD.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.GOLD);
 
         this.statContextModifier = new IStatCtxModifier() {
             @Override

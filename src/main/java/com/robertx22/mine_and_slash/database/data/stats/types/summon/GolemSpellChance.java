@@ -19,7 +19,7 @@ import net.minecraft.ChatFormatting;
 public class GolemSpellChance extends Stat {
 
     private GolemSpellChance() {
-        this.format = ChatFormatting.AQUA.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.AQUA);
 
         this.statEffect = new GolemSpellEffect();
     }

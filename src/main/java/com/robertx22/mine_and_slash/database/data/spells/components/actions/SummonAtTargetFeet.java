@@ -25,7 +25,7 @@ public class SummonAtTargetFeet extends SpellAction {
     @Override
     public void tryActivate(Collection<LivingEntity> targets, SpellCtx ctx, MapHolder data) {
 
-        Optional<EntityType<?>> projectile = EntityType.byString(data.get(MapField.PROJECTILE_ENTITY));
+        Optional<EntityType<?>> projectile = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getOptional(net.minecraft.resources.Identifier.tryParse(data.get(MapField.PROJECTILE_ENTITY)));
 
         Double height = data.getOrDefault(MapField.HEIGHT, 0D);
 

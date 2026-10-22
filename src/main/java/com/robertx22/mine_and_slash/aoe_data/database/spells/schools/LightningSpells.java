@@ -37,7 +37,7 @@ public class LightningSpells implements ExileRegistryInit {
                         "Strike enemies with chaining lightning that deals " + SpellCalcs.LIGHTNING_SPEAR.getLocDmgTooltip()
                                 + " " + Elements.Nature.getIconNameDmg())
                 .weaponReq(CastingWeapon.MAGE_WEAPON)
-                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.ALLAY_THROW), 1D, 1D))
+                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("entity.allay.item_thrown"))), 1D, 1D))
                 .onCast(PartBuilder.justAction(SpellAction.SUMMON_PROJECTILE.create(SlashItems.LIGHTNING.get(), 1D, 1D, SlashEntities.SIMPLE_PROJECTILE.get(), 12D, true)
                         .put(MapField.CHAIN_COUNT, 5D)
                         .put(MapField.GRAVITY, false)
@@ -45,7 +45,7 @@ public class LightningSpells implements ExileRegistryInit {
                 .onTick(PartBuilder.particleOnTick(1D, ParticleTypes.ELECTRIC_SPARK, 10D, 0.01D))
                 .onExpire(PartBuilder.damageInAoe(SpellCalcs.LIGHTNING_SPEAR, Elements.Nature, 1D))
                 .onExpire(PartBuilder.aoeParticles(ParticleTypes.ELECTRIC_SPARK, 50D, 0.5D))
-                .onExpire(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.TRIDENT_HIT), 1D, 1D))
+                .onExpire(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("item.trident.hit"))), 1D, 1D))
                 .levelReq(20)
                 .build();
 
@@ -66,7 +66,7 @@ public class LightningSpells implements ExileRegistryInit {
                 .onTick(PartBuilder.particleOnTick(1D, ParticleTypes.ELECTRIC_SPARK, 10D, 0.2D))
                 .onExpire(PartBuilder.damageInAoe(SpellCalcs.LIGHTNING_SPEAR, Elements.Nature, 2D))
                 .onExpire(PartBuilder.aoeParticles(ParticleTypes.ELECTRIC_SPARK, 100D, 2D))
-                .onExpire(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.TRIDENT_HIT), 1D, 1D))
+                .onExpire(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("item.trident.hit"))), 1D, 1D))
                 .onExpire(PartBuilder.aoeParticles(ParticleTypes.ELECTRIC_SPARK, 25D, 1D))
 
                 .levelReq(1)
@@ -80,7 +80,7 @@ public class LightningSpells implements ExileRegistryInit {
                                 + " " + Elements.Nature.getIconNameDmg() + " to nearby enemies.")
 
                 .weaponReq(CastingWeapon.ANY_WEAPON)
-                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.TRIDENT_THUNDER), 1D, 1D))
+                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.wrapAsHolder(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.fromNamespaceAndPath("minecraft", "item.trident.thunder")))), 1D, 1D))
                 .onCast(PartBuilder.groundParticles(ParticleTypes.ELECTRIC_SPARK, 200D, 3.5D, 0.5D))
                 .onCast(PartBuilder.groundParticles(ParticleTypes.ELECTRIC_SPARK, 300D, 3.5D, 0.5D))
                 .onCast(PartBuilder.groundParticles(ParticleTypes.ELECTRIC_SPARK, 250D, 4D, 0.5D))
@@ -96,7 +96,7 @@ public class LightningSpells implements ExileRegistryInit {
                 .manualDesc("Summon a lightning totem that deals "
                         + SpellCalcs.LIGHTNING_TOTEM.getLocDmgTooltip(Elements.Nature) + " in an area every second.")
 
-                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.GRASS_PLACE), 1D, 1D))
+                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("block.grass.place"))), 1D, 1D))
 
                 .onCast(PartBuilder.justAction(SpellAction.SUMMON_AT_SIGHT.create(SlashEntities.SIMPLE_PROJECTILE.get(), 1D, 0D)))
                 .onExpire(PartBuilder.justAction(SpellAction.SUMMON_BLOCK.create(SlashBlocks.GUARD_TOTEM.get(), 20D * 8)

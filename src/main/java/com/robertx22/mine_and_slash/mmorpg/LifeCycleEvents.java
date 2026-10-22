@@ -32,15 +32,9 @@ public class LifeCycleEvents {
             LevelUtils.runTests();
 
             if (CompatConfig.get().disableVanillaHealthRegen()) {
-                regenDefault = event.getServer()
-                        .getGameRules()
-                        .getRule(GameRules.RULE_NATURAL_REGENERATION)
-                        .get();
+                regenDefault = event.getServer().getGameRules().get(GameRules.NATURAL_HEALTH_REGENERATION);
 
-                event.getServer()
-                        .getGameRules()
-                        .getRule(GameRules.RULE_NATURAL_REGENERATION)
-                        .set(false, event.getServer());
+                event.getServer().getGameRules().set(GameRules.NATURAL_HEALTH_REGENERATION, false, event.getServer());
             }
 
             ExileDB.checkAllDatabasesHaveDefaultEmpty();
@@ -49,10 +43,7 @@ public class LifeCycleEvents {
 
         ForgeEvents.registerForgeEvent(ServerStoppingEvent.class, event -> {
             if (CompatConfig.get().disableVanillaHealthRegen()) {
-                event.getServer()
-                        .getGameRules()
-                        .getRule(GameRules.RULE_NATURAL_REGENERATION)
-                        .set(regenDefault, event.getServer());
+                event.getServer().getGameRules().set(GameRules.NATURAL_HEALTH_REGENERATION, regenDefault, event.getServer());
 
             }
         });

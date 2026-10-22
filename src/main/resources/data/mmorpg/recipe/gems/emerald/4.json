@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "mmorpg:gems/emerald/3",
+    "mmorpg:gems/emerald/3",
+    "mmorpg:gems/emerald/3"
+  ],
+  "result": {
+    "id": "mmorpg:gems/emerald/4",
+    "count": 1
+  }
+}

@@ -82,7 +82,7 @@ public class StatPanelButton extends ImageButton {
 
         RenderUtils.render16Icon(gui, stat.GetStat().getIconForRenderingWithDefault(), getX() + iconX, getY() + iconY);
 
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, Minecraft.getInstance().font, Component.literal(stattext), getX() + numX, getY() + numY, ChatFormatting.AQUA.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, Minecraft.getInstance().font, Component.literal(stattext), getX() + numX, getY() + numY, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.AQUA));
 
 //        GuiUtils.renderScaledText(gui, getX() + numX, getY() + numY, 1F, stattext, ChatFormatting.YELLOW);
 

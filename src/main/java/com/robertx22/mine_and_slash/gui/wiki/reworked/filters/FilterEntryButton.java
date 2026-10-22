@@ -25,7 +25,7 @@ public class FilterEntryButton extends ObjectSelectionList.Entry<FilterEntryButt
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
         this.screen.last.setFilterGroup(screen.type, entry);
-        Minecraft.getInstance().setScreen(screen.last);
+        Minecraft.getInstance().gui.setScreen(screen.last);
         return true;
     }
 
@@ -50,7 +50,7 @@ public class FilterEntryButton extends ObjectSelectionList.Entry<FilterEntryButt
             text.withStyle(ChatFormatting.GRAY);
 
         }
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, text, xp, yp, ChatFormatting.YELLOW.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, text, xp, yp, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.YELLOW));
 
     }
 }

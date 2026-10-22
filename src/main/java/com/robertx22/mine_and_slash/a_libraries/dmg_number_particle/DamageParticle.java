@@ -1,87 +1,44 @@
 package com.robertx22.mine_and_slash.a_libraries.dmg_number_particle;
 
 import com.robertx22.mine_and_slash.vanilla_mc.packets.DmgNumPacket;
-import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.Entity;
 
 public class DamageParticle {
-
-    public double x = 0;
-    public double y = 0;
-    public double z = 0;
-    public double xPrev = 0;
-    public double yPrev = 0;
-    public double zPrev = 0;
-
-    public int age = 0;
-
-    public double ax = 0.00;
-    public double ay = -0.005;
-    public double az = 0.00;
-
-    public double vx = 0;
-    public double vy = 0;
-    public double vz = 0;
-
     public String renderString = "";
+    public MutableComponent component = null;
+    public int age = 0;
+    public int maxAge = 25;
+    public double x;
+    public double y;
+    public double z;
+    public double vx;
+    public double vy = 0.045D;
+    public double vz;
+    public float scale = 1.0F;
+    public boolean isCrit = false;
+    public boolean hasWorldPos = false;
 
-    DmgNumPacket packet;
+    public DamageParticle() {}
 
     public DamageParticle(Entity entity, DmgNumPacket packet) {
-        this.packet = packet;
-
-        this.renderString = packet.format + packet.string;
-        if (packet.iscrit) {
-            this.renderString += "!";
+        this.renderString = packet != null && packet.string != null ? packet.string : "";
+        this.component = Component.literal(this.renderString);
+        if (entity != null) {
+            this.hasWorldPos = true;
+            this.x = entity.getRandomX(0.5D);
+            this.y = entity.getEyeY();
+            this.z = entity.getRandomZ(0.5D);
         }
-
-
-        Minecraft mc = Minecraft.getInstance();
-        /*
-        Vec3 entityLocation = entity.position()
-                .add(0, entity.getBbHeight(), 0);
-        Vec3 cameraLocation = mc.gameRenderer.getMainCamera()
-                .getPosition();
-        double offsetBy = entity.getBbWidth();
-        Vec3 offset = cameraLocation.subtract(entityLocation)
-                .normalize()
-                .scale(offsetBy);
-        Vec3 pos = entityLocation.add(offset);
-
-         */
-
-        age = 0;
-
-        vx = mc.level.random.nextGaussian() * 0.01;
-        vy = 0.05 + (mc.level.random.nextGaussian() * 0.01);
-        vz = mc.level.random.nextGaussian() * 0.01;
-
-        /*
-        x = pos.x;
-        y = pos.y;
-        z = pos.z;
-
-         */
-
-        xPrev = x;
-        yPrev = y;
-        zPrev = z;
+        this.isCrit = packet != null && packet.iscrit;
     }
 
     public void tick() {
-
-        age++;
-
-
-        xPrev = x;
-        yPrev = y;
-        zPrev = z;
-        x += vx;
-        y += vy;
-        z += vz;
-        vx += ax;
-        vy += ay;
-        vz += az;
+        this.age++;
+        this.x += this.vx;
+        this.y += this.vy;
+        this.z += this.vz;
+        this.vy *= 0.92D;
     }
-
 }

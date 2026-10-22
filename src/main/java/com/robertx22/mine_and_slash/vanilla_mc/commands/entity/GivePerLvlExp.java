@@ -17,9 +17,9 @@ public class GivePerLvlExp {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(
                 literal(CommandRefs.ID)
-                        .then(literal("give").requires(e -> e.hasPermission(2))
+                        .then(literal("give").requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS))
                                 .then(literal("xp_times_lvl")
-                                        .requires(e -> e.hasPermission(2))
+                                        .requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS))
                                         .then(argument("target", EntityArgument.player())
                                                 .then(argument("exp", IntegerArgumentType.integer())
                                                         .executes(ctx -> run(EntityArgument.getPlayer(ctx, "target"), IntegerArgumentType

@@ -39,7 +39,7 @@ public class SummonPetAction extends SpellAction {
 
         for (int i = 0; i < amount; i++) {
 
-            Optional<EntityType<?>> type = EntityType.byString(data.get(MapField.SUMMONED_PET_ID));
+            Optional<EntityType<?>> type = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getOptional(net.minecraft.resources.Identifier.tryParse(data.get(MapField.SUMMONED_PET_ID)));
 
             TamableAnimal en = (TamableAnimal) type.get().create(ctx.world, net.minecraft.world.entity.EntitySpawnReason.MOB_SUMMONED);
 

@@ -1,20 +1,15 @@
 package com.robertx22.mine_and_slash.a_libraries.dmg_number_particle.particle;
-import net.minecraft.world.InteractionResult;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.robertx22.mine_and_slash.a_libraries.dmg_number_particle.particle.impl.DamageNullifiedParticle;
-import com.robertx22.mine_and_slash.a_libraries.dmg_number_particle.particle.impl.ElementDamageParticle;
-import com.robertx22.mine_and_slash.a_libraries.dmg_number_particle.particle.impl.HealParticle;
-import com.robertx22.mine_and_slash.a_libraries.dmg_number_particle.particle.style.Default;
-import com.robertx22.mine_and_slash.a_libraries.dmg_number_particle.particle.style.IParticleRenderMaterial;
-import com.robertx22.mine_and_slash.a_libraries.dmg_number_particle.particle.style.Row;
+import com.robertx22.mine_and_slash.a_libraries.dmg_number_particle.DamageParticleRenderer;
 import com.robertx22.mine_and_slash.uncommon.enumclasses.Elements;
 import com.robertx22.mine_and_slash.uncommon.utilityclasses.ClientOnly;
 import com.robertx22.mine_and_slash.uncommon.utilityclasses.NumberUtils;
 import com.robertx22.mine_and_slash.vanilla_mc.packets.interaction.IParticleSpawnMaterial;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import org.apache.commons.lang3.tuple.Pair;
@@ -26,12 +21,10 @@ import java.util.function.BiConsumer;
 
 public class InteractionResultHandler {
 
-
-
     public enum ExileParticleType {
-        DAMAGE(new IParticleSpawnMaterial.DamageInformation(null, null, false)) ,
-        NULLIFIED_DAMAGE(IParticleSpawnMaterial.Type.DODGE) ,
-        HEAL(new IParticleSpawnMaterial.HealNumber(0.0f)) ;
+        DAMAGE(new IParticleSpawnMaterial.DamageInformation(null, null, false)),
+        NULLIFIED_DAMAGE(IParticleSpawnMaterial.Type.DODGE),
+        HEAL(new IParticleSpawnMaterial.HealNumber(0.0f));
         public final IParticleSpawnMaterial target;
 
         ExileParticleType(IParticleSpawnMaterial target) {
@@ -41,72 +34,59 @@ public class InteractionResultHandler {
 
     public enum ClientSpawnStrategy {
         DEFAULT((info, entity) -> {
+            if (Minecraft.getInstance().level == null) return;
             var mat = (IParticleSpawnMaterial.DamageInformation) info;
             ImmutableMap<Elements, Float> dmgMap = mat.getDmgMap();
-
             boolean crit = mat.isCrit();
             for (Map.Entry<Elements, Float> entry : dmgMap.entrySet()) {
                 Float damage = entry.getValue();
                 if (damage.intValue() > 0) {
-
                     double x = entity.getRandomX(0.5D);
                     double y = entity.getEyeY();
                     double z = entity.getRandomZ(0.5D);
-                    String damageString = NumberUtils.format(damage);
-                    Minecraft.getInstance().particleEngine.add(new ElementDamageParticle(Minecraft.getInstance().level, x, y, z, new Default(), new IParticleRenderMaterial.singleElement(Pair.of(entry.getKey(), damageString), crit)));
+                    String txt = (entry.getKey() != null ? entry.getKey().format + entry.getKey().icon : "") + NumberUtils.format(damage) + (crit ? "!" : "");
+                    DamageParticleRenderer.spawn(Component.literal(txt), x, y, z, 0.0D, 0.05D, 0.0D, crit ? 1.35F : 1.0F, crit);
                 }
             }
         },
-                (type, entity) -> {
-                    var mat = (IParticleSpawnMaterial.Type) type;
-                    double x = entity.getRandomX(0.5D);
-                    double y = entity.getEyeY();
-                    double z = entity.getRandomZ(0.5D);
-                    Minecraft.getInstance().particleEngine.add(new DamageNullifiedParticle(Minecraft.getInstance().level, x, y, z, new Default(), mat));
-                    ClientOnly.getPlayer().level().playLocalSound(entity.blockPosition(), mat.sound, SoundSource.PLAYERS, 1, 1.5F, true);
-                },
-                (type, entity) -> {
-                    var mat = (IParticleSpawnMaterial.HealNumber) type;
-                    double x = entity.getRandomX(0.5D);
-                    double y = entity.getEyeY();
-                    double z = entity.getRandomZ(0.5D);
-                    Minecraft.getInstance().particleEngine.add(new HealParticle(Minecraft.getInstance().level, x, y, z, new Default(), mat.number()));
-                }),
-
+        (type, entity) -> {
+            if (Minecraft.getInstance().level == null) return;
+            var mat = (IParticleSpawnMaterial.Type) type;
+            DamageParticleRenderer.spawn(mat.text.copy().withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD), entity.getRandomX(0.5D), entity.getEyeY(), entity.getRandomZ(0.5D), 0.0D, 0.045D, 0.0D, 1.0F, false);
+            if (ClientOnly.getPlayer() != null) {
+                ClientOnly.getPlayer().level().playLocalSound(entity.blockPosition(), mat.sound, SoundSource.PLAYERS, 1, 1.5F, true);
+            }
+        },
+        (type, entity) -> {
+            if (Minecraft.getInstance().level == null) return;
+            var mat = (IParticleSpawnMaterial.HealNumber) type;
+            DamageParticleRenderer.spawn(Component.literal("+" + NumberUtils.format(mat.number())).withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD), entity.getRandomX(0.5D), entity.getEyeY(), entity.getRandomZ(0.5D), 0.0D, 0.05D, 0.0D, 1.05F, false);
+        }),
 
         IN_A_ROW((info, entity) -> {
+            if (Minecraft.getInstance().level == null) return;
             var mat = (IParticleSpawnMaterial.DamageInformation) info;
             ImmutableMap<Elements, Float> dmgMap = mat.getDmgMap();
-
             boolean crit = mat.isCrit();
-            ImmutableList.Builder<Pair<Elements, String>> builder = ImmutableList.builder();
+            StringBuilder sb = new StringBuilder();
             dmgMap.entrySet().stream().sorted(Comparator.comparingInt(entry -> entry.getKey().ordinal())).forEachOrdered(x -> {
-                Elements key = x.getKey();
-                String value = NumberUtils.format(x.getValue());
-                builder.add(Pair.of(key, value));
+                if (sb.length() > 0) sb.append(" ");
+                sb.append(x.getKey().format).append(x.getKey().icon).append(NumberUtils.format(x.getValue()));
             });
-
+            if (crit) sb.append("!");
             Random random = new Random();
-            double x = entity.getX() + random.nextDouble(-1d, 1d);
-            double y = entity.getEyeY() + random.nextDouble(-0.5d, 0.8d);
-            double z = entity.getZ();
-            Minecraft.getInstance().particleEngine.add(new ElementDamageParticle(Minecraft.getInstance().level, x, y, z, new Row(), new IParticleRenderMaterial.multipleElements(builder.build(), crit)));
-
+            DamageParticleRenderer.spawn(Component.literal(sb.toString()), entity.getX() + random.nextDouble(-0.5d, 0.5d), entity.getEyeY() + random.nextDouble(-0.2d, 0.5d), entity.getZ(), 0.0D, 0.035D, 0.0D, crit ? 1.35F : 1.0F, crit);
         },
-                (type, entity) -> {
+        (type, entity) -> {
+            if (Minecraft.getInstance().level == null) return;
             var mat = (IParticleSpawnMaterial.Type) type;
-                    double x = entity.getX();
-                    double y = entity.getEyeY();
-                    double z = entity.getZ();
-            Minecraft.getInstance().particleEngine.add(new DamageNullifiedParticle(Minecraft.getInstance().level, x, y, z, new Row(), mat));
+            DamageParticleRenderer.spawn(mat.text.copy().withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD), entity.getX(), entity.getEyeY(), entity.getZ(), 0.0D, 0.035D, 0.0D, 1.0F, false);
         },
-                (type, entity) -> {
-                    var mat = (IParticleSpawnMaterial.HealNumber) type;
-                    double x = entity.getX();
-                    double y = entity.getEyeY();
-                    double z = entity.getZ();
-                    Minecraft.getInstance().particleEngine.add(new HealParticle(Minecraft.getInstance().level, x, y, z, new Row(), mat.number()));
-                });
+        (type, entity) -> {
+            if (Minecraft.getInstance().level == null) return;
+            var mat = (IParticleSpawnMaterial.HealNumber) type;
+            DamageParticleRenderer.spawn(Component.literal("+" + NumberUtils.format(mat.number())).withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD), entity.getX(), entity.getEyeY(), entity.getZ(), 0.0D, 0.035D, 0.0D, 1.05F, false);
+        });
 
         public final BiConsumer<IParticleSpawnMaterial, Entity> damageStrategy;
         public final BiConsumer<IParticleSpawnMaterial, Entity> nullifiedDamageStrategy;
@@ -118,5 +98,4 @@ public class InteractionResultHandler {
             this.healStrategy = healStrategy;
         }
     }
-
 }

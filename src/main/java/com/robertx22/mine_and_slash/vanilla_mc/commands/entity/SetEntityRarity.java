@@ -23,10 +23,10 @@ public class SetEntityRarity {
         commandDispatcher.register(
 
                 literal(CommandRefs.ID)
-                        .then(literal("set").requires(e -> e.hasPermission(2))
+                        .then(literal("set").requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS))
                                 .then(literal("entity")
                                         .then(literal("rarity")
-                                                .requires(e -> e.hasPermission(2))
+                                                .requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS))
                                                 .then(argument("target", EntityArgument.entities())
                                                         .then(argument("rarity", StringArgumentType.string())
                                                                 .executes(e -> execute(e.getSource(), EntityArgument.getEntities(e, "target"), StringArgumentType

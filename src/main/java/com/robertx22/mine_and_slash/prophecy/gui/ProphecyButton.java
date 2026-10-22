@@ -22,7 +22,7 @@ public class ProphecyButton extends ImageButton {
         super(x, y, 16, 16, 0, 0, 1, DEFAULT_ID, (action) -> {
             if (canTake) {
                 Packets.sendToServer(new AcceptProphecyPacket(data.uuid));
-                Minecraft.getInstance().setScreen(null);
+                Minecraft.getInstance().gui.setScreen(null);
             }
         });
         this.data = data;

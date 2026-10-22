@@ -119,8 +119,8 @@ public class ObeliskItemMapData {
 
         if (x == 0 && z == 0) {
             var start = ObeliskMapCapability.get(world).data.counter.getNextAndIncrement();
-            x = start.x;
-            z = start.z;
+            x = start.x();
+            z = start.z();
         }
         ObeliskItemNbt.OBELISK_MAP.saveTo(stack, this);
         return new ChunkPos(x, z);

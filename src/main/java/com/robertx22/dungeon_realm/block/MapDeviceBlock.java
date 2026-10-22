@@ -99,15 +99,15 @@ public class MapDeviceBlock extends BaseEntityBlock {
             DungeonItemMapData map = DungeonItemNbt.DUNGEON_MAP.loadFrom(stack);
 
             var count = map.getOrSetStartPos(p.level(), stack);
-            var start = DungeonMain.MAIN_DUNGEON_STRUCTURE.getStartFromCounter(count.x, count.z);
+            var start = DungeonMain.MAIN_DUNGEON_STRUCTURE.getStartFromCounter(count.x(), count.z());
             var pos = TeleportUtils.getSpawnTeleportPos(DungeonMain.MAIN_DUNGEON_STRUCTURE, start.getMiddleBlockPosition(5));
 
             //var pdata = PlayerDataCapability.get(p);
 
             var data = new DungeonMapData();
             data.item = map;
-            data.x = start.x;
-            data.z = start.z;
+            data.x = start.x();
+            data.z = start.z();
 
             be.pos = pos;
             be.currentWorldUUID = DungeonMapCapability.getFromServer().data.data.uuid;
@@ -131,7 +131,7 @@ public class MapDeviceBlock extends BaseEntityBlock {
             stack.shrink(1);
 
             if (joinCurrentMap(p, be)) {
-                p.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, DungeonMain.DIMENSION_KEY)).setBlock(pos.south(), DungeonEntries.MAP_DEVICE_BLOCK.get().defaultBlockState(), Block.UPDATE_ALL);
+                p.level().getServer().getLevel(ResourceKey.create(Registries.DIMENSION, DungeonMain.DIMENSION_KEY)).setBlock(pos.south(), DungeonEntries.MAP_DEVICE_BLOCK.get().defaultBlockState(), Block.UPDATE_ALL);
             }
 
 

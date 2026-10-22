@@ -25,22 +25,22 @@ public class LibAffixesHolder extends ExileKeyHolder<ExileMobAffix> {
     }
 
     public ExileKey<ExileMobAffix, KeyInfo> FAST_MOBS = ExileKey.ofId(this, "fast_mobs", x -> {
-        var data = PotionMobAffix.Data.ofPermanent(MobEffects.MOVEMENT_SPEED, new AffixNumberRange(1, 2));
+        var data = PotionMobAffix.Data.ofPermanent(MobEffects.SPEED, new AffixNumberRange(1, 2));
         var translation = AffixTranslation.ofPermanentPotion(Ref.MODID);
         return new PotionMobAffix(ExileMobAffix.Affects.MOB, x.GUID(), 1000, data, translation);
     });
     public ExileKey<ExileMobAffix, KeyInfo> PERIODIC_SPEEDY_MOBS = ExileKey.ofId(this, "periodic_speedy_mobs", x -> {
-        var data = PotionMobAffix.Data.of5sEvery10s(MobEffects.MOVEMENT_SPEED, new AffixNumberRange(3, 6));
+        var data = PotionMobAffix.Data.of5sEvery10s(MobEffects.SPEED, new AffixNumberRange(3, 6));
         var translation = AffixTranslation.ofPotion(Ref.MODID);
         return new PotionMobAffix(ExileMobAffix.Affects.MOB, x.GUID(), 1000, data, translation);
     });
     public ExileKey<ExileMobAffix, KeyInfo> PERIODIC_INVISIBILITY = ExileKey.ofId(this, "periodic_invis", x -> {
-        var data = PotionMobAffix.Data.of5sEvery10s(MobEffects.INVISIBILITY, new AffixNumberRange(1, 1));
+        var data = PotionMobAffix.Data.of5sEvery10s(net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.wrapAsHolder(net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("invisibility"))), new AffixNumberRange(1, 1));
         var translation = AffixTranslation.ofPotion(Ref.MODID);
         return new PotionMobAffix(ExileMobAffix.Affects.MOB, x.GUID(), 1000, data, translation);
     });
     public ExileKey<ExileMobAffix, KeyInfo> PERIODIC_LEVITATION = ExileKey.ofId(this, "periodic_levitate", x -> {
-        var data = PotionMobAffix.Data.of1sEvery10s(MobEffects.LEVITATION, new AffixNumberRange(1, 1));
+        var data = PotionMobAffix.Data.of1sEvery10s(net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.wrapAsHolder(net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("levitation"))), new AffixNumberRange(1, 1));
         var translation = AffixTranslation.ofPotion(Ref.MODID);
         return new PotionMobAffix(ExileMobAffix.Affects.MOB, x.GUID(), 1000, data, translation);
     });
@@ -55,7 +55,7 @@ public class LibAffixesHolder extends ExileKeyHolder<ExileMobAffix> {
         return new AttributeMobAffix(ExileMobAffix.Affects.MOB, x.GUID(), 1000, data, translation);
     });
     public ExileKey<ExileMobAffix, KeyInfo> HIGH_KNOCKBACK = ExileKey.ofId(this, "high_knockback", x -> {
-        var data = AttributeMobAffix.Data.of(Attributes.ATTACK_KNOCKBACK, UUID.fromString("7bedbca3-44e3-4d99-acf3-7a8407b39339"), AttributeModifier.Operation.ADD_VALUE, new AffixNumberRange(1, 3));
+        var data = AttributeMobAffix.Data.of(net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE.wrapAsHolder(net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE.getValue(net.minecraft.resources.Identifier.fromNamespaceAndPath("minecraft", "attack_knockback"))), UUID.fromString("7bedbca3-44e3-4d99-acf3-7a8407b39339"), AttributeModifier.Operation.ADD_VALUE, new AffixNumberRange(1, 3));
         var translation = AffixTranslation.ofAttribute(Ref.MODID);
         return new AttributeMobAffix(ExileMobAffix.Affects.MOB, x.GUID(), 1000, data, translation);
     });

@@ -107,7 +107,7 @@ public class NatureSpells implements ExileRegistryInit {
                         "Thorned enemies consume the stack of thorns every time they are basic attacked to deal "
                         + SpellCalcs.THORN_CONSUME.getLocDmgTooltip(Elements.Physical))
 
-                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.GRASS_PLACE), 1D, 1D))
+                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("block.grass.place"))), 1D, 1D))
 
                 .onCast(PartBuilder.justAction(SpellAction.SUMMON_AT_SIGHT.create(SlashEntities.SIMPLE_PROJECTILE.get(), 1D, 0D)))
                 .onExpire(PartBuilder.justAction(SpellAction.SUMMON_BLOCK.create(SlashBlocks.THORN_BUSH.get(), 20D * 5)
@@ -121,7 +121,7 @@ public class NatureSpells implements ExileRegistryInit {
                 .onTick("block", PartBuilder.groundEdgeParticles(ParticleTypes.ITEM_SLIME, 40D, 3D, 1D))
                 .onTick("block", PartBuilder.damageInAoe(SpellCalcs.THORN_BUSH, Elements.Physical, 3D).tick(20D).noKnock())
                 .onTick("block", PartBuilder.addExileEffectToEnemiesInAoe(ModEffects.THORN.resourcePath, 3D, 20 * 8D).tick(20D))
-                .onTick("block", PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.GRASS_BREAK), 1D, 1D).tick(20D))
+                .onTick("block", PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("block.grass.break"))), 1D, 1D).tick(20D))
                 .levelReq(20)
                 .build();
 
@@ -211,7 +211,7 @@ public class NatureSpells implements ExileRegistryInit {
                 .manualDesc("Deals " + SpellCalcs.THORN_CONSUME.getLocDmgTooltip(Elements.Physical) +
                         " in the area and applies Thorns. Gives you Inner Calm which restores " + SpellCalcs.INNER_CALM.getLocDmgTooltip() + " Mana/s.")
 
-                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.GRASS_PLACE), 1D, 1D))
+                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("block.grass.place"))), 1D, 1D))
 
                 .onCast(PartBuilder.giveSelfExileEffect(ModEffects.INNER_CALM, 20 * 5D))
 

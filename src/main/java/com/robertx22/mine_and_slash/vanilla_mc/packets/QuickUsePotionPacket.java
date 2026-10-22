@@ -70,7 +70,7 @@ public class QuickUsePotionPacket extends MyPacket<QuickUsePotionPacket> {
                     .filter(x -> x)
                     //at least one potion is consumed
                     .findFirst()
-                    .ifPresentOrElse(x -> SoundUtils.playSound(player, com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.VILLAGER_YES)), () -> SoundUtils.playSound(player, com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.VILLAGER_NO)));
+                    .ifPresentOrElse(x -> SoundUtils.playSound(player, com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("entity.villager.yes")))), () -> SoundUtils.playSound(player, com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.VILLAGER_NO)));
         }
     }
 

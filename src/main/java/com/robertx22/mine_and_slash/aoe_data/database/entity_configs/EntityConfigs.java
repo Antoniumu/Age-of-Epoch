@@ -35,26 +35,26 @@ public class EntityConfigs implements ExileRegistryInit {
 
     void setupSpecificMobs() {
 
-        EntityConfig irongolem = new EntityConfig(EntityType.IRON_GOLEM, 0);
+        EntityConfig irongolem = new EntityConfig(net.minecraft.world.entity.EntityTypes.IRON_GOLEM, 0);
         irongolem.addToSerializables(MMORPG.SERIAZABLE_REGISTRATION_INFO);
 
-        EntityConfig polarbear = new EntityConfig(EntityType.POLAR_BEAR, 0);
+        EntityConfig polarbear = new EntityConfig(net.minecraft.world.entity.EntityTypes.POLAR_BEAR, 0);
         polarbear.addToSerializables(MMORPG.SERIAZABLE_REGISTRATION_INFO);
 
-        new EntityConfig(EntityType.ZOMBIFIED_PIGLIN, 0.5F).addToSerializables(MMORPG.SERIAZABLE_REGISTRATION_INFO);
-        var zombie = new EntityConfig(EntityType.ZOMBIE, 0.75F);
+        new EntityConfig(net.minecraft.world.entity.EntityTypes.ZOMBIFIED_PIGLIN, 0.5F).addToSerializables(MMORPG.SERIAZABLE_REGISTRATION_INFO);
+        var zombie = new EntityConfig(net.minecraft.world.entity.EntityTypes.ZOMBIE, 0.75F);
         zombie.addToSerializables(MMORPG.SERIAZABLE_REGISTRATION_INFO);
-        new EntityConfig(EntityType.DROWNED, 0.75F).addToSerializables(MMORPG.SERIAZABLE_REGISTRATION_INFO);
-        new EntityConfig(EntityType.BEE, 0.8F).addToSerializables(MMORPG.SERIAZABLE_REGISTRATION_INFO);
-        new EntityConfig(EntityType.WOLF, 0.5F).addToSerializables(MMORPG.SERIAZABLE_REGISTRATION_INFO);
+        new EntityConfig(net.minecraft.world.entity.EntityTypes.DROWNED, 0.75F).addToSerializables(MMORPG.SERIAZABLE_REGISTRATION_INFO);
+        new EntityConfig(net.minecraft.world.entity.EntityTypes.BEE, 0.8F).addToSerializables(MMORPG.SERIAZABLE_REGISTRATION_INFO);
+        new EntityConfig(net.minecraft.world.entity.EntityTypes.WOLF, 0.5F).addToSerializables(MMORPG.SERIAZABLE_REGISTRATION_INFO);
 
-        EntityConfig enderman = new EntityConfig(EntityType.ENDERMAN, 1);
+        EntityConfig enderman = new EntityConfig(net.minecraft.world.entity.EntityTypes.ENDERMAN, 1);
         enderman.addToSerializables(MMORPG.SERIAZABLE_REGISTRATION_INFO);
 
-        EntityConfig wither = mob(EntityType.WITHER, new SpecialMobStats());
+        EntityConfig wither = mob(net.minecraft.world.entity.EntityTypes.WITHER, new SpecialMobStats());
         wither.min_lvl = 30;
 
-        EntityConfig dragon = mob(EntityType.ENDER_DRAGON, new SpecialMobStats());
+        EntityConfig dragon = mob(net.minecraft.world.entity.EntityTypes.ENDER_DRAGON, new SpecialMobStats());
         dragon.min_lvl = 40;
 
     }

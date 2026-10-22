@@ -55,7 +55,7 @@ public class DmgNumPacket extends MyPacket<DmgNumPacket> {
         string = tag.readUtf(500);
         id = tag.readInt();
         this.iscrit = tag.readBoolean();
-        this.format = ChatFormatting.getByName(tag.readUtf(100));
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getByName(tag.readUtf(100));
 
     }
 
@@ -64,7 +64,7 @@ public class DmgNumPacket extends MyPacket<DmgNumPacket> {
         tag.writeUtf(string);
         tag.writeInt(id);
         tag.writeBoolean(iscrit);
-        tag.writeUtf(format.getName());
+        tag.writeUtf(com.robertx22.forge_compat.common.CompatChatFormatting.getName(format));
 
     }
 

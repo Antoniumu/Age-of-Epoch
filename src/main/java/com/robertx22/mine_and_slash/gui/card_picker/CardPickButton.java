@@ -23,7 +23,7 @@ public class CardPickButton extends ImageButton {
     public CardPickButton(ICard card, int xPos, int yPos) {
         super(xPos, yPos, SIZE_X, SIZE_Y, 0, 0, 0, SlashRef.guiId("pick_card"), (button) -> {
             card.onClick(ClientOnly.getPlayer());
-            Minecraft.getInstance().setScreen(null);
+            Minecraft.getInstance().gui.setScreen(null);
         });
         this.card = card;
     }
@@ -40,7 +40,7 @@ public class CardPickButton extends ImageButton {
         Identifier tex = card.getIcon();
         com.robertx22.forge_compat.client.GuiBlitHelper.blit(gui, tex, getX() + 45, getY() + 38, iconSize, iconSize, iconSize, iconSize, iconSize, iconSize);
 
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, card.getName(), this.getX() + SIZE_X / 2 - mc.font.width(card.getName()) / 2, getY() + 20, ChatFormatting.RED.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, card.getName(), this.getX() + SIZE_X / 2 - mc.font.width(card.getName()) / 2, getY() + 20, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.RED));
 
 
         var tip = TextUTIL.mergeList(card.getScreenText(mc.player));

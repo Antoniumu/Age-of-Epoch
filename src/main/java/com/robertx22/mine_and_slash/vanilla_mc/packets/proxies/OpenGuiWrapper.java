@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class OpenGuiWrapper {
 
     public static void openMainHub() {
-        net.minecraft.client.Minecraft.getInstance().setScreen(new MainHubScreen());
+        net.minecraft.client.Minecraft.getInstance().gui.setScreen(new MainHubScreen());
     }
 
  
@@ -35,13 +35,13 @@ public class OpenGuiWrapper {
 
 
     public static void openProphecyCards() {
-        net.minecraft.client.Minecraft.getInstance().setScreen(getProphecyCardsScreen());
+        net.minecraft.client.Minecraft.getInstance().gui.setScreen(getProphecyCardsScreen());
     }
 
     public static void openWikiRunewords() {
 
         var sc = new NewWikiScreen();
-        net.minecraft.client.Minecraft.getInstance().setScreen(sc);
+        net.minecraft.client.Minecraft.getInstance().gui.setScreen(sc);
         sc.setGroup(BestiaryGroup.RUNEWORD);
 
     }

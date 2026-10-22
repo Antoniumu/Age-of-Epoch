@@ -137,7 +137,7 @@ public class WaterSpells implements ExileRegistryInit {
                         + SpellCalcs.FROST_FLOWER.getLocDmgTooltip(Elements.Cold) + " in an area every second.")
 
 
-                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.GRASS_PLACE), 1D, 1D))
+                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("block.grass.place"))), 1D, 1D))
 
                 .onCast(PartBuilder.justAction(SpellAction.SUMMON_AT_SIGHT.create(SlashEntities.SIMPLE_PROJECTILE.get(), 1D, 0D)))
                 .onExpire(PartBuilder.justAction(SpellAction.SUMMON_BLOCK.create(SlashBlocks.FROST_FLOWER.get(), 20D * 8)
@@ -148,7 +148,7 @@ public class WaterSpells implements ExileRegistryInit {
 
                 .onTick("block", PartBuilder.groundEdgeParticles(ParticleTypes.RAIN, 20D, 1.5D, 0.2D))
                 .onTick("block", PartBuilder.groundEdgeParticles(ParticleTypes.SNOWFLAKE, 5D, 1.5D, 0.2D))
-                .onTick("block", PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.PLAYER_HURT_FREEZE), 1D, 1D).tick(20D))
+                .onTick("block", PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("entity.player.hurt_freeze"))), 1D, 1D).tick(20D))
 
                 .onTick("block", PartBuilder.damageInAoe(SpellCalcs.FROST_FLOWER, Elements.Cold, 6D).tick(20D)
                         .addPerEntityHit(PartBuilder.groundEdgeParticles(ParticleTypes.RAIN, 75D, 1D, 0.1D))
@@ -217,7 +217,7 @@ public class WaterSpells implements ExileRegistryInit {
                         .tick(20D))
                 .onTick("block", PartBuilder.addExileEffectToEnemiesInAoe(ModEffects.BONE_CHILL.resourcePath, 4D, 20 * 8D)
                         .tick(20D))
-                .onTick("block", PartBuilder.addEffectToEnemiesInAoe(MobEffects.MOVEMENT_SLOWDOWN, 4D, 20D))
+                .onTick("block", PartBuilder.addEffectToEnemiesInAoe(MobEffects.SLOWNESS, 4D, 20D))
 
                 .levelReq(20)
                 .build();
@@ -257,7 +257,7 @@ public class WaterSpells implements ExileRegistryInit {
 
                 .onExpire("block", PartBuilder.justAction(SpellAction.TP_TARGET_TO_SELF.create())
                         .addTarget(TargetSelector.CASTER.create()))
-                .onExpire("block", PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.ENDERMAN_TELEPORT), 1D, 1D))
+                .onExpire("block", PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("entity.enderman.teleport"))), 1D, 1D))
 
                 .onTick("block", PartBuilder.giveSelfExileEffect(ModEffects.MAGE_CIRCLE, 20D)
                         .addCondition(EffectCondition.IS_ENTITY_IN_RADIUS.alliesInRadius(2D)))

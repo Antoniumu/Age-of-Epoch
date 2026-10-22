@@ -35,7 +35,7 @@ public class BackpackQuickLootButton extends ImageButton {
 
     public static void addLootButton(ScreenEvent.Init event){
         if (!(event instanceof ScreenEvent.Init.Post)) return;
-        if (Minecraft.getInstance().screen instanceof ContainerScreen containerScreen && ClientConfigs.getConfig().ENABLE_QUICK_LOOT_BUTTON.get()){
+        if (Minecraft.getInstance().gui.screen() instanceof ContainerScreen containerScreen && ClientConfigs.getConfig().ENABLE_QUICK_LOOT_BUTTON.get()){
             event.addListener(new BackpackQuickLootButton(containerScreen.getGuiLeft() + containerScreen.getXSize(), containerScreen.getGuiTop(), containerScreen));
         }
     }

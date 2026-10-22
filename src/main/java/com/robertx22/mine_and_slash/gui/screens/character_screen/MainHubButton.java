@@ -36,8 +36,7 @@ public class MainHubButton extends ImageButton {
                 IContainerNamedScreen con = (IContainerNamedScreen) screen;
                 con.openContainer();
             } else {
-                Minecraft.getInstance()
-                        .setScreen((Screen) screen);
+                Minecraft.getInstance().gui.setScreen((Screen) screen);
             }
         });
 
@@ -85,9 +84,9 @@ public class MainHubButton extends ImageButton {
 
         if (isHovered()) {
             if (right) {
-                com.robertx22.forge_compat.client.GuiBlitHelper.drawCenteredString(gui, Minecraft.getInstance().font, str, this.getX() + 65, this.getY() + 10, ChatFormatting.YELLOW.getColor());
+                com.robertx22.forge_compat.client.GuiBlitHelper.drawCenteredString(gui, Minecraft.getInstance().font, str, this.getX() + 65, this.getY() + 10, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.YELLOW));
             } else {
-                com.robertx22.forge_compat.client.GuiBlitHelper.drawCenteredString(gui, Minecraft.getInstance().font, str, this.getX() + 40, this.getY() + 10, ChatFormatting.YELLOW.getColor());
+                com.robertx22.forge_compat.client.GuiBlitHelper.drawCenteredString(gui, Minecraft.getInstance().font, str, this.getX() + 40, this.getY() + 10, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.YELLOW));
 
             }
         }

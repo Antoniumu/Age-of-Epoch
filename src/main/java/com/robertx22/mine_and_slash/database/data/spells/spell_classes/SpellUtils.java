@@ -19,7 +19,7 @@ public class SpellUtils {
 
     public static void summonLightningStrike(Entity entity) {
 
-        LightningBolt lightningboltentity = new LightningBolt(EntityType.LIGHTNING_BOLT, entity.level());  //boolean true means it's only an effect!'
+        LightningBolt lightningboltentity = new LightningBolt(net.minecraft.world.entity.EntityTypes.LIGHTNING_BOLT, entity.level());  //boolean true means it's only an effect!'
 
         lightningboltentity.setPosRaw((double) entity.getX() + 0.5D,
                 (double) entity.getY(),

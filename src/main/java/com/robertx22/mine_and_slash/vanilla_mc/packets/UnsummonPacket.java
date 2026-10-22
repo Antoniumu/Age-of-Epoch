@@ -35,7 +35,7 @@ public class UnsummonPacket extends MyPacket<UnsummonPacket> {
 
         Player p = ctx.getPlayer();
 
-        SoundUtils.playSound(p, com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.GENERIC_DEATH));
+        SoundUtils.playSound(p, com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("entity.generic.death"))));
 
         EntityFinder.Setup<LivingEntity> finder = EntityFinder.start(p, LivingEntity.class, p.blockPosition())
                 .finder(EntityFinder.SelectionType.RADIUS)

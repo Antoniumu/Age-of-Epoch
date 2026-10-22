@@ -40,14 +40,14 @@ public class UberBossAltarBlock extends Block {
                 if (MapDimensions.isMap(level)) {
 
                     DungeonMain.ifMapData(level, pPos).ifPresent(x -> {
-                        var uber = DungeonMain.UBER_ARENA.getUber(new ChunkPos(pPos));
+                        var uber = DungeonMain.UBER_ARENA.getUber(ChunkPos.containing(pPos));
                         var type = uber.getRandomBoss();
 
                         LivingEntity en = (LivingEntity) type.create(level, net.minecraft.world.entity.EntitySpawnReason.MOB_SUMMONED);
                         en.setPos(new MyPosition(pPos).add(0, 1, 0));
 
                         p.sendSystemMessage(uber.getTranslation(TranslationType.DESCRIPTION).getTranslatedName().withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
-                        SoundUtils.playSound(p, com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.WITHER_SPAWN));
+                        SoundUtils.playSound(p, com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("entity.wither.spawn"))));
                         level.setBlock(pPos, Blocks.AIR.defaultBlockState(), 0);
 
                         level.addFreshEntity(en);

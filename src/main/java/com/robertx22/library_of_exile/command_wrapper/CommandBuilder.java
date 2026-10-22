@@ -59,7 +59,7 @@ public class CommandBuilder {
 
 
         for (LiteralWrapper literal : literals) {
-            var next = literal(literal.id).requires(e -> e.hasPermission(literal.perm.perm));
+            var next = literal(literal.id).requires(net.minecraft.commands.Commands.hasPermission(literal.perm.perm >= 2 ? net.minecraft.commands.Commands.LEVEL_GAMEMASTERS : net.minecraft.commands.Commands.LEVEL_ALL));
             list.add(next);
             x++;
         }

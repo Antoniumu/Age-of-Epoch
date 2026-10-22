@@ -27,7 +27,7 @@ public class GuiUtils {
         float xf = (float) (xp * antiScale);
         float yf = (float) (yp * antiScale);
 
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(matrix, Minecraft.getInstance().font, ExileText.ofText(text).format(format).get(), (int) xf, (int) yf, format.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(matrix, Minecraft.getInstance().font, ExileText.ofText(text).format(format).get(), (int) xf, (int) yf, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(format));
         matrix.pose().scale((float)(antiScale), (float)(antiScale));
 
     }

@@ -25,6 +25,6 @@ public class ValidDamageUtil {
             return type.weaponType().damage_validity_check.isValid(source);
         }
 
-        return source.is(DamageTypes.PLAYER_ATTACK);
+        return source.is(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.DAMAGE_TYPE, net.minecraft.resources.Identifier.fromNamespaceAndPath("minecraft", "player_attack")));
     }
 }

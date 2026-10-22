@@ -133,7 +133,7 @@ public class ResourceStats {
             .modifyAfterDone(x -> {
                 x.is_perc = true;
                 x.base = 0;
-                x.format = ChatFormatting.YELLOW.getName();
+                x.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.YELLOW);
                 x.group = Stat.StatGroup.RESTORATION;
             })
             .build();
@@ -151,7 +151,7 @@ public class ResourceStats {
             .modifyAfterDone(x -> {
                 x.is_perc = true;
                 x.base = 0;
-                x.format = ChatFormatting.GREEN.getName();
+                x.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.GREEN);
                 x.group = Stat.StatGroup.RESTORATION;
             })
             .build();
@@ -170,7 +170,7 @@ public class ResourceStats {
             .modifyAfterDone(x -> {
                 x.is_perc = true;
                 x.base = 0;
-                x.format = ChatFormatting.YELLOW.getName();
+                x.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.YELLOW);
                 x.group = Stat.StatGroup.RESTORATION;
             })
             .build();
@@ -189,7 +189,7 @@ public class ResourceStats {
                 x.is_long = true;
                 x.scaling = StatScaling.NONE;
                 x.base = 0;
-                x.format = ChatFormatting.YELLOW.getName();
+                x.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.YELLOW);
                 x.group = Stat.StatGroup.RESTORATION;
             })
             .build();
@@ -208,7 +208,7 @@ public class ResourceStats {
                 x.is_perc = true;
                 x.base = 0;
                 x.min = -100;
-                x.format = ChatFormatting.GREEN.getName();
+                x.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.GREEN);
                 x.group = Stat.StatGroup.RESTORATION;
             })
             .build();
@@ -228,7 +228,7 @@ public class ResourceStats {
                 x.is_perc = true;
                 x.base = 0;
                 x.min = -100;
-                x.format = ChatFormatting.YELLOW.getName();
+                x.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.YELLOW);
                 x.group = Stat.StatGroup.RESTORATION;
             })
             .build();
@@ -246,7 +246,7 @@ public class ResourceStats {
                 x.base = 0;
                 x.min = 0;
                 x.scaling = StatScaling.NONE;
-                x.format = ChatFormatting.RED.getName();
+                x.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.RED);
                 x.group = Stat.StatGroup.RESTORATION;
             })
             .build();
@@ -264,7 +264,7 @@ public class ResourceStats {
                 x.base = 0;
                 x.min = 0;
                 x.scaling = StatScaling.NONE;
-                x.format = ChatFormatting.RED.getName();
+                x.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.RED);
                 x.group = Stat.StatGroup.RESTORATION;
             })
             .build();
@@ -282,7 +282,7 @@ public class ResourceStats {
                 x.base = 0;
                 x.min = 0;
                 x.scaling = StatScaling.NONE;
-                x.format = ChatFormatting.RED.getName();
+                x.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.RED);
                 x.group = Stat.StatGroup.RESTORATION;
             })
             .build();
@@ -300,7 +300,7 @@ public class ResourceStats {
                 x.base = 0;
                 x.min = 0;
                 x.scaling = StatScaling.NONE;
-                x.format = ChatFormatting.RED.getName();
+                x.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.RED);
                 x.group = Stat.StatGroup.RESTORATION;
             })
             .build();
@@ -318,7 +318,7 @@ public class ResourceStats {
                 x.base = 0;
                 x.min = 0;
                 x.scaling = StatScaling.NONE;
-                x.format = ChatFormatting.RED.getName();
+                x.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.RED);
                 x.group = Stat.StatGroup.RESTORATION;
             })
             .build();
@@ -336,7 +336,7 @@ public class ResourceStats {
                 x.base = 0;
                 x.min = 0;
                 x.scaling = StatScaling.NONE;
-                x.format = ChatFormatting.RED.getName();
+                x.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.RED);
                 x.group = Stat.StatGroup.RESTORATION;
             })
             .build();
@@ -355,7 +355,7 @@ public class ResourceStats {
             .setLocDesc(x -> "Gain " + Stat.VAL1 + "% Health Regen for every 2% of Health that is missing.")
             .modifyAfterDone(x -> {
                 x.is_perc = true;
-                x.format = ChatFormatting.GREEN.getName();
+                x.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.GREEN);
                 x.group = Stat.StatGroup.RESTORATION;
             })
             .build();

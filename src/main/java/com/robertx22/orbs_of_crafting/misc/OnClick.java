@@ -75,7 +75,7 @@ public class OnClick {
                                 SoundUtils.playSound(player.level(), player.blockPosition(), com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.GLASS_BREAK), 1, 1);
                                 return new Result(true);
                             } else if (result.outcome == ItemModification.OutcomeType.NEUTRAL) {
-                                SoundUtils.playSound(player.level(), player.blockPosition(), com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.STONE_PLACE), 1, 1);
+                                SoundUtils.playSound(player.level(), player.blockPosition(), com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.fromNamespaceAndPath("minecraft", "block.stone.place"))), 1, 1);
                                 return new Result(true);
                             } else {
                                 return new Result(true).ding();

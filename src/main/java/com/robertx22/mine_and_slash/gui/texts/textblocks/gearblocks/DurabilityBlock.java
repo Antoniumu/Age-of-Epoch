@@ -8,16 +8,16 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.List;
 
 public class DurabilityBlock extends AbstractTextBlock {
 
-    @Nonnull
+    @NotNull
     public ItemStack stack;
 
-    public DurabilityBlock(@Nonnull ItemStack stack) {
+    public DurabilityBlock(@NotNull ItemStack stack) {
         this.stack = stack;
     }
 

@@ -18,7 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class LevelUtils {
@@ -159,7 +159,7 @@ public class LevelUtils {
     }
 
     public static boolean isInMinLevelArea(ServerLevel world, BlockPos pos, DimensionConfig config) {
-        double distance = world.getSharedSpawnPos()
+        double distance = world.getRespawnData().pos()
                 .distManhattan(pos);
 
         double scale = Mth.clamp(world.dimensionType()
@@ -175,7 +175,7 @@ public class LevelUtils {
 
     public static int determineLevelPerDistanceFromSpawn(ServerLevel world, BlockPos pos, DimensionConfig config) {
 
-        double distance = world.getSharedSpawnPos().distManhattan(pos);
+        double distance = world.getRespawnData().pos().distManhattan(pos);
 
         double scale = Mth.clamp(world.dimensionType().coordinateScale() / 3F, 1, Integer.MAX_VALUE);
 

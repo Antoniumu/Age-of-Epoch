@@ -14,7 +14,7 @@ public class Blood extends Stat {
         this.group = StatGroup.MAIN;
 
         this.icon = "\u2764";
-        this.format = ChatFormatting.DARK_RED.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.DARK_RED);
     }
 
     public static Blood getInstance() {

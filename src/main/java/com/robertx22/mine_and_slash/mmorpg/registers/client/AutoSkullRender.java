@@ -50,7 +50,7 @@ public class AutoSkullRender extends EntityRenderer<AutoAimingProj, AutoSkullRen
         poseStack.pushPose();
         poseStack.mulPose(new Matrix4f().rotationY((float) Math.toRadians(-state.yRot)));
         poseStack.mulPose(new Matrix4f().rotationX((float) Math.toRadians(state.xRot)));
-        collector.order(0).submitCustomGeometry(poseStack, RenderTypes.entityCutoutNoCull(WITHER_LOCATION), (pose, vc) -> MySpriteRenderer.drawTexturedBox(pose, vc, SKULL, 0xF000F0));
+        collector.order(0).submitCustomGeometry(poseStack, RenderTypes.debugFilledBox(), (pose, vc) -> MySpriteRenderer.drawColoredBox(pose, vc, 0.90F, 0.90F, 0.95F, 0.95F));
         poseStack.popPose();
     }
 }

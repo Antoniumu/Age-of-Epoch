@@ -73,7 +73,7 @@ public abstract class SummonEntity extends TamableAnimal implements RangedAttack
             double d2 = pTarget.getZ() - this.getZ();
             double d3 = Math.sqrt(d0 * d0 + d2 * d2);
             abstractarrow.shoot(d0, d1 + d3 * (double) 0.2F, d2, 5, 0);
-            this.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.SKELETON_SHOOT), 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+            this.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("entity.skeleton.shoot"))), 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
             this.level().addFreshEntity(abstractarrow);
         }
     }

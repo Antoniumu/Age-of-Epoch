@@ -22,7 +22,7 @@ public enum ParticleEnum {
 
             for (int i = 0; i < data.amount; i++) {
                 Vector3d p = GeometryUtils.randomPos(center, world.getRandom(), data.radius);
-                Vector3d m = GeometryUtils.randomMotion(center, world.random);
+                Vector3d m = GeometryUtils.randomMotion(center, world.getRandom());
 
                 world.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.BIRCH_LEAVES.defaultBlockState()),
                         p.x, p.y, p.z, m.x, m.y, m.z

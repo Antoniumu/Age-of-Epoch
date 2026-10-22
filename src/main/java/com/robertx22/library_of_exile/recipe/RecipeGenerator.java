@@ -6,7 +6,7 @@ import com.robertx22.library_of_exile.main.ExileLog;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import com.robertx22.forge_compat.data.IFinishedRecipe;
-import net.minecraft.data.recipes.RecipeBuilder;
+import com.robertx22.forge_compat.data.RecipeBuilder;
 import com.robertx22.forge_compat.fml.loading.FMLPaths;
 
 import java.nio.file.Path;
@@ -58,7 +58,7 @@ public class RecipeGenerator {
     }
 
     private static Path resolve(Path path, String modid, String id) {
-        return path.resolve("data/" + modid + "/recipes/" + id + ".json");
+        return path.resolve("data/" + modid + "/recipe/" + id + ".json");
     }
 
 

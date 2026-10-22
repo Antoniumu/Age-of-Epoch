@@ -13,7 +13,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
@@ -82,7 +81,7 @@ public class HarvestMapData {
     }
 
     public static void actionBar(ServerPlayer p, MutableComponent title) {
-        p.connection.send(new ClientboundSetActionBarTextPacket(title));
+        p.sendOverlayMessage(title);
     }
 
     public void waveLogicSecond(Level world, BlockPos pos) {

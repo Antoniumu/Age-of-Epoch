@@ -42,7 +42,7 @@ public class HarvestMapStructure extends SimplePrebuiltMapStructure {
 
     @Override
     protected ChunkPos INTERNALgetStartChunkPos(ChunkPos cp) {
-        var newcp = (new ChunkPos(cp.x / DUNGEON_LENGTH * DUNGEON_LENGTH, cp.z / DUNGEON_LENGTH * DUNGEON_LENGTH));
+        var newcp = (new ChunkPos(cp.x() / DUNGEON_LENGTH * DUNGEON_LENGTH, cp.z() / DUNGEON_LENGTH * DUNGEON_LENGTH));
         return newcp;
     }
 

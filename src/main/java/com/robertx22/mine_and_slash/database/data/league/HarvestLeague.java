@@ -126,7 +126,7 @@ public class HarvestLeague extends LeagueMechanic {
                             }).summonMobs(level, spawnpos)) {
 
                                 if (RandomUtils.roll(25)) {
-                                    mob.addEffect(new MobEffectInstance(com.robertx22.forge_compat.common.CompatHelper.wrapEffect(MobEffects.MOVEMENT_SPEED), 20 * 60, RandomUtils.RandomRange(1, 4)));
+                                    mob.addEffect(new MobEffectInstance(com.robertx22.forge_compat.common.CompatHelper.wrapEffect(MobEffects.SPEED), 20 * 60, RandomUtils.RandomRange(1, 4)));
                                 }
                             }
                         }
@@ -147,18 +147,18 @@ public class HarvestLeague extends LeagueMechanic {
 
     public EntityType getRandomMobToSpawn() {
         if (RandomUtils.roll(10)) {
-            return EntityType.CAVE_SPIDER;
+            return net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("cave_spider"));
         }
         if (RandomUtils.roll(5)) {
-            return EntityType.WITCH;
+            return net.minecraft.world.entity.EntityTypes.WITCH;
         }
         if (RandomUtils.roll(5)) {
-            return EntityType.PIGLIN_BRUTE;
+            return net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("piglin_brute"));
         }
         if (RandomUtils.roll(2)) {
-            return EntityType.STRAY;
+            return net.minecraft.world.entity.EntityTypes.STRAY;
         }
-        return EntityType.SPIDER;
+        return net.minecraft.world.entity.EntityTypes.SPIDER;
     }
 
 

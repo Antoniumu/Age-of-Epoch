@@ -22,7 +22,7 @@ public class OnNonPlayerDamageEntityEvent extends EventConsumer<ExileEvents.OnDa
             event.damage = 0;
             return;
         }
-        if (event.source.is(DamageTypes.FELL_OUT_OF_WORLD)) {
+        if (event.source.is(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.DAMAGE_TYPE, net.minecraft.resources.Identifier.fromNamespaceAndPath("minecraft", "out_of_world")))) {
             return;
         }
         if (event.source.getEntity() instanceof LivingEntity == false) {
@@ -30,7 +30,7 @@ public class OnNonPlayerDamageEntityEvent extends EventConsumer<ExileEvents.OnDa
         }
         if (event.mob instanceof Player == false) {
             if (WorldUtils.isMapWorldClass(event.mob.level(), event.mob.blockPosition())) {
-                if (event.source.is(DamageTypes.IN_WALL)) {
+                if (event.source.is(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.DAMAGE_TYPE, net.minecraft.resources.Identifier.fromNamespaceAndPath("minecraft", "in_wall")))) {
                     UnstuckMobs.unstuckFromWalls(event.mob);
                     return;
                 }

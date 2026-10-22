@@ -20,7 +20,7 @@ public class AllAttributes extends Stat implements ITransferToOtherStats {
     public static String DEX_ID = "dexterity";
 
     private AllAttributes() {
-        this.format = ChatFormatting.LIGHT_PURPLE.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.LIGHT_PURPLE);
 
         this.scaling = StatScaling.CORE;
     }

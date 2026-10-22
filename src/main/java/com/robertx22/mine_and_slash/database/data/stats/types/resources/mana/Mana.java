@@ -22,7 +22,7 @@ public class Mana extends Stat {
         this.scaling = StatScaling.NORMAL;
         this.group = StatGroup.MAIN;
 
-        this.format = ChatFormatting.BLUE.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.BLUE);
         this.icon = "\u262F";
     }
 

@@ -359,7 +359,7 @@ public class MapDimensionConfig {
                     return;
                 }
                 // let's not accidentally stop players from spawning just in case
-                if (event.getEntityType() == EntityType.PLAYER) {
+                if (event.getEntityType() == net.minecraft.world.entity.EntityTypes.PLAYER) {
                     return;
                 }
                 var type = event.getSpawnType();
@@ -380,7 +380,7 @@ public class MapDimensionConfig {
                 DamageTypes.CACTUS,
                 DamageTypes.CRAMMING,
                 DamageTypes.FLY_INTO_WALL,
-                DamageTypes.IN_WALL,
+                net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.DAMAGE_TYPE, net.minecraft.resources.Identifier.fromNamespaceAndPath("minecraft", "in_wall")),
                 DamageTypes.WITHER,
                 DamageTypes.
         )

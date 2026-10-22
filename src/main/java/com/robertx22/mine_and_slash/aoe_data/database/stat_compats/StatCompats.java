@@ -20,7 +20,7 @@ public class StatCompats implements ExileRegistryInit {
         });
 
         new StatCompat("sharpness_damage").editAndReg(x -> {
-            x.enchant_id = Enchantments.SHARPNESS.identifier().toString();
+            x.enchant_id = net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.ENCHANTMENT, net.minecraft.resources.Identifier.fromNamespaceAndPath("minecraft", "sharpness")).identifier().toString();
             x.mns_stat_id = OffenseStats.TOTAL_DAMAGE.get().GUID();
             x.mod_type = ModType.FLAT;
             x.conversion = 5;

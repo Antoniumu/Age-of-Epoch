@@ -35,7 +35,7 @@ public class SummonedPetData {
     public void tick(LivingEntity en) {
         if (!en.level().isClientSide()) {
             if (ticks-- < 1) {
-                SoundUtils.playSound(en, com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.GENERIC_DEATH));
+                SoundUtils.playSound(en, com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("entity.generic.death"))));
                 discard(en);
             }
         }

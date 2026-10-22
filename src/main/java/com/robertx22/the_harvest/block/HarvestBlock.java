@@ -61,7 +61,7 @@ public class HarvestBlock extends BaseEntityBlock {
         HarvestItemMapData map = HarvestItemNbt.HARVEST_MAP.loadFrom(stack);
 
         var count = map.getOrSetStartPos(p.level(), stack);
-        var start = HarvestMain.HARVEST_MAP_STRUCTURE.getStartFromCounter(count.x, count.z);
+        var start = HarvestMain.HARVEST_MAP_STRUCTURE.getStartFromCounter(count.x(), count.z());
         var pos = TeleportUtils.getSpawnTeleportPos(HarvestMain.HARVEST_MAP_STRUCTURE, start.getMiddleBlockPosition(5));
 
         var pdata = PlayerDataCapability.get(p);
@@ -71,11 +71,11 @@ public class HarvestBlock extends BaseEntityBlock {
         data.onStartMap(p);
 
         data.item = map;
-        data.x = start.x;
-        data.z = start.z;
+        data.x = start.x();
+        data.z = start.z();
 
-        be.x = count.x;
-        be.z = count.z;
+        be.x = count.x();
+        be.z = count.z();
 
         be.currentWorldUUID = HarvestMapCap.get(p.level()).data.data.uuid;
 

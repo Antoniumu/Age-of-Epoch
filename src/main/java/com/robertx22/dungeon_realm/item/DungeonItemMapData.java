@@ -21,8 +21,8 @@ public class DungeonItemMapData {
 
         if (x == 0 && z == 0) {
             var start = DungeonMapCapability.get(world).data.counter.getNextAndIncrement();
-            x = start.x;
-            z = start.z;
+            x = start.x();
+            z = start.z();
         }
         DungeonItemNbt.DUNGEON_MAP.saveTo(stack, this);
         return new ChunkPos(x, z);

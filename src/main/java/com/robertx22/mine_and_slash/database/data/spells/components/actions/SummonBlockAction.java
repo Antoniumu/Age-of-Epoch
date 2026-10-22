@@ -28,7 +28,7 @@ public class SummonBlockAction extends SpellAction {
 
 
     static boolean isSolid(Level level, BlockPos pos) {
-        return level.getBlockState(pos).isSolid();
+        return !level.isEmptyBlock(pos);
     }
 
 
@@ -69,7 +69,7 @@ public class SummonBlockAction extends SpellAction {
 
             int times = 0;
 
-            int minHeight = com.robertx22.forge_compat.common.CompatHelper.minBuildHeight(ctx.world);
+            int minHeight = ctx.world.getMinY();
 
             while (!found && pos.y() > minHeight && SEARCH > times) {
                 times++;
@@ -82,7 +82,7 @@ public class SummonBlockAction extends SpellAction {
             if (!found) {
                 pos = new MyPosition(ctx.getBlockPos());
                 times = 0;
-                while (!found && pos.y() < com.robertx22.forge_compat.common.CompatHelper.maxBuildHeight(ctx.world) && SEARCH > times) {
+                while (!found && pos.y() < ctx.world.getMaxY() && SEARCH > times) {
                     times++;
                     if (!isSolid(ctx.world, pos.asBlockPos()) && isSolid(ctx.world, pos.asBlockPos().below())) {
                         found = true;

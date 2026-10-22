@@ -17,8 +17,8 @@ public class BackpackScreen extends AbstractContainerScreen<BackpackMenu> {
 
     public static final Identifier BACKGROUND_LOCATION = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/master_bag.png");
 
-    public static double iMouseX = (double)(Minecraft.getInstance().getWindow().getScreenWidth() / 2);
-    public static double iMouseY = (double)(Minecraft.getInstance().getWindow().getHeight() / 2);
+    public static double iMouseX = 0;
+    public static double iMouseY = 0;
 
     public BackpackScreen(BackpackMenu pMenu, Inventory pPlayerInventory, Component txt) {
         super(pMenu, pPlayerInventory, Component.literal(""));
@@ -59,8 +59,8 @@ public class BackpackScreen extends AbstractContainerScreen<BackpackMenu> {
     public void onClose() {
         super.onClose();
         //reset position
-        iMouseX = (double)(Minecraft.getInstance().getWindow().getScreenWidth() / 2);
-        iMouseY = (double)(Minecraft.getInstance().getWindow().getHeight() / 2);
+        iMouseX = (double)(Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2);
+        iMouseY = (double)(Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2);
     }
 
 

@@ -149,11 +149,11 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
     }
 
     public static int sizeX() {
-        return Minecraft.getInstance().getWindow().getWidth();
+        return Minecraft.getInstance().getWindow().getGuiScaledWidth();
     }
 
     public static int sizeY() {
-        return Minecraft.getInstance().getWindow().getHeight();
+        return Minecraft.getInstance().getWindow().getGuiScaledHeight();
     }
 
     int ticks = 0;
@@ -507,7 +507,7 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
         // todo test
         //com.robertx22.forge_compat.client.RenderSystem.setShaderColor(0.25F, 0.25F, 0.25F, 1.0F);
         int i = 32;
-        com.robertx22.forge_compat.client.GuiBlitHelper.blit(gui, BACKGROUND, 0, 0, -10, 0.0F, 0.0F, mc.screen.width, mc.screen.height, 32, 32);
+        com.robertx22.forge_compat.client.GuiBlitHelper.blit(gui, BACKGROUND, 0, 0, -10, 0.0F, 0.0F, mc.getWindow().getGuiScaledWidth(), mc.getWindow().getGuiScaledHeight(), 32, 32);
         //com.robertx22.forge_compat.client.RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
     }
@@ -540,9 +540,9 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
 
         int yx = 4;
 
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, text, savedx + 15, yx, ChatFormatting.YELLOW.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, text, savedx + 15, yx, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.YELLOW));
         text = Gui.TALENT_RESET_POINTS.locName().append(String.valueOf(this.schoolType.getPointType().getResetPoints(mc.player)));
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, text, savedx + (BG_WIDTH) - mc.font.width(text) - 15, yx, ChatFormatting.YELLOW.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, text, savedx + (BG_WIDTH) - mc.font.width(text) - 15, yx, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.YELLOW));
 
         int tx = savedx + BG_WIDTH;
         tx = (tx - savedx) / 2 + savedx - SEARCH_WIDTH / 2;
@@ -558,7 +558,7 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
 
         if (MMORPG.RUN_DEV_TOOLS) {
             MutableComponent debug = Component.literal("Widgets: " + this.children().size() + " - " + msstring);
-            com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, debug, savedx + 277, yx, ChatFormatting.GREEN.getColor());
+            com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, debug, savedx + 277, yx, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.GREEN));
         }
 
 

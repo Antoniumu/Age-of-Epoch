@@ -37,7 +37,7 @@ public class FilterSelectScreen extends Screen {
     }
 
     public void onClose() {
-        this.minecraft.setScreen(this.last);
+        this.minecraft.gui.setScreen(this.last);
     }
 
 

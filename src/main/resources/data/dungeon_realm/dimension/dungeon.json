@@ -1,18 +1,13 @@
 {
   "type": "dungeon_realm:dungeon",
   "generator": {
-    "type": "dungeon_realm:dungeon_chunk_gen",	
-	"map_id": "dungeon",
+    "type": "minecraft:flat",
     "settings": {
-      "biome": "dungeon_realm:dungeon_biome",
-      "lakes": false,
+      "biome": "minecraft:the_void",
       "features": false,
-      "layers": [
-        {
-          "block": "minecraft:bedrock",
-          "height": 384
-        }
-      ]
+      "lakes": false,
+      "layers": [],
+      "structure_overrides": []
     }
   }
 }

@@ -77,7 +77,7 @@ public class WikiEntry extends ObjectSelectionList.Entry<WikiEntry> {
         int xp = (int) (pLeft + 37);
         int yp = (int) pTop + 5;
 
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, entry.getCutName(), xp, yp, ChatFormatting.GREEN.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, entry.getCutName(), xp, yp, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.GREEN));
 
     }
 }

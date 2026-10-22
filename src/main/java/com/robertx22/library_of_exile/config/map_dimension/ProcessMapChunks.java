@@ -35,7 +35,7 @@ public class ProcessMapChunks {
 
         for (int x = -terrain; x < terrain; x++) {
             for (int z = -terrain; z < terrain; z++) {
-                all.add(new ChunkPos(start.x + x, start.z + z));
+                all.add(new ChunkPos(start.x() + x, start.z() + z));
             }
         }
         return all;
@@ -48,10 +48,10 @@ public class ProcessMapChunks {
         var level = p.level();
 
         for (ChunkPos cpos : processChunks) {
-            if (!level.hasChunk(cpos.x, cpos.z)) {
+            if (!level.hasChunk(cpos.x(), cpos.z())) {
                 continue;
             }
-            ChunkAccess c = level.getChunk(cpos.x, cpos.z);
+            ChunkAccess c = level.getChunk(cpos.x(), cpos.z());
 
             if (c instanceof LevelChunk chunk) {
                 //var chunkdata = Load.chunkData(chunk);
@@ -65,10 +65,10 @@ public class ProcessMapChunks {
             }
         }
         for (ChunkPos cpos : spawnChunks) {
-            if (!level.hasChunk(cpos.x, cpos.z)) {
+            if (!level.hasChunk(cpos.x(), cpos.z())) {
                 continue;
             }
-            ChunkAccess c = level.getChunk(cpos.x, cpos.z);
+            ChunkAccess c = level.getChunk(cpos.x(), cpos.z());
 
             if (c instanceof LevelChunk chunk) {
                 spawnDataFromChunk(level, chunk, type);

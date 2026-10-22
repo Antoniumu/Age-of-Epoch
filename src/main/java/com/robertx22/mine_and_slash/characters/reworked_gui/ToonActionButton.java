@@ -54,7 +54,7 @@ public class ToonActionButton extends AbstractButton {
 
         if (action == Action.CREATE_CHARACTER) {
             Packets.sendToServer(new CreateCharPacket(screen.searchBox.getValue()));
-            Minecraft.getInstance().setScreen(null);
+            Minecraft.getInstance().gui.setScreen(null);
         } else {
 
             String name = screen.searchBox.getValue();
@@ -63,13 +63,13 @@ public class ToonActionButton extends AbstractButton {
 
                 if (action == Action.LOAD || action == Action.RENAME) {
                     Packets.sendToServer(new ToonActionPacket(action, screen.selectedEntry.num, name));
-                    Minecraft.getInstance().setScreen(null);
+                    Minecraft.getInstance().gui.setScreen(null);
                 }
 
                 if (action == Action.DELETE) {
-                    Minecraft.getInstance().setScreen(new ConfirmScreen(x -> {
+                    Minecraft.getInstance().gui.setScreen(new ConfirmScreen(x -> {
                                 Packets.sendToServer(new ToonActionPacket(action, screen.selectedEntry.num, name));
-                                Minecraft.getInstance().setScreen(null);
+                                Minecraft.getInstance().gui.setScreen(null);
 
                             },
                                     Words.DELETE.locName().withStyle(ChatFormatting.RED, ChatFormatting.BOLD),

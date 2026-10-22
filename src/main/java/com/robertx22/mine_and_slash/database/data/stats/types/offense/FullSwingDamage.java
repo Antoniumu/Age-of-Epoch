@@ -25,7 +25,7 @@ public class FullSwingDamage extends Stat {
         this.group = StatGroup.MAIN;
 
         this.icon = "\u2748";
-        this.format = ChatFormatting.RED.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.RED);
 
     }
 

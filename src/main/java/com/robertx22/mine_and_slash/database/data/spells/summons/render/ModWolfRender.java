@@ -9,52 +9,56 @@ import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.AABB;
 import org.joml.Matrix4f;
 
-public class ModWolfRender<T extends Mob> extends EntityRenderer<T, ModWolfRender.WolfSummonState> {
+public class ModWolfRender<T extends Mob> extends EntityRenderer<T, ModWolfRender.SummonRenderState> {
     private final Identifier texture;
-    private static final AABB HEAD = new AABB(-0.19, 0.38, 0.28, 0.19, 0.72, 0.62);
-    private static final AABB BODY = new AABB(-0.22, 0.32, -0.35, 0.22, 0.68, 0.30);
-    private static final AABB LEG_FL = new AABB(0.06, 0.0, 0.12, 0.20, 0.35, 0.26);
-    private static final AABB LEG_FR = new AABB(-0.20, 0.0, 0.12, -0.06, 0.35, 0.26);
-    private static final AABB LEG_BL = new AABB(0.06, 0.0, -0.30, 0.20, 0.35, -0.16);
-    private static final AABB LEG_BR = new AABB(-0.20, 0.0, -0.30, -0.06, 0.35, -0.16);
+    private static final AABB HEAD = new AABB(-0.24, 1.38, -0.24, 0.24, 1.86, 0.24);
+    private static final AABB BODY = new AABB(-0.24, 0.68, -0.13, 0.24, 1.38, 0.13);
+    private static final AABB ARM_L = new AABB(0.24, 0.70, -0.10, 0.42, 1.36, 0.10);
+    private static final AABB ARM_R = new AABB(-0.42, 0.70, -0.10, -0.24, 1.36, 0.10);
+    private static final AABB LEG_L = new AABB(0.02, 0.0, -0.10, 0.22, 0.68, 0.10);
+    private static final AABB LEG_R = new AABB(-0.22, 0.0, -0.10, -0.02, 0.68, 0.10);
 
     public ModWolfRender(Identifier id, EntityRendererProvider.Context ctx) {
         super(ctx);
         this.texture = id;
     }
 
-    public static class WolfSummonState extends EntityRenderState {
+    public static class SummonRenderState extends EntityRenderState {
         public float bodyYaw;
+        public int bodyColor = ARGB.colorFromFloat(0.95F, 0.68F, 0.78F, 0.88F);
+        public int trimColor = ARGB.colorFromFloat(0.85F, 0.28F, 0.65F, 0.95F);
     }
 
     @Override
-    public WolfSummonState createRenderState() {
-        return new WolfSummonState();
+    public SummonRenderState createRenderState() {
+        return new SummonRenderState();
     }
 
     @Override
-    public void extractRenderState(T entity, WolfSummonState state, float tickProgress) {
+    public void extractRenderState(T entity, SummonRenderState state, float tickProgress) {
         super.extractRenderState(entity, state, tickProgress);
         state.bodyYaw = entity.getYRot(tickProgress);
     }
 
     @Override
-    public void submit(WolfSummonState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState cameraState) {
+    public void submit(SummonRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState cameraState) {
         super.submit(state, poseStack, collector, cameraState);
         poseStack.pushPose();
         poseStack.mulPose(new Matrix4f().rotationY((float) Math.toRadians(-state.bodyYaw)));
-        int light = state.lightCoords;
-        collector.order(0).submitCustomGeometry(poseStack, RenderTypes.entityCutoutNoCull(this.texture), (pose, vc) -> {
-            MySpriteRenderer.drawTexturedBox(pose, vc, HEAD, light);
-            MySpriteRenderer.drawTexturedBox(pose, vc, BODY, light);
-            MySpriteRenderer.drawTexturedBox(pose, vc, LEG_FL, light);
-            MySpriteRenderer.drawTexturedBox(pose, vc, LEG_FR, light);
-            MySpriteRenderer.drawTexturedBox(pose, vc, LEG_BL, light);
-            MySpriteRenderer.drawTexturedBox(pose, vc, LEG_BR, light);
+        int cMain = state.bodyColor;
+        int cTrim = state.trimColor;
+        collector.order(0).submitCustomGeometry(poseStack, RenderTypes.debugFilledBox(), (pose, vc) -> {
+            MySpriteRenderer.drawFilledBox(pose, vc, HEAD, cMain);
+            MySpriteRenderer.drawFilledBox(pose, vc, BODY, cTrim);
+            MySpriteRenderer.drawFilledBox(pose, vc, ARM_L, cMain);
+            MySpriteRenderer.drawFilledBox(pose, vc, ARM_R, cMain);
+            MySpriteRenderer.drawFilledBox(pose, vc, LEG_L, cTrim);
+            MySpriteRenderer.drawFilledBox(pose, vc, LEG_R, cTrim);
         });
         poseStack.popPose();
     }

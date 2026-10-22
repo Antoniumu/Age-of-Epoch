@@ -9,7 +9,7 @@ public class TreasureQuantity extends Stat {
     private TreasureQuantity() {
         this.group = StatGroup.Misc;
         this.icon = "\u2663";
-        this.format = ChatFormatting.YELLOW.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.YELLOW);
     }
 
     public static TreasureQuantity getInstance() {

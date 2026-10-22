@@ -37,8 +37,8 @@ public class MapBonusContentsData {
     // calc chance in such a way that if a mechanic should spawn 5 times, and the dungeon has 20 chunks left, it scatters the spawn chunks but never accidentally not generates
     public float calcSpawnChance(BlockPos pos) {
 
-        var cp = new ChunkPos(pos);
-        var point = new PointData(cp.x, cp.z);
+        var cp = ChunkPos.containing(pos);
+        var point = new PointData(cp.x(), cp.z());
 
         if (mechsChunks.contains(point)) {
             return 0;

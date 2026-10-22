@@ -19,9 +19,9 @@ public class ClearStats {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(
                 literal(CommandRefs.ID)
-                        .then(literal("stat").requires(e -> e.hasPermission(2))
+                        .then(literal("stat").requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS))
                                 .then(literal("clear")
-                                        .requires(e -> e.hasPermission(2))
+                                        .requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS))
                                         .then(argument("target", EntityArgument.entity())
                                                 .then(argument("scaling", StringArgumentType.string())
                                                         .suggests(new GiveStat.ModOrExact())

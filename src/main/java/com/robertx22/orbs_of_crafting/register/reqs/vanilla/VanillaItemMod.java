@@ -46,8 +46,12 @@ public class VanillaItemMod extends ItemModification {
     @Override
     public void applyMod(Player p, StackHolder stack, ItemModificationResult r) {
         if (enchantLevels > 0 && p != null && p.level() != null) {
-            var reg = p.level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
-            stack.stack = EnchantmentHelper.enchantItem(p.getRandom(), stack.stack, enchantLevels, reg.listElements().map(h -> (net.minecraft.core.Holder<net.minecraft.world.item.enchantment.Enchantment>) h));
+            var list = p.level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).listElements().toList();
+            if (!list.isEmpty()) {
+                var picked = list.get(p.getRandom().nextInt(list.size()));
+                int lvl = Math.max(1, Math.min(3, enchantLevels / 10));
+                EnchantmentHelper.updateEnchantments(stack.stack, mut -> mut.set(picked, Math.max(lvl, mut.getLevel(picked))));
+            }
         }
     }
 

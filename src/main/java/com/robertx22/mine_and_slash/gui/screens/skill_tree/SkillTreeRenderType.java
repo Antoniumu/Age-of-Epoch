@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
 
 public class SkillTreeRenderType {
-    public static RenderType getSkillTreeRenderType(String name, Identifier texture) {
-        return RenderTypes.entityTranslucent(texture);
+    public static RenderType getSkillTreeRenderType(Identifier texture) {
+        return RenderTypes.debugFilledBox();
     }
 }

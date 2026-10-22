@@ -80,15 +80,13 @@ public class MnsConstructor extends OrderedModConstructor {
     @Override
     public void registerDatabaseEntries() {
         StatBuffs.load();
-
-        Ailments.init(); // todo will this cause problems. I need to really figure a good way to know when each registry should register
+        Ailments.init();
         new StatsRegister().registerAll();
-
-        GeneratedData.addAllObjectsToGenerate();
         LootChests.init();
         new ProphecyStarts().registerAll();
-
         SpecialStats.init();
+
+        GeneratedData.addAllObjectsToGenerate();
 
 
     }

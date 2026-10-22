@@ -157,7 +157,7 @@ public class EntityAilmentData {
                     tier = max;
                 }
                 if (tier > -1) {
-                    target.addEffect(new MobEffectInstance(com.robertx22.forge_compat.common.CompatHelper.wrapEffect(MobEffects.MOVEMENT_SLOWDOWN), 20 * 5, tier));
+                    target.addEffect(new MobEffectInstance(com.robertx22.forge_compat.common.CompatHelper.wrapEffect(MobEffects.SLOWNESS), 20 * 5, tier));
                 }
             }
         }

@@ -217,13 +217,13 @@ public class MainHubScreen extends BaseScreen implements INamedScreen {
         int aoeBtnX = this.guiLeft - 86;
         int aoeBtnY = this.guiTop + 6;
         this.publicAddButton(net.minecraft.client.gui.components.Button.builder(
-            Component.literal("§6Квесты"), b -> Minecraft.getInstance().setScreen(new com.robertx22.age_of_exile.questbook.QuestBookScreen())
+            Component.literal("§6Квесты"), b -> Minecraft.getInstance().gui.setScreen(new com.robertx22.age_of_exile.questbook.QuestBookScreen())
         ).bounds(aoeBtnX, aoeBtnY, 82, 18).build());
         this.publicAddButton(net.minecraft.client.gui.components.Button.builder(
-            Component.literal("§bГайды"), b -> Minecraft.getInstance().setScreen(new com.robertx22.age_of_exile.guides.GuidesScreen())
+            Component.literal("§bГайды"), b -> Minecraft.getInstance().gui.setScreen(new com.robertx22.age_of_exile.guides.GuidesScreen())
         ).bounds(aoeBtnX, aoeBtnY + 21, 82, 18).build());
         this.publicAddButton(net.minecraft.client.gui.components.Button.builder(
-            Component.literal("§eСимуляция"), b -> Minecraft.getInstance().setScreen(new com.robertx22.age_of_exile.simulation.SimulationScreen())
+            Component.literal("§eСимуляция"), b -> Minecraft.getInstance().gui.setScreen(new com.robertx22.age_of_exile.simulation.SimulationScreen())
         ).bounds(aoeBtnX, aoeBtnY + 42, 82, 18).build());
 
 
@@ -371,12 +371,12 @@ public class MainHubScreen extends BaseScreen implements INamedScreen {
         int p = PlayerPointsType.STATS.getFreePoints(mc.player);
         if (p > 0) {
             MutableComponent points = Gui.STATS_POINTS.locName().append(String.valueOf(p));
-            com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, points, guiLeft + 40 - mc.font.width(points) / 2, guiTop + 10, ChatFormatting.GREEN.getColor());
+            com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, points, guiLeft + 40 - mc.font.width(points) / 2, guiTop + 10, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.GREEN));
         }
 
         int lvl = Load.player(mc.player).miscInfo.area_lvl;
         MutableComponent areaLevel = Gui.AREA_LEVEL.locName().append(String.valueOf(lvl));
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, areaLevel, guiLeft + sizeX / 2 - mc.font.width(areaLevel) / 2, guiTop + sizeY + 5, ChatFormatting.YELLOW.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, areaLevel, guiLeft + sizeX / 2 - mc.font.width(areaLevel) / 2, guiTop + sizeY + 5, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.YELLOW));
 
     }
 

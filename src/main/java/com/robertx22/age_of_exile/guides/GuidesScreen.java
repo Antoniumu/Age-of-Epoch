@@ -72,21 +72,21 @@ public class GuidesScreen extends BaseScreen implements INamedScreen {
         }).bounds(listX, actY + 48, 134, 20).build());
 
         publicAddButton(Button.builder(Component.literal("§e← Меню персонажа"), b ->
-            Minecraft.getInstance().setScreen(new MainHubScreen())
+            Minecraft.getInstance().gui.setScreen(new MainHubScreen())
         ).bounds(listX, this.guiTop + this.sizeY - 28, 134, 20).build());
 
         int rightX = this.guiLeft + 150;
         int barY = this.guiTop + this.sizeY - 28;
         publicAddButton(Button.builder(Component.literal("§eТаланты"), b ->
-            Minecraft.getInstance().setScreen(new TalentsScreen())
+            Minecraft.getInstance().gui.setScreen(new TalentsScreen())
         ).bounds(rightX, barY, 72, 20).build());
 
         publicAddButton(Button.builder(Component.literal("§bЗаклинания"), b ->
-            Minecraft.getInstance().setScreen(new SpellSchoolScreen())
+            Minecraft.getInstance().gui.setScreen(new SpellSchoolScreen())
         ).bounds(rightX + 76, barY, 76, 20).build());
 
         publicAddButton(Button.builder(Component.literal("§aСтаты"), b ->
-            Minecraft.getInstance().setScreen(new StatScreen())
+            Minecraft.getInstance().gui.setScreen(new StatScreen())
         ).bounds(rightX + 156, barY, 66, 20).build());
     }
 

@@ -10,7 +10,7 @@ public class AuraCapacity extends Stat {
 
     private AuraCapacity() {
         this.icon = "\u2663";
-        this.format = ChatFormatting.AQUA.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.AQUA);
 
         this.base = 100;
         this.min = 0;

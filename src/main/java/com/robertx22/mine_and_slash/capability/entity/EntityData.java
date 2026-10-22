@@ -880,9 +880,9 @@ public class EntityData implements ICap, INeededForClient {
     public boolean LevelUp(Player player) {
 
         if (!CheckIfCanLevelUp()) {
-            player.displayClientMessage(Chats.Not_enough_experience.locName(), false);
+            player.sendSystemMessage(Chats.Not_enough_experience.locName());
         } else if (!CheckLevelCap()) {
-            player.displayClientMessage(Chats.Can_not_go_over_maximum_level.locName(), false);
+            player.sendSystemMessage(Chats.Can_not_go_over_maximum_level.locName());
         }
 
         if (CheckIfCanLevelUp() && CheckLevelCap()) {

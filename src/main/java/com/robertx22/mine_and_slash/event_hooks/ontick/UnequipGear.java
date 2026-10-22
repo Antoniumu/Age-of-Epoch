@@ -38,8 +38,7 @@ public class UnequipGear {
             } else {
                 PlayerUtils.giveItem(copy, player);
             }
-            player.displayClientMessage(txt
-                    , false);
+            player.sendSystemMessage(txt);
         } else {
             player.setItemSlot(slot, copy);
             System.out.print("Error in unequipping gear, weird!!!");
@@ -51,7 +50,7 @@ public class UnequipGear {
         ItemStack copy = stack.copy();
         handler.getStacks().setStackInSlot(number, ItemStack.EMPTY);
         PlayerUtils.giveItem(copy, player);
-        player.displayClientMessage(txt, false);
+        player.sendSystemMessage(txt);
     }
 
     public static void check(Player player) {

@@ -31,7 +31,7 @@ public class ListStatSourcesCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dis) {
         dis.register(
                 literal(CommandRefs.ID)
-                        .then(literal("list_stat_sources").requires(e -> e.hasPermission(0))
+                        .then(literal("list_stat_sources").requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_ALL))
                                 .then(argument("type", StringArgumentType.word()).suggests(new Sugg())
                                         .executes(ctx -> run(ctx.getSource().getPlayer(), StringArgumentType.getString(ctx, "type"))))));
     }

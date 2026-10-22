@@ -13,7 +13,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 
 public class HealParticle extends ExileInteractionResultParticle {
     private final float amount;
-    public static final int color = ChatFormatting.GREEN.getColor();
+    public static final int color = com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.GREEN);
 
     public HealParticle(ClientLevel clientLevel, double x, double y, double z, IParticleRenderStrategy strategy, float amount) {
         super(clientLevel, x, y, z, strategy);

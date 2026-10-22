@@ -77,13 +77,13 @@ public class SimulationScreen extends BaseScreen implements INamedScreen {
 
         int navY = this.guiTop + this.sizeY - 28;
         publicAddButton(Button.builder(Component.literal("§e← Меню"), b ->
-            Minecraft.getInstance().setScreen(new MainHubScreen())).bounds(x1, navY, 80, 20).build());
+            Minecraft.getInstance().gui.setScreen(new MainHubScreen())).bounds(x1, navY, 80, 20).build());
         publicAddButton(Button.builder(Component.literal("§eТаланты"), b ->
-            Minecraft.getInstance().setScreen(new TalentsScreen())).bounds(x1 + 86, navY, 84, 20).build());
+            Minecraft.getInstance().gui.setScreen(new TalentsScreen())).bounds(x1 + 86, navY, 84, 20).build());
         publicAddButton(Button.builder(Component.literal("§bСпеллы"), b ->
-            Minecraft.getInstance().setScreen(new SpellSchoolScreen())).bounds(x1 + 176, navY, 84, 20).build());
+            Minecraft.getInstance().gui.setScreen(new SpellSchoolScreen())).bounds(x1 + 176, navY, 84, 20).build());
         publicAddButton(Button.builder(Component.literal("§aСтаты"), b ->
-            Minecraft.getInstance().setScreen(new StatScreen())).bounds(x1 + 266, navY, 74, 20).build());
+            Minecraft.getInstance().gui.setScreen(new StatScreen())).bounds(x1 + 266, navY, 74, 20).build());
     }
 
     @Override

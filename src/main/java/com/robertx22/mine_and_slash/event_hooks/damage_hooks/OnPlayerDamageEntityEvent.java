@@ -31,7 +31,7 @@ public class OnPlayerDamageEntityEvent extends EventConsumer<ExileEvents.OnDamag
                 event.damage = 0;
                 return;
             }
-            if (event.source.is(DamageTypes.FELL_OUT_OF_WORLD)) {
+            if (event.source.is(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.DAMAGE_TYPE, net.minecraft.resources.Identifier.fromNamespaceAndPath("minecraft", "out_of_world")))) {
                 return;
             }
             // stop mobs from being killed b4 they even had time to calculate stats?

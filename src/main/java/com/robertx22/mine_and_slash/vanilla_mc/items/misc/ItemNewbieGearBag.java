@@ -21,7 +21,6 @@ import net.minecraft.world.entity.player.Player;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 
@@ -138,7 +137,7 @@ public class ItemNewbieGearBag extends Item {
                             .shrink(1);
 
                 } else {
-                    playerIn.displayClientMessage(Component.literal("Choose your path to open this. (Press [H] and then open Talent Tree scren"), false);
+                    playerIn.sendSystemMessage(Component.literal("Choose your path to open this. (Press [H] and then open Talent Tree screen)"));
                 }
 
                 return InteractionResult.PASS;

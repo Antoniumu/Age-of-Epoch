@@ -1,18 +1,13 @@
 {
   "type": "the_harvest:harvest",
   "generator": {
-    "type": "the_harvest:harvest_chunk_gen",	
-	"map_id": "harvest",
+    "type": "minecraft:flat",
     "settings": {
-      "biome": "the_harvest:harvest_biome",
-      "lakes": false,
+      "biome": "minecraft:the_void",
       "features": false,
-      "layers": [
-        {
-          "block": "minecraft:bedrock",
-          "height": 384
-        }
-      ]
+      "lakes": false,
+      "layers": [],
+      "structure_overrides": []
     }
   }
 }

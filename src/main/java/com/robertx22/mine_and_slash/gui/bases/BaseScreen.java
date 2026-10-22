@@ -35,8 +35,8 @@ public class BaseScreen extends Screen {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 
         // todo make this less wack
-        if (KeybindsRegister.HUB_SCREEN_KEY.matches(keyCode, scanCode) && !StatScreen.SEARCH.isFocused() && !SkillTreeScreen.SEARCH.isFocused()) {
-            Minecraft.getInstance().setScreen(null);
+        if (KeybindsRegister.HUB_SCREEN_KEY.matches(com.mojang.blaze3d.platform.InputConstants.Type.KEYBOARD.getOrCreate(keyCode)) && !StatScreen.SEARCH.isFocused() && !SkillTreeScreen.SEARCH.isFocused()) {
+            Minecraft.getInstance().gui.setScreen(null);
             OnKeyPress.cooldown = 5;
             return false;
 

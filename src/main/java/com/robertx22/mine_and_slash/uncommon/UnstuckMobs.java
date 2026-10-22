@@ -15,7 +15,7 @@ public class UnstuckMobs {
         if (en.isInWall()) {
             for (Direction dir : dirs) {
                 for (int i = 1; i < 3; i++) {
-                    if (!en.level().getBlockState(en.blockPosition().relative(dir)).isSolid()) {
+                    if (!!en.level().isEmptyBlock(en.blockPosition().relative(dir))) {
                         var tp = en.blockPosition().relative(dir, i);
                         en.teleportTo(tp.getX(), tp.getY(), tp.getZ());
                         break;

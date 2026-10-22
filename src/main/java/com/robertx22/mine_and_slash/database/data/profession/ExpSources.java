@@ -70,7 +70,7 @@ public class ExpSources {
 
             if (type == Type.BLOCK_TAG) {
                 if (obj instanceof TagKey<?> in) {
-                    return in.location().equals(Identifier.parse(String.valueOf(id)));
+                    return in.identifier().equals(Identifier.parse(String.valueOf(id)));
                 }
             }
             if (type == Type.BLOCK) {

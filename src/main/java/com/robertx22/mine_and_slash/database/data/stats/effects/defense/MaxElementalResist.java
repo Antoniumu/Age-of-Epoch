@@ -28,7 +28,7 @@ public class MaxElementalResist extends ElementalStat {
         this.is_perc = true;
         this.scaling = StatScaling.NONE;
 
-        this.format = element.format.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(element.format);
         this.icon = element.icon;
 
         this.max = 15;

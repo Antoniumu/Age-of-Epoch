@@ -34,7 +34,7 @@ public class BlockChance extends Stat {
 
         this.statEffect = new BlockChance.Effect();
 
-        this.format = ChatFormatting.BLUE.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.BLUE);
 
     }
 

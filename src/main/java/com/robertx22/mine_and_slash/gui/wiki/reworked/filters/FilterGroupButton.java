@@ -22,7 +22,7 @@ public class FilterGroupButton extends AbstractButton {
     }
 
     public void onPress() {
-        Minecraft.getInstance().setScreen(new FilterSelectScreen(this, screen, filter));
+        Minecraft.getInstance().gui.setScreen(new FilterSelectScreen(this, screen, filter));
     }
 
     @Override

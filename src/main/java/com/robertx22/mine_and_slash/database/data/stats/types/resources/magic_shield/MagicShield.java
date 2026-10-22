@@ -20,7 +20,7 @@ public class MagicShield extends Stat {
 
         this.order = 0;
         this.icon = "\u2764";
-        this.format = ChatFormatting.LIGHT_PURPLE.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.LIGHT_PURPLE);
 
     }
 
@@ -68,7 +68,7 @@ public class MagicShield extends Stat {
             if (dmgReduced > 0) {
 
                 SoundUtils.playSound(effect.target, com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.GENERIC_HURT), 0.5F, 1);
-                SoundUtils.playSound(effect.target, com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.GUARDIAN_HURT), 1, 1);
+                SoundUtils.playSound(effect.target, com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("entity.guardian.hurt"))), 1, 1);
 
                
                 effect.targetData.getResources().spend(effect.target, ResourceType.magic_shield, dmgReduced);

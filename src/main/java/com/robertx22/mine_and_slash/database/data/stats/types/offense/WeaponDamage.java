@@ -26,7 +26,7 @@ public class WeaponDamage extends Stat {
         this.group = StatGroup.MAIN;
 
         this.icon = Elements.Cold.icon;
-        this.format = ChatFormatting.GOLD.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.GOLD);
 
     }
 

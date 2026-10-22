@@ -7,5 +7,5 @@ import net.minecraft.resources.Identifier;
 
 public class NeatRenderType {
     public static final Identifier HEALTH_BAR_TEXTURE = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/health_bar_texture.png");
-    public static final RenderType BAR_TEXTURE_TYPE = RenderTypes.entityTranslucent(HEALTH_BAR_TEXTURE);
+    public static final RenderType BAR_TEXTURE_TYPE = RenderTypes.debugQuads();
 }

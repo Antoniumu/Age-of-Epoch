@@ -71,9 +71,9 @@ public class ToonEntry extends ObjectSelectionList.Entry<ToonEntry> {
         int y = pTop;
 
         Component lvl = Component.literal("" + data.lvl).withStyle(ChatFormatting.YELLOW);
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawCenteredString(gui, mc.font, lvl, x + 10, y + 5, ChatFormatting.YELLOW.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawCenteredString(gui, mc.font, lvl, x + 10, y + 5, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.YELLOW));
         Component nameTxt = Component.literal("" + data.name).withStyle(ChatFormatting.GREEN);
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, nameTxt, x + 75, y + 5, ChatFormatting.GREEN.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, nameTxt, x + 75, y + 5, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.GREEN));
 
 
         x = 25;

@@ -28,7 +28,7 @@ public class Armor extends Stat implements IUsableStat {
         this.group = StatGroup.MAIN;
 
         this.icon = UNICODE.STAR;
-        this.format = ChatFormatting.BLUE.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.BLUE);
 
         this.statEffect = new ArmorEffect();
 

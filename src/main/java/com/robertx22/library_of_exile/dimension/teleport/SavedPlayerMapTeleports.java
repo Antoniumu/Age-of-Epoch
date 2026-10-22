@@ -58,8 +58,8 @@ public class SavedPlayerMapTeleports {
 
     public void teleportHome(Player p) {
         var dim = home.getDimensionId();
-        if (p.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, dim)) == null) {
-            dim = p.getServer().overworld().dimension().identifier();
+        if (p.level().getServer().getLevel(ResourceKey.create(Registries.DIMENSION, dim)) == null) {
+            dim = p.level().getServer().overworld().dimension().identifier();
         }
         teleport(p, dim, home.getPos());
     }

@@ -26,7 +26,7 @@ public class MapBossMB extends MapDataBlock {
     @Override
     public void processImplementationINTERNAL(String s, BlockPos pos, Level level, CompoundTag nbt, MapBlockCtx ctx) {
 
-        var arena = DungeonMain.ARENA.getArena(new ChunkPos(pos));
+        var arena = DungeonMain.ARENA.getArena(ChunkPos.containing(pos));
 
         EntityType<? extends LivingEntity> type = arena.getRandomBoss();
 

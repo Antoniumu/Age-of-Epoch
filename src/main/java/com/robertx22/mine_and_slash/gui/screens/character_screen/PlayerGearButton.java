@@ -61,7 +61,7 @@ public class PlayerGearButton extends ImageButton {
         // player 3d view
         
 
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, str, this.getX() + xSize / 2 - mc.font.width(str) / 2, this.getY() + 6, ChatFormatting.YELLOW.getColor());
+        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(gui, mc.font, str, this.getX() + xSize / 2 - mc.font.width(str) / 2, this.getY() + 6, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.YELLOW));
 
 
     }

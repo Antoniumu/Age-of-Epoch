@@ -15,7 +15,7 @@ public class Health extends Stat {
 
         this.order = 0;
         this.icon = "\u2764";
-        this.format = ChatFormatting.RED.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.RED);
 
     }
 

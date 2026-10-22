@@ -38,8 +38,7 @@ public class CasterCommandAction extends SpellAction {
                 CommandUtils.execute(p, command);
             }
             /*
-            ctx.caster
-                .getServer()
+            ctx.caster.level().getServer()
                 .getCommands()
                 .performCommand(source, command);
 

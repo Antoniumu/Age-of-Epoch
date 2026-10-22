@@ -21,7 +21,7 @@ public abstract class ElementalStat extends Stat implements IElementalGenerated<
         this.show_in_gui = element != Elements.Elemental;
 
         if (getElement() != null) {
-            this.format = getElement().format.getName();
+            this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(getElement().format);
             this.icon = getElement().icon;
         }
     }

@@ -8,7 +8,7 @@ public class TreasureQuality extends Stat {
 
     private TreasureQuality() {
         this.icon = "\u2663";
-        this.format = ChatFormatting.AQUA.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.AQUA);
         this.max = 150;
     }
 

@@ -115,7 +115,7 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
         this.yTile = -1;
         this.zTile = -1;
 
-        this.setSoundEvent(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.EMPTY));
+        this.setSoundEvent(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("intentionally_empty"))));
     }
 
     protected void moveToImpactPosition(HitResult result) {

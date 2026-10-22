@@ -143,9 +143,9 @@ public class SummonSpells implements ExileRegistryInit {
                 .singleAnimation(SpellAnimations.PULL)
 
                 .manualDesc("Regroup your summons and heal them for " + SpellCalcs.HEALING_AURA.getLocDmgTooltip() + " health.")
-                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.STONE_BREAK), 1D, 1D))
+                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.fromNamespaceAndPath("minecraft", "block.stone.break"))), 1D, 1D))
                 .onCast(PartBuilder.justAction(SpellAction.TP_TARGET_TO_SELF.create())
-                        .addActions(SpellAction.POTION.createGive(MobEffects.MOVEMENT_SLOWDOWN, 20D * 5))
+                        .addActions(SpellAction.POTION.createGive(MobEffects.SLOWNESS, 20D * 5))
                         .addActions(SpellAction.DEAL_DAMAGE.create(SpellCalcs.PULL, Elements.Physical))
                         .addActions(SpellAction.EXILE_EFFECT.create(ModEffects.STUN.resourcePath, ExileEffectAction.GiveOrTake.GIVE_STACKS, 20D * 2))
                         .addTarget(TargetSelector.AOE.create(30D, EntityFinder.SelectionType.RADIUS, AllyOrEnemy.pets))

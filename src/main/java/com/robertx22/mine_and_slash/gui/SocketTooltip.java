@@ -28,7 +28,10 @@ public class SocketTooltip implements ClientTooltipComponent {
         return Math.max(20, gems.size() * 18);
     }
 
-    @Override
+    public void extractImage(Font font, int x, int y, GuiGraphicsExtractor gfx) {
+        extractImage(font, x, y, getWidth(font), getHeight(font), gfx);
+    }
+
     public void extractImage(Font font, int x, int y, int width, int height, GuiGraphicsExtractor gfx) {
         int xp = x;
         for (SocketData socket : gems) {

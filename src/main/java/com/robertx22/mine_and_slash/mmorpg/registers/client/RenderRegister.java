@@ -21,7 +21,7 @@ public class RenderRegister {
         x.registerEntityRenderer(SlashEntities.FIRE_GOLEM.get(), ctx -> new ModSkeletonRender<>(SlashRef.id("textures/entity/fire_golem.png"), ctx));
         x.registerEntityRenderer(SlashEntities.COLD_GOLEM.get(), ctx -> new ModSkeletonRender<>(SlashRef.id("textures/entity/cold_golem.png"), ctx));
         x.registerEntityRenderer(SlashEntities.LIGHTNING_GOLEM.get(), ctx -> new ModSkeletonRender<>(SlashRef.id("textures/entity/lightning_golem.png"), ctx));
-        x.registerEntityRenderer(SlashEntities.SIMPLE_PROJECTILE.get(), d -> new MySpriteRenderer<>(d, Minecraft.getInstance().getItemRenderer()));
+        x.registerEntityRenderer(SlashEntities.SIMPLE_PROJECTILE.get(), d -> new MySpriteRenderer<>(d, null));
         x.registerEntityRenderer(SlashEntities.SIMPLE_ARROW.get(), RangerArrowRenderer::new);
         x.registerEntityRenderer(SlashEntities.SIMPLE_BLOCK_ENTITY.get(), FallingBlockRenderer::new);
         x.registerEntityRenderer(SlashEntities.SIMPLE_TRIDENT.get(), ModTridentRenderer::new);

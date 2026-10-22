@@ -102,7 +102,7 @@ public class RangerSpells implements ExileRegistryInit {
                 .onTick(PartBuilder.particleOnTick(1D, ParticleTypes.CRIT, 10D, 0.01D))
                 .onExpire(PartBuilder.damageInAoe(SpellCalcs.BOOMERANG, Elements.Physical, 1D))
                 .onExpire(PartBuilder.aoeParticles(ParticleTypes.CRIT, 50D, 0.5D))
-                .onExpire(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.TRIDENT_HIT), 1D, 1D))
+                .onExpire(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("item.trident.hit"))), 1D, 1D))
                 .levelReq(1)
                 .build();
 
@@ -174,7 +174,7 @@ public class RangerSpells implements ExileRegistryInit {
                 .onHit(PartBuilder.aoeParticles(ParticleTypes.CRIT, 100D, 1D))
                 .onHit(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.ARROW_HIT), 1D, 1D))
                 .onHit(PartBuilder.damageInAoe(SpellCalcs.CHARGED_BOLT, Elements.Nature, 2D)
-                        .addPerEntityHit(PartBuilder.justAction(SpellAction.POTION.createGive(MobEffects.MOVEMENT_SLOWDOWN, 40D))))
+                        .addPerEntityHit(PartBuilder.justAction(SpellAction.POTION.createGive(MobEffects.SLOWNESS, 40D))))
                 .onTick(PartBuilder.particleOnTick(1D, ParticleTypes.CRIT, 4D, 0.1D))
                 .onTick(PartBuilder.particleOnTick(1D, ParticleTypes.ENCHANTED_HIT, 4D, 0.1D))
                 .levelReq(1)
@@ -185,9 +185,9 @@ public class RangerSpells implements ExileRegistryInit {
                         .setChargesAndRegen("quickdraw", 3, 20 * 60), "Quickdraw", Arrays.asList())
                 .manualDesc("Your bow now fires instantly, and you gain a stack of arrows if you don't have infinity.")
 
-                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.WOLF_HOWL), 1D, 1D))
+                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("entity.wolf.howl"))), 1D, 1D))
                 .onCast(PartBuilder.giveSelfEffect(SlashPotions.INSTANT_ARROWS.get(), 20D * 10, 16D))
-                .onCast(PartBuilder.giveSelfEffect(MobEffects.MOVEMENT_SPEED, 20D * 3))
+                .onCast(PartBuilder.giveSelfEffect(MobEffects.SPEED, 20D * 3))
                 .onCast(PartBuilder.justAction(SpellAction.GIVE_ARROWS.create()))
                 .levelReq(10)
                 .build();
@@ -213,7 +213,7 @@ public class RangerSpells implements ExileRegistryInit {
         SpellBuilder.of(GALE_WIND, PlayStyle.DEX, SpellConfiguration.Builder.multiCast(20, 20 * 10, 10, 3), "Gale Wind",
                         Arrays.asList(SpellTags.projectile, SpellTags.damage, SpellTags.PHYSICAL))
                 .manualDesc("Summons multiple clouds, knocking back and dealing " + SpellCalcs.GALE_WIND.getLocDmgTooltip(Elements.Physical))
-                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.EGG_THROW), 1D, 0.5D))
+                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("entity.egg.throw"))), 1D, 0.5D))
                 .onCast(PartBuilder.justAction(SpellAction.SUMMON_PROJECTILE.create(Items.AIR, 5D, 0.5D, SlashEntities.SIMPLE_PROJECTILE.get(), 40D, false)))
 
                 .onTick(PartBuilder.particleOnTick(2D, ParticleTypes.CLOUD, 3D, 0.1D))
@@ -254,7 +254,7 @@ public class RangerSpells implements ExileRegistryInit {
                 .onExpire(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.ARROW_HIT), 1D, 1D))
                 .onExpire(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.GENERIC_EXPLODE), 1D, 1D))
                 .onExpire(PartBuilder.damageInAoe(SpellCalcs.EXPLOSIVE_ARROW, Elements.Fire, 2D)
-                        .addPerEntityHit(PartBuilder.justAction(SpellAction.POTION.createGive(MobEffects.MOVEMENT_SLOWDOWN, 40D))))
+                        .addPerEntityHit(PartBuilder.justAction(SpellAction.POTION.createGive(MobEffects.SLOWNESS, 40D))))
                 .onTick(PartBuilder.particleOnTick(1D, ParticleTypes.CRIT, 4D, 0.1D))
                 .levelReq(10)
                 .build();

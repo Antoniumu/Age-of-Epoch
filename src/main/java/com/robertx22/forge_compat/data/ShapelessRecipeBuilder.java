@@ -1,5 +1,6 @@
 package com.robertx22.forge_compat.data;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -8,18 +9,15 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
-public class ShapelessRecipeBuilder implements net.minecraft.data.recipes.RecipeBuilder {
-    public static ShapelessRecipeBuilder shapeless(net.minecraft.data.recipes.RecipeCategory cat, net.minecraft.world.level.ItemLike out) { return shapeless(out); }
-    public static ShapelessRecipeBuilder shapeless(net.minecraft.data.recipes.RecipeCategory cat, net.minecraft.world.level.ItemLike out, int count) { return shapeless(out, count); }
-    public ShapelessRecipeBuilder unlockedBy(String name, Object criterion) { return this; }
-    @Override public ShapelessRecipeBuilder unlockedBy(String name, net.minecraft.advancements.Criterion<?> criterion) { return this; }
-    @Override public net.minecraft.world.item.Item getResult() { return this.result.asItem(); }
-    @Override public void save(net.minecraft.data.recipes.RecipeOutput out, net.minecraft.resources.ResourceKey<net.minecraft.world.item.crafting.Recipe<?>> id) {}
-
+public class ShapelessRecipeBuilder implements RecipeBuilder {
     private final Item result;
     private final int count;
+    private final List<String> ingredients = new ArrayList<>();
+    private String group;
 
     public ShapelessRecipeBuilder(ItemLike result, int count) {
         this.result = result.asItem();
@@ -34,15 +32,28 @@ public class ShapelessRecipeBuilder implements net.minecraft.data.recipes.Recipe
         return new ShapelessRecipeBuilder(result, count);
     }
 
+    public static ShapelessRecipeBuilder shapeless(Object category, ItemLike result) {
+        return new ShapelessRecipeBuilder(result, 1);
+    }
+
+    public static ShapelessRecipeBuilder shapeless(Object category, ItemLike result, int count) {
+        return new ShapelessRecipeBuilder(result, count);
+    }
+
     public ShapelessRecipeBuilder requires(TagKey<Item> tag) {
+        this.ingredients.add("#" + tag.identifier().toString());
         return this;
     }
 
     public ShapelessRecipeBuilder requires(ItemLike item) {
-        return this;
+        return requires(item, 1);
     }
 
     public ShapelessRecipeBuilder requires(ItemLike item, int quantity) {
+        String id = BuiltInRegistries.ITEM.getKey(item.asItem()).toString();
+        for (int i = 0; i < quantity; i++) {
+            this.ingredients.add(id);
+        }
         return this;
     }
 
@@ -54,22 +65,27 @@ public class ShapelessRecipeBuilder implements net.minecraft.data.recipes.Recipe
         return this;
     }
 
-    public ShapelessRecipeBuilder unlockedBy(String name, CriterionTriggerInstance criterion) {
-        return this;
-    }
-
     public ShapelessRecipeBuilder group(String group) {
+        this.group = group;
         return this;
     }
 
+    public ShapelessRecipeBuilder unlockedBy(String name, Object criterion) {
+        return this;
+    }
+
+    @Override
+    public Item getResult() {
+        return this.result;
+    }
+
+    @Override
     public void save(Consumer<IFinishedRecipe> consumer) {
-        save(consumer, BuiltInRegistries.ITEM.getKey(this.result));
+        Identifier id = BuiltInRegistries.ITEM.getKey(this.result);
+        save(consumer, id);
     }
 
-    public void save(Consumer<IFinishedRecipe> consumer, String id) {
-        save(consumer, Identifier.parse(id));
-    }
-
+    @Override
     public void save(Consumer<IFinishedRecipe> consumer, Identifier id) {
         consumer.accept(new IFinishedRecipe() {
             @Override
@@ -79,7 +95,22 @@ public class ShapelessRecipeBuilder implements net.minecraft.data.recipes.Recipe
 
             @Override
             public JsonObject serializeRecipe() {
-                return new JsonObject();
+                JsonObject root = new JsonObject();
+                root.addProperty("type", "minecraft:crafting_shapeless");
+                root.addProperty("category", "misc");
+                if (group != null && !group.isEmpty()) {
+                    root.addProperty("group", group);
+                }
+                JsonArray arr = new JsonArray();
+                for (String ing : ingredients) {
+                    arr.add(ing);
+                }
+                root.add("ingredients", arr);
+                JsonObject resObj = new JsonObject();
+                resObj.addProperty("id", BuiltInRegistries.ITEM.getKey(result).toString());
+                resObj.addProperty("count", count);
+                root.add("result", resObj);
+                return root;
             }
         });
     }

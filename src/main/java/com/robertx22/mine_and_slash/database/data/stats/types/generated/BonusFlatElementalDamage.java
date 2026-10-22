@@ -32,7 +32,7 @@ public class BonusFlatElementalDamage extends ElementalStat {
         this.group = StatGroup.ELEMENTAL;
         this.statEffect = new Effect();
 
-        this.format = element.format.getName();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(element.format);
         this.icon = element.icon;
 
     }

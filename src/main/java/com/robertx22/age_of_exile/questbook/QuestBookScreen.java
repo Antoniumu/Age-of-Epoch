@@ -57,7 +57,7 @@ public class QuestBookScreen extends BaseScreen implements INamedScreen {
         }
 
         publicAddButton(Button.builder(Component.literal("§e← В меню персонажа"), b ->
-            Minecraft.getInstance().setScreen(new MainHubScreen())
+            Minecraft.getInstance().gui.setScreen(new MainHubScreen())
         ).bounds(navX, this.guiTop + this.sizeY - 28, 118, 20).build());
 
         List<QuestBookCatalog.QuestEntry> entries = getVisibleEntries();

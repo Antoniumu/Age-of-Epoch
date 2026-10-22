@@ -68,12 +68,12 @@ public class HolySpells implements ExileRegistryInit {
                                 + " " + Elements.Nature.getIconNameDmg() + ".")
 
                 .weaponReq(CastingWeapon.MAGE_WEAPON)
-                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.WITCH_THROW), 1D, 2D))
+                .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("entity.witch.throw"))), 1D, 2D))
                 .onCast(PartBuilder.justAction(SpellAction.SUMMON_PROJECTILE.create(Items.AIR, 1D, 0.3D, SlashEntities.SIMPLE_PROJECTILE.get(), 20 * 8D, false)
                         .put(MapField.TRACKS_ENEMIES, true)
                         .put(MapField.EXPIRE_ON_ENTITY_HIT, true)
                 ))
-                .onTick(ParticleBuilder.of(ParticleTypes.END_ROD, 0.03F).amount(3).build())
+                .onTick(ParticleBuilder.of(((net.minecraft.core.particles.SimpleParticleType) net.minecraft.core.registries.BuiltInRegistries.PARTICLE_TYPE.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("end_rod"))), 0.03F).amount(3).build())
                 .onTick(ParticleBuilder.of(ParticleTypes.ENCHANT, 0.03F).amount(3).build())
 
                 .onHit(DamageBuilder.target(Elements.Nature, SpellCalcs.HOLY_MISSILES).build())
@@ -155,7 +155,7 @@ public class HolySpells implements ExileRegistryInit {
                 .animations(AnimationHolder.none(), SpellAnimations.PULL)
                 .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.ANVIL_HIT), 1D, 1D))
                 .onCast(PartBuilder.justAction(SpellAction.TP_TARGET_TO_SELF.create())
-                        .addActions(SpellAction.POTION.createGive(MobEffects.MOVEMENT_SLOWDOWN, 20D * 5))
+                        .addActions(SpellAction.POTION.createGive(MobEffects.SLOWNESS, 20D * 5))
                         .addActions(SpellAction.DEAL_DAMAGE.create(SpellCalcs.PULL, Elements.Physical))
                         .addActions(SpellAction.EXILE_EFFECT.create(ModEffects.STUN.resourcePath, ExileEffectAction.GiveOrTake.GIVE_STACKS, 20D * 2))
                         .addTarget(TargetSelector.AOE.create(8D, EntityFinder.SelectionType.RADIUS, AllyOrEnemy.enemies)))

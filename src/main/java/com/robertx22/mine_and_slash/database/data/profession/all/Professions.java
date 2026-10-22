@@ -200,7 +200,7 @@ public class Professions {
 
         public Builder blockTag(SkillItemTier tier, int exp, TagKey<Block>... blocks) {
             for (TagKey<Block> block : blocks) {
-                this.p.exp_sources.add(tier, ExpSources.Type.BLOCK_TAG, block.location().toString(), exp);
+                this.p.exp_sources.add(tier, ExpSources.Type.BLOCK_TAG, block.identifier().toString(), exp);
             }
             return this;
         }

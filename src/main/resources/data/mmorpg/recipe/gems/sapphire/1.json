@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "mmorpg:gems/sapphire/0",
+    "mmorpg:gems/sapphire/0",
+    "mmorpg:gems/sapphire/0"
+  ],
+  "result": {
+    "id": "mmorpg:gems/sapphire/1",
+    "count": 1
+  }
+}

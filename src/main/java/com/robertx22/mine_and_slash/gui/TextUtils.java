@@ -24,7 +24,7 @@ public class TextUtils {
         float yf = (float) ((double) yp * antiScale);
 
 
-        gui.text(mc.font, text, (int) xf, (int) yf, (color.getColor() == null ? 0xFFFFFFFF : color.getColor()), true);
+        gui.text(mc.font, text, (int) xf, (int) yf, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(color), true);
 
 
         gui.pose().scale((float)(antiScale), (float)(antiScale));

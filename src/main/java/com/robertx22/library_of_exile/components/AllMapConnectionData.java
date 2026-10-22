@@ -19,7 +19,7 @@ public class AllMapConnectionData {
 
     public String createKey(MapDimensionInfo struc, BlockPos pos) {
         var c = struc.structure.getStartChunkPos(pos);
-        return struc.dimensionId.toString() + "-" + c.x + "_" + c.z;
+        return struc.dimensionId.toString() + "-" + c.x() + "_" + c.z();
     }
 
     public Data getDataFromKey(String key) {

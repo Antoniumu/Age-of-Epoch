@@ -38,17 +38,17 @@ public class ItemUtils {
                 GearRarity rar = (GearRarity) gear.getRarity();
 
                 if (rar.announce_in_chat) {
-                    MutableComponent message = Chats.FOUND_ITEM.locName(player.getName().plainCopy().withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.LIGHT_PURPLE), rar.locName()
+                    MutableComponent message = Chats.FOUND_ITEM.locName(player.getName().copy().withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.LIGHT_PURPLE), rar.locName()
                                     .withStyle(rar.textFormatting())
                                     .withStyle(ChatFormatting.BOLD))
                             .withStyle(ChatFormatting.BOLD)
                             .withStyle(ChatFormatting.LIGHT_PURPLE);
 
 
-                    player.getServer()
+                    player.level().getServer()
                             .getPlayerList()
                             .getPlayers()
-                            .forEach(x -> x.displayClientMessage(message, false));
+                            .forEach(x -> x.sendSystemMessage(message));
 
                 }
 

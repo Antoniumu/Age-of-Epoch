@@ -95,7 +95,7 @@ public class HubStatButton extends ImageButton {
 
         String stattext = CharacterStatsButtons.getHubStatString(stat.GetStat(), Load.Unit(ClientOnly.getPlayer()));
 
-        // com.robertx22.forge_compat.client.GuiBlitHelper.drawCenteredString(gui, Minecraft.getInstance().font, stattext, getX() + numX, getY() + numY, ChatFormatting.YELLOW.getColor());
+        // com.robertx22.forge_compat.client.GuiBlitHelper.drawCenteredString(gui, Minecraft.getInstance().font, stattext, getX() + numX, getY() + numY, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.YELLOW));
 
 
         GuiUtils.renderScaledText(gui, getX() + numX, getY() + numY, 0.75F, stattext, ChatFormatting.YELLOW);

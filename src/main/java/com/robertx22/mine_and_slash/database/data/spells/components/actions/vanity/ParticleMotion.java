@@ -27,7 +27,7 @@ public enum ParticleMotion {
         public Vec3 getMotion(Vec3 particlePos, Vec3 casterAngle, Vec3 sourcePos) {
 
             Vec3 c = sourcePos;
-            c = new Vec3(c.x, 0, c.z);
+            c = new Vec3(c.x(), 0, c.z());
 
             Vec3 p = particlePos;
             p = new Vec3(p.x, 0, p.z);

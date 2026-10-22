@@ -47,7 +47,7 @@ public class TotemSpells implements ExileRegistryInit {
                         .put(MapField.IS_BLOCK_FALLING, false)))
 
 
-                .onTick("block", PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.AMETHYST_BLOCK_CHIME), 0.5D, 1D)
+                .onTick("block", PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("block.amethyst_block.chime"))), 0.5D, 1D)
                         .addCondition(EffectCondition.EVERY_X_TICKS.create(20D)))
 
                 .onTick("block", PartBuilder.particleOnTick(2D, particle, 2D, 0.5D))
