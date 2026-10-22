@@ -194,8 +194,8 @@ public final class PropertiesIdHelper {
                     if (!loc.getPath().startsWith("auto_item_") && !loc.getPath().startsWith("auto_block_")) {
                         continue;
                     }
-                    boolean inItem = rk.registry() == Registries.ITEM && BuiltInRegistries.ITEM.containsKey((ResourceKey) rk);
-                    boolean inBlock = rk.registry() == Registries.BLOCK && BuiltInRegistries.BLOCK.containsKey((ResourceKey) rk);
+                    boolean inItem = Registries.ITEM.identifier().equals(rk.registry()) && BuiltInRegistries.ITEM.containsKey(loc);
+                    boolean inBlock = Registries.BLOCK.identifier().equals(rk.registry()) && BuiltInRegistries.BLOCK.containsKey(loc);
                     if (!inItem && !inBlock) {
                         toRemove.add(entry);
                     }
@@ -206,6 +206,44 @@ public final class PropertiesIdHelper {
                 entries.removeAll(toRemove);
             }
         } catch (Throwable ignored) {
+        }
+    }
+
+    private static synchronized void resolveBlockProps() {
+        if (blockPropsResolved) {
+            return;
+        }
+        blockPropsResolved = true;
+        try {
+            blockPropsSetId = BlockBehaviour.Properties.class.getMethod("setId", ResourceKey.class);
+            blockPropsSetId.setAccessible(true);
+        } catch (Throwable ignored) {
+        }
+        for (Field f : BlockBehaviour.Properties.class.getDeclaredFields()) {
+            if (ResourceKey.class.isAssignableFrom(f.getType())) {
+                f.setAccessible(true);
+                blockPropsIdField = f;
+                break;
+            }
+        }
+    }
+
+    private static synchronized void resolveItemProps() {
+        if (itemPropsResolved) {
+            return;
+        }
+        itemPropsResolved = true;
+        try {
+            itemPropsSetId = Item.Properties.class.getMethod("setId", ResourceKey.class);
+            itemPropsSetId.setAccessible(true);
+        } catch (Throwable ignored) {
+        }
+        for (Field f : Item.Properties.class.getDeclaredFields()) {
+            if (ResourceKey.class.isAssignableFrom(f.getType())) {
+                f.setAccessible(true);
+                itemPropsIdField = f;
+                break;
+            }
         }
     }
 }
