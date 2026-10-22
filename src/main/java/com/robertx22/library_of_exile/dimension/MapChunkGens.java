@@ -1,6 +1,7 @@
 package com.robertx22.library_of_exile.dimension;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.robertx22.library_of_exile.events.base.EventConsumer;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -21,11 +22,12 @@ public class MapChunkGens {
     public static void registerMapChunkGenerator(Identifier id, EventConsumer<MapChunkGenEvent> e) {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        DeferredRegister<Codec<? extends ChunkGenerator>> DEF = DeferredRegister.create(Registries.CHUNK_GENERATOR, id.getNamespace());
+        // MC 26.3: the chunk generator registry stores MapCodec values now
+        DeferredRegister<MapCodec<? extends ChunkGenerator>> DEF = DeferredRegister.create(Registries.CHUNK_GENERATOR, id.getNamespace());
 
         DEF.register(bus);
         
-        RegistryObject<Codec<? extends ChunkGenerator>> CHUNK_GEN = DEF.register(id.getPath(), () -> MapChunkGenerator.buildCodec().codec());
+        RegistryObject<MapCodec<? extends ChunkGenerator>> CHUNK_GEN = DEF.register(id.getPath(), () -> MapChunkGenerator.buildCodec());
 
         MapGenEvents.MAP_CHUNK_GEN.register(e);
 
