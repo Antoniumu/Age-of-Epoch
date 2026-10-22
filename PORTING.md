@@ -194,6 +194,14 @@ MC 26.3 закрыл следующие группы:
    (сотни skip-логов), а рецепты падали с «minecraft:air has more than max stack
    size». Правильная проверка — `Registry.getResourceKey(value).isPresent()`
    (настоящий Optional). Урок: `getKey != null` — не признак регистрации.
+3. **Компоненты предмета не привязаны во время бутстрапа**: в 26.3 максимальный
+   стек — компонент `MAX_STACK_SIZE` (`ItemInstance.getMaxStackSize()` →
+   `getOrDefault(..., 1)`), карты компонентов предметов строятся из
+   `DATA_COMPONENT_INITIALIZERS` уже ПОСЛЕ всех модовых entrypoint'ов. Валидация
+   рецептов профессий в `commonSetupEvent` видела max stack = 1 у всех предметов и
+   падала на `mmorpg:material/farming/0`. Проверка заменена на ванильный
+   `Item.ABSOLUTE_MAX_STACK_SIZE` (99), не зависящий от стадии. Общее правило:
+   во время бутстрапа нельзя читать компонентозависимые свойства предметов.
 
 ## 2. Состав порта
 
