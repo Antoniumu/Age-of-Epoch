@@ -2082,8 +2082,6 @@
   "mmorpg.delve.roots.boss.2": "Хранитель спор",
   "mmorpg.delve.roots.boss.3": "Голос корней",
   "mmorpg.delve.roots.boss.4": "Мать подземной рощи",
-  "mmorpg.branch.necromancer": "Некромант",
-  "mmorpg.branch.summoner": "Призыватель",
   "mmorpg.word.blightcaller": "Скверноводец",
   "mmorpg.talent.bc_shared_damage": "Гниющая связь",
   "mmorpg.talent.bc_shared_health": "Теневая кровь",
@@ -2108,5 +2106,12 @@
   "mmorpg.talent.bc_summ_fangs": "Острые клыки",
   "mmorpg.talent.bc_summ_paws": "Резвые лапы",
   "mmorpg.talent.bc_summ_hide": "Колючая шкура",
-  "mmorpg.talent.bc_summ_alpha": "Альфа-хищник"
+  "mmorpg.talent.bc_summ_alpha": "Альфа-хищник",
+  "mmorpg.branch.divine": "Божественный",
+  "mmorpg.branch.divine.necromancer": "Некромант",
+  "mmorpg.branch.divine.summoner": "Призыватель",
+  "mmorpg.branch.blightcaller": "Скверноводец",
+  "mmorpg.branch.blightcaller.necromancer": "Некромант",
+  "mmorpg.branch.blightcaller.summoner": "Призыватель",
+  "mmorpg.one_of_a_kind.blight_beast": "Вид призванного зверя"
 }

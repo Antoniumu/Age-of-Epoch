@@ -2077,8 +2077,6 @@
   "mmorpg.delve.roots.boss.2": "Spore Keeper",
   "mmorpg.delve.roots.boss.3": "Voice of the Roots",
   "mmorpg.delve.roots.boss.4": "Mother of the Buried Grove",
-  "mmorpg.branch.necromancer": "Necromancer",
-  "mmorpg.branch.summoner": "Summoner",
   "mmorpg.word.blightcaller": "Blightcaller",
   "mmorpg.talent.bc_shared_damage": "Festering Bond",
   "mmorpg.talent.bc_shared_health": "Shadow Blood",
@@ -2103,5 +2101,12 @@
   "mmorpg.talent.bc_summ_fangs": "Sharp Fangs",
   "mmorpg.talent.bc_summ_paws": "Swift Paws",
   "mmorpg.talent.bc_summ_hide": "Thorned Hide",
-  "mmorpg.talent.bc_summ_alpha": "Alpha Predator"
+  "mmorpg.talent.bc_summ_alpha": "Alpha Predator",
+  "mmorpg.branch.divine": "Divine",
+  "mmorpg.branch.divine.necromancer": "Necromancer",
+  "mmorpg.branch.divine.summoner": "Summoner",
+  "mmorpg.branch.blightcaller": "Blightcaller",
+  "mmorpg.branch.blightcaller.necromancer": "Necromancer",
+  "mmorpg.branch.blightcaller.summoner": "Summoner",
+  "mmorpg.one_of_a_kind.blight_beast": "Summoned Beast"
 }

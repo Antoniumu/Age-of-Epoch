@@ -19,37 +19,59 @@
 
 ## Взаимоисключение
 
-- **Некромант и призыватель не берутся вместе.** Оба пути входят в одну ветку через
-  `exclusive_branch`: как только выбран один, узлы второго закрыты, пока не сброшены таланты.
-- **Зверь один.** Серая стая, бурый страж и мамонт имеют общий `one_of_a_kind` (`divine_beast`),
-  поэтому одновременно работает только один вид зверя.
-- **Общие ветки с «Божественным».** Выбор и блокировка считаются по всему персонажу
-  (`TalentsData.getChosenExclusiveBranch`, `getAllAllocatedPerks`). Поэтому ветки и `one_of_a_kind`
-  у двух классов совпадают: призывателя нельзя взять в одном классе и некроманта в другом. Два
-  некроманта (по одному в каждом классе) взять можно — это решение нужно подтвердить.
+Ветки записываются как «класс/путь» (`Perk.exclusive_branch`), правило — `Perk.branchesConflict`:
+
+| Что уже взято | Что нельзя взять |
+|---|---|
+| любой узел «Божественного» | **любой** узел «Скверноводца» (и наоборот) |
+| некромант этого класса | призыватель этого класса |
+| призыватель этого класса | некромант этого класса |
+| общий узел класса | ничего не блокирует внутри класса |
+
+- **Полное разделение классов.** Узлы «Божественного» и «Скверноводца» взаимоисключают друг друга,
+  включая общие узлы центра. Вместе их не взять ни в каком виде.
+- **Некромант и призыватель не берутся вместе** даже внутри одного класса.
+- **Зверь один на персонажа.** Серая стая, бурый страж и мамонт имеют `one_of_a_kind`
+  (`blight_beast`), поэтому одновременно работает только один вид зверя.
+- Правило проверяется по всем изученным узлам персонажа, а не по одной странице древа.
+
+Проверка матрицы конфликтов — в `verify_blightcaller.py`; она повторяет правило из Java, но сама
+Java-логика проверяется только сборкой (`build.bat build`).
 
 ## Отличия от «Божественного»
 
 | | «Божественный» | «Скверноводец» |
 |---|---|---|
+| Класс веток | `divine` | `blightcaller` |
 | Вход в ветку | 10 ур. | 1 ур. |
 | Звери (стая, медведь) | 15 ур. | 5 ур. |
-| Название вкладки | Божественный | Скверноводец |
-| Иконки | `big_divine_light` и перки «Божественного» | собственные (`big_blightcaller`, `blight_*`, `death_crown`, …) |
+| Вид зверя (`one_of_a_kind`) | `divine_beast` | `blight_beast` |
+| Иконки | `big_divine_light` и перки «Божественного» | собственные пиксель-арт |
 
 Низкие уровни входа сделаны намеренно: при входе с 10 уровня класс не даёт ничего первые 10 уровней.
 Механики (`SummonStat`, `DivineStats`, `MinionUtils`) не дублируются.
 
 ## Иконки
 
-Иконки перков — 16×16 в `textures/gui/talent_icons/`, как у остальных талантов. Обычные
-стат-узлы используют общие иконки `textures/gui/stat_icons/` (так же, как «Божественный»).
+Все иконки класса — собственный пиксель-арт 16×16 в `textures/gui/talent_icons/`, нарисованный
+вручную в `tools/talent_gen/draw_blightcaller_icons.py` (каждая строка — 16 символов палитры).
+Обычные стат-узлы используют общие иконки `textures/gui/stat_icons/`, как и «Божественный».
 
-- Своя иконка класса: `big_blightcaller.png` (вкладка древа).
-- Своих иконок умений: 9 готовы (`blight_vial`, `death_crown`, `corpse_burst`, `plague_chain`,
-  `dark_will`, `bone_armor`, `blight_lord`, `beast_claw`, `grey_wolf`).
-- Временно: `bear.png`, `predator.png` и `unleashed.png` — существующие иконки, до замены на
-  `brown_bear`, `bandit_mammoth`, `alpha_fang` (см. «Открытые пункты»).
+| Узел | Иконка |
+|---|---|
+| Класс (вкладка) | `big_blightcaller` — череп с зелёными глазами |
+| Путь осквернителя | `blight_vial` — склянка со скверной |
+| Владыка нежити | `death_crown` — железная корона |
+| Взрыв останков | `corpse_burst` — череп в зелёных брызгах |
+| Цепной мор | `plague_chain` — звенья цепи |
+| Чёрная воля | `dark_will` — обсидиановое сердце |
+| Закалённые кости | `bone_armor` — рёберная броня |
+| Владыка скверны | `blight_lord` — скипетр |
+| Путь зверолова | `beast_claw` — когти на шнурке |
+| Серая стая | `grey_wolf` — голова волка |
+| Бурый страж | `brown_bear` — голова медведя |
+| Мамонт разбойников | `bandit_mammoth` — мамонт в красной бандане |
+| Альфа-хищник | `alpha_fang` — клык на цепи |
 
 ## Файлы
 
@@ -57,22 +79,28 @@
 |---|---|
 | `aoe_data/database/perks/BlightcallerPerks.java` | 24 перка, ветки, уровни, иконки |
 | `data/mmorpg/talent_tree/blightcaller.json` | сетка древа, вкладка, порядок (`order: 2`) |
-| `assets/mmorpg/lang/{ru_ru,en_us}.json` | названия узлов и класса (`mmorpg.talent.bc_*`, `mmorpg.word.blightcaller`) |
+| `database/data/perks/Perk.java` | `branchClass`, `branchPath`, `branchesConflict`, проверка в `isLockedToPlayer` |
+| `saveclasses/perks/TalentsData.java` | сообщение о конфликте веток при `canAllocate` |
+| `assets/mmorpg/lang/{ru_ru,en_us}.json` | названия узлов, класса и веток (`mmorpg.branch.*`) |
 | `textures/gui/talent_icons/*.png` | иконки класса и умений |
-| `tools/talent_gen/verify_blightcaller.py` | проверка сетки, регистрации, иконок, локализации, связности и веток |
+| `tools/talent_gen/draw_blightcaller_icons.py` | пиксель-арт иконок: рисует PNG из палитры |
+| `tools/talent_gen/verify_blightcaller.py` | сетка, регистрация, иконки, локализация, связность, ветки, матрица конфликтов |
 
 ## Проверка
 
 ```bash
+python3 tools/talent_gen/draw_blightcaller_icons.py --preview /tmp/preview.png   # посмотреть иконки
+python3 tools/talent_gen/draw_blightcaller_icons.py                              # записать PNG
 python3 tools/talent_gen/verify_blightcaller.py
 python3 tools/talent_gen/verify_divine.py
-python3 tools/check_java_syntax.py src/main/java/com/robertx22/age_of_exile/aoe_data/database/perks/BlightcallerPerks.java
+python3 tools/check_java_syntax.py src/main/java/com/robertx22/age_of_exile/database/data/perks/Perk.java \
+    src/main/java/com/robertx22/age_of_exile/saveclasses/perks/TalentsData.java \
+    src/main/java/com/robertx22/age_of_exile/aoe_data/database/perks/BlightcallerPerks.java
 ```
 
 `compileJava` в песочнице не запускается (нет JDK), полная сборка — `build.bat build`.
 
 ## Открытые пункты
 
-- Три иконки пока временные: медведь, мамонт и альфа-хищник.
-- Три иконки слабо читаются в 16×16 (цепь, коготь, волк) — будут перегенерированы.
-- Решение о блокировке некромант + некромант в двух классах не подтверждено.
+- Иконки «Серой стаи» и «Мамонта» читаются хуже остальных в 16×16: контуры могут потребовать
+  доработки после взгляда в игре.

@@ -132,11 +132,58 @@ def main():
             err("узел %s не в ветке призывателя" % pid)
         if pid in ("bc_summ_wolves", "bc_summ_bear", "bc_summ_mammoth") and "beast(" not in st:
             err("зверь %s должен идти через beast() (one_of_a_kind)" % pid)
-    for pid in ("bc_necro_entry", "bc_summ_entry"):
-        if pid in regs:
-            branch = "necromancer" if "necro" in pid else "summoner"
-            if ("exclusive_branch = DivinePerks.BRANCH_%s" % branch.upper()) not in src:
-                err("стартовый узел %s не задаёт exclusive_branch = %s" % (pid, branch))
+    for pid, const in (("bc_necro_entry", "BRANCH_NECROMANCER"), ("bc_summ_entry", "BRANCH_SUMMONER")):
+        if pid in regs and ("exclusive_branch = %s;" % const) not in src:
+            err("стартовый узел %s не задаёт exclusive_branch = %s" % (pid, const))
+
+    # ветки «класс/путь»: класс — «blightcaller», общие узлы класса — в SHARED
+    m = re.search(r'CLASS_BLIGHT = "([a-z_]+)"', src)
+    cls = m.group(1) if m else None
+    if cls != "blightcaller":
+        err("CLASS_BLIGHT должен быть 'blightcaller'")
+    for name in ("BRANCH_NECROMANCER", "BRANCH_SUMMONER"):
+        m = re.search(r'%s = CLASS_BLIGHT \+ "/([a-z]+)"' % name, src)
+        if not m:
+            err("%s должен строиться как CLASS_BLIGHT + \"/путь\"" % name)
+    shared = re.search(r'SHARED = Set\.of\((.*?)\);', src, re.S)
+    shared_ids = set(re.findall(r'"(bc_[a-z_]+)"', shared.group(1))) if shared else set()
+    central = {p for p in ids if not p.startswith(("bc_necro_", "bc_summ_"))}
+    if shared_ids != central:
+        err("SHARED не совпадает с общими узлами сетки: лишние %s, не хватает %s"
+            % (sorted(shared_ids - central), sorted(central - shared_ids)))
+    if "perk.exclusive_branch = CLASS_BLIGHT" not in src:
+        err("общие узлы должны получать exclusive_branch = CLASS_BLIGHT в perk()")
+
+    # матрица конфликтов: зеркало Perk.branchesConflict (правило задокументировано в Java)
+    def conflict(mine, taken):
+        if not mine or not taken:
+            return False
+        c1, _, p1 = mine.partition("/")
+        c2, _, p2 = taken.partition("/")
+        if c1 != c2:
+            return True
+        return bool(p1) and bool(p2) and p1 != p2
+    cases = {
+        "общий-общий (тот же класс)": ("blightcaller", "blightcaller", False),
+        "общий-некромант (тот же класс)": ("blightcaller", "blightcaller/necromancer", False),
+        "некромант-призыватель (тот же класс)": ("blightcaller/necromancer", "blightcaller/summoner", True),
+        "некромант-некромант (тот же класс)": ("blightcaller/necromancer", "blightcaller/necromancer", False),
+        "класс Божественный vs Скверноводец (общий)": ("divine", "blightcaller", True),
+        "некромант vs некромант (разные классы)": ("divine/necromancer", "blightcaller/necromancer", True),
+        "призыватель vs некромант (разные классы)": ("divine/summoner", "blightcaller/necromancer", True),
+        "общий Божественный vs некромант Скверноводца": ("divine", "blightcaller/necromancer", True),
+    }
+    for label, (a, b, want) in cases.items():
+        if conflict(a, b) != want:
+            err("матрица конфликтов: %s — ожидалось %s" % (label, want))
+    print("матрица конфликтов: %d случаев проверено" % len(cases))
+
+    divine = os.path.join(ROOT, "src/main/java/com/robertx22/age_of_exile/aoe_data/database/perks/DivinePerks.java")
+    dsrc = open(divine, encoding="utf-8").read()
+    if 'CLASS_DIVINE + "/necromancer"' not in dsrc or 'CLASS_DIVINE + "/summoner"' not in dsrc:
+        err("DivinePerks: ветки должны быть «divine/necromancer» и «divine/summoner»")
+    if "perk.exclusive_branch = CLASS_DIVINE" not in dsrc:
+        err("DivinePerks: общие узлы должны получать exclusive_branch = CLASS_DIVINE")
 
     if errors:
         print("ОШИБКИ:")

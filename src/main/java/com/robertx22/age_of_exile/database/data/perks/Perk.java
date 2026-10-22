@@ -137,7 +137,7 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, ITooltipL
 
             if (this.exclusive_branch != null && !this.exclusive_branch.isEmpty()) {
                 list.add(Component.literal("Взаимоисключающая ветка: ")
-                    .append(Component.translatable(SlashRef.MODID + ".branch." + exclusive_branch))
+                    .append(Component.translatable(SlashRef.MODID + ".branch." + exclusive_branch.replace('/', '.')))
                     .withStyle(ChatFormatting.RED));
 
                 list.add(Component.literal("Взять таланты другой ветки призыва не получится, пока эта не сброшена.")
@@ -224,6 +224,40 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, ITooltipL
         return type;
     }
 
+    /** Класс ветки — часть до «/»: в «divine/necromancer» это «divine». */
+    public static String branchClass(String branch) {
+        if (branch == null) {
+            return "";
+        }
+        int i = branch.indexOf('/');
+        return i < 0 ? branch : branch.substring(0, i);
+    }
+
+    /** Путь ветки — часть после «/»; пусто, если узел общий для всего класса. */
+    public static String branchPath(String branch) {
+        if (branch == null) {
+            return "";
+        }
+        int i = branch.indexOf('/');
+        return i < 0 ? "" : branch.substring(i + 1);
+    }
+
+    /**
+     * Конфликтуют ли две ветки. Разные классы взаимоисключают друг друга полностью;
+     * внутри одного класса конфликтуют только разные пути (общие узлы класса конфликта не дают).
+     */
+    public static boolean branchesConflict(String mine, String taken) {
+        if (mine == null || mine.isEmpty() || taken == null || taken.isEmpty()) {
+            return false;
+        }
+        if (!branchClass(mine).equals(branchClass(taken))) {
+            return true;
+        }
+        String a = branchPath(mine);
+        String b = branchPath(taken);
+        return !a.isEmpty() && !b.isEmpty() && !a.equals(b);
+    }
+
     public boolean isLockedToPlayer(Player player) {
 
         if (Load.Unit(player)
@@ -249,9 +283,12 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, ITooltipL
 
 
         if (exclusive_branch != null && !exclusive_branch.isEmpty()) {
-            String chosen = Load.playerRPGData(player).talents.getChosenExclusiveBranch();
-            if (chosen != null && !chosen.equals(exclusive_branch)) {
-                return true; // выбрана другая ветка (например, некромант вместо призывателя)
+            boolean conflict = Load.playerRPGData(player).talents.getAllAllocatedPerks()
+                .values()
+                .stream()
+                .anyMatch(x -> x != null && branchesConflict(this.exclusive_branch, x.exclusive_branch));
+            if (conflict) {
+                return true; // уже взята конфликтующая ветка: другой класс или другой путь того же класса
             }
         }
 

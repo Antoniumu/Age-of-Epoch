@@ -10,6 +10,7 @@ import com.robertx22.library_of_exile.registry.ExileRegistryInit;
 import net.minecraft.resources.Identifier;
 
 import java.util.Arrays;
+import java.util.Set;
 
 /**
  * Перки древа «Божественный» — {@code data/mmorpg/talent_tree/divine.json}.
@@ -20,20 +21,26 @@ import java.util.Arrays;
  * <li><b>в центре</b> — общие перки, нужные обоим билдам;</li>
  * <li><b>справа</b> — ветка призывателя (постоянные звери: стая волков, медведь или боевой мамонт).</li>
  * </ul>
- * Ветки взаимоисключающие: у всех их узлов стоит {@link Perk#exclusive_branch}, поэтому взять
- * некроманта и призывателя одновременно нельзя (см. {@code Perk.isLockedToPlayer}). Внутри ветки
- * призывателя вид зверя выбирается одним из трёх ключевых талантов ({@code one_of_a_kind}).
+ * Ветки «класс/путь»: некромант и призыватель взаимоисключают друг друга внутри класса, а весь класс
+ * исключает другой класс призыва (см. {@link Perk#branchesConflict}). Вид зверя выбирается одним из трёх
+ * ключевых талантов ({@code one_of_a_kind}).
  * <p>
  * Сами механики — в {@code com.robertx22.age_of_exile.summoning.MinionUtils}.
  */
 public class DivinePerks implements ExileRegistryInit {
 
-    /** Ид ветки некроманта (для {@link Perk#exclusive_branch}). */
-    public static final String BRANCH_NECROMANCER = "necromancer";
-    /** Ид ветки призывателя (для {@link Perk#exclusive_branch}). */
-    public static final String BRANCH_SUMMONER = "summoner";
+    /** Класс древа: общие узлы и обе ветки начинаются с него (см. {@link Perk#branchesConflict}). */
+    public static final String CLASS_DIVINE = "divine";
+    /** Ветка некроманта: «класс/путь». */
+    public static final String BRANCH_NECROMANCER = CLASS_DIVINE + "/necromancer";
+    /** Ветка призывателя: «класс/путь». */
+    public static final String BRANCH_SUMMONER = CLASS_DIVINE + "/summoner";
     /** Одновременно можно держать только один вид зверей. */
     public static final String ONE_OF_A_KIND_BEAST = "divine_beast";
+    /** Общие узлы центра страницы: без пути, но с классом — они тоже взаимоисключают другой класс. */
+    private static final Set<String> SHARED = Set.of(
+        "div_shared_damage", "div_shared_health", "div_shared_duration", "div_shared_armor",
+        "div_shared_speed", "div_shared_damage_big", "div_shared_health_big", "divine_command");
 
     @Override
     public void registerAll() {
@@ -143,6 +150,9 @@ public class DivinePerks implements ExileRegistryInit {
         perk.icon = Identifier.fromNamespaceAndPath(SlashRef.MODID, iconPath)
             .toString();
         perk.stats = Arrays.asList(stats);
+        if (SHARED.contains(id)) {
+            perk.exclusive_branch = CLASS_DIVINE;
+        }
         perk.addToSerializables();
         return perk;
     }

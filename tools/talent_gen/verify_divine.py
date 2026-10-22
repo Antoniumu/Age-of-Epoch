@@ -144,7 +144,7 @@ for stat_id in sorted(all_stat_ids):
         if "mmorpg.stat_desc." + stat_id not in lang[code]:
             fail("Нет ключа mmorpg.stat_desc.%s в %s" % (stat_id, code))
 
-for key in ("mmorpg.branch.necromancer", "mmorpg.branch.summoner", "mmorpg.one_of_a_kind.divine_beast"):
+for key in ("mmorpg.branch.divine.necromancer", "mmorpg.branch.divine.summoner", "mmorpg.branch.divine", "mmorpg.one_of_a_kind.divine_beast"):
     for code in lang:
         if key not in lang[code]:
             fail("Нет ключа %s в %s" % (key, code))
