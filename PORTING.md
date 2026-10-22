@@ -202,6 +202,22 @@ MC 26.3 закрыл следующие группы:
    падала на `mmorpg:material/farming/0`. Проверка заменена на ванильный
    `Item.ABSOLUTE_MAX_STACK_SIZE` (99), не зависящий от стадии. Общее правило:
    во время бутстрапа нельзя читать компонентозависимые свойства предметов.
+4. **Форматы worldgen-JSON датапака** (краш при создании мира — загрузка реестров):
+   - `dimension_type` ×4: новое обязательное поле `has_ender_dragon_fight`;
+     `monster_spawn_light_level` — IntProvider теперь инлайном
+     (`{"type":"minecraft:uniform","min_inclusive":..,"max_inclusive":..}`, без
+     обёртки `value`); поля ultrawarm/natural/bed_works/respawn_anchor_works/
+     piglin_safe/has_raids/fixed_time/effects переехали в environment-атрибуты
+     (незнакомые ключи игнорируются — убраны для чистоты).
+   - `worldgen/biome` ×4: `carvers` — это HolderSet-список (строка или массив id),
+     а не карта «стадия → carver» (`{}` → `[]`); `spawners`/`spawn_costs` вообще
+     покинули кодек биома (убраны).
+   - `worldgen/processor_list` ×2 (world_of_exile): кастомные типы процессоров
+     delve/tower не портировались (классов нет) — содержимое заменено на
+     `{"processors": []}`, чтобы структуры грузились.
+   - Косметика: для блока portal добавлена директория-форма blockstate
+     `blockstates/portal/mmorpg.json` (26.3 пробует её); удалены файлы-мусор
+     « - Copy» (один ломал путь в ресурс-паке).
 
 ## 2. Состав порта
 
