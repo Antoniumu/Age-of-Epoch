@@ -238,6 +238,20 @@ MC 26.3 закрыл следующие группы:
    на месте, cleanup удаляет записи с незарегистрированными auto-ключами) и
    добавлен миксин, чистящий сирот перед каждым `build()`.
 
+7. **Незарегистрированный ArgumentType** («Unrecognized argument type
+   EnumArgument», кик игрока «Неверные данные игрока» при входе в мир):
+   в 26.3 каждый кастомный ArgumentType обязан иметь зарегистрированный
+   ArgumentTypeInfo — сервер строит ClientboundCommandsPacket через
+   `ArgumentTypeInfos.byClass`, и незнакомый класс роняет синхронизацию
+   дерева команд. Forge регистрировал аргументы сам; в Fabric используется
+   `ArgumentTypeRegistry.registerArgumentType(id, class, serializer)`
+   (пишет в приватную map `ArgumentTypeInfos.BY_CLASS` + реестр
+   COMMAND_ARGUMENT_TYPE). Для `EnumArgument` (forge_compat/common) написан
+   полноценный Info с сетевым шаблоном: класс enum'а передаётся строкой
+   (`Class.forName` на клиенте), чтобы серверные подсказки выживали синк.
+   Регистрация — `EnumArgument.registerCompat()` первой строкой
+   `onInitialize` (до любого входа игрока, на обеих сторонах).
+
 ## 2. Состав порта
 
 Монорепозиторий одного Fabric-мода `mmorpg` («Age of Epoch»), объединяющий исходники:

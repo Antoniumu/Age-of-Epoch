@@ -52,4 +52,67 @@ public class EnumArgument<T extends Enum<T>> implements ArgumentType<T> {
     public Collection<String> getExamples() {
         return Arrays.stream(enumClass.getEnumConstants()).map(Enum::name).collect(Collectors.toList());
     }
+
+    /**
+     * MC 26.3 / Fabric: every custom ArgumentType must be registered with
+     * ArgumentTypeInfos before the command tree is synced to the client
+     * ("Unrecognized argument type" crash on player join otherwise).
+     */
+    public static void registerCompat() {
+        net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry.registerArgumentType(
+            net.minecraft.resources.Identifier.fromNamespaceAndPath("mmorpg", "enum"),
+            (Class<? extends EnumArgument<?>>) (Class<?>) EnumArgument.class,
+            Info.INSTANCE
+        );
+    }
+
+    public static class Info implements net.minecraft.commands.synchronization.ArgumentTypeInfo<EnumArgument<?>, Info.Template> {
+        public static final Info INSTANCE = new Info();
+
+        public static final class Template implements net.minecraft.commands.synchronization.ArgumentTypeInfo.Template<EnumArgument<?>> {
+            private final Class<? extends Enum<?>> enumClass;
+
+            Template(Class<? extends Enum<?>> enumClass) {
+                this.enumClass = enumClass;
+            }
+
+            @Override
+            @SuppressWarnings({"unchecked", "rawtypes"})
+            public EnumArgument<?> instantiate(net.minecraft.commands.CommandBuildContext ctx) {
+                return EnumArgument.enumArgument((Class) enumClass);
+            }
+
+            @Override
+            public ArgumentTypeInfo<EnumArgument<?>, ?> type() {
+                return Info.INSTANCE;
+            }
+        }
+
+        @Override
+        public void serializeToNetwork(Template t, net.minecraft.network.FriendlyByteBuf buf) {
+            // the enum class travels with the template so client-side suggestions work
+            buf.writeUtf(t.enumClass.getName());
+        }
+
+        @Override
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        public Template deserializeFromNetwork(net.minecraft.network.FriendlyByteBuf buf) {
+            try {
+                return new Template(Class.forName(buf.readUtf()).asSubclass(Enum.class));
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException("Unknown enum argument class received", e);
+            }
+        }
+
+        @Override
+        public void serializeToJson(Template t, com.google.gson.JsonObject json) {
+            json.addProperty("enum", t.enumClass.getName());
+        }
+
+        @Override
+        @SuppressWarnings("rawtypes")
+        public Template unpack(EnumArgument<?> arg) {
+            return new Template(((EnumArgument) arg).enumClass);
+        }
+    }
 }

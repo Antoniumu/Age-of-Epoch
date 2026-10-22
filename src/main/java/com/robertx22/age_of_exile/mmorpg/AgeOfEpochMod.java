@@ -5,6 +5,7 @@ import com.robertx22.age_of_exile.gamemaster.GameMasterCommand;
 import com.robertx22.age_of_exile.gamemaster.GameMasterEvents;
 import com.robertx22.age_of_exile.guides.GuideLimit;
 import com.robertx22.age_of_exile.guides.GuidesPacket;
+import com.robertx22.forge_compat.common.EnumArgument;
 import com.robertx22.age_of_exile.questbook.QuestBookEvents;
 import com.robertx22.age_of_exile.questbook.QuestBookPacket;
 import com.robertx22.age_of_exile.questbook.QuestBookService;
@@ -158,6 +159,7 @@ public class AgeOfEpochMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        EnumArgument.registerCompat(); // must precede first command-tree sync (player join)
         bootstrapCommon();
         registerFabricBridges();
     }
