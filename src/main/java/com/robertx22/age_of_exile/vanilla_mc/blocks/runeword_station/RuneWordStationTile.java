@@ -57,8 +57,14 @@ public class RuneWordStationTile extends BaseModificationStation {
     public boolean modifyItem(int number, Player player) {
 
         ItemStack stack = getGearStack();
+        if (stack.isEmpty()) {
+            return false;
+        }
 
         if (StackSaving.GEARS.has(stack)) {
+            if (player != null && !player.level().isClientSide()) {
+                player.displayClientMessage(com.robertx22.age_of_exile.uncommon.localization.Words.GearHasData.locName(), false);
+            }
             return false;
         }
 
@@ -84,7 +90,15 @@ public class RuneWordStationTile extends BaseModificationStation {
 
         if (word != null) {
 
-            runes.forEach(x -> x.shrink(1));
+            for (int slot : RUNE_SLOTS) {
+                ItemStack runeStack = this.itemStacks[slot];
+                if (!runeStack.isEmpty() && runeStack.getItem() instanceof RuneItem) {
+                    runeStack.shrink(1);
+                    if (runeStack.isEmpty()) {
+                        this.itemStacks[slot] = ItemStack.EMPTY;
+                    }
+                }
+            }
 
             GearBlueprint b = new GearBlueprint(Load.Unit(player)
                 .getLevel());
@@ -98,7 +112,20 @@ public class RuneWordStationTile extends BaseModificationStation {
             gear.saveToStack(stack);
             QuestBookService.onRunewordCreated(player, word);
 
-            System.out.println("sdsdsd");
+            this.setChanged();
+            if (player != null) {
+                com.robertx22.library_of_exile.utils.SoundUtils.playSound(player, net.minecraft.sounds.SoundEvents.ANVIL_USE, 1, 1);
+                if (player.containerMenu != null) {
+                    player.containerMenu.broadcastChanges();
+                }
+                if (!player.level().isClientSide()) {
+                    com.robertx22.library_of_exile.main.Packets.sendToClient(
+                        player,
+                        new com.robertx22.library_of_exile.packets.TileUpdatePacket(this)
+                    );
+                }
+            }
+            return true;
         }
 
         return false;
@@ -111,6 +138,6 @@ public class RuneWordStationTile extends BaseModificationStation {
 
     @Override
     public MutableComponent getDisplayName() {
-        return CLOC.blank("block.mmorpg.socket_station");
+        return CLOC.blank("block.mmorpg.runeword_station");
     }
 }

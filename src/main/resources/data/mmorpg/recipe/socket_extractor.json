@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": "minecraft:gold_ingot",
+    "B": "minecraft:stick"
+  },
+  "pattern": [
+    "AAA",
+    "AAA",
+    " B "
+  ],
+  "result": {
+    "id": "mmorpg:socket_extractor",
+    "count": 1
+  }
+}

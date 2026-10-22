@@ -42,7 +42,11 @@ public class OnItemInteract {
                 slot = screen.slots.get(i);
             } catch (Exception e) {
             }
-            if (slot == null) {
+            if (slot == null || !slot.hasItem() || !slot.mayPickup(player)
+                || slot instanceof net.minecraft.world.inventory.ResultSlot
+                || slot instanceof net.minecraft.world.inventory.FurnaceResultSlot
+                || slot instanceof com.robertx22.age_of_exile.player_skills.crafting_inv.ProfCraftResultSlot
+                || slot.container instanceof net.minecraft.world.inventory.ResultContainer) {
                 return;
             }
 

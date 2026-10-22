@@ -18,9 +18,21 @@ public class BackpackContainer extends BaseTileContainer {
     BackpackInventory backpackInv;
     Player player;
     BackpackInfo info;
+    net.minecraft.world.InteractionHand hand = net.minecraft.world.InteractionHand.MAIN_HAND;
+
+    private static final ThreadLocal<net.minecraft.world.InteractionHand> LAST_READ_HAND =
+        ThreadLocal.withInitial(() -> net.minecraft.world.InteractionHand.MAIN_HAND);
+
+    private static ItemStack resolveHandStack(Player player, FriendlyByteBuf buf) {
+        net.minecraft.world.InteractionHand h = (buf != null && buf.readableBytes() > 0)
+            ? buf.readEnum(net.minecraft.world.InteractionHand.class)
+            : net.minecraft.world.InteractionHand.MAIN_HAND;
+        LAST_READ_HAND.set(h);
+        return player.getItemInHand(h);
+    }
 
     public BackpackContainer(int syncid, Inventory playerinv, FriendlyByteBuf buf) {
-        this(playerinv.player.getMainHandItem(), syncid, playerinv);
+        this(resolveHandStack(playerinv.player, buf), syncid, playerinv, LAST_READ_HAND.get());
     }
 
     public static BackpackInfo getInfo(Player player, ItemStack stack) {
@@ -28,19 +40,24 @@ public class BackpackContainer extends BaseTileContainer {
     }
 
     public BackpackContainer(ItemStack stack, int id, Inventory invPlayer) {
+        this(stack, id, invPlayer, net.minecraft.world.InteractionHand.MAIN_HAND);
+    }
+
+    public BackpackContainer(ItemStack stack, int id, Inventory invPlayer, net.minecraft.world.InteractionHand hand) {
         super(BackpackInventory.getSizeBackpack(stack), SlashContainers.BACKPACK.get(), id, invPlayer);
 
         try {
             this.player = invPlayer.player;
+            this.hand = hand != null ? hand : net.minecraft.world.InteractionHand.MAIN_HAND;
 
             if (!StackNBT.has(stack)) {
                 StackNBT.set(stack, new CompoundTag());
             }
             if (!StackNBT.get(stack)
                 .contains("id")) {
-                StackNBT.get(stack)
-                    .putString("id", UUID.randomUUID()
-                        .toString()); // so 2 backpacks can never be the same
+                CompoundTag tag = StackNBT.getOrCreate(stack);
+                tag.putString("id", UUID.randomUUID().toString());
+                StackNBT.set(stack, tag); // so 2 backpacks can never be the same
             }
             this.stack = stack.copy(); // copy so i can later check if its same stack
 
@@ -81,14 +98,24 @@ public class BackpackContainer extends BaseTileContainer {
     @Override
     public void broadcastChanges() {
         super.broadcastChanges();
-        backpackInv.writeItemStack();
+        if (backpackInv != null) {
+            backpackInv.writeItemStack();
+        }
+    }
+
+    @Override
+    public void removed(Player p) {
+        if (backpackInv != null) {
+            backpackInv.writeItemStack();
+        }
+        super.removed(p);
     }
 
     @Override
     public boolean stillValid(Player player) {
-
+        ItemStack held = player.getItemInHand(hand);
         try {
-            if (!StackNBT.getOrCreate(player.getMainHandItem())
+            if (!StackNBT.getOrCreate(held)
                 .getStringOr("id", "")
                 .equals(StackNBT.get(stack)
                     .getStringOr("id", ""))) {
@@ -97,8 +124,7 @@ public class BackpackContainer extends BaseTileContainer {
         } catch (Exception e) {
         }
 
-        if (player.getMainHandItem()
-            .getItem() != stack.getItem()) {
+        if (held.getItem() != stack.getItem()) {
             return false;
         }
         return true;

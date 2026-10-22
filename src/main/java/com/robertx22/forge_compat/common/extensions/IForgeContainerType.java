@@ -21,8 +21,10 @@ public class IForgeContainerType {
     public static <T extends AbstractContainerMenu> MenuType<T> create(ExtFactory<T> factory) {
         StreamCodec<RegistryFriendlyByteBuf, FriendlyByteBuf> codec = StreamCodec.of(
             (buf, val) -> {
-                byte[] bytes = new byte[val.readableBytes()];
-                val.getBytes(val.readerIndex(), bytes);
+                byte[] bytes = val != null ? new byte[val.readableBytes()] : new byte[0];
+                if (val != null && bytes.length > 0) {
+                    val.getBytes(val.readerIndex(), bytes);
+                }
                 buf.writeByteArray(bytes);
             },
             buf -> new FriendlyByteBuf(io.netty.buffer.Unpooled.wrappedBuffer(buf.readByteArray()))

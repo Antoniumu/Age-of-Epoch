@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "t": "mmorpg:currency/orb_of_transmutation",
+    "v": "mmorpg:mat/condensed_salvage/c0",
+    "o": "mmorpg:mat/salvage/salvage3"
+  },
+  "pattern": [
+    "ovo",
+    "vtv",
+    "ovo"
+  ],
+  "result": {
+    "id": "mmorpg:currency/clear_corruption",
+    "count": 1
+  }
+}

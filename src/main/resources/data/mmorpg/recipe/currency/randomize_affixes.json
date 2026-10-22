@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "mmorpg:mat/infused_iron",
+    "t": "mmorpg:currency/orb_of_transmutation",
+    "v": "minecraft:gold_nugget",
+    "o": "mmorpg:mat/salvage/salvage3"
+  },
+  "pattern": [
+    "o#o",
+    "oto",
+    "vvv"
+  ],
+  "result": {
+    "id": "mmorpg:currency/randomize_affixes",
+    "count": 1
+  }
+}

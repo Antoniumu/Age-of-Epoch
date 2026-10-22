@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "t": "minecraft:iron_chestplate",
+    "v": "mmorpg:mat/salvage/salvage0"
+  },
+  "pattern": [
+    " v ",
+    "vtv",
+    " v "
+  ],
+  "result": {
+    "id": "mmorpg:craft_tools/armor_craft",
+    "count": 1
+  }
+}

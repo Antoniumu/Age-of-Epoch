@@ -55,9 +55,14 @@ public class MenuScreensCompat {
                         MenuType<?> menuType = (MenuType<?>) args[1];
                         Minecraft minecraft = (Minecraft) args[2];
                         int windowId = (Integer) args[3];
+                        if (minecraft.player == null) {
+                            return null;
+                        }
                         Inventory inventory = minecraft.player.getInventory();
                         M menu = (M) menuType.create(windowId, inventory);
-                        minecraft.setScreenAndShow(factory.create(menu, inventory, title));
+                        U screen = factory.create(menu, inventory, title);
+                        minecraft.player.containerMenu = menu;
+                        minecraft.setScreenAndShow(screen);
                         return null;
                     }
                     case "toString":

@@ -41,7 +41,11 @@ public class RuneWordStationGui extends ModificationGui<RuneWordStationContainer
     int index = 0;
 
     public void moveUp() {
-        if (index >= words.size()) {
+        if (words.isEmpty()) {
+            index = 0;
+            return;
+        }
+        if (index + 1 >= words.size()) {
             index = 0;
         } else {
             index++;
@@ -52,6 +56,10 @@ public class RuneWordStationGui extends ModificationGui<RuneWordStationContainer
     boolean updateButtons = false;
 
     public void moveDown() {
+        if (words.isEmpty()) {
+            index = 0;
+            return;
+        }
         if (index <= 0) {
             index = words.size() - 1;
         } else {
@@ -117,9 +125,14 @@ public class RuneWordStationGui extends ModificationGui<RuneWordStationContainer
                     words = wrap.list;
                 }
 
+                if (index >= words.size()) {
+                    index = 0;
+                }
+
                 int count = 0;
 
                 this.buttons.removeIf(x -> x instanceof RuneWordButton);
+                this.children.removeIf(x -> x instanceof RuneWordButton);
 
                 for (int i = index; i < index + 9; i++) {
                     if (words.size() > i) {
@@ -141,16 +154,10 @@ public class RuneWordStationGui extends ModificationGui<RuneWordStationContainer
 
         this.updateButtons = true;
 
-        /*
-        List<Text> list = new ArrayList<>();
-
-        list.add(new LiteralText("Here you can socket gems and runes into items!"));
-
-        this.addButton(new HelpButton(list, this.x + this.backgroundWidth - 25, this.y + 5));
-
-         */
-
-        this.addButton(new CraftButton(tile.getBlockPos(), this.leftPos + 176, this.topPos + 50));
+        BlockPos targetPos = tile != null ? tile.getBlockPos() : (this.menu != null ? this.menu.pos : null);
+        if (targetPos != null) {
+            this.addButton(new CraftButton(targetPos, this.leftPos + 176, this.topPos + 50));
+        }
     }
 
     private static final Identifier BUTTON_TEX = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/craft_button.png");
@@ -175,8 +182,12 @@ public class RuneWordStationGui extends ModificationGui<RuneWordStationContainer
                 try {
                     List<Component> tooltip = new ArrayList<>();
 
-                    if (tooltip.isEmpty()) {
-                        tooltip.add(Component.literal("Модифицировать"));
+                    tooltip.add(Component.literal("Модифицировать"));
+
+                    if (tile != null && !tile.getGearStack().isEmpty()
+                        && com.robertx22.age_of_exile.uncommon.datasaving.StackSaving.GEARS.has(tile.getGearStack())) {
+                        tooltip.add(com.robertx22.age_of_exile.uncommon.localization.Words.GearHasData.locName()
+                            .withStyle(ChatFormatting.RED));
                     }
 
                     GuiUtils.renderTooltip(matrix,

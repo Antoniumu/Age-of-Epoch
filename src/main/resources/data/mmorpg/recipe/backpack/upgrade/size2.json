@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "mmorpg:mat/condensed_salvage/c2",
+    "minecraft:gold_ingot",
+    "minecraft:leather",
+    "minecraft:leather",
+    "minecraft:leather",
+    "minecraft:diamond"
+  ],
+  "result": {
+    "id": "mmorpg:backpack/upgrade/size2",
+    "count": 1
+  }
+}

@@ -23,24 +23,24 @@ public abstract class ModificationGui<T extends BaseTileContainer, Tile extends 
     public Font font = Minecraft.getInstance().font;
     Identifier background;
 
+    private final Class<Tile> token;
+
     public ModificationGui(Identifier background, T cont, Inventory inv, MutableComponent text, Class<Tile> token) {
         super(cont, inv, text);
         this.background = background;
         this.mc = Minecraft.getInstance();
+        this.token = token;
+        resolveTile();
+    }
 
-        if (cont.pos != null) {
-            BlockEntity en = Minecraft.getInstance().level.getBlockEntity(cont.pos);
-            if (en != null) {
-                if (token.isAssignableFrom(en.getClass())) {
-                    this.tile = (Tile) en;
-                }
+    @SuppressWarnings("unchecked")
+    protected void resolveTile() {
+        if (this.tile == null && this.menu != null && this.menu.pos != null && this.mc != null && this.mc.level != null) {
+            BlockEntity en = this.mc.level.getBlockEntity(this.menu.pos);
+            if (en != null && token.isAssignableFrom(en.getClass())) {
+                this.tile = (Tile) en;
             }
         }
-
-        if (tile == null) {
-            this.onClose();
-        }
-
     }
 
     public int putInTheMiddleX(int buttnowidth) {
@@ -90,17 +90,21 @@ public abstract class ModificationGui<T extends BaseTileContainer, Tile extends 
 
     @Override
     public void render(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+        resolveTile();
 
-        if (tile != null) {
+        if (tile != null && mc.player != null) {
             if (mc.player.tickCount % 3 == 0) {
                 Packets.sendToServer(new RequestTilePacket(tile.getBlockPos()));
             }
+        } else if (this.menu != null && this.menu.pos != null && mc.player != null && mc.player.tickCount % 5 == 0) {
+            Packets.sendToServer(new RequestTilePacket(this.menu.pos));
         }
 
         this.renderBackground(matrix);
         super.render(matrix, mouseX, mouseY, partialTicks);
         renderOther(matrix, mouseX, mouseY);
         this.renderTooltip(matrix, mouseX, mouseY);
+        this.buttons.forEach(b -> b.renderToolTip(matrix, mouseX, mouseY));
 
     }
 
@@ -117,8 +121,6 @@ public abstract class ModificationGui<T extends BaseTileContainer, Tile extends 
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         blit(matrix, this.leftPos, this.topPos, 0, 0, imageWidth, imageHeight, backgroundCanvasSize, backgroundCanvasSize);
-
-        this.buttons.forEach(b -> b.renderToolTip(matrix, x, y));
 
     }
 

@@ -93,7 +93,7 @@ public abstract class BaseTileContainer extends AbstractContainerMenu {
                     if (!this.moveItemStackTo(itemstack1, getContainerStart(), getContainerEnd(), true)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (!this.moveItemStackTo(itemstack1, getPlayerInvStart(), getPlayerInvEnd(), false)) {
+                } else if (!this.moveItemStackTo(itemstack1, getPlayerInvStart(), getPlayerInvEnd() + 1, false)) {
                     return ItemStack.EMPTY;
                 }
 

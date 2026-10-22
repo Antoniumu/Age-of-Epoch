@@ -30,6 +30,7 @@ public abstract class AbstractContainerScreen<T extends AbstractContainerMenu>
     public int backgroundWidth = 176;
     public int backgroundHeight = 166;
     private boolean superExtractedInFrame = false;
+    private boolean inExtractRenderState = false;
 
     public AbstractContainerScreen(T menu, Inventory inv, Component title) {
         super(menu, inv, title);
@@ -72,7 +73,9 @@ public abstract class AbstractContainerScreen<T extends AbstractContainerMenu>
     }
 
     public void renderBackground(PoseStack matrix) {
-        AbstractGui.fill(matrix, 0, 0, this.width, this.height, 0xB0101010);
+        if (!inExtractRenderState) {
+            AbstractGui.fill(matrix, 0, 0, this.width, this.height, 0xB0101010);
+        }
     }
 
     protected void renderBg(PoseStack matrix, float partialTicks, int mouseX, int mouseY) {
@@ -106,7 +109,10 @@ public abstract class AbstractContainerScreen<T extends AbstractContainerMenu>
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         AbstractGui.setCurrentGraphics(graphics);
-        this.renderBg(AbstractGui.currentPose(), partialTicks, mouseX, mouseY);
+        PoseStack pose = new PoseStack();
+        AbstractGui.setCurrentPose(pose);
+        AbstractGui.fill(pose, 0, 0, this.width, this.height, 0xB0101010);
+        this.renderBg(pose, partialTicks, mouseX, mouseY);
     }
 
     @Override
@@ -121,10 +127,15 @@ public abstract class AbstractContainerScreen<T extends AbstractContainerMenu>
         PoseStack pose = new PoseStack();
         AbstractGui.setCurrentPose(pose);
         superExtractedInFrame = false;
-        this.render(pose, mouseX, mouseY, partialTicks);
-        if (!superExtractedInFrame) {
-            superExtractedInFrame = true;
-            super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
+        inExtractRenderState = true;
+        try {
+            this.render(pose, mouseX, mouseY, partialTicks);
+            if (!superExtractedInFrame) {
+                superExtractedInFrame = true;
+                super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
+            }
+        } finally {
+            inExtractRenderState = false;
         }
     }
 
