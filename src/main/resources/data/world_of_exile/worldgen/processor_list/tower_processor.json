@@ -1,7 +1,3 @@
 {
-  "processors": [
-    {
-      "processor_type": "world_of_exile:tower_processor"
-    }
-  ]
+  "processors": []
 }
