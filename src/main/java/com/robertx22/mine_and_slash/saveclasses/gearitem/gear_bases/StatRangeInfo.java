@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.saveclasses.gearitem.gear_bases;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import com.robertx22.mine_and_slash.capability.entity.EntityData;
 import com.robertx22.mine_and_slash.database.data.MinMax;
 import com.robertx22.mine_and_slash.database.data.stats.tooltips.StatTooltipType;
@@ -12,8 +14,8 @@ public class StatRangeInfo implements Cloneable {
 
 
     public StatRangeInfo(ModRange minmax) {
-        this.hasAltDown = Screen.hasAltDown();
-        this.hasShiftDown = Screen.hasShiftDown();
+        this.hasAltDown = InputConstants.isKeyDown(InputConstants.KEY_LALT);
+        this.hasShiftDown = InputConstants.isKeyDown(InputConstants.KEY_LSHIFT);
 
         this.player = ClientOnly.getPlayer();
         this.unitdata = Load.Unit(player);

@@ -27,7 +27,7 @@ public class MapPlayerDataSaver<T> {
     }
 
     public T getData(MapStructure structure, BlockPos pos) {
-        var start = structure.getStartChunkPos(new ChunkPos(pos));
+        var start = structure.getStartChunkPos(ChunkPos.containing(pos));
         String key = getKey(start);
         return map.get(key);
     }
@@ -37,7 +37,7 @@ public class MapPlayerDataSaver<T> {
     }
 
     public boolean hasData(MapStructure structure, BlockPos pos) {
-        var start = structure.getStartChunkPos(new ChunkPos(pos));
+        var start = structure.getStartChunkPos(ChunkPos.containing(pos));
         String key = getKey(start);
         return map.containsKey(key);
     }
@@ -50,7 +50,7 @@ public class MapPlayerDataSaver<T> {
             map.remove(playerMapIdMap.get(p.getStringUUID()));
         }
 
-        var start = structure.getStartChunkPos(new ChunkPos(pos));
+        var start = structure.getStartChunkPos(ChunkPos.containing(pos));
         String key = getKey(start);
         map.put(key, data);
         playerMapIdMap.put(p.getStringUUID(), key);

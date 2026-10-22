@@ -1,5 +1,7 @@
 package com.robertx22.forge_compat.client.settings;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import com.robertx22.forge_compat.client.Screen;
 
 public enum KeyModifier {
@@ -7,9 +9,9 @@ public enum KeyModifier {
 
     public boolean isActive(KeyConflictContext ctx) {
         return switch (this) {
-            case CONTROL -> Screen.hasControlDown();
-            case SHIFT -> Screen.hasShiftDown();
-            case ALT -> Screen.hasAltDown();
+            case CONTROL -> InputConstants.isKeyDown(InputConstants.KEY_LCONTROL);
+            case SHIFT -> InputConstants.isKeyDown(InputConstants.KEY_LSHIFT);
+            case ALT -> InputConstants.isKeyDown(InputConstants.KEY_LALT);
             case NONE -> true;
         };
     }

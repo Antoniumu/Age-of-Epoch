@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.stats.types.core_stats;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.mine_and_slash.database.data.stats.Stat;
 import com.robertx22.mine_and_slash.database.data.stats.StatScaling;
 import com.robertx22.mine_and_slash.database.data.stats.types.core_stats.base.ITransferToOtherStats;
@@ -20,7 +22,7 @@ public class AllAttributes extends Stat implements ITransferToOtherStats {
     public static String DEX_ID = "dexterity";
 
     private AllAttributes() {
-        this.format = ChatFormatting.LIGHT_PURPLE.getName();
+        this.format = CompatChatFormatting.getName(ChatFormatting.LIGHT_PURPLE);
 
         this.scaling = StatScaling.CORE;
     }

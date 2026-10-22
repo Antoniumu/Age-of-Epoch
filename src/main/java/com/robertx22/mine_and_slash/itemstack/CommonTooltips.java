@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.itemstack;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import com.robertx22.mine_and_slash.gui.texts.textblocks.AdditionalBlock;
 import com.robertx22.mine_and_slash.uncommon.localization.Itemtips;
 import com.robertx22.mine_and_slash.uncommon.localization.Words;
@@ -21,7 +23,7 @@ public class CommonTooltips {
         if (doQuality) {
             list.add(Itemtips.QUALITY.locName(exStack.get(StackKeys.CUSTOM).getOrCreate().data.get(CustomItemData.KEYS.QUALITY)).withStyle(ChatFormatting.GOLD));
         }
-        return new AdditionalBlock(list).showWhen(() -> Screen.hasShiftDown());
+        return new AdditionalBlock(list).showWhen(() -> InputConstants.isKeyDown(InputConstants.KEY_LSHIFT));
     }
 
     public static AdditionalBlock craftedItem(ExileStack exStack) {
@@ -29,7 +31,7 @@ public class CommonTooltips {
         if (exStack.get(StackKeys.CUSTOM).hasAndTrue(x -> x.data.get(CustomItemData.KEYS.CRAFTED))) {
             all.add(Words.CRAFTED.locName().withStyle(ChatFormatting.LIGHT_PURPLE));
         }
-        return new AdditionalBlock(all).showWhen(() -> Screen.hasShiftDown());
+        return new AdditionalBlock(all).showWhen(() -> InputConstants.isKeyDown(InputConstants.KEY_LSHIFT));
     }
 
 }

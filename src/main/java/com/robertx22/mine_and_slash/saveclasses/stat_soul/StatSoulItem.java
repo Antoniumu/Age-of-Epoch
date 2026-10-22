@@ -1,4 +1,6 @@
 package com.robertx22.mine_and_slash.saveclasses.stat_soul;
+
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.world.InteractionResult;
 
 import com.robertx22.library_of_exile.registry.IGUID;
@@ -148,7 +150,7 @@ public class StatSoulItem extends Item implements IGUID, ICreativeTabNbt, iHideJ
             StatSoulData data = StackSaving.STAT_SOULS.loadFrom(stack);
             if (data != null) {
                 tooltip.clear();
-                if (Screen.hasShiftDown() && data.gear != null) {
+                if (InputConstants.isKeyDown(InputConstants.KEY_LSHIFT) && data.gear != null) {
                     // todo temp solution to view extracted souls
                     var gearstack = new ItemStack(Items.IRON_SWORD);
                     data.gear.saveTo(gearstack);

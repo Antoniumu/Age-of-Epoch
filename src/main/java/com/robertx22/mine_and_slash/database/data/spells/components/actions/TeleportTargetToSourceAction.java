@@ -92,7 +92,7 @@ public class TeleportTargetToSourceAction extends SpellAction {
         double yAdjust = entity.getBbHeight() / 2.0 - 0.5;
 
         for (Vec3i offset : SEARCH_OFFSETS) {
-            Vec3 testPosition = blockPos.offset(offset).getCenter().add(0, yAdjust, 0);
+            Vec3 testPosition = net.minecraft.world.phys.Vec3.atCenterOf(blockPos.offset(offset)).add(0, yAdjust, 0);
             if (canEntityFit(entity, testPosition)) {
                 return testPosition;
             }

@@ -31,7 +31,7 @@ public class MapConnectionsCap implements ICapabilityProvider, INBTSerializable<
     }
 
     public static MapConnectionsCap get(Level entity) {
-        var overworld = entity.level().getServer().overworld();
+        var overworld = entity.getServer().overworld();
         return com.robertx22.forge_compat.common.capabilities.CapabilityProvider.get(overworld, INSTANCE).orElse(new MapConnectionsCap(overworld));
     }
 

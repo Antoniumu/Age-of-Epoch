@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.stats.types.spirit;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.mine_and_slash.database.data.stats.Stat;
 import com.robertx22.mine_and_slash.saveclasses.unit.stat_ctx.StatContext;
 import com.robertx22.mine_and_slash.saveclasses.unit.stat_ctx.modify.IStatCtxModifier;
@@ -10,7 +12,7 @@ public class AuraEffect extends Stat {
 
     private AuraEffect() {
         this.icon = "\u2663";
-        this.format = ChatFormatting.AQUA.getName();
+        this.format = CompatChatFormatting.getName(ChatFormatting.AQUA);
 
         this.statContextModifier = new IStatCtxModifier() {
             @Override

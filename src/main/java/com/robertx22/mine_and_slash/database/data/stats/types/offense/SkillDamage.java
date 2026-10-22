@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.stats.types.offense;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.mine_and_slash.database.data.stats.Stat;
 import com.robertx22.mine_and_slash.database.data.stats.effects.base.BaseDamageIncreaseEffect;
 import com.robertx22.mine_and_slash.saveclasses.unit.StatData;
@@ -14,7 +16,7 @@ public class SkillDamage extends Stat {
         this.group = StatGroup.MAIN;
 
         this.statEffect = new Effect();
-        this.format = ChatFormatting.LIGHT_PURPLE.getName();
+        this.format = CompatChatFormatting.getName(ChatFormatting.LIGHT_PURPLE);
 
 
     }

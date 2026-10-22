@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.spells.components.actions;
 
+import net.minecraft.world.damagesource.DamageSource;
+
 import com.robertx22.mine_and_slash.database.data.spells.components.MapHolder;
 import com.robertx22.mine_and_slash.database.data.spells.map_fields.MapField;
 import com.robertx22.mine_and_slash.database.data.spells.spell_classes.SpellCtx;
@@ -31,7 +33,11 @@ public class KnockbackAction extends SpellAction {
     private void knockbackTarget(Entity caster, LivingEntity entity, float strength) {
         float rot = caster.getYRot();
         if (entity != null) {
-            entity.knockback(strength, Mth.sin((float) (rot * Math.PI / 180.0F)), -Mth.cos((float) (rot * (Math.PI / 180.0F))));
+            // MC 26.3: knockback now requires a DamageSource + damage amount
+            DamageSource src = caster instanceof LivingEntity le
+                ? caster.damageSources().mobAttack(le)
+                : caster.damageSources().generic();
+            entity.knockback(strength, Mth.sin((float) (rot * Math.PI / 180.0F)), -Mth.cos((float) (rot * (Math.PI / 180.0F))), src, 1.0F);
         }
     }
 

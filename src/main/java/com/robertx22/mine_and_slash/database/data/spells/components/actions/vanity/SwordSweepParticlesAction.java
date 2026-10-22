@@ -21,7 +21,10 @@ public class SwordSweepParticlesAction extends SpellAction {
 
             if (ctx.caster instanceof Player) {
                 Player p = (Player) ctx.caster;
-                p.sweepAttack();
+                // MC 26.3: Player.sweepAttack() was removed, spawn the sweep particles directly
+                p.swingAndResetAttackStrength(net.minecraft.world.InteractionHand.MAIN_HAND, net.minecraft.world.item.component.SwingAnimation.DEFAULT, true);
+                p.level().addParticle(net.minecraft.core.particles.ParticleTypes.SWEEP_ATTACK,
+                    p.getX(), p.getBoundingBox().maxY, p.getZ(), 0, 0, 0);
             }
         }
     }

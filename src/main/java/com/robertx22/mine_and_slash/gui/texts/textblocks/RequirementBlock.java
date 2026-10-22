@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.gui.texts.textblocks;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import com.google.common.collect.ImmutableList;
 import com.robertx22.mine_and_slash.capability.entity.EntityData;
 import com.robertx22.mine_and_slash.gui.texts.ExileTooltips;
@@ -71,7 +73,7 @@ public class RequirementBlock extends AbstractTextBlock {
             } else {
                 builder.add(Component.literal("").append(Component.literal(NO_ICON).withStyle(ChatFormatting.RED, ChatFormatting.BOLD)).append(Component.literal(" ")).append(Itemtips.LEVEL_REQ.locName(levelRequirement).withStyle().withStyle(ChatFormatting.DARK_GRAY)));
             }
-            if (Screen.hasAltDown()) {
+            if (InputConstants.isKeyDown(InputConstants.KEY_LALT)) {
                 builder.add(Chats.LEVEL_EXPLANATION.locName());
             }
         }

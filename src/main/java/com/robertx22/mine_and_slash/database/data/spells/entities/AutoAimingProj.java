@@ -91,7 +91,7 @@ public class AutoAimingProj extends AbstractHurtingProjectile {
                 move = move.normalize().multiply(speed, speed, speed);
 
                 this.setDeltaMovement(move);
-                this.hurtMarked = true;
+                this.needsSync = true; // MC 26.3: renamed from hurtMarked
             }
 
             if (this.tickCount > (20 * 15)) {

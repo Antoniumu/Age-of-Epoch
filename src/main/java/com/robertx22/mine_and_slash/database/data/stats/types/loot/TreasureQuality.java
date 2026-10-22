@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.stats.types.loot;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.mine_and_slash.database.data.stats.Stat;
 import com.robertx22.mine_and_slash.uncommon.enumclasses.Elements;
 import net.minecraft.ChatFormatting;
@@ -8,7 +10,7 @@ public class TreasureQuality extends Stat {
 
     private TreasureQuality() {
         this.icon = "\u2663";
-        this.format = ChatFormatting.AQUA.getName();
+        this.format = CompatChatFormatting.getName(ChatFormatting.AQUA);
         this.max = 150;
     }
 

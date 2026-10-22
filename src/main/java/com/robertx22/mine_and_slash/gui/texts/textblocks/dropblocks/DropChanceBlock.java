@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.gui.texts.textblocks.dropblocks;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import com.robertx22.mine_and_slash.gui.texts.ExileTooltips;
 import com.robertx22.mine_and_slash.gui.texts.textblocks.AbstractTextBlock;
 import com.robertx22.mine_and_slash.mmorpg.MMORPG;
@@ -27,7 +29,7 @@ public class DropChanceBlock extends AbstractTextBlock {
 
         List<MutableComponent> list = new ArrayList<>();
         list.add(Itemtips.DROP_CHANCE.locName(chancetext).withStyle(ChatFormatting.GREEN));
-        if (Screen.hasShiftDown()) {
+        if (InputConstants.isKeyDown(InputConstants.KEY_LSHIFT)) {
             list.add(Itemtips.DROP_CHANCE_EXTRA_INFO.locName().withStyle(ChatFormatting.BLUE));
         }
         return list;

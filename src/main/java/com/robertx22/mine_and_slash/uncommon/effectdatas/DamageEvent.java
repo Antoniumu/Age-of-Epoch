@@ -645,7 +645,9 @@ public class DamageEvent extends EffectEvent {
             }
         }
 
-        DamageSource dmgsource = new DamageSource(source.level().registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DAMAGE_TYPE), source, source, source.position());
+        // MC 26.3: the (type, direct, causing, position) DamageSource constructor is private,
+        // public one takes (Holder<DamageType>, direct, causing) without position
+        DamageSource dmgsource = new DamageSource(source.level().registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DAMAGE_TYPE), source, source);
 
 
         if (this.data.isSpellEffect()) {
@@ -687,10 +689,10 @@ public class DamageEvent extends EffectEvent {
                 duck.setMnsDamage(vanillaDamage);
 
                 if (target instanceof Player == false) {
-                    int inv = target.invulnerableTime;
-                    target.invulnerableTime = 0;
+                    int inv = target.getInvulnerableTime();
+                    target.setInvulnerableTime(0);
                     if (target.level() instanceof net.minecraft.server.level.ServerLevel sl) target.hurtServer(sl, dmgsource, vanillaDamage);
-                    target.invulnerableTime = inv;
+                    target.setInvulnerableTime(inv);
                 } else {
                     if (target.level() instanceof net.minecraft.server.level.ServerLevel sl) target.hurtServer(sl, dmgsource, vanillaDamage);
                 }
@@ -699,7 +701,7 @@ public class DamageEvent extends EffectEvent {
 
         if (attri.hasModifier(NO_KNOCKBACK.id())) {
             attri.removeModifier(NO_KNOCKBACK);
-            target.hurtMarked = false;
+            // MC 26.3: Entity.hurtMarked field is gone; the new knockback handles velocity sync internally
         }
 
         if (dmg > 0) {
@@ -751,7 +753,7 @@ public class DamageEvent extends EffectEvent {
             if (CompatConfig.get().disableMobIframes()) {
                 if (attackInfo == null) {
                     if (target instanceof Player == false) {
-                        target.invulnerableTime = 0;
+                        target.setInvulnerableTime(0);
                     }
                 }
             }

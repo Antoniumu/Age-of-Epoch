@@ -18,7 +18,9 @@ public class ParticleUtils {
 
         if (en instanceof Player) {
             Player p = (Player) en;
-            p.sweepAttack();
+            // MC 26.3: Player.sweepAttack() was removed, spawn the sweep particles directly
+            p.level().addParticle(net.minecraft.core.particles.ParticleTypes.SWEEP_ATTACK,
+                p.getX(), p.getBoundingBox().maxY, p.getZ(), 0, 0, 0);
         }
     }
 

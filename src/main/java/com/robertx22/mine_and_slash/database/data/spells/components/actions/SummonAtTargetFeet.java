@@ -1,5 +1,9 @@
 package com.robertx22.mine_and_slash.database.data.spells.components.actions;
 
+import net.minecraft.resources.Identifier;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.robertx22.mine_and_slash.database.data.spells.components.MapHolder;
 import com.robertx22.mine_and_slash.database.data.spells.components.Spell;
 import com.robertx22.mine_and_slash.database.data.spells.map_fields.MapField;
@@ -25,7 +29,7 @@ public class SummonAtTargetFeet extends SpellAction {
     @Override
     public void tryActivate(Collection<LivingEntity> targets, SpellCtx ctx, MapHolder data) {
 
-        Optional<EntityType<?>> projectile = EntityType.byString(data.get(MapField.PROJECTILE_ENTITY));
+        Optional<EntityType<?>> projectile = BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.parse(data.get(MapField.PROJECTILE_ENTITY)));
 
         Double height = data.getOrDefault(MapField.HEIGHT, 0D);
 

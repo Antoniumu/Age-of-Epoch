@@ -217,7 +217,7 @@ public class WaterSpells implements ExileRegistryInit {
                         .tick(20D))
                 .onTick("block", PartBuilder.addExileEffectToEnemiesInAoe(ModEffects.BONE_CHILL.resourcePath, 4D, 20 * 8D)
                         .tick(20D))
-                .onTick("block", PartBuilder.addEffectToEnemiesInAoe(MobEffects.MOVEMENT_SLOWDOWN, 4D, 20D))
+                .onTick("block", PartBuilder.addEffectToEnemiesInAoe(MobEffects.SLOWNESS, 4D, 20D))
 
                 .levelReq(20)
                 .build();

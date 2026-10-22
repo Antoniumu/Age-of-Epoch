@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.stats.types.resources.magic_shield;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.library_of_exile.utils.SoundUtils;
 import com.robertx22.mine_and_slash.database.data.stats.Stat;
 import com.robertx22.mine_and_slash.database.data.stats.StatScaling;
@@ -20,7 +22,7 @@ public class MagicShield extends Stat {
 
         this.order = 0;
         this.icon = "\u2764";
-        this.format = ChatFormatting.LIGHT_PURPLE.getName();
+        this.format = CompatChatFormatting.getName(ChatFormatting.LIGHT_PURPLE);
 
     }
 

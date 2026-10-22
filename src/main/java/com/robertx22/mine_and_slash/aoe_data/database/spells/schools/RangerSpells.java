@@ -174,7 +174,7 @@ public class RangerSpells implements ExileRegistryInit {
                 .onHit(PartBuilder.aoeParticles(ParticleTypes.CRIT, 100D, 1D))
                 .onHit(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.ARROW_HIT), 1D, 1D))
                 .onHit(PartBuilder.damageInAoe(SpellCalcs.CHARGED_BOLT, Elements.Nature, 2D)
-                        .addPerEntityHit(PartBuilder.justAction(SpellAction.POTION.createGive(MobEffects.MOVEMENT_SLOWDOWN, 40D))))
+                        .addPerEntityHit(PartBuilder.justAction(SpellAction.POTION.createGive(MobEffects.SLOWNESS, 40D))))
                 .onTick(PartBuilder.particleOnTick(1D, ParticleTypes.CRIT, 4D, 0.1D))
                 .onTick(PartBuilder.particleOnTick(1D, ParticleTypes.ENCHANTED_HIT, 4D, 0.1D))
                 .levelReq(1)
@@ -187,7 +187,7 @@ public class RangerSpells implements ExileRegistryInit {
 
                 .onCast(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.WOLF_HOWL), 1D, 1D))
                 .onCast(PartBuilder.giveSelfEffect(SlashPotions.INSTANT_ARROWS.get(), 20D * 10, 16D))
-                .onCast(PartBuilder.giveSelfEffect(MobEffects.MOVEMENT_SPEED, 20D * 3))
+                .onCast(PartBuilder.giveSelfEffect(MobEffects.SPEED, 20D * 3))
                 .onCast(PartBuilder.justAction(SpellAction.GIVE_ARROWS.create()))
                 .levelReq(10)
                 .build();
@@ -254,7 +254,7 @@ public class RangerSpells implements ExileRegistryInit {
                 .onExpire(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.ARROW_HIT), 1D, 1D))
                 .onExpire(PartBuilder.playSound(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.GENERIC_EXPLODE), 1D, 1D))
                 .onExpire(PartBuilder.damageInAoe(SpellCalcs.EXPLOSIVE_ARROW, Elements.Fire, 2D)
-                        .addPerEntityHit(PartBuilder.justAction(SpellAction.POTION.createGive(MobEffects.MOVEMENT_SLOWDOWN, 40D))))
+                        .addPerEntityHit(PartBuilder.justAction(SpellAction.POTION.createGive(MobEffects.SLOWNESS, 40D))))
                 .onTick(PartBuilder.particleOnTick(1D, ParticleTypes.CRIT, 4D, 0.1D))
                 .levelReq(10)
                 .build();

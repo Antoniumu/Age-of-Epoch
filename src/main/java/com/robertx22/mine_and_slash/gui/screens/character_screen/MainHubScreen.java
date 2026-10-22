@@ -217,13 +217,13 @@ public class MainHubScreen extends BaseScreen implements INamedScreen {
         int aoeBtnX = this.guiLeft - 86;
         int aoeBtnY = this.guiTop + 6;
         this.publicAddButton(net.minecraft.client.gui.components.Button.builder(
-            Component.literal("§6Квесты"), b -> Minecraft.getInstance().setScreen(new com.robertx22.age_of_exile.questbook.QuestBookScreen())
+            Component.literal("§6Квесты"), b -> Minecraft.getInstance().gui.setScreen(new com.robertx22.age_of_exile.questbook.QuestBookScreen())
         ).bounds(aoeBtnX, aoeBtnY, 82, 18).build());
         this.publicAddButton(net.minecraft.client.gui.components.Button.builder(
-            Component.literal("§bГайды"), b -> Minecraft.getInstance().setScreen(new com.robertx22.age_of_exile.guides.GuidesScreen())
+            Component.literal("§bГайды"), b -> Minecraft.getInstance().gui.setScreen(new com.robertx22.age_of_exile.guides.GuidesScreen())
         ).bounds(aoeBtnX, aoeBtnY + 21, 82, 18).build());
         this.publicAddButton(net.minecraft.client.gui.components.Button.builder(
-            Component.literal("§eСимуляция"), b -> Minecraft.getInstance().setScreen(new com.robertx22.age_of_exile.simulation.SimulationScreen())
+            Component.literal("§eСимуляция"), b -> Minecraft.getInstance().gui.setScreen(new com.robertx22.age_of_exile.simulation.SimulationScreen())
         ).bounds(aoeBtnX, aoeBtnY + 42, 82, 18).build());
 
 

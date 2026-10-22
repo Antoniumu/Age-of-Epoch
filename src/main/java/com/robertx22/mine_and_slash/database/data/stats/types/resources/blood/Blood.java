@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.stats.types.resources.blood;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.mine_and_slash.database.data.stats.Stat;
 import com.robertx22.mine_and_slash.database.data.stats.StatScaling;
 import com.robertx22.mine_and_slash.uncommon.enumclasses.Elements;
@@ -14,7 +16,7 @@ public class Blood extends Stat {
         this.group = StatGroup.MAIN;
 
         this.icon = "\u2764";
-        this.format = ChatFormatting.DARK_RED.getName();
+        this.format = CompatChatFormatting.getName(ChatFormatting.DARK_RED);
     }
 
     public static Blood getInstance() {

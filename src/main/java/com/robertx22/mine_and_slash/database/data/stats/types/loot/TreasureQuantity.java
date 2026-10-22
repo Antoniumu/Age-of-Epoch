@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.stats.types.loot;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.mine_and_slash.database.data.stats.Stat;
 import com.robertx22.mine_and_slash.uncommon.enumclasses.Elements;
 import net.minecraft.ChatFormatting;
@@ -9,7 +11,7 @@ public class TreasureQuantity extends Stat {
     private TreasureQuantity() {
         this.group = StatGroup.Misc;
         this.icon = "\u2663";
-        this.format = ChatFormatting.YELLOW.getName();
+        this.format = CompatChatFormatting.getName(ChatFormatting.YELLOW);
     }
 
     public static TreasureQuantity getInstance() {

@@ -145,7 +145,7 @@ public class OnServerTick {
                             .energyData()
                             .getValue() / 10) {
                         if (CompatConfig.get().energyPenalty()) {
-                            player.addEffect(new MobEffectInstance(com.robertx22.forge_compat.common.CompatHelper.wrapEffect(MobEffects.MOVEMENT_SLOWDOWN), 20 * 3, 2));
+                            player.addEffect(new MobEffectInstance(com.robertx22.forge_compat.common.CompatHelper.wrapEffect(MobEffects.SLOWNESS), 20 * 3, 2));
                             player.addEffect(new MobEffectInstance(com.robertx22.forge_compat.common.CompatHelper.wrapEffect(MobEffects.HUNGER), 20 * 3, 2));
                         }
                     }

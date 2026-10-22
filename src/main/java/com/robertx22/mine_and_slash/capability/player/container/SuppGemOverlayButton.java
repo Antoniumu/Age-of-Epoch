@@ -26,7 +26,7 @@ public class SuppGemOverlayButton extends ImageButton {
 
     public SuppGemOverlayButton(boolean can, MaxLinks links, int xPos, int yPos) {
         super(xPos, yPos, BUTTON_SIZE_X, BUTTON_SIZE_Y, 0, 0, BUTTON_SIZE_Y, SlashRef.guiId("blocked_slot"), (button) -> {
-            //Minecraft.getInstance().setScreen(new InvGuiScreen(GuiInventoryGrids.ofSelectableSpells(ClientOnly.getPlayer(), slot)));
+            //Minecraft.getInstance().gui.setScreen(new InvGuiScreen(GuiInventoryGrids.ofSelectableSpells(ClientOnly.getPlayer(), slot)));
         });
         this.can = can;
         this.links = links;

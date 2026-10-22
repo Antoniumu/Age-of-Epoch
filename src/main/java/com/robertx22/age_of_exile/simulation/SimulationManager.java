@@ -193,7 +193,7 @@ public final class SimulationManager {
 
     public static void spawnDummy(ServerPlayer player, boolean boss) {
         if (!(player.level() instanceof ServerLevel sl)) return;
-        Zombie dummy = (Zombie) EntityType.ZOMBIE.create(sl, EntitySpawnReason.COMMAND);
+        Zombie dummy = (Zombie) EntityTypes.ZOMBIE.create(sl, EntitySpawnReason.COMMAND);
         if (dummy == null) return;
         BlockPos pos = player.blockPosition().relative(player.getDirection(), 3);
         dummy.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);

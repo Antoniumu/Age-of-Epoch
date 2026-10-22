@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.aoe_data.database.stats;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.mine_and_slash.aoe_data.database.stat_conditions.StatConditions;
 import com.robertx22.mine_and_slash.aoe_data.database.stat_effects.StatEffects;
 import com.robertx22.mine_and_slash.aoe_data.database.stats.base.DatapackStatBuilder;
@@ -158,7 +160,7 @@ public class SpellChangeStats {
             .modifyAfterDone(x -> {
                 x.is_perc = true;
                 x.icon = "\u27B9";
-                x.format = ChatFormatting.GREEN.getName();
+                x.format = CompatChatFormatting.getName(ChatFormatting.GREEN);
             })
             .build();
 
@@ -177,7 +179,7 @@ public class SpellChangeStats {
                 x.max = 100;
                 x.minus_is_good = true;
                 x.icon = "\u27B9";
-                x.format = ChatFormatting.GREEN.getName();
+                x.format = CompatChatFormatting.getName(ChatFormatting.GREEN);
             })
             .build();
 
@@ -236,7 +238,7 @@ public class SpellChangeStats {
             .modifyAfterDone(x -> {
                 x.is_perc = true;
                 x.icon = "\u27B9";
-                x.format = ChatFormatting.GREEN.getName();
+                x.format = CompatChatFormatting.getName(ChatFormatting.GREEN);
             })
 
             .build();
@@ -251,7 +253,7 @@ public class SpellChangeStats {
             .setLocDesc(x -> "")
             .modifyAfterDone(x -> {
                 x.is_perc = true;
-                x.format = ChatFormatting.GREEN.getName();
+                x.format = CompatChatFormatting.getName(ChatFormatting.GREEN);
             })
 
             .build();
@@ -266,7 +268,7 @@ public class SpellChangeStats {
             .setLocDesc(x -> "Higher radius means minions can travel further to kill stuff for you, lower means they will stay nearby more")
             .modifyAfterDone(x -> {
                 x.is_perc = true;
-                x.format = ChatFormatting.GREEN.getName();
+                x.format = CompatChatFormatting.getName(ChatFormatting.GREEN);
             })
 
             .build();

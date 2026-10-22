@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.stats;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.library_of_exile.registry.ExileRegistryType;
 import com.robertx22.library_of_exile.registry.IGUID;
 import com.robertx22.library_of_exile.registry.IWeighted;
@@ -73,7 +75,7 @@ public abstract class Stat implements IGUID, IAutoLocName, IWeighted, IAutoLocDe
     public boolean is_long = false;
     public String icon = UNICODE.STAR;
     public int order = 100;
-    public String format = ChatFormatting.AQUA.getName();
+    public String format = CompatChatFormatting.getName(ChatFormatting.AQUA);
     public StatGroup group = StatGroup.Misc;
     private MultiUseType multiUseType = MultiUseType.MULTIPLY_STAT;
     public boolean minus_is_good = false; // so stats like minus mana cost dont have nasty red tooltip
@@ -157,7 +159,7 @@ public abstract class Stat implements IGUID, IAutoLocName, IWeighted, IAutoLocDe
 
 
     public ChatFormatting getFormat() {
-        return ChatFormatting.getByName(format);
+        return CompatChatFormatting.getByName(format);
     }
 
     public String getIconNameFormat() {

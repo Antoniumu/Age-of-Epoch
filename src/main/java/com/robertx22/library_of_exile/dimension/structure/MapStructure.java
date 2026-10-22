@@ -47,12 +47,12 @@ public abstract class MapStructure<Map> {
 
     public ChunkPos getRelativeChunkPosFromStart(ChunkPos pos) {
         ChunkPos start = getStartChunkPos(pos);
-        ChunkPos relative = new ChunkPos(pos.x - start.x, pos.z - start.z);
+        ChunkPos relative = new ChunkPos(pos.x() - start.x(), pos.z() - start.z());
         return relative;
     }
 
     public ChunkPos getStartChunkPos(BlockPos pos) {
-        var start = getStartChunkPos(new ChunkPos(pos));
+        var start = getStartChunkPos(ChunkPos.containing(pos));
         return start;
     }
 

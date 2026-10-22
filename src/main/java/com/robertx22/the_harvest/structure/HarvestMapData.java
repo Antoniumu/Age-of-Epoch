@@ -46,7 +46,7 @@ public class HarvestMapData {
     }
 
     public List<LivingEntity> getAllLivingMobs(Level world, BlockPos pos) {
-        return world.getEntitiesOfClass(LivingEntity.class, AABB.ofSize(pos.getCenter(), 30, 30, 30)).stream().filter(x -> HarvestEntityCap.get(x).data.isHarvestSpawn).collect(Collectors.toList());
+        return world.getEntitiesOfClass(LivingEntity.class, AABB.ofSize(net.minecraft.world.phys.Vec3.atCenterOf(pos), 30, 30, 30)).stream().filter(x -> HarvestEntityCap.get(x).data.isHarvestSpawn).collect(Collectors.toList());
     }
 
 
@@ -131,7 +131,7 @@ public class HarvestMapData {
         en.setPos(pos.getX(), pos.getY(), pos.getZ());
 
         if (en instanceof Mob mob) {
-            mob.finalizeSpawn((ServerLevel) world, world.getCurrentDifficultyAt(pos), net.minecraft.world.entity.EntitySpawnReason.COMMAND, (SpawnGroupData) null);
+            mob.finalizeSpawn((ServerLevel) world, ((ServerLevel) world).getCurrentDifficultyAt(pos), net.minecraft.world.entity.EntitySpawnReason.COMMAND, (SpawnGroupData) null);
         }
 
         world.addFreshEntity(en);

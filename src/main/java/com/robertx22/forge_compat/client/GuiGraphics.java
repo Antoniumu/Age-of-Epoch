@@ -26,7 +26,8 @@ public class GuiGraphics {
     }
 
     public GuiGraphics(Minecraft mc, Object bufferSource) {
-        this.extractor = new GuiGraphicsExtractor();
+        // MC 26.3: GuiGraphicsExtractor has no default constructor anymore
+        this.extractor = new GuiGraphicsExtractor(mc, new net.minecraft.client.renderer.state.gui.GuiRenderState(), 0, 0);
     }
 
     public static GuiGraphics wrap(GuiGraphicsExtractor ext) {

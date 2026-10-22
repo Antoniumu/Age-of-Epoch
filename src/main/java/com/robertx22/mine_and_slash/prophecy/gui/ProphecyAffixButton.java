@@ -30,7 +30,7 @@ public class ProphecyAffixButton extends ImageButton {
         super(x, y, 16, 16, 0, 0, 1, ID, (action) -> {
             if (canTake) {
                 //Packets.sendToServer(new AcceptProphecyAffixPacket(data.GUID()));
-                //Minecraft.getInstance().setScreen(null);
+                //Minecraft.getInstance().gui.setScreen(null);
             }
         });
         this.info = info;

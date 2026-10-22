@@ -38,7 +38,7 @@ public class BaseScreen extends Screen {
         // todo make this less wack
         // MC 26.3: KeyMapping.matches takes an InputConstants.Key (the compat layer passes the SDL scancode as keyCode)
         if (KeybindsRegister.HUB_SCREEN_KEY.matches(InputConstants.Type.KEYBOARD.getOrCreate(keyCode)) && !StatScreen.SEARCH.isFocused() && !SkillTreeScreen.SEARCH.isFocused()) {
-            Minecraft.getInstance().setScreen(null);
+            Minecraft.getInstance().gui.setScreen(null);
             OnKeyPress.cooldown = 5;
             return false;
 

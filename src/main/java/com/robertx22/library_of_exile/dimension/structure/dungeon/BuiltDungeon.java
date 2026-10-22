@@ -64,8 +64,8 @@ public class BuiltDungeon {
     public BuiltRoom getRoomForChunk(MapStructure s, ChunkPos pos) {
         try {
             ChunkPos start = s.getStartChunkPos(pos.getMiddleBlockPosition(50));
-            ChunkPos relative = new ChunkPos(pos.x - start.x, pos.z - start.z);
-            return rooms[getMiddle() + relative.x][getMiddle() + relative.z];
+            ChunkPos relative = new ChunkPos(pos.x() - start.x(), pos.z() - start.z());
+            return rooms[getMiddle() + relative.x()][getMiddle() + relative.z()];
         } catch (Exception e) {
         }
         // todo.. why is this nulling now

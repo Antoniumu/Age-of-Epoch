@@ -1,5 +1,9 @@
 package com.robertx22.mine_and_slash.database.data.spells.components.actions;
 
+import net.minecraft.resources.Identifier;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.robertx22.mine_and_slash.database.data.spells.components.MapHolder;
 import com.robertx22.mine_and_slash.database.data.spells.components.ProjectileCastHelper;
 import com.robertx22.mine_and_slash.database.data.spells.components.Spell;
@@ -34,7 +38,7 @@ public class SummonProjectileAction extends SpellAction {
             return;
         }
 
-        Optional<EntityType<?>> projectile = EntityType.byString(data.get(MapField.PROJECTILE_ENTITY));
+        Optional<EntityType<?>> projectile = BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.parse(data.get(MapField.PROJECTILE_ENTITY)));
 
         PositionSource posSource = data.getOrDefault(PositionSource.CASTER);
         ShootWay shootWay = data.getOrDefault(ShootWay.FROM_PLAYER_VIEW);

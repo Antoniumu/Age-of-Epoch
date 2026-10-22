@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.stats.types.resources.mana;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.mine_and_slash.database.data.stats.Stat;
 import com.robertx22.mine_and_slash.database.data.stats.StatScaling;
 import com.robertx22.mine_and_slash.uncommon.enumclasses.Elements;
@@ -22,7 +24,7 @@ public class Mana extends Stat {
         this.scaling = StatScaling.NORMAL;
         this.group = StatGroup.MAIN;
 
-        this.format = ChatFormatting.BLUE.getName();
+        this.format = CompatChatFormatting.getName(ChatFormatting.BLUE);
         this.icon = "\u262F";
     }
 

@@ -35,7 +35,7 @@ public class ProcessMapChunks {
 
         for (int x = -terrain; x < terrain; x++) {
             for (int z = -terrain; z < terrain; z++) {
-                all.add(new ChunkPos(start.x + x, start.z + z));
+                all.add(new ChunkPos(start.x() + x, start.z() + z));
             }
         }
         return all;

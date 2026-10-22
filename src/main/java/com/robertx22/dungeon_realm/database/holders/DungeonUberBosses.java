@@ -24,7 +24,7 @@ public class DungeonUberBosses extends ExileKeyHolder<MapDataBlock> {
                 "Realm of Atrophy and Decay",
                 DungeonMain.MODID,
                 "A living mortal, in MY Realm?",
-                EntityType.WITHER,
+                EntityTypes.WITHER,
                 new SimplePrebuiltMapData(3, DungeonMain.MODID + ":uber/river")
         );
         return arena;

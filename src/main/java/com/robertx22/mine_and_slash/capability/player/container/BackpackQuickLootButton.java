@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.capability.player.container;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import com.robertx22.library_of_exile.main.Packets;
 import com.robertx22.mine_and_slash.config.forge.ClientConfigs;
 import com.robertx22.mine_and_slash.mmorpg.SlashRef;
@@ -19,14 +21,14 @@ import com.robertx22.forge_compat.client.event.ScreenEvent;
 public class BackpackQuickLootButton extends ImageButton {
     static Identifier TEXTURE = SlashRef.id("textures/gui/backpack_button.png");
     public BackpackQuickLootButton(int pX, int pY, ContainerScreen screen) {
-        super(pX + ClientConfigs.getConfig().QUICK_LOOT_BUTTON_X_OFFSET.get(), pY + ClientConfigs.getConfig().QUICK_LOOT_BUTTON_Y_OFFSET.get(), 14, 14, 0, 0, 16, TEXTURE, 16, 32, x -> Packets.sendToServer(new BackPackLootMenuPacket(Screen.hasShiftDown() ? BackPackLootMenuPacket.Mode.DROP : BackPackLootMenuPacket.Mode.LOOT)), Gui.MASTER_BACKPACK_LOOT_BUTTON.locName());
+        super(pX + ClientConfigs.getConfig().QUICK_LOOT_BUTTON_X_OFFSET.get(), pY + ClientConfigs.getConfig().QUICK_LOOT_BUTTON_Y_OFFSET.get(), 14, 14, 0, 0, 16, TEXTURE, 16, 32, x -> Packets.sendToServer(new BackPackLootMenuPacket(InputConstants.isKeyDown(InputConstants.KEY_LSHIFT) ? BackPackLootMenuPacket.Mode.DROP : BackPackLootMenuPacket.Mode.LOOT)), Gui.MASTER_BACKPACK_LOOT_BUTTON.locName());
 
     }
 
     @Override
     public void extractWidgetRenderState(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         super.renderWidget(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        if (Screen.hasShiftDown()){
+        if (InputConstants.isKeyDown(InputConstants.KEY_LSHIFT)){
             this.setTooltip(Tooltip.create(Gui.MASTER_BACKPACK_LOOT_BUTTON_2.locName()));
         } else {
             this.setTooltip(Tooltip.create(Gui.MASTER_BACKPACK_LOOT_BUTTON.locName()));

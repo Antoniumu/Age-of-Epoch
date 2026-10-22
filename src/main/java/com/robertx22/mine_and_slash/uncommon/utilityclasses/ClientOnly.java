@@ -23,7 +23,7 @@ public class ClientOnly {
     }
 
     public static void openProphecy() {
-        Minecraft.getInstance().setScreen(new ProphecyScreen());
+        Minecraft.getInstance().gui.setScreen(new ProphecyScreen());
     }
 
 
@@ -57,11 +57,11 @@ public class ClientOnly {
     }
 
     public static void setScreen(Screen s) {
-        Minecraft.getInstance().setScreen(s);
+        Minecraft.getInstance().gui.setScreen(s);
     }
 
     public static void closeScreen() {
-        Minecraft.getInstance().setScreen(null);
+        Minecraft.getInstance().gui.setScreen(null);
     }
 
 

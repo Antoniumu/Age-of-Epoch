@@ -359,7 +359,7 @@ public class MapDimensionConfig {
                     return;
                 }
                 // let's not accidentally stop players from spawning just in case
-                if (event.getEntityType() == EntityType.PLAYER) {
+                if (event.getEntityType() == EntityTypes.PLAYER) {
                     return;
                 }
                 var type = event.getSpawnType();

@@ -24,7 +24,7 @@ public class UnstuckMobs {
             }
         }
         if (en.isInWall()) {
-            en.invulnerableTime = 0;
+            en.setInvulnerableTime(0);
             if (en.level() instanceof net.minecraft.server.level.ServerLevel sl) en.hurtServer(sl, en.damageSources().fellOutOfWorld(), 999999);
             en.discard();
         }

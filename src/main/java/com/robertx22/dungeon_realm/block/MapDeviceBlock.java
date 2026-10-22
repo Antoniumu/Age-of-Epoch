@@ -99,7 +99,7 @@ public class MapDeviceBlock extends BaseEntityBlock {
             DungeonItemMapData map = DungeonItemNbt.DUNGEON_MAP.loadFrom(stack);
 
             var count = map.getOrSetStartPos(p.level(), stack);
-            var start = DungeonMain.MAIN_DUNGEON_STRUCTURE.getStartFromCounter(count.x, count.z);
+            var start = DungeonMain.MAIN_DUNGEON_STRUCTURE.getStartFromCounter(count.x(), count.z());
             var pos = TeleportUtils.getSpawnTeleportPos(DungeonMain.MAIN_DUNGEON_STRUCTURE, start.getMiddleBlockPosition(5));
 
             //var pdata = PlayerDataCapability.get(p);
@@ -224,13 +224,6 @@ public class MapDeviceBlock extends BaseEntityBlock {
                 // todo
             }
         };
-    }
-
-
-    @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public com.mojang.serialization.MapCodec<? extends net.minecraft.world.level.block.BaseEntityBlock> codec() {
-        return (com.mojang.serialization.MapCodec) simpleCodec(p -> this);
     }
 
 

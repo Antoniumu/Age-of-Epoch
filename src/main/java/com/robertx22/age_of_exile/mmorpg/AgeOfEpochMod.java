@@ -306,9 +306,10 @@ public class AgeOfEpochMod implements ModInitializer {
         int count = 0;
         for (PreparableReloadListener listener : reloadEvent.listeners) {
             listener.reload(
-                immediateBarrier,
-                manager,
+                // MC 26.3: reload() takes a SharedState (wrapping the resource manager) first
+                new PreparableReloadListener.SharedState(manager),
                 Runnable::run,
+                immediateBarrier,
                 Runnable::run
             ).join();
             count++;

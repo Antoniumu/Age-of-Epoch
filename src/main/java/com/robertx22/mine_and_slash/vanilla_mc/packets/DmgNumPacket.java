@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.vanilla_mc.packets;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.library_of_exile.main.MyPacket;
 import com.robertx22.library_of_exile.packets.ExilePacketContext;
 import com.robertx22.mine_and_slash.a_libraries.dmg_number_particle.DamageParticleAdder;
@@ -55,7 +57,7 @@ public class DmgNumPacket extends MyPacket<DmgNumPacket> {
         string = tag.readUtf(500);
         id = tag.readInt();
         this.iscrit = tag.readBoolean();
-        this.format = ChatFormatting.getByName(tag.readUtf(100));
+        this.format = CompatChatFormatting.getByName(tag.readUtf(100));
 
     }
 

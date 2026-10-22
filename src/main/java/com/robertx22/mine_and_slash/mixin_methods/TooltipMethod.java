@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.mixin_methods;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import com.robertx22.addons.orbs_of_crafting.currency.IItemAsCurrency;
 import com.robertx22.library_of_exile.registry.Database;
 import com.robertx22.mine_and_slash.capability.entity.EntityData;
@@ -57,7 +59,7 @@ public class TooltipMethod {
             }
 
 
-            if (Screen.hasControlDown()) {
+            if (InputConstants.isKeyDown(InputConstants.KEY_LCONTROL)) {
                 GearItemData gear = StackSaving.GEARS.loadFrom(stack);
 
                 if (gear != null) {
@@ -99,7 +101,7 @@ public class TooltipMethod {
 
                     tooltip.addAll(splitLongText(Chats.SOULLESS_GEAR_INFO.locName()));
 
-                    if (Screen.hasShiftDown()) {
+                    if (InputConstants.isKeyDown(InputConstants.KEY_LSHIFT)) {
                         tooltip.addAll(splitLongText(Chats.SOULLESS_GEAR_MORE_INFO.locName()));
                     }
                 }

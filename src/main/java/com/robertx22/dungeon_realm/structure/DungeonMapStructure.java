@@ -53,8 +53,8 @@ public class DungeonMapStructure extends DungeonStructure {
 
     @Override
     protected ChunkPos INTERNALgetStartChunkPos(ChunkPos cp) {
-        int chunkX = cp.x;
-        int chunkZ = cp.z;
+        int chunkX = cp.x();
+        int chunkZ = cp.z();
         int distToEntranceX = 11 - (chunkX % DUNGEON_LENGTH);
         int distToEntranceZ = 11 - (chunkZ % DUNGEON_LENGTH);
         chunkX += distToEntranceX;

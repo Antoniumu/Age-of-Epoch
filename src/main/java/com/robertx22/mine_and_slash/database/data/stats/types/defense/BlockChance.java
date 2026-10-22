@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.stats.types.defense;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.library_of_exile.utils.RandomUtils;
 import com.robertx22.mine_and_slash.database.data.stats.Stat;
 import com.robertx22.mine_and_slash.database.data.stats.effects.base.BaseDamageEffect;
@@ -34,7 +36,7 @@ public class BlockChance extends Stat {
 
         this.statEffect = new BlockChance.Effect();
 
-        this.format = ChatFormatting.BLUE.getName();
+        this.format = CompatChatFormatting.getName(ChatFormatting.BLUE);
 
     }
 

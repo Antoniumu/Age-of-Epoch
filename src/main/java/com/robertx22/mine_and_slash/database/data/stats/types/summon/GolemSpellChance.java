@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.stats.types.summon;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.mine_and_slash.database.data.spells.spell_classes.SpellCtx;
 import com.robertx22.mine_and_slash.database.data.spells.spell_classes.bases.SpellCastContext;
 import com.robertx22.mine_and_slash.database.data.spells.summons.entity.golems.GolemSummon;
@@ -19,7 +21,7 @@ import net.minecraft.ChatFormatting;
 public class GolemSpellChance extends Stat {
 
     private GolemSpellChance() {
-        this.format = ChatFormatting.AQUA.getName();
+        this.format = CompatChatFormatting.getName(ChatFormatting.AQUA);
 
         this.statEffect = new GolemSpellEffect();
     }

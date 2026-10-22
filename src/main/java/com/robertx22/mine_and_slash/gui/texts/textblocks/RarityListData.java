@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.gui.texts.textblocks;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import com.robertx22.library_of_exile.registry.ExileRegistryContainer;
 import com.robertx22.library_of_exile.tooltip.ExileTooltipUtils;
 import com.robertx22.library_of_exile.util.UNICODE;
@@ -33,7 +35,7 @@ public class RarityListData {
         List<GearRarity> allRarities = container.getList();
 
         allRarities.sort(Comparator.comparingInt(x -> x.item_tier));
-        if (!Screen.hasShiftDown()) {
+        if (!InputConstants.isKeyDown(InputConstants.KEY_LSHIFT)) {
             MutableComponent starter = Component.literal("");
             String block = "\u25A0";
             allRarities

@@ -37,7 +37,7 @@ public class MainHubButton extends ImageButton {
                 con.openContainer();
             } else {
                 Minecraft.getInstance()
-                        .setScreen((Screen) screen);
+                        .gui.setScreen((Screen) screen);
             }
         });
 

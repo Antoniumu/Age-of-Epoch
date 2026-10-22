@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.value_calc;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import com.robertx22.library_of_exile.main.ExileLog;
 import com.robertx22.library_of_exile.registry.ExileRegistryType;
 import com.robertx22.library_of_exile.registry.IAutoGson;
@@ -111,7 +113,7 @@ public class ValueCalculation implements JsonExileRegistry<ValueCalculation>, IA
 
         text.append("" + ChatFormatting.GREEN + val + ChatFormatting.GRAY);
 
-        if (!Screen.hasShiftDown()) {
+        if (!InputConstants.isKeyDown(InputConstants.KEY_LSHIFT)) {
             return text;
         }
 

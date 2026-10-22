@@ -199,8 +199,8 @@ public class DungeonEvents {
                 if (RandomUtils.roll(chance)) {
                     data.spawnBonusMapContent(world, pos);
                 }
-                var cp = new ChunkPos(pos);
-                var point = new PointData(cp.x, cp.z);
+                var cp = ChunkPos.containing(pos);
+                var point = new PointData(cp.x(), cp.z());
                 data.bonusContents.mechsChunks.add(point);
             }
         }

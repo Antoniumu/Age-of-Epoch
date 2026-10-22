@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.gui.texts.textblocks.dropblocks;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import com.robertx22.library_of_exile.database.league.League;
 import com.robertx22.library_of_exile.localization.TranslationType;
 import com.robertx22.library_of_exile.util.UNICODE;
@@ -27,7 +29,7 @@ public class LeagueBlock extends AbstractTextBlock {
 
         list.add(Component.literal(UNICODE.SKULL + " ").withStyle(league.getTextColor()).append(league.getTranslation(TranslationType.NAME).getTranslatedName().withStyle(league.getTextColor())));
 
-        if (Screen.hasShiftDown()) {
+        if (InputConstants.isKeyDown(InputConstants.KEY_LSHIFT)) {
             list.add(Chats.ITEM_AQUIRED_THROUGH_LEAGUE.locName().withStyle(league.getTextColor()));
         }
         return list;

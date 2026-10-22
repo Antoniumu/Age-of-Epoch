@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.saveclasses.prof_tool;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import com.google.common.collect.ImmutableList;
 import com.robertx22.mine_and_slash.database.data.affixes.Affix;
 import com.robertx22.mine_and_slash.database.data.game_balance_config.GameBalanceConfig;
@@ -142,7 +144,7 @@ public class ProfessionToolData implements ITooltip {
         while (ctx.tooltip.get(ctx.tooltip.size() - 1).getString().isBlank()){
             ctx.tooltip.remove(ctx.tooltip.size() - 1);
         }*/
-        if (Screen.hasControlDown()) {
+        if (InputConstants.isKeyDown(InputConstants.KEY_LCONTROL)) {
             return;
         }
 

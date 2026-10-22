@@ -1,5 +1,7 @@
 package com.robertx22.orbs_of_crafting.main;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import com.robertx22.orbs_of_crafting.lang.OrbWords;
 import com.robertx22.orbs_of_crafting.register.ExileCurrency;
 import net.minecraft.ChatFormatting;
@@ -15,7 +17,7 @@ import java.util.List;
 public class OrbTooltips {
 
     public static void callMethod(ItemStack stack, Player entity, TooltipFlag tooltipContext, CallbackInfoReturnable<List<Component>> list) {
-        if (Screen.hasControlDown()) {
+        if (InputConstants.isKeyDown(InputConstants.KEY_LCONTROL)) {
             return;
         }
         // apparently i cant clear the entire thing with the forge event so.. ItemTooltipEvent

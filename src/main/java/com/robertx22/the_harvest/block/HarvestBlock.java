@@ -61,7 +61,7 @@ public class HarvestBlock extends BaseEntityBlock {
         HarvestItemMapData map = HarvestItemNbt.HARVEST_MAP.loadFrom(stack);
 
         var count = map.getOrSetStartPos(p.level(), stack);
-        var start = HarvestMain.HARVEST_MAP_STRUCTURE.getStartFromCounter(count.x, count.z);
+        var start = HarvestMain.HARVEST_MAP_STRUCTURE.getStartFromCounter(count.x(), count.z());
         var pos = TeleportUtils.getSpawnTeleportPos(HarvestMain.HARVEST_MAP_STRUCTURE, start.getMiddleBlockPosition(5));
 
         var pdata = PlayerDataCapability.get(p);
@@ -164,13 +164,6 @@ public class HarvestBlock extends BaseEntityBlock {
                 // todo
             }
         };
-    }
-
-
-    @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public com.mojang.serialization.MapCodec<? extends net.minecraft.world.level.block.BaseEntityBlock> codec() {
-        return (com.mojang.serialization.MapCodec) simpleCodec(p -> this);
     }
 
 

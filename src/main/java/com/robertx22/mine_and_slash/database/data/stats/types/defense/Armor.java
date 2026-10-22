@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.stats.types.defense;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.library_of_exile.util.UNICODE;
 import com.robertx22.mine_and_slash.database.data.stats.IUsableStat;
 import com.robertx22.mine_and_slash.database.data.stats.Stat;
@@ -28,7 +30,7 @@ public class Armor extends Stat implements IUsableStat {
         this.group = StatGroup.MAIN;
 
         this.icon = UNICODE.STAR;
-        this.format = ChatFormatting.BLUE.getName();
+        this.format = CompatChatFormatting.getName(ChatFormatting.BLUE);
 
         this.statEffect = new ArmorEffect();
 

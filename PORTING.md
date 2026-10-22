@@ -62,6 +62,41 @@ MC 26.3 закрыл следующие группы:
    dmg-частиц/хелсбаров выпилены (живой рендер плашек — `MobPlateRenderer`
    через `OrderedSubmitNodeCollector.submitNameTag/submitText`).
 
+## 1b. Третий проход (следующие 100 ошибок)
+
+6. **Инкапсуляция сущностей**: `Entity.invulnerableTime` приватный →
+   `getInvulnerableTime()`/`setInvulnerableTime(int)`; поле `hurtMarked`
+   переименовано в публичное `needsSync`; `hasImpulse` удалён (knockback
+   синхронизирует скорость сам); `Entity/Player.getServer()` — только через
+   `level()/levelAccessor.getServer()` (хвосты, включая 4 cap-класса
+   `*MapCapability`/`MapConnectionsCap`, где `get(Level entity)`).
+7. **Рендер-GUI**: `Minecraft.setScreen()` удалён →
+   `Minecraft.getInstance().gui.setScreen(...)` (34 места);
+   `Screen.hasShiftDown()/hasAltDown()/hasControlDown()` удалены →
+   `InputConstants.isKeyDown(InputConstants.KEY_L*)` (SDL-сканкоды, 19 файлов);
+   `GuiGraphicsExtractor` без no-arg конструктора —
+   `(Minecraft, GuiRenderState, int, int)`.
+8. **ChunkPos — record**: поля `.x`/`.z` → `.x()`/`.z()`,
+   `new ChunkPos(BlockPos)` → `ChunkPos.containing(pos)`.
+9. **Типы/реестры**: статические константы (`ZOMBIE`, `PLAYER`, …) переехали из
+   `EntityType` в `EntityTypes` (`EntityType.Builder` остался); `byString(id)` →
+   `BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.parse(id))`;
+   `MobEffects.MOVEMENT_SLOWDOWN/MOVEMENT_SPEED` → `SLOWNESS/SPEED`;
+   `ChatFormatting.getName()/getByName()` удалены →
+   `CompatChatFormatting.getName/getByName` (23 файла).
+10. **Бои и спавн**: публичный конструктор `DamageSource` без позиции —
+    `(Holder, direct, causing)`; `knockback(power,x,z,DamageSource,damage)`;
+    `Level.getCurrentDifficultyAt` есть только у `ServerLevel` (каст);
+    `BlockPos.getCenter()` → `Vec3.atCenterOf(pos)`; `Player.sweepAttack()`
+    удалён → частица `SWEEP_ATTACK` + `swingAndResetAttackStrength(...)`.
+11. **Блоки и датаген**: `Block.codec()`/`simpleCodec()` удалены целиком
+    (7 obelisk/dungeon/harvest/profession-блоков) — сериализация блоков в 26.3
+    другая; `DataGenerator.addProvider(run, provider)` →
+    `addProvider((PackOutput) -> provider)`; `PreparableReloadListener.reload`
+    теперь принимает `SharedState(manager)` первым аргументом.
+12. `-Xmaxerrs` поднят до 5000 по умолчанию (`-PdshMaxErrs=N` для переопределения),
+    чтобы хвосты ошибок больше не прятались за лимитом в 100.
+
 ## 2. Состав порта
 
 Монорепозиторий одного Fabric-мода `mmorpg` («Age of Epoch»), объединяющий исходники:

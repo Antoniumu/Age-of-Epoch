@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.gui.screens.skill_tree.buttons;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import com.google.common.collect.HashMultimap;
 import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.library_of_exile.utils.Watch;
@@ -91,7 +93,7 @@ public class PerkButton extends ImageButton {
             if (perk.stats.stream().anyMatch(x -> x.stat.equals(new UnknownStat().GUID()))) {
                 tooltip.add(Component.literal("No Perk of this ID found: " + perkid));
             } else {
-                if (MMORPG.RUN_DEV_TOOLS || Screen.hasShiftDown()) {
+                if (MMORPG.RUN_DEV_TOOLS || InputConstants.isKeyDown(InputConstants.KEY_LSHIFT)) {
                     tooltip.add(Component.literal("Perk ID: " + perkid));
                 }
             }

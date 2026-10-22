@@ -1,5 +1,9 @@
 package com.robertx22.mine_and_slash.database.data.spells.components.actions;
 
+import net.minecraft.resources.Identifier;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.robertx22.mine_and_slash.aoe_data.database.spells.SummonType;
 import com.robertx22.mine_and_slash.capability.entity.SummonedPetData;
 import com.robertx22.mine_and_slash.database.data.spells.components.MapHolder;
@@ -39,11 +43,11 @@ public class SummonPetAction extends SpellAction {
 
         for (int i = 0; i < amount; i++) {
 
-            Optional<EntityType<?>> type = EntityType.byString(data.get(MapField.SUMMONED_PET_ID));
+            Optional<EntityType<?>> type = BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.parse(data.get(MapField.SUMMONED_PET_ID)));
 
             TamableAnimal en = (TamableAnimal) type.get().create(ctx.world, net.minecraft.world.entity.EntitySpawnReason.MOB_SUMMONED);
 
-            en.finalizeSpawn((ServerLevel) ctx.world, ctx.world.getCurrentDifficultyAt(ctx.getBlockPos()), net.minecraft.world.entity.EntitySpawnReason.MOB_SUMMONED, null);
+            en.finalizeSpawn((ServerLevel) ctx.world, ((ServerLevel) ctx.world).getCurrentDifficultyAt(ctx.getBlockPos()), net.minecraft.world.entity.EntitySpawnReason.MOB_SUMMONED, null);
 
             en.tame((Player) ctx.caster);
 

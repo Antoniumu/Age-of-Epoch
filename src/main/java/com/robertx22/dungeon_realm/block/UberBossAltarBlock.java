@@ -40,7 +40,7 @@ public class UberBossAltarBlock extends Block {
                 if (MapDimensions.isMap(level)) {
 
                     DungeonMain.ifMapData(level, pPos).ifPresent(x -> {
-                        var uber = DungeonMain.UBER_ARENA.getUber(new ChunkPos(pPos));
+                        var uber = DungeonMain.UBER_ARENA.getUber(ChunkPos.containing(pPos));
                         var type = uber.getRandomBoss();
 
                         LivingEntity en = (LivingEntity) type.create(level, net.minecraft.world.entity.EntitySpawnReason.MOB_SUMMONED);

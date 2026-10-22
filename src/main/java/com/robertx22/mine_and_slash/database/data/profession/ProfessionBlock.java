@@ -140,12 +140,6 @@ public class ProfessionBlock extends BaseEntityBlock  {
         return null;
     }
 
-    @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public com.mojang.serialization.MapCodec<? extends net.minecraft.world.level.block.BaseEntityBlock> codec() {
-        return (com.mojang.serialization.MapCodec) simpleCodec(p -> this);
-    }
-
 
     @Override
     public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {

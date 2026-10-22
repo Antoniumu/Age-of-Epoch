@@ -30,7 +30,7 @@ public class RewardStructure extends SimplePrebuiltMapStructure {
 
     public void generateManually(ServerLevel level, ChunkPos cp) {
         var start = getStartChunkPos(cp);
-        var chunk = level.getChunk(start.x, start.z);
+        var chunk = level.getChunk(start.x(), start.z());
         ProcessMapChunks.spawnDataFromChunk(level, chunk, ChunkProcessType.REWARD_ROOM);
     }
 

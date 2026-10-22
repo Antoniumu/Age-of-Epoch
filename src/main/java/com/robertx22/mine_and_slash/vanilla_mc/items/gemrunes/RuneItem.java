@@ -1,4 +1,6 @@
 package com.robertx22.mine_and_slash.vanilla_mc.items.gemrunes;
+
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.world.InteractionResult;
 
 import com.robertx22.addons.orbs_of_crafting.currency.IItemAsCurrency;
@@ -295,7 +297,7 @@ public class RuneItem extends Item implements IGUID, IAutoModel, IAutoLocName, I
             t.accept(new OperationTipBlock().setAlt().setShift());
             Rune rune = this.getRune();
 
-            if (Screen.hasShiftDown()) {
+            if (InputConstants.isKeyDown(InputConstants.KEY_LSHIFT)) {
                 t.accept(new UsageBlock(splitLongText(Itemtips.RUNE_ITEM_USAGE.locName().withStyle(ChatFormatting.BLUE))));
                 if (rune.Weight() > 0) {
                     var lvl = Load.Unit(ClientOnly.getPlayer()).getLevel();

@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.gui.texts.textblocks;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import com.robertx22.library_of_exile.tooltip.ExileTooltipUtils;
 import com.robertx22.library_of_exile.util.UNICODE;
 import com.robertx22.mine_and_slash.database.data.gear_slots.GearSlot;
@@ -83,7 +85,7 @@ public class WorksOnBlock extends AbstractTextBlock {
 
         var types = Component.literal(UNICODE.STAR + " ").append(Words.ITEM_TYPES.locName()).withStyle(ChatFormatting.GREEN);
 
-        if (Screen.hasShiftDown()) {
+        if (InputConstants.isKeyDown(InputConstants.KEY_LSHIFT)) {
             all.add(types);
 
             for (ItemType type : items) {
@@ -124,7 +126,7 @@ public class WorksOnBlock extends AbstractTextBlock {
 
             all.add(Itemtips.DRAG_AND_DROP_TO_USE.locName().withStyle(ChatFormatting.BLUE));
 
-            if (Screen.hasShiftDown()) {
+            if (InputConstants.isKeyDown(InputConstants.KEY_LSHIFT)) {
                 all.add(Itemtips.DRAG_AND_DROP_TO_USE_DESC.locName().withStyle(ChatFormatting.AQUA));
             }
             if (ClientOnly.getPlayer().isCreative()) {

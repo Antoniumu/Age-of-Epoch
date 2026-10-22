@@ -25,12 +25,12 @@ public class LibAffixesHolder extends ExileKeyHolder<ExileMobAffix> {
     }
 
     public ExileKey<ExileMobAffix, KeyInfo> FAST_MOBS = ExileKey.ofId(this, "fast_mobs", x -> {
-        var data = PotionMobAffix.Data.ofPermanent(MobEffects.MOVEMENT_SPEED, new AffixNumberRange(1, 2));
+        var data = PotionMobAffix.Data.ofPermanent(MobEffects.SPEED, new AffixNumberRange(1, 2));
         var translation = AffixTranslation.ofPermanentPotion(Ref.MODID);
         return new PotionMobAffix(ExileMobAffix.Affects.MOB, x.GUID(), 1000, data, translation);
     });
     public ExileKey<ExileMobAffix, KeyInfo> PERIODIC_SPEEDY_MOBS = ExileKey.ofId(this, "periodic_speedy_mobs", x -> {
-        var data = PotionMobAffix.Data.of5sEvery10s(MobEffects.MOVEMENT_SPEED, new AffixNumberRange(3, 6));
+        var data = PotionMobAffix.Data.of5sEvery10s(MobEffects.SPEED, new AffixNumberRange(3, 6));
         var translation = AffixTranslation.ofPotion(Ref.MODID);
         return new PotionMobAffix(ExileMobAffix.Affects.MOB, x.GUID(), 1000, data, translation);
     });

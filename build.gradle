@@ -70,9 +70,8 @@ tasks.withType(JavaCompile).configureEach {
     it.options.encoding = 'UTF-8'
     // Minecraft 26.x requires Java 25
     it.options.release = 25
-    if (project.hasProperty('dshMaxErrs')) {
-        it.options.compilerArgs.addAll(['-Xmaxerrs', project.property('dshMaxErrs').toString()])
-    }
+    // Show all compile errors, not just the default first 100 (override with -PdshMaxErrs=N)
+    it.options.compilerArgs.addAll(['-Xmaxerrs', project.hasProperty('dshMaxErrs') ? project.property('dshMaxErrs').toString() : '5000'])
 }
 
 tasks.register('dshClasspath') {

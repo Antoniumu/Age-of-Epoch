@@ -23,7 +23,7 @@ public class CardPickButton extends ImageButton {
     public CardPickButton(ICard card, int xPos, int yPos) {
         super(xPos, yPos, SIZE_X, SIZE_Y, 0, 0, 0, SlashRef.guiId("pick_card"), (button) -> {
             card.onClick(ClientOnly.getPlayer());
-            Minecraft.getInstance().setScreen(null);
+            Minecraft.getInstance().gui.setScreen(null);
         });
         this.card = card;
     }

@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.itemstack;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import com.robertx22.forge_compat.client.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -14,8 +16,8 @@ public class ExileTipCtx {
     public Player player;
     public ExileStack stack;
 
-    public boolean shift = Screen.hasShiftDown();
-    public boolean alt = Screen.hasAltDown();
+    public boolean shift = InputConstants.isKeyDown(InputConstants.KEY_LSHIFT);
+    public boolean alt = InputConstants.isKeyDown(InputConstants.KEY_LALT);
 
     public ExileTipCtx(List<Component> tip, Player player, ExileStack stack) {
         this.tip = tip;

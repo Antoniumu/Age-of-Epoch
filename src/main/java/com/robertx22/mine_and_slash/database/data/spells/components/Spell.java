@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.spells.components;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import com.robertx22.library_of_exile.main.ExileLog;
 import com.robertx22.library_of_exile.registry.ExileRegistryType;
 import com.robertx22.library_of_exile.registry.IAutoGson;
@@ -249,7 +251,7 @@ public final class Spell implements ISkillGem, IGUID, IAutoGson<Spell>, JsonExil
         list.add(locName().withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
         list.add(ExileText.emptyLine().get());
 
-        if (true || Screen.hasShiftDown()) {
+        if (true || InputConstants.isKeyDown(InputConstants.KEY_LSHIFT)) {
             SpellDesc.getTooltip(ctx.caster, this)
                     .forEach(x -> list.add(Component.literal(x)));
         }
@@ -310,7 +312,7 @@ public final class Spell implements ISkillGem, IGUID, IAutoGson<Spell>, JsonExil
             list.add(Words.CASTED_TIMES_CHANNEL.locName(config.times_to_cast).withStyle(ChatFormatting.RED));
         }
 
-        boolean showeffect = Screen.hasShiftDown();
+        boolean showeffect = InputConstants.isKeyDown(InputConstants.KEY_LSHIFT);
 
         // --- FIX: Use a map to keep only the effect with the greatest duration ---
         LinkedHashMap<ExileEffect, String> effectsWithDurations = new LinkedHashMap<>();

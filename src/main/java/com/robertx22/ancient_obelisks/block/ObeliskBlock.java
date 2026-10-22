@@ -59,18 +59,18 @@ public class ObeliskBlock extends BaseEntityBlock {
         ObeliskItemMapData map = ObeliskItemNbt.OBELISK_MAP.loadFrom(stack);
 
         var count = map.getOrSetStartPos(p.level(), stack);
-        var start = ObelisksMain.OBELISK_MAP_STRUCTURE.getStartFromCounter(count.x, count.z);
+        var start = ObelisksMain.OBELISK_MAP_STRUCTURE.getStartFromCounter(count.x(), count.z());
         var pos = TeleportUtils.getSpawnTeleportPos(ObelisksMain.OBELISK_MAP_STRUCTURE, start.getMiddleBlockPosition(5));
 
         var pdata = PlayerDataCapability.get(p);
 
         var data = new ObeliskMapData();
         data.item = map;
-        data.x = start.x;
-        data.z = start.z;
+        data.x = start.x();
+        data.z = start.z();
 
-        be.x = count.x;
-        be.z = count.z;
+        be.x = count.x();
+        be.z = count.z();
 
         be.currentWorldUUID = ObeliskMapCapability.get(p.level()).data.data.uuid;
 
@@ -161,13 +161,6 @@ public class ObeliskBlock extends BaseEntityBlock {
                 // todo
             }
         };
-    }
-
-
-    @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public com.mojang.serialization.MapCodec<? extends net.minecraft.world.level.block.BaseEntityBlock> codec() {
-        return (com.mojang.serialization.MapCodec) simpleCodec(p -> this);
     }
 
 

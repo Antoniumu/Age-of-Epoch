@@ -31,6 +31,6 @@ public class OpenInvGuiScreen implements IContainerNamedScreen {
 
     @Override
     public void openContainer() {
-        Minecraft.getInstance().setScreen(new InvGuiScreen(grid));
+        Minecraft.getInstance().gui.setScreen(new InvGuiScreen(grid));
     }
 }

@@ -25,7 +25,7 @@ public class FilterEntryButton extends ObjectSelectionList.Entry<FilterEntryButt
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
         this.screen.last.setFilterGroup(screen.type, entry);
-        Minecraft.getInstance().setScreen(screen.last);
+        Minecraft.getInstance().gui.setScreen(screen.last);
         return true;
     }
 

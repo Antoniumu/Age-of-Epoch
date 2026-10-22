@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.stats.types.resources.energy;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.mine_and_slash.database.data.stats.Stat;
 import com.robertx22.mine_and_slash.database.data.stats.StatScaling;
 import com.robertx22.mine_and_slash.uncommon.enumclasses.Elements;
@@ -22,7 +24,7 @@ public class Energy extends Stat {
         this.scaling = StatScaling.NORMAL;
         this.group = StatGroup.MAIN;
 
-        this.format = ChatFormatting.GREEN.getName();
+        this.format = CompatChatFormatting.getName(ChatFormatting.GREEN);
         this.icon = "\u262F";
     }
 

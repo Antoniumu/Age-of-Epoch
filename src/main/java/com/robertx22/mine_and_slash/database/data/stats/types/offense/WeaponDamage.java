@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.stats.types.offense;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.mine_and_slash.database.data.stats.Stat;
 import com.robertx22.mine_and_slash.database.data.stats.StatScaling;
 import com.robertx22.mine_and_slash.uncommon.enumclasses.Elements;
@@ -26,7 +28,7 @@ public class WeaponDamage extends Stat {
         this.group = StatGroup.MAIN;
 
         this.icon = Elements.Cold.icon;
-        this.format = ChatFormatting.GOLD.getName();
+        this.format = CompatChatFormatting.getName(ChatFormatting.GOLD);
 
     }
 

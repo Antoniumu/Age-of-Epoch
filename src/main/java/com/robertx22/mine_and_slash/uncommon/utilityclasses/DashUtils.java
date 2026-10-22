@@ -26,11 +26,12 @@ public class DashUtils {
 
     public static void knockback(LivingEntity source, LivingEntity target) {
 
-        target.knockback(0.5F, source.getX() - target.getX(), source.getZ() - target.getZ());
+        // MC 26.3: knockback now requires a DamageSource + damage amount
+        target.knockback(0.5F, source.getX() - target.getX(), source.getZ() - target.getZ(), source.damageSources().mobAttack(source), 1.0F);
 
         if (target instanceof ServerPlayer) {
             ((ServerPlayer) target).connection.send(new ClientboundSetEntityMotionPacket(target));
-            target.hurtMarked = false;
+            // MC 26.3: Entity.hurtMarked field is gone, velocity sync is handled internally
         }
     }
 
@@ -38,7 +39,7 @@ public class DashUtils {
     public static void push(Entity en, float f, double d, double e) {
 
         if (f > 0.0F) {
-            en.hasImpulse = true;
+            // MC 26.3: Entity.hasImpulse field is gone
             Vec3 vec3d = en.getDeltaMovement();
             Vec3 vec3d2 = (new Vec3(d, 0.0D, e)).normalize()
                     .scale((double) f);
@@ -72,7 +73,7 @@ public class DashUtils {
 
         if (entity instanceof ServerPlayer) {
             ((ServerPlayer) entity).connection.send(new ClientboundSetEntityMotionPacket(entity));
-            entity.hurtMarked = false;
+            // MC 26.3: Entity.hurtMarked field is gone
         }
     }
 

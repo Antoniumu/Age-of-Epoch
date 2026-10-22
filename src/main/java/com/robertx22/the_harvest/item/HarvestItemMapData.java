@@ -18,8 +18,8 @@ public class HarvestItemMapData {
 
         if (x == 0 && z == 0) {
             var start = HarvestMapCap.get(world).data.counter.getNextAndIncrement();
-            x = start.x;
-            z = start.z;
+            x = start.x();
+            z = start.z();
         }
         HarvestItemNbt.HARVEST_MAP.saveTo(stack, this);
         return new ChunkPos(x, z);

@@ -22,12 +22,12 @@ public class SimplePrebuiltMapData {
     public Identifier getRoomForChunk(ChunkPos pos, MapStructure struc) {
         try {
             ChunkPos relative = struc.getRelativeChunkPosFromStart(pos);
-            if (relative.x < 0 || relative.z < 0) {
+            if (relative.x() < 0 || relative.z() < 0) {
                 return null;
             }
 
-            int x = relative.x;
-            int z = relative.z;
+            int x = relative.x();
+            int z = relative.z();
 
             if (isWithinBounds(x, z)) {
                 return Identifier.parse(String.valueOf(rooms_folder + "/" + x + "_" + z));

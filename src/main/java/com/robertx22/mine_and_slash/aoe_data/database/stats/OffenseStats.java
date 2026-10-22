@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.aoe_data.database.stats;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.mine_and_slash.aoe_data.database.stat_conditions.StatConditions;
 import com.robertx22.mine_and_slash.aoe_data.database.stat_effects.StatEffects;
 import com.robertx22.mine_and_slash.aoe_data.database.stats.base.DatapackStatBuilder;
@@ -66,7 +68,7 @@ public class OffenseStats {
                 x.min = 0;
                 x.group = Stat.StatGroup.MAIN;
                 x.icon = "\u2694";
-                x.format = ChatFormatting.AQUA.getName();
+                x.format = CompatChatFormatting.getName(ChatFormatting.AQUA);
             })
             .build();
 
@@ -90,7 +92,7 @@ public class OffenseStats {
                 x.min = 0;
                 x.group = Stat.StatGroup.MAIN;
                 x.icon = "\u2694";
-                x.format = ChatFormatting.AQUA.getName();
+                x.format = CompatChatFormatting.getName(ChatFormatting.AQUA);
             })
             .build();
 
@@ -216,7 +218,7 @@ public class OffenseStats {
                 x.min = 0;
                 x.group = Stat.StatGroup.MAIN;
                 x.icon = "\u2694";
-                x.format = ChatFormatting.YELLOW.getName();
+                x.format = CompatChatFormatting.getName(ChatFormatting.YELLOW);
             })
             .build();
 
@@ -238,7 +240,7 @@ public class OffenseStats {
                 x.group = Stat.StatGroup.MAIN;
 
                 x.icon = "\u2694";
-                x.format = ChatFormatting.RED.getName();
+                x.format = CompatChatFormatting.getName(ChatFormatting.RED);
 
             })
             .build();
@@ -258,7 +260,7 @@ public class OffenseStats {
                 x.max = 500;
                 x.group = Stat.StatGroup.MAIN;
                 x.icon = "\u2694";
-                x.format = ChatFormatting.RED.getName();
+                x.format = CompatChatFormatting.getName(ChatFormatting.RED);
             })
             .build();
     public static DataPackStatAccessor<EmptyAccessor> ACCURACY = DatapackStatBuilder
@@ -290,7 +292,7 @@ public class OffenseStats {
                 x.is_perc = true;
                 x.base = 0;
                 x.icon = "\u27B9";
-                x.format = ChatFormatting.RED.getName();
+                x.format = CompatChatFormatting.getName(ChatFormatting.RED);
             })
             .build();
     public static DataPackStatAccessor<EmptyAccessor> AREA_DAMAGE = DatapackStatBuilder
@@ -306,7 +308,7 @@ public class OffenseStats {
             .modifyAfterDone(x -> {
                 x.is_perc = true;
                 x.base = 0;
-                x.format = ChatFormatting.BLUE.getName();
+                x.format = CompatChatFormatting.getName(ChatFormatting.BLUE);
             })
             .build();
     public static DataPackStatAccessor<EmptyAccessor> TRAP_AREA_DAMAGE = DatapackStatBuilder
@@ -323,7 +325,7 @@ public class OffenseStats {
             .modifyAfterDone(x -> {
                 x.is_perc = true;
                 x.base = 0;
-                x.format = ChatFormatting.BLUE.getName();
+                x.format = CompatChatFormatting.getName(ChatFormatting.BLUE);
             })
             .build();
 
@@ -340,7 +342,7 @@ public class OffenseStats {
             .modifyAfterDone(x -> {
                 x.is_perc = true;
                 x.base = 0;
-                x.format = ChatFormatting.RED.getName();
+                x.format = CompatChatFormatting.getName(ChatFormatting.RED);
             })
             .build();
 
@@ -358,7 +360,7 @@ public class OffenseStats {
             .modifyAfterDone(x -> {
                 x.is_perc = true;
                 x.base = 0;
-                x.format = ChatFormatting.RED.getName();
+                x.format = CompatChatFormatting.getName(ChatFormatting.RED);
             })
             .build();
 
@@ -375,7 +377,7 @@ public class OffenseStats {
                 x.scaling = StatScaling.NONE;
                 x.is_perc = true;
                 x.base = 0;
-                x.format = ChatFormatting.RED.getName();
+                x.format = CompatChatFormatting.getName(ChatFormatting.RED);
             })
             .build();
     public static DataPackStatAccessor<EmptyAccessor> ATTACK_DAMAGE = DatapackStatBuilder
@@ -392,7 +394,7 @@ public class OffenseStats {
                 x.scaling = StatScaling.NONE;
                 x.is_perc = true;
                 x.base = 0;
-                x.format = ChatFormatting.RED.getName();
+                x.format = CompatChatFormatting.getName(ChatFormatting.RED);
             })
             .build();
     public static DataPackStatAccessor<Elements> ELE_DOT_DAMAGE = DatapackStatBuilder
@@ -410,7 +412,7 @@ public class OffenseStats {
             .modifyAfterDone(x -> {
                 x.is_perc = true;
                 x.base = 0;
-                x.format = ChatFormatting.RED.getName();
+                x.format = CompatChatFormatting.getName(ChatFormatting.RED);
                 x.group = Stat.StatGroup.Misc;
             })
             .build();
@@ -470,7 +472,7 @@ public class OffenseStats {
             .modifyAfterDone(x -> {
                 x.is_perc = true;
                 x.icon = "\u27B9";
-                x.format = ChatFormatting.RED.getName();
+                x.format = CompatChatFormatting.getName(ChatFormatting.RED);
             })
             .build();
 

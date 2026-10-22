@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.stats.types.resources.health;
 
+import com.robertx22.forge_compat.common.CompatChatFormatting;
+
 import com.robertx22.mine_and_slash.database.data.stats.Stat;
 import com.robertx22.mine_and_slash.database.data.stats.StatScaling;
 import com.robertx22.mine_and_slash.uncommon.enumclasses.Elements;
@@ -15,7 +17,7 @@ public class Health extends Stat {
 
         this.order = 0;
         this.icon = "\u2764";
-        this.format = ChatFormatting.RED.getName();
+        this.format = CompatChatFormatting.getName(ChatFormatting.RED);
 
     }
 

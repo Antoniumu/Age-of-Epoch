@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.database.data.profession.items;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import com.robertx22.mine_and_slash.aoe_data.datapacks.models.ItemModelManager;
 import com.robertx22.mine_and_slash.aoe_data.datapacks.models.ModelHelper;
 import com.robertx22.mine_and_slash.database.data.gear_types.bases.SlotFamily;
@@ -63,7 +65,7 @@ public class CraftedSoulItem extends AutoItem implements ICreativeTabTiered, IRa
 
             if (soul != null) {
                 list.clear();
-                if (Screen.hasShiftDown() && soul.gear != null) {
+                if (InputConstants.isKeyDown(InputConstants.KEY_LSHIFT) && soul.gear != null) {
                     soul.gear.gear.BuildTooltip(new com.robertx22.mine_and_slash.saveclasses.gearitem.gear_bases.TooltipContext(pStack, list, Load.Unit(ClientOnly.getPlayer())));
                 } else {
                     ExileTooltips tooltip = soul.getTooltip(pStack, false);
