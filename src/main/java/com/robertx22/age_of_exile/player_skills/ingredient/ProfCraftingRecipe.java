@@ -26,8 +26,7 @@ public class ProfCraftingRecipe {
         List<IngredientData> list = new ArrayList<>();
 
         if (skill.isGearCraftingProf()) {
-            boolean hasgear = false;
-
+            int gearCount = 0;
             boolean hasgearwithdata = false;
 
             for (int i = 0; i < inv.getContainerSize(); ++i) {
@@ -40,10 +39,7 @@ public class ProfCraftingRecipe {
                     }
 
                     if (skill.gearMatchesProfession(stack.getItem())) {
-
-                        OnScreenMessageUtils.sendMessage((ServerPlayer) player, Component.literal("Нет снаряжения"), ClientboundTitleCompatPacket.Type.SUBTITLE);
-
-                        hasgear = true;
+                        gearCount++;
                     }
 
                 }
@@ -51,8 +47,11 @@ public class ProfCraftingRecipe {
             if (hasgearwithdata) {
                 return ProfCraftResult.fail(Words.GearHasData);
             }
-            if (!hasgear) {
+            if (gearCount == 0) {
                 return ProfCraftResult.fail(Words.NoGear);
+            }
+            if (gearCount > 1) {
+                return ProfCraftResult.fail(Words.CantUseMoreOf);
             }
         }
 
@@ -150,7 +149,8 @@ public class ProfCraftingRecipe {
                 ItemStack gear = inv.getItem(i);
                 if (!gear.isEmpty()) {
                     if (skill.gearMatchesProfession(gear.getItem())) {
-                        stack = gear.copy();
+                        stack = gear.copyWithCount(1);
+                        break;
                     }
                 }
             }

@@ -20,25 +20,42 @@ public class MatBagContainer extends BaseTileContainer {
     ItemStack stack;
     BackpackInventory backpackInv;
     Player player;
+    net.minecraft.world.InteractionHand hand = net.minecraft.world.InteractionHand.MAIN_HAND;
+
+    private static final ThreadLocal<net.minecraft.world.InteractionHand> LAST_READ_HAND =
+        ThreadLocal.withInitial(() -> net.minecraft.world.InteractionHand.MAIN_HAND);
+
+    private static ItemStack resolveHandStack(Player player, FriendlyByteBuf buf) {
+        net.minecraft.world.InteractionHand h = (buf != null && buf.readableBytes() > 0)
+            ? buf.readEnum(net.minecraft.world.InteractionHand.class)
+            : net.minecraft.world.InteractionHand.MAIN_HAND;
+        LAST_READ_HAND.set(h);
+        return player.getItemInHand(h);
+    }
 
     public MatBagContainer(int syncid, Inventory playerinv, FriendlyByteBuf buf) {
-        this(playerinv.player.getMainHandItem(), syncid, playerinv);
+        this(resolveHandStack(playerinv.player, buf), syncid, playerinv, LAST_READ_HAND.get());
     }
 
     public MatBagContainer(ItemStack stack, int id, Inventory invPlayer) {
+        this(stack, id, invPlayer, net.minecraft.world.InteractionHand.MAIN_HAND);
+    }
+
+    public MatBagContainer(ItemStack stack, int id, Inventory invPlayer, net.minecraft.world.InteractionHand hand) {
         super(6 * 9, SlashContainers.MAT_POUCH.get(), id, invPlayer);
 
         try {
             this.player = invPlayer.player;
+            this.hand = hand != null ? hand : net.minecraft.world.InteractionHand.MAIN_HAND;
 
             if (!StackNBT.has(stack)) {
                 StackNBT.set(stack, new CompoundTag());
             }
             if (!StackNBT.get(stack)
                 .contains("id")) {
-                StackNBT.get(stack)
-                    .putString("id", UUID.randomUUID()
-                        .toString()); // so 2 backpacks can never be the same
+                CompoundTag tag = StackNBT.getOrCreate(stack);
+                tag.putString("id", UUID.randomUUID().toString());
+                StackNBT.set(stack, tag); // so 2 backpacks can never be the same
             }
             this.stack = stack.copy(); // copy so i can later check if its same stack
 
@@ -75,14 +92,24 @@ public class MatBagContainer extends BaseTileContainer {
     @Override
     public void broadcastChanges() {
         super.broadcastChanges();
-        backpackInv.writeItemStack();
+        if (backpackInv != null) {
+            backpackInv.writeItemStack();
+        }
+    }
+
+    @Override
+    public void removed(Player p) {
+        if (backpackInv != null) {
+            backpackInv.writeItemStack();
+        }
+        super.removed(p);
     }
 
     @Override
     public boolean stillValid(Player player) {
-
+        ItemStack held = player.getItemInHand(hand);
         try {
-            if (!StackNBT.getOrCreate(player.getMainHandItem())
+            if (!StackNBT.getOrCreate(held)
                 .getStringOr("id", "")
                 .equals(StackNBT.get(stack)
                     .getStringOr("id", ""))) {
@@ -91,8 +118,7 @@ public class MatBagContainer extends BaseTileContainer {
         } catch (Exception e) {
         }
 
-        if (player.getMainHandItem()
-            .getItem() != stack.getItem()) {
+        if (held.getItem() != stack.getItem()) {
             return false;
         }
         return true;
@@ -106,7 +132,7 @@ public class MatBagContainer extends BaseTileContainer {
 
         @Override
         public boolean mayPickup(Player player) {
-            if (getItem().getItem() instanceof BackpackItem) {
+            if (getItem().getItem() instanceof BackpackItem || getItem().getItem() instanceof MaterialBagItem) {
                 return false;
             }
 
@@ -116,7 +142,7 @@ public class MatBagContainer extends BaseTileContainer {
         @Override
         public boolean mayPlace(ItemStack stack) {
 
-            if (stack.getItem() instanceof BackpackItem) {
+            if (stack.getItem() instanceof BackpackItem || stack.getItem() instanceof MaterialBagItem) {
                 return false;
             }
             if (!StackSaving.INGREDIENTS.has(stack)) {

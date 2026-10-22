@@ -33,18 +33,25 @@ public class ShrineBlock extends Block {
         return items;
     }
 
-    @Override
-    @Deprecated
-    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player,
-                                       InteractionHand hand, BlockHitResult ray) {
+    private InteractionResult openShrine(Level world, Player player) {
         if (world.isClientSide()) {
-
             ClientOnly.openMissionsScreen();
-            return InteractionResult.CONSUME;
         } else {
             PlayerMissionCap.get(player)
                 .syncToClient(player);
         }
-        return InteractionResult.CONSUME;
+        return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult ray) {
+        return openShrine(world, player);
+    }
+
+    @Override
+    @Deprecated
+    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player,
+                                       InteractionHand hand, BlockHitResult ray) {
+        return openShrine(world, player);
     }
 }

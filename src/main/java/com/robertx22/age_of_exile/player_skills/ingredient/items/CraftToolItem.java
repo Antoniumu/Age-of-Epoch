@@ -53,29 +53,29 @@ public class CraftToolItem extends AutoItem implements IShapedRecipe {
     @Override
     public InteractionResult use(Level world, Player user, InteractionHand hand) {
 
-        user.startUsingItem(hand);
+        if (world != null && !world.isClientSide() && user instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
 
-        if (world != null && !world.isClientSide()) {
-
-            ItemStack stack = user.getItemInHand(hand);
-
-            user.openMenu(new MenuProvider() {
+            com.robertx22.forge_compat.fml.network.NetworkHooks.openGui(serverPlayer, new MenuProvider() {
                 @Override
                 public Component getDisplayName() {
-                    return Component.literal("");
+                    return stackName(user.getItemInHand(hand));
                 }
 
                 @Nullable
                 @Override
                 public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player p) {
-                    ItemStack stack = p.getMainHandItem();
-                    return new ProfCraftContainer(stack, syncId, inv);
+                    ItemStack toolStack = p.getItemInHand(hand);
+                    return new ProfCraftContainer(toolStack, syncId, inv, hand);
                 }
-            });
+            }, buf -> buf.writeEnum(hand));
 
         }
 
         return InteractionResult.SUCCESS;
+    }
+
+    private Component stackName(ItemStack stack) {
+        return stack != null && !stack.isEmpty() ? stack.getHoverName() : Component.literal("");
     }
 
     @Override

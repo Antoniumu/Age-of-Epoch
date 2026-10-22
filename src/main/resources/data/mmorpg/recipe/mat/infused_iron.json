@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "mmorpg:mat/salvage/salvage0",
+    "i": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    " # ",
+    "#i#",
+    " # "
+  ],
+  "result": {
+    "id": "mmorpg:mat/infused_iron",
+    "count": 1
+  }
+}

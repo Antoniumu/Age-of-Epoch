@@ -39,16 +39,17 @@ public class BackpackItem extends Item implements IAutoLocName, IAutoModel, ISha
     @Override
     public InteractionResult use(Level world, Player user, InteractionHand hand) {
 
-        user.startUsingItem(hand);
+        if (world != null && !world.isClientSide() && user instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
 
-        if (world != null && !world.isClientSide()) {
+            ItemStack held = user.getItemInHand(hand);
+            com.robertx22.age_of_exile.uncommon.utilityclasses.StackNBT.getOrCreate(held);
+            if (!com.robertx22.age_of_exile.uncommon.utilityclasses.StackNBT.get(held).contains("id")) {
+                net.minecraft.nbt.CompoundTag tag = com.robertx22.age_of_exile.uncommon.utilityclasses.StackNBT.getOrCreate(held);
+                tag.putString("id", java.util.UUID.randomUUID().toString());
+                com.robertx22.age_of_exile.uncommon.utilityclasses.StackNBT.set(held, tag);
+            }
 
-            ItemStack stack = user.getItemInHand(hand);
-            //  if (!IsSkillItemUsableUtil.canUseItem(user, stack, true)) {
-            ///     return InteractionResult.FAIL;
-            //}
-
-            user.openMenu(new MenuProvider() {
+            com.robertx22.forge_compat.fml.network.NetworkHooks.openGui(serverPlayer, new MenuProvider() {
                 @Override
                 public Component getDisplayName() {
                     return Component.literal("");
@@ -57,10 +58,10 @@ public class BackpackItem extends Item implements IAutoLocName, IAutoModel, ISha
                 @Nullable
                 @Override
                 public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player p) {
-                    ItemStack stack = p.getMainHandItem();
-                    return new BackpackContainer(stack, syncId, inv);
+                    ItemStack stack = p.getItemInHand(hand);
+                    return new BackpackContainer(stack, syncId, inv, hand);
                 }
-            });
+            }, buf -> buf.writeEnum(hand));
 
         }
 

@@ -20,6 +20,7 @@ public class ProfCraftScreen extends AbstractContainerScreen<ProfCraftContainer>
 
     public ProfCraftScreen(ProfCraftContainer handler, Inventory inventory, Component text) {
         super(handler, inventory, Component.literal(""));
+        FAIL_REASON = null;
 
         imageWidth = 176;
         imageHeight = 207;

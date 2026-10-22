@@ -59,6 +59,47 @@ public class RuneWordStationContainer extends BaseTileContainer {
     }
 
     @Override
+    public net.minecraft.world.item.ItemStack quickMoveStack(Player playerIn, int index) {
+        net.minecraft.world.item.ItemStack result = net.minecraft.world.item.ItemStack.EMPTY;
+        try {
+            Slot slot = this.slots.get(index);
+            if (slot != null && slot.hasItem()) {
+                net.minecraft.world.item.ItemStack stackInSlot = slot.getItem();
+                result = stackInSlot.copy();
+
+                int runeStart = getContainerStart();
+                int runeEnd = runeStart + RuneWordStationTile.RUNE_SLOTS.size();
+                int gearSlot = runeEnd;
+                int storageStart = gearSlot + RuneWordStationTile.ITEM_SLOT.size();
+                int storageEnd = getContainerEnd();
+
+                if (isPlayerInventory(index)) {
+                    boolean moved = false;
+                    if (stackInSlot.getItem() instanceof com.robertx22.age_of_exile.vanilla_mc.items.gemrunes.RuneItem) {
+                        moved = this.moveItemStackTo(stackInSlot, runeStart, runeEnd, false);
+                    } else if (com.robertx22.age_of_exile.database.data.gear_slots.GearSlot.getSlotOf(stackInSlot.getItem()) != null) {
+                        moved = this.moveItemStackTo(stackInSlot, gearSlot, gearSlot + 1, false);
+                    }
+                    if (!moved && !this.moveItemStackTo(stackInSlot, storageStart, storageEnd, false)) {
+                        return net.minecraft.world.item.ItemStack.EMPTY;
+                    }
+                } else if (!this.moveItemStackTo(stackInSlot, getPlayerInvStart(), getPlayerInvEnd() + 1, false)) {
+                    return net.minecraft.world.item.ItemStack.EMPTY;
+                }
+
+                if (stackInSlot.isEmpty()) {
+                    slot.set(net.minecraft.world.item.ItemStack.EMPTY);
+                } else {
+                    slot.setChanged();
+                }
+            }
+        } catch (Exception e) {
+            return result;
+        }
+        return result;
+    }
+
+    @Override
     public boolean stillValid(Player player) {
         return tile.stillValid(player);
     }

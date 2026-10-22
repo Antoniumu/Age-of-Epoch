@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "mmorpg:mat/mythic_essence",
+    "t": "mmorpg:currency/orb_of_transmutation",
+    "v": "minecraft:emerald",
+    "o": "mmorpg:mat/golden_orb"
+  },
+  "pattern": [
+    "v#v",
+    "vtv",
+    "ooo"
+  ],
+  "result": {
+    "id": "mmorpg:currency/orb_of_corruption",
+    "count": 1
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:glistering_melon_slice",
+    "minecraft:glass_bottle",
+    "mmorpg:mat/condensed_salvage/c0"
+  ],
+  "result": {
+    "id": "mmorpg:alchemy/potion/health/0",
+    "count": 3
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "t": "mmorpg:jewelry/ring/iron",
+    "v": "mmorpg:mat/salvage/salvage0"
+  },
+  "pattern": [
+    " v ",
+    "vtv",
+    " v "
+  ],
+  "result": {
+    "id": "mmorpg:craft_tools/jewel_craft",
+    "count": 1
+  }
+}

@@ -85,22 +85,31 @@ public abstract class BaseModificationBlock extends OpaqueBlock implements Entit
         return true;
     }
 
+    private InteractionResult openStation(Level world, BlockPos pos, Player player) {
+        BlockEntity tile = world.getBlockEntity(pos);
+        if (!(tile instanceof BaseModificationStation station)) {
+            return InteractionResult.PASS;
+        }
+        if (!world.isClientSide() && player instanceof ServerPlayer serverPlayer) {
+            NetworkHooks.openGui(serverPlayer, station, pos);
+            com.robertx22.library_of_exile.main.Packets.sendToClient(
+                serverPlayer,
+                new com.robertx22.library_of_exile.packets.TileUpdatePacket(station)
+            );
+        }
+        return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult ray) {
+        return openStation(world, pos, player);
+    }
+
     @Override
     @Deprecated
     public InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player,
                                        InteractionHand hand, BlockHitResult ray) {
-        if (world.isClientSide()) {
-            return InteractionResult.CONSUME;
-        }
-
-        BlockEntity tile = world.getBlockEntity(pos);
-
-        if (tile instanceof BaseModificationStation) {
-
-            NetworkHooks.openGui((ServerPlayer) player, (BaseModificationStation) tile, pos);
-        }
-
-        return InteractionResult.SUCCESS;
+        return openStation(world, pos, player);
     }
 
 }

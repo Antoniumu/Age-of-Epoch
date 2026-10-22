@@ -42,11 +42,7 @@ public class TeleporterBlock extends OpaqueBlock implements EntityBlock {
         return new TeleportedBlockEntity();
     }
 
-    @Override
-    @Deprecated
-    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player,
-                                       InteractionHand hand, BlockHitResult ray) {
-
+    private InteractionResult openTeleporter(Level world, BlockPos pos, Player player) {
         BlockEntity tile = world.getBlockEntity(pos);
 
         if (tile instanceof TeleportedBlockEntity) {
@@ -63,6 +59,18 @@ public class TeleporterBlock extends OpaqueBlock implements EntityBlock {
             return InteractionResult.SUCCESS;
         }
 
-        return InteractionResult.CONSUME;
+        return InteractionResult.PASS;
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult ray) {
+        return openTeleporter(world, pos, player);
+    }
+
+    @Override
+    @Deprecated
+    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player,
+                                       InteractionHand hand, BlockHitResult ray) {
+        return openTeleporter(world, pos, player);
     }
 }

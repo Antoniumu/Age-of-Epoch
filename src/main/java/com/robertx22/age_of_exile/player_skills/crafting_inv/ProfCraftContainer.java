@@ -22,33 +22,58 @@ public class ProfCraftContainer extends BaseTileContainer {
     CraftingContainer craftInv;
     SimpleContainer resultInv;
     Player player;
+    net.minecraft.world.InteractionHand hand = net.minecraft.world.InteractionHand.MAIN_HAND;
 
     PlayerSkillEnum skill;
 
     public ProfCraftContainer(int syncid, Inventory playerinv, FriendlyByteBuf buf) {
-        this(playerinv.player.getMainHandItem(), syncid, playerinv);
+        this(
+            resolveHandStack(playerinv.player, buf),
+            syncid,
+            playerinv,
+            LAST_READ_HAND.get()
+        );
+    }
+
+    private static final ThreadLocal<net.minecraft.world.InteractionHand> LAST_READ_HAND =
+        ThreadLocal.withInitial(() -> net.minecraft.world.InteractionHand.MAIN_HAND);
+
+    private static ItemStack resolveHandStack(Player player, FriendlyByteBuf buf) {
+        net.minecraft.world.InteractionHand h = (buf != null && buf.readableBytes() > 0)
+            ? buf.readEnum(net.minecraft.world.InteractionHand.class)
+            : net.minecraft.world.InteractionHand.MAIN_HAND;
+        LAST_READ_HAND.set(h);
+        return player.getItemInHand(h);
     }
 
     public ProfCraftContainer(ItemStack tool, int id, Inventory invPlayer) {
+        this(tool, id, invPlayer, net.minecraft.world.InteractionHand.MAIN_HAND);
+    }
 
-        super(6, SlashContainers.PROF_CRAFTING.get(), id, invPlayer);
+    public ProfCraftContainer(ItemStack tool, int id, Inventory invPlayer, net.minecraft.world.InteractionHand hand) {
+
+        super(7, SlashContainers.PROF_CRAFTING.get(), id, invPlayer);
+
+        this.player = invPlayer.player;
+        this.hand = hand != null ? hand : net.minecraft.world.InteractionHand.MAIN_HAND;
+        this.craftInv = new TransientCraftingContainer(this, 3, 2);
+        this.resultInv = new SimpleContainer(1);
 
         try {
 
-            if (tool.getItem() instanceof CraftToolItem) {
-                CraftToolItem t = (CraftToolItem) tool.getItem();
+            if (tool != null && tool.getItem() instanceof CraftToolItem t) {
                 skill = t.skill;
+            } else if (player.getMainHandItem().getItem() instanceof CraftToolItem tMain) {
+                skill = tMain.skill;
+                this.hand = net.minecraft.world.InteractionHand.MAIN_HAND;
+            } else if (player.getOffhandItem().getItem() instanceof CraftToolItem tOff) {
+                skill = tOff.skill;
+                this.hand = net.minecraft.world.InteractionHand.OFF_HAND;
             }
 
             if (skill == null) {
-                this.removed(invPlayer.player);
                 return;
             }
-
-            this.player = invPlayer.player;
-
-            this.craftInv = new TransientCraftingContainer(this, 3, 2);
-            this.resultInv = new SimpleContainer(1);
 
             int num = 0;
             for (int x = 0; x < 3; ++x) {
@@ -63,7 +88,11 @@ public class ProfCraftContainer extends BaseTileContainer {
                 }
             }
 
-            addSlot(new ProfCraftResultSlot(player, craftInv, resultInv, 0, 133, 75));
+            addSlot(new ProfCraftResultSlot(this, player, craftInv, resultInv, 0, 133, 75));
+
+            if (!player.level().isClientSide()) {
+                this.slotsChanged(this.craftInv);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,12 +103,14 @@ public class ProfCraftContainer extends BaseTileContainer {
     @Override
     public void slotsChanged(Container inv) {
 
-        if (!player.level().isClientSide()) {
+        if (player != null && skill != null && !player.level().isClientSide()) {
 
             ProfCraftResult result = ProfCraftingRecipe.canCraft(player, craftInv, resultInv, skill);
 
             if (result.reason != null) {
                 Packets.sendToClient(player, new FailReasonPacket(result.reason.locName()));
+            } else {
+                Packets.sendToClient(player, new FailReasonPacket(com.robertx22.age_of_exile.uncommon.localization.Words.EmptyString.locName()));
             }
 
             if (result.canCraft) {
@@ -95,19 +126,76 @@ public class ProfCraftContainer extends BaseTileContainer {
 
     @Override
     public ItemStack quickMoveStack(Player playerIn, int index) {
-        return ItemStack.EMPTY;
+        ItemStack result = ItemStack.EMPTY;
+        try {
+            if (index < 0 || index >= this.slots.size()) {
+                return ItemStack.EMPTY;
+            }
+            Slot slot = this.slots.get(index);
+            if (slot == null || !slot.hasItem()) {
+                return ItemStack.EMPTY;
+            }
+
+            ItemStack stackInSlot = slot.getItem();
+            result = stackInSlot.copy();
+
+            int craftStart = getContainerStart(); // 36
+            int resultSlotIndex = craftStart + 6;  // 42
+
+            if (index == resultSlotIndex) {
+                if (!this.moveItemStackTo(stackInSlot, getPlayerInvStart(), getPlayerInvEnd() + 1, true)) {
+                    return ItemStack.EMPTY;
+                }
+                slot.onQuickCraft(stackInSlot, result);
+                if (stackInSlot.isEmpty()) {
+                    slot.set(ItemStack.EMPTY);
+                } else {
+                    slot.setChanged();
+                }
+                if (stackInSlot.getCount() == result.getCount()) {
+                    return ItemStack.EMPTY;
+                }
+                slot.onTake(playerIn, stackInSlot);
+                this.broadcastChanges();
+                return result;
+            } else if (isPlayerInventory(index)) {
+                if (!this.moveItemStackTo(stackInSlot, craftStart, resultSlotIndex, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.moveItemStackTo(stackInSlot, getPlayerInvStart(), getPlayerInvEnd() + 1, false)) {
+                return ItemStack.EMPTY;
+            }
+
+            if (stackInSlot.isEmpty()) {
+                slot.set(ItemStack.EMPTY);
+            } else {
+                slot.setChanged();
+            }
+            this.slotsChanged(this.craftInv);
+        } catch (Exception e) {
+            return ItemStack.EMPTY;
+        }
+        return result;
     }
 
     @Override
     public void removed(Player p) {
         super.removed(p);
-        this.clearContainer(p, craftInv);
-        this.resultInv.setItem(0, ItemStack.EMPTY);
+        if (this.craftInv != null) {
+            this.clearContainer(p, craftInv);
+        }
+        if (this.resultInv != null) {
+            this.resultInv.setItem(0, ItemStack.EMPTY);
+        }
     }
 
     @Override
     public boolean stillValid(Player player) {
-        return true;
+        if (skill == null || player == null) {
+            return false;
+        }
+        ItemStack held = player.getItemInHand(hand);
+        return held.getItem() instanceof CraftToolItem t && t.skill == skill;
     }
 
     private class IngredientSlot extends Slot {

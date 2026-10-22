@@ -41,8 +41,13 @@ public class RequestTilePacket extends MyPacket<RequestTilePacket> {
     @Override
     public void onReceived(ExilePacketContext ctx) {
         Player player = ctx.getPlayer();
+        if (player == null || pos == null) {
+            return;
+        }
         BlockEntity tile = player.level().getBlockEntity(pos);
-        Packets.sendToClient(player, new TileUpdatePacket(tile));
+        if (tile != null) {
+            Packets.sendToClient(player, new TileUpdatePacket(tile));
+        }
     }
 
     @Override
