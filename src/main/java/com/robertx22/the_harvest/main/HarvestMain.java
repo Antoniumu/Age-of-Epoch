@@ -222,8 +222,8 @@ public class HarvestMain {
         LootParams.Builder lootparams$builder = (new LootParams.Builder((ServerLevel) en.level()))
                 .withParameter(LootContextParams.THIS_ENTITY, en)
                 .withParameter(LootContextParams.ORIGIN, en.position())
-                .withParameter(LootContextParams.DAMAGE_SOURCE, pDamageSource).withOptionalParameter(LootContextParams.ATTACKING_ENTITY, pDamageSource.getEntity())
-                .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, pDamageSource.getDirectEntity());
+                .withParameter(LootContextParams.DAMAGE_SOURCE, pDamageSource)
+                ;
         LootParams lootparams = lootparams$builder.create(LootContextParamSets.ENTITY);
         
     }

@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
 public class ImageButton extends Button {
+
     protected final Identifier resourceLocation;
     protected final int xTexStart;
     protected final int yTexStart;
@@ -13,19 +14,19 @@ public class ImageButton extends Button {
     protected final int textureWidth;
     protected final int textureHeight;
 
-    public ImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart, Identifier resourceLocation, OnPress onPress) {
-        this(x, y, width, height, xTexStart, yTexStart, height, resourceLocation, 256, 256, onPress, Component.empty());
+    public ImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart, int yDiffTex,
+                       Identifier resourceLocation, OnPress onPress) {
+        this(x, y, width, height, xTexStart, yTexStart, yDiffTex, resourceLocation, 256, 256, onPress);
     }
 
-    public ImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart, int yDiffTex, Identifier resourceLocation, OnPress onPress) {
-        this(x, y, width, height, xTexStart, yTexStart, yDiffTex, resourceLocation, 256, 256, onPress, Component.empty());
+    public ImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart, int yDiffTex,
+                       Identifier resourceLocation, int textureWidth, int textureHeight, OnPress onPress) {
+        this(x, y, width, height, xTexStart, yTexStart, yDiffTex, resourceLocation, textureWidth, textureHeight,
+            onPress, Component.empty());
     }
 
-    public ImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart, int yDiffTex, Identifier resourceLocation, int textureWidth, int textureHeight, OnPress onPress) {
-        this(x, y, width, height, xTexStart, yTexStart, yDiffTex, resourceLocation, textureWidth, textureHeight, onPress, Component.empty());
-    }
-
-    public ImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart, int yDiffTex, Identifier resourceLocation, int textureWidth, int textureHeight, OnPress onPress, Component message) {
+    public ImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart, int yDiffTex,
+                       Identifier resourceLocation, int textureWidth, int textureHeight, OnPress onPress, Component message) {
         super(x, y, width, height, message, onPress);
         this.textureWidth = textureWidth;
         this.textureHeight = textureHeight;
@@ -35,15 +36,27 @@ public class ImageButton extends Button {
         this.resourceLocation = resourceLocation;
     }
 
-    public void renderWidget(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        extractContents(graphics, mouseX, mouseY, partialTick);
+    public ImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart,
+                       Identifier resourceLocation, OnPress onPress) {
+        this(x, y, width, height, xTexStart, yTexStart, height, resourceLocation, 256, 256, onPress);
     }
 
     @Override
     protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        if (this.resourceLocation != null) {
-            int v = this.yTexStart + (this.isHoveredOrFocused() ? this.yDiffTex : 0);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, this.resourceLocation, getX(), getY(), (float) this.xTexStart, (float) v, this.width, this.height, this.textureWidth, this.textureHeight);
+        AbstractGui.setCurrentGraphics(graphics);
+        int v = this.yTexStart;
+        if (!this.isActive()) {
+            v += this.yDiffTex * 2;
+        } else if (this.isHoveredOrFocused()) {
+            v += this.yDiffTex;
+        }
+        graphics.blit(RenderPipelines.GUI_TEXTURED, this.resourceLocation,
+            this.getX(), this.getY(), (float) this.xTexStart, (float) v,
+            this.width, this.height, this.textureWidth, this.textureHeight);
+        GuiGraphics wrapped = GuiGraphics.wrap(graphics);
+        this.renderWidget(wrapped, mouseX, mouseY, partialTick);
+        if (this.isHoveredOrFocused()) {
+            this.renderToolTip(wrapped, mouseX, mouseY);
         }
     }
 }

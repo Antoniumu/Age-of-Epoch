@@ -51,7 +51,7 @@ public class ObeliskMapData {
     }
 
     public List<LivingEntity> getAllLivingMobs(Level world, BlockPos pos) {
-        return world.getEntitiesOfClass(LivingEntity.class, AABB.ofSize(pos.getCenter(), 35, 30, 35)).stream().filter(x -> ObeliskEntityCapability.get(x).data.isObeSpawn).collect(Collectors.toList());
+        return world.getEntitiesOfClass(LivingEntity.class, AABB.ofSize(net.minecraft.world.phys.Vec3.atCenterOf(pos), 35, 30, 35)).stream().filter(x -> ObeliskEntityCapability.get(x).data.isObeSpawn).collect(Collectors.toList());
     }
 
 
@@ -145,7 +145,7 @@ public class ObeliskMapData {
         en.setPos(pos.getX(), pos.getY(), pos.getZ());
 
         if (en instanceof Mob mob) {
-            mob.finalizeSpawn((ServerLevel) world, world.getCurrentDifficultyAt(pos), net.minecraft.world.entity.EntitySpawnReason.COMMAND, (SpawnGroupData) null);
+            mob.finalizeSpawn((ServerLevel) world, ((net.minecraft.server.level.ServerLevel) world).getCurrentDifficultyAt(pos), net.minecraft.world.entity.EntitySpawnReason.COMMAND, (SpawnGroupData) null);
         }
 
         world.addFreshEntity(en);

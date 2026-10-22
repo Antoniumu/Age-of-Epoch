@@ -295,7 +295,7 @@ public class RuneItem extends Item implements IGUID, IAutoModel, IAutoLocName, I
             t.accept(new OperationTipBlock().setAlt().setShift());
             Rune rune = this.getRune();
 
-            if (Screen.hasShiftDown()) {
+            if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
                 t.accept(new UsageBlock(splitLongText(Itemtips.RUNE_ITEM_USAGE.locName().withStyle(ChatFormatting.BLUE))));
                 if (rune.Weight() > 0) {
                     var lvl = Load.Unit(ClientOnly.getPlayer()).getLevel();

@@ -37,7 +37,7 @@ public class DeferredRegister<T> {
             return new DeferredRegister<>((Registry<Object>) reg, modid);
         }
         if (registryOrKey instanceof ResourceKey<?> rk) {
-            Registry<?> resolved = BuiltInRegistries.REGISTRY.getValue((ResourceKey) rk);
+            Registry<?> resolved = BuiltInRegistries.REGISTRY.getValue(rk.identifier());
             return new DeferredRegister<>((Registry<Object>) resolved, modid);
         }
         return new DeferredRegister<>(null, modid);

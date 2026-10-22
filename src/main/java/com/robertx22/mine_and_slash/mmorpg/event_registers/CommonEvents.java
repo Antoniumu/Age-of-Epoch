@@ -76,7 +76,7 @@ public class CommonEvents {
         ForgeEvents.registerForgeEvent(ArrowNockEvent.class, event -> {
             if (com.robertx22.forge_compat.common.CompatHelper.hasEffect(event.getEntity(), SlashPotions.INSTANT_ARROWS.get())) {
                 event.setAction(InteractionResultHolder.pass(event.getBow()));
-                event.getBow().releaseUsing(event.getLevel(), event.getEntity(), 20);
+                event.getBow().getItem().releaseUsing(event.getBow(), event.getLevel(), event.getEntity(), 20);
                 int cd = 20 - com.robertx22.forge_compat.common.CompatHelper.getEffect(event.getEntity(), SlashPotions.INSTANT_ARROWS.get()).getAmplifier();
 
                 if (cd < 3) {

@@ -3,7 +3,6 @@ package com.robertx22.library_of_exile.utils;
 import com.robertx22.library_of_exile.registry.IWeighted;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
-import org.joml.Math;
 
 import java.util.ArrayList;
 import java.util.Collection;

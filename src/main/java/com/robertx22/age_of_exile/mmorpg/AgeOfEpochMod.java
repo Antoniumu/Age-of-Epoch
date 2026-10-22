@@ -18,11 +18,19 @@ import com.robertx22.forge_compat.event.AddReloadListenerEvent;
 import com.robertx22.forge_compat.event.OnDatapackSyncEvent;
 import com.robertx22.forge_compat.event.RegisterCommandsEvent;
 import com.robertx22.forge_compat.event.TickEvent;
+import com.robertx22.forge_compat.event.entity.EntityAttributeCreationEvent;
+import com.robertx22.forge_compat.event.entity.EntityJoinLevelEvent;
 import com.robertx22.forge_compat.event.entity.EntityJoinWorldEvent;
+import com.robertx22.forge_compat.event.entity.living.LivingDeathEvent;
 import com.robertx22.forge_compat.event.entity.player.AttackEntityEvent;
+import com.robertx22.forge_compat.event.entity.player.EntityItemPickupEvent;
 import com.robertx22.forge_compat.event.entity.player.PlayerEvent;
 import com.robertx22.forge_compat.event.entity.player.PlayerInteractEvent;
 import com.robertx22.forge_compat.event.level.BlockEvent;
+import com.robertx22.forge_compat.event.server.ServerAboutToStartEvent;
+import com.robertx22.forge_compat.event.server.ServerStartedEvent;
+import com.robertx22.forge_compat.event.server.ServerStoppedEvent;
+import com.robertx22.forge_compat.event.server.ServerStoppingEvent;
 import com.robertx22.forge_compat.eventbus.api.IEventBus;
 import com.robertx22.forge_compat.fml.event.lifecycle.FMLCommonSetupEvent;
 import com.robertx22.forge_compat.fml.event.lifecycle.InterModEnqueueEvent;
@@ -38,11 +46,16 @@ import com.robertx22.library_of_exile.events.base.EventConsumer;
 import com.robertx22.library_of_exile.events.base.ExileEvents;
 import com.robertx22.library_of_exile.main.CommonInit;
 import com.robertx22.library_of_exile.main.Packets;
+import com.robertx22.mine_and_slash.mmorpg.ForgeEvents;
 import com.robertx22.mine_and_slash.mmorpg.MMORPG;
 import com.robertx22.mine_and_slash.mmorpg.SlashRef;
 import com.robertx22.the_harvest.main.HarvestMain;
+import com.robertx22.world_of_exile.delve.DelveMarkerBlockEntity;
+import com.robertx22.world_of_exile.delve.DelveStructureProcessor;
 import com.robertx22.world_of_exile.world_gen.TowerBoss;
 import com.robertx22.world_of_exile.world_gen.TowerCollapse;
+import com.robertx22.world_of_exile.world_gen.TowerDestroyer;
+import com.robertx22.world_of_exile.world_gen.TowerStructureProcessor;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
@@ -58,6 +71,7 @@ import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
@@ -71,13 +85,13 @@ import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.storage.LevelResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.concurrent.CompletableFuture;
 
 public class AgeOfEpochMod implements ModInitializer {
 
@@ -111,8 +125,23 @@ public class AgeOfEpochMod implements ModInitializer {
         THE_HARVEST = new HarvestMain();           // the_harvest
 
         // 2. Register preserved custom Age-of-Epoch systems (Towers, Delves, GameMaster, Guides, QuestBook, Simulation)
+        try {
+            Identifier towerProcId = Identifier.fromNamespaceAndPath("world_of_exile", "tower_processor");
+            if (!BuiltInRegistries.STRUCTURE_PROCESSOR.containsKey(towerProcId)) {
+                Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, towerProcId, TowerStructureProcessor.CODEC);
+            }
+            Identifier delveProcId = Identifier.fromNamespaceAndPath("world_of_exile", "delve_processor");
+            if (!BuiltInRegistries.STRUCTURE_PROCESSOR.containsKey(delveProcId)) {
+                Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, delveProcId, DelveStructureProcessor.CODEC);
+            }
+        } catch (Exception e) {
+            LOGGER.error("[Age of Epoch] Failed registering world_of_exile structure processors", e);
+        }
+
         GameMasterEvents.register();
         QuestBookEvents.register();
+        ForgeEvents.registerForgeEvent(LivingDeathEvent.class, TowerBoss::onDeath);
+        ForgeEvents.registerForgeEvent(LivingDeathEvent.class, DelveMarkerBlockEntity::onDeath);
 
         Packets.registerClientToServerPacket(MMORPG.NETWORK, new GuidesPacket(), 901);
         Packets.registerClientToServerPacket(MMORPG.NETWORK, new QuestBookPacket(), 902);
@@ -159,6 +188,7 @@ public class AgeOfEpochMod implements ModInitializer {
     @Override
     public void onInitialize() {
         bootstrapCommon();
+        FMLJavaModLoadingContext.get().getModEventBus().post(new EntityAttributeCreationEvent());
         registerFabricBridges();
     }
 
@@ -186,6 +216,7 @@ public class AgeOfEpochMod implements ModInitializer {
         // 3. Server Lifecycle + World Capability Persistence Bridge
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
             ServerLifecycleHooks.setCurrentServer(server);
+            MinecraftForge.EVENT_BUS.post(new ServerAboutToStartEvent(server));
             MinecraftForge.EVENT_BUS.post(new FMLServerStartingEvent(server));
         });
 
@@ -193,19 +224,23 @@ public class AgeOfEpochMod implements ModInitializer {
             ServerLifecycleHooks.setCurrentServer(server);
             GuideLimit.loadFromDisk();
             loadWorldCapabilities(server);
+            MinecraftForge.EVENT_BUS.post(new ServerStartedEvent(server));
             MinecraftForge.EVENT_BUS.post(new FMLServerStartedEvent(server));
         });
 
-        ServerLifecycleEvents.SERVER_STOPPING.register(thisServer ->
-            saveWorldCapabilities(thisServer));
+        ServerLifecycleEvents.SERVER_STOPPING.register(thisServer -> {
+            MinecraftForge.EVENT_BUS.post(new ServerStoppingEvent(thisServer));
+            saveWorldCapabilities(thisServer);
+        });
 
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
             saveWorldCapabilities(server);
+            MinecraftForge.EVENT_BUS.post(new ServerStoppedEvent(server));
             MinecraftForge.EVENT_BUS.post(new FMLServerStoppedEvent(server));
             ServerLifecycleHooks.setCurrentServer(null);
         });
 
-        // 4. Server, Level & Player Tick Bridges (+ TowerCollapse tick + periodic world cap autosave)
+        // 4. Server, Level & Player Tick Bridges (including Auto-Salvage / Auto-Backpack Item Pickup & Tower/Delve ticks)
         ServerTickEvents.START_SERVER_TICK.register(server -> {
             MinecraftForge.EVENT_BUS.post(new TickEvent.ServerTickEvent(TickEvent.Phase.START, server));
             for (ServerPlayer sp : server.getPlayerList().getPlayers()) {
@@ -215,6 +250,15 @@ public class AgeOfEpochMod implements ModInitializer {
 
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             for (ServerPlayer sp : server.getPlayerList().getPlayers()) {
+                if (sp.isAlive() && !sp.isSpectator()) {
+                    for (ItemEntity itemEntity : sp.level().getEntitiesOfClass(
+                        ItemEntity.class, sp.getBoundingBox().inflate(1.0D, 0.5D, 1.0D)
+                    )) {
+                        if (itemEntity.isAlive() && !itemEntity.getItem().isEmpty()) {
+                            MinecraftForge.EVENT_BUS.post(new EntityItemPickupEvent(sp, itemEntity));
+                        }
+                    }
+                }
                 MinecraftForge.EVENT_BUS.post(new TickEvent.PlayerTickEvent(TickEvent.Phase.END, sp));
             }
             MinecraftForge.EVENT_BUS.post(new TickEvent.ServerTickEvent(TickEvent.Phase.END, server));
@@ -228,10 +272,12 @@ public class AgeOfEpochMod implements ModInitializer {
 
         ServerTickEvents.END_LEVEL_TICK.register(world -> {
             MinecraftForge.EVENT_BUS.post(new TickEvent.WorldTickEvent(TickEvent.Phase.END, world));
+            TowerBoss.tickLevel(world);
             TowerCollapse.tick(world);
+            TowerDestroyer.tickAll(world);
         });
 
-        // 5. Player Join / Disconnect / Clone & Entity Tracking Bridges
+        // 5. Player Join / Disconnect / Clone / Respawn & Entity Load / Tracking Bridges
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayer sp = handler.player;
             ExileEvents.ON_PLAYER_LOGIN.callEvents(new ExileEvents.OnPlayerLogin(sp));
@@ -249,6 +295,9 @@ public class AgeOfEpochMod implements ModInitializer {
             MinecraftForge.EVENT_BUS.post(new PlayerEvent.Clone(newPlayer, oldPlayer, !alive));
         });
 
+        ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) ->
+            MinecraftForge.EVENT_BUS.post(new PlayerEvent.PlayerRespawnEvent(newPlayer, alive)));
+
         EntityTrackingEvents.START_TRACKING.register((trackedEntity, player) ->
             MinecraftForge.EVENT_BUS.post(new PlayerEvent.StartTracking(player, trackedEntity)));
 
@@ -256,6 +305,7 @@ public class AgeOfEpochMod implements ModInitializer {
             if (entity instanceof LivingEntity living) {
                 EntityInfoComponent.get(living).spawnInit(entity);
             }
+            MinecraftForge.EVENT_BUS.post(new EntityJoinLevelEvent(entity, world));
             MinecraftForge.EVENT_BUS.post(new EntityJoinWorldEvent(entity, world));
         });
 
@@ -297,20 +347,11 @@ public class AgeOfEpochMod implements ModInitializer {
     public static int runAllExileReloadListeners(ResourceManager manager) {
         AddReloadListenerEvent reloadEvent = new AddReloadListenerEvent();
         MinecraftForge.EVENT_BUS.post(reloadEvent);
-        PreparableReloadListener.PreparationBarrier immediateBarrier = new PreparableReloadListener.PreparationBarrier() {
-            @Override
-            public <T> CompletableFuture<T> wait(T backgroundResult) {
-                return CompletableFuture.completedFuture(backgroundResult);
-            }
-        };
         int count = 0;
         for (PreparableReloadListener listener : reloadEvent.listeners) {
-            listener.reload(
-                immediateBarrier,
-                manager,
-                Runnable::run,
-                Runnable::run
-            ).join();
+            if (listener instanceof com.robertx22.library_of_exile.registry.loaders.BaseDataPackLoader<?> loader) {
+                loader.reloadSync(manager);
+            }
             count++;
         }
         ExileEvents.AFTER_DATABASE_LOADED.callEvents(new ExileEvents.AfterDatabaseLoaded());

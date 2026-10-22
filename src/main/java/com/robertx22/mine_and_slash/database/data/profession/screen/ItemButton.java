@@ -41,12 +41,7 @@ public class ItemButton extends ImageButton {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-
-    }
-
-
-    public void renderLegacyUnused(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    protected void extractContents(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
 
 
         this.setTooltip(Tooltip.create(TextUTIL.mergeList(com.robertx22.forge_compat.common.CompatHelper.getTooltipLines(stack, this.mc.player, TooltipFlag.Default.NORMAL))));
@@ -61,7 +56,7 @@ public class ItemButton extends ImageButton {
         this.setTooltip(Tooltip.create(TextUTIL.mergeList(tip)));
 
 
-        super.extractWidgetRenderState(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        
 
         //pGuiGraphics.renderite
         // RenderUtils.renderStack(pGuiGraphics, this.stack, this.getX(), this.getY());

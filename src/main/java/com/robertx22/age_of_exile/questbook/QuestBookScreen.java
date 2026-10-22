@@ -93,7 +93,7 @@ public class QuestBookScreen extends BaseScreen implements INamedScreen {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor gui, int mouseX, int mouseY, float partialTicks) {
+    public void extractRenderState(GuiGraphicsExtractor gui, int mouseX, int mouseY, float partialTicks) {
         gui.fill(this.guiLeft, this.guiTop, this.guiLeft + this.sizeX, this.guiTop + this.sizeY, 0xE614141C);
         gui.fill(this.guiLeft, this.guiTop, this.guiLeft + this.sizeX, this.guiTop + 2, 0xFFD4AF37);
         gui.fill(this.guiLeft + 129, this.guiTop + 24, this.guiLeft + 130, this.guiTop + this.sizeY - 8, 0x60D4AF37);

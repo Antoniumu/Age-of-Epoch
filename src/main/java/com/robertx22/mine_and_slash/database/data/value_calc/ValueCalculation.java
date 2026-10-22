@@ -111,7 +111,7 @@ public class ValueCalculation implements JsonExileRegistry<ValueCalculation>, IA
 
         text.append("" + ChatFormatting.GREEN + val + ChatFormatting.GRAY);
 
-        if (!Screen.hasShiftDown()) {
+        if (!net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
             return text;
         }
 

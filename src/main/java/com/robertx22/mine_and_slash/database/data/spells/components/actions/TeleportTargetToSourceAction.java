@@ -119,11 +119,11 @@ public class TeleportTargetToSourceAction extends SpellAction {
     }
 
     private boolean canPointFit(Entity entity, Vec3 destination, double size) {
-        return entity.level().noCollision(entity, AABB.ofSize(destination, size, size, size));
+        return entity.level().noCollision(AABB.ofSize(destination, size, size, size));
     }
 
     private boolean canEntityFit(Entity entity, Vec3 destination) {
-        return entity.level().noCollision(entity, makeAabbForPosition(entity, destination));
+        return entity.level().noCollision(makeAabbForPosition(entity, destination));
     }
 
     private AABB makeAabbForPosition(Entity entity, Vec3 position) {

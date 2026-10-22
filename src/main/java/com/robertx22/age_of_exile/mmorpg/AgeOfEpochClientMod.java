@@ -8,8 +8,10 @@ import com.robertx22.dungeon_realm.main.DungeonClient;
 import com.robertx22.forge_compat.client.GuiGraphics;
 import com.robertx22.forge_compat.client.event.EntityRenderersEvent;
 import com.robertx22.forge_compat.client.event.RegisterClientTooltipComponentFactoriesEvent;
+import com.robertx22.forge_compat.client.event.RegisterGuiOverlaysEvent;
 import com.robertx22.forge_compat.client.event.RegisterKeyMappingsEvent;
 import com.robertx22.forge_compat.client.event.RenderGuiOverlayEvent;
+import com.robertx22.forge_compat.client.event.ScreenEvent;
 import com.robertx22.forge_compat.client.gui.overlay.VanillaGuiOverlay;
 import com.robertx22.forge_compat.common.MinecraftForge;
 import com.robertx22.forge_compat.event.TickEvent;
@@ -18,12 +20,16 @@ import com.robertx22.forge_compat.fml.event.lifecycle.FMLClientSetupEvent;
 import com.robertx22.forge_compat.fml.javafmlmod.FMLJavaModLoadingContext;
 import com.robertx22.library_of_exile.main.ClientInit;
 import com.robertx22.mine_and_slash.mmorpg.SlashRef;
+import com.robertx22.mine_and_slash.mmorpg.event_registers.GuiOverlays;
 import com.robertx22.the_harvest.main.HarvestClient;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.resources.Identifier;
 
 public class AgeOfEpochClientMod implements ClientModInitializer {
@@ -42,13 +48,24 @@ public class AgeOfEpochClientMod implements ClientModInitializer {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         modBus.post(new FMLClientSetupEvent());
 
-        // 2. Register all key mappings, entity renderers, model layers & SocketTooltip factories
+        // 2. Register all key mappings, entity renderers, model layers, SocketTooltip factories & all 4 MNS HUD overlays
         modBus.post(new RegisterKeyMappingsEvent());
         modBus.post(new EntityRenderersEvent.RegisterLayerDefinitions());
         modBus.post(new EntityRenderersEvent.RegisterRenderers());
         modBus.post(new RegisterClientTooltipComponentFactoriesEvent());
+        GuiOverlays.registerOverlay(new RegisterGuiOverlaysEvent());
 
-        // 3. Client Tick, HUD Overlays & World Mob Plates
+        // 3. Screen Init Bridge (Backpack Quick-Loot button on Vanilla Chest screens)
+        ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
+            ScreenEvent.Init initEvent = new ScreenEvent.Init.Post(screen, listener -> {
+                if (listener instanceof AbstractWidget widget) {
+                    Screens.getWidgets(screen).add(widget);
+                }
+            });
+            MinecraftForge.EVENT_BUS.post(initEvent);
+        });
+
+        // 4. Client Tick, HUD Overlays & World Mob Plates
         ClientTickEvents.START_CLIENT_TICK.register(client ->
             MinecraftForge.EVENT_BUS.post(new TickEvent.ClientTickEvent(TickEvent.Phase.START)));
         ClientTickEvents.END_CLIENT_TICK.register(client ->

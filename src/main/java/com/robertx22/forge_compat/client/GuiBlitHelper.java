@@ -70,11 +70,21 @@ public final class GuiBlitHelper {
     }
 
     public static void renderTooltip(GuiGraphicsExtractor g, Font font, ItemStack stack, int x, int y) {
-        g.setTooltipForNextFrame(font, stack, x, y);
+        if (stack == null || stack.isEmpty()) return;
+        net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
+        net.minecraft.world.item.TooltipFlag flag = (mc != null && mc.options != null && mc.options.advancedItemTooltips)
+            ? net.minecraft.world.item.TooltipFlag.Default.ADVANCED
+            : net.minecraft.world.item.TooltipFlag.Default.NORMAL;
+        List<Component> lines = com.robertx22.forge_compat.common.CompatHelper.getTooltipLines(
+            stack,
+            mc != null ? mc.player : null,
+            flag
+        );
+        g.setComponentTooltipForNextFrame(font, lines, x, y);
     }
 
     public static void renderTooltip(GuiGraphicsExtractor g, Font font, Component text, int x, int y) {
-        g.setTooltipForNextFrame(font, text, x, y);
+        g.setComponentTooltipForNextFrame(font, List.of(text), x, y);
     }
 
     public static void renderTooltip(GuiGraphicsExtractor g, Font font, List<? extends FormattedCharSequence> lines, int x, int y) {

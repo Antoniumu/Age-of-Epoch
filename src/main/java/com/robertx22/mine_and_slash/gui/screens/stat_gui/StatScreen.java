@@ -62,7 +62,7 @@ public class StatScreen extends BaseScreen implements INamedScreen {
 
 
     public void setupStatButtons() {
-        this.renderables.removeIf(x -> x instanceof EditBox == false);
+        net.fabricmc.fabric.api.client.screen.v1.Screens.getWidgets(this).removeIf(x -> x instanceof EditBox == false);
         this.children().removeIf(x -> x instanceof EditBox == false);
 
         //    this.children().clear();
@@ -132,7 +132,7 @@ public class StatScreen extends BaseScreen implements INamedScreen {
 
     public void setInfo(StatData stat) {
 
-        this.renderables.removeIf(x -> x instanceof IStatInfoButton);
+        net.fabricmc.fabric.api.client.screen.v1.Screens.getWidgets(this).removeIf(x -> x instanceof IStatInfoButton);
         this.children().removeIf(x -> x instanceof IStatInfoButton);
 
 

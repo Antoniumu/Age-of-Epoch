@@ -214,7 +214,9 @@ public class MainHubScreen extends BaseScreen implements INamedScreen {
     @Override
     public void init() {
         super.init();
-        int aoeBtnX = this.guiLeft - 86;
+        this.clearWidgets();
+
+int aoeBtnX = this.guiLeft - 86;
         int aoeBtnY = this.guiTop + 6;
         this.publicAddButton(net.minecraft.client.gui.components.Button.builder(
             Component.literal("§6Квесты"), b -> Minecraft.getInstance().gui.setScreen(new com.robertx22.age_of_exile.questbook.QuestBookScreen())
@@ -226,8 +228,6 @@ public class MainHubScreen extends BaseScreen implements INamedScreen {
             Component.literal("§eСимуляция"), b -> Minecraft.getInstance().gui.setScreen(new com.robertx22.age_of_exile.simulation.SimulationScreen())
         ).bounds(aoeBtnX, aoeBtnY + 42, 82, 18).build());
 
-
-        this.clearWidgets();
 
         //this.children.clear();
 
@@ -405,25 +405,19 @@ public class MainHubScreen extends BaseScreen implements INamedScreen {
         }
 
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
-
-            if (this.active && this.visible) {
-                boolean bl = this.clicked(mouseX, mouseY);
-                if (bl) {
-                    this.playDownSound(Minecraft.getInstance().getSoundManager());
-                    if (button == 0) {
-                        Packets.sendToServer(new AllocateStatPacket(stat, AllocateStatPacket.ACTION.ALLOCATE));
-                    }
-                    if (button == 1) {
-                        Packets.sendToServer(new AllocateStatPacket(stat, AllocateStatPacket.ACTION.REMOVE));
-                    }
-                    this.onPress();
-                    return true;
+        public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean doubleClick) {
+            if (this.active && this.visible && this.isMouseOver(event.x(), event.y())) {
+                this.playDownSound(Minecraft.getInstance().getSoundManager());
+                if (event.button() == 0) {
+                    Packets.sendToServer(new AllocateStatPacket(stat, AllocateStatPacket.ACTION.ALLOCATE));
                 }
-                return false;
-            } else {
-                return false;
+                if (event.button() == 1) {
+                    Packets.sendToServer(new AllocateStatPacket(stat, AllocateStatPacket.ACTION.REMOVE));
+                }
+                this.onPress();
+                return true;
             }
+            return false;
         }
 
         public void setTooltipMod() {
@@ -448,11 +442,11 @@ public class MainHubScreen extends BaseScreen implements INamedScreen {
 
 
         @Override
-        protected void extractWidgetRenderState(GuiGraphicsExtractor gui, int x, int y, float f) {
+        protected void extractContents(GuiGraphicsExtractor gui, int x, int y, float f) {
 
             setTooltipMod();
 
-            super.extractRenderState(gui, x, y, f);
+            super.extractContents(gui, x, y, f);
 
             Minecraft mc = Minecraft.getInstance();
 
@@ -468,7 +462,7 @@ public class MainHubScreen extends BaseScreen implements INamedScreen {
         }
 
         @Override
-        public void onRelease(double pMouseX, double pMouseY) {
+        public void onRelease(net.minecraft.client.input.MouseButtonEvent event) {
             this.setFocused(false);
         }
 

@@ -76,6 +76,10 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
 
 
     @Override
+    protected ItemStack getDefaultPickupItem() {
+        return new ItemStack(Items.ARROW);
+    }
+
     protected ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
@@ -115,7 +119,6 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
         this.yTile = -1;
         this.zTile = -1;
 
-        this.setSoundEvent(com.robertx22.forge_compat.common.CompatHelper.unwrapSound(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("intentionally_empty"))));
     }
 
     protected void moveToImpactPosition(HitResult result) {
@@ -145,11 +148,7 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
             enres = (EntityHitResult) result;
         }
 
-        if (enres == null) {
-            return null;
-        }
-
-        if (enres.getEntity() instanceof Entity) {
+        if (enres != null && enres.getEntity() != null) {
             if (enres.getEntity() != this.getCaster()) {
                 return enres.getEntity();
             }

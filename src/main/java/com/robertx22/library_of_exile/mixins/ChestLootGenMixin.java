@@ -9,6 +9,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -19,18 +20,26 @@ import java.util.List;
 @Mixin(LootTable.class)
 public abstract class ChestLootGenMixin {
 
+    @Unique
+    private static final ThreadLocal<LootContext> ageOfEpoch$lastLootContext = new ThreadLocal<>();
 
-    @Inject(method = "fill", at = @At(value = "HEAD"))
-    public void onLootGen(Container pContainer, LootParams pParams, long pSeed, CallbackInfo ci) {
+    @Inject(method = "fill", at = @At(value = "TAIL"))
+    public void onLootGen(Container inventory, LootParams params, long seed, CallbackInfo ci) {
         try {
-            ChestGenLootMixin.onLootGen(pContainer, pParams);
+            LootContext context = ageOfEpoch$lastLootContext.get();
+            if (context != null) {
+                ChestGenLootMixin.onLootGen(inventory, context);
+            }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            ageOfEpoch$lastLootContext.remove();
         }
     }
 
     @Inject(method = "getRandomItems(Lnet/minecraft/world/level/storage/loot/LootContext;)Lit/unimi/dsi/fastutil/objects/ObjectArrayList;", at = @At(value = "TAIL"))
     public void onLootGen(LootContext context, CallbackInfoReturnable<List<ItemStack>> ci) {
+        ageOfEpoch$lastLootContext.set(context);
         try {
             OnBlockDropMining.run(context, ci);
             OnBlockDropFarming.run(context, ci);
@@ -38,5 +47,4 @@ public abstract class ChestLootGenMixin {
             e.printStackTrace();
         }
     }
-
 }

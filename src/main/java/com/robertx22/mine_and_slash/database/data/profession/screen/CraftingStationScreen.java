@@ -57,8 +57,8 @@ public abstract class CraftingStationScreen extends AbstractContainerScreen<Craf
     int ticks = 0;
 
     @Override
-    public void containerTick() {
-        super.containerTick();
+    public void tick() {
+        super.tick();
 
         ticks++;
 
@@ -94,7 +94,7 @@ public abstract class CraftingStationScreen extends AbstractContainerScreen<Craf
     public void extractRenderState(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         this.extractBackground(pGuiGraphics, 0, 0, 0F);
         super.extractRenderState(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+        this.extractTooltip(pGuiGraphics, pMouseX, pMouseY);
     }
 
     String possible = "";
@@ -112,7 +112,7 @@ public abstract class CraftingStationScreen extends AbstractContainerScreen<Craf
 
 
         this.children().removeIf(x -> x instanceof ItemButton);
-        this.renderables.removeIf(x -> x instanceof ItemButton);
+        net.fabricmc.fabric.api.client.screen.v1.Screens.getWidgets(this).removeIf(x -> x instanceof ItemButton);
 
         int xoff = 0;
         int yoff = 0;
@@ -147,7 +147,7 @@ public abstract class CraftingStationScreen extends AbstractContainerScreen<Craf
             possible = str;
 
             this.children().removeIf(x -> x instanceof RecipeButton);
-            this.renderables.removeIf(x -> x instanceof RecipeButton);
+            net.fabricmc.fabric.api.client.screen.v1.Screens.getWidgets(this).removeIf(x -> x instanceof RecipeButton);
 
             int xoff = 0;
             int yoff = 0;
@@ -192,7 +192,7 @@ public abstract class CraftingStationScreen extends AbstractContainerScreen<Craf
         } else {
             recipes = new HashSet<>();
         }
-        recipes.addAll(ExileDB.Recipes().getFilterWrapped(x -> x.profession.equals(prof.GUID()) && x.canCraft(menu.getItems()).can).list);
+        recipes.addAll(ExileDB.Recipes().getFilterWrapped(x -> x.profession.equals(prof.GUID()) && x.canCraft(net.minecraft.core.NonNullList.copyOf(menu.slots.stream().map(Slot::getItem).toList())).can).list);
         return recipes.stream().toList();
 
     }

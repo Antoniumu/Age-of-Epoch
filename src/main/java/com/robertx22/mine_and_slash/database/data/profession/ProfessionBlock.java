@@ -36,7 +36,7 @@ public class ProfessionBlock extends BaseEntityBlock  {
     public String profession;
 
     public ProfessionBlock(String profession) {
-        super(Properties.ofFullCopy(Blocks.CRAFTING_TABLE).noOcclusion());
+        super(Properties.ofFullCopy(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("crafting_table"))).noOcclusion());
         this.profession = profession;
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
 
@@ -141,11 +141,7 @@ public class ProfessionBlock extends BaseEntityBlock  {
         return null;
     }
 
-    @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public com.mojang.serialization.MapCodec<? extends net.minecraft.world.level.block.BaseEntityBlock> codec() {
-        return (com.mojang.serialization.MapCodec) simpleCodec(p -> this);
-    }
+    
 
 
     @Override

@@ -3,7 +3,6 @@ package com.robertx22.mine_and_slash.gui.screens.skill_tree;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.ARGB;
 import org.joml.Matrix3x2f;
 
 public record BufferInfo(
@@ -45,8 +44,6 @@ public record BufferInfo(
 
     public void draw(GuiGraphicsExtractor gui, Identifier texture) {
         if (texture == null) return;
-        float alpha = Math.min(1.0f, Math.max(0.05f, this.renderInfo.opacity()));
-        int tint = ARGB.colorFromFloat(alpha, 1.0f, 1.0f, 1.0f);
         gui.pose().pushMatrix();
         gui.pose().set(this.matrix);
         gui.blit(
@@ -61,8 +58,7 @@ public record BufferInfo(
             uWidth,
             vHeight,
             Math.max(1, texWidth),
-            Math.max(1, texHeight),
-            tint
+            Math.max(1, texHeight)
         );
         gui.pose().popMatrix();
     }

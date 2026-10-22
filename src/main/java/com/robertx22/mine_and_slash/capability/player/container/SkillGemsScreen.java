@@ -61,7 +61,7 @@ public class SkillGemsScreen extends AbstractContainerScreen<SkillGemsMenu> {
     public void extractRenderState(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         this.extractBackground(pGuiGraphics, 0, 0, 0F);
         super.extractRenderState(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+        this.extractTooltip(pGuiGraphics, pMouseX, pMouseY);
     }
 
     @Override

@@ -148,7 +148,7 @@ public class StatSoulItem extends Item implements IGUID, ICreativeTabNbt, iHideJ
             StatSoulData data = StackSaving.STAT_SOULS.loadFrom(stack);
             if (data != null) {
                 tooltip.clear();
-                if (Screen.hasShiftDown() && data.gear != null) {
+                if (net.minecraft.client.Minecraft.getInstance().hasShiftDown() && data.gear != null) {
                     // todo temp solution to view extracted souls
                     var gearstack = new ItemStack(Items.IRON_SWORD);
                     data.gear.saveTo(gearstack);

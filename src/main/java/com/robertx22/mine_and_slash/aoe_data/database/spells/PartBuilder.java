@@ -17,7 +17,7 @@ import com.robertx22.mine_and_slash.uncommon.enumclasses.Elements;
 import com.robertx22.mine_and_slash.uncommon.utilityclasses.AllyOrEnemy;
 import com.robertx22.mine_and_slash.uncommon.utilityclasses.DashUtils;
 import com.robertx22.mine_and_slash.uncommon.utilityclasses.EntityFinder;
-import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 
@@ -138,24 +138,24 @@ public class PartBuilder {
         return c;
     }
 
-    public static ComponentPart particleOnTick(Double ticks, SimpleParticleType particle, Double count, Double radius) {
+    public static ComponentPart particleOnTick(Double ticks, ParticleType<?> particle, Double count, Double radius) {
         ComponentPart c = new ComponentPart();
         c.acts.add(SpellAction.PARTICLES_IN_RADIUS.create(particle, count, radius));
         c.ifs.add(EffectCondition.EVERY_X_TICKS.create(ticks));
         return c;
     }
 
-    public static ComponentPart aoeParticles(SimpleParticleType particle, Double count, Double radius) {
+    public static ComponentPart aoeParticles(ParticleType<?> particle, Double count, Double radius) {
         ComponentPart c = new ComponentPart();
         c.acts.add(SpellAction.PARTICLES_IN_RADIUS.create(particle, count, radius));
         return c;
     }
 
-    public static ComponentPart tickCloudParticle(Double ticks, SimpleParticleType particle, Double count, Double radius) {
+    public static ComponentPart tickCloudParticle(Double ticks, ParticleType<?> particle, Double count, Double radius) {
         return tickCloudParticle(ticks, particle, count, radius, 2.5D);
     }
 
-    public static ComponentPart tickCloudParticle(Double ticks, SimpleParticleType particle, Double count, Double radius, Double randomY) {
+    public static ComponentPart tickCloudParticle(Double ticks, ParticleType<?> particle, Double count, Double radius, Double randomY) {
         ComponentPart c = cloudParticles(particle, count, radius, randomY);
         c.ifs.add(EffectCondition.EVERY_X_TICKS.create(ticks));
         return c;
@@ -187,7 +187,7 @@ public class PartBuilder {
         return c;
     }
 
-    public static ComponentPart cloudParticles(SimpleParticleType particle, Double count, Double radius, Double randomY) {
+    public static ComponentPart cloudParticles(ParticleType<?> particle, Double count, Double radius, Double randomY) {
         ComponentPart c = new ComponentPart();
         c.acts.add(SpellAction.PARTICLES_IN_RADIUS.create(particle, count, radius)
                 .put(MapField.PARTICLE_SHAPE, ParticleShape.CIRCLE_2D.name())
@@ -195,7 +195,7 @@ public class PartBuilder {
         return c;
     }
 
-    public static ComponentPart tickGroundParticle(Double ticks, SimpleParticleType particle, Double count, Double radius, Double randomY) {
+    public static ComponentPart tickGroundParticle(Double ticks, ParticleType<?> particle, Double count, Double radius, Double randomY) {
         ComponentPart c = groundParticles(particle, count, radius, randomY);
         c.ifs.add(EffectCondition.EVERY_X_TICKS.create(ticks));
         return c;
@@ -208,12 +208,12 @@ public class PartBuilder {
         return c;
     }
 
-    public static ComponentPart groundEdgeParticles(SimpleParticleType particle, Double count, Double radius, Double randomY) {
+    public static ComponentPart groundEdgeParticles(ParticleType<?> particle, Double count, Double radius, Double randomY) {
         return groundEdgeParticles(particle, count, radius, randomY, ParticleMotion.None);
     }
 
 
-    public static ComponentPart nova(SimpleParticleType particle, Double count, Double radius, Double motionMulti) {
+    public static ComponentPart nova(ParticleType<?> particle, Double count, Double radius, Double motionMulti) {
         ComponentPart c = new ComponentPart();
         c.acts.add(SpellAction.PARTICLES_IN_RADIUS.create(particle, count, radius)
                 .put(MapField.PARTICLE_SHAPE, ParticleShape.CIRCLE_2D.name())
@@ -225,7 +225,7 @@ public class PartBuilder {
         return c;
     }
 
-    public static ComponentPart groundEdgeParticles(SimpleParticleType particle, Double count, Double radius, Double randomY, ParticleMotion motion) {
+    public static ComponentPart groundEdgeParticles(ParticleType<?> particle, Double count, Double radius, Double randomY, ParticleMotion motion) {
         ComponentPart c = new ComponentPart();
         c.acts.add(SpellAction.PARTICLES_IN_RADIUS.create(particle, count, radius)
                 .put(MapField.PARTICLE_SHAPE, ParticleShape.CIRCLE_2D.name())
@@ -236,7 +236,7 @@ public class PartBuilder {
         return c;
     }
 
-    public static ComponentPart groundParticles(SimpleParticleType particle, Double count, Double radius, Double randomY) {
+    public static ComponentPart groundParticles(ParticleType<?> particle, Double count, Double radius, Double randomY) {
         ComponentPart c = new ComponentPart();
         c.acts.add(SpellAction.PARTICLES_IN_RADIUS.create(particle, count, radius)
                 .put(MapField.PARTICLE_SHAPE, ParticleShape.CIRCLE_2D.name())

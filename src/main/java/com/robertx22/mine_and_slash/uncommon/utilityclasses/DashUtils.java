@@ -30,7 +30,7 @@ public class DashUtils {
 
         if (target instanceof ServerPlayer) {
             ((ServerPlayer) target).connection.send(new ClientboundSetEntityMotionPacket(target));
-            target.hurtMarked = false;
+
         }
     }
 
@@ -38,7 +38,7 @@ public class DashUtils {
     public static void push(Entity en, float f, double d, double e) {
 
         if (f > 0.0F) {
-            en.hasImpulse = true;
+            en.needsSync = true;
             Vec3 vec3d = en.getDeltaMovement();
             Vec3 vec3d2 = (new Vec3(d, 0.0D, e)).normalize()
                     .scale((double) f);
@@ -72,7 +72,7 @@ public class DashUtils {
 
         if (entity instanceof ServerPlayer) {
             ((ServerPlayer) entity).connection.send(new ClientboundSetEntityMotionPacket(entity));
-            entity.hurtMarked = false;
+
         }
     }
 

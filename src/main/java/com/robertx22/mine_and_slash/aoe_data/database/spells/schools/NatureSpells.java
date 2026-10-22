@@ -80,7 +80,7 @@ public class NatureSpells implements ExileRegistryInit {
                 .onTick("totem", PartBuilder.groundEdgeParticles(ParticleTypes.WITCH, 100D, 3D, 0.5D).tick(2D))
 
                 .onTick("totem", PartBuilder.aoeSelectEnemies(10D, 50D).tick(20D)
-                        .addPerEntityHit(PartBuilder.justAction(SpellAction.SUMMON_BLOCK.create(Blocks.PURPLE_GLAZED_TERRACOTTA, 200D)
+                        .addPerEntityHit(PartBuilder.justAction(SpellAction.SUMMON_BLOCK.create(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("purple_glazed_terracotta")), 200D)
                                 .put(MapField.ENTITY_NAME, "meteor")
                                 .put(MapField.BLOCK_FALL_SPEED, -0.05D)
                                 .put(MapField.HEIGHT, 4D)
@@ -216,7 +216,7 @@ public class NatureSpells implements ExileRegistryInit {
                 .onCast(PartBuilder.giveSelfExileEffect(ModEffects.INNER_CALM, 20 * 5D))
 
                 .onCast(PartBuilder.justAction(SpellAction.SUMMON_AT_SIGHT.create(SlashEntities.SIMPLE_PROJECTILE.get(), 1D, 4D)))
-                .onExpire(PartBuilder.justAction(SpellAction.SUMMON_BLOCK.create(Blocks.CACTUS, 200D)
+                .onExpire(PartBuilder.justAction(SpellAction.SUMMON_BLOCK.create(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("cactus")), 200D)
                         .put(MapField.ENTITY_NAME, "block")
                         .put(MapField.FIND_NEAREST_SURFACE, false)
                         .put(MapField.BLOCK_FALL_SPEED, -0.05D)

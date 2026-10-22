@@ -40,10 +40,10 @@ public class BackpackScreen extends AbstractContainerScreen<BackpackMenu> {
             y += 18;
         }
 
-        MouseHandlerDuck mouseHandler = (MouseHandlerDuck) Minecraft.getInstance().mouseHandler;
-        //init() will be invoked when this screen be set to Minecraft.screen after the releaseMouse(), see setScreen();
-        mouseHandler.setXPos(iMouseX);
-        mouseHandler.setYPos(iMouseY);
+        if (Minecraft.getInstance().mouseHandler instanceof MouseHandlerDuck mouseHandler) {
+            mouseHandler.setXPos(iMouseX);
+            mouseHandler.setYPos(iMouseY);
+        }
         //from MouseHandler.class releaseMouse()
         
     }
@@ -51,7 +51,7 @@ public class BackpackScreen extends AbstractContainerScreen<BackpackMenu> {
     public void extractRenderState(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         this.extractBackground(pGuiGraphics, 0, 0, 0F);
         super.extractRenderState(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+        this.extractTooltip(pGuiGraphics, pMouseX, pMouseY);
 
     }
 

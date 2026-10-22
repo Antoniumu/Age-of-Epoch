@@ -33,7 +33,7 @@ public class RarityListData {
         List<GearRarity> allRarities = container.getList();
 
         allRarities.sort(Comparator.comparingInt(x -> x.item_tier));
-        if (!Screen.hasShiftDown()) {
+        if (!net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
             MutableComponent starter = Component.literal("");
             String block = "\u25A0";
             allRarities

@@ -450,7 +450,7 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
             float addx = (1F / zoom - 1) * this.width / 2F;
             float addy = (1F / zoom - 1) * this.height / 2F;
 
-            for (Renderable e : this.renderables) {
+            for (var e : net.fabricmc.fabric.api.client.screen.v1.Screens.getWidgets(this)) {
                 if (e instanceof PerkButton b)
                     if (originalButtonLocMap.containsKey(b)) {
 

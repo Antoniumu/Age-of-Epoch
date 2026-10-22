@@ -66,11 +66,7 @@ public class JewelsMenu extends ChestMenu {
         return super.quickMoveStack(pPlayer, pIndex);
     }
 
-    @Override
     public boolean canTakeItemForPickAll(ItemStack pStack, Slot pSlot) {
-        if (isJewelSlot(pSlot.index)) {
-            return false;
-        }
-        return super.canTakeItemForPickAll(pStack, pSlot);
+        return !isJewelSlot(pSlot.index);
     }
 }

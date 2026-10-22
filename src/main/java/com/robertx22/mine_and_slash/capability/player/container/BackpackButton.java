@@ -32,21 +32,23 @@ public class BackpackButton extends ImageButton {
 
     public void renderLegacyUnused(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
         setModTooltip();
-        super.extractWidgetRenderState(gui, mouseX, mouseY, delta);
+        super.extractContents(gui, mouseX, mouseY, delta);
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
+    protected void extractContents(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
+        setModTooltip();
         Identifier tex = type.getIcon();
         com.robertx22.forge_compat.client.RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         com.robertx22.forge_compat.client.GuiBlitHelper.blit(gui, tex, getX(), getY(), SX, SX, SX, SX, SX, SX);
 
     }
 
-    public void onClick(double pMouseX, double pMouseY) {
+    @Override
+    public void onClick(net.minecraft.client.input.MouseButtonEvent event, boolean doubleClick) {
         BackpackScreen.iMouseX = Minecraft.getInstance().mouseHandler.xpos();
         BackpackScreen.iMouseY = Minecraft.getInstance().mouseHandler.ypos();
-        super.onClick(pMouseX, pMouseY);
+        super.onClick(event, doubleClick);
     }
 
     public void setModTooltip() {

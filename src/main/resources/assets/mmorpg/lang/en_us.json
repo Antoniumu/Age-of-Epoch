@@ -3363,5 +3363,8 @@
   "translator_guide_1": "1. Some lang lines have corresponding locale context, particularly the formatter lines. Understanding these contexts helps translators comprehend how the lang line function. Translating these lines is unnecessary.",
   "translator_guide_2": "2. Certain lines contain line break format(\\n). translator can add/remove that format at will based on the actual length of the translated text.",
   "uncommon.item": "Uncommon",
-  "unique.item": "Unique"
+  "unique.item": "Unique",
+  "key.category.mmorpg.keys": "Mine and Slash / Age of Epoch",
+  "mmorpg.key.mob_plate_style": "Cycle Mob Plate Style",
+  "key.mmorpg.open_questbook": "Open Quest Book"
 }

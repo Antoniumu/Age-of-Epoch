@@ -6,19 +6,14 @@
   "mixins": [
     "ArrowShootMixin",
     "AttributeMixin",
-    "DamageConflictCheckMixin",
     "DamageSourceMixin",
-    "EntityMixin",
     "FallingBlockEntityMixin",
     "LivingEntityMixin",
-    "LootTableMixin",
-    "StopMobDropWornGearInMapsMixin"
+    "LootTableMixin"
   ],
   "client": [
     "ItemStackMixin",
-    "MouseHandlerMixin",
-    "StopOffhandRenderMixin",
-    "TooltipMixin"
+    "StopOffhandRenderMixin"
   ],
   "injectors": {
     "defaultRequire": 0

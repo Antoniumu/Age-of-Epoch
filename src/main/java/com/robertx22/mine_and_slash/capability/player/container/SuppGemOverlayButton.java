@@ -54,23 +54,32 @@ public class SuppGemOverlayButton extends ImageButton {
         }
         this.setTooltip(Tooltip.create(TextUTIL.mergeList(tooltip)));
 
-        super.extractWidgetRenderState(gui, mouseX, mouseY, delta);
+        super.extractContents(gui, mouseX, mouseY, delta);
     }
 
 
     static Identifier id = SlashRef.guiId("blocked_slot");
 
-    @Override
     protected boolean clicked(double pMouseX, double pMouseY) {
         return false;
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
+    protected void extractContents(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
 
         //  super.renderWidget(gui, mouseX, mouseY, delta);
 
         if (!can) {
+            List<Component> tooltip = new ArrayList<>();
+            tooltip.add(Words.LockedSuppGemSlot.locName().withStyle(ChatFormatting.RED));
+            tooltip.add(Component.empty());
+            if (links == null) {
+                tooltip.add(Words.NoSocketedSpell.locName().withStyle(ChatFormatting.YELLOW));
+            } else {
+                if (links.cappedByLevel) tooltip.add(Words.IncreaseYourLevel.locName().withStyle(ChatFormatting.YELLOW));
+                if (links.cappedBySpellLevel) tooltip.add(Words.IncreaseSpellLevel.locName().withStyle(ChatFormatting.YELLOW));
+            }
+            this.setTooltip(Tooltip.create(TextUTIL.mergeList(tooltip)));
             com.robertx22.forge_compat.client.RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             com.robertx22.forge_compat.client.GuiBlitHelper.blit(gui, id, getX(), getY(), BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X);
         }

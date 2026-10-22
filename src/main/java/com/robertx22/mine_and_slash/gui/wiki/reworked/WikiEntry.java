@@ -62,7 +62,7 @@ public class WikiEntry extends ObjectSelectionList.Entry<WikiEntry> {
 
         if (this.isMouseOver(pMouseX, pMouseY)) {
             var tip = Tooltip.create(TextUTIL.mergeList(entry.getTooltip()));
-            list.screen.setTooltipForNextRenderPass(tip, DefaultTooltipPositioner.INSTANCE, true);
+            gui.setTooltipForNextFrame(Minecraft.getInstance().font, TextUTIL.mergeList(entry.getTooltip()), pMouseX, pMouseY);
         }
 
         var mc = Minecraft.getInstance();

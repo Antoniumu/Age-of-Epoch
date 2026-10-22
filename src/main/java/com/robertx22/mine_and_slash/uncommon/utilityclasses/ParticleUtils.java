@@ -16,9 +16,10 @@ public class ParticleUtils {
     public static void spawnDefaultSlashingWeaponParticles(Entity en) {
         SoundUtils.playSound(en, com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.PLAYER_ATTACK_SWEEP), 1, 1);
 
-        if (en instanceof Player) {
-            Player p = (Player) en;
-            p.sweepAttack();
+        if (en instanceof Player p && p.level() instanceof net.minecraft.server.level.ServerLevel sl) {
+            double dx = -Math.sin(Math.toRadians(p.getYRot()));
+            double dz = Math.cos(Math.toRadians(p.getYRot()));
+            sl.sendParticles(net.minecraft.core.particles.ParticleTypes.SWEEP_ATTACK, p.getX() + dx, p.getY(0.5D), p.getZ() + dz, 0, dx, 0.0D, dz, 0.0D);
         }
     }
 

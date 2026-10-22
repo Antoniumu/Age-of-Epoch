@@ -29,7 +29,7 @@ import net.minecraft.world.phys.BlockHitResult;
 public class ProphecyAltarBlock extends Block {
 
     public ProphecyAltarBlock() {
-        super(BlockBehaviour.Properties.ofFullCopy(Blocks.LECTERN).noOcclusion());
+        super(BlockBehaviour.Properties.ofFullCopy(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("lectern"))).noOcclusion());
     }
 
     @Override

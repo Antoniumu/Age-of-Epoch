@@ -126,14 +126,14 @@ public class Professions {
         Builder.of(MINING, "Mining", "Mining gives you chance to obtain extra custom materials by mining ores. You can see which ores give experience in the Mine and Slash HUB > Library screen.")
                 .tool(SlotTags.mining_tool)
 
-                .blockTag(SkillItemTier.TIER0, 15, BlockTags.COAL_ORES)
-                .blockTag(SkillItemTier.TIER1, 20, BlockTags.COPPER_ORES)
-                .blockTag(SkillItemTier.TIER1, 15, BlockTags.REDSTONE_ORES)
-                .blockTag(SkillItemTier.TIER1, 25, BlockTags.LAPIS_ORES)
-                .blockTag(SkillItemTier.TIER2, 50, BlockTags.IRON_ORES)
-                .blockTag(SkillItemTier.TIER3, 75, BlockTags.GOLD_ORES)
-                .blockTag(SkillItemTier.TIER4, 100, BlockTags.EMERALD_ORES)
-                .blockTag(SkillItemTier.TIER5, 200, BlockTags.DIAMOND_ORES)
+                .blockTag(SkillItemTier.TIER0, 15, TagKey.create(net.minecraft.core.registries.Registries.BLOCK, net.minecraft.resources.Identifier.withDefaultNamespace("coal_ores")))
+                .blockTag(SkillItemTier.TIER1, 20, TagKey.create(net.minecraft.core.registries.Registries.BLOCK, net.minecraft.resources.Identifier.withDefaultNamespace("copper_ores")))
+                .blockTag(SkillItemTier.TIER1, 15, TagKey.create(net.minecraft.core.registries.Registries.BLOCK, net.minecraft.resources.Identifier.withDefaultNamespace("redstone_ores")))
+                .blockTag(SkillItemTier.TIER1, 25, TagKey.create(net.minecraft.core.registries.Registries.BLOCK, net.minecraft.resources.Identifier.withDefaultNamespace("lapis_ores")))
+                .blockTag(SkillItemTier.TIER2, 50, TagKey.create(net.minecraft.core.registries.Registries.BLOCK, net.minecraft.resources.Identifier.withDefaultNamespace("iron_ores")))
+                .blockTag(SkillItemTier.TIER3, 75, TagKey.create(net.minecraft.core.registries.Registries.BLOCK, net.minecraft.resources.Identifier.withDefaultNamespace("gold_ores")))
+                .blockTag(SkillItemTier.TIER4, 100, TagKey.create(net.minecraft.core.registries.Registries.BLOCK, net.minecraft.resources.Identifier.withDefaultNamespace("emerald_ores")))
+                .blockTag(SkillItemTier.TIER5, 200, TagKey.create(net.minecraft.core.registries.Registries.BLOCK, net.minecraft.resources.Identifier.withDefaultNamespace("diamond_ores")))
 
                 .dropTiered(ProfessionMatItems.TIERED_MAIN_MATS.get(MINING), 1)
 
@@ -200,7 +200,7 @@ public class Professions {
 
         public Builder blockTag(SkillItemTier tier, int exp, TagKey<Block>... blocks) {
             for (TagKey<Block> block : blocks) {
-                this.p.exp_sources.add(tier, ExpSources.Type.BLOCK_TAG, block.identifier().toString(), exp);
+                this.p.exp_sources.add(tier, ExpSources.Type.BLOCK_TAG, block.location().toString(), exp);
             }
             return this;
         }

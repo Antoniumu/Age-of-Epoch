@@ -51,10 +51,11 @@ public class LearnClassPointButton extends ImageButton {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent __ev, boolean __dbl) {
+        double mouseX = __ev.x(); double mouseY = __ev.y(); int button = __ev.button();
 
         if (this.active && this.visible) {
-            boolean bl = this.clicked(mouseX, mouseY);
+            boolean bl = this.isMouseOver(mouseX, mouseY);
             if (bl) {
                 this.playDownSound(Minecraft.getInstance().getSoundManager());
                 if (button == 0) {
@@ -72,7 +73,8 @@ public class LearnClassPointButton extends ImageButton {
         }
     }
 
-    public void renderLegacyUnused(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
+    @Override
+    protected void extractContents(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
         if (this.isHovered()) {
             setModTooltip();
         }
@@ -124,14 +126,11 @@ public class LearnClassPointButton extends ImageButton {
         String lvltext = currentlvl + "/" + maxlvl;
         TextUtils.renderText(gui, 0.8F, lvltext, getX() + BUTTON_SIZE_X / 2, (int) (getY() + BUTTON_SIZE_Y * 0.85F), color);
 
-        super.extractWidgetRenderState(gui, mouseX, mouseY, delta);
+        
 
     }
 
-    @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        // this.renderTexture(pGuiGraphics, this.resourceLocation, this.getX(), this.getY(), this.xTexStart, this.yTexStart, this.yDiffTex, this.width, this.height, this.textureWidth, this.textureHeight);
-    }
+
 
     public void setModTooltip() {
 

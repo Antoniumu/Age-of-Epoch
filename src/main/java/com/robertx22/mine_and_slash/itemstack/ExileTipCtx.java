@@ -14,8 +14,8 @@ public class ExileTipCtx {
     public Player player;
     public ExileStack stack;
 
-    public boolean shift = Screen.hasShiftDown();
-    public boolean alt = Screen.hasAltDown();
+    public boolean shift = net.minecraft.client.Minecraft.getInstance().hasShiftDown();
+    public boolean alt = net.minecraft.client.Minecraft.getInstance().hasAltDown();
 
     public ExileTipCtx(List<Component> tip, Player player, ExileStack stack) {
         this.tip = tip;

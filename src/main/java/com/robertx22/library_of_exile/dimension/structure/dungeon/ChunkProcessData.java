@@ -25,7 +25,7 @@ public class ChunkProcessData {
         for (int x = 0; x < 16; x++) {
             for (int y = -16; y < 16; y++) {
                 for (int z = 0; z < 16; z++) {
-                    function.apply(chunk.getPos().getBlockAt(0, 0, 0).offset(x, y, z));
+                    function.apply(new BlockPos(chunk.getPos().getMinBlockX(), 0, chunk.getPos().getMinBlockZ()).offset(x, y, z));
                 }
             }
         }
@@ -38,7 +38,7 @@ public class ChunkProcessData {
 
         List<BlockPos> list = new ArrayList<>();
 
-        var bpos = chunk.getPos().getBlockAt(0, 0, 0);
+        var bpos = new BlockPos(chunk.getPos().getMinBlockX(), 0, chunk.getPos().getMinBlockZ());
         for (int x = 0; x < 16; x++) {
             for (int y = -16; y < 16; y++) {
                 for (int z = 0; z < 16; z++) {

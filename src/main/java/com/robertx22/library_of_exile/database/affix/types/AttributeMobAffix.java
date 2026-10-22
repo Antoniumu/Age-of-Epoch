@@ -133,7 +133,7 @@ public class AttributeMobAffix extends ExileMobAffix {
             }
 
             if (flag) {
-                return CommonComponents.space().append(Component.translatable("attribute.modifier.equals." + attributemodifier.operation().ordinal(), com.robertx22.forge_compat.common.CompatHelper.ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(entry.getKey().getDescriptionId()))).withStyle(ChatFormatting.DARK_GREEN);
+                return Component.literal(" ").append(Component.translatable("attribute.modifier.equals." + attributemodifier.operation().ordinal(), com.robertx22.forge_compat.common.CompatHelper.ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(entry.getKey().getDescriptionId()))).withStyle(ChatFormatting.DARK_GREEN);
             } else if (d0 > 0.0D) {
                 return Component.translatable("attribute.modifier.plus." + attributemodifier.operation().ordinal(), com.robertx22.forge_compat.common.CompatHelper.ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.BLUE);
             } else if (d0 < 0.0D) {

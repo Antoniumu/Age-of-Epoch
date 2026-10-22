@@ -36,12 +36,12 @@ public class AddSpawnerExtraLootMethod {
             if (!context.hasParameter(LootContextParams.THIS_ENTITY)) {
                 return;
             }
-            if (context.getOptionalParameter(LootContextParams.BLOCK_STATE)
+            if (context.getOptional(LootContextParams.BLOCK_STATE)
                     .getBlock() != Blocks.SPAWNER) {
                 return;
             }
 
-            Entity en = context.getOptionalParameter(LootContextParams.THIS_ENTITY);
+            Entity en = context.getOptional(LootContextParams.THIS_ENTITY);
 
             Player player = null;
             if (en instanceof Player) {
@@ -51,13 +51,13 @@ public class AddSpawnerExtraLootMethod {
                 return;
             }
 
-            ItemStack stack = context.getOptionalParameter(LootContextParams.TOOL) instanceof ItemStack __st ? __st : ItemStack.EMPTY;
+            ItemStack stack = context.getOptional(LootContextParams.TOOL) instanceof ItemStack __st ? __st : ItemStack.EMPTY;
             if (com.robertx22.forge_compat.common.CompatHelper.getEnchantLevel(null, Enchantments.SILK_TOUCH, stack) != 0) {
                 return;
             }
 
 
-            Vec3 p = context.getOptionalParameter(LootContextParams.ORIGIN);
+            Vec3 p = context.getOptional(LootContextParams.ORIGIN);
             BlockPos pos = new BlockPos((int) p.x, (int) p.y, (int) p.z);
 
             LootInfo info = LootInfo.ofSpawner(player, context.getLevel(), pos);

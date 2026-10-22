@@ -79,7 +79,7 @@ public class MobBuilder {
 
         T mob = (T) type.create(world, net.minecraft.world.entity.EntitySpawnReason.MOB_SUMMONED);
 
-        mob.finalizeSpawn((ServerLevelAccessor) world, world.getCurrentDifficultyAt(p), net.minecraft.world.entity.EntitySpawnReason.REINFORCEMENT, null);
+        mob.finalizeSpawn((ServerLevelAccessor) world, ((net.minecraft.server.level.ServerLevel) world).getCurrentDifficultyAt(p), net.minecraft.world.entity.EntitySpawnReason.REINFORCEMENT, null);
         mob.setPos(vec.x(), vec.y(), vec.z());
 
 

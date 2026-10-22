@@ -32,9 +32,9 @@ public class SchoolButton extends ImageButton {
         }
     }
 
-    public void extractWidgetRenderState(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    protected void extractContents(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         if (school != null) {
-            this.renderTexture(pGuiGraphics, this.school.getIconLoc(), this.getX(), this.getY(), 0, 0, this.yDiffTex, SIZE, SIZE, SIZE, SIZE);
+            com.robertx22.forge_compat.client.GuiBlitHelper.blit(pGuiGraphics, this.school.getIconLoc(), this.getX(), this.getY(), SIZE, SIZE, SIZE, SIZE, SIZE, SIZE);
 
             if (this.isHoveredOrFocused()) {
                 List<Component> tooltip = new ArrayList<>();

@@ -27,7 +27,7 @@ public class DropChanceBlock extends AbstractTextBlock {
 
         List<MutableComponent> list = new ArrayList<>();
         list.add(Itemtips.DROP_CHANCE.locName(chancetext).withStyle(ChatFormatting.GREEN));
-        if (Screen.hasShiftDown()) {
+        if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
             list.add(Itemtips.DROP_CHANCE_EXTRA_INFO.locName().withStyle(ChatFormatting.BLUE));
         }
         return list;

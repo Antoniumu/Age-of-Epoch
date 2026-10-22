@@ -21,7 +21,7 @@ public class CommonTooltips {
         if (doQuality) {
             list.add(Itemtips.QUALITY.locName(exStack.get(StackKeys.CUSTOM).getOrCreate().data.get(CustomItemData.KEYS.QUALITY)).withStyle(ChatFormatting.GOLD));
         }
-        return new AdditionalBlock(list).showWhen(() -> Screen.hasShiftDown());
+        return new AdditionalBlock(list).showWhen(() -> net.minecraft.client.Minecraft.getInstance().hasShiftDown());
     }
 
     public static AdditionalBlock craftedItem(ExileStack exStack) {
@@ -29,7 +29,7 @@ public class CommonTooltips {
         if (exStack.get(StackKeys.CUSTOM).hasAndTrue(x -> x.data.get(CustomItemData.KEYS.CRAFTED))) {
             all.add(Words.CRAFTED.locName().withStyle(ChatFormatting.LIGHT_PURPLE));
         }
-        return new AdditionalBlock(all).showWhen(() -> Screen.hasShiftDown());
+        return new AdditionalBlock(all).showWhen(() -> net.minecraft.client.Minecraft.getInstance().hasShiftDown());
     }
 
 }

@@ -153,7 +153,7 @@ public class ProcessMapChunks {
             if (!skip) {
                 if (any) {
                     // only set to air if the processor didnt turn it into another block
-                    if (level.getBlockState(tilePos).getBlock() == Blocks.STRUCTURE_BLOCK || level.getBlockState(tilePos).getBlock() == Blocks.COMMAND_BLOCK) {
+                    if (level.getBlockState(tilePos).getBlock() == net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("structure_block")) || level.getBlockState(tilePos).getBlock() == net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("command_block"))) {
                         //level.destroyBlock(tilePos, false);
                         //  level.removeBlockEntity(tilePos);
                         // level.setBlock(tilePos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL); // delete data block

@@ -44,7 +44,7 @@ public class ShapedRecipeBuilder implements RecipeBuilder {
     }
 
     public ShapedRecipeBuilder define(Character symbol, TagKey<Item> tag) {
-        this.key.put(symbol, "#" + tag.identifier().toString());
+        this.key.put(symbol, "#" + tag.location().toString());
         return this;
     }
 

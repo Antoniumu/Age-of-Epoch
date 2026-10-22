@@ -17,7 +17,7 @@ import java.util.Random;
 
 public class MapGenerationUTIL {
     public static Random createRandom(Level level, ChunkPos start) {
-        long worldSeed = level.getServer().getWorldData().worldGenOptions().seed();
+        long worldSeed = ((net.minecraft.server.level.ServerLevel) level).getSeed();
         int chunkX = start.x();
         int chunkZ = start.z();
         long newSeed = (worldSeed + (long) (chunkX * chunkX * 4987142) + (long) (chunkX * 5947611) + (long) (chunkZ * chunkZ) * 4392871L + (long) (chunkZ * 389711) ^ worldSeed);
@@ -37,7 +37,7 @@ public class MapGenerationUTIL {
                 var template = opt.get();
                 StructurePlaceSettings settings = new StructurePlaceSettings().setMirror(Mirror.NONE).setIgnoreEntities(false);
                 
-                BlockPos position = cpos.getBlockAt(0, y, 0);
+                BlockPos position = new BlockPos(cpos.getMinBlockX(), y, cpos.getMinBlockZ());
 
                 if (template == null) {
                     if (errorIfMissing) {
@@ -52,7 +52,7 @@ public class MapGenerationUTIL {
 
                 settings.setRotation(Rotation.NONE);
 
-                template.placeInWorld(level, position, position, settings, level.getRandom(), Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
+                template.placeInWorld(level, position, position, settings, level.getRandom(), 2);
             } else {
                 if (errorIfMissing) {
 
