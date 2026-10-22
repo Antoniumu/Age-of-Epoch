@@ -1,0 +1,7 @@
+{
+  "id": "missing_health_scaling_2.0",
+  "resourceType": "health",
+  "scalingPer": 2.0,
+  "ser": "missing_resource_scaling",
+  "side": "Source"
+}

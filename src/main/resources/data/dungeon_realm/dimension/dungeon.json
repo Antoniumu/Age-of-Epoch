@@ -1,0 +1,18 @@
+{
+  "type": "dungeon_realm:dungeon",
+  "generator": {
+    "type": "dungeon_realm:dungeon_chunk_gen",	
+	"map_id": "dungeon",
+    "settings": {
+      "biome": "dungeon_realm:dungeon_biome",
+      "lakes": false,
+      "features": false,
+      "layers": [
+        {
+          "block": "minecraft:bedrock",
+          "height": 384
+        }
+      ]
+    }
+  }
+}

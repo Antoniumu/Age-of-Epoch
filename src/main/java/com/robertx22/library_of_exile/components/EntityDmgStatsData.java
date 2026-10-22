@@ -1,24 +1,19 @@
 package com.robertx22.library_of_exile.components;
 
-import info.loenwind.autosave.annotations.Storable;
-import info.loenwind.autosave.annotations.Store;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerLevel;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-@Storable
 public class EntityDmgStatsData {
 
-    @Store
     private HashMap<String, Float> map = new HashMap<>();
 
-    @Store
     private float enviroOrMobDmg = 0;
 
     public float getEnviroOrMobDmg() {
@@ -26,25 +21,34 @@ public class EntityDmgStatsData {
     }
 
     public void onDamagedBy(Entity entity, float dmg) {
-        if (entity instanceof Player) {
-            String id = entity.getUUID()
-                .toString();
-            map.put(id, dmg + map.getOrDefault(id, 0F));
-        } else {
-            enviroOrMobDmg += dmg;
+
+        if (dmg > 0 && Float.isFinite(dmg)) {
+            // for some reason there's errors about trying to save infinity..?
+
+            if (map.size() > 300) {
+                map = new HashMap<>();
+                enviroOrMobDmg = 0;
+            }
+
+            if (entity instanceof Player) {
+                String id = entity.getUUID().toString();
+                map.put(id, dmg + map.getOrDefault(id, 0F));
+            } else {
+                enviroOrMobDmg += dmg;
+            }
         }
     }
 
     public LivingEntity getHighestDamager(ServerLevel world) {
 
         Optional<Map.Entry<String, Float>> opt = map.entrySet()
-            .stream()
-            .max((one, two) -> one.getValue() >= two.getValue() ? 1 : -1);
+                .stream()
+                .max((one, two) -> one.getValue() >= two.getValue() ? 1 : -1);
 
         if (opt.isPresent()) {
 
             String id = opt.get()
-                .getKey();
+                    .getKey();
 
             Entity en = world.getEntity(UUID.fromString(id));
 
@@ -60,9 +64,9 @@ public class EntityDmgStatsData {
             return 0;
         }
         return map.values()
-            .stream()
-            .reduce((x, y) -> x + y)
-            .get();
+                .stream()
+                .reduce((x, y) -> x + y)
+                .get();
     }
 
 }

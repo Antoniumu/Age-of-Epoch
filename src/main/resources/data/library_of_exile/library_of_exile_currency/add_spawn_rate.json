@@ -1,0 +1,23 @@
+{
+  "always_do_item_mods": [
+    {
+      "id": "add_spawn_rate",
+      "weight": 1
+    }
+  ],
+  "id": "add_spawn_rate",
+  "item_id": "ancient_obelisks:orbs/add_spawn_rate",
+  "item_type_requirement": [
+    "is_obelisk_map"
+  ],
+  "pick_one_item_mod": [],
+  "potential": {
+    "needs_potential": true,
+    "potential_cost": 0
+  },
+  "rar": "rare",
+  "req": [
+    "obelisk_spawnrate_cap"
+  ],
+  "weight": 0
+}

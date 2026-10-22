@@ -1,12 +1,12 @@
 package com.robertx22.library_of_exile.utils;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+
 
 public class SoundUtils {
 
@@ -22,20 +22,8 @@ public class SoundUtils {
         playSound(en, event, 1, 1);
     }
 
-    public static void playSound(Entity en, Holder<SoundEvent> event) {
-        playSound(en, event.value(), 1, 1);
-    }
-
     public static void playSound(Level world, BlockPos pos, SoundEvent event) {
         playSound(world, pos, event, 1, 1);
-    }
-
-    public static void playSound(Level world, BlockPos pos, Holder<SoundEvent> event) {
-        playSound(world, pos, event.value(), 1, 1);
-    }
-
-    public static void playSound(Entity en, Holder<SoundEvent> event, float volume, float pitch) {
-        playSound(en, event.value(), volume, pitch);
     }
 
     public static void playSound(Entity en, SoundEvent event, float volume, float pitch) {
@@ -46,15 +34,11 @@ public class SoundUtils {
         }
     }
 
-    public static void playSound(Level world, BlockPos pos, Holder<SoundEvent> event, float volume, float pitch) {
-        playSound(world, pos, event.value(), SoundSource.PLAYERS, volume, pitch);
-    }
-
     public static void playSound(Level world, BlockPos pos, SoundEvent event, float volume, float pitch) {
         playSound(world, pos, event, SoundSource.PLAYERS, volume, pitch);
     }
 
-    public static void playSound(Level world, BlockPos pos, SoundEvent event, SoundSource cat, float volume, float pitch) {
+    public static void playSound(net.minecraft.world.level.Level world, BlockPos pos, SoundEvent event, SoundSource cat, float volume, float pitch) {
         if (!world.isClientSide()) {
             world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), event, cat, volume, pitch);
         } else {
@@ -63,7 +47,13 @@ public class SoundUtils {
     }
 
     public static void ding(Level world, BlockPos pos) {
-        SoundUtils.playSound(world, pos, SoundEvents.EXPERIENCE_ORB_PICKUP, 1, 1);
+        SoundUtils.playSound(world, pos, com.robertx22.forge_compat.common.CompatHelper.unwrapSound(SoundEvents.EXPERIENCE_ORB_PICKUP), 1, 1);
     }
 
+
+    public static void playSound(net.minecraft.world.level.Level world, net.minecraft.core.BlockPos pos, net.minecraft.core.Holder<SoundEvent> sound, float volume, float pitch) {
+        if (sound != null) {
+            playSound(world, pos, sound.value(), volume, pitch);
+        }
+    }
 }

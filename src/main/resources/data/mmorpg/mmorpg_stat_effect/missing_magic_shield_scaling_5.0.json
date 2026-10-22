@@ -1,0 +1,7 @@
+{
+  "id": "missing_magic_shield_scaling_5.0",
+  "resourceType": "magic_shield",
+  "scalingPer": 5.0,
+  "ser": "missing_resource_scaling",
+  "side": "Source"
+}

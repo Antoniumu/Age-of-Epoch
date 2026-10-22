@@ -1,0 +1,7 @@
+{
+  "id": "missing_mana_scaling_5.0",
+  "resourceType": "mana",
+  "scalingPer": 5.0,
+  "ser": "missing_resource_scaling",
+  "side": "Source"
+}

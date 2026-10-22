@@ -1,0 +1,7 @@
+{
+  "id": "is_pickaxe_tag",
+  "itemTagId": "minecraft:pickaxes",
+  "serializer": "vanilla_condition",
+  "vanillaCondition": {},
+  "weight": 1000
+}

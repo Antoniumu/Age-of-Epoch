@@ -1,0 +1,22 @@
+{
+  "always_do_item_mods": [
+    {
+      "id": "enchant_with_30_levels",
+      "weight": 1
+    }
+  ],
+  "id": "legendary_enchant_tool",
+  "item_id": "library_of_exile:legendary_enchant_tool",
+  "item_type_requirement": [],
+  "pick_one_item_mod": [],
+  "potential": {
+    "needs_potential": true,
+    "potential_cost": 0
+  },
+  "rar": "rare",
+  "req": [
+    "is_tool_tag",
+    "has_no_enchants"
+  ],
+  "weight": 0
+}

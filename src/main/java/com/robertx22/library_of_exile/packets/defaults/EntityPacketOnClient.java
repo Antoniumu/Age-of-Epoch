@@ -1,14 +1,10 @@
 package com.robertx22.library_of_exile.packets.defaults;
 
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
-
 public class EntityPacketOnClient {
     /*
     @Environment(EnvType.CLIENT)
     public static void onPacket(Context context, FriendlyByteBuf byteBuf) {
-        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.byId(byteBuf.readVarInt());
+        EntityType<?> type = Registry.ENTITY_TYPE.byId(byteBuf.readVarInt());
         UUID entityUUID = byteBuf.readUUID();
         int entityID = byteBuf.readVarInt();
         double x = byteBuf.readDouble();
@@ -19,12 +15,12 @@ public class EntityPacketOnClient {
         context.getTaskQueue()
             .execute(() -> {
                 ClientLevel world = Minecraft.getInstance().level;
-                Entity entity = type.create(world);
+                Entity entity = type.create(world, net.minecraft.world.entity.EntitySpawnReason.MOB_SUMMONED);
                 if (entity != null) {
                     entity.setPos(x, y, z);
                     entity.setPacketCoordinates(x, y, z);
-                    entity.setXRot(pitch);
-                    entity.setYRot(yaw);
+                    entity.xRot = pitch;
+                    entity.yRot = yaw;
                     entity.setId(entityID);
                     entity.setUUID(entityUUID);
                     //entity.setVelocity(velocityX, velocityY, velocityZ);

@@ -1,0 +1,5 @@
+{
+  "id": "implicit_number_reroll",
+  "serializer": "reroll_implicit_numbers",
+  "weight": 1000
+}

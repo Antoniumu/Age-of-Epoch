@@ -1,0 +1,48 @@
+package com.robertx22.mine_and_slash.mixin_ducks;
+
+import com.robertx22.library_of_exile.events.base.ExileEvents;
+import com.robertx22.mine_and_slash.event_hooks.damage_hooks.util.AttackInformation;
+
+public interface DamageSourceDuck {
+
+    public void setMnsDamage(float dmg);
+
+    public float getMnsDamage();
+
+    public void setOriginalHP(float hp);
+
+    public float getOriginalHP();
+
+    public boolean hasMnsDamageOverride();
+
+    public void setOriginalDamage(float hp);
+
+    public float getOriginalDamage();
+
+    default void tryOverrideDmgWithMns(AttackInformation info) {
+        if (hasMnsDamageOverride()) {
+            info.setAmount(getMnsDamage());
+
+            if (info.amount() <= 0) {
+                info.setCanceled(true);
+            } else {
+                info.setCanceled(false);
+            }
+        }
+    }
+
+    default void tryOverrideDmgWithMns(ExileEvents.OnDamageEntity event) {
+        if (hasMnsDamageOverride()) {
+            event.damage = getMnsDamage();
+
+            if (event.damage <= 0) {
+                event.damage = 0;
+                event.canceled = true;
+            } else {
+                event.canceled = false;
+            }
+
+        }
+    }
+
+}

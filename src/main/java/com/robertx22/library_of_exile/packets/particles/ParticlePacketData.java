@@ -1,18 +1,15 @@
 package com.robertx22.library_of_exile.packets.particles;
 
 import com.robertx22.library_of_exile.utils.RGB;
-import info.loenwind.autosave.annotations.Storable;
-import info.loenwind.autosave.annotations.Store;
+import com.robertx22.library_of_exile.vanilla_util.main.VanillaUTIL;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.Identifier;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.core.Registry;
+import org.joml.Vector3d;
 
-import net.minecraft.core.registries.BuiltInRegistries;
-@Storable
+
 public class ParticlePacketData {
 
     private ParticlePacketData() {
@@ -23,47 +20,35 @@ public class ParticlePacketData {
         return new ParticlePacketData();
     }
 
-    @Store
     public double x = 1;
-    @Store
     public double y = 1;
-    @Store
     public double z = 1;
 
-    @Store
     public boolean isVecPos = false;
 
-    @Store
     public double mx = 1;
-    @Store
     public double my = 1;
-    @Store
     public double mz = 1;
 
-    @Store
     public ParticleEnum type;
 
-    @Store
     public float radius = 1;
 
-    @Store
     public int amount = 1;
 
-    @Store
     public RGB color;
 
-    @Store
     public String particleID;
 
     public <T extends ParticleOptions> ParticleOptions getParticleType() {
-        ParticleType<T> particleType = (ParticleType<T>) BuiltInRegistries.PARTICLE_TYPE.getValue(Identifier.parse(particleID));
+        ParticleType<T> particleType = (ParticleType<T>) VanillaUTIL.REGISTRY.particles().get(Identifier.parse(String.valueOf(particleID)));
 
         if (particleType instanceof ParticleOptions) {
             return (ParticleOptions) particleType;
         } else return ParticleTypes.CRIT;
     }
 
-    public ParticlePacketData motion(Vec3 v) {
+    public ParticlePacketData motion(Vector3d v) {
         mx = v.x;
         my = v.y;
         mz = v.z;
@@ -71,8 +56,8 @@ public class ParticlePacketData {
     }
 
     public ParticlePacketData type(ParticleType type) {
-        this.particleID = BuiltInRegistries.PARTICLE_TYPE.getKey(type)
-            .toString();
+        this.particleID = VanillaUTIL.REGISTRY.particles().getKey(type)
+                .toString();
         return this;
     }
 
@@ -96,15 +81,15 @@ public class ParticlePacketData {
         return this;
     }
 
-    public Vec3 getPos() {
-        return new Vec3(x, y, z);
+    public Vector3d getPos() {
+        return new Vector3d(x, y, z);
     }
 
     public BlockPos getBlockPos() {
         return new BlockPos((int) x, (int) y, (int) z);
     }
 
-    public ParticlePacketData(Vec3 pos, ParticleEnum type) {
+    public ParticlePacketData(Vector3d pos, ParticleEnum type) {
         x = pos.x();
         y = pos.y();
         z = pos.z();

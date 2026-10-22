@@ -1,0 +1,238 @@
+{
+  "attached": {
+    "entity_components": {
+      "default_entity_name": [
+        {
+          "acts": [
+            {
+              "map": {
+                "motion": "None",
+                "particle_count": 1.0,
+                "particle_type": "minecraft:explosion",
+                "radius": 0.1
+              },
+              "type": "particles_in_radius"
+            }
+          ],
+          "en_preds": [],
+          "ifs": [
+            {
+              "map": {},
+              "type": "on_entity_expire"
+            }
+          ],
+          "targets": []
+        },
+        {
+          "acts": [
+            {
+              "map": {
+                "pitch": 1.0,
+                "sound": "minecraft:entity.arrow.hit",
+                "volume": 1.0
+              },
+              "type": "sound"
+            }
+          ],
+          "en_preds": [],
+          "ifs": [
+            {
+              "map": {},
+              "type": "on_entity_expire"
+            }
+          ],
+          "targets": []
+        },
+        {
+          "acts": [
+            {
+              "map": {
+                "pitch": 1.0,
+                "sound": "minecraft:entity.generic.explode",
+                "volume": 1.0
+              },
+              "type": "sound"
+            }
+          ],
+          "en_preds": [],
+          "ifs": [
+            {
+              "map": {},
+              "type": "on_entity_expire"
+            }
+          ],
+          "targets": []
+        },
+        {
+          "acts": [
+            {
+              "map": {
+                "element": "Fire",
+                "value_calculation": "explosive_arrow"
+              },
+              "type": "damage"
+            }
+          ],
+          "en_preds": [],
+          "ifs": [
+            {
+              "map": {},
+              "type": "on_entity_expire"
+            }
+          ],
+          "per_entity_hit": [
+            {
+              "acts": [
+                {
+                  "map": {
+                    "count": 1.0,
+                    "potion_action": "GIVE_STACKS",
+                    "potion_dur": 40.0,
+                    "potion_id": "minecraft:movement_slowdown"
+                  },
+                  "type": "potion"
+                }
+              ],
+              "en_preds": [],
+              "ifs": [],
+              "targets": []
+            }
+          ],
+          "targets": [
+            {
+              "map": {
+                "en_predicate": "enemies",
+                "radius": 2.0,
+                "selection_type": "RADIUS"
+              },
+              "type": "aoe"
+            }
+          ]
+        },
+        {
+          "acts": [
+            {
+              "map": {
+                "motion": "None",
+                "particle_count": 4.0,
+                "particle_type": "minecraft:crit",
+                "radius": 0.1
+              },
+              "type": "particles_in_radius"
+            }
+          ],
+          "en_preds": [],
+          "ifs": [
+            {
+              "map": {
+                "tick_rate": 1.0
+              },
+              "type": "x_ticks_condition"
+            }
+          ],
+          "targets": []
+        }
+      ]
+    },
+    "on_cast": [
+      {
+        "acts": [
+          {
+            "map": {
+              "pitch": 1.0,
+              "sound": "minecraft:entity.arrow.shoot",
+              "volume": 1.0
+            },
+            "type": "sound"
+          }
+        ],
+        "en_preds": [],
+        "ifs": [
+          {
+            "map": {},
+            "type": "on_spell_cast"
+          }
+        ],
+        "targets": []
+      },
+      {
+        "acts": [
+          {
+            "map": {
+              "entity_name": "default_entity_name",
+              "gravity": true,
+              "item": "minecraft:air",
+              "life_ticks": 80.0,
+              "proj_count": 1.0,
+              "proj_en": "mmorpg:spell_arrow",
+              "proj_speed": 3.0,
+              "projectile_spread_randomness": 0.0
+            },
+            "type": "projectile"
+          }
+        ],
+        "en_preds": [],
+        "ifs": [
+          {
+            "map": {},
+            "type": "on_spell_cast"
+          }
+        ],
+        "targets": []
+      }
+    ]
+  },
+  "cast_animation": {
+    "id": "steady_cast"
+  },
+  "cast_finish_animation": {
+    "id": "cast_finish"
+  },
+  "config": {
+    "aggro_radius": 1,
+    "cast_time_ticks": 0,
+    "castingWeapon": "RANGED",
+    "charge_name": "",
+    "charge_regen": 0,
+    "charges": 0,
+    "cooldown_ticks": 200,
+    "ene_cost": {
+      "max": 0.0,
+      "min": 0.0
+    },
+    "imbues": 0,
+    "mana_cost": {
+      "max": 7.5,
+      "min": 10.0
+    },
+    "slows_when_casting": true,
+    "style": "dex",
+    "summonType": "NONE",
+    "summon_basic_atk": "",
+    "swing_arm": false,
+    "tags": {
+      "tags": [
+        "damage",
+        "ranged",
+        "fire",
+        "projectile"
+      ]
+    },
+    "times_to_cast": 1,
+    "tracking_radius": 5,
+    "tracks": "enemies",
+    "use_support_gems_from": ""
+  },
+  "default_lvl": 0,
+  "disabled_dims": [],
+  "effect_tip": "",
+  "identifier": "explosive_arrow",
+  "loc_name": "Explosive Arrow",
+  "lvl_based_on_spell": "",
+  "manual_tip": true,
+  "max_lvl": 16,
+  "min_lvl": 10,
+  "show_other_spell_tooltip": "",
+  "statsForSkillGem": [],
+  "weight": 1000
+}

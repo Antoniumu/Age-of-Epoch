@@ -1,8 +1,0 @@
-{
-    "variants": {
-        "facing=north": { "model": "mmorpg:block/teleporter" },
-        "facing=south": { "model": "mmorpg:block/teleporter", "y": 180 },
-        "facing=west":  { "model": "mmorpg:block/teleporter", "y": 270 },
-        "facing=east":  { "model": "mmorpg:block/teleporter", "y": 90 }
-    }
-}

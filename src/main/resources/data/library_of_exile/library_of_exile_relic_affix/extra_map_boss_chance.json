@@ -1,0 +1,12 @@
+{
+  "id": "extra_map_boss_chance",
+  "mods": [
+    {
+      "max": 5.0,
+      "min": 1.0,
+      "stat": "extra_map_boss_chance"
+    }
+  ],
+  "relic_type": "dungeon_realm",
+  "weight": 1000
+}

@@ -1,0 +1,10 @@
+{
+  "aliases": [],
+  "id": "elite_mob_horde",
+  "process_on": "NORMAL",
+  "serializer": "elite_mob_horde",
+  "tags": [
+    "can_spawn_league"
+  ],
+  "weight": 1000
+}

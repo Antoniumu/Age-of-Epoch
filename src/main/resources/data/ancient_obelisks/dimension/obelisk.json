@@ -1,0 +1,18 @@
+{
+  "type": "ancient_obelisks:obelisk",
+  "generator": {
+    "type": "ancient_obelisks:obelisk_chunk_gen",	
+	"map_id": "obelisk",
+    "settings": {
+      "biome": "ancient_obelisks:obelisk_biome",
+      "lakes": false,
+      "features": false,
+      "layers": [
+        {
+          "block": "minecraft:bedrock",
+          "height": 384
+        }
+      ]
+    }
+  }
+}

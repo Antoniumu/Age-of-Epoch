@@ -1,10 +1,10 @@
 package com.robertx22.world_of_exile.world_gen;
 
-import com.robertx22.age_of_exile.mmorpg.registers.common.SlashBlocks;
-import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import com.robertx22.mine_and_slash.mmorpg.registers.common.SlashBlocks;
+import com.robertx22.mine_and_slash.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.questbook.QuestBookService;
-import com.robertx22.age_of_exile.uncommon.interfaces.data_items.IRarity;
-import com.robertx22.age_of_exile.uncommon.utilityclasses.SignUtils;
+import com.robertx22.mine_and_slash.uncommon.interfaces.data_items.IRarity;
+import com.robertx22.mine_and_slash.uncommon.utilityclasses.SignUtils;
 import com.robertx22.forge_compat.event.entity.living.LivingDeathEvent;
 import com.robertx22.world_of_exile.tower.TowerAbility;
 import com.robertx22.world_of_exile.tower.TowerBossDef;

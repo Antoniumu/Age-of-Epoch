@@ -1,0 +1,7 @@
+{
+  "enchantLevels": 20,
+  "id": "enchant_with_20_levels",
+  "serializer": "vanilla_function",
+  "vanillaFunction": {},
+  "weight": 1000
+}

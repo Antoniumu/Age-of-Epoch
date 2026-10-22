@@ -1,0 +1,24 @@
+{
+	"item.orbs_of_crafting.legendary_enchant_tool": "传说工具附魔宝珠",
+	"orbs_of_crafting.item_modification.destroy_item": "彻底破坏此物品！",
+	"orbs_of_crafting.item_modification.do_nothing": "无任何效果",
+	"orbs_of_crafting.item_modification.enchant_with_10_levels": "施加等价于10级的附魔",
+	"orbs_of_crafting.item_modification.enchant_with_20_levels": "施加等价于20级的附魔",
+	"orbs_of_crafting.item_modification.enchant_with_30_levels": "施加等价于30级的附魔",
+	"orbs_of_crafting.item_requirement.has_no_enchants": "必须无附魔",
+	"orbs_of_crafting.item_requirement.is_damaged": "必须已被损坏",
+	"orbs_of_crafting.item_requirement.is_single_item": "必须为单个物品",
+	"orbs_of_crafting.item_requirement.is_tool_tag": "必须带有＃Tool标签",
+	"orbs_of_crafting.words.always_does": "始终：",
+	"orbs_of_crafting.words.currency": "合成宝珠",
+	"orbs_of_crafting.words.drag_and_drop": "[拖拽到别的物品上以使用]",
+	"orbs_of_crafting.words.drag_no_work_creative": "该物品无法在创造模式下使用！",
+	"orbs_of_crafting.words.mod_name": "百炼通货",
+	"orbs_of_crafting.words.not_a_potential_consumer": "使用时不消耗潜能",
+	"orbs_of_crafting.words.outcome_tip": "%1$s - %2$s",
+	"orbs_of_crafting.words.potential_cost": "潜能消耗：%1$s",
+	"orbs_of_crafting.words.random_outcome": "随机结果：",
+	"orbs_of_crafting.words.requirements": "需求： ",
+	"orbs_of_crafting.words.this_is_not_a": "此物不是%1$s"
+
+}

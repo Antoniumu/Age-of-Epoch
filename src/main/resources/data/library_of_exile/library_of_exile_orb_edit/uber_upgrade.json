@@ -1,0 +1,9 @@
+{
+  "always_do_item_mods": [],
+  "id": "uber_upgrade",
+  "orb_id": "uber_upgrade",
+  "pick_one_item_mod": [],
+  "req": [
+    "map_is_mythic"
+  ]
+}

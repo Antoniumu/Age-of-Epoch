@@ -3,16 +3,15 @@
   "generator": {
     "type": "minecraft:flat",
     "settings": {
-      "biome": "minecraft:the_void",
-      "features": false,
+      "biome": "mmorpg:dungeon_biome",
       "lakes": false,
+      "features": false,
       "layers": [
         {
-          "block": "minecraft:stone",
-          "height": 220
+          "block": "minecraft:bedrock",
+          "height": 384
         }
-      ],
-      "structure_overrides": []
+      ]
     }
   }
 }

@@ -1,0 +1,8 @@
+{
+  "action": "MULTIPLY",
+  "id": "armor_mitigation",
+  "max_multi": 1.0E8,
+  "min_multi": 0.1,
+  "name": "Armor Mitigation",
+  "priority": 100
+}

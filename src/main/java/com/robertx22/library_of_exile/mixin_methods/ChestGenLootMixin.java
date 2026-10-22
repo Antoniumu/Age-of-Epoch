@@ -1,39 +1,55 @@
 package com.robertx22.library_of_exile.mixin_methods;
 
 import com.robertx22.library_of_exile.events.base.ExileEvents;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.Container;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
 public class ChestGenLootMixin {
 
-    public static void onLootGen(Container inventory, LootContext context) {
+    public static void onLootGen(Container inventory, net.minecraft.world.level.storage.loot.LootParams context) {
 
         try {
-            if (context.hasParameter(LootContextParams.THIS_ENTITY) &&
-                context.hasParameter(LootContextParams.ORIGIN)
-                && context.getOptional(LootContextParams.THIS_ENTITY) instanceof Player) {
+            if (context.params().has(LootContextParams.THIS_ENTITY)
+                    && context.params().has(LootContextParams.ORIGIN) && context.params().getOptional(LootContextParams.THIS_ENTITY) instanceof Player player) {
 
                 BlockEntity chest = null;
-                BlockPos pos = BlockPos.containing(context.getOptional(LootContextParams.ORIGIN));
+                var p = context.params().getOptional(LootContextParams.ORIGIN);
 
-                Player player = (Player) context.getOptional(LootContextParams.THIS_ENTITY);
+                BlockPos pos = new BlockPos((int) (p.x - 0.5), (int) (p.y - 0.5), (int) (p.z - 0.5));
+
                 Level world = player.level();
 
+                if (world == null) {
+                    return;
+                }
                 if (inventory instanceof BlockEntity) {
                     chest = (BlockEntity) inventory;
                 }
                 if (chest == null) {
                     chest = world.getBlockEntity(pos);
+
+                    // this fixes lootr incompatibility because they offset the position with a center, but maybe abusable?
+                    int radius = 1;
+                    for (int x = -radius; x < radius; x++) {
+                        for (int y = -radius; y < radius; y++) {
+                            for (int z = -radius; z < radius; z++) {
+                                if (chest == null) {
+                                    chest = world.getBlockEntity(pos.offset(x, y, z));
+                                    if (chest != null) {
+                                        pos = pos.offset(x, y, z);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-                if (world == null) {
-                    return;
-                }
+
                 if (chest instanceof RandomizableContainerBlockEntity) {
                     ExileEvents.ON_CHEST_LOOTED.callEvents(new ExileEvents.OnChestLooted(player, context, inventory, pos));
                 }

@@ -1,0 +1,35 @@
+{
+  "gem_type": "garnet",
+  "identifier": "garnet0",
+  "item_id": "mmorpg:gems/garnet/0",
+  "min_lvl_multi": 0.0,
+  "on_armor_stats": [
+    {
+      "scale_to_lvl": true,
+      "stat": "dexterity",
+      "type": "FLAT",
+      "v1": 0.5
+    }
+  ],
+  "on_jewelry_stats": [
+    {
+      "scale_to_lvl": true,
+      "stat": "energy_regen",
+      "type": "PERCENT",
+      "v1": 1.5
+    }
+  ],
+  "on_weapons_stats": [
+    {
+      "scale_to_lvl": true,
+      "stat": "critical_hit",
+      "type": "FLAT",
+      "v1": 0.8
+    }
+  ],
+  "perc_upgrade_chance": 100,
+  "rar": "common",
+  "text_format": "GREEN",
+  "tier": 0,
+  "weight": 100999
+}

@@ -1,51 +1,39 @@
 package com.robertx22.library_of_exile.components;
 
-import com.robertx22.forge_compat.common.capabilities.CapabilityProvider;
-
-import com.robertx22.library_of_exile.components.forge.BaseProvider;
-import com.robertx22.library_of_exile.components.forge.BaseStorage;
-import com.robertx22.library_of_exile.components.forge.ICommonCap;
 import com.robertx22.library_of_exile.main.Ref;
 import com.robertx22.library_of_exile.utils.LoadSave;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.Identifier;
-import net.minecraft.core.BlockPos;
 import com.robertx22.forge_compat.common.capabilities.Capability;
-import com.robertx22.forge_compat.common.capabilities.CapabilityInject;
-import com.robertx22.forge_compat.event.AttachCapabilitiesEvent;
-import com.robertx22.forge_compat.eventbus.api.SubscribeEvent;
-import com.robertx22.forge_compat.fml.common.Mod;
+import com.robertx22.forge_compat.common.capabilities.CapabilityManager;
+import com.robertx22.forge_compat.common.capabilities.CapabilityToken;
+import com.robertx22.forge_compat.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@Mod.EventBusSubscriber
 public class EntityInfoComponent {
-    public static final Identifier RESOURCE = Identifier.fromNamespaceAndPath(Ref.MODID, "entity_info");
 
-    @CapabilityInject(IEntityInfo.class)
-    public static Capability<IEntityInfo> Data = null;
+    public static final Identifier RESOURCE = Identifier.fromNamespaceAndPath(Ref.MODID, "entity_info");
+    public static Capability<DefaultImpl> INSTANCE = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     public static IEntityInfo get(LivingEntity entity) {
-        return CapabilityProvider.get(entity, Data)
-            .orElse(null);
+        return com.robertx22.forge_compat.common.capabilities.CapabilityProvider.get(entity, INSTANCE).orElse(new EntityInfoComponent.DefaultImpl(entity));
     }
+
 
     private static final String DMG_STATS = "dmg_stats";
     private static final String SPAWN_POS = "spawn_pos";
     private static final String SPAWN_REASON = "spawn";
+    private static final String CUSTOM_SAVE_DATA = "custom_data";
 
-    @Mod.EventBusSubscriber
-    public static class EventHandler {
-        @SubscribeEvent
-        public static void onEntityConstruct(AttachCapabilitiesEvent<Entity> event) {
-            if (event.getObject() instanceof LivingEntity) {
-                event.addCapability(RESOURCE, new Provider((LivingEntity) event.getObject()));
-            }
-        }
-    }
 
-    public interface IEntityInfo extends ICommonCap, BaseStorage<IEntityInfo> {
+    public interface IEntityInfo {
 
         EntityDmgStatsData getDamageStats();
 
@@ -55,30 +43,27 @@ public class EntityInfoComponent {
 
         MySpawnReason getSpawnReason();
 
-        void setSpawnReasonOnCreate(EntitySpawnReason reason);
+        // CurrentMobAffixesData getMobAffixes();
+
+        void setSpawnReasonOnCreate(net.minecraft.world.entity.EntitySpawnReason reason);
+
+
     }
 
-    public static class Provider extends BaseProvider<IEntityInfo, LivingEntity> {
-        public Provider(LivingEntity owner) {
-            super(owner);
-        }
+
+    public static class DefaultImpl implements ICap, IEntityInfo {
+
+        final LazyOptional<DefaultImpl> supp = LazyOptional.of(() -> this);
 
         @Override
-        public IEntityInfo newDefaultImpl(LivingEntity owner) {
-            return new DefaultImpl(owner);
+        public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+            if (cap == INSTANCE) {
+                return supp.cast();
+            }
+            return LazyOptional.empty();
         }
 
-        @Override
-        public Capability<IEntityInfo> dataInstance() {
-            return Data;
-        }
-    }
-
-    public static class Storage implements BaseStorage<IEntityInfo> {
-
-    }
-
-    public static class DefaultImpl implements IEntityInfo {
+        // public CurrentMobAffixesData mobAffixes = new CurrentMobAffixesData();
 
         EntityDmgStatsData dmgStats = new EntityDmgStatsData();
 
@@ -93,48 +78,67 @@ public class EntityInfoComponent {
 
         @Override
         public BlockPos getSpawnPos() {
-            if (spawnPos != null) {
+            if (isSpawnInit()) {
                 return spawnPos;
             }
-            return BlockPos.ZERO;
+            return this.owner.blockPosition();
+        }
+
+        private boolean isSpawnInit() {
+            return spawnPos != null && !this.spawnPos.equals(BlockPos.ZERO);
         }
 
         @Override
         public void spawnInit(Entity entity) {
-            if (spawnPos == null || (spawnPos.getX() == 0 && spawnPos.getY() == 0 && spawnPos.getZ() == 0)) {
+            if (isSpawnInit()) {
                 this.spawnPos = entity.blockPosition();
             }
         }
 
         @Override
         public MySpawnReason getSpawnReason() {
-            return spawnReason == null ? MySpawnReason.NATURAL : spawnReason;
+            return spawnReason == null ? MySpawnReason.OTHER : spawnReason;
         }
 
+        /*
         @Override
-        public void setSpawnReasonOnCreate(EntitySpawnReason reason) {
+        public CurrentMobAffixesData getMobAffixes() {
+            return mobAffixes;
+        }
+
+         */
+
+        @Override
+        public void setSpawnReasonOnCreate(net.minecraft.world.entity.EntitySpawnReason reason) {
             if (spawnReason == null) {
                 spawnReason = MySpawnReason.get(reason);
             }
         }
 
+    
         @Override
         public EntityDmgStatsData getDamageStats() {
             return dmgStats;
         }
 
         @Override
-        public CompoundTag saveToNBT() {
+        public CompoundTag serializeNBT() {
             CompoundTag nbt = new CompoundTag();
             try {
                 if (dmgStats != null) {
                     LoadSave.Save(dmgStats, nbt, DMG_STATS);
                 }
+                /*
+                if (mobAffixes != null) {
+                    LoadSave.Save(mobAffixes, nbt, MOB_AFFIXES);
+                }
+
+                 */
                 if (spawnPos != null) {
                     nbt.putLong(SPAWN_POS, spawnPos.asLong());
                 }
 
-                nbt.putString(SPAWN_REASON, getSpawnReason().name());
+                nbt.putString(getSpawnReason().name(), SPAWN_REASON);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -143,9 +147,18 @@ public class EntityInfoComponent {
         }
 
         @Override
-        public void loadFromNBT(CompoundTag nbt) {
+        public void deserializeNBT(CompoundTag nbt) {
 
             try {
+
+                /*
+                this.mobAffixes = LoadSave.Load(CurrentMobAffixesData.class, new CurrentMobAffixesData(), nbt, MOB_AFFIXES);
+                if (mobAffixes == null) {
+                    mobAffixes = new CurrentMobAffixesData();
+                }
+
+                 */
+
                 this.dmgStats = LoadSave.Load(EntityDmgStatsData.class, new EntityDmgStatsData(), nbt, DMG_STATS);
                 if (dmgStats == null) {
                     dmgStats = new EntityDmgStatsData();
@@ -156,7 +169,7 @@ public class EntityInfoComponent {
                 if (res != null && !res.isEmpty()) {
                     this.spawnReason = MySpawnReason.valueOf(res);
                 } else {
-                    this.spawnReason = MySpawnReason.NATURAL;
+                    this.spawnReason = MySpawnReason.OTHER;
                 }
 
             } catch (Exception e) {
@@ -164,6 +177,10 @@ public class EntityInfoComponent {
             }
         }
 
+        @Override
+        public String getCapIdForSyncing() {
+            return "entity_info";
+        }
     }
 
 }

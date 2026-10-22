@@ -1,0 +1,23 @@
+{
+  "always_do_item_mods": [
+    {
+      "id": "add_wave",
+      "weight": 1
+    }
+  ],
+  "id": "add_wave",
+  "item_id": "ancient_obelisks:orbs/add_wave",
+  "item_type_requirement": [
+    "is_obelisk_map"
+  ],
+  "pick_one_item_mod": [],
+  "potential": {
+    "needs_potential": true,
+    "potential_cost": 0
+  },
+  "rar": "rare",
+  "req": [
+    "has_less_than_x_waves"
+  ],
+  "weight": 0
+}

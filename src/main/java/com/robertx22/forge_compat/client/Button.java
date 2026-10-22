@@ -1,135 +1,135 @@
 package com.robertx22.forge_compat.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 
-public class Button extends net.minecraft.client.gui.components.Button {
-
-    public int x;
-    public int y;
-
-    @FunctionalInterface
-    public interface IPressable extends net.minecraft.client.gui.components.Button.OnPress {
+public class Button extends AbstractButton {
+    public interface OnPress {
+        void onPress(Button button);
     }
 
-    @FunctionalInterface
-    public interface OnTooltip {
-        void onTooltip(Button button, PoseStack matrices, int mouseX, int mouseY);
+    public interface CreateNarration {
+        Component createNarrationMessage(java.util.function.Supplier<Component> defaultSupplier);
     }
 
-    protected OnTooltip compatTooltip;
+    public static final CreateNarration DEFAULT_NARRATION = java.util.function.Supplier::get;
 
-    public Button(int x, int y, int width, int height, Component message, net.minecraft.client.gui.components.Button.OnPress onPress) {
-        super(x, y, width, height, message, onPress != null ? onPress : b -> {}, net.minecraft.client.gui.components.Button.DEFAULT_NARRATION);
-        this.x = x;
-        this.y = y;
+    protected final OnPress onPress;
+    protected final CreateNarration createNarration;
+
+    public Button(int x, int y, int width, int height, Component message, OnPress onPress) {
+        this(x, y, width, height, message, onPress, DEFAULT_NARRATION);
     }
 
-    public Button(int x, int y, int width, int height, Component message, net.minecraft.client.gui.components.Button.OnPress onPress, OnTooltip onTooltip) {
-        this(x, y, width, height, message, onPress);
-        this.compatTooltip = onTooltip;
+    public Button(int x, int y, int width, int height, Component message, OnPress onPress, CreateNarration createNarration) {
+        super(x, y, width, height, message);
+        this.onPress = onPress;
+        this.createNarration = createNarration;
     }
 
-    @Override
-    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
-        AbstractGui.CURRENT_GRAPHICS = graphics;
-        if (this.getX() != this.x) this.setX(this.x);
-        if (this.getY() != this.y) this.setY(this.y);
-        this.renderButton(AbstractGui.currentPose(), mouseX, mouseY, delta);
-    }
-
-    public void render(PoseStack matrix, int mouseX, int mouseY, float delta) {
-        if (!this.visible) return;
-        if (this.getX() != this.x) this.setX(this.x);
-        if (this.getY() != this.y) this.setY(this.y);
-        this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
-        this.renderButton(matrix, mouseX, mouseY, delta);
-    }
-
-    public void renderButton(PoseStack matrix, int mouseX, int mouseY, float delta) {
-        if (AbstractGui.CURRENT_GRAPHICS != null) {
-            this.extractDefaultSprite(AbstractGui.CURRENT_GRAPHICS);
-            Component msg = this.getMessage();
-            if (msg != null && !msg.getString().isEmpty()) {
-                AbstractGui.drawCenteredString(
-                    matrix,
-                    Minecraft.getInstance().font,
-                    msg,
-                    this.x + this.width / 2,
-                    this.y + (this.height - 8) / 2,
-                    this.active ? 0xFFFFFFFF : 0xFFA0A0A0
-                );
-            }
-        }
-    }
-
-    public void renderToolTip(PoseStack matrix, int mouseX, int mouseY) {
-        if (this.compatTooltip != null) {
-            this.compatTooltip.onTooltip(this, matrix, mouseX, mouseY);
-        }
+    public static Builder builder(Component message, OnPress onPress) {
+        return new Builder(message, onPress);
     }
 
     @Override
     public void onPress(InputWithModifiers input) {
-        super.onPress(input);
         this.onPress();
-        this.onPress(this);
     }
 
     public void onPress() {
+        if (this.onPress != null) {
+            this.onPress.onPress(this);
+        }
     }
 
-    public void onPress(Button button) {
-    }
-
-    public boolean clicked(double mouseX, double mouseY) {
-        return this.active && this.visible
-            && mouseX >= (double) this.x && mouseY >= (double) this.y
-            && mouseX < (double) (this.x + this.width) && mouseY < (double) (this.y + this.height);
+    public void onClick(double mouseX, double mouseY) {
+        this.onPress();
     }
 
     @Override
+    public void onRelease(MouseButtonEvent event) {
+        this.onRelease(event.x(), event.y());
+        super.onRelease(event);
+    }
+
+    public void onRelease(double mouseX, double mouseY) {}
+
+    @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-        if (this.getX() != this.x) this.setX(this.x);
-        if (this.getY() != this.y) this.setY(this.y);
-        if (this.mouseClicked(event.x(), event.y(), event.button())) {
-            return true;
-        }
-        if (super.mouseClicked(event, doubleClick)) {
-            return true;
-        }
-        if (event.button() == 1 && this.clicked(event.x(), event.y())) {
-            this.playDownSound(Minecraft.getInstance().getSoundManager());
-            this.onPress(event);
-            return true;
-        }
-        return false;
+        if (this.mouseClicked(event.x(), event.y(), event.button())) return true;
+        return super.mouseClicked(event, doubleClick);
     }
 
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         return false;
     }
 
-    public void onClick(double mouseX, double mouseY) {
+    protected boolean clicked(double mouseX, double mouseY) {
+        return this.active && this.visible
+            && mouseX >= (double) this.getX()
+            && mouseY >= (double) this.getY()
+            && mouseX < (double) (this.getX() + this.getWidth())
+            && mouseY < (double) (this.getY() + this.getHeight());
     }
 
-    public static void blit(PoseStack matrix, int x, int y, int u, int v, int w, int h) {
-        AbstractGui.blit(matrix, x, y, u, v, w, h);
+    protected ClientTooltipPositioner createTooltipPositioner() {
+        return DefaultTooltipPositioner.INSTANCE;
     }
 
-    public static void blit(PoseStack matrix, int x, int y, float u, float v, int w, int h, int texW, int texH) {
-        AbstractGui.blit(matrix, x, y, u, v, w, h, texW, texH);
+    public void renderTexture(GuiGraphicsExtractor graphics, Identifier texture, int x, int y, int uOffset, int vOffset, int yDiff, int width, int height, int textureWidth, int textureHeight) {
+        int v = vOffset + (this.isHoveredOrFocused() ? yDiff : 0);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, x, y, (float) uOffset, (float) v, width, height, textureWidth, textureHeight);
     }
 
-    public static void blit(PoseStack matrix, int x, int y, int u, int v, int w, int h, int texW, int texH) {
-        AbstractGui.blit(matrix, x, y, u, v, w, h, texW, texH);
+    @Override
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        this.renderWidget(graphics, mouseX, mouseY, partialTicks);
     }
 
-    public static void blit(PoseStack matrix, int x, int y, int w, int h, float u, float v, int regionW, int regionH, int texW, int texH) {
-        AbstractGui.blit(matrix, x, y, w, h, u, v, regionW, regionH, texW, texH);
+    public void renderWidget(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        this.renderWidget(GuiGraphics.wrap(graphics), mouseX, mouseY, partialTicks);
+    }
+
+    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        int bg = !this.active ? 0xFF333333 : (this.isHoveredOrFocused() ? 0xFF666688 : 0xFF444444);
+        graphics.fill(this.getX(), this.getY(), this.getX() + this.getWidth(), this.getY() + this.getHeight(), bg);
+        graphics.renderOutline(this.getX(), this.getY(), this.getWidth(), this.getHeight(), 0xFF000000);
+        if (this.getMessage() != null) {
+            graphics.drawCenteredString(Minecraft.getInstance().font, this.getMessage(), this.getX() + this.getWidth() / 2, this.getY() + (this.getHeight() - 8) / 2, 0xFFFFFFFF);
+        }
+    }
+
+    @Override
+    protected void updateWidgetNarration(NarrationElementOutput output) {}
+
+    public static class Builder {
+        private final Component message;
+        private final OnPress onPress;
+        private int x, y;
+        private int width = 150, height = 20;
+        private net.minecraft.client.gui.components.Tooltip tooltip;
+
+        public Builder(Component message, OnPress onPress) {
+            this.message = message;
+            this.onPress = onPress;
+        }
+        public Builder pos(int x, int y) { this.x = x; this.y = y; return this; }
+        public Builder size(int w, int h) { this.width = w; this.height = h; return this; }
+        public Builder bounds(int x, int y, int w, int h) { this.x = x; this.y = y; this.width = w; this.height = h; return this; }
+        public Builder tooltip(net.minecraft.client.gui.components.Tooltip t) { this.tooltip = t; return this; }
+        public Button build() {
+            Button b = new Button(x, y, width, height, message, onPress);
+            if (tooltip != null) b.setTooltip(tooltip);
+            return b;
+        }
     }
 }

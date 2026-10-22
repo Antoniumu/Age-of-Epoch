@@ -1,0 +1,1 @@
+package mezz.jei.api.registration; import mezz.jei.api.recipe.RecipeType; import java.util.List; public interface IRecipeRegistration { <T> void addRecipes(RecipeType<T> recipeType, List<T> recipes); }

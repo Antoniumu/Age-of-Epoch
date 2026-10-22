@@ -1,15 +1,17 @@
 package com.robertx22.library_of_exile.utils;
 
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.MutableComponent;
+
 
 public class CLOC {
 
-    public static String translate(Component s) {
+    public static String translate(FormattedText s) {
         return I18n.get(s.getString()
-                .replaceAll("%", "PERCENT"))
-            .replaceAll("PERCENT", "%");
+                        .replaceAll("%", "PERCENT"))
+                .replaceAll("PERCENT", "%");
 
     }
 

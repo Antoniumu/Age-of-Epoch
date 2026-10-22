@@ -1,0 +1,8 @@
+{
+  "always_spawn": false,
+  "block_id": "ancient_obelisks:obelisk",
+  "id": "obelisk",
+  "max_blocks": 1,
+  "min_blocks": 1,
+  "weight": 1000
+}

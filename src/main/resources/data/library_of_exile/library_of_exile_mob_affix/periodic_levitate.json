@@ -1,0 +1,19 @@
+{
+  "affects": "MOB",
+  "data": {
+    "amplifer": {
+      "max": 1.0,
+      "min": 1.0
+    },
+    "apply_every_x_seconds": 10,
+    "duration_ticks": {
+      "max": 20.0,
+      "min": 20.0
+    },
+    "status_effect_id": "minecraft:levitation"
+  },
+  "id": "periodic_levitate",
+  "modid": "library_of_exile",
+  "serializer": "potion_mob_affix",
+  "weight": 1000
+}

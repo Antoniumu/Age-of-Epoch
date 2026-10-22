@@ -25,4 +25,8 @@ public class LivingEvent extends Event {
             super(entityLiving);
         }
     }
+
+    public static class LivingTickEvent extends LivingUpdateEvent {
+        public LivingTickEvent(LivingEntity e) { super(e); }
+    }
 }

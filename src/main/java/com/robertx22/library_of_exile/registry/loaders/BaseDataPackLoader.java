@@ -3,10 +3,14 @@ package com.robertx22.library_of_exile.registry.loaders;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.robertx22.library_of_exile.main.LibraryOfExile;
-import com.robertx22.library_of_exile.registry.*;
-import com.robertx22.library_of_exile.utils.Watch;
-import net.minecraft.resources.FileToIdConverter;
+import com.robertx22.library_of_exile.main.ExileLog;
+import com.robertx22.library_of_exile.registry.Database;
+import com.robertx22.library_of_exile.registry.ExileRegistry;
+import com.robertx22.library_of_exile.registry.ExileRegistryType;
+import com.robertx22.library_of_exile.registry.register_info.ExileRegistrationInfo;
+import com.robertx22.library_of_exile.registry.register_info.FromDatapackRegistration;
+import com.robertx22.library_of_exile.registry.register_info.SeriazableRegistration;
+import com.robertx22.library_of_exile.registry.serialization.ISerializable;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -14,99 +18,116 @@ import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 
 import java.io.Reader;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.function.Function;
 
-public abstract class BaseDataPackLoader<T extends ExileRegistry> extends SimplePreparableReloadListener<Map<Identifier, JsonElement>> {
-
-    public String id;
-    Function<JsonObject, T> serializer;
+public class BaseDataPackLoader<T extends ExileRegistry> extends SimplePreparableReloadListener<Map<Identifier, JsonElement>> {
     public ExileRegistryType registryType;
+    public String id;
+    public ISerializable<T> serializer;
 
-    public BaseDataPackLoader(ExileRegistryType registryType, String id, Function<JsonObject, T> serializer) {
-        Objects.requireNonNull(registryType);
-        this.id = id;
-        this.serializer = serializer;
-        this.registryType = registryType;
+    public static int LAST_RELOAD_LOADED_OBJECTS = 0;
+    public static int LAST_RELOAD_PARSE_ERRORS = 0;
+
+    public static ExileRegistrationInfo INFO = new SeriazableRegistration("mmorpg");
+
+    public BaseDataPackLoader(ExileRegistryType registryType, String id) {
+        this(registryType, id, registryType != null ? registryType.getSerializer() : null);
     }
 
-    public abstract ExileDatapackGenerator getDataPackGenerator();
+    @SuppressWarnings("unchecked")
+    public BaseDataPackLoader(ExileRegistryType registryType, String id, ISerializable<T> serializer) {
+        this.registryType = registryType;
+        this.id = id;
+        this.serializer = serializer;
+    }
+
+    public enum LoaderType {
+        REPLACE_FULLY, ADD_TO_EXISTING
+    }
+
+    public LoaderType loaderType = LoaderType.REPLACE_FULLY;
 
     @Override
     protected Map<Identifier, JsonElement> prepare(ResourceManager manager, ProfilerFiller profiler) {
-
-        if (LibraryOfExile.runDevTools()) {
-            this.getDataPackGenerator()
-                .run();
+        Map<Identifier, JsonElement> result = new LinkedHashMap<>();
+        if (manager == null || this.id == null) return result;
+        Map<Identifier, Resource> found = manager.listResources(this.id, loc -> loc.getPath().endsWith(".json"));
+        String prefix = this.id + "/";
+        List<Map.Entry<Identifier, Resource>> bundles = new ArrayList<>();
+        List<Map.Entry<Identifier, Resource>> singles = new ArrayList<>();
+        for (Map.Entry<Identifier, Resource> entry : found.entrySet()) {
+            if (entry.getKey().getPath().endsWith("/_bundle.json")) {
+                bundles.add(entry);
+            } else {
+                singles.add(entry);
+            }
         }
-
-        FileToIdConverter lister = FileToIdConverter.json(this.id);
-        Map<Identifier, JsonElement> result = new HashMap<>();
-        for (Map.Entry<Identifier, Resource> entry : lister.listMatchingResources(manager).entrySet()) {
-            Identifier location = entry.getKey();
-            Identifier fileId = lister.fileToId(location);
+        // Load base bundles first so any individual datapack .json file cleanly overrides specific entries!
+        for (Map.Entry<Identifier, Resource> entry : bundles) {
+            Identifier raw = entry.getKey();
             try (Reader reader = entry.getValue().openAsReader()) {
-                JsonElement elem = JsonParser.parseReader(reader);
-                result.putIfAbsent(fileId, elem);
-            } catch (Exception e) {
-                e.printStackTrace();
+                JsonObject bundleObj = JsonParser.parseReader(reader).getAsJsonObject();
+                for (Map.Entry<String, JsonElement> item : bundleObj.entrySet()) {
+                    result.put(Identifier.fromNamespaceAndPath(raw.getNamespace(), item.getKey()), item.getValue());
+                }
+            } catch (Exception ex) {
+                LAST_RELOAD_PARSE_ERRORS++;
+                ExileLog.get().warn("Failed parsing datapack bundle " + raw + ": " + ex.getMessage());
+            }
+        }
+        for (Map.Entry<Identifier, Resource> entry : singles) {
+            Identifier raw = entry.getKey();
+            String path = raw.getPath();
+            if (path.startsWith(prefix)) path = path.substring(prefix.length());
+            if (path.endsWith(".json")) path = path.substring(0, path.length() - 5);
+            Identifier cleanId = Identifier.fromNamespaceAndPath(raw.getNamespace(), path);
+            try (Reader reader = entry.getValue().openAsReader()) {
+                result.put(cleanId, JsonParser.parseReader(reader));
+            } catch (Exception ex) {
+                LAST_RELOAD_PARSE_ERRORS++;
+                ExileLog.get().warn("Failed parsing datapack JSON " + raw + ": " + ex.getMessage());
             }
         }
         return result;
     }
 
-    static String ENABLED = "enabled";
-
-    public void reloadSync(ResourceManager manager) {
-        this.apply(this.prepare(manager, null), manager, null);
-    }
-
     @Override
     @SuppressWarnings("unchecked")
-    protected void apply(Map<Identifier, JsonElement> mapToLoad, ResourceManager manager, ProfilerFiller profilerIn) {
-
+    protected void apply(Map<Identifier, JsonElement> map, ResourceManager manager, ProfilerFiller profiler) {
         try {
-            ExileRegistryContainer reg = Database.getRegistry(registryType);
-
-            Watch normal = new Watch();
-            normal.min = 50000;
-            reg.unregisterAllEntriesFromDatapacks();
-
-            for (Object s : reg.getSerializable()) {
-                if (s instanceof ExileRegistry entry) {
-                    reg.register(entry);
-                }
-            }
-
-            mapToLoad.forEach((key, value) -> {
-                try {
-                    JsonObject json = value
-                        .getAsJsonObject();
-
-                    if (!json.has(ENABLED) || json.get(ENABLED)
-                        .getAsBoolean()) {
-                        T object = serializer.apply(json);
-                        reg.unRegister(object);
-                        object.registerToExileRegistry();
+            var reg = Database.getRegistry(this.registryType);
+            if (this.loaderType == LoaderType.REPLACE_FULLY && reg != null) {
+                for (Object rawExisting : new ArrayList<>(reg.getList())) {
+                    ExileRegistry existing = (ExileRegistry) rawExisting;
+                    if (existing.isFromDatapack()) {
+                        reg.unRegister(existing);
                     }
-                } catch (Exception exception) {
-                    System.out.println(id + " is a broken datapack entry.");
-                    exception.printStackTrace();
                 }
-            });
-
-            normal.print("Loading " + registryType.id + " jsons ");
-
-            if (reg
-                .isEmpty()) {
-                throw new RuntimeException("Exile Registry of type " + registryType.id + " is EMPTY after datapack loading!");
             }
-        } catch (RuntimeException e) {
+            ISerializable<T> ser = this.serializer != null ? this.serializer : this.registryType.getSerializer();
+            for (Map.Entry<Identifier, JsonElement> entry : map.entrySet()) {
+                try {
+                    var json = entry.getValue().getAsJsonObject();
+                    T object = (T) ser.fromJson(json);
+                    if (reg != null && reg.isRegistered(object.GUID())) {
+                        reg.unRegister(object);
+                    }
+                    object.registerToExileRegistry(new FromDatapackRegistration(entry.getKey()));
+                    LAST_RELOAD_LOADED_OBJECTS++;
+                } catch (Exception inner) {
+                    LAST_RELOAD_PARSE_ERRORS++;
+                    ExileLog.get().warn("Error loading " + entry.getKey() + " into " + this.id + ": " + inner.getMessage());
+                }
+            }
+            if (reg != null) {
+                reg.onAllDatapacksLoaded();
+            }
+        } catch (Exception e) {
+            LAST_RELOAD_PARSE_ERRORS++;
             e.printStackTrace();
         }
-
     }
-
 }

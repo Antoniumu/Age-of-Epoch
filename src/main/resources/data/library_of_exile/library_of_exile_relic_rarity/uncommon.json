@@ -1,0 +1,11 @@
+{
+  "affixes": 1,
+  "base_data": {
+    "id": "uncommon",
+    "text_format": "GREEN",
+    "tier": 1,
+    "weight": 2500
+  },
+  "max_affix_percent": 50,
+  "min_affix_percent": 5
+}

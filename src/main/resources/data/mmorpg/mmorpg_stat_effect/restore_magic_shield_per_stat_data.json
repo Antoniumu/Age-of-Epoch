@@ -1,0 +1,11 @@
+{
+  "id": "restore_magic_shield_per_stat_data",
+  "num_provider": {
+    "calc": "",
+    "type": "STAT_DATA"
+  },
+  "restore_type": "leech",
+  "ser": "restore_resource",
+  "side": "Source",
+  "type": "magic_shield"
+}

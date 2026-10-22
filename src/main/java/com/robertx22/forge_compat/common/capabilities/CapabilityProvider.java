@@ -31,7 +31,7 @@ public class CapabilityProvider {
     }
 
     public static synchronized <T> LazyOptional<T> get(Object owner, Capability<T> cap, Direction side) {
-        if (owner instanceof ICapabilityProvider && !(owner instanceof net.minecraft.world.entity.Entity) && !(owner instanceof net.minecraft.world.level.Level) && !(owner instanceof net.minecraft.world.item.ItemStack)) {
+        if (owner instanceof ICapabilityProvider && !(owner instanceof net.minecraft.world.entity.Entity) && !(owner instanceof net.minecraft.world.level.Level) && !(owner instanceof net.minecraft.world.level.chunk.LevelChunk) && !(owner instanceof net.minecraft.world.item.ItemStack)) {
             return ((ICapabilityProvider) owner).getCapability(cap, side);
         }
         return get(owner, cap);

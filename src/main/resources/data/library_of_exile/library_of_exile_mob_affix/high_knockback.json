@@ -1,0 +1,16 @@
+{
+  "affects": "MOB",
+  "data": {
+    "attribute_id": "minecraft:attack_knockback",
+    "number_range": {
+      "max": 3.0,
+      "min": 1.0
+    },
+    "operation": "ADD_VALUE",
+    "uuid": "7bedbca3-44e3-4d99-acf3-7a8407b39339"
+  },
+  "id": "high_knockback",
+  "modid": "library_of_exile",
+  "serializer": "attribute_mob_affix",
+  "weight": 1000
+}

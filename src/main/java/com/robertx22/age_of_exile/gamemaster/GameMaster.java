@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.robertx22.age_of_exile.gamemaster.PlayerProgress.HistoryPoint;
-import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import com.robertx22.mine_and_slash.uncommon.datasaving.Load;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;

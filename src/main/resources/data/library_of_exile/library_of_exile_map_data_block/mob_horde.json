@@ -1,0 +1,13 @@
+{
+  "aliases": [
+    "pack",
+    "trader"
+  ],
+  "id": "mob_horde",
+  "process_on": "NORMAL",
+  "serializer": "mob_horde",
+  "tags": [
+    "can_spawn_league"
+  ],
+  "weight": 1000
+}

@@ -1,34 +1,6 @@
 {
   "model": {
-    "type": "minecraft:range_dispatch",
-    "property": "minecraft:custom_model_data",
-    "index": 0,
-    "fallback": {
-      "type": "minecraft:model",
-      "model": "mmorpg:item/loot_crate/default"
-    },
-    "entries": [
-      {
-        "threshold": 1.0,
-        "model": {
-          "type": "minecraft:model",
-          "model": "mmorpg:block/loot_crate/gem"
-        }
-      },
-      {
-        "threshold": 2.0,
-        "model": {
-          "type": "minecraft:model",
-          "model": "mmorpg:block/loot_crate/rune"
-        }
-      },
-      {
-        "threshold": 3.0,
-        "model": {
-          "type": "minecraft:model",
-          "model": "mmorpg:block/loot_crate/currency"
-        }
-      }
-    ]
+    "type": "minecraft:model",
+    "model": "mmorpg:item/loot_crate/default"
   }
 }

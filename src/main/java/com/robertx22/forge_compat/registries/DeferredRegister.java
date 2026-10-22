@@ -3,25 +3,27 @@ package com.robertx22.forge_compat.registries;
 import com.robertx22.forge_compat.eventbus.api.IEventBus;
 import com.robertx22.forge_compat.fml.RegistryObject;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-/**
- * Eager-registration DeferredRegister: entries are registered immediately,
- * which matches Fabric's register-during-init lifecycle.
- */
 public class DeferredRegister<T> {
+
+    private static final List<DeferredRegister<?>> ALL_REGISTERS = Collections.synchronizedList(new ArrayList<>());
 
     private final Registry<Object> registry;
     private final String modid;
-    private final List<Runnable> pending = new ArrayList<>();
+    private final List<RegistryObject<?>> entries = new ArrayList<>();
 
     private DeferredRegister(Registry<Object> registry, String modid) {
         this.registry = registry;
         this.modid = modid;
+        ALL_REGISTERS.add(this);
     }
 
     @SuppressWarnings("unchecked")
@@ -29,32 +31,58 @@ public class DeferredRegister<T> {
         return new DeferredRegister<>(registry, modid);
     }
 
-    public static <T> DeferredRegister<T> create(Object registry, String modid) {
-        return new DeferredRegister<>((Registry<Object>) registry, modid);
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static <T> DeferredRegister<T> create(Object registryOrKey, String modid) {
+        if (registryOrKey instanceof Registry<?> reg) {
+            return new DeferredRegister<>((Registry<Object>) reg, modid);
+        }
+        if (registryOrKey instanceof ResourceKey<?> rk) {
+            Registry<?> resolved = BuiltInRegistries.REGISTRY.getValue((ResourceKey) rk);
+            return new DeferredRegister<>((Registry<Object>) resolved, modid);
+        }
+        return new DeferredRegister<>(null, modid);
     }
 
     public void register(IEventBus bus) {
-        // entries are registered eagerly at register(id, supplier) time
     }
 
     @SuppressWarnings("unchecked")
     public synchronized <I extends T> RegistryObject<I> register(String name, Supplier<I> supplier) {
         Identifier id = Identifier.fromNamespaceAndPath(modid, name);
-        if (registry != null && registry.containsKey(id)) {
-            I existing = (I) registry.getValue(id);
-            return new RegistryObject<>(id, existing);
+        RegistryObject<I> obj = new RegistryObject<>(id, () -> {
+            if (registry != null && registry.containsKey(id)) {
+                return (I) registry.getValue(id);
+            }
+            PropertiesIdHelper.CURRENT_ID.set(id);
+            I value;
+            try {
+                value = supplier.get();
+            } finally {
+                PropertiesIdHelper.CURRENT_ID.remove();
+            }
+            PropertiesIdHelper.fixRegisteredDescriptionId(value, id);
+            if (registry != null) {
+                Registry.register((Registry<I>) registry, id, value);
+            }
+            return value;
+        }, true);
+        entries.add(obj);
+        return obj;
+    }
+
+    public synchronized void flush() {
+        for (RegistryObject<?> obj : new ArrayList<>(entries)) {
+            obj.get();
         }
-        PropertiesIdHelper.CURRENT_ID.set(id);
-        I value;
-        try {
-            value = supplier.get();
-        } finally {
-            PropertiesIdHelper.CURRENT_ID.remove();
+    }
+
+    public static void flushAll() {
+        List<DeferredRegister<?>> snapshot;
+        synchronized (ALL_REGISTERS) {
+            snapshot = new ArrayList<>(ALL_REGISTERS);
         }
-        PropertiesIdHelper.fixRegisteredDescriptionId(value, id);
-        if (registry != null) {
-            Registry.register((Registry<I>) registry, id, value);
+        for (DeferredRegister<?> dr : snapshot) {
+            dr.flush();
         }
-        return new RegistryObject<>(id, value);
     }
 }

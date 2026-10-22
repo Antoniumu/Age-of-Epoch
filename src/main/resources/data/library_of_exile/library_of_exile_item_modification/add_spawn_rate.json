@@ -1,0 +1,8 @@
+{
+  "data": {
+    "spawn_rate": 10
+  },
+  "id": "add_spawn_rate",
+  "serializer": "add_obelisk_spawn_rate",
+  "weight": 1000
+}
