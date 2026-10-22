@@ -23,8 +23,8 @@ public class RollCommand {
                             int roll = RandomUtils.RandomRange(0, 100);
                             TeamUtils.getOnlineMembers(player)
                                     .forEach(p -> {
-                                        p.displayClientMessage(Component.empty().append(player.getDisplayName())
-                                                .append(" rolled a " + roll), false);
+                                        p.sendSystemMessage(Component.empty().append(player.getDisplayName())
+                                                .append(" rolled a " + roll));
                                     });
 
                             return 0;

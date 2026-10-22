@@ -1,11 +1,9 @@
 package com.robertx22.mine_and_slash.gui.texts;
 
 import com.google.common.collect.Lists;
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.*;
 
 public class IgnoreNullList<E> extends AbstractList<E> {
@@ -45,7 +43,7 @@ public class IgnoreNullList<E> extends AbstractList<E> {
         return objects;
     }
 
-    @Nonnull
+    @NotNull
     public E get(int pIndex) {
         return this.list.get(pIndex);
     }
@@ -55,7 +53,6 @@ public class IgnoreNullList<E> extends AbstractList<E> {
         return this.list.set(pIndex, pValue);
     }
 
-    @CanIgnoreReturnValue
     public boolean add(E pValue) {
         if (pValue != null) {
             this.list.add(pValue);
@@ -64,7 +61,6 @@ public class IgnoreNullList<E> extends AbstractList<E> {
         return false;
     }
 
-    @CanIgnoreReturnValue
     public IgnoreNullList<E> addAll(List<? extends E> elements) {
         if (elements == null || elements.isEmpty()) return this;
         for (E element : elements) {

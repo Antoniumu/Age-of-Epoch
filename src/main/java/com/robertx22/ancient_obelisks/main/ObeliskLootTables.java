@@ -6,7 +6,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 
 import java.util.function.BiConsumer;
 
@@ -21,12 +21,12 @@ public class ObeliskLootTables {
         public void generate(BiConsumer<Identifier, LootTable.Builder> output) {
 
             var essB = LootTable.lootTable()
-                    .withPool(LootPool.lootPool().setRolls(UniformGenerator.between(3, 6))
+                    .withPool(LootPool.lootPool().setRolls(ContextIntProviders.between(3, 6))
                             .add(LootItem.lootTableItem(ObeliskEntries.ENVY.get()))
                             .add(LootItem.lootTableItem(ObeliskEntries.WRATH.get()))
                             .add(LootItem.lootTableItem(ObeliskEntries.GREED.get()))
                     ).withPool(
-                            LootPool.lootPool().setRolls(UniformGenerator.between(3, 6))
+                            LootPool.lootPool().setRolls(ContextIntProviders.between(3, 6))
                                     .add(LootItem.lootTableItem(Items.DIAMOND))
                                     .add(LootItem.lootTableItem(Items.GOLD_INGOT))
                                     .add(LootItem.lootTableItem(Items.IRON_INGOT))

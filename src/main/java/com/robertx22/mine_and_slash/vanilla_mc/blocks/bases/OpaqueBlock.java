@@ -6,7 +6,7 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.RedstoneTorchBlock;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Mirror;
@@ -14,7 +14,8 @@ import net.minecraft.world.level.block.Rotation;
 
 public abstract class OpaqueBlock extends Block {
 
-    public static final DirectionProperty direction = net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
+    // MC 26.3: DirectionProperty was removed, BlockStateProperties.HORIZONTAL_FACING is an EnumProperty<Direction> now
+    public static final EnumProperty<Direction> direction = net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty light = RedstoneTorchBlock.LIT;
 
     public OpaqueBlock(Properties properties) {

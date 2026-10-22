@@ -34,7 +34,7 @@ public class DungeonMapCapability implements ICapabilityProvider, INBTSerializab
     }
 
     public static DungeonMapCapability get(Level entity) {
-        return com.robertx22.forge_compat.common.capabilities.CapabilityProvider.get(entity.getServer().overworld(), INSTANCE).orElse(new DungeonMapCapability(entity));
+        return com.robertx22.forge_compat.common.capabilities.CapabilityProvider.get(entity.level().getServer().overworld(), INSTANCE).orElse(new DungeonMapCapability(entity));
     }
 
     public static DungeonMapCapability getFromServer() {

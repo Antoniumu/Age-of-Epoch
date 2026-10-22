@@ -55,7 +55,7 @@ public class ListStats {
                             .stream()
                             .collect(Collectors.toList()), ",");
                 }
-                player.displayClientMessage(Component.literal(str), false);
+                player.sendSystemMessage(Component.literal(str));
 
             }
 

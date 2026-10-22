@@ -9,8 +9,6 @@ import com.robertx22.library_of_exile.database.relic.stat.ExactRelicStat;
 import com.robertx22.library_of_exile.database.relic.stat.RelicMod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.Container;
-import net.minecraft.world.ContainerListener;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -20,7 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MapDeviceBE extends BlockEntity implements ContainerListener {
+public class MapDeviceBE extends BlockEntity {
 
 
     public boolean gaveMap = false;
@@ -43,12 +41,17 @@ public class MapDeviceBE extends BlockEntity implements ContainerListener {
 
     public MapDeviceBE(BlockPos pPos, BlockState pBlockState) {
         super(DungeonEntries.MAP_DEVICE_BE.get(), pPos, pBlockState);
-
-        this.inv.addListener(this);
-
     }
 
-    public SimpleContainer inv = new SimpleContainer(27);
+    // MC 26.3: SimpleContainer no longer supports listeners - hook setChanged() instead,
+    // which vanilla Slot calls after every inventory mutation.
+    public SimpleContainer inv = new SimpleContainer(27) {
+        @Override
+        public void setChanged() {
+            super.setChanged();
+            MapDeviceBE.this.setChanged();
+        }
+    };
 
 
     public List<ExactRelicStat> getAllValidRelicStats() {
@@ -108,12 +111,6 @@ public class MapDeviceBE extends BlockEntity implements ContainerListener {
         }
         com.robertx22.forge_compat.common.CompatHelper.loadContainer(inv, pTag.getListOrEmpty("inv")); // todo care when porting
         this.currentWorldUUID = pTag.getStringOr("uid", "");
-    }
-
-    // this i think allows me to make sure the inventory + block entity is dirty easily
-    @Override
-    public void containerChanged(Container pContainer) {
-        this.setChanged();
     }
 
     @Override

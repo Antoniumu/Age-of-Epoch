@@ -205,7 +205,7 @@ public enum AllyOrEnemy {
                 if (type == EntityTypeUtils.EntityClassification.NPC) {
                     return false;
                 } // failsafe incase mod doesn't use villager class
-                if (target instanceof net.minecraft.world.entity.npc.AbstractVillager) {
+                if (target instanceof net.minecraft.world.entity.npc.villager.AbstractVillager) {
                     return false;
                 }*/
                 if (target instanceof Player) {

@@ -138,7 +138,7 @@ public class ItemNewbieGearBag extends Item {
                             .shrink(1);
 
                 } else {
-                    playerIn.displayClientMessage(Component.literal("Choose your path to open this. (Press [H] and then open Talent Tree scren"), false);
+                    playerIn.sendSystemMessage(Component.literal("Choose your path to open this. (Press [H] and then open Talent Tree scren"));
                 }
 
                 return InteractionResult.PASS;

@@ -6,15 +6,15 @@ import com.robertx22.mine_and_slash.saveclasses.gearitem.gear_bases.Rarity;
 import com.robertx22.mine_and_slash.uncommon.localization.Itemtips;
 import net.minecraft.network.chat.Component;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class RarityBlock extends AbstractTextBlock {
 
-    @Nonnull
+    @NotNull
     public Rarity rarity;
 
-    public RarityBlock(@Nonnull Rarity rarity) {
+    public RarityBlock(@NotNull Rarity rarity) {
         this.rarity = rarity;
     }
 

@@ -9,7 +9,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -22,14 +22,14 @@ public class SimpleItemStatBlock extends StatBlock {
 
     private final Map<Component, List<? extends ITooltipList>> map = new LinkedHashMap<>();
 
-    @Nonnull
+    @NotNull
     private final StatRangeInfo info;
     private final ImmutableMap<String, ChatFormatting> colorMap = ImmutableMap.of(
             Itemtips.COR_STATS.locName().getString(), ChatFormatting.RED,
             Itemtips.UNIQUE_STATS.locName().getString(), ChatFormatting.YELLOW
     );
 
-    public SimpleItemStatBlock(@Nonnull StatRangeInfo info) {
+    public SimpleItemStatBlock(@NotNull StatRangeInfo info) {
         this.info = info;
     }
 

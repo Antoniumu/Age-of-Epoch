@@ -1,9 +1,7 @@
 package com.robertx22.mine_and_slash.a_libraries.dmg_number_particle;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.MultiBufferSource;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +14,6 @@ public class DamageParticleRenderer {
         PARTICLES.removeIf(x -> x.age > 50);
     }
 
-    public static void renderNameTag(Camera camera, String text, DamageParticle p, PoseStack stack, float tick, MultiBufferSource buf) {
-    }
+    // MC 26.3: MultiBufferSource was removed from the render pipeline, world-space text
+    // would have to go through OrderedSubmitNodeCollector - damage numbers are ticked but not drawn for now.
 }

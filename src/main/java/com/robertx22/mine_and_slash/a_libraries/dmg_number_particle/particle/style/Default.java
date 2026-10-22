@@ -5,14 +5,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import com.robertx22.mine_and_slash.a_libraries.dmg_number_particle.particle.ExileInteractionResultParticle;
-import com.robertx22.mine_and_slash.a_libraries.dmg_number_particle.particle.RenderUtils;
-import com.robertx22.mine_and_slash.a_libraries.dmg_number_particle.particle.impl.DamageNullifiedParticle;
-import com.robertx22.mine_and_slash.a_libraries.dmg_number_particle.particle.impl.HealParticle;
 import com.robertx22.mine_and_slash.uncommon.enumclasses.Elements;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.tuple.Pair;
@@ -32,7 +27,7 @@ public class Default implements IParticleRenderStrategy {
         v = DEFAULTParticleSpeedDirection ? v : -v;
         DEFAULTParticleSpeedDirection = !DEFAULTParticleSpeedDirection;
         particle.setParticleSpeed(0 + v, 0.1 + random.nextDouble(0.2, 0.3), 0);
-        particle.setLiftTime(15 + Minecraft.getInstance().player.level().random.nextInt(5));
+        particle.setLiftTime(15 + Minecraft.getInstance().player.level().getRandom().nextInt(5));
     }
 
     @Override
@@ -51,42 +46,26 @@ public class Default implements IParticleRenderStrategy {
         float scale = this.scale * 0.02F;
         Vec3 vec3 = limitDistance(new Vec3(x - cameraPos.x, y - cameraPos.y, z - cameraPos.z));
         posestack.translate(vec3.x(), vec3.y(), vec3.z());
-        posestack.mulPose(camera.rotation());
-        posestack.mulPose(Axis.ZP.rotationDegrees(180.0F));
+        // MC 26.3: PoseStack.mulPose(Quaternionf) was removed, use rotate(...)
+        posestack.rotate(camera.rotation());
+        posestack.rotate(Axis.ZP, 180.0F);
         posestack.scale(scale, scale, scale);
         posestack.translate(0.0F, -2.0F, 0.0F);
     }
 
+    // MC 26.3: MultiBufferSource and Font.drawInBatch were removed from the render
+    // pipeline, so per-particle text drawing is disabled (particles still tick/spawn).
+
     @Override
     public void renderDamage(ExileInteractionResultParticle particle, VertexConsumer vertexConsumer, Camera camera, float partialTick, PoseStack posestack, IParticleRenderMaterial mat) {
-        IParticleRenderMaterial.singleElement material = (IParticleRenderMaterial.singleElement) mat;
-        boolean crit = material.isCrit();
-        Pair<Elements, String> mat1 = material.getMat();
-        String value = mat1.getValue();
-        ChatFormatting format = mat1.getKey().format;
-        MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
-        float f = (float) (-Minecraft.getInstance().font.width(value) / 2);
-
-        RenderUtils.renderText(posestack, crit ? value + "!" : value, f, format.getColor(), multibuffersource$buffersource);
     }
 
     @Override
     public void renderNullifiedDamage(ExileInteractionResultParticle particle, VertexConsumer vertexConsumer, Camera camera, float partialTick, PoseStack posestack, IParticleRenderMaterial mat) {
-        IParticleRenderMaterial.simpleText material = (IParticleRenderMaterial.simpleText) mat;
-        MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
-        float f = (float) (-Minecraft.getInstance().font.width(material.getMat()) / 2);
-
-        RenderUtils.renderText(posestack, material.getMat(),f, DamageNullifiedParticle.color, multibuffersource$buffersource);
-
     }
 
     @Override
     public void renderHeal(ExileInteractionResultParticle particle, VertexConsumer vertexConsumer, Camera camera, float partialTick, PoseStack posestack, IParticleRenderMaterial mat) {
-        IParticleRenderMaterial.simpleText material = (IParticleRenderMaterial.simpleText) mat;
-        MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
-        float f = (float) (-Minecraft.getInstance().font.width(material.getMat()) / 2);
-
-        RenderUtils.renderText(posestack, material.getMat(),f, HealParticle.color, multibuffersource$buffersource);
     }
 
 

@@ -24,6 +24,44 @@
 Генератор башен пишет новую схему; оригинальные старые NBT сохраняют свою старую
 версию для штатной миграции. Источники и регрессия: [`tools/tower_gen/FORMAT.md`](tools/tower_gen/FORMAT.md).
 
+## 1a. Добивка: хвосты после лимита в 100 ошибок javac (второй проход)
+
+Первая компиляция после ANT-50 упиралась в стандартный лимит `-Xmaxerrs 100`,
+поэтому часть хвостов не была видна. Прогон против реального дерева исходников
+MC 26.3 закрыл следующие группы:
+
+1. **Удалённые/переехавшие библиотеки**: `javax.annotation.*` (jsr305) больше не
+   на classpath — в 26.3 Mojang перешли на `org.jetbrains.annotations`
+   (28 файлов); `com.google.errorprone.annotations` убран (`IgnoreNullList`);
+   **LWJGL-glfw удалён** — MC 26.3 переехал с GLFW на SDL
+   (`InputConstants.KEY_*` = SDL-сканкоды, `InputConstants.Type.KEYBOARD`
+   вместо `KEYSYM`, `org.lwjgl.sdl.*` в ваниле).
+2. **KeyMapping**: `KeyMapping.Category` — реестровый объект
+   (`Category.register(Identifier)`), а не строка; `matches(KeyEvent)` /
+   `matches(InputConstants.Key)` вместо `matches(int, int)`.
+3. **Лут**: `UniformGenerator` разъехался на `providers.number.floats/ints`,
+   для роллов используется `ContextIntProviders.between(min, max)`
+   (`LootPool.Builder.setRolls(Holder<ContextIntProvider>)`).
+4. **Прочее**: `Criterion` → `net.minecraft.advancements.triggers.Criterion`
+   (+ в `RecipeBuilder` больше нет `getResult`, зато есть `group`/`defaultId`);
+   `ContainerListener` → `net.minecraft.world.inventory.ContainerListener`,
+   у `SimpleContainer` больше нет `addListener` (хук через `setChanged()`);
+   `DirectionProperty` удалён — `HORIZONTAL_FACING` теперь
+   `EnumProperty<Direction>`; `AbstractVillager` → `...npc.villager.AbstractVillager`;
+   `RandomizableContainerBlockEntity.setLootTable(key, seed)` разделён на
+   `setLootTable(key)` + `setLootTableSeed(seed)`; `Entity/Player.getServer()`
+   удалён — только `levelAccessor/level.getServer()`; `level.random` →
+   `level.getRandom()` (хвосты); `displayClientMessage(msg, false)` →
+   `sendSystemMessage(msg)` (37 мест).
+5. **Клиентские события**: `KeyEvent` не имеет `scancode()` (это `keycode()`),
+   `CharacterEvent` не имеет `modifiers()` — исправлены мосты
+   `forge_compat.client.Screen` / `AbstractContainerScreen`;
+   `PoseStack.mulPose(Quaternionf)` удалён → `rotate(Quaternionfc)` /
+   `rotate(Axis, angle)`; `MultiBufferSource`, `Font.drawInBatch` и
+   `Minecraft.renderBuffers()` удалены из пайплайна — мёртвые пути
+   dmg-частиц/хелсбаров выпилены (живой рендер плашек — `MobPlateRenderer`
+   через `OrderedSubmitNodeCollector.submitNameTag/submitText`).
+
 ## 2. Состав порта
 
 Монорепозиторий одного Fabric-мода `mmorpg` («Age of Epoch»), объединяющий исходники:

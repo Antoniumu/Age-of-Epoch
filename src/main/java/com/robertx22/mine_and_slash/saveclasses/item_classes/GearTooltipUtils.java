@@ -32,8 +32,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -60,9 +60,9 @@ public class GearTooltipUtils {
                         .setStatRequirement(gear.getRequirement())
                         .setLevelRequirement(gear.getLevel()))
                 .accept(new StatBlock() {
-                    @Nonnull
+                    @NotNull
                     private final GearItemData gearItemData = gear;
-                    @Nonnull
+                    @NotNull
                     private final StatRangeInfo tinfo = info;
 
                     public BaseStatsData baseStatsData;

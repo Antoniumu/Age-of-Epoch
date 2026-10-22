@@ -35,14 +35,14 @@ public class OnLogin {
             }
 
 
-            if (!player.getServer()
+            if (!player.level().getServer()
                     .isDedicatedServer() || true) {
-                player.displayClientMessage(Chats.COMMAND_BLOCK_UNAVALIABLE.locName().withStyle(ChatFormatting.RED), false);
-                player.displayClientMessage(Chats.HOW_TO_ENABLE_COMMAND_BLOCK.locName().withStyle(ChatFormatting.GREEN), false);
+                player.sendSystemMessage(Chats.COMMAND_BLOCK_UNAVALIABLE.locName().withStyle(ChatFormatting.RED));
+                player.sendSystemMessage(Chats.HOW_TO_ENABLE_COMMAND_BLOCK.locName().withStyle(ChatFormatting.GREEN));
             }
 
             if (MMORPG.RUN_DEV_TOOLS) {
-                player.displayClientMessage(Chats.Dev_tools_enabled_contact_the_author.locName(), false);
+                player.sendSystemMessage(Chats.Dev_tools_enabled_contact_the_author.locName());
             }
 
             EntityData data = Load.Unit(player);

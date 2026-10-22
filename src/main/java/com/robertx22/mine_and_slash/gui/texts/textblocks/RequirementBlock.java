@@ -13,7 +13,7 @@ import com.robertx22.forge_compat.client.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 

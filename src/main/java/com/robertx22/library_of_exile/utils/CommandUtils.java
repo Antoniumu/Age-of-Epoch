@@ -9,7 +9,7 @@ public class CommandUtils {
 
     public static void execute(Player player, String command) {
         CommandSourceStack source = getCommandSource(player);
-        player.getServer().getCommands().performPrefixedCommand(source, command);
+        player.level().getServer().getCommands().performPrefixedCommand(source, command);
 
     }
 

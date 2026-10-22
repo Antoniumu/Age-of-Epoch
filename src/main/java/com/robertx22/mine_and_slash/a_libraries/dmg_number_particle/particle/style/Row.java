@@ -5,23 +5,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import com.robertx22.mine_and_slash.a_libraries.dmg_number_particle.particle.ExileInteractionResultParticle;
-import com.robertx22.mine_and_slash.a_libraries.dmg_number_particle.particle.RenderUtils;
 import com.robertx22.mine_and_slash.uncommon.enumclasses.Elements;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.contents.PlainTextContents.LiteralContents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 
 public class Row implements IParticleRenderStrategy {
 
@@ -48,59 +39,26 @@ public class Row implements IParticleRenderStrategy {
         float scale = 0.02f;
         Vec3 vec3 = limitDistance(new Vec3(x - cameraPos.x, y - cameraPos.y, z - cameraPos.z));
         posestack.translate(vec3.x(), vec3.y(), vec3.z());
-        posestack.mulPose(camera.rotation());
-        posestack.mulPose(Axis.ZP.rotationDegrees(180.0F));
+        // MC 26.3: PoseStack.mulPose(Quaternionf) was removed, use rotate(...)
+        posestack.rotate(camera.rotation());
+        posestack.rotate(Axis.ZP, 180.0F);
         posestack.scale(scale, scale, scale);
         posestack.translate(0.0F, -2.0F, 0.0F);
     }
 
+    // MC 26.3: MultiBufferSource and Font.drawInBatch were removed from the render
+    // pipeline, so per-particle text drawing is disabled (particles still tick/spawn).
+
     @Override
     public void renderDamage(ExileInteractionResultParticle particle, VertexConsumer vertexConsumer, Camera camera, float partialTick, PoseStack posestack, IParticleRenderMaterial mat) {
-        IParticleRenderMaterial.multipleElements material = (IParticleRenderMaterial.multipleElements)mat;
-
-        List<Pair<Elements, String>> mat1 = material.getMat();
-        boolean crit = material.isCrit();
-        MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
-
-        float startFrom = 0.0f;
-
-        Function<String, String> damageFormat = (number) -> "-" + number + " ";
-        for (Pair<Elements, String> elementsStringPair : mat1) {
-            int i = -Minecraft.getInstance().font.width(damageFormat.apply(elementsStringPair.getValue()));
-            startFrom += i;
-        }
-
-        startFrom = startFrom / 2;
-
-        float usedWidth = 0;
-        for (Pair<Elements, String> pair : mat1) {
-            Elements element = pair.getLeft();
-            String number = pair.getRight();
-            String damage = damageFormat.apply(number);
-
-            ChatFormatting format = element.format;
-            MutableComponent mutableComponent = Component.literal(damage).withStyle(format);
-            if (crit) {
-                mutableComponent.withStyle(ChatFormatting.BOLD);
-            }
-
-            int thisWidth = Minecraft.getInstance().font.width(mutableComponent);
-            RenderUtils.renderComponent(posestack, mutableComponent, startFrom + usedWidth, format.getColor(), multibuffersource$buffersource);
-
-            usedWidth += thisWidth;
-        }
-
-
     }
 
     @Override
     public void renderNullifiedDamage(ExileInteractionResultParticle particle, VertexConsumer vertexConsumer, Camera camera, float partialTick, PoseStack posestack, IParticleRenderMaterial mat) {
-        new Default().renderNullifiedDamage(particle, vertexConsumer, camera, partialTick, posestack, mat);
     }
 
     @Override
     public void renderHeal(ExileInteractionResultParticle particle, VertexConsumer vertexConsumer, Camera camera, float partialTick, PoseStack posestack, IParticleRenderMaterial mat) {
-        new Default().renderHeal(particle, vertexConsumer, camera, partialTick, posestack, mat);
     }
 
     @Override

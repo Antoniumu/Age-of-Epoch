@@ -61,14 +61,14 @@ public abstract class Screen extends net.minecraft.client.gui.screens.Screen {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (this.keyPressed(event.key(), event.scancode(), event.modifiers())) return true;
+        if (this.keyPressed(event.key(), event.keycode(), event.modifiers())) return true;
         return super.keyPressed(event);
     }
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) { return false; }
 
     @Override
     public boolean charTyped(CharacterEvent event) {
-        if (this.charTyped((char) event.codepoint(), event.modifiers())) return true;
+        if (this.charTyped((char) event.codepoint(), 0)) return true;
         return super.charTyped(event);
     }
     public boolean charTyped(char codePoint, int modifiers) { return false; }

@@ -14,8 +14,9 @@ public class ShapelessRecipeBuilder implements net.minecraft.data.recipes.Recipe
     public static ShapelessRecipeBuilder shapeless(net.minecraft.data.recipes.RecipeCategory cat, net.minecraft.world.level.ItemLike out) { return shapeless(out); }
     public static ShapelessRecipeBuilder shapeless(net.minecraft.data.recipes.RecipeCategory cat, net.minecraft.world.level.ItemLike out, int count) { return shapeless(out, count); }
     public ShapelessRecipeBuilder unlockedBy(String name, Object criterion) { return this; }
-    @Override public ShapelessRecipeBuilder unlockedBy(String name, net.minecraft.advancements.Criterion<?> criterion) { return this; }
-    @Override public net.minecraft.world.item.Item getResult() { return this.result.asItem(); }
+    @Override public ShapelessRecipeBuilder unlockedBy(String name, net.minecraft.advancements.triggers.Criterion<?> criterion) { return this; }
+    @Override public ShapelessRecipeBuilder group(String group) { return this; }
+    @Override public net.minecraft.resources.ResourceKey<net.minecraft.world.item.crafting.Recipe<?>> defaultId() { return null; }
     @Override public void save(net.minecraft.data.recipes.RecipeOutput out, net.minecraft.resources.ResourceKey<net.minecraft.world.item.crafting.Recipe<?>> id) {}
 
     private final Item result;

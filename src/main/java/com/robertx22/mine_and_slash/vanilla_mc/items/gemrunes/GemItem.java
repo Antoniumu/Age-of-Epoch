@@ -142,7 +142,7 @@ public class GemItem extends BaseGemItem implements IGUID, IAutoModel, IItemAsCu
 
                                     gear.sockets.getSocketed().add(socket);
 
-                                    ctx.player.displayClientMessage(Chats.GEM_SOCKETED.locName(), false);
+                                    ctx.player.sendSystemMessage(Chats.GEM_SOCKETED.locName());
 
                                 });
                                 ctx.stack = ex.getStack();

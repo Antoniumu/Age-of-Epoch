@@ -351,7 +351,7 @@ public class ProfessionBlockEntity extends BlockEntity {
                     // 1% chance per level to get extra salvage results
                     float extraSalvageChance = ownerLvl * 0.01f; // 1% per level
                     while (extraSalvageChance > 0) {
-                        if (extraSalvageChance >= 1.0f || p.level().random.nextFloat() < extraSalvageChance) {
+                        if (extraSalvageChance >= 1.0f || p.level().getRandom().nextFloat() < extraSalvageChance) {
                             output.addAll(sal.getSalvageResult(ex));
                         }
                         extraSalvageChance -= 1.0f;

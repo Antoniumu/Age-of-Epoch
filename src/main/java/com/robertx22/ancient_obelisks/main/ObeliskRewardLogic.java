@@ -83,7 +83,9 @@ public class ObeliskRewardLogic {
         world.setBlock(pos, Blocks.CHEST.defaultBlockState(), Block.UPDATE_ALL);
 
         if (world.getBlockEntity(pos) instanceof RandomizableContainerBlockEntity ce) {
-            ce.setLootTable(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.LOOT_TABLE, loottable), world.random.nextLong());
+            // MC 26.3: setLootTable(key, seed) split into setLootTable(key) + setLootTableSeed(seed)
+            ce.setLootTable(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.LOOT_TABLE, loottable));
+            ce.setLootTableSeed(world.getRandom().nextLong());
         }
 
     }

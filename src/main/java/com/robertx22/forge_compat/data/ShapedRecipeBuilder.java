@@ -14,8 +14,9 @@ public class ShapedRecipeBuilder implements net.minecraft.data.recipes.RecipeBui
     public static ShapedRecipeBuilder shaped(net.minecraft.data.recipes.RecipeCategory cat, net.minecraft.world.level.ItemLike out) { return shaped(out); }
     public static ShapedRecipeBuilder shaped(net.minecraft.data.recipes.RecipeCategory cat, net.minecraft.world.level.ItemLike out, int count) { return shaped(out, count); }
     public ShapedRecipeBuilder unlockedBy(String name, Object criterion) { return this; }
-    @Override public ShapedRecipeBuilder unlockedBy(String name, net.minecraft.advancements.Criterion<?> criterion) { return this; }
-    @Override public net.minecraft.world.item.Item getResult() { return this.result.asItem(); }
+    @Override public ShapedRecipeBuilder unlockedBy(String name, net.minecraft.advancements.triggers.Criterion<?> criterion) { return this; }
+    @Override public ShapedRecipeBuilder group(String group) { return this; }
+    @Override public net.minecraft.resources.ResourceKey<net.minecraft.world.item.crafting.Recipe<?>> defaultId() { return null; }
     @Override public void save(net.minecraft.data.recipes.RecipeOutput out, net.minecraft.resources.ResourceKey<net.minecraft.world.item.crafting.Recipe<?>> id) {}
 
     private final Item result;

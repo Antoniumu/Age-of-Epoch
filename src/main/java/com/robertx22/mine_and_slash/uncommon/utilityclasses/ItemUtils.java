@@ -45,10 +45,10 @@ public class ItemUtils {
                             .withStyle(ChatFormatting.LIGHT_PURPLE);
 
 
-                    player.getServer()
+                    player.level().getServer()
                             .getPlayerList()
                             .getPlayers()
-                            .forEach(x -> x.displayClientMessage(message, false));
+                            .forEach(x -> x.sendSystemMessage(message));
 
                 }
 

@@ -315,7 +315,7 @@
   "item.mmorpg.weapon.staff.iron": "Посох",
   "item.mmorpg.weapon.staff.wood": "Посох",
   "itemGroup.mmorpg.tab": "Mine and Slash",
-  "key.mmorpg.keybind": "Mine and Slash",
+  "key.category.mmorpg.keybind": "Mine and Slash",
   "legendary.item": "Легендарный",
   "library_of_exile.item_modification.add_10_perc_unique_stats": "Добавляет %1$s к уникальным характеристикам (в %)",
   "library_of_exile.item_modification.add_1_to_5_gear_quality": "Добавляет %1$s к качеству",

@@ -131,7 +131,7 @@ public class MapDeviceBlock extends BaseEntityBlock {
             stack.shrink(1);
 
             if (joinCurrentMap(p, be)) {
-                p.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, DungeonMain.DIMENSION_KEY)).setBlock(pos.south(), DungeonEntries.MAP_DEVICE_BLOCK.get().defaultBlockState(), Block.UPDATE_ALL);
+                p.level().getServer().getLevel(ResourceKey.create(Registries.DIMENSION, DungeonMain.DIMENSION_KEY)).setBlock(pos.south(), DungeonEntries.MAP_DEVICE_BLOCK.get().defaultBlockState(), Block.UPDATE_ALL);
             }
 
 

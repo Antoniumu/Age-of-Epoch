@@ -25,7 +25,7 @@ public class DelayedTeleportData {
 
             // getting the chunk SHOULD prevent server freezes, DO NOT REMOVE!!!
             var key = ResourceKey.create(Registries.DIMENSION, tp.getDimensionId());
-            var level = p.getServer().getLevel(key);
+            var level = p.level().getServer().getLevel(key);
             level.getChunk(tp.getPos());
             CommandUtils.execute(p, command);
             this.command = "";

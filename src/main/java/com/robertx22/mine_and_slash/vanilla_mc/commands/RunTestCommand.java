@@ -26,7 +26,7 @@ public class RunTestCommand {
 
         CommandTests.run(test, player);
 
-        player.displayClientMessage(Component.literal("Test completed."), false);
+        player.sendSystemMessage(Component.literal("Test completed."));
 
         return 1;
     }

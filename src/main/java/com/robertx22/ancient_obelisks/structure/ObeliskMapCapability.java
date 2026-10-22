@@ -30,7 +30,7 @@ public class ObeliskMapCapability implements ICapabilityProvider, INBTSerializab
     }
 
     public static ObeliskMapCapability get(Level entity) {
-        return com.robertx22.forge_compat.common.capabilities.CapabilityProvider.get(entity.getServer().overworld(), INSTANCE).orElse(new ObeliskMapCapability(entity));
+        return com.robertx22.forge_compat.common.capabilities.CapabilityProvider.get(entity.level().getServer().overworld(), INSTANCE).orElse(new ObeliskMapCapability(entity));
     }
 
 
