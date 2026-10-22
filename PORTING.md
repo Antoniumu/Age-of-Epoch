@@ -154,6 +154,27 @@ MC 26.3 закрыл следующие группы:
     `EntityDataSerializer.forValueType(ByteBufCodecs.COMPOUND_TAG)` в
     SimpleProjectileEntity и StationaryFallingBlockEntity.
 
+## 1d. Пятый проход — хвост из 25 ошибок после круглой правки 4
+
+1. Иерархия виджетов: у `AbstractWidget` абстрактный хук —
+   `extractWidgetRenderState(GuiGraphicsExtractor,int,int,float)` (MC EditBox
+   переопределяет его в :398, не финально); он финален только у `AbstractButton`,
+   у которого абстрактный — `extractContents`. Поэтому переименование в 4-м проходе
+   вернули для compat EditBox, ObjectSelectionList и TipsWidget (ToonList/
+   WikiEntryList/FilterEntryList наследуют реализацию от ObjectSelectionList).
+2. `Screen.init()` защищён — `public void init()` в compat
+   AbstractContainerScreen сделан protected (иначе подклассы с protected init()
+   «сужали» доступ).
+3. Лут: в 4 блоках (Obelisk/MapDevice/Profession/Harvest) получатель —
+   `LootParams.Builder`, у которого метод сохранился как `getOptionalParameter`
+   (ошибочно переименован в 4-м проходе); в ChestGenLootMixin переменная —
+   `LootParams` → `contextMap().has()/get()`.
+4. `@javax.annotation.Nullable` → `@org.jspecify.annotations.Nullable` (пакет
+   javax.annotation отсутствует в 26.3); `drop(ItemStack,boolean,Prediction)`
+   (`net.minecraft.util.Prediction.SERVER_ONLY`); getColor в compat возвращает int
+   (тернарник с `== null` удалён); `be.x`/`be.z` в HarvestBlock — поля BlockEntity,
+   а не ChunkPos; импорт ByteBufCodecs в StationaryFallingBlockEntity.
+
 ## 2. Состав порта
 
 Монорепозиторий одного Fabric-мода `mmorpg` («Age of Epoch»), объединяющий исходники:
