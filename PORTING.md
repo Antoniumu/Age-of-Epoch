@@ -175,6 +175,19 @@ MC 26.3 закрыл следующие группы:
    (тернарник с `== null` удалён); `be.x`/`be.z` в HarvestBlock — поля BlockEntity,
    а не ChunkPos; импорт ByteBufCodecs в StationaryFallingBlockEntity.
 
+## 6. Рантайм-фаза (после зелёной сборки)
+
+Сборка и запуск достигнуты; дальше правятся падения при старте/игре.
+
+1. **Дубликат кодека генератора чанков** (краш на `flushAll`): три map-мода
+   (obelisk/dungeon/harvest) регистрировали ОДИН статический
+   `MapChunkGenerator.CODEC` под разными id; в 26.3 `MappedRegistry` хранит значения
+   в `IdentityHashMap` и бросает «Adding duplicate value». Решение:
+   `MapChunkGenerator.buildCodec()` создаёт свежий кодек на каждую регистрацию
+   (все три id сохранены — на них ссылаются JSON измерений), а `DeferredRegister`
+   при повторной регистрации того же значения под другим ключом пропускает её
+   с записью в лог вместо краша.
+
 ## 2. Состав порта
 
 Монорепозиторий одного Fabric-мода `mmorpg` («Age of Epoch»), объединяющий исходники:
