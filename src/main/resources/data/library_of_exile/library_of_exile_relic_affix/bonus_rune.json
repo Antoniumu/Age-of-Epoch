@@ -1,0 +1,12 @@
+{
+  "id": "bonus_rune",
+  "mods": [
+    {
+      "max": 10.0,
+      "min": 1.0,
+      "stat": "bonus_rune"
+    }
+  ],
+  "relic_type": "mmorpg",
+  "weight": 1000
+}

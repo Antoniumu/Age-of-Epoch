@@ -1,0 +1,5 @@
+{
+  "id": "is_less_than_max_tier",
+  "serializer": "is_less_than_max_tier",
+  "weight": 1000
+}

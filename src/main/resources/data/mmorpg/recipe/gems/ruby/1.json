@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "mmorpg:gems/ruby/0",
+    "mmorpg:gems/ruby/0",
+    "mmorpg:gems/ruby/0"
+  ],
+  "result": {
+    "id": "mmorpg:gems/ruby/1",
+    "count": 1
+  }
+}

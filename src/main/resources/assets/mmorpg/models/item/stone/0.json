@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:item/generated",
+  "parent": "item/generated",
   "textures": {
-    "layer0": "mmorpg:items/stone/0"
+    "layer0": "mmorpg:item/stone/0"
   }
 }

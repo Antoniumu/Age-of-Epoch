@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "mmorpg:material/meat/3"
+  ],
+  "result": {
+    "id": "mmorpg:material/meat/2",
+    "count": 1
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "dex",
+  "mods": [
+    {
+      "max": 15.0,
+      "min": 5.0,
+      "stat": "dexterity",
+      "type": "PERCENT"
+    }
+  ]
+}

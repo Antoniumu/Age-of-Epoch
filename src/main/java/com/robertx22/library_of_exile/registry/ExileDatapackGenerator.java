@@ -1,41 +1,46 @@
 package com.robertx22.library_of_exile.registry;
 
-import com.robertx22.forge_compat.data.DataProvider;
-import com.robertx22.forge_compat.data.HashCache;
 import com.robertx22.library_of_exile.registry.serialization.ISerializable;
+import com.robertx22.library_of_exile.registry.util.ExileRegistryUtil;
+import net.minecraft.data.CachedOutput;
+import net.minecraft.data.DataProvider;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
-public class ExileDatapackGenerator<T extends IGUID & ISerializable<T>> extends BaseDatapackGenerator<T> {
+public class ExileDatapackGenerator<T extends IGUID & ISerializable<T>> extends BaseDatapackGenerator<T> implements DataProvider {
     String modid;
+
 
     public ExileDatapackGenerator(String modid, List<T> list, String category) {
         super(list, category);
         this.modid = modid;
+
     }
 
-    @Override
-    public void run() {
-        generateAll(cache);
-    }
 
     public Path resolve(Path path, T object) {
         return path.resolve(
-            "data/" + modid + "/" + category + "/" + object.datapackFolder() + object.getFileName()
-                .replaceAll(":", "_") +
-                ".json");
+                "data/" + modid + "/" + category + "/" + object.datapackFolder() + object.getFileName()
+                        .replaceAll(":", "_") +
+                        ".json");
     }
 
-    protected void generateAll(HashCache cache) {
+    protected CompletableFuture<?> generateAll(CachedOutput cache) {
 
         try {
             Path path = gameDirPath();
 
             for (T entry : list) {
 
+                if (entry instanceof ExileRegistry er) {
+                    if (!ExileRegistryUtil.MODID_TO_GENERATE_DATA.test(er.getRegistrationInfo().modid)) {
+                        continue;
+                    }
+                }
                 if (!entry.shouldGenerateJson()) {
                     continue;
                 }
@@ -43,11 +48,11 @@ public class ExileDatapackGenerator<T extends IGUID & ISerializable<T>> extends 
                 Path target = movePath(resolve(path, entry));
 
                 target = Paths.get(target.toString()
-                    .replace("\\.\\", "\\"));
+                        .replace("\\.\\", "\\"));
 
                 try {
-                    DataProvider.save(GSON, cache, entry.toJson(), target);
-                } catch (IOException e) {
+                    DataProvider.saveStable(cache, entry.toJson(), target);
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -55,5 +60,16 @@ public class ExileDatapackGenerator<T extends IGUID & ISerializable<T>> extends 
             e.printStackTrace();
         }
 
+        return CompletableFuture.completedFuture(Optional.empty()); // todo..??
+    }
+
+    @Override
+    public CompletableFuture<?> run(CachedOutput pOutput) {
+        return generateAll(pOutput);
+    }
+
+    @Override
+    public String getName() {
+        return this.category;
     }
 }

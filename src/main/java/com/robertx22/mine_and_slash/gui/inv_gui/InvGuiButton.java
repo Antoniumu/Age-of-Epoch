@@ -1,0 +1,89 @@
+package com.robertx22.mine_and_slash.gui.inv_gui;
+
+import com.robertx22.library_of_exile.main.Packets;
+import com.robertx22.library_of_exile.utils.TextUTIL;
+import com.robertx22.mine_and_slash.mmorpg.SlashRef;
+import com.robertx22.mine_and_slash.uncommon.utilityclasses.ClientOnly;
+import com.robertx22.mine_and_slash.vanilla_mc.packets.InvGuiPacket;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import com.robertx22.forge_compat.client.ImageButton;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class InvGuiButton extends ImageButton {
+
+    static Identifier TEX = SlashRef.guiId("inv_gui.png");
+
+    public static int BUTTON_SIZE_X = 18;
+    public static int BUTTON_SIZE_Y = 18;
+
+    Minecraft mc = Minecraft.getInstance();
+    GuiItemData data;
+
+
+    public InvGuiButton(GuiItemData data, int xPos, int yPos) {
+        super(xPos, yPos, BUTTON_SIZE_X, BUTTON_SIZE_Y, 0, 0, BUTTON_SIZE_Y, TEX, (button) -> {
+            if (!data.isEmpty()) {
+                Packets.sendToServer(new InvGuiPacket(data));
+                data.getAction().clientAction(ClientOnly.getPlayer(), data);
+            }
+
+        });
+        this.data = data;
+
+    }
+
+    @Override
+    protected ClientTooltipPositioner createTooltipPositioner() {
+        return DefaultTooltipPositioner.INSTANCE;
+    }
+
+    public void renderLegacyUnused(GuiGraphicsExtractor gui, int mouseX, int mouseY, float delta) {
+        if (data.isEmpty()) {
+            return;
+        }
+
+        setModTooltip();
+
+
+        super.extractWidgetRenderState(gui, mouseX, mouseY, delta);
+
+    }
+
+    @Override
+    public void extractWidgetRenderState(GuiGraphicsExtractor gui, int pMouseX, int pMouseY, float pPartialTick) {
+
+
+        if (data.getAction().getBackGroundIcon() != null) {
+            com.robertx22.forge_compat.client.RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            com.robertx22.forge_compat.client.GuiBlitHelper.blit(gui, data.getAction().getBackGroundIcon(), getX() + 1, getY() + 1, 16, 16, 16, 16, 16, 16);
+        }
+        com.robertx22.forge_compat.client.RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        com.robertx22.forge_compat.client.GuiBlitHelper.blit(gui, data.getAction().getIcon(), getX() + 2, getY() + 1, 16, 16, 16, 16, 16, 16);
+
+    }
+
+    public void setModTooltip() {
+
+        List<Component> tooltip = new ArrayList<>();
+
+
+        for (Object c : data.getAction().getTooltip(mc.player)) {
+            tooltip.add((Component) c);
+        }
+
+
+        this.setTooltip(Tooltip.create(TextUTIL.mergeList(tooltip)));
+
+
+    }
+
+
+}

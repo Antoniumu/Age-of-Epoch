@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": "minecraft:diamond",
+    "Y": "minecraft:stick"
+  },
+  "pattern": [
+    "XXX",
+    "XXX",
+    " Y "
+  ],
+  "result": {
+    "id": "mmorpg:currency/extract_rune",
+    "count": 3
+  }
+}

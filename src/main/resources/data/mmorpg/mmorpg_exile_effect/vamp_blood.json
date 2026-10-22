@@ -1,0 +1,24 @@
+{
+  "id": "vamp_blood",
+  "max_stacks": 1,
+  "mc_stats": [],
+  "one_of_a_kind_id": "",
+  "spell_tags": {
+    "tags": []
+  },
+  "stacks_affect_stats": true,
+  "stats": [
+    {
+      "max": 5.0,
+      "min": 2.0,
+      "stat": "lifesteal",
+      "type": "FLAT"
+    }
+  ],
+  "tags": {
+    "tags": [
+      "positive"
+    ]
+  },
+  "type": "beneficial"
+}

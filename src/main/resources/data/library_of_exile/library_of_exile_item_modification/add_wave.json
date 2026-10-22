@@ -1,0 +1,8 @@
+{
+  "data": {
+    "waves": 1
+  },
+  "id": "add_wave",
+  "serializer": "add_obelisk_wave",
+  "weight": 1000
+}

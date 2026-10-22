@@ -2,12 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "M": "minecraft:iron_ingot"
+    "X": "minecraft:iron_ingot"
   },
   "pattern": [
-    "MMM",
-    "M M",
-    "MMM"
+    "XXX",
+    "X X",
+    " X "
   ],
   "result": {
     "id": "mmorpg:jewelry/necklace/iron",

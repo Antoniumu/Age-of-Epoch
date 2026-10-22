@@ -1,6 +1,6 @@
 package com.robertx22.age_of_exile.guides;
 
-import com.robertx22.age_of_exile.saveclasses.PointData;
+import com.robertx22.mine_and_slash.saveclasses.PointData;
 import net.minecraft.ChatFormatting;
 
 import java.util.ArrayList;

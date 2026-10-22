@@ -89,6 +89,7 @@ public class ForgeConfigSpec {
             return new ConfigValue<>(path(name), defaultValue, values);
         }
 
+        public <T> ConfigValue<List<? extends T>> defineList(String path, java.util.function.Supplier<List<? extends T>> defaultSupplier, java.util.function.Predicate<Object> elementValidator) { return defineList(path, defaultSupplier.get(), elementValidator); }
         public <T> ConfigValue<List<? extends T>> defineList(String name, List<? extends T> defaultValue, Predicate<Object> elementValidator) {
             return new ConfigValue<>(path(name), defaultValue, values);
         }

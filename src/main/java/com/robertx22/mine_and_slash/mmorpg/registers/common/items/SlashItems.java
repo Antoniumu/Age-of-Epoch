@@ -1,0 +1,168 @@
+package com.robertx22.mine_and_slash.mmorpg.registers.common.items;
+
+import com.robertx22.library_of_exile.database.relic.relic_type.RelicItem;
+import com.robertx22.library_of_exile.deferred.RegObj;
+import com.robertx22.mine_and_slash.aoe_data.database.exile_effects.adders.ModEffects;
+import com.robertx22.mine_and_slash.aoe_data.database.stats.base.EffectCtx;
+import com.robertx22.mine_and_slash.capability.player.BackpackItem;
+import com.robertx22.mine_and_slash.database.data.game_balance_config.PlayerPointsType;
+import com.robertx22.mine_and_slash.database.data.loot_chest.base.LootChestItem;
+import com.robertx22.mine_and_slash.database.data.omen.OmenItem;
+import com.robertx22.mine_and_slash.database.data.profession.all.Professions;
+import com.robertx22.mine_and_slash.database.data.profession.items.DestroyOutputMegaExpItem;
+import com.robertx22.mine_and_slash.database.data.profession.items.StationBlockItem;
+import com.robertx22.mine_and_slash.mmorpg.registers.common.SlashBlocks;
+import com.robertx22.mine_and_slash.mmorpg.registers.deferred_wrapper.Def;
+import com.robertx22.mine_and_slash.saveclasses.stat_soul.StatSoulItem;
+import com.robertx22.mine_and_slash.uncommon.coins.Coin;
+import com.robertx22.mine_and_slash.uncommon.coins.CoinItem;
+import com.robertx22.mine_and_slash.vanilla_mc.items.*;
+import com.robertx22.mine_and_slash.vanilla_mc.items.crates.gem_crate.LootCrateItem;
+import com.robertx22.mine_and_slash.vanilla_mc.items.gearitems.VanillaMaterial;
+import com.robertx22.mine_and_slash.vanilla_mc.items.gearitems.bases.DodgeOffhandItem;
+import com.robertx22.mine_and_slash.vanilla_mc.items.gearitems.bases.TomeItem;
+import com.robertx22.mine_and_slash.vanilla_mc.items.gearitems.baubles.ItemNecklace;
+import com.robertx22.mine_and_slash.vanilla_mc.items.gearitems.baubles.ItemRing;
+import com.robertx22.mine_and_slash.vanilla_mc.items.gearitems.weapons.StaffWeapon;
+import com.robertx22.mine_and_slash.vanilla_mc.items.misc.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+public class SlashItems {
+
+    public static void init() {
+
+        for (Coin coin : Coin.ALL.values()) {
+            coin(coin);
+        }
+
+        station(Professions.COOKING, () -> Items.BREAD);
+        station(Professions.SALVAGING, () -> Items.IRON_INGOT);
+        station(Professions.GEAR_CRAFTING, () -> Items.GOLD_INGOT);
+        station(Professions.ALCHEMY, () -> Items.IRON_NUGGET);
+        station(Professions.INFUSING, () -> Items.PAPER);
+
+        for (EffectCtx eff : ModEffects.ALL) {
+            EFFECT_DISPLAY.put(eff.GUID(), Def.item(() -> new EffectDisplayItem(), "mob_effects/" + eff.GUID()));
+        }
+
+        for (PlayerPointsType type : PlayerPointsType.values()) {
+            FULL_RESET_POTIONS.put(type, Def.item(() -> new ResetPotion(type, ResetPotion.ResetType.FULL_RESET), "potions/" + ResetPotion.ResetType.FULL_RESET.id + "_" + type.GUID()));
+            RESET_POINT_POTIONS.put(type, Def.item(() -> new ResetPotion(type, ResetPotion.ResetType.ADD_POINTS), "potions/" + ResetPotion.ResetType.ADD_POINTS.id + "_" + type.GUID()));
+        }
+
+
+    }
+
+    private static void coin(Coin coin) {
+        var c = Def.item(() -> new CoinItem(coin), "coin/" + coin.id);
+        COINS.put(coin.id, c);
+    }
+
+    public static HashMap<String, RegObj<CoinItem>> COINS = new HashMap<>();
+
+    private static void station(String pro, Supplier<Item> sup) {
+        STATIONS.put(pro, Def.item(pro + "_station", () -> new StationBlockItem(SlashBlocks.STATIONS.get(pro).get(), new Item.Properties(), sup)));
+
+    }
+
+
+    public static HashMap<PlayerPointsType, RegObj<Item>> FULL_RESET_POTIONS = new HashMap<>();
+    public static HashMap<PlayerPointsType, RegObj<Item>> RESET_POINT_POTIONS = new HashMap<>();
+
+    public static RegObj<CommonGearProducerItem> COMMON_SOUL_PRODUCE = Def.item(() -> new CommonGearProducerItem(), "common_soul_produce");
+
+    public static RegObj<StatSoulItem> STAT_SOUL = Def.item(() -> new StatSoulItem(), "stat_soul");
+    public static RegObj<Item> INVISIBLE_ICON = Def.item(() -> new Item(new Item.Properties()), "invisible_item");
+    public static RegObj<Item> TEST_GEN = Def.item(() -> new Item(new Item.Properties()), "test_gen");
+    public static RegObj<Item> MASTER_BAG = Def.item(() -> new BackpackItem(), "master_bag");
+    public static RegObj<Item> OMEN = Def.item(() -> new OmenItem(VanillaMaterial.DIAMOND), "omen");
+    public static RegObj<Item> MAP_CREATOR = Def.item(() -> new MapCreator(), "map_creator");
+    public static RegObj<LootCrateItem> LOOT_CRATE = Def.item(() -> new LootCrateItem(), "loot_crate/default");
+    public static RegObj<RelicItem> RELIC = Def.item(() -> new RelicItem(), "relic");
+
+
+    public static RegObj<ProjectileItem> FIREBALL = Def.item(() -> new ProjectileItem("fireball"), "projectile/" + "fireball");
+    public static RegObj<ProjectileItem> SNOWBALL = Def.item(() -> new ProjectileItem("snowball"), "projectile/" + "snowball");
+    public static RegObj<ProjectileItem> SLIMEBALL = Def.item(() -> new ProjectileItem("slimeball"), "projectile/" + "slimeball");
+    public static RegObj<ProjectileItem> LIGHTNING = Def.item(() -> new ProjectileItem("lightning"), "projectile/" + "lightning");
+    public static RegObj<ProjectileItem> BOOMERANG = Def.item(() -> new ProjectileItem("boomerang"), "projectile/" + "boomerang");
+
+
+    public static RegObj<LootTableItem> LOOT_TABLE_ITEM = Def.item(() -> new LootTableItem(), "loot_table_chest");
+
+    public static RegObj<Item> NEWBIE_GEAR_BAG = Def.item(() -> new ItemNewbieGearBag(), "newbie_gear_bag");
+    public static RegObj<Item> DESTROY_OUTPUT = Def.item(() -> new DestroyOutputMegaExpItem("Disassembler's Learning Method"), "destroy_output_exp");
+    //   public static RegObj<Item> SALVAGE_HAMMER = Def.item(() -> new SalvageHammerItem(), "salvage_hammer");
+    //  public static RegObj<Item> SOCKET_EXTRACTOR = Def.item(() -> new GemExtractorItem(), "socket_extractor");
+    public static RegObj<Item> SOUL_CLEANER = Def.item(() -> new SoulCleanerItem(), "soul_cleaner");
+
+
+    /*
+    public static RegObj<Item> INFUSED_IRON = Def.item(() -> new SimpleMatItem(), "mat/infused_iron");
+    public static RegObj<Item> CRYSTALLIZED_ESSENCE = Def.item(() -> new SimpleMatItem(), "mat/crystallized_essence");
+    public static RegObj<Item> GOLDEN_ORB = Def.item(() -> new SimpleMatItem(), "mat/golden_orb");
+    public static RegObj<Item> MYTHIC_ESSENCE = Def.item(() -> new SimpleMatItem(), "mat/mythic_essence");
+     */
+
+    public static RegObj<LootChestItem> CURRENCY_CHEST = Def.item(() -> new LootChestItem("Currency"), "chest/currency");
+
+    public static RegObj<Item> DEX_JEWEL = Def.item(() -> new JewelItem(new Item.Properties().stacksTo(1)), "jewel/dex");
+    public static RegObj<Item> STR_JEWEL = Def.item(() -> new JewelItem(new Item.Properties().stacksTo(1)), "jewel/str");
+    public static RegObj<Item> INT_JEWEL = Def.item(() -> new JewelItem(new Item.Properties().stacksTo(1)), "jewel/int");
+    public static RegObj<Item> WATCHER_EYE_JEWEL = Def.item(() -> new JewelItem(new Item.Properties().stacksTo(1)), "jewel/watcher_eye");
+    public static RegObj<Item> CRAFTED_UNIQUE_JEWEL = Def.item(() -> new CraftedUniqueJewelItem(), "jewel/unique_crafted");
+
+
+    public static HashMap<String, RegObj<Item>> STATIONS = new HashMap<>();
+    public static HashMap<String, RegObj<Item>> EFFECT_DISPLAY = new HashMap<>();
+
+    //  public static RegObj<Item> CLOTH_SET = Def.item(() -> new TagForceSoulItem(() -> Items.PAPER, TagForceSoulItem.AvailableTags.CLOTH), "cloth_set");
+    // public static RegObj<Item> LEATHER_SET = Def.item(() -> new TagForceSoulItem(() -> Items.LEATHER, TagForceSoulItem.AvailableTags.LEATHER), "leather_set");
+    //public static RegObj<Item> PLATE_SET = Def.item(() -> new TagForceSoulItem(() -> Items.COPPER_INGOT, TagForceSoulItem.AvailableTags.PLATE), "plate_set");
+
+
+    public static class GearItems {
+
+        public static void init() {
+        }
+
+        public static HashMap<VanillaMaterial, RegObj<Item>> STAFFS = of("weapon/staff/",
+                Arrays.asList(VanillaMaterial.DIAMOND, VanillaMaterial.IRON, VanillaMaterial.WOOD),
+                x -> new StaffWeapon(x));
+
+        public static HashMap<VanillaMaterial, RegObj<Item>> RINGS = of("jewelry/ring/", Arrays.asList(
+                VanillaMaterial.DIAMOND, VanillaMaterial.GOLD, VanillaMaterial.IRON
+        ), x -> new ItemRing(x));
+
+        public static HashMap<VanillaMaterial, RegObj<Item>> NECKLACES = of("jewelry/necklace/", Arrays.asList(
+                VanillaMaterial.DIAMOND, VanillaMaterial.GOLD, VanillaMaterial.IRON
+        ), x -> new ItemNecklace(x));
+
+        public static HashMap<VanillaMaterial, RegObj<Item>> TOMES = of("offhand/tome/", Arrays.asList(
+                VanillaMaterial.DIAMOND, VanillaMaterial.WOOD, VanillaMaterial.IRON
+        ), x -> new TomeItem());
+
+        public static HashMap<VanillaMaterial, RegObj<Item>> ENERGY_DODGE_OFFHAND = of("offhand/dodge/", Arrays.asList(
+                VanillaMaterial.DIAMOND, VanillaMaterial.WOOD, VanillaMaterial.IRON
+        ), x -> new DodgeOffhandItem());
+
+        private static HashMap<VanillaMaterial, RegObj<Item>> of(String idprefix, List<VanillaMaterial> list, Function<VanillaMaterial, Item> item) {
+            HashMap<VanillaMaterial, RegObj<Item>> map = new HashMap<VanillaMaterial, RegObj<Item>>();
+            list
+                    .forEach(x -> {
+                        map.put(x, Def.item(idprefix + x.id, () -> item.apply(x)));
+                    });
+            return map;
+        }
+
+
+    }
+
+}

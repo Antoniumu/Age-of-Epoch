@@ -1,0 +1,36 @@
+{
+  "id": "shred",
+  "max_stacks": 3,
+  "mc_stats": [],
+  "one_of_a_kind_id": "",
+  "spell_tags": {
+    "tags": []
+  },
+  "stacks_affect_stats": true,
+  "stats": [
+    {
+      "max": -25.0,
+      "min": -10.0,
+      "stat": "armor",
+      "type": "FLAT"
+    },
+    {
+      "max": -3.0,
+      "min": -1.0,
+      "stat": "elemental_resist",
+      "type": "FLAT"
+    },
+    {
+      "max": -5.0,
+      "min": -2.0,
+      "stat": "armor",
+      "type": "PERCENT"
+    }
+  ],
+  "tags": {
+    "tags": [
+      "negative"
+    ]
+  },
+  "type": "negative"
+}

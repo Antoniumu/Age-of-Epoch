@@ -1,6 +1,7 @@
 package com.robertx22.age_of_exile.mixins;
 
-import com.robertx22.age_of_exile.uncommon.utilityclasses.WorldUtils;
+import com.robertx22.age_of_exile.simulation.SimulationManager;
+import com.robertx22.library_of_exile.dimension.MapDimensions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -18,10 +19,9 @@ public class DisableMobSpawnsInDungeon {
 
     @Inject(method = "checkSpawnRules", at = @At(value = "HEAD"), cancellable = true)
     private static <T extends Entity> void disableCanSpawn(EntityType<T> type, ServerLevelAccessor serverWorldAccess, EntitySpawnReason spawnReason, BlockPos pos, RandomSource random, CallbackInfoReturnable<Boolean> ci) {
-        if (WorldUtils.isMapWorldClass(serverWorldAccess) || WorldUtils.isSimulationWorld(serverWorldAccess)) {
-            if (spawnReason == EntitySpawnReason.NATURAL) {
-                ci.setReturnValue(false);
-            }
+        if ((MapDimensions.isMap(serverWorldAccess.getLevel()) || SimulationManager.isSimulationLevel(serverWorldAccess))
+            && spawnReason == EntitySpawnReason.NATURAL) {
+            ci.setReturnValue(false);
         }
     }
 }

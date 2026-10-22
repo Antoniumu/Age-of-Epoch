@@ -1,0 +1,9 @@
+{
+  "id": "rare",
+  "loot_table": "library_of_exile:chests/tier_2_dungeon",
+  "mns_loot_multi": 1.5,
+  "perc_to_unlock": 25,
+  "reward_chests": 2,
+  "text_format": "AQUA",
+  "tier": 2
+}

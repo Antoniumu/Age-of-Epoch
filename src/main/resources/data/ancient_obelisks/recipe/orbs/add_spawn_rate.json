@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": "minecraft:diamond",
+    "Y": "ancient_obelisks:ancient_greed"
+  },
+  "pattern": [
+    "YYY",
+    "YXY",
+    "YYY"
+  ],
+  "result": {
+    "id": "ancient_obelisks:orbs/add_spawn_rate",
+    "count": 8
+  }
+}

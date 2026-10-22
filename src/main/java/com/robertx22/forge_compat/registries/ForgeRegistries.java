@@ -28,4 +28,24 @@ public class ForgeRegistries {
     public static final Registry<RecipeSerializer<?>> RECIPE_SERIALIZERS = BuiltInRegistries.RECIPE_SERIALIZER;
     public static final Registry<MobEffect> POTIONS = BuiltInRegistries.MOB_EFFECT;
     public static final Registry<StructureType<?>> STRUCTURE_FEATURES = BuiltInRegistries.STRUCTURE_TYPE;
+
+    public static final Registry<BlockEntityType<?>> BLOCK_ENTITY_TYPES = BuiltInRegistries.BLOCK_ENTITY_TYPE;
+    public static final Registry<EntityType<?>> ENTITY_TYPES = BuiltInRegistries.ENTITY_TYPE;
+    public static final Registry<MenuType<?>> MENU_TYPES = BuiltInRegistries.MENU;
+    public static final Registry<MobEffect> MOB_EFFECTS = BuiltInRegistries.MOB_EFFECT;
+    public static final Registry<net.minecraft.world.entity.ai.attributes.Attribute> ATTRIBUTES = BuiltInRegistries.ATTRIBUTE;
+    public static final Registry<net.minecraft.world.item.enchantment.Enchantment> ENCHANTMENTS = null;
+    public static final Registry<net.minecraft.world.level.chunk.status.ChunkStatus> CHUNK_STATUS = BuiltInRegistries.CHUNK_STATUS;
+    public static final Registry<net.minecraft.core.particles.ParticleType<?>> PARTICLES = BuiltInRegistries.PARTICLE_TYPE;
+
+    public static final class Keys {
+        public static final net.minecraft.resources.ResourceKey<Registry<Item>> ITEMS = net.minecraft.core.registries.Registries.ITEM;
+        public static final net.minecraft.resources.ResourceKey<Registry<Block>> BLOCKS = net.minecraft.core.registries.Registries.BLOCK;
+        public static final net.minecraft.resources.ResourceKey<Registry<EntityType<?>>> ENTITY_TYPES = net.minecraft.core.registries.Registries.ENTITY_TYPE;
+        public static final net.minecraft.resources.ResourceKey<Registry<BlockEntityType<?>>> BLOCK_ENTITY_TYPES = net.minecraft.core.registries.Registries.BLOCK_ENTITY_TYPE;
+        public static final net.minecraft.resources.ResourceKey<Registry<SoundEvent>> SOUND_EVENTS = net.minecraft.core.registries.Registries.SOUND_EVENT;
+        public static final net.minecraft.resources.ResourceKey<Registry<MobEffect>> MOB_EFFECTS = net.minecraft.core.registries.Registries.MOB_EFFECT;
+        public static final net.minecraft.resources.ResourceKey<Registry<MenuType<?>>> MENU_TYPES = net.minecraft.core.registries.Registries.MENU;
+        public static final net.minecraft.resources.ResourceKey<Registry<ParticleType<?>>> PARTICLE_TYPES = net.minecraft.core.registries.Registries.PARTICLE_TYPE;
+    }
 }

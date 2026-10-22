@@ -1,0 +1,1049 @@
+{
+  "attack_type_is_bonus_dmg": {
+    "id": "attack_type_is_bonus_dmg",
+    "ser": "string_matches",
+    "string_id": "bonus_dmg",
+    "string_key": "attack_type"
+  },
+  "attack_type_is_dot": {
+    "id": "attack_type_is_dot",
+    "ser": "string_matches",
+    "string_id": "dot",
+    "string_key": "attack_type"
+  },
+  "attack_type_is_dot_is_false": {
+    "id": "attack_type_is_dot_is_false",
+    "is": false,
+    "ser": "string_matches",
+    "string_id": "dot",
+    "string_key": "attack_type"
+  },
+  "attack_type_is_hit": {
+    "id": "attack_type_is_hit",
+    "ser": "string_matches",
+    "string_id": "hit",
+    "string_key": "attack_type"
+  },
+  "effect_has_tag_agony": {
+    "effect": "agony",
+    "id": "effect_has_tag_agony",
+    "ser": "is_effect"
+  },
+  "effect_has_tag_charge": {
+    "id": "effect_has_tag_charge",
+    "ser": "effect_has_tag",
+    "tag": "charge"
+  },
+  "effect_has_tag_curse": {
+    "id": "effect_has_tag_curse",
+    "ser": "effect_has_tag",
+    "tag": "curse"
+  },
+  "effect_has_tag_defensive": {
+    "id": "effect_has_tag_defensive",
+    "ser": "effect_has_tag",
+    "tag": "defensive"
+  },
+  "effect_has_tag_despair": {
+    "effect": "despair",
+    "id": "effect_has_tag_despair",
+    "ser": "is_effect"
+  },
+  "effect_has_tag_food": {
+    "id": "effect_has_tag_food",
+    "ser": "effect_has_tag",
+    "tag": "food"
+  },
+  "effect_has_tag_golem": {
+    "id": "effect_has_tag_golem",
+    "ser": "effect_has_tag",
+    "tag": "golem"
+  },
+  "effect_has_tag_heal_over_time": {
+    "id": "effect_has_tag_heal_over_time",
+    "ser": "effect_has_tag",
+    "tag": "heal_over_time"
+  },
+  "effect_has_tag_immobilizing": {
+    "id": "effect_has_tag_immobilizing",
+    "ser": "effect_has_tag",
+    "tag": "immobilizing"
+  },
+  "effect_has_tag_negative": {
+    "id": "effect_has_tag_negative",
+    "ser": "effect_has_tag",
+    "tag": "negative"
+  },
+  "effect_has_tag_offensive": {
+    "id": "effect_has_tag_offensive",
+    "ser": "effect_has_tag",
+    "tag": "offensive"
+  },
+  "effect_has_tag_positive": {
+    "id": "effect_has_tag_positive",
+    "ser": "effect_has_tag",
+    "tag": "positive"
+  },
+  "effect_has_tag_slow": {
+    "effect": "slow",
+    "id": "effect_has_tag_slow",
+    "ser": "is_effect"
+  },
+  "effect_has_tag_song": {
+    "id": "effect_has_tag_song",
+    "ser": "effect_has_tag",
+    "tag": "song"
+  },
+  "effect_has_tag_weak": {
+    "effect": "weak",
+    "id": "effect_has_tag_weak",
+    "ser": "is_effect"
+  },
+  "effect_has_tag_wounds": {
+    "effect": "wounds",
+    "id": "effect_has_tag_wounds",
+    "ser": "is_effect"
+  },
+  "ele_match_stat": {
+    "id": "ele_match_stat",
+    "ser": "ele_match_stat"
+  },
+  "is_ailment_bleed": {
+    "ailment": "bleed",
+    "id": "is_ailment_bleed",
+    "ser": "is_ailment"
+  },
+  "is_ailment_burn": {
+    "ailment": "burn",
+    "id": "is_ailment_burn",
+    "ser": "is_ailment"
+  },
+  "is_ailment_electrify": {
+    "ailment": "electrify",
+    "id": "is_ailment_electrify",
+    "ser": "is_ailment"
+  },
+  "is_ailment_freeze": {
+    "ailment": "freeze",
+    "id": "is_ailment_freeze",
+    "ser": "is_ailment"
+  },
+  "is_ailment_poison": {
+    "ailment": "poison",
+    "id": "is_ailment_poison",
+    "ser": "is_ailment"
+  },
+  "is_attack_or_spell_attack": {
+    "id": "is_attack_or_spell_attack",
+    "ifs": [
+      "attack_type_is_hit"
+    ],
+    "ser": "either_is_true"
+  },
+  "is_axe_wep_type": {
+    "id": "is_axe_wep_type",
+    "ser": "wep_type_match",
+    "type": "axe"
+  },
+  "is_blood_explosion_not_on_cd": {
+    "cd_id": "blood_explosion",
+    "id": "is_blood_explosion_not_on_cd",
+    "ser": "is_not_on_cd"
+  },
+  "is_bone_shatter_not_on_cd": {
+    "cd_id": "bone_shatter",
+    "id": "is_bone_shatter_not_on_cd",
+    "ser": "is_not_on_cd"
+  },
+  "is_bow_wep_type": {
+    "id": "is_bow_wep_type",
+    "ser": "wep_type_match",
+    "type": "bow"
+  },
+  "is_crit_true": {
+    "bool_id": "crit",
+    "id": "is_crit_true",
+    "ser": "is_bool_true"
+  },
+  "is_crit_true_is_false": {
+    "bool_id": "crit",
+    "id": "is_crit_true_is_false",
+    "is": false,
+    "ser": "is_bool_true"
+  },
+  "is_crossbow_wep_type": {
+    "id": "is_crossbow_wep_type",
+    "ser": "wep_type_match",
+    "type": "crossbow"
+  },
+  "is_day": {
+    "id": "is_day",
+    "ser": "is_day"
+  },
+  "is_day_is_false": {
+    "id": "is_day_is_false",
+    "is": false,
+    "ser": "is_day"
+  },
+  "is_elemental_damage": {
+    "id": "is_elemental_damage",
+    "ser": "is_elemental_damage"
+  },
+  "is_hit_or_bonus": {
+    "id": "is_hit_or_bonus",
+    "ifs": [
+      "attack_type_is_hit",
+      "attack_type_is_bonus_dmg"
+    ],
+    "ser": "either_is_true"
+  },
+  "is_hp_or_ms_restore": {
+    "id": "is_hp_or_ms_restore",
+    "ifs": [
+      "resource_type_is_health",
+      "resource_type_is_magic_shield"
+    ],
+    "ser": "either_is_true"
+  },
+  "is_ignite_explosion_not_on_cd": {
+    "cd_id": "ignite_explosion",
+    "id": "is_ignite_explosion_not_on_cd",
+    "ser": "is_not_on_cd"
+  },
+  "is_in_combat": {
+    "id": "is_in_combat",
+    "ser": "is_in_combat"
+  },
+  "is_in_combat_is_false": {
+    "id": "is_in_combat_is_false",
+    "is": false,
+    "ser": "is_in_combat"
+  },
+  "is_is_basic_atk_true": {
+    "bool_id": "is_basic_atk",
+    "id": "is_is_basic_atk_true",
+    "ser": "is_bool_true"
+  },
+  "is_is_basic_atk_true_is_false": {
+    "bool_id": "is_basic_atk",
+    "id": "is_is_basic_atk_true_is_false",
+    "is": false,
+    "ser": "is_bool_true"
+  },
+  "is_is_blocked_true": {
+    "bool_id": "is_blocked",
+    "id": "is_is_blocked_true",
+    "ser": "is_bool_true"
+  },
+  "is_is_blocked_true_is_false": {
+    "bool_id": "is_blocked",
+    "id": "is_is_blocked_true_is_false",
+    "is": false,
+    "ser": "is_bool_true"
+  },
+  "is_is_bonus_element_damage_true_is_false": {
+    "bool_id": "is_bonus_element_damage",
+    "id": "is_is_bonus_element_damage_true_is_false",
+    "is": false,
+    "ser": "is_bool_true"
+  },
+  "is_is_dodged_true": {
+    "bool_id": "is_dodged",
+    "id": "is_is_dodged_true",
+    "ser": "is_bool_true"
+  },
+  "is_is_dodged_true_is_false": {
+    "bool_id": "is_dodged",
+    "id": "is_is_dodged_true_is_false",
+    "is": false,
+    "ser": "is_bool_true"
+  },
+  "is_is_summon_attack_true": {
+    "bool_id": "is_summon_attack",
+    "id": "is_is_summon_attack_true",
+    "ser": "is_bool_true"
+  },
+  "is_is_summon_attack_true_is_false": {
+    "bool_id": "is_summon_attack",
+    "id": "is_is_summon_attack_true_is_false",
+    "is": false,
+    "ser": "is_bool_true"
+  },
+  "is_profane_explosion_not_on_cd": {
+    "cd_id": "profane_explosion",
+    "id": "is_profane_explosion_not_on_cd",
+    "ser": "is_not_on_cd"
+  },
+  "is_projectile": {
+    "id": "is_projectile",
+    "ifs": [
+      "spell_has_tag_projectile",
+      "is_ranged_weapon"
+    ],
+    "ser": "either_is_true"
+  },
+  "is_ranged_weapon": {
+    "id": "is_ranged_weapon",
+    "ser": "is_ranged_weapon"
+  },
+  "is_source_low_hp": {
+    "id": "is_source_low_hp",
+    "perc": 30,
+    "ser": "is_hp_under",
+    "side": "Source"
+  },
+  "is_source_max_essence_of_frost": {
+    "effect": "essence_of_frost",
+    "id": "is_source_max_essence_of_frost",
+    "ser": "is_mns_effect_max_charges",
+    "side": "Source"
+  },
+  "is_spell": {
+    "id": "is_spell",
+    "ser": "is_spell"
+  },
+  "is_staff_wep_type": {
+    "id": "is_staff_wep_type",
+    "ser": "wep_type_match",
+    "type": "staff"
+  },
+  "is_sword_wep_type": {
+    "id": "is_sword_wep_type",
+    "ser": "wep_type_match",
+    "type": "sword"
+  },
+  "is_target_cursed": {
+    "id": "is_target_cursed",
+    "ser": "is_target_cursed"
+  },
+  "is_target_low": {
+    "check_combined_hp_and_ms": true,
+    "id": "is_target_low",
+    "perc": 30,
+    "ser": "is_target_low",
+    "side": "Target"
+  },
+  "is_target_low_hp": {
+    "id": "is_target_low_hp",
+    "perc": 30,
+    "ser": "is_hp_under",
+    "side": "Target"
+  },
+  "is_target_low_magic_shield": {
+    "id": "is_target_low_magic_shield",
+    "perc": 30,
+    "ser": "is_ms_under",
+    "side": "Target"
+  },
+  "is_target_near_full_hp": {
+    "id": "is_target_near_full_hp",
+    "perc": 70,
+    "ser": "is_hp_above",
+    "side": "Target"
+  },
+  "is_target_under_bone_chill": {
+    "effect": "bone_chill",
+    "id": "is_target_under_bone_chill",
+    "ser": "is_under_exile_effect",
+    "side": "Target"
+  },
+  "is_trident_wep_type": {
+    "id": "is_trident_wep_type",
+    "ser": "wep_type_match",
+    "type": "trident"
+  },
+  "is_undead": {
+    "id": "is_undead",
+    "ser": "is_undead"
+  },
+  "is_undead_is_false": {
+    "id": "is_undead_is_false",
+    "is": false,
+    "ser": "is_undead"
+  },
+  "random_roll": {
+    "id": "random_roll",
+    "ser": "random_roll"
+  },
+  "resource_type_is_blood": {
+    "id": "resource_type_is_blood",
+    "ser": "string_matches",
+    "string_id": "blood",
+    "string_key": "resource_type"
+  },
+  "resource_type_is_energy": {
+    "id": "resource_type_is_energy",
+    "ser": "string_matches",
+    "string_id": "energy",
+    "string_key": "resource_type"
+  },
+  "resource_type_is_health": {
+    "id": "resource_type_is_health",
+    "ser": "string_matches",
+    "string_id": "health",
+    "string_key": "resource_type"
+  },
+  "resource_type_is_magic_shield": {
+    "id": "resource_type_is_magic_shield",
+    "ser": "string_matches",
+    "string_id": "magic_shield",
+    "string_key": "resource_type"
+  },
+  "resource_type_is_mana": {
+    "id": "resource_type_is_mana",
+    "ser": "string_matches",
+    "string_id": "mana",
+    "string_key": "resource_type"
+  },
+  "restore_type_is_food": {
+    "id": "restore_type_is_food",
+    "ser": "string_matches",
+    "string_id": "food",
+    "string_key": "restore_type"
+  },
+  "restore_type_is_heal": {
+    "id": "restore_type_is_heal",
+    "ser": "string_matches",
+    "string_id": "heal",
+    "string_key": "restore_type"
+  },
+  "restore_type_is_leech": {
+    "id": "restore_type_is_leech",
+    "ser": "string_matches",
+    "string_id": "leech",
+    "string_key": "restore_type"
+  },
+  "restore_type_is_potion": {
+    "id": "restore_type_is_potion",
+    "ser": "string_matches",
+    "string_id": "potion",
+    "string_key": "restore_type"
+  },
+  "restore_type_is_regen": {
+    "id": "restore_type_is_regen",
+    "ser": "string_matches",
+    "string_id": "regen",
+    "string_key": "restore_type"
+  },
+  "source_is_target": {
+    "id": "source_is_target",
+    "ser": "source_is_target"
+  },
+  "spell_has_resource_type_cost_blood": {
+    "id": "spell_has_resource_type_cost_blood",
+    "ser": "spell_has_resource_type_cost",
+    "type": "blood"
+  },
+  "spell_has_resource_type_cost_energy": {
+    "id": "spell_has_resource_type_cost_energy",
+    "ser": "spell_has_resource_type_cost",
+    "type": "energy"
+  },
+  "spell_has_resource_type_cost_health": {
+    "id": "spell_has_resource_type_cost_health",
+    "ser": "spell_has_resource_type_cost",
+    "type": "health"
+  },
+  "spell_has_resource_type_cost_magic_shield": {
+    "id": "spell_has_resource_type_cost_magic_shield",
+    "ser": "spell_has_resource_type_cost",
+    "type": "magic_shield"
+  },
+  "spell_has_resource_type_cost_mana": {
+    "id": "spell_has_resource_type_cost_mana",
+    "ser": "spell_has_resource_type_cost",
+    "type": "mana"
+  },
+  "spell_has_tag_area": {
+    "id": "spell_has_tag_area",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "area"
+    }
+  },
+  "spell_has_tag_area_is_false": {
+    "id": "spell_has_tag_area_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "area"
+    }
+  },
+  "spell_has_tag_arrow": {
+    "id": "spell_has_tag_arrow",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "arrow"
+    }
+  },
+  "spell_has_tag_arrow_is_false": {
+    "id": "spell_has_tag_arrow_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "arrow"
+    }
+  },
+  "spell_has_tag_beast": {
+    "id": "spell_has_tag_beast",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "beast"
+    }
+  },
+  "spell_has_tag_beast_is_false": {
+    "id": "spell_has_tag_beast_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "beast"
+    }
+  },
+  "spell_has_tag_buff": {
+    "id": "spell_has_tag_buff",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "buff"
+    }
+  },
+  "spell_has_tag_buff_is_false": {
+    "id": "spell_has_tag_buff_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "buff"
+    }
+  },
+  "spell_has_tag_cast_speed_to_cooldown": {
+    "id": "spell_has_tag_cast_speed_to_cooldown",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "cast_speed_to_cooldown"
+    }
+  },
+  "spell_has_tag_cast_speed_to_cooldown_is_false": {
+    "id": "spell_has_tag_cast_speed_to_cooldown_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "cast_speed_to_cooldown"
+    }
+  },
+  "spell_has_tag_chaining": {
+    "id": "spell_has_tag_chaining",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "chaining"
+    }
+  },
+  "spell_has_tag_chaining_is_false": {
+    "id": "spell_has_tag_chaining_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "chaining"
+    }
+  },
+  "spell_has_tag_chaos": {
+    "id": "spell_has_tag_chaos",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "chaos"
+    }
+  },
+  "spell_has_tag_chaos_is_false": {
+    "id": "spell_has_tag_chaos_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "chaos"
+    }
+  },
+  "spell_has_tag_cold": {
+    "id": "spell_has_tag_cold",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "cold"
+    }
+  },
+  "spell_has_tag_cold_is_false": {
+    "id": "spell_has_tag_cold_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "cold"
+    }
+  },
+  "spell_has_tag_curse": {
+    "id": "spell_has_tag_curse",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "curse"
+    }
+  },
+  "spell_has_tag_curse_is_false": {
+    "id": "spell_has_tag_curse_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "curse"
+    }
+  },
+  "spell_has_tag_damage": {
+    "id": "spell_has_tag_damage",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "damage"
+    }
+  },
+  "spell_has_tag_damage_is_false": {
+    "id": "spell_has_tag_damage_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "damage"
+    }
+  },
+  "spell_has_tag_fire": {
+    "id": "spell_has_tag_fire",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "fire"
+    }
+  },
+  "spell_has_tag_fire_is_false": {
+    "id": "spell_has_tag_fire_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "fire"
+    }
+  },
+  "spell_has_tag_golem": {
+    "id": "spell_has_tag_golem",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "golem"
+    }
+  },
+  "spell_has_tag_golem_is_false": {
+    "id": "spell_has_tag_golem_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "golem"
+    }
+  },
+  "spell_has_tag_has_pet_ability": {
+    "id": "spell_has_tag_has_pet_ability",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "has_pet_ability"
+    }
+  },
+  "spell_has_tag_has_pet_ability_is_false": {
+    "id": "spell_has_tag_has_pet_ability_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "has_pet_ability"
+    }
+  },
+  "spell_has_tag_heal": {
+    "id": "spell_has_tag_heal",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "heal"
+    }
+  },
+  "spell_has_tag_heal_is_false": {
+    "id": "spell_has_tag_heal_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "heal"
+    }
+  },
+  "spell_has_tag_lightning": {
+    "id": "spell_has_tag_lightning",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "lightning"
+    }
+  },
+  "spell_has_tag_lightning_is_false": {
+    "id": "spell_has_tag_lightning_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "lightning"
+    }
+  },
+  "spell_has_tag_magic": {
+    "id": "spell_has_tag_magic",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "magic"
+    }
+  },
+  "spell_has_tag_magic_is_false": {
+    "id": "spell_has_tag_magic_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "magic"
+    }
+  },
+  "spell_has_tag_melee": {
+    "id": "spell_has_tag_melee",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "melee"
+    }
+  },
+  "spell_has_tag_melee_is_false": {
+    "id": "spell_has_tag_melee_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "melee"
+    }
+  },
+  "spell_has_tag_minion_explode": {
+    "id": "spell_has_tag_minion_explode",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "minion_explode"
+    }
+  },
+  "spell_has_tag_minion_explode_is_false": {
+    "id": "spell_has_tag_minion_explode_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "minion_explode"
+    }
+  },
+  "spell_has_tag_missile": {
+    "id": "spell_has_tag_missile",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "missile"
+    }
+  },
+  "spell_has_tag_missile_is_false": {
+    "id": "spell_has_tag_missile_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "missile"
+    }
+  },
+  "spell_has_tag_movement": {
+    "id": "spell_has_tag_movement",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "movement"
+    }
+  },
+  "spell_has_tag_movement_is_false": {
+    "id": "spell_has_tag_movement_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "movement"
+    }
+  },
+  "spell_has_tag_not_affected_by_cast_speed": {
+    "id": "spell_has_tag_not_affected_by_cast_speed",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "not_affected_by_cast_speed"
+    }
+  },
+  "spell_has_tag_not_affected_by_cast_speed_is_false": {
+    "id": "spell_has_tag_not_affected_by_cast_speed_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "not_affected_by_cast_speed"
+    }
+  },
+  "spell_has_tag_physical": {
+    "id": "spell_has_tag_physical",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "physical"
+    }
+  },
+  "spell_has_tag_physical_is_false": {
+    "id": "spell_has_tag_physical_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "physical"
+    }
+  },
+  "spell_has_tag_projectile": {
+    "id": "spell_has_tag_projectile",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "projectile"
+    }
+  },
+  "spell_has_tag_projectile_is_false": {
+    "id": "spell_has_tag_projectile_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "projectile"
+    }
+  },
+  "spell_has_tag_ranged": {
+    "id": "spell_has_tag_ranged",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "ranged"
+    }
+  },
+  "spell_has_tag_ranged_is_false": {
+    "id": "spell_has_tag_ranged_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "ranged"
+    }
+  },
+  "spell_has_tag_rejuvenate": {
+    "id": "spell_has_tag_rejuvenate",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "rejuvenate"
+    }
+  },
+  "spell_has_tag_rejuvenate_is_false": {
+    "id": "spell_has_tag_rejuvenate_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "rejuvenate"
+    }
+  },
+  "spell_has_tag_self_damage": {
+    "id": "spell_has_tag_self_damage",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "self_damage"
+    }
+  },
+  "spell_has_tag_self_damage_is_false": {
+    "id": "spell_has_tag_self_damage_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "self_damage"
+    }
+  },
+  "spell_has_tag_shatter": {
+    "id": "spell_has_tag_shatter",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "shatter"
+    }
+  },
+  "spell_has_tag_shatter_is_false": {
+    "id": "spell_has_tag_shatter_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "shatter"
+    }
+  },
+  "spell_has_tag_shield": {
+    "id": "spell_has_tag_shield",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "shield"
+    }
+  },
+  "spell_has_tag_shield_is_false": {
+    "id": "spell_has_tag_shield_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "shield"
+    }
+  },
+  "spell_has_tag_shout": {
+    "id": "spell_has_tag_shout",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "shout"
+    }
+  },
+  "spell_has_tag_shout_is_false": {
+    "id": "spell_has_tag_shout_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "shout"
+    }
+  },
+  "spell_has_tag_song": {
+    "id": "spell_has_tag_song",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "song"
+    }
+  },
+  "spell_has_tag_song_is_false": {
+    "id": "spell_has_tag_song_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "song"
+    }
+  },
+  "spell_has_tag_summon": {
+    "id": "spell_has_tag_summon",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "summon"
+    }
+  },
+  "spell_has_tag_summon_is_false": {
+    "id": "spell_has_tag_summon_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "summon"
+    }
+  },
+  "spell_has_tag_thorns": {
+    "id": "spell_has_tag_thorns",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "thorns"
+    }
+  },
+  "spell_has_tag_thorns_is_false": {
+    "id": "spell_has_tag_thorns_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "thorns"
+    }
+  },
+  "spell_has_tag_totem": {
+    "id": "spell_has_tag_totem",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "totem"
+    }
+  },
+  "spell_has_tag_totem_is_false": {
+    "id": "spell_has_tag_totem_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "totem"
+    }
+  },
+  "spell_has_tag_trap": {
+    "id": "spell_has_tag_trap",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "trap"
+    }
+  },
+  "spell_has_tag_trap_is_false": {
+    "id": "spell_has_tag_trap_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "trap"
+    }
+  },
+  "spell_has_tag_weapon_skill": {
+    "id": "spell_has_tag_weapon_skill",
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "weapon_skill"
+    }
+  },
+  "spell_has_tag_weapon_skill_is_false": {
+    "id": "spell_has_tag_weapon_skill_is_false",
+    "is": false,
+    "ser": "spell_has_tag",
+    "tag": {
+      "id": "weapon_skill"
+    }
+  },
+  "style_is_int_is_false": {
+    "id": "style_is_int_is_false",
+    "is": false,
+    "ser": "string_matches",
+    "string_id": "int",
+    "string_key": "style"
+  },
+  "summon_type_is_beast": {
+    "id": "summon_type_is_beast",
+    "ser": "string_matches",
+    "string_id": "beast",
+    "string_key": "summon_type"
+  },
+  "summon_type_is_golem": {
+    "id": "summon_type_is_golem",
+    "ser": "string_matches",
+    "string_id": "golem",
+    "string_key": "summon_type"
+  },
+  "summon_type_is_none": {
+    "id": "summon_type_is_none",
+    "ser": "string_matches",
+    "string_id": "none",
+    "string_key": "summon_type"
+  },
+  "summon_type_is_spider": {
+    "id": "summon_type_is_spider",
+    "ser": "string_matches",
+    "string_id": "spider",
+    "string_key": "summon_type"
+  },
+  "summon_type_is_total": {
+    "id": "summon_type_is_total",
+    "ser": "string_matches",
+    "string_id": "total",
+    "string_key": "summon_type"
+  },
+  "summon_type_is_undead": {
+    "id": "summon_type_is_undead",
+    "ser": "string_matches",
+    "string_id": "undead",
+    "string_key": "summon_type"
+  },
+  "threat_gen_type_is_deal_dmg": {
+    "id": "threat_gen_type_is_deal_dmg",
+    "ser": "string_matches",
+    "string_id": "deal_dmg",
+    "string_key": "threat_gen_type"
+  },
+  "threat_gen_type_is_heal": {
+    "id": "threat_gen_type_is_heal",
+    "ser": "string_matches",
+    "string_id": "heal",
+    "string_key": "threat_gen_type"
+  },
+  "threat_gen_type_is_spell": {
+    "id": "threat_gen_type_is_spell",
+    "ser": "string_matches",
+    "string_id": "spell",
+    "string_key": "threat_gen_type"
+  },
+  "threat_gen_type_is_take_dmg": {
+    "id": "threat_gen_type_is_take_dmg",
+    "ser": "string_matches",
+    "string_id": "take_dmg",
+    "string_key": "threat_gen_type"
+  }
+}

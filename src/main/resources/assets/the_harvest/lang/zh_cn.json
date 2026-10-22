@@ -1,0 +1,26 @@
+{
+	"block.the_harvest.harvest": "丰收",
+	"block.the_harvest.harvest_spawner": "丰收生成方块",
+	"item.the_harvest.chaotic": "纠缠之混沌宝石",
+	"item.the_harvest.harvest": "丰收",
+	"item.the_harvest.harvest_map": "\u00A7a丰收地图",
+	"item.the_harvest.lucid": "纠缠之明澈宝石",
+	"item.the_harvest.primal": "纠缠之原始宝石",
+	"item.the_harvest.relic": "\u00A7a地牢奇物",
+	"library_of_exile.league.harvest": "丰收",
+	"library_of_exile.relic_stat.bonus_harvest_chance": "%1$s 的几率丰收传送门数量增加1",
+	"library_of_exile.relic_stat.double_harvest_chance": "%1$s 包含2x丰收传送门几率",
+	"library_of_exile.relic_stat.harvest_content": "地图中%1$s的几率包含丰收传送门",
+	"library_of_exile.relic_stat.mobs_spawned": "%1$s 增长怪物生成",
+	"library_of_exile.relic_type.the_harvest": "丰收奇物",
+	"the_harvest.words.creative_tab": "丰收",
+	"the_harvest.words.harvest_end": "藤蔓暂时缩小了……",
+	"the_harvest.words.harvest_time_remaining": "还剩 %1$s 秒",
+	"the_harvest.words.last_wave": "最后一波！",
+	"the_harvest.words.map_item_use_info": "右击丰收方块即可启动",
+	"the_harvest.words.new_map_given": "丰收赐予了你一张地图，你可以使用这张地图来启动丰收地图。",
+	"the_harvest.words.relic_map": "\u2605奇物",
+	"the_harvest.words.relic_maps_only": "这一丰收传送门只接受奇物地图",
+	"the_harvest.words.spawn_rate": "怪物刷新几率：%1$s%%"
+
+}

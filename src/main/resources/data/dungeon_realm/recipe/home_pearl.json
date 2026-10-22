@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "Y": "minecraft:iron_ingot",
+    "X": "minecraft:gold_ingot"
+  },
+  "pattern": [
+    " X ",
+    "YYY",
+    "YYY"
+  ],
+  "result": {
+    "id": "dungeon_realm:home_pearl",
+    "count": 16
+  }
+}

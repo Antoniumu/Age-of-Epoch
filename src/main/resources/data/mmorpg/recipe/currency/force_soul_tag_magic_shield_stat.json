@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": "minecraft:paper",
+    "Y": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    "X",
+    "Y"
+  ],
+  "result": {
+    "id": "mmorpg:currency/force_soul_tag_magic_shield_stat",
+    "count": 1
+  }
+}

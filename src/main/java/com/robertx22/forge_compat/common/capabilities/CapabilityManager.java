@@ -84,4 +84,11 @@ public class CapabilityManager {
         AttachCapabilitiesEvent<?> event = new AttachCapabilitiesEvent<>(object);
         com.robertx22.forge_compat.common.MinecraftForge.EVENT_BUS.post(event);
     }
+
+    public static <T> Capability<T> get(CapabilityToken<T> token) {
+        Class<T> type = token.getRawType();
+        Capability<T> existing = INSTANCE.getCapability(type);
+        if (existing != null) return existing;
+        return INSTANCE.register(type, null, () -> null);
+    }
 }

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:stone_bricks",
+    "minecraft:stone_bricks",
+    "minecraft:stone_bricks",
+    "minecraft:raw_iron"
+  ],
+  "result": {
+    "id": "mmorpg:soul_cleaner",
+    "count": 1
+  }
+}

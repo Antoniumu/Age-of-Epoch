@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "the_harvest:item/harvest_map"
+  }
+}

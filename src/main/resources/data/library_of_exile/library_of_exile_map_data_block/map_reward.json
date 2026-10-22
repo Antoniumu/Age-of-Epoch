@@ -1,0 +1,8 @@
+{
+  "aliases": [],
+  "id": "map_reward",
+  "process_on": "REWARD_ROOM",
+  "serializer": "map_reward",
+  "tags": [],
+  "weight": 1000
+}

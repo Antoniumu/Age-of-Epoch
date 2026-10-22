@@ -1,16 +1,15 @@
 package com.robertx22.library_of_exile.utils;
 
-import net.minecraft.world.phys.Vec3;
-
-import java.util.Random;
+import net.minecraft.util.RandomSource;
+import org.joml.Vector3d;
 
 public class GeometryUtils {
 
-    public static Vec3 getRandomHorizontalPosInRadiusCircle(Vec3 pos, float radius) {
+    public static Vector3d getRandomHorizontalPosInRadiusCircle(Vector3d pos, float radius) {
         return getRandomHorizontalPosInRadiusCircle(pos.x, pos.y, pos.z, radius);
     }
 
-    public static Vec3 getRandomHorizontalPosInRadiusCircle(double x, double y, double z, float radius) {
+    public static Vector3d getRandomHorizontalPosInRadiusCircle(double x, double y, double z, float radius) {
 
         double u = Math.random();
         double v = Math.random();
@@ -20,48 +19,34 @@ public class GeometryUtils {
         double ypos = y;
         double zpos = z + (radius * Math.cos(phi));
 
-        return new Vec3(xpos, ypos, zpos);
+        return new Vector3d(xpos, ypos, zpos);
 
     }
 
-    public static Vec3 getRandomPosInRadiusCircle(Vec3 p, float radius) {
+    public static Vector3d getRandomPosInRadiusCircle(Vector3d p, float radius) {
         return getRandomPosInRadiusCircle(p.x, p.y, p.z, radius);
     }
 
-    public static Vec3 randomMotion(Vec3 p, net.minecraft.util.RandomSource rand) {
-        double x = rand.nextDouble() - 0.5D * 2;
-        double y = -rand.nextDouble();
-        double z = rand.nextDouble() - 0.5D * 2;
-        return new Vec3(x, y, z);
-    }
-
-    public static Vec3 randomPos(Vec3 p, net.minecraft.util.RandomSource rand, float radius) {
-        double x = p.x + rand.nextDouble() * radius - 0.5D * radius;
-        double y = p.y + rand.nextDouble() * radius - 0.5D * radius;
-        double z = p.z + rand.nextDouble() * radius - 0.5D * radius;
-        return new Vec3(x, y, z);
-    }
-
-    public static Vec3 randomMotion(Vec3 p, Random rand) {
+    public static Vector3d randomMotion(Vector3d p, RandomSource rand) {
 
         double x = rand.nextDouble() - 0.5D * 2;
         double y = -rand.nextDouble();
         double z = rand.nextDouble() - 0.5D * 2;
 
-        return new Vec3(x, y, z);
+        return new Vector3d(x, y, z);
     }
 
-    public static Vec3 randomPos(Vec3 p, Random rand, float radius) {
+    public static Vector3d randomPos(Vector3d p, RandomSource rand, float radius) {
 
         double x = p.x + rand.nextDouble() * radius - 0.5D * radius;
         double y = p.y + rand.nextDouble() * radius - 0.5D * radius;
         double z = p.z + rand.nextDouble() * radius - 0.5D * radius;
 
-        return new Vec3(x, y, z);
+        return new Vector3d(x, y, z);
 
     }
 
-    public static Vec3 getRandomPosInRadiusCircle(double x, double y, double z, float radius) {
+    public static Vector3d getRandomPosInRadiusCircle(double x, double y, double z, float radius) {
 
         double u = Math.random();
         double v = Math.random();
@@ -71,7 +56,7 @@ public class GeometryUtils {
         double ypos = y + (radius * Math.sin(phi) * Math.sin(theta));
         double zpos = z + (radius * Math.cos(phi));
 
-        return new Vec3(xpos, ypos, zpos);
+        return new Vector3d(xpos, ypos, zpos);
 
     }
 

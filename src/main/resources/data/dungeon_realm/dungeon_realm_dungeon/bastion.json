@@ -1,0 +1,55 @@
+{
+  "author": "",
+  "data": {
+    "curved_hallways": [
+      "barracks",
+      "basic0",
+      "parkour",
+      "rings",
+      "winding"
+    ],
+    "ends": [
+      "basalt_boss",
+      "boss",
+      "prison",
+      "tree_farm"
+    ],
+    "entrances": [
+      "lava_fountains",
+      "nether_wastes"
+    ],
+    "folder": "bastion",
+    "four_ways": [
+      "4pillars",
+      "basic3",
+      "lava_basins",
+      "pillar1",
+      "treasure_room"
+    ],
+    "mob_list_tag_check": {
+      "checks": [
+        {
+          "check": "HAS_ANY",
+          "tags": [
+            "map"
+          ]
+        }
+      ]
+    },
+    "straight_hallways": [
+      "basic1",
+      "bridge",
+      "furnaces",
+      "ores",
+      "pillar0"
+    ],
+    "triple_hallway": [
+      "basalt0",
+      "basalt1",
+      "underbridge",
+      "woodcutter"
+    ]
+  },
+  "id": "bastion",
+  "weight": 2000
+}

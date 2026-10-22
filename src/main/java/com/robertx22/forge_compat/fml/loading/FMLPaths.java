@@ -21,7 +21,7 @@ public enum FMLPaths implements Supplier<Path> {
                 return Paths.get("logs");
             case GAMEDIR:
             default:
-                return Paths.get(".");
+                return Paths.get("run");
         }
     }
 }

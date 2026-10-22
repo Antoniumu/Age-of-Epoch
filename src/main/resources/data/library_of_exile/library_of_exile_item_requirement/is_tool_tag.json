@@ -1,0 +1,7 @@
+{
+  "id": "is_tool_tag",
+  "itemTagId": "minecraft:swords",
+  "serializer": "vanilla_condition",
+  "vanillaCondition": {},
+  "weight": 1000
+}

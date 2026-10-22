@@ -1,0 +1,67 @@
+{
+  "id": "taunt_stance",
+  "max_stacks": 1,
+  "mc_stats": [],
+  "one_of_a_kind_id": "",
+  "spell": {
+    "entity_components": {
+      "default_entity_name": [
+        {
+          "acts": [
+            {
+              "map": {
+                "aggro": "AGGRO",
+                "value_calculation": "taunt"
+              },
+              "type": "aggro"
+            }
+          ],
+          "en_preds": [],
+          "ifs": [
+            {
+              "map": {
+                "tick_rate": 60.0
+              },
+              "type": "x_ticks_condition"
+            }
+          ],
+          "targets": [
+            {
+              "map": {
+                "en_predicate": "enemies",
+                "radius": 10.0,
+                "selection_type": "RADIUS"
+              },
+              "type": "aoe"
+            }
+          ]
+        }
+      ]
+    },
+    "on_cast": []
+  },
+  "spell_tags": {
+    "tags": []
+  },
+  "stacks_affect_stats": true,
+  "stats": [
+    {
+      "max": 25.0,
+      "min": 10.0,
+      "stat": "threat_generated",
+      "type": "FLAT"
+    },
+    {
+      "max": 50.0,
+      "min": 25.0,
+      "stat": "more_threat_on_take_dmg",
+      "type": "FLAT"
+    }
+  ],
+  "tags": {
+    "tags": [
+      "positive"
+    ]
+  },
+  "type": "beneficial"
+}

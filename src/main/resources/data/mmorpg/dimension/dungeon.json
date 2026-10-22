@@ -6,12 +6,7 @@
       "biome": "minecraft:the_void",
       "features": false,
       "lakes": false,
-      "layers": [
-        {
-          "block": "minecraft:stone",
-          "height": 220
-        }
-      ],
+      "layers": [],
       "structure_overrides": []
     }
   }

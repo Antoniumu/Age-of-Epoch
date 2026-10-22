@@ -1,0 +1,27 @@
+{
+  "id": "green",
+  "mobs": [
+    {
+      "mob_id": "minecraft:pig",
+      "weight": 50
+    },
+    {
+      "mob_id": "minecraft:pig",
+      "weight": 300
+    },
+    {
+      "mob_id": "minecraft:pig",
+      "weight": 50
+    },
+    {
+      "mob_id": "minecraft:pig",
+      "weight": 1000
+    }
+  ],
+  "tags": {
+    "tags": [
+      "has_flying_mobs"
+    ]
+  },
+  "weight": 1000
+}

@@ -1,0 +1,10 @@
+{
+  "aliases": [
+    "chest_chance"
+  ],
+  "id": "chance_chest",
+  "process_on": "NORMAL",
+  "serializer": "chance_chest",
+  "tags": [],
+  "weight": 1000
+}

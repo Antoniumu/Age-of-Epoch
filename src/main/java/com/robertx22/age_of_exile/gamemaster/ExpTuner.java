@@ -1,7 +1,7 @@
 package com.robertx22.age_of_exile.gamemaster;
 
-import com.robertx22.age_of_exile.database.data.game_balance_config.GameBalanceConfig;
-import com.robertx22.age_of_exile.uncommon.utilityclasses.LevelUtils;
+import com.robertx22.mine_and_slash.database.data.game_balance_config.GameBalanceConfig;
+import com.robertx22.mine_and_slash.uncommon.utilityclasses.LevelUtils;
 
 import java.util.HashMap;
 import java.util.Map;

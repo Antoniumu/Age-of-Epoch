@@ -1,7 +1,7 @@
 package com.robertx22.world_of_exile.world_gen;
 
 import com.mojang.serialization.MapCodec;
-import com.robertx22.age_of_exile.mmorpg.registers.common.SlashBlocks;
+import com.robertx22.mine_and_slash.mmorpg.registers.common.SlashBlocks;
 import com.robertx22.world_of_exile.tower.TowerTheme;
 import com.robertx22.world_of_exile.tower.TowerThemes;
 import net.minecraft.core.BlockPos;

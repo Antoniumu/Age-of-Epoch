@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "mmorpg:material/mining/3"
+  ],
+  "result": {
+    "id": "mmorpg:material/mining/2",
+    "count": 1
+  }
+}

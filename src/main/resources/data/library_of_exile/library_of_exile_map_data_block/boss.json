@@ -1,0 +1,12 @@
+{
+  "aliases": [
+    "boss_mob"
+  ],
+  "id": "boss",
+  "process_on": "NORMAL",
+  "serializer": "boss",
+  "tags": [
+    "can_spawn_league"
+  ],
+  "weight": 1000
+}

@@ -1,0 +1,23 @@
+{
+  "always_do_item_mods": [
+    {
+      "id": "add_tier",
+      "weight": 1
+    }
+  ],
+  "id": "add_tier",
+  "item_id": "ancient_obelisks:orbs/add_tier",
+  "item_type_requirement": [
+    "is_obelisk_map"
+  ],
+  "pick_one_item_mod": [],
+  "potential": {
+    "needs_potential": true,
+    "potential_cost": 0
+  },
+  "rar": "rare",
+  "req": [
+    "is_less_than_max_tier"
+  ],
+  "weight": 0
+}

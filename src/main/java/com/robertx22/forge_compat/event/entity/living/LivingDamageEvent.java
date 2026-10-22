@@ -27,4 +27,6 @@ public class LivingDamageEvent extends Event {
 
     @Override
     public boolean isCancelable() { return true; }
+
+    public float amount() { return getAmount(); }
 }

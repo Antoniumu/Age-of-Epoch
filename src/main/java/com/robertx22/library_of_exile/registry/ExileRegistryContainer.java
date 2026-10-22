@@ -1,20 +1,19 @@
 package com.robertx22.library_of_exile.registry;
 
 import com.google.common.base.Preconditions;
+import com.robertx22.library_of_exile.events.base.ExileEvents;
+import com.robertx22.library_of_exile.main.ExileLog;
+import com.robertx22.library_of_exile.main.LibraryOfExile;
 import com.robertx22.library_of_exile.main.Packets;
 import com.robertx22.library_of_exile.packets.registry.EfficientRegistryPacket;
-import com.robertx22.library_of_exile.packets.registry.RegistryPacket;
-import com.robertx22.library_of_exile.registry.serialization.IByteBuf;
-import com.robertx22.library_of_exile.registry.serialization.ISerializable;
+import com.robertx22.library_of_exile.registry.register_info.ExileRegistrationInfo;
+import com.robertx22.library_of_exile.registry.register_info.RegistrationInfoData;
 import com.robertx22.library_of_exile.utils.RandomUtils;
 import io.netty.buffer.Unpooled;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -24,6 +23,8 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
     private List<String> accessorErrosAletedFor = new ArrayList<>();
     private List<String> emptyRegistries = new ArrayList<>();
 
+    public HashMap<String, RegistrationInfoData> registrationInfo = new HashMap<>();
+
     private boolean dataPacksAreRegistered = true;
 
     boolean isDatapack = false;
@@ -31,6 +32,7 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
     public ExileRegistryContainer<C> setIsDatapack() {
         this.dataPacksAreRegistered = false;
         this.isDatapack = true;
+
         return this;
     }
 
@@ -43,80 +45,42 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
     List<C> fromDatapacks = null;
     FriendlyByteBuf cachedBuf = null;
 
-    public boolean isDatapack() {
-        return this.isDatapack;
-    }
 
     public void sendUpdatePacket(ServerPlayer player) {
-        if (type.ser == null || !this.isDatapack) {
+        if (type.ser == null) {
             return;
         }
-        try {
-            if (cachedBuf == null) {
-                onAllDatapacksLoaded();
-            }
-            if (cachedBuf == null) {
-                return;
-            }
-
-            if (type.ser instanceof IByteBuf) {
-                Packets.sendToClient(player, new EfficientRegistryPacket(this.type, getList()));
-            } else {
-                ListStringData data = new ListStringData(getFromDatapacks()
-                    .stream()
-                    .map(x -> ((ISerializable) x).toJsonString())
-                    .collect(Collectors.toList()));
-                Packets.sendToClient(player, new RegistryPacket(this.type, data));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (LibraryOfExile.DISABLE_DATABASE_DATAPACK_FEATURE) {
+            return;
         }
-    }
 
-    public void registerSerializables() {
-        if (!serializables.isEmpty()) {
-            serializables.forEach(map::putIfAbsent);
-        }
+        Preconditions.checkNotNull(cachedBuf, type.id + " error, cachedbuf is null!!!");
+
+        Packets.sendToClient(player, new EfficientRegistryPacket(this.type, Database.getRegistry(type).getFromDatapacks()));
+
     }
 
     public void onAllDatapacksLoaded() {
-        registerSerializables();
-
-        if (!this.isDatapack || type.ser == null) {
-            return;
-        }
 
         fromDatapacks = null;
         getFromDatapacks();
 
         if (fromDatapacks != null && !fromDatapacks.isEmpty()) {
-            try {
-                FriendlyByteBuf tmpBuf = new FriendlyByteBuf(Unpooled.buffer());
-                // save the packetbytebuf, this should save at least 0.1 sec for each time anyone logs in.
-                // SUPER important for big mmorpg servers!
-                if (type.ser instanceof IByteBuf) {
-                    new EfficientRegistryPacket(type, Database.getRegistry(type)
-                        .getFromDatapacks()).saveToData(tmpBuf);
-                } else {
-                    ListStringData data = new ListStringData(getFromDatapacks()
-                        .stream()
-                        .map(x -> ((ISerializable) x).toJsonString())
-                        .collect(Collectors.toList()));
-                    new RegistryPacket(type, data).saveToData(tmpBuf);
-                }
-                Preconditions.checkNotNull(tmpBuf);
-                cachedBuf = tmpBuf;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            cachedBuf = new FriendlyByteBuf(Unpooled.buffer());
+            // save the packetbytebuf, this should save at least 0.1 sec for each time anyone logs in.
+            // SUPER important for big mmorpg servers!
+
+            new EfficientRegistryPacket(type, Database.getRegistry(type).getFromDatapacks()).saveToData(cachedBuf);
+
+            Preconditions.checkNotNull(cachedBuf);
         }
     }
 
     public List<C> getFromDatapacks() {
         if (fromDatapacks == null) {// cache this cus it's called every login
             fromDatapacks = getList().stream()
-                .filter(x -> x.isFromDatapack())
-                .collect(Collectors.toList());
+                    .filter(x -> x.isFromDatapack())
+                    .collect(Collectors.toList());
         }
         return fromDatapacks;
     }
@@ -127,7 +91,7 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
 
     public static void logRegistryError(String text) {
         try {
-            throw new Exception("[Age of Exile Registry Error]: " + text);
+            throw new Exception("[Mine and Slash Registry Error]: " + text);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -135,10 +99,10 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
     }
 
     private ExileRegistryType type;
-    private C emptyDefault;
+    private String emptyDefault;
 
     public C getDefault() {
-        return this.emptyDefault;
+        return this.map.getOrDefault(emptyDefault, null);
     }
 
     private HashMap<String, C> map = new HashMap<>();
@@ -152,7 +116,9 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
     }
 
     public void unRegister(ExileRegistry entry) {
-        map.remove(entry.GUID());
+        if (map.containsKey(entry.GUID())) {
+            map.remove(entry.GUID());
+        }
     }
 
     public ExileRegistryContainer dontErrorMissingEntriesOnAccess() {
@@ -166,21 +132,18 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
     }
 
     public int getSize() {
-        return !map.isEmpty() ? map.size() : serializables.size();
+        return map.size();
     }
 
     public boolean isRegistrationDone() {
         return getSize() > 0;
     }
 
-    public ExileRegistryContainer(ExileRegistryType type, C emptyDefault) {
+    public ExileRegistryContainer(ExileRegistryType type, String emptyDefault) {
         this.type = type;
         this.emptyDefault = emptyDefault;
     }
 
-    public void setDefault(C c) {
-        this.emptyDefault = c;
-    }
 
     private void tryLogEmptyRegistry() {
         if (errorIfEmpty) {
@@ -190,7 +153,7 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
 
                         emptyRegistries.add(this.type.id);
                         logRegistryError(
-                            "Exile Registry of type: " + this.type.toString() + " is empty, this is really bad!");
+                                "Exile Registry of type: " + this.type.toString() + " is empty, this is really bad!");
                     }
                 }
             }
@@ -205,9 +168,6 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
     }
 
     public List<C> getList() {
-        if (map.isEmpty() && !serializables.isEmpty()) {
-            registerSerializables();
-        }
         if (!map.isEmpty()) {
             return new ArrayList<C>(map.values());
         }
@@ -223,11 +183,6 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
         return list;
     }
 
-    public void unregisterAllEntriesFromDatapacks() {
-        map.entrySet()
-            .removeIf(x -> x.getValue()
-                .isFromDatapack());
-    }
 
     public C getFromSerializables(DataGenKey<C> key) {
         return this.serializables.get(key.GUID());
@@ -243,10 +198,10 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
 
         if (map.isEmpty() && serializables.isEmpty()) {
             if (!accessedEarly) {
-                System.out.print("\n Accessed slash registry earlier than datapacks are loaded, returning empty: " + guid);
+                throw new RuntimeException("\n Accessed slash registry earlier than datapacks are loaded, returning empty: " + guid + "\n");
             }
             accessedEarly = true;
-            return this.emptyDefault;
+            return this.getDefault();
         }
 
         tryLogEmptyRegistry();
@@ -262,7 +217,7 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
             if (logMissingEntryOnAccess) {
                 if (accessorErrosAletedFor.contains(guid) == false) {
                     logRegistryError(
-                        "GUID Error: " + guid + " of type: " + type.id + " doesn't exist. This is either " + "a removed/renamed old registry, or robertx22 forgot to include it in an " + "update" + ".");
+                            "GUID Error: " + guid + " of type: " + type.id + " doesn't exist. This is either " + "a removed/renamed old registry, or robertx22 forgot to include it in an " + "update" + ".");
                     accessorErrosAletedFor.add(guid);
                 }
             }
@@ -281,13 +236,17 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
     // just do gearsThatCanDoThis.and() .or() etc. if need multiple
     public List<C> getFiltered(Predicate<C> predicate) {
         return this.getList()
-            .stream()
-            .filter(predicate)
-            .collect(Collectors.toList());
+                .stream()
+                .filter(predicate)
+                .collect(Collectors.toList());
     }
 
     public C random() {
         return RandomUtils.weightedRandom(this.getList());
+    }
+
+    public C random(Double randomDouble) {
+        return RandomUtils.weightedRandom(this.getList(), randomDouble);
     }
 
     public boolean isRegistered(C c) {
@@ -295,21 +254,43 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
     }
 
     public boolean isRegistered(String guid) {
-        return map.containsKey(guid) || serializables.containsKey(guid);
+        return map.containsKey(guid);
     }
 
-    public void register(C c) {
+    public Optional<C> getOptional(String guid) {
+
+        if (isRegistered(guid)) {
+            return java.util.Optional.of(get(guid));
+        }
+
+        return java.util.Optional.empty();
+    }
+
+    public boolean isExistingSeriazable(String guid) {
+        return map.containsKey(guid);
+    }
+
+
+    public void register(C c, ExileRegistrationInfo info) {
+
+        Preconditions.checkNotNull(info);
 
         if (isRegistered(c)) {
             if (registersErrorsAlertedFor.contains(c.GUID()) == false) {
                 logRegistryError("Key: " + c.GUID() + " has already been registered to: " + c.getExileRegistryType()
-                    .toString() + " registry.");
+                        .toString() + " registry.");
                 registersErrorsAlertedFor.add(c.GUID());
             }
 
         } else {
             tryLogAddition(c);
             map.put(c.GUID(), c);
+            if (!registrationInfo.containsKey(c.GUID())) {
+                registrationInfo.put(c.GUID(), new RegistrationInfoData());
+            }
+            registrationInfo.get(c.GUID()).onRegister(info);
+
+            ExileEvents.ON_REGISTER_TO_DATABASE.callEvents(new ExileEvents.OnRegisterToDatabase(c, type));
         }
 
     }
@@ -325,13 +306,13 @@ public class ExileRegistryContainer<C extends ExileRegistry> {
 
     }
 
-    public void addSerializable(C entry) {
+    public void addSerializable(C entry, ExileRegistrationInfo info) {
         if (serializables.containsKey(entry.GUID())) {
-            System.out.println("Entry of type: " + entry.getExileRegistryType().
-                id + " already exists as seriazable: " + entry.GUID());
+            ExileLog.get().warn("Entry of type: " + entry.getExileRegistryType().id + " already exists as seriazable: " + entry.GUID());
         }
         this.serializables.put(entry.GUID(), entry);
-        this.map.putIfAbsent(entry.GUID(), entry);
+        this.unRegister(entry);
+        this.register(entry, info);
 
     }
 

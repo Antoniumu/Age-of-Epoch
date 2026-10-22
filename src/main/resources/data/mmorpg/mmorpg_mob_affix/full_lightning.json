@@ -1,0 +1,27 @@
+{
+  "format": "YELLOW",
+  "icon": "",
+  "id": "full_lightning",
+  "stats": [
+    {
+      "max": 100.0,
+      "min": 100.0,
+      "stat": "phys_to_lightning",
+      "type": "FLAT"
+    },
+    {
+      "max": 50.0,
+      "min": 50.0,
+      "stat": "plus_phys_to_lightning",
+      "type": "FLAT"
+    },
+    {
+      "max": 25.0,
+      "min": 25.0,
+      "stat": "lightning_resist",
+      "type": "FLAT"
+    }
+  ],
+  "type": "suffix",
+  "weight": 0
+}

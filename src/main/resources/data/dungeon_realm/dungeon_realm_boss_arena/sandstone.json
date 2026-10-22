@@ -1,0 +1,15 @@
+{
+  "id": "sandstone",
+  "possible_bosses": [
+    "minecraft:iron_golem"
+  ],
+  "size": 2,
+  "structure": {
+    "rooms_folder": "dungeon_realm:map_boss/sandstone",
+    "size": 1,
+    "teleport_offset_x": 0,
+    "teleport_offset_y": 0,
+    "teleport_offset_z": 0
+  },
+  "weight": 1000
+}

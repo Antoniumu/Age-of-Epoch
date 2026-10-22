@@ -59,4 +59,7 @@ public class PlayerInteractEvent extends Event {
             super(player, hand, target.level(), null, target);
         }
     }
+
+    public net.minecraft.world.level.Level getLevel() { return getWorld(); }
+    public void setCancellationResult(net.minecraft.world.InteractionResult r) {}
 }

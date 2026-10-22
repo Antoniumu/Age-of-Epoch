@@ -14,4 +14,8 @@ public interface IEventBus {
     void register(Object target);
 
     boolean post(Event event);
+
+    default <T extends Event, F> void addGenericListener(Class<F> filter, java.util.function.Consumer<T> consumer) {
+        addListener(consumer);
+    }
 }

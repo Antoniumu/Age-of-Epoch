@@ -1,13 +1,13 @@
 package com.robertx22.library_of_exile.packets;
 
+import com.robertx22.library_of_exile.components.ICap;
 import com.robertx22.library_of_exile.components.PlayerCapabilities;
-import com.robertx22.library_of_exile.components.forge.IPlayerCap;
 import com.robertx22.library_of_exile.main.MyPacket;
 import com.robertx22.library_of_exile.main.Ref;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
 
 public class SyncPlayerCapToClient extends MyPacket<SyncPlayerCapToClient> {
 
@@ -20,7 +20,7 @@ public class SyncPlayerCapToClient extends MyPacket<SyncPlayerCapToClient> {
 
     public SyncPlayerCapToClient(Player player, String capid) {
         this.nbt = PlayerCapabilities.get(player, capid)
-            .saveToNBT();
+                .serializeNBT();
         this.capid = capid;
     }
 
@@ -51,9 +51,9 @@ public class SyncPlayerCapToClient extends MyPacket<SyncPlayerCapToClient> {
 
             if (player.level().isClientSide()) { // just an extra check
 
-                IPlayerCap cap = PlayerCapabilities.get(player, capid);
+                ICap cap = PlayerCapabilities.get(player, capid);
                 if (cap != null) {
-                    cap.loadFromNBT(nbt);
+                    cap.deserializeNBT(nbt);
                 }
             }
         } catch (Exception e) {

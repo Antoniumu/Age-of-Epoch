@@ -1,0 +1,238 @@
+{
+  "attached": {
+    "entity_components": {
+      "arrow": [
+        {
+          "acts": [
+            {
+              "map": {
+                "element": "Physical",
+                "value_calculation": "arrow_totem"
+              },
+              "type": "damage"
+            }
+          ],
+          "en_preds": [],
+          "ifs": [
+            {
+              "map": {},
+              "type": "on_entity_expire"
+            }
+          ],
+          "targets": [
+            {
+              "map": {
+                "en_predicate": "enemies",
+                "radius": 1.5,
+                "selection_type": "RADIUS"
+              },
+              "type": "aoe"
+            }
+          ]
+        }
+      ],
+      "block": [
+        {
+          "acts": [
+            {
+              "map": {
+                "height": 0.5,
+                "motion": "None",
+                "particle_count": 100.0,
+                "particle_type": "minecraft:crit",
+                "radius": 3.0,
+                "shape": "CIRCLE_2D_EDGE",
+                "y_rand": 0.5
+              },
+              "type": "particles_in_radius"
+            }
+          ],
+          "en_preds": [],
+          "ifs": [
+            {
+              "map": {
+                "tick_rate": 2.0
+              },
+              "type": "x_ticks_condition"
+            }
+          ],
+          "targets": []
+        },
+        {
+          "acts": [
+            {
+              "map": {
+                "entity_name": "arrow",
+                "gravity": false,
+                "item": "minecraft:air",
+                "life_ticks": 40.0,
+                "pos_source": "SOURCE_ENTITY",
+                "proj_count": 1.0,
+                "proj_en": "mmorpg:spell_arrow",
+                "proj_speed": 2.5,
+                "projectile_spread_randomness": 0.0,
+                "shoot_way": "FIND_ENEMY"
+              },
+              "type": "projectile"
+            }
+          ],
+          "en_preds": [],
+          "ifs": [
+            {
+              "map": {
+                "tick_rate": 5.0
+              },
+              "type": "x_ticks_condition"
+            }
+          ],
+          "targets": []
+        },
+        {
+          "acts": [
+            {
+              "map": {
+                "pitch": 1.0,
+                "sound": "minecraft:entity.arrow.shoot",
+                "volume": 1.0
+              },
+              "type": "sound"
+            }
+          ],
+          "en_preds": [],
+          "ifs": [
+            {
+              "map": {
+                "tick_rate": 5.0
+              },
+              "type": "x_ticks_condition"
+            }
+          ],
+          "targets": []
+        }
+      ],
+      "default_entity_name": [
+        {
+          "acts": [
+            {
+              "map": {
+                "block": "mmorpg:attack_totem",
+                "block_fall_speed": 0.0,
+                "entity_name": "block",
+                "find_surface": false,
+                "is_falling_block": false,
+                "life_ticks": 150.0
+              },
+              "type": "summon_block"
+            }
+          ],
+          "en_preds": [],
+          "ifs": [
+            {
+              "map": {},
+              "type": "on_entity_expire"
+            }
+          ],
+          "targets": []
+        }
+      ]
+    },
+    "on_cast": [
+      {
+        "acts": [
+          {
+            "map": {
+              "pitch": 1.0,
+              "sound": "minecraft:illusioner.cast.spell",
+              "volume": 1.0
+            },
+            "type": "sound"
+          }
+        ],
+        "en_preds": [],
+        "ifs": [
+          {
+            "map": {},
+            "type": "on_spell_cast"
+          }
+        ],
+        "targets": []
+      },
+      {
+        "acts": [
+          {
+            "map": {
+              "entity_name": "default_entity_name",
+              "gravity": false,
+              "height": 0.0,
+              "life_ticks": 1.0,
+              "proj_en": "mmorpg:spell_projectile"
+            },
+            "type": "summon_at_sight"
+          }
+        ],
+        "en_preds": [],
+        "ifs": [
+          {
+            "map": {},
+            "type": "on_spell_cast"
+          }
+        ],
+        "targets": []
+      }
+    ]
+  },
+  "cast_animation": {
+    "id": "steady_cast"
+  },
+  "cast_finish_animation": {
+    "id": "cast_finish"
+  },
+  "config": {
+    "aggro_radius": 1,
+    "cast_time_ticks": 0,
+    "castingWeapon": "ANY_WEAPON",
+    "charge_name": "arrow_totem",
+    "charge_regen": 600,
+    "charges": 3,
+    "cooldown_ticks": 3,
+    "ene_cost": {
+      "max": 0.0,
+      "min": 0.0
+    },
+    "imbues": 0,
+    "mana_cost": {
+      "max": 18.75,
+      "min": 25.0
+    },
+    "slows_when_casting": true,
+    "style": "dex",
+    "summonType": "NONE",
+    "summon_basic_atk": "",
+    "swing_arm": true,
+    "tags": {
+      "tags": [
+        "damage",
+        "ranged",
+        "totem",
+        "physical",
+        "projectile"
+      ]
+    },
+    "times_to_cast": 1,
+    "tracking_radius": 5,
+    "tracks": "enemies",
+    "use_support_gems_from": ""
+  },
+  "default_lvl": 0,
+  "disabled_dims": [],
+  "effect_tip": "",
+  "identifier": "arrow_totem",
+  "loc_name": "Arrow Totem",
+  "lvl_based_on_spell": "",
+  "manual_tip": true,
+  "max_lvl": 16,
+  "min_lvl": 20,
+  "show_other_spell_tooltip": "",
+  "statsForSkillGem": [],
+  "weight": 1000
+}

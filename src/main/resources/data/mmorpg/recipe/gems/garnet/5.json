@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "mmorpg:gems/garnet/4",
+    "mmorpg:gems/garnet/4",
+    "mmorpg:gems/garnet/4"
+  ],
+  "result": {
+    "id": "mmorpg:gems/garnet/5",
+    "count": 1
+  }
+}

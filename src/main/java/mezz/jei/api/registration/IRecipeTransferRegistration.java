@@ -1,0 +1,1 @@
+package mezz.jei.api.registration; import mezz.jei.api.recipe.transfer.IRecipeTransferInfo; public interface IRecipeTransferRegistration { <C extends net.minecraft.world.inventory.AbstractContainerMenu, R> void addRecipeTransferHandler(IRecipeTransferInfo<C, R> info); }

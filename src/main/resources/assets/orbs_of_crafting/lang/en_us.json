@@ -1,0 +1,23 @@
+{
+  "item.orbs_of_crafting.legendary_enchant_tool": "Orb of Legendary Tool Enchant",
+  "orbs_of_crafting.item_modification.destroy_item": "DESTROYS the Item!",
+  "orbs_of_crafting.item_modification.do_nothing": "Does Nothing",
+  "orbs_of_crafting.item_modification.enchant_with_10_levels": "Applies Enchantments worth 10 Levels",
+  "orbs_of_crafting.item_modification.enchant_with_20_levels": "Applies Enchantments worth 20 Levels",
+  "orbs_of_crafting.item_modification.enchant_with_30_levels": "Applies Enchantments worth 30 Levels",
+  "orbs_of_crafting.item_requirement.has_no_enchants": "Must have no Enchantments",
+  "orbs_of_crafting.item_requirement.is_damaged": "Must be a Damaged Item",
+  "orbs_of_crafting.item_requirement.is_single_item": "Must be a Single Item",
+  "orbs_of_crafting.item_requirement.is_tool_tag": "Must be tagged as #Tool",
+  "orbs_of_crafting.words.always_does": "Always does:",
+  "orbs_of_crafting.words.currency": "Crafting Orb",
+  "orbs_of_crafting.words.drag_and_drop": "[Stack/Drag on another item to use]",
+  "orbs_of_crafting.words.drag_no_work_creative": "Item can not be used in Creative Mode!",
+  "orbs_of_crafting.words.mod_name": "Orbs of Crafting",
+  "orbs_of_crafting.words.not_a_potential_consumer": "Does not consume potential when used",
+  "orbs_of_crafting.words.outcome_tip": "%1$s - %2$s",
+  "orbs_of_crafting.words.potential_cost": "Potential Cost: %1$s",
+  "orbs_of_crafting.words.random_outcome": "Random Outcome:",
+  "orbs_of_crafting.words.requirements": "Requirements: ",
+  "orbs_of_crafting.words.this_is_not_a": "This is not a %1$s"
+}

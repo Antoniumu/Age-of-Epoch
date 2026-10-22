@@ -1,0 +1,32 @@
+{
+  "id": "dos",
+  "item_id": "mmorpg:runes/dos",
+  "min_lvl_multi": 0.1,
+  "on_armor_stats": [
+    {
+      "max": 5.0,
+      "min": 1.0,
+      "stat": "dodge",
+      "type": "PERCENT"
+    }
+  ],
+  "on_jewelry_stats": [
+    {
+      "max": 8.0,
+      "min": 2.0,
+      "stat": "faster_projectiles",
+      "type": "FLAT"
+    }
+  ],
+  "on_weapons_stats": [
+    {
+      "max": 10.0,
+      "min": 3.0,
+      "stat": "projectile_damage",
+      "type": "FLAT"
+    }
+  ],
+  "tier": 1,
+  "uses_unlucky_ran": true,
+  "weight": 1000
+}

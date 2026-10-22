@@ -2,12 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "M": "minecraft:diamond"
+    "X": "minecraft:diamond"
   },
   "pattern": [
-    "MMM",
-    "M M",
-    "MMM"
+    "XXX",
+    "X X",
+    " X "
   ],
   "result": {
     "id": "mmorpg:jewelry/necklace/diamond",

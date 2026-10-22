@@ -1,7 +1,9 @@
 package com.robertx22.library_of_exile.utils;
 
 import com.robertx22.library_of_exile.registry.IWeighted;
-import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.levelgen.LegacyRandomSource;
+import org.joml.Math;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,7 +12,8 @@ import java.util.Random;
 
 public class RandomUtils {
 
-    private static Random ran = new Random();
+
+    private static LegacyRandomSource ran = new LegacyRandomSource(new Random().nextLong());
 
     public static int RandomRange(int min, int max) {
         return RandomRange(min, max, ran);
@@ -36,9 +39,34 @@ public class RandomUtils {
 
             int result = rand.nextInt(max - min + 1);
 
-            return Mth.clamp(result + min, min, max);
+            return Math.clamp(result + min, min, max);
         } catch (Exception e) {
-            System.out.println("min " + min + " " + "max " + max);
+            // System.out.println("min " + min + " " + "max " + max);
+            e.printStackTrace();
+        }
+        return 0;
+
+    }
+
+    public static int RandomRange(int min, int max, RandomSource rand) {
+
+        try {
+            if (max < 1) {
+                return 0;
+            }
+            if (min > max) {
+                return min;
+            }
+            // prevents trying to nextin on 0
+            if (min == max) {
+                return min;
+            }
+
+            int result = rand.nextInt(max - min + 1);
+
+            return Math.clamp(result + min, min, max);
+        } catch (Exception e) {
+            // System.out.println("min " + min + " " + "max " + max);
             e.printStackTrace();
         }
         return 0;
@@ -55,7 +83,7 @@ public class RandomUtils {
 
     }
 
-    public static <T> T randomFromList(List<T> list, Random rand) {
+    public static <T> T randomFromList(List<T> list, RandomSource rand) {
         if (list == null || list.isEmpty()) {
             return null;
         }
@@ -75,12 +103,6 @@ public class RandomUtils {
 
         return list;
 
-    }
-
-    public static boolean roll(double chance, net.minecraft.util.RandomSource rand) {
-
-        double ranNum = rand.nextDouble() * 100;
-        return ranNum < chance;
     }
 
     public static boolean roll(double chance, Random rand) {
@@ -169,7 +191,7 @@ public class RandomUtils {
     private static IWeighted WeightedRandom(List<IWeighted> lootTable, double nextDouble) {
 
         if (lootTable.stream()
-            .allMatch(x -> x.Weight() == 0)) {
+                .allMatch(x -> x.Weight() == 0)) {
             return RandomUtils.randomFromList(lootTable);
         }
 

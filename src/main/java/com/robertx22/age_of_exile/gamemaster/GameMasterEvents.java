@@ -44,7 +44,7 @@ public class GameMasterEvents {
         });
 
         ForgeEvents.registerForgeEvent(PlayerEvent.PlayerLoggedInEvent.class, event -> {
-            if (event.getPlayer() instanceof ServerPlayer player) {
+            if (event.getEntity() instanceof ServerPlayer player) {
                 try {
                     GameMaster.get()
                         .onLogin(player);
@@ -55,7 +55,7 @@ public class GameMasterEvents {
         });
 
         ForgeEvents.registerForgeEvent(PlayerEvent.PlayerLoggedOutEvent.class, event -> {
-            if (event.getPlayer() instanceof ServerPlayer player) {
+            if (event.getEntity() instanceof ServerPlayer player) {
                 try {
                     GameMaster.get()
                         .onLogout(player);

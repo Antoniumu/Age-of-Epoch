@@ -4,14 +4,13 @@ import com.robertx22.library_of_exile.events.base.ExileEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
@@ -21,28 +20,37 @@ public class OnBlockDropMining {
     public static void run(LootContext ctx, CallbackInfoReturnable<List<ItemStack>> ci) {
 
         try {
-            BlockState state = ctx.getOptional(LootContextParams.BLOCK_STATE);
-            ItemInstance tool = ctx.getOptional(LootContextParams.TOOL);
-            Vec3 origin = ctx.getOptional(LootContextParams.ORIGIN);
-            Entity en = ctx.getOptional(LootContextParams.THIS_ENTITY);
-
-            if (state == null || tool == null || origin == null || en == null) {
+            if (!ctx.hasParameter(LootContextParams.BLOCK_STATE)) {
+                return;
+            }
+            if (!ctx.hasParameter(LootContextParams.TOOL)) {
+                return;
+            }
+            if (!ctx.hasParameter(LootContextParams.ORIGIN)) {
+                return;
+            }
+            if (!ctx.hasParameter(LootContextParams.THIS_ENTITY)) {
                 return;
             }
 
-            if (tool instanceof ItemStack stack && stack.getEnchantments().keySet().stream().anyMatch(h -> h.is(Enchantments.SILK_TOUCH))) {
+            ItemStack stack = ctx.getOptionalParameter(LootContextParams.TOOL) instanceof ItemStack __st ? __st : ItemStack.EMPTY;
+            if (com.robertx22.forge_compat.common.CompatHelper.getEnchantLevel(null, Enchantments.SILK_TOUCH, stack) > 0) {
                 return;
             }
 
+            BlockState state = ctx.getOptionalParameter(LootContextParams.BLOCK_STATE);
             Block block = state.getBlock();
 
             if (ci.getReturnValue()
-                .stream()
-                .anyMatch(x -> x.getItem() == block.asItem())) {
-                return;
+                    .stream()
+                    .anyMatch(x -> x.getItem() == block.asItem())) {
+                return; // if a diamond ore is broken and drops diamond ore, don't give exp and loot
             }
 
-            BlockPos pos = BlockPos.containing(origin);
+            Entity en = ctx.getOptionalParameter(LootContextParams.THIS_ENTITY);
+
+            var p = ctx.getOptionalParameter(LootContextParams.ORIGIN);
+            BlockPos pos = new BlockPos((int) p.x, (int) p.y, (int) p.z);
 
             Player player = null;
             if (en instanceof Player) {
@@ -59,8 +67,7 @@ public class OnBlockDropMining {
             ExileEvents.PLAYER_MINE_ORE.callEvents(event);
 
             if (!event.itemsToAddToDrop.isEmpty()) {
-                ci.getReturnValue()
-                    .addAll(event.itemsToAddToDrop);
+                ci.getReturnValue().addAll(event.itemsToAddToDrop);
             }
 
         } catch (Exception e) {

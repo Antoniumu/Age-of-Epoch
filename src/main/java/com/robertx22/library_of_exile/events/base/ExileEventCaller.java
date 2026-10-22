@@ -3,6 +3,8 @@ package com.robertx22.library_of_exile.events.base;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ExileEventCaller<T extends ExileEvent> {
 
@@ -10,6 +12,9 @@ public class ExileEventCaller<T extends ExileEvent> {
 
     public ExileEventCaller() {
     }
+
+    // this makes sure there aren't random concurrentmodification errors etc
+    Lock lock = new ReentrantLock();
 
     public T callEvents(T event) {
         events.forEach(x -> {
@@ -25,8 +30,13 @@ public class ExileEventCaller<T extends ExileEvent> {
     }
 
     public void register(EventConsumer<T> t) {
-        this.events.add(t);
-        events.sort(Comparator.comparingInt(x -> x.callOrder()));
+        lock.lock();
+        try {
+            this.events.add(t);
+            events.sort(Comparator.comparingInt(x -> x.callOrder()));
+        } finally {
+            lock.unlock();
+        }
     }
 
 }
