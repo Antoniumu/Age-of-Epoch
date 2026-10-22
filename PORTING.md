@@ -226,6 +226,17 @@ MC 26.3 закрыл следующие группы:
    «blockstate definition 'mmorpg:portal/mmorpg'» — это `definition id/имя
    ресурс-пака`, а не путь; блок portal не имеет свойства facing → один вариант
    `""`.
+6. **Сироты DataComponentInitializers** («Missing element mmorpg:auto_item_N»
+   при создании мира): в 26.3 конструктор Item/Block сразу пишет инициализатор
+   компонентов в `BuiltInRegistries.DATA_COMPONENT_INITIALIZERS` — это теперь
+   приватный `List<InitializerEntry(key, initializer)>`, а не Map. Предметы,
+   сконструированные вне supplier'а DeferredRegister, получают автоматический id
+   `mmorpg:auto_item_N`; если предмет регистрируется под другим ключом — запись
+   остаётся сиротой, и `build()` на старте мира падает на `getOrThrow`.
+   Старые remap/cleanup в PropertiesIdHelper искали Map'ы рефлексией и молча
+   ничего не находили — переписаны на работу со списком (remap меняет ключ
+   на месте, cleanup удаляет записи с незарегистрированными auto-ключами) и
+   добавлен миксин, чистящий сирот перед каждым `build()`.
 
 ## 2. Состав порта
 
