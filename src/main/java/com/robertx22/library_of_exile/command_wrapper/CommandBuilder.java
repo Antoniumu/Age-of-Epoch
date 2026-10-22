@@ -120,8 +120,6 @@ public class CommandBuilder {
         this.commandString = command;
     }
 
-}
-
     // MC 26.3: CommandSourceStack.hasPermission(int) was removed; permissions are PermissionSet-based now
     public static boolean hasPermLevel(net.minecraft.commands.CommandSourceStack src, int level) {
         if (level <= 0) return true;
@@ -132,3 +130,4 @@ public class CommandBuilder {
             : net.minecraft.server.permissions.PermissionLevel.MODERATORS;
         return src.permissions().hasPermission(new net.minecraft.server.permissions.Permission.HasCommandLevel(pl));
     }
+}
