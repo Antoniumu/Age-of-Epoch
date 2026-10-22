@@ -174,17 +174,11 @@ public class TalentsData implements IApplyableStats {
             if ("start".equals(perk.one_of_a_kind)) {
                 return "Начальный путь уже выбран";
             }
-            if (perk.exclusive_branch != null && !perk.exclusive_branch.isEmpty()) {
-                String chosen = getChosenExclusiveBranch();
-                if (chosen != null && !chosen.equals(perk.exclusive_branch)) {
-                    return "Выбрана другая ветка призыва. Сначала сбросьте её таланты.";
-                }
-            }
             return "Уже выбран другой талант этого типа";
         }
         if (!perk.is_entry) {
             if (getSchool(school).getAllocatedPoints(school).isEmpty()) {
-                return "Сначала выберите начальный путь этого древа";
+                return "Сначала выберите начальный путь в центре древа";
             }
             return "Сначала изучите соседний связанный талант";
         }
@@ -317,43 +311,6 @@ public class TalentsData implements IApplyableStats {
             }
         }
         return perks;
-    }
-
-    /**
-     * Какая взаимоисключающая ветка уже выбрана (см. {@link Perk#exclusive_branch}).
-     * <p>
-     * В древе «Божественный» так разведены некромант и призыватель: пока взята одна ветка, узлы
-     * другой закрыты. Возвращает null, если ни одна ветка не выбрана.
-     */
-    public String getChosenExclusiveBranch() {
-
-        for (Map.Entry<String, SchoolData> x : perks.entrySet()) {
-
-            if (x.getValue() == null) {
-                continue;
-            }
-            if (!ExileDB.TalentTrees()
-                .isRegistered(x.getKey())) {
-                continue;
-            }
-
-            TalentTree school = ExileDB.TalentTrees()
-                .get(x.getKey());
-
-            if (school == null) {
-                continue;
-            }
-
-            for (PointData p : x.getValue()
-                .getAllocatedPoints(school)) {
-                Perk perk = school.calcData.getPerk(p);
-                if (perk != null && perk.exclusive_branch != null && !perk.exclusive_branch.isEmpty()) {
-                    return perk.exclusive_branch;
-                }
-            }
-        }
-
-        return null;
     }
 
     public PerkStatus getStatus(Player player, TalentTree school, PointData point) {

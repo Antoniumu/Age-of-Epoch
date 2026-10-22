@@ -32,8 +32,6 @@ public abstract class StatEffect implements JsonExileRegistry<StatEffect>, IAuto
         addSer(new IncreaseNumberByPercentEffect());
         addSer(new RestoreResourceAction());
         addSer(new GiveExileStatusEffect());
-        addSer(new RaiseDeadAction());
-        addSer(new ExplodeCorpseAction());
     }
 
     static void addSer(StatEffect eff) {

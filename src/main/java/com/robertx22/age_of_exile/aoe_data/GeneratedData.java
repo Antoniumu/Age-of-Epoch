@@ -27,7 +27,6 @@ import com.robertx22.age_of_exile.aoe_data.database.spells.SpellCalcs;
 import com.robertx22.age_of_exile.aoe_data.database.spells.Spells;
 import com.robertx22.age_of_exile.aoe_data.database.stat_conditions.StatConditions;
 import com.robertx22.age_of_exile.aoe_data.database.stat_effects.StatEffects;
-import com.robertx22.age_of_exile.aoe_data.database.stats.DivineStats;
 import com.robertx22.age_of_exile.aoe_data.database.stats.PlusSkillsInSchoolStats;
 import com.robertx22.age_of_exile.aoe_data.database.stats.Stats;
 import com.robertx22.age_of_exile.aoe_data.database.stats.old.AutoDatapackStats;
@@ -47,7 +46,6 @@ public class GeneratedData {
 
         new StatEffects().registerAll();
         new StatConditions().registerAll();
-        new DivineStats().registerAll(); // до Stats: её registerAll() добавляет датапак-статы в сериализацию
         new Stats().registerAll();
         new DatapackStats().registerAll();
 
