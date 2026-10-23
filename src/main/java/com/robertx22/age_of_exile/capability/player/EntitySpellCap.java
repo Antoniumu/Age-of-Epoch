@@ -81,6 +81,12 @@ public class EntitySpellCap {
 
         public abstract int getFreeSpellPoints();
 
+        /** Свободные очки эндгейма школы (1 за каждый уровень после endgame_after_level). */
+        public abstract int getFreeEndgamePoints(SpellSchool school);
+
+        /** Изучить заклинание: сначала обычные очки, если их нет — очко эндгейма. */
+        public abstract void learnSpell(SpellSchool school, Spell spell);
+
         public abstract boolean canLearn(SpellSchool school, Spell spell);
 
         public abstract boolean canLearn(SpellSchool school, Synergy synergy);
@@ -166,12 +172,36 @@ public class EntitySpellCap {
             this.spellData = new SpellsData();
         }
 
+        /** Обычные потраченные очки (без очков эндгейма). */
         public int getSpentSpellPoints() {
             int total = 0;
             for (Integer x : this.spellData.allocated_lvls.values()) {
                 total += x;
             }
-            return total;
+            return total - spellData.endgame_spent;
+        }
+
+        @Override
+        public int getFreeEndgamePoints(SpellSchool school) {
+            if (school == null || school.endgame_after_level <= 0) {
+                return 0;
+            }
+            int levelPoints = Math.max(0, Load.Unit(entity).getLevel() - school.endgame_after_level);
+            return levelPoints - spellData.endgame_spent;
+        }
+
+        private boolean hasEndgameSlotFor(SpellSchool school, Spell spell) {
+            return school.spells.containsKey(spell.GUID()) && getFreeEndgamePoints(school) >= 1;
+        }
+
+        @Override
+        public void learnSpell(SpellSchool school, Spell spell) {
+            if (getFreeSpellPoints() >= 1) {
+                spellData.learnSpell(spell, school);
+            } else if (hasEndgameSlotFor(school, spell)) {
+                spellData.learnSpell(spell, school);
+                spellData.endgame_spent++;
+            }
         }
 
         @Override
@@ -182,7 +212,7 @@ public class EntitySpellCap {
 
         @Override
         public boolean canLearn(SpellSchool school, Spell spell) {
-            if (getFreeSpellPoints() < 1) {
+            if (getFreeSpellPoints() < 1 && !hasEndgameSlotFor(school, spell)) {
                 return false;
             }
             if (!school.isLevelEnoughForSpell(entity, spell)) {

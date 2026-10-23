@@ -45,6 +45,12 @@ public class SchoolBuilder {
         return this;
     }
 
+    /** Эндгейм: с уровня level каждый уровень даёт очко, которое тратится только в заклинания этой школы. */
+    public SchoolBuilder endgameAfter(int level) {
+        school.endgame_after_level = level;
+        return this;
+    }
+
     /** Уровни открытия по рядам (индекс = номер ряда, y). */
     public SchoolBuilder levelReqs(Integer... reqs) {
         school.lvl_reqs = java.util.Arrays.asList(reqs);

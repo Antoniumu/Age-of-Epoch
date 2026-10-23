@@ -48,6 +48,7 @@ public class SpellSchoolsAdder implements ExileRegistryInit {
         // Некромант и призыватель взаимоисключают друг друга (ветки в SpellSchool.isBranchBlocked).
         SchoolBuilder.of(BLIGHTCALLER, "Blightcaller")
             .levelReqs(50, 50, 50, 50, 50, 50, 50)
+            .endgameAfter(50)
 
             .addSpell(BlightcallerSpells.RAISE_DEAD, new PointData(0, 1), BlightcallerSpells.BRANCH_NECROMANCER)
             .addSpell(BlightcallerSpells.UNDEAD_HORDE, new PointData(2, 1), BlightcallerSpells.BRANCH_NECROMANCER)

@@ -37,6 +37,12 @@ public class SpellSchool implements JsonExileRegistry<SpellSchool>, IAutoGson<Sp
 
     public List<Integer> lvl_reqs = Arrays.asList(1, 5, 10, 20, 30, 40, 50);
 
+    /**
+     * Эндгейм школы: начиная с этого уровня каждый уровень персонажа даёт 1 очко,
+     * которое можно потратить на любое заклинание этой школы. 0 — эндгейма нет.
+     */
+    public int endgame_after_level = 0;
+
     public String branchOf(String spellId) {
         String b = branches.get(spellId);
         return b == null ? "" : b;

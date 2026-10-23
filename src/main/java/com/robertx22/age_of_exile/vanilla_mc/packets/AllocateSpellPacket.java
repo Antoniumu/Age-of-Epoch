@@ -63,8 +63,7 @@ public class AllocateSpellPacket extends MyPacket<AllocateSpellPacket> {
             .get(this.schoolid);
 
         if (spells.canLearn(school, spell)) {
-            spells.getSpellsData()
-                .learnSpell(spell, school);
+            spells.learnSpell(school, spell);
         }
 
         spells.syncToClient(ctx.getPlayer());
