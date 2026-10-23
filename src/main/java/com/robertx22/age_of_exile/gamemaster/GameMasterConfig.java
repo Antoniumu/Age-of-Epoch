@@ -6,23 +6,29 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
- * Настройки «GameMaster» — системы динамической подстройки опыта.
+ * Настройки «GameMaster» — систем динамической подстройки опыта и spawn-rate мобов.
  * <p>
  * Файл: {@code config/age_of_epoch/gamemaster.json}
  * <p>
- * Два независимых переключателя:
+ * Независимые переключатели:
  * <ul>
  *     <li>{@code catch_up} — догоняющий опыт: отстающие от группы игроки получают больше опыта,
  *     ушедшие вперёд — чуть меньше. Цель — развиваться вместе.</li>
  *     <li>{@code pacing} — темп развития: после {@code pacing_start_level} всем выдаётся
  *     прогрессивный штраф к опыту так, чтобы игрок наигрывал около {@code target_hours}
  *     <b>реальных</b> часов до максимального уровня.</li>
+ *     <li>{@code spawn_rate_enabled}/{@code spawn_rate_dynamic} — ручной и динамический
+ *     множители частоты появления враждебных мобов.</li>
  * </ul>
- * Если включены оба, множители перемножаются, а догоняющий режим работает и тогда,
- * когда общий темп ещё не растянут до целевых часов.
+ * Если включены оба режима опыта, их множители перемножаются, а догоняющий режим работает
+ * и тогда, когда общий темп ещё не растянут до целевых часов. Spawn-rate на опыт не влияет.
  */
 public class GameMasterConfig {
 
@@ -101,7 +107,29 @@ public class GameMasterConfig {
     public double exp_multiplier_max = 5.0;
 
     // ------------------------------------------------------------------
-    // 3. Учёт времени
+    // 3. Спавн мобов вокруг игроков
+    // ------------------------------------------------------------------
+
+    /** Применять GameMaster к скорости появления враждебных мобов. */
+    public boolean spawn_rate_enabled = true;
+
+    /** Динамически уменьшать спавн по текущей Благосклонности игрока. */
+    public boolean spawn_rate_dynamic = true;
+
+    /** Ручной глобальный множитель вероятности спавна (1 = без ручного штрафа). */
+    public double spawn_rate_manual_multiplier = 1.0;
+
+    /** Благосклонность, при которой динамический множитель равен 0.5. */
+    public double spawn_rate_favor_reference = 100.0;
+
+    /** Минимальный динамический множитель, чтобы спавн не исчезал полностью. */
+    public double spawn_rate_dynamic_min_multiplier = 0.05;
+
+    /** UUID игрока → ручной множитель-override (0…1); при его наличии заменяет глобальную ручную настройку. */
+    public Map<String, Double> spawn_rate_player_overrides = new HashMap<>();
+
+    // ------------------------------------------------------------------
+    // 4. Учёт времени
     // ------------------------------------------------------------------
 
     /** Не считать AFK-время: если игрок не двигался N секунд, секунды не идут в статистику. */
@@ -117,7 +145,7 @@ public class GameMasterConfig {
     public int save_interval_seconds = 180;
 
     // ------------------------------------------------------------------
-    // 4. Сообщения игрокам
+    // 5. Сообщения игрокам
     // ------------------------------------------------------------------
 
     /** Показывать множитель опыта в сообщении о полученном опыте. */
@@ -127,7 +155,7 @@ public class GameMasterConfig {
     public boolean announce_on_login = true;
 
     // ------------------------------------------------------------------
-    // 5. Веб-панель GameMaster
+    // 6. Веб-панель GameMaster
     // ------------------------------------------------------------------
 
     /** Поднимать локальную веб-панель с графиками. */
@@ -160,6 +188,27 @@ public class GameMasterConfig {
         catch_up_reference_blend = clamp(catch_up_reference_blend, 0, 1);
         catch_up_min_playtime_minutes = (int) clamp(catch_up_min_playtime_minutes, 0, 100000);
         catch_up_activity_window_days = (int) clamp(catch_up_activity_window_days, 1, 100000);
+        spawn_rate_manual_multiplier = clamp(spawn_rate_manual_multiplier, 0, 1);
+        spawn_rate_favor_reference = clamp(spawn_rate_favor_reference, 1, 1000000);
+        spawn_rate_dynamic_min_multiplier = clamp(spawn_rate_dynamic_min_multiplier, 0, 1);
+        if (spawn_rate_player_overrides == null) {
+            spawn_rate_player_overrides = new HashMap<>();
+        } else {
+            Iterator<Map.Entry<String, Double>> overrides = spawn_rate_player_overrides.entrySet().iterator();
+            while (overrides.hasNext()) {
+                Map.Entry<String, Double> entry = overrides.next();
+                try {
+                    UUID.fromString(entry.getKey());
+                    if (entry.getValue() == null) {
+                        overrides.remove();
+                    } else {
+                        entry.setValue(clamp(entry.getValue(), 0, 1));
+                    }
+                } catch (Exception invalidUuid) {
+                    overrides.remove();
+                }
+            }
+        }
         exp_multiplier_min = clamp(exp_multiplier_min, 0.001, 1000);
         exp_multiplier_max = clamp(exp_multiplier_max, exp_multiplier_min, 1000);
         afk_threshold_seconds = (int) clamp(afk_threshold_seconds, 5, 86400);
@@ -214,6 +263,11 @@ public class GameMasterConfig {
                     case "pacing_curve" -> this.pacing_curve = el.getAsDouble();
                     case "pacing_auto_calibrate" -> this.pacing_auto_calibrate = el.getAsBoolean();
                     case "assumed_baseline_hours" -> this.assumed_baseline_hours = el.getAsDouble();
+                    case "spawn_rate_enabled" -> this.spawn_rate_enabled = el.getAsBoolean();
+                    case "spawn_rate_dynamic" -> this.spawn_rate_dynamic = el.getAsBoolean();
+                    case "spawn_rate_manual_multiplier" -> this.spawn_rate_manual_multiplier = el.getAsDouble();
+                    case "spawn_rate_favor_reference" -> this.spawn_rate_favor_reference = el.getAsDouble();
+                    case "spawn_rate_dynamic_min_multiplier" -> this.spawn_rate_dynamic_min_multiplier = el.getAsDouble();
                     case "show_multiplier_in_actionbar" -> this.show_multiplier_in_actionbar = el.getAsBoolean();
                     case "announce_on_login" -> this.announce_on_login = el.getAsBoolean();
                     case "web_enabled" -> this.web_enabled = el.getAsBoolean();

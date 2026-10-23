@@ -124,6 +124,18 @@ public class ExpTuner {
     }
 
     /**
+     * Динамический множитель спавна от Благосклонности.
+     * При базовой Благосклонности 100 и текущем значении 100 возвращает 0.5;
+     * при 0 возвращает 1.0, а с ростом Благосклонности постепенно стремится к минимуму.
+     */
+    public static double favorSpawnRate(int favor, double referenceFavor, double minimumMultiplier) {
+        double reference = Math.max(0.01, referenceFavor);
+        double value = Math.max(0, favor);
+        double rate = reference / (reference + value);
+        return clamp(rate, clamp(minimumMultiplier, 0, 1), 1);
+    }
+
+    /**
      * Догоняющий множитель: отстающие получают бонус, ушедшие вперёд — небольшой штраф.
      *
      * @param referenceLevel ориентир группы

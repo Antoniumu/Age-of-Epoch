@@ -2,6 +2,7 @@ package com.robertx22.age_of_exile.dimension.spawner;
 
 import com.robertx22.age_of_exile.dimension.SpawnUtil;
 import com.robertx22.age_of_exile.dimension.database.dungeon_mob_lists.DungeonMobList;
+import com.robertx22.age_of_exile.gamemaster.SpawnRateUtils;
 import com.robertx22.age_of_exile.mmorpg.registers.common.SlashBlockEntities;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.WorldUtils;
@@ -13,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Blocks;
@@ -63,6 +65,15 @@ public class ModSpawnerBlockEntity extends BlockEntity implements ITickableBlock
             if (!level.isClientSide()) {
                 if (isPlayerInRange()) {
                     if (WorldUtils.isMapWorldClass(level)) {
+                        if (!spawnBoss && level instanceof ServerLevel serverLevel) {
+                            ServerPlayer nearest = SpawnRateUtils.nearestEligiblePlayer(serverLevel,
+                                worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5,
+                                Math.max(0, requiredPlayerRange));
+                            if (nearest != null && !SpawnRateUtils.allowSpawnAttempt(nearest, serverLevel.getRandom())) {
+                                return;
+                            }
+                        }
+
                         int entities = level.getEntitiesOfClass(LivingEntity.class, (new AABB(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), (worldPosition.getX() + 1), (worldPosition.getY() + 1), (worldPosition.getZ() + 1))).inflate(this.spawnRange))
                             .size();
                         if (!spawnAllAtOnce && entities > MAX_NEARBY_ENTITIES) {

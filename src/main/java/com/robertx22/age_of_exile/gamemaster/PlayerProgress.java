@@ -14,6 +14,9 @@ public class PlayerProgress {
     /** Последний известный уровень. */
     public int level = 1;
 
+    /** Последняя Благосклонность (используется для отображения spawn-rate в панели, включая offline игроков). */
+    public int favor = 100;
+
     /** Реальные секунды игры (без AFK, если он включён в конфиге). */
     public double playtime_seconds = 0;
 
