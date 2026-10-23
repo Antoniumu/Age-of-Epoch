@@ -52,6 +52,7 @@ public abstract class SpellAction extends BaseFieldNeeder implements IGUID {
     public static ExileEffectAction EXILE_EFFECT = of(new ExileEffectAction());
     public static AggroAction AGGRO = of(new AggroAction());
     public static SummonAtTargetFeet SUMMON_AT_FEET = of(new SummonAtTargetFeet());
+    public static SummonMinionAction SUMMON_MINION = of(new SummonMinionAction());
     public static TeleportTargetToSourceAction TP_TARGET_TO_SELF = of(new TeleportTargetToSourceAction());
 
     private static <T extends SpellAction> T of(T s) {

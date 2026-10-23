@@ -24,6 +24,7 @@ public class Spells implements ExileRegistryInit {
         new NatureSpells().registerAll();
         new WaterSpells().registerAll();
         new HolySpells().registerAll();
+        new BlightcallerSpells().registerAll();
         new RangerSpells().registerAll();
 
     }

@@ -13,6 +13,7 @@ public class SpellSchoolsAdder implements ExileRegistryInit {
     public static String FIRE = "fire";
     public static String NATURE = "nature";
     public static String WATER = "water";
+    public static String BLIGHTCALLER = "blightcaller";
 
     @Override
     public void registerAll() {
@@ -40,6 +41,15 @@ public class SpellSchoolsAdder implements ExileRegistryInit {
 
             .addSpell(HolySpells.WISH, new PointData(3, 6))
 
+            .build();
+
+        // Скверноводец: открывается с 50 уровня (ряд 6 = 50 уровень)
+        SchoolBuilder.of(BLIGHTCALLER, "Blightcaller")
+            .addSpell(BlightcallerSpells.RAISE_DEAD, new PointData(0, 6))
+            .addSpell(BlightcallerSpells.CORPSE_BURST, new PointData(2, 6))
+            .addSpell(BlightcallerSpells.WOLF_PACK, new PointData(4, 6))
+            .addSpell(BlightcallerSpells.PLAGUE_CLOUD, new PointData(6, 6))
+            .addSpell(BlightcallerSpells.BLIGHT_BOLT, new PointData(8, 6))
             .build();
 
         SchoolBuilder.of(HUNTING, "Hunting")

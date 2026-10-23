@@ -2108,5 +2108,11 @@
   "mmorpg.branch.blightcaller": "Blightcaller",
   "mmorpg.branch.blightcaller.necromancer": "Necromancer",
   "mmorpg.branch.blightcaller.summoner": "Summoner",
-  "mmorpg.one_of_a_kind.blight_beast": "Summoned Beast"
+  "mmorpg.one_of_a_kind.blight_beast": "Summoned Beast",
+  "mmorpg.spell.bc_raise_dead": "Raise the Fallen",
+  "mmorpg.spell.bc_corpse_burst": "Corpse Burst",
+  "mmorpg.spell.bc_wolf_pack": "Wolf Pack",
+  "mmorpg.spell.bc_plague_cloud": "Plague Cloud",
+  "mmorpg.spell.bc_blight_bolt": "Blight Bolt",
+  "mmorpg.spell_school.blightcaller": "Blightcaller"
 }

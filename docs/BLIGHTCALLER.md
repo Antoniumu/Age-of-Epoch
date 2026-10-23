@@ -86,6 +86,26 @@ python3 tools/check_java_syntax.py src/main/java/com/robertx22/age_of_exile/data
 
 `compileJava` в песочнице не запускается (нет JDK), полная сборка — `build.bat build`.
 
+## Школа «Скверноводец» (заклинания)
+
+Школа `blightcaller` открывается с 50 уровня: все её заклинания стоят в ряду 6 (`lvl_reqs[6] = 50`).
+Регистрация: `SpellSchoolsAdder` (школа), `BlightcallerSpells` (заклинания), `Spells` (подключение).
+
+| Заклинание | ID | Что делает |
+|---|---|---|
+| Пробуждение павших | `bc_raise_dead` | призывает нежить через `MinionUtils.summonUndead` (лимит — `MAX_UNDEAD_MINIONS`) |
+| Взрыв останков | `bc_corpse_burst` | урон по области вокруг кастера |
+| Серая стая | `bc_wolf_pack` | три призыва волка через `MinionUtils.summonBeast` (лимит — `MAX_BEAST_MINIONS`) |
+| Облако скверны | `bc_plague_cloud` | облако: урон по области и эффект яда |
+| Тёмный снаряд | `bc_blight_bolt` | снаряд, урон по первой цели |
+
+Действие `SUMMON_MINION` (`SummonMinionAction`) — тонкая обёртка над `MinionUtils` для навыков.
+Иконки: `textures/gui/spells/icons/bc_*.png`, школа: `textures/gui/spells/schools/blightcaller.png`, 128×128.
+
+**Не сделано:** баффы после 50 уровня (по одному за уровень). Предложение: каждое очко заклинаний
+после 50 тратится на пассивный бафф школы. Механика баффов ещё не реализована.
+Код не скомпилирован (в песочнице нет JDK): проверена только синтаксическая корректность.
+
 ## Открытые пункты
 
 - Иконки классов и школ переделаны под цветную плитку в цвете класса (128×128): `class_divine`,

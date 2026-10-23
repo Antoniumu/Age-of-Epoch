@@ -2113,5 +2113,11 @@
   "mmorpg.branch.blightcaller": "Скверноводец",
   "mmorpg.branch.blightcaller.necromancer": "Некромант",
   "mmorpg.branch.blightcaller.summoner": "Призыватель",
-  "mmorpg.one_of_a_kind.blight_beast": "Вид призванного зверя"
+  "mmorpg.one_of_a_kind.blight_beast": "Вид призванного зверя",
+  "mmorpg.spell.bc_raise_dead": "Пробуждение павших",
+  "mmorpg.spell.bc_corpse_burst": "Взрыв останков",
+  "mmorpg.spell.bc_wolf_pack": "Серая стая",
+  "mmorpg.spell.bc_plague_cloud": "Облако скверны",
+  "mmorpg.spell.bc_blight_bolt": "Тёмный снаряд",
+  "mmorpg.spell_school.blightcaller": "Скверноводец"
 }
