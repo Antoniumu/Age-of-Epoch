@@ -86,6 +86,12 @@ public class GameMaster {
     private long autoGlobalUpdated = 0;
     private double autoTargetHours = 0;
 
+    /** Сколько игроков онлайн на последнем тике. */
+    private int onlineCache = 0;
+
+    /** Сколько из них реально играют (без AFK) — от этого считается кооп-бонус. */
+    private int coopCache = 1;
+
     private long lastSecondTick = 0;
     private long lastStatsTick = 0;
     private long lastSaveTick = 0;
@@ -256,6 +262,30 @@ public class GameMaster {
         config.retention_pity_start_kills = parsed.retention_pity_start_kills;
         config.retention_pity_full_kills = parsed.retention_pity_full_kills;
         config.retention_no_exp_loss_level = parsed.retention_no_exp_loss_level;
+        config.retention_session_goal = parsed.retention_session_goal;
+        config.retention_session_goal_favor = parsed.retention_session_goal_favor;
+        config.retention_session_goal_max = parsed.retention_session_goal_max;
+        config.retention_return_package = parsed.retention_return_package;
+        config.retention_return_days = parsed.retention_return_days;
+        config.retention_return_hours = parsed.retention_return_hours;
+        config.retention_return_exp_bonus = parsed.retention_return_exp_bonus;
+        config.retention_return_rare = parsed.retention_return_rare;
+        config.social_enabled = parsed.social_enabled;
+        config.social_coop_exp_per_player = parsed.social_coop_exp_per_player;
+        config.social_coop_loot_per_player = parsed.social_coop_loot_per_player;
+        config.social_coop_spawn_per_player = parsed.social_coop_spawn_per_player;
+        config.social_coop_max = parsed.social_coop_max;
+        config.social_group_content = parsed.social_group_content;
+        config.social_group_hp_per_player = parsed.social_group_hp_per_player;
+        config.social_group_hp_max = parsed.social_group_hp_max;
+        config.social_group_radius = parsed.social_group_radius;
+        config.social_prime_hint = parsed.social_prime_hint;
+        config.social_prime_window_hours = parsed.social_prime_window_hours;
+        config.social_announce_firsts = parsed.social_announce_firsts;
+        config.social_goal_enabled = parsed.social_goal_enabled;
+        config.social_goal_kills = parsed.social_goal_kills;
+        config.social_goal_favor = parsed.social_goal_favor;
+        config.social_goal_rare = parsed.social_goal_rare;
         config.config_version = parsed.config_version;
         config.auto_session_fatigue_minutes = parsed.auto_session_fatigue_minutes;
         config.auto_welcome_hours = parsed.auto_welcome_hours;
@@ -406,6 +436,17 @@ public class GameMaster {
         // если сервер лагал, честно засчитываем пропущенные реальные секунды
         int seconds = (int) Math.min(60, Math.max(1, deltaMs / 1000L));
 
+        // Маленький сервер: кто вообще онлайн и когда обычно собирается компания.
+        List<ServerPlayer> online = server.getPlayerList()
+            .getPlayers();
+        onlineCache = online.size();
+        if (config.social_enabled) {
+            ensureWeek(now);
+            if (config.social_prime_hint && onlineCache > 0) {
+                data.addActivity(Social.localHour(now), (long) seconds * onlineCache);
+            }
+        }
+
         for (ServerPlayer player : server.getPlayerList()
             .getPlayers()) {
             try {
@@ -414,6 +455,20 @@ public class GameMaster {
                 e.printStackTrace();
             }
         }
+
+        // Кооп-бонус считается по реально играющим: AFK-персонаж не должен
+        // «зарабатывать» бонус для остальных.
+        int activePlayers = 0;
+        for (ServerPlayer player : online) {
+            PlayerProgress progress = data.get(player.getUUID()
+                .toString());
+            boolean afk = config.afk_exclusion && progress != null
+                && now - progress.last_moved_epoch > Math.max(5, config.afk_threshold_seconds);
+            if (!afk) {
+                activePlayers++;
+            }
+        }
+        coopCache = Math.max(1, activePlayers);
 
         if (now - lastStatsTick >= 5) {
             recomputeStats(now);
@@ -558,6 +613,15 @@ public class GameMaster {
             progress.level_baseline_seconds = 0;
             progress.level = level;
 
+            // «Первые» события сервера: первый 10-й уровень, 20-й и т.д.
+            // На маленьком сервере это личная слава — и повод зайти остальным.
+            for (int milestoneLevel : new int[]{10, 20, 30, 40, 50}) {
+                if (level >= milestoneLevel) {
+                    recordFirst("level_" + milestoneLevel, progress.name,
+                        "первым достиг " + milestoneLevel + " уровня");
+                }
+            }
+
             // Веха удержания: награда за каждый N-й уровень.
             Retention.Reward milestone = Retention.onLevelUp(progress, level, config);
             if (milestone != null) {
@@ -625,10 +689,31 @@ public class GameMaster {
         }
         PlayerProgress progress = data.get(player.getUUID()
             .toString());
-        if (progress != null) {
-            progress.kills_since_unique++;
-            dirty = true;
+        if (progress == null) {
+            return;
         }
+        long now = now();
+        progress.kills_since_unique++;
+
+        // Общая цель недели: считаем убийства всех игроков сервера.
+        if (config.social_enabled && config.social_goal_enabled) {
+            ensureWeek(now);
+            data.week_kills++;
+            if (config.social_goal_kills > 0 && data.week_kills == config.social_goal_kills) {
+                data.week_goal_epoch = now;
+                broadcast("★ Общая цель недели выполнена: " + data.week_kills
+                    + " убийств! Каждому, кто зайдёт, — награда.", ChatFormatting.GOLD);
+            }
+        }
+
+        // Цель сессии: награда выдаётся в момент выполнения.
+        int goalReward = Retention.registerKill(progress, now, config);
+        if (goalReward > 0) {
+            grantFavor(player, progress, goalReward);
+            player.sendSystemMessage(Component.literal("GameMaster: цель сессии выполнена! +"
+                + goalReward + " Благосклонности").withStyle(ChatFormatting.GREEN));
+        }
+        dirty = true;
     }
 
     /** Учитывает выпадение униката: сбрасывает счётчик pity. */
@@ -641,6 +726,7 @@ public class GameMaster {
         if (progress != null) {
             progress.kills_since_unique = 0;
             dirty = true;
+            recordFirst("unique", progress.name, "первый уникат сервера");
         }
     }
 
@@ -717,6 +803,182 @@ public class GameMaster {
         return level < config.retention_no_exp_loss_level;
     }
 
+    // ------------------------------------------------------------------
+    // Маленький сервер: социальный слой (см. Social)
+    // ------------------------------------------------------------------
+
+    /**
+     * Сообщает входящему игроку, что происходит на сервере: кто онлайн, когда
+     * обычно собираются, и как продвигается общая цель недели.
+     */
+    private void announceSocialState(ServerPlayer player, PlayerProgress progress, long now) {
+        if (!config.enabled || !config.social_enabled) {
+            return;
+        }
+        try {
+            // новая неделя должна начинаться с чистого счётчика даже без тика
+            ensureWeek(now);
+            List<ServerPlayer> online = onlinePlayers();
+            List<String> names = new ArrayList<>();
+            for (ServerPlayer other : online) {
+                if (other != player) {
+                    names.add(other.getGameProfile()
+                        .name());
+                }
+            }
+            if (names.isEmpty()) {
+                player.sendSystemMessage(Component.literal(
+                        "GameMaster: сейчас ты на сервере один — мобы и лут настроены под одиночную игру.")
+                    .withStyle(ChatFormatting.GRAY));
+            } else {
+                player.sendSystemMessage(Component.literal("GameMaster: сейчас в игре " + (names.size() + 1)
+                        + " — кооп-бонус ×" + fmt(Social.coopExp(names.size() + 1, config))
+                        + " к опыту: " + String.join(", ", names))
+                    .withStyle(ChatFormatting.AQUA));
+            }
+
+            if (config.social_prime_hint && Social.hasActivity(data.hour_activity)) {
+                int start = Social.bestWindowStart(data.hour_activity, config.social_prime_window_hours);
+                if (start >= 0) {
+                    player.sendSystemMessage(Component.literal("GameMaster: обычно все собираются "
+                            + Social.formatWindow(start, config.social_prime_window_hours))
+                        .withStyle(ChatFormatting.GRAY));
+                }
+            }
+
+            if (config.social_goal_enabled && config.social_goal_kills > 0) {
+                boolean reached = data.week_goal_epoch > 0 || data.week_kills >= config.social_goal_kills;
+                String uuid = player.getUUID()
+                    .toString();
+                boolean claimed = data.week_claimed != null && data.week_claimed.contains(uuid);
+
+                if (reached && !claimed) {
+                    if (data.week_claimed == null) {
+                        data.week_claimed = new ArrayList<>();
+                    }
+                    data.week_claimed.add(uuid);
+                    grantFavor(player, progress, (int) Math.round(config.social_goal_favor));
+                    progress.guaranteed_rare += Math.max(0, config.social_goal_rare);
+                    dirty = true;
+                    player.sendSystemMessage(Component.literal("GameMaster: общая цель недели выполнена! +"
+                            + Math.round(config.social_goal_favor) + " Благосклонности"
+                            + (config.social_goal_rare > 0 ? " и гарантированная редкая вещь" : ""))
+                        .withStyle(ChatFormatting.GOLD));
+                } else if (!reached) {
+                    player.sendSystemMessage(Component.literal("GameMaster: цель недели — "
+                            + Social.goalText(data.week_kills, config.social_goal_kills))
+                        .withStyle(ChatFormatting.GRAY));
+                }
+            }
+        } catch (Exception e) {
+            // социальные сообщения не должны ломать вход в игру
+        }
+    }
+
+    /** Сбрасывает недельный счётчик, когда началась новая неделя. */
+    private void ensureWeek(long now) {
+        long week = Social.weekIndex(now);
+        if (data.week_index == week) {
+            return;
+        }
+        data.week_index = week;
+        data.week_kills = 0;
+        data.week_goal_epoch = 0;
+        data.week_claimed = new ArrayList<>();
+        dirty = true;
+    }
+
+    /** Сообщение всем, кто сейчас онлайн (например, о «первом» событии сервера). */
+    public void broadcast(String text, ChatFormatting color) {
+        if (server == null) {
+            return;
+        }
+        Component message = Component.literal(text)
+            .withStyle(color);
+        for (ServerPlayer online : onlinePlayers()) {
+            try {
+                online.sendSystemMessage(message);
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    /** Запоминает «первое» событие сервера и объявляет его (один раз на сезон). */
+    private void recordFirst(String key, String name, String text) {
+        if (!config.social_enabled || key == null || name == null || name.isEmpty()) {
+            return;
+        }
+        if (data.firsts == null) {
+            data.firsts = new HashMap<>();
+        }
+        if (data.firsts.containsKey(key)) {
+            return;
+        }
+        data.firsts.put(key, name);
+        dirty = true;
+        if (config.social_announce_firsts) {
+            broadcast("★ " + name + " " + text + "!", ChatFormatting.GOLD);
+        }
+    }
+
+    /**
+     * Множитель HP моба по числу игроков рядом с ним. Считается в момент спавна
+     * или пересчёта статов: группа из четырёх не убивает босса за один удар,
+     * а одиночка не получает искусственно толстых мобов.
+     */
+    public double mobGroupHealthMultiplier(net.minecraft.world.entity.Entity entity) {
+        if (entity == null || !loaded || !config.enabled || !config.social_enabled
+            || !config.social_group_content || server == null) {
+            return 1;
+        }
+        try {
+            double radius = Math.max(1, config.social_group_radius);
+            double radiusSq = radius * radius;
+            int nearby = 0;
+            for (ServerPlayer player : onlinePlayers()) {
+                if (player.level() != entity.level()) {
+                    continue;
+                }
+                if (player.distanceToSqr(entity) <= radiusSq) {
+                    nearby++;
+                }
+            }
+            return Social.groupHealthMultiplier(nearby, config);
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+
+    /** Сколько игроков онлайн на последнем тике. */
+    public int onlineCount() {
+        return onlineCache;
+    }
+
+    /** Кооп-множитель опыта (для панели и команд). */
+    public double coopExpMultiplier() {
+        return config.enabled && config.social_enabled ? Social.coopExp(coopCache, config) : 1;
+    }
+
+    /** Кооп-множитель лута. */
+    public double coopLootMultiplier() {
+        return config.enabled && config.social_enabled ? Social.coopLoot(coopCache, config) : 1;
+    }
+
+    /** Кооп-множитель спавна. */
+    public double coopSpawnMultiplier() {
+        return config.enabled && config.social_enabled ? Social.coopSpawn(coopCache, config) : 1;
+    }
+
+    /** Убийств всей командой за текущую неделю. */
+    public int weeklyKills() {
+        return data.week_kills;
+    }
+
+    /** Выполнена ли общая цель недели. */
+    public boolean weeklyGoalReached() {
+        return data.week_goal_epoch > 0 || (config.social_goal_kills > 0 && data.week_kills >= config.social_goal_kills);
+    }
+
     /** Открыта новая сессия (вход в игру): обновляем среднюю длину сессии. */
     private void accumulateSession(PlayerProgress progress) {
         if (progress.session_seconds > 60) {
@@ -733,6 +995,15 @@ public class GameMaster {
         }
         PlayerProgress progress = progressFor(player);
         long now = now();
+
+        // Возвращение после перерыва: короткое окно бонуса и гарантированный дроп.
+        // Считаем ДО перезаписи last_seen, иначе перерыв «исчезает».
+        boolean returning = Retention.shouldGrantReturn(progress, now, config);
+        if (returning) {
+            progress.return_until = now + (long) Math.max(0, config.retention_return_hours * 3600.0);
+            progress.guaranteed_rare += Math.max(0, config.retention_return_rare);
+        }
+
         if (config.auto_balance && config.auto_welcome_hours > 0 && progress.last_seen > 0
             && now - progress.last_seen >= config.auto_welcome_hours * 3600.0) {
             progress.welcome_until = now + 1800;
@@ -754,7 +1025,21 @@ public class GameMaster {
                 player.sendSystemMessage(Component.literal("GameMaster: " + daily.text)
                     .withStyle(ChatFormatting.AQUA));
             }
+
+            // Короткая цель на сессию: одна конкретная задача вместо «играй как хочешь».
+            Retention.SessionGoal goal = Retention.ensureSessionGoal(progress, progress.level, now, config);
+            if (goal != null && !goal.done) {
+                player.sendSystemMessage(Component.literal("GameMaster: " + goal.text)
+                    .withStyle(ChatFormatting.YELLOW));
+            }
         }
+
+        if (returning) {
+            player.sendSystemMessage(Component.literal("GameMaster: " + Retention.returnText(config))
+                .withStyle(ChatFormatting.GREEN));
+        }
+
+        announceSocialState(player, progress, now);
 
         progress.multiplier = computeMultiplier(progress);
         if (progress.history.isEmpty()) {
@@ -766,7 +1051,10 @@ public class GameMaster {
             MultiplierBreakdown breakdown = breakdown(progress);
             String text = "GameMaster: множитель опыта x" + fmt(breakdown.total)
                 + " (темп x" + fmt(breakdown.pacing) + ", догоняющий x" + fmt(breakdown.catchUp)
-                + ", автобаланс x" + fmt(breakdown.auto) + ")";
+                + ", автобаланс x" + fmt(breakdown.auto)
+                + (breakdown.coop > 1.001 ? ", кооп x" + fmt(breakdown.coop) : "")
+                + (breakdown.returnBonus > 1.001 ? ", возвращение x" + fmt(breakdown.returnBonus) : "")
+                + ")";
             player.sendSystemMessage(Component.literal(text)
                 .withStyle(ChatFormatting.GOLD));
         }
@@ -875,9 +1163,12 @@ public class GameMaster {
             return;
         }
 
-        double sumHealth = 0;
-        double sumDamage = 0;
-        double sumLoot = 0;
+        // Медиана, а не среднее: на сервере с 4–6 игроками одна тяжёлая сессия
+        // (новичок, который умирает каждые две минуты) не должна ослаблять мобов
+        // всем остальным. При двух игроках медиана совпадает со средним.
+        List<Double> healthTargets = new ArrayList<>();
+        List<Double> damageTargets = new ArrayList<>();
+        List<Double> lootTargets = new ArrayList<>();
         int count = 0;
 
         for (ServerPlayer player : onlinePlayers()) {
@@ -906,9 +1197,9 @@ public class GameMaster {
             progress.auto_state = directive.state;
             progress.auto_updated_epoch = now;
 
-            sumHealth += directive.mob_health;
-            sumDamage += directive.mob_damage;
-            sumLoot += directive.loot;
+            healthTargets.add(directive.mob_health);
+            damageTargets.add(directive.mob_damage);
+            lootTargets.add(directive.loot);
             count++;
         }
 
@@ -922,8 +1213,8 @@ public class GameMaster {
         double step = config.auto_global_step_per_minute;
 
         if (config.auto_touch_mobs) {
-            autoMobHealth = AutoBalance.rateLimit(autoMobHealth, sumHealth / count, step, minutes);
-            autoMobDamage = AutoBalance.rateLimit(autoMobDamage, sumDamage / count, step, minutes);
+            autoMobHealth = AutoBalance.rateLimit(autoMobHealth, median(healthTargets), step, minutes);
+            autoMobDamage = AutoBalance.rateLimit(autoMobDamage, median(damageTargets), step, minutes);
             autoMobHealth = AutoBalance.clamp(autoMobHealth, config.auto_mob_health_min, config.auto_mob_health_max);
             autoMobDamage = AutoBalance.clamp(autoMobDamage, config.auto_mob_damage_min, config.auto_mob_damage_max);
         } else {
@@ -932,13 +1223,26 @@ public class GameMaster {
         }
 
         if (config.auto_touch_loot) {
-            autoLoot = AutoBalance.rateLimit(autoLoot, sumLoot / count, step, minutes);
+            autoLoot = AutoBalance.rateLimit(autoLoot, median(lootTargets), step, minutes);
             autoLoot = AutoBalance.clamp(autoLoot, 1.0, config.auto_loot_max);
         } else {
             autoLoot = 1.0;
         }
 
         autoGlobalUpdated = now;
+    }
+
+    /** Медиана значений (устойчива к одиночным выбросам). */
+    private static double median(List<Double> values) {
+        if (values == null || values.isEmpty()) {
+            return 1.0;
+        }
+        List<Double> sorted = new ArrayList<>(values);
+        sorted.sort(Double::compareTo);
+        int size = sorted.size();
+        return size % 2 == 1
+            ? sorted.get(size / 2)
+            : (sorted.get(size / 2 - 1) + sorted.get(size / 2)) / 2.0;
     }
 
     /** Оценка времени до максимума по замерам (в часах), либо -1, если замеров нет. */
@@ -998,6 +1302,12 @@ public class GameMaster {
         if (config.auto_balance && progress.auto_exp_multiplier > 0) {
             multiplier *= progress.auto_exp_multiplier;
         }
+        // Маленький сервер: играть вместе выгоднее, чем по очереди.
+        if (config.social_enabled) {
+            multiplier *= Social.coopExp(coopCache, config);
+        }
+        // Возвращение после перерыва: короткое окно усиленного опыта.
+        multiplier *= Retention.returnExpBonus(progress, now(), config);
 
         return ExpTuner.clamp(multiplier, config.exp_multiplier_min, config.exp_multiplier_max);
     }
@@ -1019,7 +1329,12 @@ public class GameMaster {
         if (config.auto_balance && progress.auto_exp_multiplier > 0) {
             breakdown.auto = progress.auto_exp_multiplier;
         }
-        breakdown.total = ExpTuner.clamp(breakdown.pacing * breakdown.catchUp * breakdown.auto,
+        if (config.social_enabled) {
+            breakdown.coop = Social.coopExp(coopCache, config);
+        }
+        breakdown.returnBonus = Retention.returnExpBonus(progress, now(), config);
+        breakdown.total = ExpTuner.clamp(
+            breakdown.pacing * breakdown.catchUp * breakdown.auto * breakdown.coop * breakdown.returnBonus,
             config.exp_multiplier_min, config.exp_multiplier_max);
         return breakdown;
     }
@@ -1100,6 +1415,10 @@ public class GameMaster {
         // но итог всё равно остаётся вероятностью 0…1.
         if (config.auto_balance) {
             rate *= autoSpawnMultiplier(uuid);
+        }
+        // Компания онлайн — больше мобов: мир должен быть живым, а не пустым.
+        if (config.social_enabled) {
+            rate *= Social.coopSpawn(coopCache, config);
         }
         return ExpTuner.clamp(rate, 0, 1);
     }
@@ -1327,6 +1646,42 @@ public class GameMaster {
         retention.addProperty("pity_start_kills", config.retention_pity_start_kills);
         retention.addProperty("milestone_every", config.retention_milestone_every);
         summary.add("retention", retention);
+
+        // Маленький сервер: кто онлайн, когда собираются, общая цель недели.
+        JsonObject social = new JsonObject();
+        social.addProperty("enabled", config.enabled && config.social_enabled);
+        social.addProperty("online", onlineCache);
+        social.addProperty("coop_exp", round2(coopExpMultiplier()));
+        social.addProperty("coop_loot", round2(coopLootMultiplier()));
+        social.addProperty("coop_spawn", round2(coopSpawnMultiplier()));
+        social.addProperty("group_hp", round2(Social.groupHealthMultiplier(coopCache, config)));
+        social.addProperty("active", coopCache);
+        social.addProperty("group_radius", round2(config.social_group_radius));
+        boolean hasActivity = Social.hasActivity(data.hour_activity);
+        int window = Math.max(1, Math.min(24, config.social_prime_window_hours));
+        int primeStart = hasActivity ? Social.bestWindowStart(data.hour_activity, window) : -1;
+        social.addProperty("prime_start", primeStart);
+        social.addProperty("prime_end", primeStart < 0 ? -1 : Math.floorMod(primeStart + window, 24));
+        social.addProperty("prime_window", Social.formatWindow(primeStart, window));
+        JsonArray heat = new JsonArray();
+        for (double value : Social.normalized(data.hour_activity)) {
+            heat.add(round2(value));
+        }
+        social.add("heat", heat);
+        social.addProperty("goal_enabled", config.social_goal_enabled);
+        social.addProperty("goal_kills", data.week_kills);
+        social.addProperty("goal_target", config.social_goal_kills);
+        social.addProperty("goal_reached", weeklyGoalReached());
+        social.addProperty("goal_claimed", data.week_claimed == null ? 0 : data.week_claimed.size());
+        JsonObject firsts = new JsonObject();
+        if (data.firsts != null) {
+            for (Map.Entry<String, String> entry : data.firsts.entrySet()) {
+                firsts.addProperty(entry.getKey(), entry.getValue());
+            }
+        }
+        social.add("firsts", firsts);
+        summary.add("social", social);
+
         root.add("summary", summary);
 
         List<PlayerProgress> sorted = new ArrayList<>(data.players.values());
@@ -1394,6 +1749,12 @@ public class GameMaster {
         json.addProperty("kills_since_unique", progress.kills_since_unique);
         json.addProperty("guaranteed_rare", progress.guaranteed_rare);
         json.addProperty("guaranteed_epic", progress.guaranteed_epic);
+        json.addProperty("coop_multiplier", round2(config.social_enabled
+            ? Social.coopExp(coopCache, config) : 1));
+        json.addProperty("session_goal_progress", progress.session_goal_progress);
+        json.addProperty("session_goal_target", progress.session_goal_target);
+        json.addProperty("session_goal_done", progress.session_goal_done);
+        json.addProperty("return_bonus", round2(Retention.returnExpBonus(progress, now(), config)));
 
         // для графика хватает ~300 точек, не гоняем весь массив в браузер
         JsonArray history = new JsonArray();
@@ -1428,7 +1789,8 @@ public class GameMaster {
         sb.append("uuid,name,level,playtime_hours,sessions,avg_session_minutes,streak_days,")
             .append("active_days_7,day_of_play,churn_risk,deaths,deaths_per_hour,")
             .append("minutes_per_level,target_minutes,exp_multiplier,auto_state,")
-            .append("kills_since_unique,milestones,guaranteed_rare,guaranteed_epic,last_seen_days\n");
+            .append("kills_since_unique,milestones,guaranteed_rare,guaranteed_epic,last_seen_days,")
+            .append("goal_progress,goal_target,return_bonus,coop_multiplier\n");
         for (PlayerProgress p : data.players.values()) {
             if (p == null) {
                 continue;
@@ -1453,7 +1815,11 @@ public class GameMaster {
                 .append(p.milestones_claimed).append(',')
                 .append(p.guaranteed_rare).append(',')
                 .append(p.guaranteed_epic).append(',')
-                .append(p.last_seen > 0 ? round2((now - p.last_seen) / 86400.0) : -1)
+                .append(p.last_seen > 0 ? round2((now - p.last_seen) / 86400.0) : -1).append(',')
+                .append(p.session_goal_progress).append(',')
+                .append(p.session_goal_target).append(',')
+                .append(round2(Retention.returnExpBonus(p, now, config))).append(',')
+                .append(round2(config.social_enabled ? Social.coopExp(coopCache, config) : 1))
                 .append('\n');
         }
         Files.createDirectories(baseDir());
@@ -1540,9 +1906,13 @@ public class GameMaster {
         return config.enabled && config.auto_balance && config.auto_touch_mobs ? autoMobDamage : 1.0;
     }
 
-    /** Глобальный множитель шанса дропа. */
+    /** Глобальный множитель шанса дропа (автобаланс + кооп-бонус). */
     public double lootMultiplier() {
-        return config.enabled && config.auto_balance && config.auto_touch_loot ? autoLoot : 1.0;
+        double loot = config.enabled && config.auto_balance && config.auto_touch_loot ? autoLoot : 1.0;
+        if (config.enabled && config.social_enabled) {
+            loot *= Social.coopLoot(coopCache, config);
+        }
+        return loot;
     }
 
     /** Суммарное целевое время 1 → максимум, часы. */
@@ -1571,6 +1941,10 @@ public class GameMaster {
         public double catchUp = 1;
         /** Множитель «режиссёра» (AutoBalance) по темпу и смертям. */
         public double auto = 1;
+        /** Кооп-бонус за игру вместе (1 — ты один). */
+        public double coop = 1;
+        /** Бонус за возвращение после перерыва (1 — не действует). */
+        public double returnBonus = 1;
         public double total = 1;
     }
 }

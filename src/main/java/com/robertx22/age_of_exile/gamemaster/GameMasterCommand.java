@@ -112,6 +112,14 @@ public class GameMasterCommand {
                     .executes(ctx -> toggleRetentionPity(ctx.getSource()))
                     .then(argument("value", BoolArgumentType.bool())
                         .executes(ctx -> setRetentionPity(ctx.getSource(), BoolArgumentType.getBool(ctx, "value"))))))
+            .then(literal("social")
+                .executes(ctx -> socialStatus(ctx.getSource()))
+                .then(literal("on").executes(ctx -> setSocial(ctx.getSource(), true)))
+                .then(literal("off").executes(ctx -> setSocial(ctx.getSource(), false)))
+                .then(literal("goal")
+                    .then(argument("kills", IntegerArgumentType.integer(0, 100000000))
+                        .executes(ctx -> setSocialGoal(ctx.getSource(),
+                            IntegerArgumentType.getInteger(ctx, "kills"))))))
             .then(literal("export").executes(ctx -> exportCsv(ctx.getSource())))
             .then(literal("reload").executes(ctx -> {
                 GameMaster.get()
@@ -390,6 +398,67 @@ public class GameMasterCommand {
         }
         send(source, "Лучшая серия: " + best + " дн., средний риск ухода: "
             + GameMaster.fmt(count > 0 ? risk / count : 0) + " (0 — не уйдёт, 1 — уйдёт)");
+        return 1;
+    }
+
+    private static int setSocial(CommandSourceStack source, boolean value) {
+        GameMasterConfig config = GameMaster.get()
+            .config();
+        config.social_enabled = value;
+        GameMaster.get()
+            .onConfigEdited();
+        send(source, "Социальный слой (кооп-бонус, прайм-тайм, общая цель): " + onOff(value));
+        return 1;
+    }
+
+    private static int setSocialGoal(CommandSourceStack source, int kills) {
+        GameMasterConfig config = GameMaster.get()
+            .config();
+        config.social_goal_kills = kills;
+        config.social_goal_enabled = kills > 0;
+        GameMaster.get()
+            .onConfigEdited();
+        send(source, kills > 0
+            ? "Общая цель недели: " + kills + " убийств на весь сервер."
+            : "Общая цель недели выключена.");
+        return 1;
+    }
+
+    private static int socialStatus(CommandSourceStack source) {
+        GameMaster gm = GameMaster.get();
+        GameMasterConfig config = gm.config();
+        if (!config.social_enabled) {
+            send(source, "Социальный слой выключен (/gm social on).");
+            return 1;
+        }
+        int online = gm.onlineCount();
+        send(source, "Онлайн: " + online + "; кооп-бонус: опыт x" + GameMaster.fmt(gm.coopExpMultiplier())
+            + ", лут x" + GameMaster.fmt(gm.coopLootMultiplier())
+            + ", спавн x" + GameMaster.fmt(gm.coopSpawnMultiplier()));
+        send(source, "Темп бонуса: +" + GameMaster.fmt(config.social_coop_exp_per_player * 100)
+            + "% опыта за каждого сверх первого (потолок x" + GameMaster.fmt(config.social_coop_max) + ")");
+        if (Social.hasActivity(gm.data().hour_activity)) {
+            int start = Social.bestWindowStart(gm.data().hour_activity, config.social_prime_window_hours);
+            send(source, "Прайм-тайм сервера: "
+                + Social.formatWindow(start, config.social_prime_window_hours));
+        } else {
+            send(source, "Прайм-тайм: данных пока нет (нужно несколько сессий).");
+        }
+        if (config.social_goal_enabled && config.social_goal_kills > 0) {
+            send(source, "Общая цель недели: " + Social.goalText(gm.weeklyKills(), config.social_goal_kills)
+                + (gm.weeklyGoalReached() ? " — выполнена" : "")
+                + "; награда: +" + GameMaster.fmt(config.social_goal_favor) + " Благосклонности");
+        } else {
+            send(source, "Общая цель недели выключена (/gm social goal <убийств>).");
+        }
+        send(source, "Мобы: +" + GameMaster.fmt(config.social_group_hp_per_player * 100)
+            + "% HP за каждого игрока рядом (радиус " + GameMaster.fmt(config.social_group_radius)
+            + ", потолок x" + GameMaster.fmt(config.social_group_hp_max) + ")");
+        if (gm.data().firsts != null && !gm.data().firsts.isEmpty()) {
+            for (var entry : gm.data().firsts.entrySet()) {
+                send(source, "  ★ " + entry.getKey() + " — " + entry.getValue());
+            }
+        }
         return 1;
     }
 

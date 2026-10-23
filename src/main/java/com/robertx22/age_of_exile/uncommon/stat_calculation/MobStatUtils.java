@@ -158,6 +158,11 @@ public class MobStatUtils {
         hpToAdd *= (float) GameMaster.get()
             .mobHealthMultiplier();
 
+        // Маленький сервер: если рядом несколько игроков, моб крепче.
+        // Считается один раз — в момент спавна/пересчёта статов.
+        hpToAdd *= (float) GameMaster.get()
+            .mobGroupHealthMultiplier(en);
+
         stats.add(ExactStatData.scaleTo(hpToAdd, ModType.FLAT, Health.getInstance()
             .GUID(), lvl));
 

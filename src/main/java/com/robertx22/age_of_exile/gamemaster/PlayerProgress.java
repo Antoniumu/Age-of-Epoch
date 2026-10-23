@@ -97,6 +97,18 @@ public class PlayerProgress {
     public int guaranteed_rare = 0;
     public int guaranteed_epic = 0;
 
+    /** Цель на сессию: сколько убийств нужно и сколько уже сделано. */
+    public int session_goal_target = 0;
+    public int session_goal_progress = 0;
+    /** Награда за выполненную цель (Благосклонность). */
+    public int session_goal_reward = 0;
+    /** Сутки, на которые назначена цель. */
+    public long session_goal_day = 0;
+    public boolean session_goal_done = false;
+
+    /** До какого момента (epoch seconds) действует усиленный опыт после перерыва. */
+    public long return_until = 0;
+
     /** Время последней активности (epoch seconds). */
     public long last_seen = 0;
 

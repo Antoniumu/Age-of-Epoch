@@ -112,6 +112,26 @@
   .note { color: var(--muted); font-size: 12px; margin-top: 10px; }
   code { background: #0c1118; border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; font-size: 12px; }
   .empty { color: var(--muted); padding: 24px 6px; text-align: center; }
+  .card h3 { margin: 0 0 6px; font-size: 15px; }
+  .card .sub { color: var(--muted); font-size: 12.5px; }
+  .progress {
+    height: 10px; border-radius: 999px; background: #0c1118; border: 1px solid var(--line);
+    overflow: hidden; margin: 12px 0 8px;
+  }
+  .progress-fill {
+    height: 100%; width: 0; border-radius: 999px;
+    background: linear-gradient(90deg, #2f6d45, var(--green)); transition: width .3s;
+  }
+  .heat {
+    display: grid; grid-auto-flow: column; grid-template-columns: repeat(24, 1fr);
+    gap: 4px; align-items: end; height: 96px; margin-top: 10px;
+  }
+  .heat-col { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; gap: 4px; }
+  .heat-bar {
+    width: 100%; min-height: 2px; border-radius: 3px 3px 0 0;
+    background: linear-gradient(180deg, var(--violet), #4c1d95);
+  }
+  .heat-label { font-size: 9px; color: var(--muted); }
   @media (max-width: 620px) { main, header { padding-left: 14px; padding-right: 14px; } }
 </style>
 </head>
@@ -221,9 +241,12 @@
         <label class="field">Минимум динамики спавна
           <input type="number" id="inpSpawnMin" min="0" max="1" step="0.01">
         </label>
+        <label class="field">Общая цель недели, убийств
+          <input type="number" id="inpGoalKills" min="0" max="100000000" step="50">
+        </label>
         <button class="apply" id="btnApply">Применить</button>
       </div>
-      <div class="note">Ручной множитель задаётся в диапазоне 0–1: 0.5 означает половину спавна, 1 — без ручного штрафа. Динамика ×100/(100+Благосклонность): при 0 — ×1, при 100 — ×0.5. Ручной override игрока заменяет глобальный ручной множитель, динамика затем умножается. Значения сохраняются в <code>config/age_of_epoch/gamemaster.json</code>.</div>
+      <div class="note">Ручной множитель задаётся в диапазоне 0–1: 0.5 означает половину спавна. Динамика: <code>floor + (1 − floor) × Благосклонность/(Благосклонность + база)</code> — чем выше Благосклонность, тем <b>больше</b> спавн, но не ниже <code>floor</code>. Ручной override игрока заменяет глобальный множитель. Общая цель недели: 0 — выключить. Значения сохраняются в <code>config/age_of_epoch/gamemaster.json</code>.</div>
     </div>
   </section>
 
@@ -275,6 +298,38 @@
         <div class="value" id="statPlayers">—</div>
         <div class="hint" id="statPlayersHint">онлайн / в сезоне</div>
       </div>
+      <div class="card stat">
+        <div class="label">Кооп-бонус</div>
+        <div class="value" id="statCoop">—</div>
+        <div class="hint" id="statCoopHint">опыт / лут / спавн</div>
+      </div>
+      <div class="card stat">
+        <div class="label">Прайм-тайм</div>
+        <div class="value" id="statPrime">—</div>
+        <div class="hint" id="statPrimeHint">когда обычно играют</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Сервер</h2>
+    <div class="grid cols-2">
+      <div class="card">
+        <h3>Общая цель недели</h3>
+        <div class="sub" id="goalText">—</div>
+        <div class="progress"><div class="progress-fill" id="goalFill"></div></div>
+        <div class="sub" id="goalNote">—</div>
+      </div>
+      <div class="card">
+        <h3>Когда все играют</h3>
+        <div class="sub" id="primeText">—</div>
+        <div class="heat" id="heatBars"></div>
+        <div class="sub" style="margin-top:8px">Столбик — активность сервера в этот час (всё время наблюдений).</div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>Первые события сервера</h3>
+      <div class="sub" id="firstsText">—</div>
     </div>
   </section>
 
@@ -316,6 +371,7 @@
             <th class="num">Авто XP</th>
             <th class="num">Состояние</th>
             <th class="num">Темп уровня</th>
+            <th class="num">Цель</th>
             <th class="num">Серия</th>
             <th class="num">Pity</th>
             <th class="num">Итог XP</th>
@@ -323,7 +379,7 @@
           </tr>
         </thead>
         <tbody id="playerRows">
-          <tr><td colspan="15" class="empty">данных пока нет</td></tr>
+          <tr><td colspan="16" class="empty">данных пока нет</td></tr>
         </tbody>
       </table>
     </div>
@@ -423,8 +479,9 @@
       "штраф после " + (cfg.pacing_start_level ?? "—") + " уровня; прогноз " + fmt(summary.predicted_hours, 1) + " ч, k=" + fmt(summary.k, 2);
     document.getElementById("masterInfo").textContent = cfg.enabled ? "система активна" : "вмешательство GameMaster отключено";
     const favorBase = Math.max(1, Number(cfg.spawn_rate_favor_reference) || 100);
+    const floor = Number(cfg.spawn_rate_dynamic_min_multiplier ?? 0.65);
     const dynamicAt100 = cfg.spawn_rate_dynamic
-      ? Math.max(Number(cfg.spawn_rate_dynamic_min_multiplier || 0), favorBase / (favorBase + 100))
+      ? floor + (1 - floor) * (100 / (favorBase + 100))
       : 1;
     document.getElementById("spawnRateInfo").textContent =
       (cfg.enabled && cfg.spawn_rate_enabled ? "активно" : "выключено") + "; ручной ×" +
@@ -458,6 +515,54 @@
     document.getElementById("statPredicted").textContent = fmt(summary.predicted_hours, 1) + " ч";
     document.getElementById("statTarget").textContent = fmt(summary.target_hours, 1) + " ч";
     document.getElementById("statReference").textContent = fmt(summary.reference_level, 1) + " ур.";
+    const social = summary.social || {};
+    document.getElementById("statCoop").textContent = "×" + fmt(social.coop_exp, 2);
+    document.getElementById("statCoopHint").textContent =
+      "лут ×" + fmt(social.coop_loot, 2) + ", спавн ×" + fmt(social.coop_spawn, 2)
+      + ", HP мобов ×" + fmt(social.group_hp, 2);
+    document.getElementById("statPrime").textContent =
+      (social.prime_start ?? -1) >= 0 ? social.prime_window : "—";
+    document.getElementById("statPrimeHint").textContent =
+      (social.online ?? 0) + " сейчас · " + (social.prime_start >= 0 ? "окно компании" : "мало данных");
+
+    const goalKills = social.goal_kills ?? 0;
+    const goalTarget = social.goal_target ?? 0;
+    const goalFavor = cfg.social_goal_favor ?? 0;
+    document.getElementById("goalText").textContent = goalTarget > 0
+      ? goalKills + " / " + goalTarget + " убийств всей командой"
+      : "цель выключена (/gm social goal <убийств>)";
+    document.getElementById("goalFill").style.width =
+      goalTarget > 0 ? Math.min(100, (100 * goalKills) / goalTarget).toFixed(1) + "%" : "0%";
+    document.getElementById("goalNote").textContent = goalTarget <= 0
+      ? "—"
+      : (social.goal_reached
+        ? "выполнена — награда ждёт всех, кто зайдёт (получили: " + (social.goal_claimed ?? 0) + ")"
+        : "осталось " + Math.max(0, goalTarget - goalKills) + " убийств · награда +"
+          + fmt(goalFavor, 0) + " Благосклонности каждому");
+
+    document.getElementById("primeText").textContent = (social.prime_start ?? -1) >= 0
+      ? "Обычно собираются " + social.prime_window + " · онлайн сейчас " + (social.online ?? 0)
+      : "Нужно несколько сессий, чтобы увидеть расписание";
+    const heat = social.heat || [];
+    document.getElementById("heatBars").innerHTML = Array.from({ length: 24 }, (_, hour) => {
+      const value = Math.max(0, Math.min(1, Number(heat[hour] || 0)));
+      const label = hour % 3 === 0 ? String(hour).padStart(2, "0") : "";
+      return `<div class="heat-col" title="${String(hour).padStart(2, "0")}:00 — активность ${(value * 100).toFixed(0)}%">`
+        + `<div class="heat-bar" style="height:${(value * 100).toFixed(0)}%"></div>`
+        + `<div class="heat-label">${label}</div></div>`;
+    }).join("");
+
+    const firsts = social.firsts || {};
+    const firstLabels = {
+      level_10: "первый 10 уров.", level_20: "первый 20 уров.", level_30: "первый 30 уров.",
+      level_40: "первый 40 уров.", level_50: "первый 50 уров.", unique: "первый уникат"
+    };
+    const firstKeys = Object.keys(firsts);
+    document.getElementById("firstsText").innerHTML = firstKeys.length
+      ? firstKeys.map((key) => `<span class="badge flat" style="margin:0 8px 6px 0">★ `
+          + `${escapeHtml(firstLabels[key] || key)} — ${escapeHtml(firsts[key])}</span>`).join("")
+      : "пока никого — стань первым";
+
     document.getElementById("statPlayers").textContent = (summary.online ?? 0) + " / " + (summary.tracked ?? 0);
     document.getElementById("statPlayersHint").textContent = "онлайн / в сезоне";
     document.getElementById("statPredictedHint").textContent =
@@ -488,12 +593,13 @@
           <td class="num">×${fmt(p.auto_exp_multiplier, 2)}</td>
           <td class="num muted" title="смертей/час: ${fmt(p.deaths_per_hour, 2)}; спавн ×${fmt(p.auto_spawn, 2)}">${escapeHtml(p.auto_state || "—")}</td>
           <td class="num muted">${fmt(p.minutes_at_level, 0)} / ${fmt(p.target_minutes, 0)} мин</td>
+          <td class="num muted" title="цель сессии: убийства; бонус за возвращение ×${fmt(p.return_bonus, 2)}">${p.session_goal_progress ?? 0}/${p.session_goal_target ?? 0}</td>
           <td class="num muted" title="активных дней за 7: ${p.active_days_7 ?? 0}">${p.streak_days ?? 0} дн</td>
           <td class="num muted" title="убийств без униката; гарант. редких: ${p.guaranteed_rare ?? 0}, эпик: ${p.guaranteed_epic ?? 0}">${p.kills_since_unique ?? 0}</td>
           <td class="num"><span class="badge ${multiplierClass(p.multiplier)}">×${fmt(p.multiplier, 2)}</span></td>
           <td class="num muted">${p.online ? "в сети" : ago(p.last_seen_minutes)}</td>
         </tr>`).join("")
-      : `<tr><td colspan="15" class="empty">данных пока нет</td></tr>`;
+      : `<tr><td colspan="16" class="empty">данных пока нет</td></tr>`;
 
     if (!document.activeElement || !document.activeElement.matches("input, select")) {
       document.getElementById("inpTarget").value = cfg.target_hours ?? "";
@@ -505,6 +611,7 @@
       document.getElementById("inpSpawnManual").value = cfg.spawn_rate_manual_multiplier ?? "";
       document.getElementById("inpFavorReference").value = cfg.spawn_rate_favor_reference ?? "";
       document.getElementById("inpSpawnMin").value = cfg.spawn_rate_dynamic_min_multiplier ?? "";
+      document.getElementById("inpGoalKills").value = cfg.social_goal_kills ?? "";
       document.getElementById("inpAutoStart").value = cfg.auto_start_minutes ?? "";
       document.getElementById("inpAutoEnd").value = cfg.auto_end_minutes ?? "";
       document.getElementById("inpAutoDead").value = cfg.auto_dead_zone ?? "";
@@ -820,6 +927,7 @@
       spawn_rate_manual_multiplier: Number(document.getElementById("inpSpawnManual").value),
       spawn_rate_favor_reference: Number(document.getElementById("inpFavorReference").value),
       spawn_rate_dynamic_min_multiplier: Number(document.getElementById("inpSpawnMin").value),
+      social_goal_kills: Number(document.getElementById("inpGoalKills").value),
       auto_start_minutes: Number(document.getElementById("inpAutoStart").value),
       auto_end_minutes: Number(document.getElementById("inpAutoEnd").value),
       auto_dead_zone: Number(document.getElementById("inpAutoDead").value)

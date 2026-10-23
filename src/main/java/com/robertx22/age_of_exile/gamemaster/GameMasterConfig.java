@@ -232,6 +232,82 @@ public class GameMasterConfig {
      */
     public int retention_no_exp_loss_level = 5;
 
+    /** Короткая цель на сессию: одна задача на входе, чтобы было чем заняться сразу. */
+    public boolean retention_session_goal = true;
+
+    /** Базовый размер награды за цель сессии. */
+    public double retention_session_goal_favor = 120;
+
+    /** Потолок цели по убийствам (чтобы на низких уровнях она не была марафоном). */
+    public int retention_session_goal_max = 40;
+
+    /** Пакет возвращения после долгого перерыва. */
+    public boolean retention_return_package = true;
+
+    /** Сколько дней отсутствия считаются «перерывом». */
+    public int retention_return_days = 3;
+
+    /** Сколько часов действует усиленный опыт после возвращения. */
+    public double retention_return_hours = 2;
+
+    /** Множитель опыта после возвращения (1.25 = +25%). */
+    public double retention_return_exp_bonus = 1.25;
+
+    /** Сколько гарантированных редких вещей выдаётся вместе с возвращением. */
+    public int retention_return_rare = 1;
+
+    // ------------------------------------------------------------------
+    // 2d. Маленький сервер (см. Social)
+    // ------------------------------------------------------------------
+
+    /** Кооп-бонус, подсказки прайм-тайма, общая цель и «первые» события. */
+    public boolean social_enabled = true;
+
+    /** Бонус к опыту за каждого игрока онлайн сверх первого (0.07 = +7%). */
+    public double social_coop_exp_per_player = 0.07;
+
+    /** Бонус к луту за каждого игрока онлайн сверх первого. */
+    public double social_coop_loot_per_player = 0.05;
+
+    /** Бонус к частоте спавна за каждого игрока онлайн сверх первого. */
+    public double social_coop_spawn_per_player = 0.15;
+
+    /** Потолок кооп-бонуса опыта и лута. */
+    public double social_coop_max = 1.35;
+
+    /** Масштабировать HP мобов по числу игроков рядом (иначе группа сносит всё мгновенно). */
+    public boolean social_group_content = true;
+
+    /** Добавка к HP моба за каждого игрока рядом сверх первого. */
+    public double social_group_hp_per_player = 0.25;
+
+    /** Потолок группового HP моба. */
+    public double social_group_hp_max = 2.0;
+
+    /** Радиус, в котором игроки считаются «вместе» для HP мобов. */
+    public double social_group_radius = 24;
+
+    /** Подсказывать при входе, когда обычно играют остальные. */
+    public boolean social_prime_hint = true;
+
+    /** Сколько часов подряд считается «окном компании». */
+    public int social_prime_window_hours = 3;
+
+    /** Объявлять «первые» события сервера (первый уровень 20, первый уникат и т.д.). */
+    public boolean social_announce_firsts = true;
+
+    /** Общая недельная цель сервера. */
+    public boolean social_goal_enabled = true;
+
+    /** Сколько убийств нужно набрать всем сервером за неделю. */
+    public int social_goal_kills = 1500;
+
+    /** Благосклонность каждому, кто зашёл после выполнения цели. */
+    public double social_goal_favor = 400;
+
+    /** Гарантированных редких вещей за выполнение общей цели. */
+    public int social_goal_rare = 1;
+
     // ------------------------------------------------------------------
     // 3. Спавн мобов вокруг игроков
     // ------------------------------------------------------------------
@@ -378,6 +454,23 @@ public class GameMasterConfig {
         retention_pity_full_kills = (int) clamp(retention_pity_full_kills,
             retention_pity_start_kills + 1, 10000000);
         retention_no_exp_loss_level = (int) clamp(retention_no_exp_loss_level, 0, 50);
+        retention_session_goal_favor = clamp(retention_session_goal_favor, 0, 100000);
+        retention_session_goal_max = (int) clamp(retention_session_goal_max, 1, 10000);
+        retention_return_days = (int) clamp(retention_return_days, 1, 3650);
+        retention_return_hours = clamp(retention_return_hours, 0, 8760);
+        retention_return_exp_bonus = clamp(retention_return_exp_bonus, 1, 100);
+        retention_return_rare = (int) clamp(retention_return_rare, 0, 100);
+        social_coop_exp_per_player = clamp(social_coop_exp_per_player, 0, 10);
+        social_coop_loot_per_player = clamp(social_coop_loot_per_player, 0, 10);
+        social_coop_spawn_per_player = clamp(social_coop_spawn_per_player, 0, 10);
+        social_coop_max = clamp(social_coop_max, 1, 100);
+        social_group_hp_per_player = clamp(social_group_hp_per_player, 0, 10);
+        social_group_hp_max = clamp(social_group_hp_max, 1, 100);
+        social_group_radius = clamp(social_group_radius, 1, 256);
+        social_prime_window_hours = (int) clamp(social_prime_window_hours, 1, 24);
+        social_goal_kills = (int) clamp(social_goal_kills, 0, 100000000);
+        social_goal_favor = clamp(social_goal_favor, 0, 100000);
+        social_goal_rare = (int) clamp(social_goal_rare, 0, 100);
         auto_spawn_min = clamp(auto_spawn_min, 0.05, 100);
         auto_spawn_max = clamp(auto_spawn_max, auto_spawn_min, 100);
         if (config_version == null) {
@@ -468,6 +561,30 @@ public class GameMasterConfig {
                     case "retention_pity_start_kills" -> this.retention_pity_start_kills = el.getAsInt();
                     case "retention_pity_full_kills" -> this.retention_pity_full_kills = el.getAsInt();
                     case "retention_no_exp_loss_level" -> this.retention_no_exp_loss_level = el.getAsInt();
+                    case "retention_session_goal" -> this.retention_session_goal = el.getAsBoolean();
+                    case "retention_session_goal_favor" -> this.retention_session_goal_favor = el.getAsDouble();
+                    case "retention_session_goal_max" -> this.retention_session_goal_max = el.getAsInt();
+                    case "retention_return_package" -> this.retention_return_package = el.getAsBoolean();
+                    case "retention_return_days" -> this.retention_return_days = el.getAsInt();
+                    case "retention_return_hours" -> this.retention_return_hours = el.getAsDouble();
+                    case "retention_return_exp_bonus" -> this.retention_return_exp_bonus = el.getAsDouble();
+                    case "retention_return_rare" -> this.retention_return_rare = el.getAsInt();
+                    case "social_enabled" -> this.social_enabled = el.getAsBoolean();
+                    case "social_coop_exp_per_player" -> this.social_coop_exp_per_player = el.getAsDouble();
+                    case "social_coop_loot_per_player" -> this.social_coop_loot_per_player = el.getAsDouble();
+                    case "social_coop_spawn_per_player" -> this.social_coop_spawn_per_player = el.getAsDouble();
+                    case "social_coop_max" -> this.social_coop_max = el.getAsDouble();
+                    case "social_group_content" -> this.social_group_content = el.getAsBoolean();
+                    case "social_group_hp_per_player" -> this.social_group_hp_per_player = el.getAsDouble();
+                    case "social_group_hp_max" -> this.social_group_hp_max = el.getAsDouble();
+                    case "social_group_radius" -> this.social_group_radius = el.getAsDouble();
+                    case "social_prime_hint" -> this.social_prime_hint = el.getAsBoolean();
+                    case "social_prime_window_hours" -> this.social_prime_window_hours = el.getAsInt();
+                    case "social_announce_firsts" -> this.social_announce_firsts = el.getAsBoolean();
+                    case "social_goal_enabled" -> this.social_goal_enabled = el.getAsBoolean();
+                    case "social_goal_kills" -> this.social_goal_kills = el.getAsInt();
+                    case "social_goal_favor" -> this.social_goal_favor = el.getAsDouble();
+                    case "social_goal_rare" -> this.social_goal_rare = el.getAsInt();
                     case "auto_session_fatigue_minutes" -> this.auto_session_fatigue_minutes = el.getAsDouble();
                     case "auto_welcome_hours" -> this.auto_welcome_hours = el.getAsDouble();
                     case "auto_touch_mobs" -> this.auto_touch_mobs = el.getAsBoolean();

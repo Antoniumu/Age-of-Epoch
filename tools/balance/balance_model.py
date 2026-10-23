@@ -476,6 +476,35 @@ def auto_exp_for_ratio(ratio):
     return max(AUTO_EXP_MIN, min(AUTO_EXP_MAX, ratio ** 0.8))
 
 
+def table_social():
+    print("### Маленький сервер (4–6 игроков)")
+    print()
+    print("| Онлайн | Опыт | Лут | Спавн | HP мобов (все рядом) |")
+    print("|---:|---:|---:|---:|---:|")
+    for online in range(1, 7):
+        exp = min(1.35, 1 + 0.07 * (online - 1))
+        loot = min(1.35, 1 + 0.05 * (online - 1))
+        spawn = 1 + 0.15 * (online - 1)
+        hp = min(2.0, 1 + 0.25 * (online - 1))
+        print(f"| {online} | ×{exp:.2f} | ×{loot:.2f} | ×{spawn:.2f} | ×{hp:.2f} |")
+    print()
+    print("Спавн дополнительно клампится в 0…1: при Благосклонности 500 "
+          "базовый rate ×0.82 и кооп ×1.6 дают уже ×1.0, дальше потолок.")
+    print()
+    print("Общая цель недели (убийства всей командой, при ~100 убийствах в час на игрока):")
+    print()
+    print("| Игроков | Часов в неделю каждый | Убийств за неделю | Цель 1500 |")
+    print("|---:|---:|---:|---|")
+    for players in (4, 5, 6):
+        for hours in (3, 5, 8):
+            kills = players * hours * 100
+            mark = "выполнена" if kills >= 1500 else f"нужно ещё {1500 - kills}"
+            print(f"| {players} | {hours} | {kills} | {mark} |")
+    print()
+    print("Цель 1500 подобрана так, чтобы её закрывала команда из 4–6 человек "
+          "за 3–5 часов в неделю суммарно на игрока — то есть без гринда.\n")
+
+
 def table_autobalance():
     print("### Автобаланс: целевой коридор и реакция на темп\n")
     print(f"Коридор: {AUTO_START_MINUTES:.0f} мин на 1 ур. → {AUTO_END_MINUTES:.0f} мин на 50 ур., "
@@ -682,4 +711,5 @@ if __name__ == "__main__":
     table_pacing()
     table_spawn()
     table_retention()
+    table_social()
     table_autobalance()

@@ -1,6 +1,8 @@
 package com.robertx22.age_of_exile.gamemaster;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,6 +23,43 @@ public class GameMasterData {
 
     /** Сколько всего секунд базового времени замерено (для быстрого расчёта). */
     public double observed_seconds = 0;
+
+    // ------------------------------------------------------------------
+    // Маленький сервер (см. Social)
+    // ------------------------------------------------------------------
+
+    /** Активность по локальным часам: сколько «человеко-секунд» сыграно в каждый час. */
+    public long[] hour_activity = new long[24];
+
+    /** «Первые» события сервера: ключ события → ник игрока. */
+    public Map<String, String> firsts = new HashMap<>();
+
+    /** Номер текущей недели (UTC-эпоха / 7 дней). */
+    public long week_index = 0;
+
+    /** Убийства всех игроков за текущую неделю. */
+    public int week_kills = 0;
+
+    /** Когда цель недели была выполнена впервые (epoch seconds), 0 — ещё нет. */
+    public long week_goal_epoch = 0;
+
+    /** Кто уже получил награду за цель недели. */
+    public List<String> week_claimed = new ArrayList<>();
+
+    /** Добавляет человеко-секунды в корзину часа (0–23). */
+    public void addActivity(int hour, long seconds) {
+        if (hour < 0 || hour > 23) {
+            return;
+        }
+        if (hour_activity == null || hour_activity.length != 24) {
+            hour_activity = new long[24];
+        }
+        if (seconds <= 0) {
+            return;
+        }
+        // потолок на корзину: за 6 недель работы сервера данные остаются осмысленными
+        hour_activity[hour] = Math.min(Long.MAX_VALUE / 4, hour_activity[hour] + seconds);
+    }
 
     public GameMasterData() {
     }
@@ -69,5 +108,11 @@ public class GameMasterData {
         players = new HashMap<>();
         level_times = new HashMap<>();
         observed_seconds = 0;
+        hour_activity = new long[24];
+        firsts = new HashMap<>();
+        week_index = 0;
+        week_kills = 0;
+        week_goal_epoch = 0;
+        week_claimed = new ArrayList<>();
     }
 }

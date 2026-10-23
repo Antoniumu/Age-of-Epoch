@@ -139,6 +139,134 @@ public final class Retention {
         return reward;
     }
 
+    /** Короткая цель на сессию: конкретная задача на входе, а не «играй как хочешь». */
+    public static final class SessionGoal {
+        public int target = 0;
+        public int progress = 0;
+        public int reward = 0;
+        public boolean done = false;
+        public String text = "";
+    }
+
+    /**
+     * Назначает цель на текущие сутки (или возвращает уже назначенную).
+     *
+     * <p>Цель короткая: её видно сразу и её реально закрыть за одну сессию в 20–40 минут.
+     * Награда — Благосклонность, то есть больше спавна и лута: игрок сам решает, когда
+     * её потратить.
+     */
+    public static SessionGoal ensureSessionGoal(PlayerProgress progress, int level, long now,
+                                                GameMasterConfig config) {
+        if (progress == null || config == null || !config.retention_enabled
+            || !config.retention_session_goal) {
+            return null;
+        }
+        long today = dayIndex(now);
+        if (progress.session_goal_day != today || progress.session_goal_target <= 0) {
+            int cap = Math.max(1, config.retention_session_goal_max);
+            int target = (int) Math.round(clamp(12 + level * 1.5, 12, cap));
+            progress.session_goal_day = today;
+            progress.session_goal_target = target;
+            progress.session_goal_progress = 0;
+            progress.session_goal_done = false;
+            progress.session_goal_reward = (int) Math.round(
+                config.retention_session_goal_favor * (1.0 + level / 50.0));
+        }
+        return goalOf(progress);
+    }
+
+    /** Текущая цель без назначения новой (может быть null). */
+    public static SessionGoal goalOf(PlayerProgress progress) {
+        if (progress == null || progress.session_goal_target <= 0) {
+            return null;
+        }
+        SessionGoal goal = new SessionGoal();
+        goal.target = progress.session_goal_target;
+        goal.progress = Math.min(progress.session_goal_progress, progress.session_goal_target);
+        goal.reward = progress.session_goal_reward;
+        goal.done = progress.session_goal_done;
+        goal.text = goal.done
+            ? "Цель сессии выполнена"
+            : "Цель сессии: убить " + goal.target + " мобов (" + goal.progress + "/" + goal.target
+            + ") → +" + goal.reward + " Благосклонности";
+        return goal;
+    }
+
+    /**
+     * Учитывает убийство в цели сессии.
+     *
+     * @return награда, если цель только что выполнена, иначе 0
+     */
+    public static int registerKill(PlayerProgress progress, long now, GameMasterConfig config) {
+        if (progress == null || config == null || !config.retention_session_goal) {
+            return 0;
+        }
+        if (progress.session_goal_done || progress.session_goal_target <= 0) {
+            return 0;
+        }
+        if (progress.session_goal_day != dayIndex(now)) {
+            return 0;
+        }
+        progress.session_goal_progress++;
+        if (progress.session_goal_progress >= progress.session_goal_target) {
+            progress.session_goal_done = true;
+            return Math.max(0, progress.session_goal_reward);
+        }
+        return 0;
+    }
+
+    // ------------------------------------------------------------------
+    // Пакет возвращения
+    // ------------------------------------------------------------------
+
+    /**
+     * Стоит ли выдать пакет возвращения: игрок отсутствовал дольше
+     * {@code retention_return_days}. Возвращаться должно быть выгодно — иначе
+     * после перерыва человек просто не заходит, чтобы «не начинать с нуля».
+     */
+    public static boolean shouldGrantReturn(PlayerProgress progress, long now, GameMasterConfig config) {
+        if (progress == null || config == null || !config.retention_enabled
+            || !config.retention_return_package || progress.last_seen <= 0) {
+            return false;
+        }
+        long gap = now - progress.last_seen;
+        return gap >= Math.max(1, config.retention_return_days) * 86400L;
+    }
+
+    /** Множитель опыта после перерыва: 1, если бонус не действует. */
+    public static double returnExpBonus(PlayerProgress progress, long now, GameMasterConfig config) {
+        if (progress == null || config == null || !config.retention_return_package) {
+            return 1;
+        }
+        if (progress.return_until <= now) {
+            return 1;
+        }
+        return Math.max(1, config.retention_return_exp_bonus);
+    }
+
+    /** Текст-приглашение вернуться (показывается при входе после перерыва). */
+    public static String returnText(GameMasterConfig config) {
+        int rare = config == null ? 0 : config.retention_return_rare;
+        double hours = config == null ? 0 : config.retention_return_hours;
+        double bonus = config == null ? 1 : config.retention_return_exp_bonus;
+        StringBuilder sb = new StringBuilder("С возвращением! ");
+        if (hours > 0 && bonus > 1) {
+            sb.append("Опыт ×").append(String.format("%.2f", bonus)).append(" на ")
+                .append(fmtHours(hours)).append(". ");
+        }
+        if (rare > 0) {
+            sb.append("Гарантированная редкая вещь уже ждёт в следующем дропе.");
+        }
+        return sb.toString().trim();
+    }
+
+    private static String fmtHours(double hours) {
+        if (hours < 1) {
+            return Math.round(hours * 60) + " мин";
+        }
+        return (hours == Math.floor(hours) ? String.valueOf((int) hours) : String.format("%.1f", hours)) + " ч";
+    }
+
     /**
      * Шанс «принудительного» униката за один дроп. Растёт с числом убийств
      * без униката: 0 до порога, затем линейно до 0.9.
