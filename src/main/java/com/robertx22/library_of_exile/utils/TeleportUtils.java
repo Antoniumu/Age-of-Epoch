@@ -1,57 +1,54 @@
 package com.robertx22.library_of_exile.utils;
 
-import com.robertx22.library_of_exile.components.DelayedTeleportData;
-import com.robertx22.library_of_exile.components.PlayerDataCapability;
-import com.robertx22.library_of_exile.dimension.structure.MapStructure;
-import com.robertx22.library_of_exile.dimension.structure.SimplePrebuiltMapData;
-import com.robertx22.library_of_exile.dimension.structure.SimplePrebuiltMapStructure;
-import com.robertx22.library_of_exile.dimension.teleport.SavedTeleportPos;
-import com.robertx22.library_of_exile.vanilla_util.main.VanillaUTIL;
+import com.robertx22.library_of_exile.events.base.StaticServerPlayerTickEvent;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.dimension.DimensionType;
-import org.jetbrains.annotations.NotNull;
+
+import java.util.Set;
 
 public class TeleportUtils {
 
     public static void teleport(ServerPlayer player, BlockPos pos) {
-        teleport(player, pos, player.level().dimensionType());
+        teleport(player, pos, player.level().dimension().identifier());
     }
 
     public static void teleport(ServerPlayer player, BlockPos pos, DimensionType dimension) {
-        teleport(player, pos, VanillaUTIL.REGISTRY.dimensionTypes(player.level()).getKey(dimension));
+        Identifier key = player.level().registryAccess()
+            .lookupOrThrow(Registries.DIMENSION_TYPE)
+            .getKey(dimension);
+        if (key != null) {
+            teleport(player, pos, key);
+        }
     }
 
     public static void teleport(ServerPlayer player, BlockPos pos, Identifier dimension) {
+        teleport(player, pos, dimension, true);
+    }
+
+    public static void teleport(ServerPlayer player, BlockPos pos, Identifier dimension, Boolean addSafety) {
         try {
-            // todo is the gameprofile/uuid name correct?
-            String command = "/execute in " + dimension.toString() + " run tp " + player.getStringUUID() +
-                    " " + pos.getX() + " " + pos.getY() + " " + pos.getZ();
 
-            PlayerDataCapability.get(player).delayedTeleportData = new DelayedTeleportData(command, 2, SavedTeleportPos.from(dimension, pos));
+            ServerLevel world = player.level().getServer()
+                .getLevel(ResourceKey.create(Registries.DIMENSION, dimension));
 
-            //CommandUtils.execute(player, command);
+            if (world == null) {
+                System.out.println("No world with id: " + dimension);
+                return;
+            }
+
+            player.teleportTo(world, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, Set.of(), 0F, 0F, false);
+
+            if (addSafety) {
+                StaticServerPlayerTickEvent.makeSureTeleport(player, pos, dimension);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-    public static BlockPos getSpawnTeleportPos(MapStructure<?> structure, BlockPos startAt) {
-        BlockPos p = getOriginalTeleportPos(structure, startAt);
-        if (structure instanceof SimplePrebuiltMapStructure simplePrebuiltMapStructure){
-            SimplePrebuiltMapData map = simplePrebuiltMapStructure.getMap(structure.getStartChunkPos(startAt));
-            p = p.offset(map.teleport_offset_x, map.teleport_offset_y, map.teleport_offset_z);
-        }
-        return p;
-    }
-
-    public static @NotNull BlockPos getOriginalTeleportPos(MapStructure<?> structure, BlockPos pos) {
-        BlockPos p = structure.getStartChunkPos(pos).getMiddleBlockPosition(structure.getSpawnHeight() + 5);
-        p = new BlockPos(p.getX(), structure.getSpawnHeight() + 5, p.getZ());
-        return p;
-    }
 }
-
-

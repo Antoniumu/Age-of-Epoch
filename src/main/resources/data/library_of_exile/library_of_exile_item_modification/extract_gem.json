@@ -1,6 +1,0 @@
-{
-  "id": "extract_gem",
-  "serializer": "extract_socket",
-  "type": "GEM",
-  "weight": 1000
-}

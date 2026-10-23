@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "mmorpg:mat/salvage/salvage2",
+    "i": "minecraft:gold_ingot"
+  },
+  "pattern": [
+    " # ",
+    "#i#",
+    " # "
+  ],
+  "result": {
+    "id": "mmorpg:mat/golden_orb",
+    "count": 1
+  }
+}

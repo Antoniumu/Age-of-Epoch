@@ -2,7 +2,7 @@ package com.robertx22.age_of_exile.guides;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.robertx22.mine_and_slash.database.data.game_balance_config.GameBalanceConfig;
+import com.robertx22.age_of_exile.database.data.game_balance_config.GameBalanceConfig;
 import com.robertx22.forge_compat.fml.loading.FMLPaths;
 
 import java.nio.charset.StandardCharsets;
@@ -106,7 +106,7 @@ public class GuideLimit {
         try {
             GameBalanceConfig cfg = GameBalanceConfig.get();
             if (cfg != null) {
-                GuideMath.RUNTIME_GUIDE_MAX_LEVEL = clamp(level);
+                cfg.GUIDE_MAX_LEVEL = clamp(level);
             }
         } catch (Exception ignored) {
         }

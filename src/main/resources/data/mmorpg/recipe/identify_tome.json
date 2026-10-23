@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": "mmorpg:mat/salvage/salvage0",
+    "B": "minecraft:paper"
+  },
+  "pattern": [
+    "BA",
+    "BB"
+  ],
+  "result": {
+    "id": "mmorpg:identify_tome",
+    "count": 9
+  }
+}

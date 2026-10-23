@@ -2,12 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "X": "minecraft:gold_ingot"
+    "M": "minecraft:gold_ingot"
   },
   "pattern": [
-    " X ",
-    "X X",
-    " X "
+    " M ",
+    "M M",
+    " M "
   ],
   "result": {
     "id": "mmorpg:jewelry/ring/gold",

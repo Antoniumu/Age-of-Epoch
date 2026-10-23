@@ -1,6 +1,5 @@
 package com.robertx22.age_of_exile.mixins;
 
-import com.robertx22.age_of_exile.simulation.SimulationManager;
 import com.robertx22.forge_compat.common.capabilities.CapabilityProvider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
@@ -22,7 +21,7 @@ public abstract class EntityNbtCapBridgeMixin {
         if (!tag.isEmpty()) {
             output.store("AgeOfEpochCaps", CompoundTag.CODEC, tag);
         }
-        CompoundTag simSnap = SimulationManager.getSnapshotForSave(self);
+        CompoundTag simSnap = com.robertx22.age_of_exile.simulation.SimulationManager.getSnapshotForSave(self);
         if (simSnap != null && !simSnap.isEmpty()) {
             output.store("AgeOfEpochSimSnapshot", CompoundTag.CODEC, simSnap);
         }
@@ -34,6 +33,6 @@ public abstract class EntityNbtCapBridgeMixin {
         input.read("AgeOfEpochCaps", CompoundTag.CODEC)
             .ifPresent(tag -> CapabilityProvider.loadAll(self, tag));
         input.read("AgeOfEpochSimSnapshot", CompoundTag.CODEC)
-            .ifPresent(simSnap -> SimulationManager.loadSnapshotFromSave(self, simSnap));
+            .ifPresent(simSnap -> com.robertx22.age_of_exile.simulation.SimulationManager.loadSnapshotFromSave(self, simSnap));
     }
 }

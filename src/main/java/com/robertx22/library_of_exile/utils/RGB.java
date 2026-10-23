@@ -1,5 +1,10 @@
 package com.robertx22.library_of_exile.utils;
 
+import info.loenwind.autosave.annotations.Factory;
+import info.loenwind.autosave.annotations.Storable;
+import info.loenwind.autosave.annotations.Store;
+
+@Storable
 public class RGB {
     public RGB(int R, int G, int B) {
         this.R = R;
@@ -7,12 +12,16 @@ public class RGB {
         this.B = B;
     }
 
+    @Factory
     public RGB() {
 
     }
 
+    @Store
     private int R;
+    @Store
     private int G;
+    @Store
     private int B;
 
     public float getR() {

@@ -1,7 +1,0 @@
-{
-  "id": "missing_energy_scaling_5.0",
-  "resourceType": "energy",
-  "scalingPer": 5.0,
-  "ser": "missing_resource_scaling",
-  "side": "Source"
-}

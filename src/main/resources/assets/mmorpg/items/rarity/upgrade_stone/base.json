@@ -1,0 +1,34 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "mmorpg:item/rarity/upgrade_stone/base"
+    },
+    "entries": [
+      {
+        "threshold": 2.0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "mmorpg:item/rarity/upgrade_stone/uncommon"
+        }
+      },
+      {
+        "threshold": 3.0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "mmorpg:item/rarity/upgrade_stone/rare"
+        }
+      },
+      {
+        "threshold": 4.0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "mmorpg:item/rarity/upgrade_stone/epic"
+        }
+      }
+    ]
+  }
+}

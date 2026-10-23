@@ -5,7 +5,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.Tag;
 
 public class Capability<T> {
-    public String getName() { return String.valueOf(this.toString()); }
 
     public interface IStorage<T> {
         Tag writeNBT(Capability<T> capability, T instance, Direction side);

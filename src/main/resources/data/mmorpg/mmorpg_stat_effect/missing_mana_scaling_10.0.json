@@ -1,7 +1,0 @@
-{
-  "id": "missing_mana_scaling_10.0",
-  "resourceType": "mana",
-  "scalingPer": 10.0,
-  "ser": "missing_resource_scaling",
-  "side": "Source"
-}

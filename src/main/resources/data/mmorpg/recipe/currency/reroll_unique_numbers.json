@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "mmorpg:mat/golden_orb",
+    "t": "mmorpg:currency/number_reroll",
+    "v": "minecraft:gold_ingot",
+    "o": "mmorpg:mat/salvage/salvage4"
+  },
+  "pattern": [
+    "o#o",
+    "oto",
+    "v#v"
+  ],
+  "result": {
+    "id": "mmorpg:currency/reroll_unique_numbers",
+    "count": 1
+  }
+}

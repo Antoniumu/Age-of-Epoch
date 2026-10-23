@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "mmorpg:mat/salvage/salvage4",
+    "b": "minecraft:bowl"
+  },
+  "pattern": [
+    "###",
+    "###",
+    " b "
+  ],
+  "result": {
+    "id": "mmorpg:mat/mythic_essence",
+    "count": 1
+  }
+}

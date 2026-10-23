@@ -1,8 +1,8 @@
 package com.robertx22.age_of_exile.a_libraries.mob_plates;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.robertx22.mine_and_slash.config.forge.ClientConfigs;
-import com.robertx22.mine_and_slash.config.forge.MobPlateStyle;
+import com.robertx22.age_of_exile.config.forge.ClientConfigs;
+import com.robertx22.age_of_exile.config.forge.MobPlateStyle;
 import com.robertx22.forge_compat.client.AbstractGui;
 import net.minecraft.client.Minecraft;
 
@@ -51,22 +51,5 @@ public final class MobPlateStyleHud {
 
         AbstractGui.fill(matrix, x - 7, y - 3, x + textWidth + 7, y + 11, 0x99101418);
         AbstractGui.drawShadow(mc.font, matrix, text, x, y, 0xFFFFD98A);
-    }
-
-    public static void render(net.minecraft.client.gui.GuiGraphicsExtractor gui) {
-        if (System.currentTimeMillis() > showUntilMs || text.isEmpty()) {
-            return;
-        }
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || mc.font == null) {
-            return;
-        }
-        int width = mc.getWindow().getGuiScaledWidth();
-        int height = mc.getWindow().getGuiScaledHeight();
-        int textWidth = mc.font.width(text);
-        int x = width / 2 - textWidth / 2;
-        int y = height - 70;
-        gui.fill(x - 7, y - 3, x + textWidth + 7, y + 11, 0x99101418);
-        gui.text(mc.font, text, x, y, 0xFFFFD98A, true);
     }
 }

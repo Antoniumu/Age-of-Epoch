@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "mmorpg:mat/salvage/salvage1",
+    "i": "minecraft:diamond"
+  },
+  "pattern": [
+    " # ",
+    "#i#",
+    " # "
+  ],
+  "result": {
+    "id": "mmorpg:mat/crystallized_essence",
+    "count": 1
+  }
+}

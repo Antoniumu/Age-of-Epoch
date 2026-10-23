@@ -1,9 +1,0 @@
-{
-  "id": "add_stat_data_to_num",
-  "num_provider": {
-    "calc": "",
-    "type": "STAT_DATA"
-  },
-  "number_id": "number",
-  "ser": "add_to_number"
-}

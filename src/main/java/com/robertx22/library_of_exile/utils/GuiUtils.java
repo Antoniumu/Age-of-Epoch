@@ -1,10 +1,12 @@
 package com.robertx22.library_of_exile.utils;
 
-import com.robertx22.library_of_exile.wrappers.ExileText;
-import net.minecraft.ChatFormatting;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.robertx22.forge_compat.client.AbstractGui;
+import com.robertx22.forge_compat.client.RenderSystem;
+import com.robertx22.forge_compat.common.CompatChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -12,32 +14,33 @@ import java.util.List;
 
 public class GuiUtils {
 
-    public static void renderScaledText(GuiGraphicsExtractor matrix, int x, int y, float scale, String text, ChatFormatting format) {
+    public static void renderScaledText(PoseStack matrix, int x, int y, double scale, String text, ChatFormatting format) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.font == null || text == null) {
+            return;
+        }
+        int width = mc.font.width(text);
+        int height = mc.font.lineHeight;
 
-        float antiScale = 1 / scale;
+        PoseStack pose = matrix != null ? matrix : new PoseStack();
+        pose.pushPose();
+        pose.scale((float) scale, (float) scale, 1.0F);
 
-        matrix.pose().scale((float)(scale), (float)(scale));
+        float xf = (float) (x / scale - width / 2.0D);
+        float yf = (float) (y / scale - height / 2.0D);
 
-        double textWidthMinus = Minecraft.getInstance().font.width(text) / 2F * scale;
-        double textHeightMinus = Minecraft.getInstance().font.lineHeight * scale / 2;
-
-        float xp = (float) (x - textWidthMinus);
-        float yp = (float) (y - textHeightMinus);
-
-        float xf = (float) (xp * antiScale);
-        float yf = (float) (yp * antiScale);
-
-        com.robertx22.forge_compat.client.GuiBlitHelper.drawString(matrix, Minecraft.getInstance().font, ExileText.ofText(text).format(format).get(), (int) xf, (int) yf, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(format));
-        matrix.pose().scale((float)(antiScale), (float)(antiScale));
-
+        AbstractGui.drawShadow(mc.font, pose, text, xf, yf, CompatChatFormatting.getColor(format));
+        pose.popPose();
     }
 
-    public static void renderTooltip(GuiGraphicsExtractor matrix, List<? extends MutableComponent> tooltip, int mouseX, int mouseY) {
+    public static <T extends Component> void renderTooltip(PoseStack matrix, List<T> tooltip, int mouseX, int mouseY) {
         renderComponentTooltip(matrix, tooltip, mouseX, mouseY);
     }
 
-    static void renderComponentTooltip(GuiGraphicsExtractor matrix, List<? extends MutableComponent> tooltip, int x, int y) {
-        com.robertx22.forge_compat.client.GuiBlitHelper.renderTooltip(matrix, Minecraft.getInstance().font, TextUTIL.mergeList(tooltip), x, y);
+    static void renderComponentTooltip(PoseStack matrix, List<? extends Component> tooltip, int x, int y) {
+        if (AbstractGui.CURRENT_GRAPHICS != null && tooltip != null) {
+            AbstractGui.CURRENT_GRAPHICS.setComponentTooltipForNextFrame(Minecraft.getInstance().font, new ArrayList<>(tooltip), x, y);
+        }
     }
 
     public static boolean isInRectPoints(Point guiPos, Point size, Point mousePos) {
@@ -84,13 +87,13 @@ public class GuiUtils {
 
         // Calculate the middle of the expected curve.
         float factor = (float) Math.sqrt(
-                (pRadius * pRadius) / ((pTo.x - pFrom.x) * (pTo.x - pFrom.x) + (pTo.y - pFrom.y) * (pTo.y - pFrom.y)) - 0.25f);
+            (pRadius * pRadius) / ((pTo.x - pFrom.x) * (pTo.x - pFrom.x) + (pTo.y - pFrom.y) * (pTo.y - pFrom.y)) - 0.25f);
         PointF circleMiddlePoint = new PointF(0, 0);
 
         float middleDistance1 =
-                0.5f * (pFrom.x + pTo.x) + factor * (pTo.y - pFrom.y) + 0.5f * (pFrom.y + pTo.y) + factor * (pFrom.x - pTo.x);
+            0.5f * (pFrom.x + pTo.x) + factor * (pTo.y - pFrom.y) + 0.5f * (pFrom.y + pTo.y) + factor * (pFrom.x - pTo.x);
         float middleDistance2 =
-                0.5f * (pFrom.x + pTo.x) - factor * (pTo.y - pFrom.y) + 0.5f * (pFrom.y + pTo.y) - factor * (pFrom.x - pTo.x);
+            0.5f * (pFrom.x + pTo.x) - factor * (pTo.y - pFrom.y) + 0.5f * (pFrom.y + pTo.y) - factor * (pFrom.x - pTo.x);
 
         boolean side2 = middleDistance1 < middleDistance2;
 
@@ -128,7 +131,7 @@ public class GuiUtils {
         }
         for (float f = angle1; f < angle2; f += step) {
             PointF p = new PointF((float) Math.cos(f) * pRadius + circleMiddlePoint.x,
-                    (float) Math.sin(f) * pRadius + circleMiddlePoint.y
+                (float) Math.sin(f) * pRadius + circleMiddlePoint.y
             );
             pOutPut.add(p);
         }

@@ -1,8 +1,0 @@
-{
-  "always_spawn": true,
-  "block_id": "dungeon_realm:boss_teleport",
-  "id": "boss",
-  "max_blocks": 1,
-  "min_blocks": 1,
-  "weight": 0
-}

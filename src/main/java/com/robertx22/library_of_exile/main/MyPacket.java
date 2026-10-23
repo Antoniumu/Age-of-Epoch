@@ -8,7 +8,6 @@ import com.robertx22.forge_compat.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public abstract class MyPacket<T> {
-    FriendlyByteBuf buf = null;
 
     public abstract Identifier getIdentifier();
 
@@ -24,8 +23,6 @@ public abstract class MyPacket<T> {
 
         MyPacket<T> data = newInstance();
         try {
-            this.buf = buf;
-
             data.loadFromData(buf);
         } catch (Exception e) {
             e.printStackTrace();
@@ -38,22 +35,16 @@ public abstract class MyPacket<T> {
     public void handle(Supplier<NetworkEvent.Context> ctx) {
 
         ctx.get()
-                .enqueueWork(
-                        () -> {
-                            try {
-                                try {
-                                    onReceived(new ExilePacketContext(ctx.get()));
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            } finally {
-                                if (buf != null) {
-                                    buf.release();
-                                }
-                            }
-                        });
-
-        ctx.get().setPacketHandled(true);
+            .enqueueWork(
+                () -> {
+                    try {
+                        onReceived(new ExilePacketContext(ctx.get()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+        ctx.get()
+            .setPacketHandled(true);
     }
 
 }

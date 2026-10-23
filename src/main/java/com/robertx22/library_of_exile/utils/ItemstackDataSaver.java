@@ -1,12 +1,12 @@
 package com.robertx22.library_of_exile.utils;
 
 import com.robertx22.library_of_exile.registry.IGUID;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 
 import java.util.function.Supplier;
 
-
+import com.robertx22.age_of_exile.uncommon.utilityclasses.StackNBT;
 public class ItemstackDataSaver<T> implements IGUID {
 
     String id;
@@ -19,8 +19,8 @@ public class ItemstackDataSaver<T> implements IGUID {
         this.constructor = constructor;
 
         if (AllItemStackSavers.ALL.stream()
-                .noneMatch(x -> x.GUID()
-                        .equals(GUID()))) {
+            .noneMatch(x -> x.GUID()
+                .equals(GUID()))) {
             AllItemStackSavers.ALL.add(this);
         }
 
@@ -35,8 +35,8 @@ public class ItemstackDataSaver<T> implements IGUID {
     }
 
     public boolean has(ItemStack stack) {
-        return stack != null && com.robertx22.forge_compat.common.NbtStackCompat.hasTag(stack) && com.robertx22.forge_compat.common.NbtStackCompat.getTag(stack)
-                .contains(id);
+        return stack != null && StackNBT.has(stack) && StackNBT.get(stack)
+            .contains(id);
     }
 
     public T loadFrom(ItemStack stack) {
@@ -44,11 +44,11 @@ public class ItemstackDataSaver<T> implements IGUID {
         if (stack == null) {
             return null;
         }
-        if (!com.robertx22.forge_compat.common.NbtStackCompat.hasTag(stack)) {
+        if (!StackNBT.has(stack)) {
             return null;
         }
 
-        T object = LoadSave.Load(clazz, constructor.get(), com.robertx22.forge_compat.common.NbtStackCompat.getTag(stack), id);
+        T object = LoadSave.Load(clazz, constructor.get(), StackNBT.get(stack), id);
 
         return object;
 
@@ -63,11 +63,8 @@ public class ItemstackDataSaver<T> implements IGUID {
             return;
         }
 
-        if (!com.robertx22.forge_compat.common.NbtStackCompat.hasTag(stack)) {
-            com.robertx22.forge_compat.common.NbtStackCompat.setTag(stack, new CompoundTag());
-        }
         if (object != null) {
-            LoadSave.Save(object, com.robertx22.forge_compat.common.NbtStackCompat.getTag(stack), id);
+            LoadSave.Save(object, StackNBT.getOrCreate(stack), id);
         }
 
     }

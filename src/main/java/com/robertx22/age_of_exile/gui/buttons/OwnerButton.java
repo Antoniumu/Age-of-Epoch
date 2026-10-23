@@ -1,0 +1,90 @@
+package com.robertx22.age_of_exile.gui.buttons;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.robertx22.age_of_exile.mmorpg.SlashRef;
+import com.robertx22.age_of_exile.vanilla_mc.blocks.bases.BaseModificationStation;
+import com.robertx22.library_of_exile.utils.CLOC;
+import com.robertx22.library_of_exile.utils.GuiUtils;
+import net.minecraft.client.Minecraft;
+import com.robertx22.forge_compat.client.ImageButton;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.resources.Identifier;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class OwnerButton extends ImageButton {
+
+    public static int SIZE_X = 80;
+    public static int SIZE_Y = 16;
+
+    static Identifier ID = SlashRef.guiId("owner_button");
+
+    Minecraft mc = Minecraft.getInstance();
+
+    BaseModificationStation tile;
+
+    public OwnerButton(BaseModificationStation tile, int xPos, int yPos) {
+        super(xPos, yPos, SIZE_X, SIZE_Y, 0, 0, SIZE_Y, ID, (button) -> {
+        });
+        this.tile = tile;
+
+    }
+
+    @Override
+    public void renderToolTip(PoseStack matrix, int x, int y) {
+        if (isInside(x, y)) {
+            List<Component> tooltip = new ArrayList<>();
+
+            tooltip.add(Component.literal("Это владелец станции."));
+            tooltip.add(Component.literal("Станция создаёт предметы на основе уровней навыков владельца."));
+            tooltip.add(Component.literal("Владелец получает опыт при создании предметов на этой станции."));
+            tooltip.add(Component.literal("Станция не работает, если владелец не в сети."));
+
+            GuiUtils.renderTooltip(matrix, tooltip, x, y);
+
+        }
+    }
+
+    public boolean isInside(int x, int y) {
+        return GuiUtils.isInRect(this.x, this.y, SIZE_X, SIZE_Y, x, y);
+    }
+
+    @Override
+    public void renderButton(PoseStack matrix, int x, int y, float f) {
+
+        super.renderButton(matrix, x, y, f);
+
+        String txt = "";
+
+        Player owner = tile.getOwner();
+
+        if (owner != null) {
+            txt = CLOC.translate(owner.getDisplayName());
+        } else {
+
+            txt = "No Owner";
+        }
+
+        int width = mc.font.width(txt);
+
+        boolean cut = false;
+
+        while (width > (SIZE_X - 10)) {
+            cut = true;
+
+            txt = txt.substring(0, txt.length() - 2);
+
+            width = mc.font.width(txt);
+
+        }
+        if (cut) {
+            txt += "...";
+        }
+
+        com.robertx22.forge_compat.client.AbstractGui.drawShadow(mc.font, matrix, txt, this.x + (SIZE_X / 2F - (mc.font.width(txt) / 2F)), this.y + 3, com.robertx22.forge_compat.common.CompatChatFormatting.getColor(ChatFormatting.WHITE));
+    }
+
+}
