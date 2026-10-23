@@ -39,6 +39,9 @@ public abstract class BaseSpawnerSpawnRateMixin {
     @Shadow
     private SpawnData nextSpawnData;
 
+    @Shadow
+    private int requiredPlayerRange;
+
     @Inject(method = "serverTick", at = @At("HEAD"), cancellable = true)
     private void aoe$applyPlayerSpawnRate(ServerLevel level, BlockPos pos, CallbackInfo ci) {
         if (!GameMaster.isActive() || level.isClientSide()) {
@@ -56,10 +59,9 @@ public abstract class BaseSpawnerSpawnRateMixin {
             return;
         }
 
-        BaseSpawner spawner = (BaseSpawner) (Object) this;
         ServerPlayer player = SpawnRateUtils.nearestEligiblePlayer(level,
             pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-            Math.max(0, spawner.requiredPlayerRange));
+            Math.max(0, this.requiredPlayerRange));
         if (player != null && !SpawnRateUtils.allowSpawnAttempt(player, level.getRandom())) {
             // Skipping a tick also pauses the vanilla spawn-delay countdown, reducing
             // the spawner's real rate without interfering with its spawn data or mob cap.
