@@ -1,16 +1,21 @@
 package com.robertx22.age_of_exile.aoe_data.database.spells.schools;
 
+import com.robertx22.age_of_exile.aoe_data.database.exile_effects.adders.BeneficialEffects;
 import com.robertx22.age_of_exile.aoe_data.database.exile_effects.adders.NegativeEffects;
 import com.robertx22.age_of_exile.aoe_data.database.spells.PartBuilder;
 import com.robertx22.age_of_exile.aoe_data.database.spells.SpellBuilder;
 import com.robertx22.age_of_exile.aoe_data.database.spells.SpellCalcs;
 import com.robertx22.age_of_exile.database.data.spells.SpellTag;
 import com.robertx22.age_of_exile.database.data.spells.components.SpellConfiguration;
+import com.robertx22.age_of_exile.database.data.spells.components.actions.AggroAction;
 import com.robertx22.age_of_exile.database.data.spells.components.actions.SpellAction;
+import com.robertx22.age_of_exile.database.data.spells.components.selectors.TargetSelector;
 import com.robertx22.age_of_exile.database.data.spells.map_fields.MapField;
 import com.robertx22.age_of_exile.mmorpg.registers.common.SlashEntities;
 import com.robertx22.age_of_exile.summoning.MinionUtils;
 import com.robertx22.age_of_exile.uncommon.enumclasses.Elements;
+import com.robertx22.age_of_exile.uncommon.utilityclasses.AllyOrEnemy;
+import com.robertx22.age_of_exile.uncommon.utilityclasses.EntityFinder;
 import com.robertx22.library_of_exile.registry.ExileRegistryInit;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
@@ -20,19 +25,49 @@ import net.minecraft.world.level.block.Blocks;
 import java.util.Arrays;
 
 /**
- * Школа «Скверноводец». Открывается с 50 уровня: все заклинания стоят в ряду 6 (50 уровень).
- * Иконки: textures/gui/spells/icons/<id>.png
+ * Школа «Скверноводец». Открывается с 50 уровня (все ряды школы — lvl 50, см. SpellSchoolsAdder).
+ * <p>
+ * Три группы по 5 заклинаний:
+ * <ul>
+ * <li>{@link #BRANCH_NECROMANCER} — некромант;</li>
+ * <li>{@link #BRANCH_SUMMONER} — призыватель;</li>
+ * <li>общие (без ветки) — центр.</li>
+ * </ul>
+ * Некромант и призыватель взаимоисключают друг друга внутри школы (SpellSchool.isBranchBlocked).
+ * Иконки: textures/gui/spells/icons/&lt;id&gt;.png
+ * <p>
+ * Механики — первая версия на существующих блоках (урон, эффекты, призыв). Числа не балансировались.
  */
 public class BlightcallerSpells implements ExileRegistryInit {
 
+    public static final String BRANCH_NECROMANCER = "necromancer";
+    public static final String BRANCH_SUMMONER = "summoner";
+
+    // ---- некромант
     public static String RAISE_DEAD = "bc_raise_dead";
     public static String CORPSE_BURST = "bc_corpse_burst";
-    public static String WOLF_PACK = "bc_wolf_pack";
     public static String PLAGUE_CLOUD = "bc_plague_cloud";
+    public static String UNDEAD_HORDE = "bc_undead_horde";
+    public static String DEATH_CURSE = "bc_death_curse";
+
+    // ---- призыватель
+    public static String WOLF_PACK = "bc_wolf_pack";
+    public static String BEAR = "bc_bear";
+    public static String MAMMOTH = "bc_mammoth";
+    public static String ALPHA_FANGS = "bc_alpha_fangs";
+    public static String CALL_OF_PACK = "bc_call_of_pack";
+
+    // ---- общие
     public static String BLIGHT_BOLT = "bc_blight_bolt";
+    public static String DARK_WAVE = "bc_dark_wave";
+    public static String WITHER_MARK = "bc_wither_mark";
+    public static String DARK_PACT = "bc_dark_pact";
+    public static String SHADOW_VEIL = "bc_shadow_veil";
 
     @Override
     public void registerAll() {
+
+        // ================================ некромант
 
         // Пробуждение павших: призывает нежить (лимит — стат MAX_UNDEAD_MINIONS)
         SpellBuilder.of(RAISE_DEAD, SpellConfiguration.Builder.instant(15, 20 * 20)
@@ -49,16 +84,6 @@ public class BlightcallerSpells implements ExileRegistryInit {
                 + " " + Elements.Elemental.getIconNameDmg() + " to nearby enemies.")
             .onCast(PartBuilder.playSound(SoundEvents.WITHER_SKELETON_HURT, 1D, 0.7D))
             .onCast(PartBuilder.damageInAoe(SpellCalcs.CURSE, Elements.Elemental, 4D))
-            .build();
-
-        // Стая волков: призывает зверей (лимит — стат MAX_BEAST_MINIONS)
-        SpellBuilder.of(WOLF_PACK, SpellConfiguration.Builder.instant(20, 20 * 30)
-                .setScaleManaToPlayer(), "Wolf Pack", Arrays.asList(SpellTag.damage))
-            .manualDesc("Calls a pack of wolves to fight beside you.")
-            .onCast(PartBuilder.playSound(SoundEvents.ILLUSIONER_CAST_SPELL, 1D, 1D))
-            .onCast(PartBuilder.justAction(SpellAction.SUMMON_MINION.create(MinionUtils.Kind.WOLF.id)))
-            .onCast(PartBuilder.justAction(SpellAction.SUMMON_MINION.create(MinionUtils.Kind.WOLF.id)))
-            .onCast(PartBuilder.justAction(SpellAction.SUMMON_MINION.create(MinionUtils.Kind.WOLF.id)))
             .build();
 
         // Облако скверны: проклятое облако, яд и урон по области
@@ -79,6 +104,73 @@ public class BlightcallerSpells implements ExileRegistryInit {
                     )))
             .build();
 
+        // Орда мертвецов: сразу три нежити (лимит — стат MAX_UNDEAD_MINIONS)
+        SpellBuilder.of(UNDEAD_HORDE, SpellConfiguration.Builder.instant(30, 20 * 45)
+                .setScaleManaToPlayer(), "Undead Horde", Arrays.asList(SpellTag.damage))
+            .manualDesc("Raises three undead minions at once.")
+            .onCast(PartBuilder.playSound(SoundEvents.ILLUSIONER_CAST_SPELL, 1D, 0.6D))
+            .onCast(PartBuilder.justAction(SpellAction.SUMMON_MINION.create(MinionUtils.Kind.UNDEAD.id)))
+            .onCast(PartBuilder.justAction(SpellAction.SUMMON_MINION.create(MinionUtils.Kind.UNDEAD.id)))
+            .onCast(PartBuilder.justAction(SpellAction.SUMMON_MINION.create(MinionUtils.Kind.UNDEAD.id)))
+            .build();
+
+        // Проклятие смерти: урон по области и «Метка смерти» на врагах рядом
+        SpellBuilder.of(DEATH_CURSE, SpellConfiguration.Builder.instant(14, 20 * 15)
+                .setSwingArm(), "Death Curse", Arrays.asList(SpellTag.area, SpellTag.curse))
+            .manualDesc("Curses enemies around you with a mark of death.")
+            .onCast(PartBuilder.playSound(SoundEvents.WITHER_SPAWN, 0.6D, 1.2D))
+            .onCast(PartBuilder.damageInAoe(SpellCalcs.CURSE, Elements.Elemental, 5D))
+            .onCast(PartBuilder.addExileEffectToEnemiesInAoe(NegativeEffects.MARK_OF_DEATH.resourcePath, 5D, 20 * 8D))
+            .build();
+
+        // ================================ призыватель
+
+        // Серая стая: призывает трёх волков (лимит — стат MAX_BEAST_MINIONS)
+        SpellBuilder.of(WOLF_PACK, SpellConfiguration.Builder.instant(20, 20 * 30)
+                .setScaleManaToPlayer(), "Wolf Pack", Arrays.asList(SpellTag.damage))
+            .manualDesc("Calls a pack of wolves to fight beside you.")
+            .onCast(PartBuilder.playSound(SoundEvents.ILLUSIONER_CAST_SPELL, 1D, 1D))
+            .onCast(PartBuilder.justAction(SpellAction.SUMMON_MINION.create(MinionUtils.Kind.WOLF.id)))
+            .onCast(PartBuilder.justAction(SpellAction.SUMMON_MINION.create(MinionUtils.Kind.WOLF.id)))
+            .onCast(PartBuilder.justAction(SpellAction.SUMMON_MINION.create(MinionUtils.Kind.WOLF.id)))
+            .build();
+
+        // Бурый медведь: призывает медведя (лимит — стат MAX_BEAST_MINIONS)
+        SpellBuilder.of(BEAR, SpellConfiguration.Builder.instant(28, 20 * 45)
+                .setScaleManaToPlayer(), "Brown Bear", Arrays.asList(SpellTag.damage))
+            .manualDesc("Calls a brown bear to fight beside you.")
+            .onCast(PartBuilder.playSound(SoundEvents.POLAR_BEAR_WARNING, 1D, 0.8D))
+            .onCast(PartBuilder.justAction(SpellAction.SUMMON_MINION.create(MinionUtils.Kind.BEAR.id)))
+            .build();
+
+        // Мамонт разбойников: призывает боевого мамонта (лимит — стат MAX_BEAST_MINIONS)
+        SpellBuilder.of(MAMMOTH, SpellConfiguration.Builder.instant(40, 20 * 90)
+                .setScaleManaToPlayer(), "Bandit Mammoth", Arrays.asList(SpellTag.damage))
+            .manualDesc("Calls a battle mammoth to crush your enemies.")
+            .onCast(PartBuilder.playSound(SoundEvents.RAVAGER_ROAR, 1D, 0.7D))
+            .onCast(PartBuilder.justAction(SpellAction.SUMMON_MINION.create(MinionUtils.Kind.MAMMOTH.id)))
+            .build();
+
+        // Альфа-клыки: удар по конусу перед собой и кровотечение
+        SpellBuilder.of(ALPHA_FANGS, SpellConfiguration.Builder.instant(12, 20 * 8)
+                .setSwingArm(), "Alpha Fangs", Arrays.asList(SpellTag.damage))
+            .manualDesc("Bites enemies in front of you, causing bleeding.")
+            .onCast(PartBuilder.playSound(SoundEvents.WOLF_GROWL, 1D, 0.9D))
+            .onCast(PartBuilder.damageInFront(SpellCalcs.SHRED, Elements.Physical, 3D, 3D))
+            .onCast(PartBuilder.addExileEffectToEnemiesInFront(NegativeEffects.BLEED.resourcePath, 3D, 3D, 20 * 6D))
+            .build();
+
+        // Зов стаи: призывает волка и даёт себе «Доблесть»
+        SpellBuilder.of(CALL_OF_PACK, SpellConfiguration.Builder.instant(18, 20 * 40)
+                .setScaleManaToPlayer(), "Call of the Pack", Arrays.asList(SpellTag.damage, SpellTag.shout))
+            .manualDesc("Calls a wolf to your side and fills you with valor.")
+            .onCast(PartBuilder.playSound(SoundEvents.WOLF_HOWL, 1D, 1D))
+            .onCast(PartBuilder.justAction(SpellAction.SUMMON_MINION.create(MinionUtils.Kind.WOLF.id)))
+            .onCast(PartBuilder.giveSelfExileEffect(BeneficialEffects.VALOR.resourcePath, 20 * 20D))
+            .build();
+
+        // ================================ общие
+
         // Тёмный снаряд: летит вперёд и бьёт по первой цели
         SpellBuilder.of(BLIGHT_BOLT, SpellConfiguration.Builder.instant(10, 20 * 4)
                 .setSwingArm(), "Blight Bolt", Arrays.asList(SpellTag.projectile, SpellTag.damage))
@@ -87,6 +179,38 @@ public class BlightcallerSpells implements ExileRegistryInit {
                 .put(MapField.IS_SILENT, true)
             ))
             .onHit(PartBuilder.damage(SpellCalcs.POISON_BALL, Elements.Elemental))
+            .build();
+
+        // Тёмная волна: конус урона перед собой
+        SpellBuilder.of(DARK_WAVE, SpellConfiguration.Builder.instant(12, 20 * 8)
+                .setSwingArm(), "Dark Wave", Arrays.asList(SpellTag.area, SpellTag.damage))
+            .manualDesc("Sends a wave of darkness through the enemies in front of you.")
+            .onCast(PartBuilder.playSound(SoundEvents.WARDEN_SONIC_BOOM, 0.6D, 1.2D))
+            .onCast(PartBuilder.damageInFront(SpellCalcs.CURSE, Elements.Elemental, 8D, 4D))
+            .build();
+
+        // Метка увядания: «Проклятие слабости» на врагах рядом
+        SpellBuilder.of(WITHER_MARK, SpellConfiguration.Builder.instant(10, 20 * 10)
+                .setSwingArm(), "Wither Mark", Arrays.asList(SpellTag.curse))
+            .manualDesc("Marks enemies around you with a curse of weakness.")
+            .onCast(PartBuilder.playSound(SoundEvents.WITHER_AMBIENT, 0.6D, 1.0D))
+            .onCast(PartBuilder.addExileEffectToEnemiesInAoe(NegativeEffects.WEAKNESS.resourcePath, 6D, 20 * 12D))
+            .build();
+
+        // Тёмный договор: восстанавливает ману и даёт «Вампирскую кровь»
+        SpellBuilder.of(DARK_PACT, SpellConfiguration.Builder.instant(0, 20 * 60), "Dark Pact", Arrays.asList(SpellTag.heal))
+            .manualDesc("Restores mana and grants vampiric blood for a while.")
+            .onCast(PartBuilder.playSound(SoundEvents.SOUL_ESCAPE, 1D, 0.8D))
+            .onCast(PartBuilder.restoreManaToCaster(SpellCalcs.AWAKEN_MANA))
+            .onCast(PartBuilder.giveSelfExileEffect(BeneficialEffects.VAMPIRIC_BLOOD.resourcePath, 20 * 15D))
+            .build();
+
+        // Теневая завеса: враги рядом теряют угрозу (аггро)
+        SpellBuilder.of(SHADOW_VEIL, SpellConfiguration.Builder.instant(15, 20 * 30), "Shadow Veil", Arrays.asList(SpellTag.area))
+            .manualDesc("Enemies around you lose track of you.")
+            .onCast(PartBuilder.playSound(SoundEvents.ENDERMAN_TELEPORT, 0.6D, 0.8D))
+            .onCast(PartBuilder.justAction(SpellAction.AGGRO.create(SpellCalcs.SMOKE_BOMB, AggroAction.Type.DE_AGGRO))
+                .addTarget(TargetSelector.AOE.create(10D, EntityFinder.SelectionType.RADIUS, AllyOrEnemy.enemies)))
             .build();
     }
 }

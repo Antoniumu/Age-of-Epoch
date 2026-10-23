@@ -196,6 +196,9 @@ public class EntitySpellCap {
             if (spellData.allocated_lvls.getOrDefault(spell.GUID(), 0) >= spell.getMaxLevel()) {
                 return false;
             }
+            if (school.isBranchBlocked(spell.GUID(), this::getLevelOf)) {
+                return false;
+            }
 
             return true;
         }

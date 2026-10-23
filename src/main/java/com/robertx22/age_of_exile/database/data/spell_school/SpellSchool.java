@@ -29,7 +29,39 @@ public class SpellSchool implements JsonExileRegistry<SpellSchool>, IAutoGson<Sp
     public HashMap<String, PointData> spells = new HashMap<>();
     public HashMap<String, PointData> synergies = new HashMap<>();
 
+    /**
+     * Ветка заклинания (spell id -> ветка). Заклинания с разными непустыми ветками в одной школе
+     * взаимоисключают друг друга. Заклинания без ветки (общие) конфликтов не создают.
+     */
+    public HashMap<String, String> branches = new HashMap<>();
+
     public List<Integer> lvl_reqs = Arrays.asList(1, 5, 10, 20, 30, 40, 50);
+
+    public String branchOf(String spellId) {
+        String b = branches.get(spellId);
+        return b == null ? "" : b;
+    }
+
+    /**
+     * true, если уже изученное заклинание этой школы относится к другой ветке.
+     * levelOf возвращает уровень изученности заклинания по id.
+     */
+    public boolean isBranchBlocked(String spellId, java.util.function.ToIntFunction<String> levelOf) {
+        String mine = branchOf(spellId);
+        if (mine.isEmpty()) {
+            return false;
+        }
+        for (String other : spells.keySet()) {
+            String theirs = branchOf(other);
+            if (theirs.isEmpty() || theirs.equals(mine) || other.equals(spellId)) {
+                continue;
+            }
+            if (levelOf.applyAsInt(other) > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     // public HashMap<String, PointData> spells = new HashMap<>(); todo synergies
 

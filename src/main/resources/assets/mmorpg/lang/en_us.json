@@ -2114,5 +2114,15 @@
   "mmorpg.spell.bc_wolf_pack": "Wolf Pack",
   "mmorpg.spell.bc_plague_cloud": "Plague Cloud",
   "mmorpg.spell.bc_blight_bolt": "Blight Bolt",
+  "mmorpg.spell.bc_undead_horde": "Undead Horde",
+  "mmorpg.spell.bc_death_curse": "Death Curse",
+  "mmorpg.spell.bc_bear": "Brown Bear",
+  "mmorpg.spell.bc_mammoth": "Bandit Mammoth",
+  "mmorpg.spell.bc_alpha_fangs": "Alpha Fangs",
+  "mmorpg.spell.bc_call_of_pack": "Call of the Pack",
+  "mmorpg.spell.bc_dark_wave": "Dark Wave",
+  "mmorpg.spell.bc_wither_mark": "Wither Mark",
+  "mmorpg.spell.bc_dark_pact": "Dark Pact",
+  "mmorpg.spell.bc_shadow_veil": "Shadow Veil",
   "mmorpg.spell_school.blightcaller": "Blightcaller"
 }

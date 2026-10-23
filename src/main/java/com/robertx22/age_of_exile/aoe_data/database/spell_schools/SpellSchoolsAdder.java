@@ -43,13 +43,29 @@ public class SpellSchoolsAdder implements ExileRegistryInit {
 
             .build();
 
-        // Скверноводец: открывается с 50 уровня (ряд 6 = 50 уровень)
+        // Скверноводец: открывается с 50 уровня — все ряды школы = 50 (levelReqs).
+        // Три группы: слева некромант, в центре общие, справа призыватель.
+        // Некромант и призыватель взаимоисключают друг друга (ветки в SpellSchool.isBranchBlocked).
         SchoolBuilder.of(BLIGHTCALLER, "Blightcaller")
-            .addSpell(BlightcallerSpells.RAISE_DEAD, new PointData(0, 6))
-            .addSpell(BlightcallerSpells.CORPSE_BURST, new PointData(2, 6))
-            .addSpell(BlightcallerSpells.WOLF_PACK, new PointData(4, 6))
-            .addSpell(BlightcallerSpells.PLAGUE_CLOUD, new PointData(6, 6))
-            .addSpell(BlightcallerSpells.BLIGHT_BOLT, new PointData(8, 6))
+            .levelReqs(50, 50, 50, 50, 50, 50, 50)
+
+            .addSpell(BlightcallerSpells.RAISE_DEAD, new PointData(0, 1), BlightcallerSpells.BRANCH_NECROMANCER)
+            .addSpell(BlightcallerSpells.UNDEAD_HORDE, new PointData(2, 1), BlightcallerSpells.BRANCH_NECROMANCER)
+            .addSpell(BlightcallerSpells.CORPSE_BURST, new PointData(1, 3), BlightcallerSpells.BRANCH_NECROMANCER)
+            .addSpell(BlightcallerSpells.DEATH_CURSE, new PointData(0, 5), BlightcallerSpells.BRANCH_NECROMANCER)
+            .addSpell(BlightcallerSpells.PLAGUE_CLOUD, new PointData(2, 5), BlightcallerSpells.BRANCH_NECROMANCER)
+
+            .addSpell(BlightcallerSpells.BLIGHT_BOLT, new PointData(5, 0))
+            .addSpell(BlightcallerSpells.DARK_WAVE, new PointData(4, 2))
+            .addSpell(BlightcallerSpells.WITHER_MARK, new PointData(6, 2))
+            .addSpell(BlightcallerSpells.DARK_PACT, new PointData(4, 4))
+            .addSpell(BlightcallerSpells.SHADOW_VEIL, new PointData(6, 4))
+
+            .addSpell(BlightcallerSpells.WOLF_PACK, new PointData(8, 1), BlightcallerSpells.BRANCH_SUMMONER)
+            .addSpell(BlightcallerSpells.BEAR, new PointData(10, 1), BlightcallerSpells.BRANCH_SUMMONER)
+            .addSpell(BlightcallerSpells.CALL_OF_PACK, new PointData(9, 3), BlightcallerSpells.BRANCH_SUMMONER)
+            .addSpell(BlightcallerSpells.MAMMOTH, new PointData(8, 5), BlightcallerSpells.BRANCH_SUMMONER)
+            .addSpell(BlightcallerSpells.ALPHA_FANGS, new PointData(10, 5), BlightcallerSpells.BRANCH_SUMMONER)
             .build();
 
         SchoolBuilder.of(HUNTING, "Hunting")

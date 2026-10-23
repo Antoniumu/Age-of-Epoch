@@ -26,6 +26,11 @@ public class SchoolBuilder {
     }
 
     public SchoolBuilder addSpell(String id, PointData point) {
+        return addSpell(id, point, "");
+    }
+
+    /** branch — ветка (взаимоисключение внутри школы), пустая строка — общее заклинание. */
+    public SchoolBuilder addSpell(String id, PointData point, String branch) {
 
         Preconditions.checkArgument(SpellSchool.MAX_X_ROWS >= point.x && point.x > -1);
         Preconditions.checkArgument(SpellSchool.MAX_Y_ROWS >= point.y && point.y > -1);
@@ -34,6 +39,15 @@ public class SchoolBuilder {
             .noneMatch(x -> x.equals(point)));
 
         school.spells.put(id, point);
+        if (branch != null && !branch.isEmpty()) {
+            school.branches.put(id, branch);
+        }
+        return this;
+    }
+
+    /** Уровни открытия по рядам (индекс = номер ряда, y). */
+    public SchoolBuilder levelReqs(Integer... reqs) {
+        school.lvl_reqs = java.util.Arrays.asList(reqs);
         return this;
     }
 
