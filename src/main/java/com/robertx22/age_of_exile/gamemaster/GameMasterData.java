@@ -46,6 +46,9 @@ public class GameMasterData {
     /** Кто уже получил награду за цель недели. */
     public List<String> week_claimed = new ArrayList<>();
 
+    /** Когда последний раз напоминали о цели недели (epoch seconds). */
+    public long last_goal_hint = 0;
+
     /** Телеметрия: сезон, счётчики, профили (см. Telemetry). */
     public Telemetry.State telemetry = new Telemetry.State();
 
@@ -117,6 +120,7 @@ public class GameMasterData {
         week_kills = 0;
         week_goal_epoch = 0;
         week_claimed = new ArrayList<>();
+        last_goal_hint = 0;
         telemetry = new Telemetry.State();
     }
 }

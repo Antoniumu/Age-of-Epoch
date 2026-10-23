@@ -124,6 +124,8 @@ public class GameMasterCommand {
                     .then(argument("kills", IntegerArgumentType.integer(0, 100000000))
                         .executes(ctx -> setSocialGoal(ctx.getSource(),
                             IntegerArgumentType.getInteger(ctx, "kills"))))))
+            .then(literal("codex")
+                .executes(ctx -> codexStatus(ctx.getSource())))
             .then(literal("telemetry")
                 .executes(ctx -> telemetryStatus(ctx.getSource()))
                 .then(literal("on").executes(ctx -> setTelemetry(ctx.getSource(), true)))
@@ -474,6 +476,37 @@ public class GameMasterCommand {
                 send(source, "  ★ " + entry.getKey() + " — " + entry.getValue());
             }
         }
+        return 1;
+    }
+
+    private static int codexStatus(CommandSourceStack source) {
+        GameMaster gm = GameMaster.get();
+        GameMasterConfig config = gm.config();
+        if (!config.codex_enabled) {
+            send(source, "Кодекс выключен (codex_enabled).");
+            return 1;
+        }
+        send(source, "Кодекс: " + gm.codexUniqueTotal() + " разных уникатов собрано на сервере; "
+            + "награда каждые " + config.codex_reward_step + " штук (+"
+            + GameMaster.fmt(config.codex_reward_favor) + " Благосклонности)");
+        List<PlayerProgress> sorted = new ArrayList<>(gm.data().players.values());
+        sorted.sort(Comparator.comparingInt(Retention::codexSize)
+            .reversed());
+        for (int i = 0; i < Math.min(10, sorted.size()); i++) {
+            PlayerProgress progress = sorted.get(i);
+            if (progress == null || Retention.codexSize(progress) == 0) {
+                continue;
+            }
+            send(source, "  " + progress.name + ": " + Retention.codexSize(progress)
+                + " уникатов (ступеней: " + progress.codex_rewarded + ")");
+        }
+        send(source, "Мягкая смерть: " + onOff(config.retention_soft_death)
+            + " (печать " + GameMaster.fmt(config.retention_seal_minutes) + " мин или "
+            + config.retention_seal_kills + " убийств, опыт ×"
+            + GameMaster.fmt(config.retention_seal_exp_penalty) + ")");
+        send(source, "Pity рун: " + onOff(config.retention_pity_runes) + " (с "
+            + config.retention_pity_rune_start_kills + " до "
+            + config.retention_pity_rune_full_kills + " убийств)");
         return 1;
     }
 

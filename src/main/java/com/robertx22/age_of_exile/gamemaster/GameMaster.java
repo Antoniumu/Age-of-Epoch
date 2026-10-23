@@ -149,6 +149,12 @@ public class GameMaster {
     }
 
     public void stop() {
+        // Ночное выключение: закрываем сессии тех, кто ещё онлайн, чтобы время
+        // и статистика не «повисли» до утра, и чтобы сессия не посчиталась дважды.
+        try {
+            finalizeOnlineSessions();
+        } catch (Exception ignored) {
+        }
         try {
             telemetry.close();
         } catch (Exception ignored) {
@@ -160,6 +166,33 @@ public class GameMaster {
         }
         loaded = false;
         server = null;
+    }
+
+    /**
+     * Закрывает сессии всех онлайн-игроков (при остановке сервера).
+     * Сервер гасится по ночам, поэтому это штатный путь, а не аварийный.
+     */
+    private void finalizeOnlineSessions() {
+        if (server == null) {
+            return;
+        }
+        long now = now();
+        for (ServerPlayer player : server.getPlayerList()
+            .getPlayers()) {
+            try {
+                PlayerProgress progress = data.get(player.getUUID()
+                    .toString());
+                if (progress == null || !progress.online) {
+                    continue;
+                }
+                telemetry.logout(player, progress.session_seconds);
+                accumulateSession(progress);
+                progress.online = false;
+                progress.last_seen = now;
+            } catch (Exception ignored) {
+            }
+        }
+        dirty = true;
     }
 
     public boolean isLoaded() {
@@ -286,6 +319,21 @@ public class GameMaster {
         config.retention_return_hours = parsed.retention_return_hours;
         config.retention_return_exp_bonus = parsed.retention_return_exp_bonus;
         config.retention_return_rare = parsed.retention_return_rare;
+        config.retention_pity_runes = parsed.retention_pity_runes;
+        config.retention_pity_rune_start_kills = parsed.retention_pity_rune_start_kills;
+        config.retention_pity_rune_full_kills = parsed.retention_pity_rune_full_kills;
+        config.retention_pity_gem_start_kills = parsed.retention_pity_gem_start_kills;
+        config.retention_pity_gem_full_kills = parsed.retention_pity_gem_full_kills;
+        config.retention_soft_death = parsed.retention_soft_death;
+        config.retention_seal_minutes = parsed.retention_seal_minutes;
+        config.retention_seal_kills = parsed.retention_seal_kills;
+        config.retention_seal_exp_penalty = parsed.retention_seal_exp_penalty;
+        config.social_goal_hint = parsed.social_goal_hint;
+        config.social_goal_hint_minutes = parsed.social_goal_hint_minutes;
+        config.codex_enabled = parsed.codex_enabled;
+        config.codex_reward_step = parsed.codex_reward_step;
+        config.codex_reward_favor = parsed.codex_reward_favor;
+        config.codex_reward_epic = parsed.codex_reward_epic;
         config.social_enabled = parsed.social_enabled;
         config.social_coop_exp_per_player = parsed.social_coop_exp_per_player;
         config.social_coop_loot_per_player = parsed.social_coop_loot_per_player;
@@ -494,6 +542,7 @@ public class GameMaster {
         coopCache = Math.max(1, activePlayers);
 
         telemetry.flush();
+        maybeHintWeeklyGoal(now);
 
         if (now - lastStatsTick >= 5) {
             recomputeStats(now);
@@ -651,6 +700,17 @@ public class GameMaster {
 
             telemetry.levelUp(player, level);
 
+            // Онбординг: после первых 10 уровней подсказываем, куда идти дальше.
+            // Без подсказки часть игроков застревает на «а что теперь делать».
+            if (level >= 10 && progress.onboarding_level < 10) {
+                progress.onboarding_level = 10;
+                player.sendSystemMessage(Component.literal(
+                        "GameMaster: первые 10 уровней позади. Дальше — башни и делвы: там падают лучшие вещи, "
+                            + "а с боссов можно получить уникат. Загляни в ближайшую башню.")
+                    .withStyle(ChatFormatting.YELLOW));
+                telemetry.retained(player, "onboarding", "lvl10", 0);
+            }
+
             // «Первые» события сервера: первый 10-й уровень, 20-й и т.д.
             // На маленьком сервере это личная слава — и повод зайти остальным.
             for (int milestoneLevel : new int[]{10, 20, 30, 40, 50}) {
@@ -733,6 +793,15 @@ public class GameMaster {
         }
         long now = now();
         progress.kills_since_unique++;
+        progress.kills_since_rune++;
+        progress.kills_since_gem++;
+
+        // Мягкая смерть: убийства снимают печать досрочно.
+        if (Retention.registerSealKill(progress, now)) {
+            player.sendSystemMessage(Component.literal("GameMaster: печать снята.")
+                .withStyle(ChatFormatting.GREEN));
+            telemetry.event("seal", player, "cleared", 1, "");
+        }
 
         // Общая цель недели: считаем убийства всех игроков сервера.
         if (config.social_enabled && config.social_goal_enabled) {
@@ -822,7 +891,14 @@ public class GameMaster {
         return 0;
     }
 
-    /** true, если смерть на этом уровне не должна отнимать опыт. */
+    /**
+     * true, если смерть не должна отнимать опыт.
+     *
+     * <p>Два случая: новичок (до {@code retention_no_exp_loss_level}) и мягкая смерть —
+     * тогда вместо опыта вешается «печать» (см. {@link Retention#applySeal}).
+     * Метод вызывается из {@code EntityData.onDeath} раньше, чем {@code onDeath}
+     * GameMaster, поэтому печать ставится именно здесь.
+     */
     public boolean skipsExpLossOnDeath(ServerPlayer player) {
         if (!loaded || player == null || !config.retention_enabled) {
             return false;
@@ -835,12 +911,119 @@ public class GameMaster {
                 .getLevel();
         } catch (Exception ignored) {
         }
+        PlayerProgress progress = data.get(player.getUUID()
+            .toString());
         if (level <= 0) {
-            PlayerProgress progress = data.get(player.getUUID()
-                .toString());
             level = progress != null ? progress.level : 1;
         }
-        return level < config.retention_no_exp_loss_level;
+        if (level < config.retention_no_exp_loss_level) {
+            return true;
+        }
+        if (config.retention_soft_death && progress != null) {
+            if (Retention.applySeal(progress, now(), config)) {
+                try {
+                    player.sendSystemMessage(Component.literal("GameMaster: " + Retention.sealText(config))
+                        .withStyle(ChatFormatting.GRAY));
+                } catch (Exception ignored) {
+                }
+                telemetry.event("seal", player, "death", 1, "level=" + level);
+                dirty = true;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    // ------------------------------------------------------------------
+    // Pity для рун и самоцветов, кодекс
+    // ------------------------------------------------------------------
+
+    /** Шанс принудительной руны за дроп (0…0.9). */
+    public double runePityChance(ServerPlayer player) {
+        if (!loaded || player == null || !config.retention_enabled) {
+            return 0;
+        }
+        PlayerProgress progress = data.get(player.getUUID()
+            .toString());
+        return progress == null ? 0 : Retention.runePityChance(progress.kills_since_rune, config);
+    }
+
+    /** Шанс принудительного самоцвета за дроп. */
+    public double gemPityChance(ServerPlayer player) {
+        if (!loaded || player == null || !config.retention_enabled) {
+            return 0;
+        }
+        PlayerProgress progress = data.get(player.getUUID()
+            .toString());
+        return progress == null ? 0 : Retention.gemPityChance(progress.kills_since_gem, config);
+    }
+
+    /** Сбрасывает счётчик рун (руна выпала). */
+    public void onRuneDropped(ServerPlayer player) {
+        if (!loaded || player == null) {
+            return;
+        }
+        PlayerProgress progress = data.get(player.getUUID()
+            .toString());
+        if (progress != null) {
+            progress.kills_since_rune = 0;
+            dirty = true;
+        }
+    }
+
+    /** Сбрасывает счётчик самоцветов. */
+    public void onGemDropped(ServerPlayer player) {
+        if (!loaded || player == null) {
+            return;
+        }
+        PlayerProgress progress = data.get(player.getUUID()
+            .toString());
+        if (progress != null) {
+            progress.kills_since_gem = 0;
+            dirty = true;
+        }
+    }
+
+    /**
+     * Учитывает собранный уникат в кодексе и выдаёт награду за новую ступень.
+     */
+    public void recordCodex(ServerPlayer player, String itemId) {
+        if (!loaded || player == null || !config.codex_enabled || itemId == null || itemId.isEmpty()) {
+            return;
+        }
+        PlayerProgress progress = data.get(player.getUUID()
+            .toString());
+        if (progress == null) {
+            return;
+        }
+        Retention.Reward reward = Retention.registerCodexEntry(progress, itemId, config);
+        if (reward == null) {
+            return;
+        }
+        grantFavor(player, progress, reward.favor);
+        player.sendSystemMessage(Component.literal("GameMaster: " + reward.text)
+            .withStyle(ChatFormatting.LIGHT_PURPLE));
+        telemetry.retained(player, "codex", itemId, reward.favor);
+        broadcast("★ " + player.getGameProfile()
+            .name() + " собрал " + Retention.codexSize(progress) + " уникатов в кодексе!", ChatFormatting.GOLD);
+        dirty = true;
+    }
+
+    /** Сколько уникатов в кодексе у игрока. */
+    public int codexSize(String uuid) {
+        PlayerProgress progress = uuid == null ? null : data.get(uuid);
+        return Retention.codexSize(progress);
+    }
+
+    /** Сколько уникатов собрано всеми игроками (разные предметы). */
+    public int codexUniqueTotal() {
+        java.util.Set<String> all = new java.util.HashSet<>();
+        for (PlayerProgress p : data.players.values()) {
+            if (p != null && p.codex != null) {
+                all.addAll(p.codex);
+            }
+        }
+        return all.size();
     }
 
     // ------------------------------------------------------------------
@@ -914,6 +1097,42 @@ public class GameMaster {
         } catch (Exception e) {
             // социальные сообщения не должны ломать вход в игру
         }
+    }
+
+    /**
+     * Напоминание о невыполненной цели недели — только тем, кто онлайн и только
+     * в прайм-тайм (когда люди и так собираются). Так подсказка не выглядит спамом
+     * и не будит сервер ночью: рассылка живёт внутри тика.
+     */
+    private void maybeHintWeeklyGoal(long now) {
+        if (!config.enabled || !config.social_enabled || !config.social_goal_enabled
+            || !config.social_goal_hint || config.social_goal_kills <= 0) {
+            return;
+        }
+        if (onlineCache <= 0 || weeklyGoalReached()) {
+            return;
+        }
+        if (now - data.last_goal_hint < Math.max(5, config.social_goal_hint_minutes) * 60L) {
+            return;
+        }
+        // Если данных достаточно — напоминаем только в окно компании.
+        if (Social.hasActivity(data.hour_activity)) {
+            int start = Social.bestWindowStart(data.hour_activity, config.social_prime_window_hours);
+            if (start >= 0) {
+                int window = Math.max(1, Math.min(24, config.social_prime_window_hours));
+                int hour = Social.localHour(now);
+                int offset = Math.floorMod(hour - start, 24);
+                if (offset >= window) {
+                    return;
+                }
+            }
+        }
+        data.last_goal_hint = now;
+        dirty = true;
+        int left = Math.max(0, config.social_goal_kills - data.week_kills);
+        broadcast("☆ До общей цели недели осталось " + left + " убийств. "
+            + "Вместе это 20–30 минут на человека.", ChatFormatting.AQUA);
+        telemetry.event("goal_hint", null, "weekly", left, "");
     }
 
     /** Сбрасывает недельный счётчик, когда началась новая неделя. */
@@ -1036,6 +1255,12 @@ public class GameMaster {
         }
         PlayerProgress progress = progressFor(player);
         long now = now();
+
+        // Если прошлая сессия не закрылась (сервер упал или был выключен жёстко),
+        // засчитываем её сейчас — иначе она потеряется навсегда.
+        if (progress.session_seconds > 0) {
+            accumulateSession(progress);
+        }
 
         // Возвращение после перерыва: короткое окно бонуса и гарантированный дроп.
         // Считаем ДО перезаписи last_seen, иначе перерыв «исчезает».
@@ -1353,6 +1578,8 @@ public class GameMaster {
         }
         // Возвращение после перерыва: короткое окно усиленного опыта.
         multiplier *= Retention.returnExpBonus(progress, now(), config);
+        // Мягкая смерть: пока висит печать, опыт немного медленнее.
+        multiplier *= Retention.sealExpMultiplier(progress, now(), config);
 
         return ExpTuner.clamp(multiplier, config.exp_multiplier_min, config.exp_multiplier_max);
     }
@@ -1378,8 +1605,10 @@ public class GameMaster {
             breakdown.coop = Social.coopExp(coopCache, config);
         }
         breakdown.returnBonus = Retention.returnExpBonus(progress, now(), config);
+        breakdown.seal = Retention.sealExpMultiplier(progress, now(), config);
         breakdown.total = ExpTuner.clamp(
-            breakdown.pacing * breakdown.catchUp * breakdown.auto * breakdown.coop * breakdown.returnBonus,
+            breakdown.pacing * breakdown.catchUp * breakdown.auto * breakdown.coop * breakdown.returnBonus
+                * breakdown.seal,
             config.exp_multiplier_min, config.exp_multiplier_max);
         return breakdown;
     }
@@ -1725,6 +1954,21 @@ public class GameMaster {
             }
         }
         social.add("firsts", firsts);
+        social.add("codex_unique", codexUniqueTotal());
+        int codexSum = 0;
+        int codexPlayers = 0;
+        for (PlayerProgress p : data.players.values()) {
+            if (p == null) {
+                continue;
+            }
+            codexSum += Retention.codexSize(p);
+            if (Retention.codexSize(p) > 0) {
+                codexPlayers++;
+            }
+        }
+        social.addProperty("codex_total", codexSum);
+        social.addProperty("codex_players", codexPlayers);
+        social.addProperty("codex_enabled", config.codex_enabled);
         summary.add("social", social);
 
         summary.add("telemetry", telemetry.panelJson(config.telemetry_panel_top));
@@ -1825,6 +2069,11 @@ public class GameMaster {
         json.addProperty("session_goal_done", progress.session_goal_done);
         json.addProperty("return_bonus", round2(Retention.returnExpBonus(progress, now(), config)));
         json.addProperty("distance", round2(progress.distance_travelled));
+        json.addProperty("seal_active", Retention.sealActive(progress, now()));
+        json.addProperty("seal_kills_left", progress.seal_kills_left);
+        json.addProperty("codex", Retention.codexSize(progress));
+        json.addProperty("kills_since_rune", progress.kills_since_rune);
+        json.addProperty("kills_since_gem", progress.kills_since_gem);
         JsonObject preferences = telemetry.preferencesJson(progress.uuid);
         if (preferences.size() > 0) {
             json.add("preferences", preferences);
@@ -1865,7 +2114,7 @@ public class GameMaster {
             .append("minutes_per_level,target_minutes,exp_multiplier,auto_state,")
             .append("kills_since_unique,milestones,guaranteed_rare,guaranteed_epic,last_seen_days,")
             .append("goal_progress,goal_target,return_bonus,coop_multiplier,")
-            .append("distance,top_biome,style\n");
+            .append("distance,top_biome,style,codex,seal_count,kills_since_rune\n");
         for (PlayerProgress p : data.players.values()) {
             if (p == null) {
                 continue;
@@ -1897,7 +2146,10 @@ public class GameMaster {
                 .append(round2(config.social_enabled ? Social.coopExp(coopCache, config) : 1)).append(',')
                 .append(round2(p.distance_travelled)).append(',')
                 .append(csv(telemetryTop(p.uuid, "biome_time|"))).append(',')
-                .append(csv(telemetryStyle(p.uuid)))
+                .append(csv(telemetryStyle(p.uuid))).append(',')
+                .append(Retention.codexSize(p)).append(',')
+                .append(p.seal_count).append(',')
+                .append(p.kills_since_rune)
                 .append('\n');
         }
         Files.createDirectories(baseDir());
@@ -2049,6 +2301,8 @@ public class GameMaster {
         public double coop = 1;
         /** Бонус за возвращение после перерыва (1 — не действует). */
         public double returnBonus = 1;
+        /** Штраф «печати» после смерти (1 — печати нет). */
+        public double seal = 1;
         public double total = 1;
     }
 }

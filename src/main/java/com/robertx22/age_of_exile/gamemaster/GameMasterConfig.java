@@ -256,6 +256,70 @@ public class GameMasterConfig {
     /** Сколько гарантированных редких вещей выдаётся вместе с возвращением. */
     public int retention_return_rare = 1;
 
+    // --- защита от невезения для рун и самоцветов (pity) ---
+
+    /**
+     * Pity для рун: базовый шанс руны — 5% на дроп (RUNE_DROPRATE = 0.05 как ожидаемое
+     * число предметов). Серия без руны в 50 убийств случается у 7.7% игроков, в 100 —
+     * у 0.6%. Pity включается после 50 и доходит до 90% к 150 убийствам.
+     */
+    public boolean retention_pity_runes = true;
+
+    /** Сколько убийств без руны считается «нормой» (до этого pity молчит). */
+    public int retention_pity_rune_start_kills = 50;
+
+    /** На этом числе убийств шанс принудительной руны достигает 90%. */
+    public int retention_pity_rune_full_kills = 150;
+
+    /**
+     * Самоцветы падают с шансом 50% на дроп, поэтому сухая серия — это 5–10 убийств.
+     * Порог высокий намеренно: защита нужна только от совсем невезучих серий.
+     */
+    public int retention_pity_gem_start_kills = 12;
+
+    /** На этом числе убийств шанс принудительного самоцвета достигает 90%. */
+    public int retention_pity_gem_full_kills = 40;
+
+    // --- мягкая смерть («печать») ---
+
+    /**
+     * Вместо потери опыта смерть вешает «печать»: короткий дебафф, который снимается
+     * убийствами. Наказание есть, прогресс не теряется — это главная причина,
+     * по которой люди бросают игру после неудачного вечера.
+     */
+    public boolean retention_soft_death = true;
+
+    /** Сколько минут действует печать, если её не снять убийствами. */
+    public double retention_seal_minutes = 10;
+
+    /** Сколько убийств снимают печать досрочно. */
+    public int retention_seal_kills = 3;
+
+    /** Множитель опыта, пока печать активна (0.85 = −15%). */
+    public double retention_seal_exp_penalty = 0.85;
+
+    // --- подсказка к общей цели недели ---
+
+    /** Напоминать онлайн-игрокам о невыполненной цели недели в прайм-тайм. */
+    public boolean social_goal_hint = true;
+
+    /** Минимальный интервал между напоминаниями, минуты. */
+    public int social_goal_hint_minutes = 60;
+
+    // --- кодекс уникатов ---
+
+    /** Считать собранные уникаты и выдавать награды за коллекцию. */
+    public boolean codex_enabled = true;
+
+    /** Каждые N собранных уникатов — награда. */
+    public int codex_reward_step = 10;
+
+    /** Благосклонность за ступень кодекса. */
+    public double codex_reward_favor = 300;
+
+    /** Гарантированных эпических вещей за ступень кодекса. */
+    public int codex_reward_epic = 1;
+
     // ------------------------------------------------------------------
     // 2d. Маленький сервер (см. Social)
     // ------------------------------------------------------------------
@@ -485,6 +549,19 @@ public class GameMasterConfig {
         retention_return_hours = clamp(retention_return_hours, 0, 8760);
         retention_return_exp_bonus = clamp(retention_return_exp_bonus, 1, 100);
         retention_return_rare = (int) clamp(retention_return_rare, 0, 100);
+        retention_pity_rune_start_kills = (int) clamp(retention_pity_rune_start_kills, 1, 1000000);
+        retention_pity_rune_full_kills = (int) clamp(retention_pity_rune_full_kills,
+            retention_pity_rune_start_kills + 1, 10000000);
+        retention_pity_gem_start_kills = (int) clamp(retention_pity_gem_start_kills, 1, 1000000);
+        retention_pity_gem_full_kills = (int) clamp(retention_pity_gem_full_kills,
+            retention_pity_gem_start_kills + 1, 10000000);
+        retention_seal_minutes = clamp(retention_seal_minutes, 0, 1440);
+        retention_seal_kills = (int) clamp(retention_seal_kills, 0, 100);
+        retention_seal_exp_penalty = clamp(retention_seal_exp_penalty, 0.1, 1);
+        social_goal_hint_minutes = (int) clamp(social_goal_hint_minutes, 5, 1440);
+        codex_reward_step = (int) clamp(codex_reward_step, 1, 1000);
+        codex_reward_favor = clamp(codex_reward_favor, 0, 100000);
+        codex_reward_epic = (int) clamp(codex_reward_epic, 0, 100);
         social_coop_exp_per_player = clamp(social_coop_exp_per_player, 0, 10);
         social_coop_loot_per_player = clamp(social_coop_loot_per_player, 0, 10);
         social_coop_spawn_per_player = clamp(social_coop_spawn_per_player, 0, 10);
@@ -601,6 +678,21 @@ public class GameMasterConfig {
                     case "retention_return_hours" -> this.retention_return_hours = el.getAsDouble();
                     case "retention_return_exp_bonus" -> this.retention_return_exp_bonus = el.getAsDouble();
                     case "retention_return_rare" -> this.retention_return_rare = el.getAsInt();
+                    case "retention_pity_runes" -> this.retention_pity_runes = el.getAsBoolean();
+                    case "retention_pity_rune_start_kills" -> this.retention_pity_rune_start_kills = el.getAsInt();
+                    case "retention_pity_rune_full_kills" -> this.retention_pity_rune_full_kills = el.getAsInt();
+                    case "retention_pity_gem_start_kills" -> this.retention_pity_gem_start_kills = el.getAsInt();
+                    case "retention_pity_gem_full_kills" -> this.retention_pity_gem_full_kills = el.getAsInt();
+                    case "retention_soft_death" -> this.retention_soft_death = el.getAsBoolean();
+                    case "retention_seal_minutes" -> this.retention_seal_minutes = el.getAsDouble();
+                    case "retention_seal_kills" -> this.retention_seal_kills = el.getAsInt();
+                    case "retention_seal_exp_penalty" -> this.retention_seal_exp_penalty = el.getAsDouble();
+                    case "social_goal_hint" -> this.social_goal_hint = el.getAsBoolean();
+                    case "social_goal_hint_minutes" -> this.social_goal_hint_minutes = el.getAsInt();
+                    case "codex_enabled" -> this.codex_enabled = el.getAsBoolean();
+                    case "codex_reward_step" -> this.codex_reward_step = el.getAsInt();
+                    case "codex_reward_favor" -> this.codex_reward_favor = el.getAsDouble();
+                    case "codex_reward_epic" -> this.codex_reward_epic = el.getAsInt();
                     case "social_enabled" -> this.social_enabled = el.getAsBoolean();
                     case "social_coop_exp_per_player" -> this.social_coop_exp_per_player = el.getAsDouble();
                     case "social_coop_loot_per_player" -> this.social_coop_loot_per_player = el.getAsDouble();

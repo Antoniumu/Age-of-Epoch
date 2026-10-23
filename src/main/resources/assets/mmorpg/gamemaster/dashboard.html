@@ -216,6 +216,30 @@
 
       <div class="card toggle">
         <div>
+          <h3>Мягкая смерть (печать)</h3>
+          <p>Вместо потери опыта — дебафф на 10 минут или 3 убийства. Прогресс не теряется.</p>
+        </div>
+        <div class="switch" id="swSoftDeath" data-key="retention_soft_death" title="Мягкая смерть"></div>
+      </div>
+
+      <div class="card toggle">
+        <div>
+          <h3>Pity для рун и самоцветов</h3>
+          <p>Длинная серия без руны (0.05% базового шанса) заканчивается принудительной руной.</p>
+        </div>
+        <div class="switch" id="swRunePity" data-key="retention_pity_runes" title="Pity рун"></div>
+      </div>
+
+      <div class="card toggle">
+        <div>
+          <h3>Кодекс уникатов</h3>
+          <p>Счёт собранных уникатов и награды каждые 10 штук.</p>
+        </div>
+        <div class="switch" id="swCodex" data-key="codex_enabled" title="Кодекс"></div>
+      </div>
+
+      <div class="card toggle">
+        <div>
           <h3>Телеметрия</h3>
           <p>События, биомы, мобы, смерти, профили игроков и отчёты по сезону.</p>
         </div>
@@ -338,6 +362,11 @@
         <div class="label">Прайм-тайм</div>
         <div class="value" id="statPrime">—</div>
         <div class="hint" id="statPrimeHint">когда обычно играют</div>
+      </div>
+      <div class="card stat">
+        <div class="label">Кодекс</div>
+        <div class="value" id="statCodex">—</div>
+        <div class="hint" id="statCodexHint">разных уникатов собрано</div>
       </div>
       <div class="card stat">
         <div class="label">Телеметрия</div>
@@ -595,6 +624,9 @@
     setSwitch(document.getElementById("swSpawnDynamic"), cfg.spawn_rate_dynamic, busy);
     setSwitch(document.getElementById("swAuto"), cfg.auto_balance && cfg.enabled, busy);
     setSwitch(document.getElementById("swTelemetry"), cfg.telemetry_enabled, busy);
+    setSwitch(document.getElementById("swSoftDeath"), cfg.retention_soft_death, busy);
+    setSwitch(document.getElementById("swRunePity"), cfg.retention_pity_runes, busy);
+    setSwitch(document.getElementById("swCodex"), cfg.codex_enabled, busy);
     setSwitch(document.getElementById("swTelemetryEvents"), cfg.telemetry_events, busy);
 
     document.getElementById("catchupInfo").textContent =
@@ -688,6 +720,10 @@
           + `${escapeHtml(firstLabels[key] || key)} — ${escapeHtml(firsts[key])}</span>`).join("")
       : "пока никого — стань первым";
 
+    document.getElementById("statCodex").textContent = (social.codex_unique ?? 0) + " шт";
+    document.getElementById("statCodexHint").textContent =
+      "всего собрано " + (social.codex_total ?? 0) + " · игроков с кодексом " + (social.codex_players ?? 0);
+
     const tel = summary.telemetry || {};
     document.getElementById("statTel").textContent = fmtInt(tel.events ?? 0);
     document.getElementById("statTelHint").textContent =
@@ -734,9 +770,9 @@
           <td class="num">×${fmt(p.catch_up_multiplier, 2)}</td>
           <td class="num"><span class="badge ${multiplierClass(p.spawn_rate_multiplier)}">×${fmt(p.spawn_rate_multiplier, 2)}</span></td>
           <td class="num">×${fmt(p.auto_exp_multiplier, 2)}</td>
-          <td class="num muted" title="смертей/час: ${fmt(p.deaths_per_hour, 2)}; спавн ×${fmt(p.auto_spawn, 2)}">${escapeHtml(p.auto_state || "—")}</td>
+          <td class="num muted" title="смертей/час: ${fmt(p.deaths_per_hour, 2)}; спавн ×${fmt(p.auto_spawn, 2)}; печать: ${p.seal_active ? "активна (" + (p.seal_kills_left ?? 0) + " убийств)" : "нет"}; pity рун: ${p.kills_since_rune ?? 0}">${escapeHtml(p.auto_state || "—")}${p.seal_active ? " 🕯" : ""}</td>
           <td class="num muted">${fmt(p.minutes_at_level, 0)} / ${fmt(p.target_minutes, 0)} мин</td>
-          <td class="num muted" title="${escapeHtml((p.preferences && p.preferences.top_biome) || "нет данных")}; любимый час: ${escapeHtml((p.preferences && p.preferences.top_hour) || "—")}">${escapeHtml((p.preferences && p.preferences.style) || "—")}</td>
+          <td class="num muted" title="${escapeHtml((p.preferences && p.preferences.top_biome) || "нет данных")}; любимый час: ${escapeHtml((p.preferences && p.preferences.top_hour) || "—")}; кодекс: ${p.codex ?? 0}">${escapeHtml((p.preferences && p.preferences.style) || "—")}</td>
           <td class="num muted" title="цель сессии: убийства; бонус за возвращение ×${fmt(p.return_bonus, 2)}">${p.session_goal_progress ?? 0}/${p.session_goal_target ?? 0}</td>
           <td class="num muted" title="активных дней за 7: ${p.active_days_7 ?? 0}">${p.streak_days ?? 0} дн</td>
           <td class="num muted" title="убийств без униката; гарант. редких: ${p.guaranteed_rare ?? 0}, эпик: ${p.guaranteed_epic ?? 0}">${p.kills_since_unique ?? 0}</td>

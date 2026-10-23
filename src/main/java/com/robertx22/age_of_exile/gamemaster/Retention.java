@@ -284,6 +284,155 @@ public final class Retention {
         return 0.9 * t;
     }
 
+    // ------------------------------------------------------------------
+    // Pity для рун и самоцветов
+    // ------------------------------------------------------------------
+
+    /**
+     * Шанс «принудительной» руны за один дроп. Рун в игре мало (0.05% базового шанса —
+     * это ~2000 убийств), поэтому сухая серия здесь ещё длиннее, чем у уникатов.
+     */
+    public static double runePityChance(int killsSinceRune, GameMasterConfig config) {
+        if (config == null || !config.retention_pity_runes) {
+            return 0;
+        }
+        return ramp(killsSinceRune, config.retention_pity_rune_start_kills,
+            config.retention_pity_rune_full_kills);
+    }
+
+    /** То же для самоцветов. */
+    public static double gemPityChance(int killsSinceGem, GameMasterConfig config) {
+        if (config == null || !config.retention_pity_runes) {
+            return 0;
+        }
+        return ramp(killsSinceGem, config.retention_pity_gem_start_kills,
+            config.retention_pity_gem_full_kills);
+    }
+
+    private static double ramp(int kills, int startKills, int fullKills) {
+        int start = Math.max(1, startKills);
+        int full = Math.max(start + 1, fullKills);
+        if (kills < start) {
+            return 0;
+        }
+        double t = clamp((kills - start) / (double) (full - start), 0, 1);
+        return 0.9 * t;
+    }
+
+    // ------------------------------------------------------------------
+    // Мягкая смерть: «печать» вместо потери опыта
+    // ------------------------------------------------------------------
+
+    /**
+     * Вешает печать после смерти. Возвращает {@code true}, если печать поставлена.
+     *
+     * <p>Печать — это не потеря прогресса, а короткий дебафф: опыт немного медленнее,
+     * пока игрок не снимет её убийствами. Так наказание остаётся, а «минус час работы»
+     * исчезает — именно из-за него люди бросают игру после плохого вечера.
+     */
+    public static boolean applySeal(PlayerProgress progress, long now, GameMasterConfig config) {
+        if (progress == null || config == null || !config.retention_soft_death) {
+            return false;
+        }
+        // повторный вызов в ту же секунду (например, при двойном событии смерти) не дублируем
+        if (progress.seal_until > now + 5) {
+            return false;
+        }
+        progress.seal_until = now + (long) Math.max(30, config.retention_seal_minutes * 60);
+        // 0 убийств в конфиге = печать снимается только по времени
+        progress.seal_kills_left = Math.max(0, config.retention_seal_kills);
+        progress.seal_count++;
+        return true;
+    }
+
+    /** Действует ли печать прямо сейчас. */
+    public static boolean sealActive(PlayerProgress progress, long now) {
+        return progress != null && progress.seal_until > now;
+    }
+
+    /** Множитель опыта, пока печать активна (1 — не активна). */
+    public static double sealExpMultiplier(PlayerProgress progress, long now, GameMasterConfig config) {
+        if (!sealActive(progress, now) || config == null) {
+            return 1;
+        }
+        return clamp(config.retention_seal_exp_penalty, 0.1, 1);
+    }
+
+    /**
+     * Учитывает убийство для снятия печати.
+     *
+     * @return {@code true}, если печать только что снята
+     */
+    public static boolean registerSealKill(PlayerProgress progress, long now) {
+        if (progress == null || !sealActive(progress, now)) {
+            return false;
+        }
+        if (progress.seal_kills_left <= 0) {
+            return false;
+        }
+        progress.seal_kills_left--;
+        if (progress.seal_kills_left <= 0) {
+            progress.seal_until = 0;
+            return true;
+        }
+        return false;
+    }
+
+    /** Текст для игрока при получении печати. */
+    public static String sealText(GameMasterConfig config) {
+        int kills = config == null ? 0 : config.retention_seal_kills;
+        double minutes = config == null ? 0 : config.retention_seal_minutes;
+        if (kills <= 0) {
+            return "Печать: опыт немного медленнее ещё " + Math.round(minutes) + " мин.";
+        }
+        return "Печать: опыт немного медленнее. Снять — убей " + kills + " мобов (или подожди "
+            + Math.round(minutes) + " мин).";
+    }
+
+    // ------------------------------------------------------------------
+    // Кодекс уникатов
+    // ------------------------------------------------------------------
+
+    /**
+     * Добавляет уникат в кодекс.
+     *
+     * @return награда, если пройдена новая ступень, иначе {@code null}
+     */
+    public static Reward registerCodexEntry(PlayerProgress progress, String itemId, GameMasterConfig config) {
+        if (progress == null || config == null || !config.codex_enabled
+            || itemId == null || itemId.isEmpty()) {
+            return null;
+        }
+        if (progress.codex == null) {
+            progress.codex = new ArrayList<>();
+        }
+        if (progress.codex.contains(itemId)) {
+            return null;
+        }
+        progress.codex.add(itemId);
+
+        int step = Math.max(1, config.codex_reward_step);
+        int reached = progress.codex.size() / step;
+        if (reached <= progress.codex_rewarded) {
+            return null;
+        }
+        progress.codex_rewarded = reached;
+
+        Reward reward = new Reward();
+        reward.favor = (int) Math.round(config.codex_reward_favor * reached);
+        reward.epic_charges = Math.max(0, config.codex_reward_epic);
+        progress.guaranteed_epic += reward.epic_charges;
+        reward.text = "Кодекс: " + progress.codex.size() + " уникатов собрано! +" + reward.favor
+            + " Благосклонности"
+            + (reward.epic_charges > 0 ? " и " + reward.epic_charges + " гарантированная эпическая вещь" : "");
+        return reward;
+    }
+
+    /** Сколько уникатов собрано. */
+    public static int codexSize(PlayerProgress progress) {
+        return progress == null || progress.codex == null ? 0 : progress.codex.size();
+    }
+
     /**
      * Риск ухода, 0…1. Считается по трём наблюдаемым сигналам:
      * давности последнего входа, длине серии и наличию сессий вообще.
