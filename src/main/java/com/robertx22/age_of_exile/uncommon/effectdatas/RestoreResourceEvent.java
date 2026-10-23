@@ -26,6 +26,36 @@ public class RestoreResourceEvent extends EffectEvent {
         return ID;
     }
 
+    /**
+     * Регенерация даёт и плоское значение стата, и процент от максимума.
+     * Без процента энергия на 50-м уровне восстанавливалась на 4 в секунду
+     * при стоимости удара в 13 — бой превращался в ожидание.
+     */
+    private float getAmountWithPercentRegen() {
+        float amount = data.getNumber();
+        if (data.getRestoreType() != RestoreType.regen) {
+            return amount;
+        }
+        float percent;
+        if (data.getResourceType() == ResourceType.energy) {
+            percent = com.robertx22.age_of_exile.database.data.game_balance_config.GameBalanceConfig.get().ENERGY_REGEN_PERCENT_PER_SECOND;
+        } else if (data.getResourceType() == ResourceType.mana) {
+            percent = com.robertx22.age_of_exile.database.data.game_balance_config.GameBalanceConfig.get().MANA_REGEN_PERCENT_PER_SECOND;
+        } else {
+            return amount;
+        }
+        if (percent <= 0) {
+            return amount;
+        }
+        float max = this.targetData.getResources()
+            .getMax(target, data.getResourceType());
+        if (max <= 0) {
+            return amount;
+        }
+        // тик регенерации приходит раз в 3 секунды (60 тиков) — берём именно эту долю
+        return amount + max * percent * 3F;
+    }
+
     @Override
     protected void activate() {
 
@@ -34,7 +64,7 @@ public class RestoreResourceEvent extends EffectEvent {
         }
 
         this.targetData.getResources()
-            .restore(target, data.getResourceType(), data.getNumber());
+            .restore(target, data.getResourceType(), getAmountWithPercentRegen());
 
         if (this.data.getResourceType() == ResourceType.health) {
             if (data.getRestoreType() == RestoreType.heal) {

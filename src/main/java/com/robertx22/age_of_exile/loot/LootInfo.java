@@ -296,6 +296,9 @@ public class LootInfo {
             }
         }
 
+        modifier *= (float) com.robertx22.age_of_exile.gamemaster.GameMaster.get()
+            .lootMultiplier();
+
         float chance = gen.baseDropChance() * modifier;
 
         chance = ExileEvents.SETUP_LOOT_CHANCE.callEvents(new ExileEvents.OnSetupLootChance(mobKilled, player, chance)).lootChance;

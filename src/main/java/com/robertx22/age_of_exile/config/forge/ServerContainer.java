@@ -42,14 +42,14 @@ public class ServerContainer {
         REQUIRE_TEAM_FOR_TEAM_DUNGEONS = b.define("require_team_for_dungeons", true);
         DONT_SYNC_DATA_OF_AMBIENT_MOBS = b.define("dont_sync_ambient_mob_data", true);
 
-        STARTING_FAVOR = b.defineInRange("starting_favor", 100, 0, 100000);
+        STARTING_FAVOR = b.defineInRange("starting_favor", 500, 0, 100000);
 
         HP_VALUE_NEEDED_FOR_MAX_ENVIRO_DMG_PROTECTION = b.defineInRange("HP_VALUE_NEEDED_FOR_MAX_ENVIRO_DMG_PROTECTION", 125, 0, 100000);
         MAX_ENVIRO_DMG_PROTECTION_FROM_HP_MULTI = b.defineInRange("MAX_ENVIRO_DMG_PROTECTION_FROM_HP_MULTI", 0.75F, 0, 1);
 
         MAX_UNIQUE_GEARS_WORN = b.defineInRange("max_uniques_worn", 100, 0, 20);
 
-        FAVOR_GAIN_PER_CHEST_LOOTED = b.defineInRange("favor_per_chest", 20D, 0, 1000);
+        FAVOR_GAIN_PER_CHEST_LOOTED = b.defineInRange("favor_per_chest", 50D, 0, 1000);
         FAVOR_GAIN_PER_SPAWNER_DESTROYED = b.comment("Set this to 0 if there is a way to create spawners in the modpack.")
             .defineInRange("favor_per_spawner_destroyed", 5D, 0, 1000);
 
@@ -62,7 +62,7 @@ public class ServerContainer {
         MAX_INSTABILITY = b.defineInRange("max_instability", 1000D, 0, 10000000);
         LEVEL_DISTANCE_PENALTY_PER_LVL = b.defineInRange("lvl_distance_penalty_per_level", 0.1D, 0, 1D);
         LEVEL_DISTANCE_PENALTY_MIN_MULTI = b.defineInRange("min_loot_chance", 0.1D, 0, 1);
-        EXTRA_MOB_STATS_PER_LEVEL = b.defineInRange("extra_mob_stats_per_lvl", 0.02D, 0, 1000);
+        EXTRA_MOB_STATS_PER_LEVEL = b.defineInRange("extra_mob_stats_per_lvl", 0.01D, 0, 1000);
         VANILLA_MOB_DMG_AS_EXILE_DMG = b.defineInRange("vanilla_mob_dmg_as_exile_dmg", 1D, 0, 1000);
         VANILLA_MOB_DMG_AS_EXILE_DMG_AT_MAX_LVL = b.defineInRange("vanilla_mob_dmg_as_exile_dmg_at_max_lvl", 1D, 0, 1000);
         PLAYER_VANILLA_DMG_MULTI = b.defineInRange("PLAYER_VANILLA_DMG_MULTI", 0D, 0, 1000);

@@ -164,6 +164,15 @@
 
       <div class="card toggle">
         <div>
+          <h3>Автобаланс</h3>
+          <p>GameMaster сам держит темп: если уровни идут медленнее цели — повышает опыт, быстрее — снижает. Много смертей — мобы мягче, мало — крепче. Застрявшим выдаёт «режим спасения».</p>
+          <div class="muted" style="margin-top:8px;font-size:12px" id="autoInfo">—</div>
+        </div>
+        <div class="switch" id="swAuto" data-key="auto_balance" title="Автобаланс"></div>
+      </div>
+
+      <div class="card toggle">
+        <div>
           <h3>Динамика по Благосклонности</h3>
           <p>При Благосклонности 100 динамический множитель равен ×0.5; при 0 — ×1.0.</p>
         </div>
@@ -193,6 +202,15 @@
         </label>
         <label class="field">Макс. бонус догоняющего
           <input type="number" id="inpCatchMax" min="0" max="20" step="0.1">
+        </label>
+        <label class="field">Автобаланс: старт, мин/уровень
+          <input type="number" id="inpAutoStart" min="1" max="600" step="1">
+        </label>
+        <label class="field">Автобаланс: максимум, мин/уровень
+          <input type="number" id="inpAutoEnd" min="1" max="600" step="1">
+        </label>
+        <label class="field">Автобаланс: мёртвая зона (±)
+          <input type="number" id="inpAutoDead" min="0" max="0.9" step="0.05">
         </label>
         <label class="field">Ручной множитель спавна (0–1)
           <input type="number" id="inpSpawnManual" min="0" max="1" step="0.05">
@@ -231,6 +249,16 @@
         <div class="label">Ориентир группы</div>
         <div class="value" id="statReference">—</div>
         <div class="hint" id="statReferenceHint">средний уровень с поправкой на лидера</div>
+      </div>
+      <div class="card stat">
+        <div class="label">Автобаланс: мобы</div>
+        <div class="value" id="statAutoMobs">—</div>
+        <div class="hint" id="statAutoMobsHint">HP / урон мобов</div>
+      </div>
+      <div class="card stat">
+        <div class="label">Автобаланс: коридор</div>
+        <div class="value" id="statAutoPace">—</div>
+        <div class="hint" id="statAutoPaceHint">минут на уровень</div>
       </div>
       <div class="card stat">
         <div class="label">Игроков</div>
@@ -275,12 +303,15 @@
             <th class="num">Темп</th>
             <th class="num">Догоняющий</th>
             <th class="num">Спавн мобов</th>
+            <th class="num">Авто XP</th>
+            <th class="num">Состояние</th>
+            <th class="num">Темп уровня</th>
             <th class="num">Итог XP</th>
             <th class="num">Был(а)</th>
           </tr>
         </thead>
         <tbody id="playerRows">
-          <tr><td colspan="10" class="empty">данных пока нет</td></tr>
+          <tr><td colspan="13" class="empty">данных пока нет</td></tr>
         </tbody>
       </table>
     </div>
@@ -371,6 +402,7 @@
     setSwitch(document.getElementById("swEnabled"), cfg.enabled, busy);
     setSwitch(document.getElementById("swSpawnRate"), cfg.spawn_rate_enabled, busy);
     setSwitch(document.getElementById("swSpawnDynamic"), cfg.spawn_rate_dynamic, busy);
+    setSwitch(document.getElementById("swAuto"), cfg.auto_balance && cfg.enabled, busy);
 
     document.getElementById("catchupInfo").textContent =
       "+" + fmt((cfg.catch_up_per_level || 0) * 100, 0) + "% за уровень отставания, максимум +" +
@@ -386,6 +418,20 @@
       (cfg.enabled && cfg.spawn_rate_enabled ? "активно" : "выключено") + "; ручной ×" +
       fmt(cfg.spawn_rate_manual_multiplier, 2) + "; при Благосклонности 100 итог примерно ×" +
       fmt(cfg.spawn_rate_manual_multiplier * dynamicAt100, 2);
+
+    const auto = summary.auto || {};
+    document.getElementById("autoInfo").textContent = auto.enabled
+      ? "цель ~" + fmt(auto.target_hours, 0) + " ч; сейчас мобы HP ×" + fmt(auto.mob_health, 2)
+        + ", урон ×" + fmt(auto.mob_damage, 2) + ", лут ×" + fmt(auto.loot, 2)
+      : "выключен";
+    document.getElementById("statAutoMobs").textContent =
+      "×" + fmt(auto.mob_health, 2) + " / ×" + fmt(auto.mob_damage, 2);
+    document.getElementById("statAutoMobsHint").textContent =
+      "HP / урон мобов, лут ×" + fmt(auto.loot, 2);
+    document.getElementById("statAutoPace").textContent =
+      fmt(auto.target_start_minutes, 0) + "–" + fmt(auto.target_end_minutes, 0) + " мин";
+    document.getElementById("statAutoPaceHint").textContent =
+      "цель ~" + fmt(auto.target_hours, 0) + " ч до максимума";
 
     document.getElementById("statBaseline").textContent = fmt(summary.baseline_hours, 1) + " ч";
     document.getElementById("statPredicted").textContent = fmt(summary.predicted_hours, 1) + " ч";
@@ -418,10 +464,13 @@
           <td class="num">×${fmt(p.pacing_multiplier, 2)}</td>
           <td class="num">×${fmt(p.catch_up_multiplier, 2)}</td>
           <td class="num"><span class="badge ${multiplierClass(p.spawn_rate_multiplier)}">×${fmt(p.spawn_rate_multiplier, 2)}</span></td>
+          <td class="num">×${fmt(p.auto_exp_multiplier, 2)}</td>
+          <td class="num muted" title="смертей/час: ${fmt(p.deaths_per_hour, 2)}">${escapeHtml(p.auto_state || "—")}</td>
+          <td class="num muted">${fmt(p.minutes_at_level, 0)} / ${fmt(p.target_minutes, 0)} мин</td>
           <td class="num"><span class="badge ${multiplierClass(p.multiplier)}">×${fmt(p.multiplier, 2)}</span></td>
           <td class="num muted">${p.online ? "в сети" : ago(p.last_seen_minutes)}</td>
         </tr>`).join("")
-      : `<tr><td colspan="10" class="empty">данных пока нет</td></tr>`;
+      : `<tr><td colspan="13" class="empty">данных пока нет</td></tr>`;
 
     if (!document.activeElement || !document.activeElement.matches("input, select")) {
       document.getElementById("inpTarget").value = cfg.target_hours ?? "";
@@ -433,6 +482,9 @@
       document.getElementById("inpSpawnManual").value = cfg.spawn_rate_manual_multiplier ?? "";
       document.getElementById("inpFavorReference").value = cfg.spawn_rate_favor_reference ?? "";
       document.getElementById("inpSpawnMin").value = cfg.spawn_rate_dynamic_min_multiplier ?? "";
+      document.getElementById("inpAutoStart").value = cfg.auto_start_minutes ?? "";
+      document.getElementById("inpAutoEnd").value = cfg.auto_end_minutes ?? "";
+      document.getElementById("inpAutoDead").value = cfg.auto_dead_zone ?? "";
     }
     renderSpawnOverrideForm(players);
 
@@ -744,7 +796,10 @@
       catch_up_max_bonus: Number(document.getElementById("inpCatchMax").value),
       spawn_rate_manual_multiplier: Number(document.getElementById("inpSpawnManual").value),
       spawn_rate_favor_reference: Number(document.getElementById("inpFavorReference").value),
-      spawn_rate_dynamic_min_multiplier: Number(document.getElementById("inpSpawnMin").value)
+      spawn_rate_dynamic_min_multiplier: Number(document.getElementById("inpSpawnMin").value),
+      auto_start_minutes: Number(document.getElementById("inpAutoStart").value),
+      auto_end_minutes: Number(document.getElementById("inpAutoEnd").value),
+      auto_dead_zone: Number(document.getElementById("inpAutoDead").value)
     };
     Object.keys(patch).forEach(k => {
       if (!Number.isFinite(patch[k])) delete patch[k];

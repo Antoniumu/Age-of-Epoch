@@ -35,6 +35,46 @@ public class PlayerProgress {
     /** Последний рассчитанный итоговый множитель. */
     public double multiplier = 1;
 
+    // ------------------------------------------------------------------
+    // Автобаланс (см. AutoBalance)
+    // ------------------------------------------------------------------
+
+    /** Сглаженное время прохождения уровня в реальных минутах. 0 — замеров ещё нет. */
+    public double ema_minutes_per_level = 0;
+
+    /** Значение playtime_seconds на момент получения текущего уровня. */
+    public double level_started_playtime = 0;
+
+    /** Смертей на текущем уровне (сбрасывается при повышении). */
+    public int deaths_since_level = 0;
+
+    /** Смертей всего. */
+    public int deaths = 0;
+
+    /** Текущий множитель опыта от автобаланса. */
+    public double auto_exp_multiplier = 1;
+    public double auto_mob_health = 1;
+    public double auto_mob_damage = 1;
+    public double auto_loot = 1;
+    /** 0…1: насколько игрок близок к целевому темпу. */
+    public double auto_flow = 0.5;
+    /** Состояние автобаланса: stable / rescue / brake / push / welcome. */
+    public String auto_state = "stable";
+    /** Когда последний раз пересчитывали автобаланс (epoch seconds). */
+    public long auto_updated_epoch = 0;
+
+    /** Уровней, пройденных внутри целевого коридора (для панели). */
+    public int levels_at_pace = 0;
+    /** Уровней пройдено всего (для панели). */
+    public int levels_gained = 0;
+
+    /** Длительность текущей сессии в секундах (без AFK). */
+    public double session_seconds = 0;
+    /** Количество сессий. */
+    public int sessions = 0;
+    /** Средняя длительность сессии в секундах. */
+    public double avg_session_seconds = 0;
+
     /** Время последней активности (epoch seconds). */
     public long last_seen = 0;
 
@@ -54,6 +94,8 @@ public class PlayerProgress {
     public transient boolean has_pos = false;
     public transient long last_moved_epoch = 0;
     public transient boolean online = false;
+    /** До какого момента (epoch seconds) действует «тёплый приём» после долгого перерыва. */
+    public transient long welcome_until = 0;
 
     public double playtimeHours() {
         return playtime_seconds / 3600.0;
@@ -61,6 +103,14 @@ public class PlayerProgress {
 
     public double baselineHours() {
         return baseline_seconds / 3600.0;
+    }
+
+    /** Минут, проведённых на текущем уровне. */
+    public double minutesAtLevel() {
+        if (level_started_playtime <= 0) {
+            return 0;
+        }
+        return Math.max(0, (playtime_seconds - level_started_playtime) / 60.0);
     }
 
     public void addHistory(double multiplier, long epochSeconds) {

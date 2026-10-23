@@ -26,6 +26,9 @@ import java.util.UUID;
  *     <b>реальных</b> часов до максимального уровня.</li>
  *     <li>{@code spawn_rate_enabled}/{@code spawn_rate_dynamic} — ручной и динамический
  *     множители частоты появления враждебных мобов.</li>
+ *     <li>{@code auto_balance} — «режиссёр»: вместо фиксированных {@code target_hours} держит
+ *     коридор «минут на уровень» и подстраивает опыт, HP/урон мобов и лут. При включении
+ *     заменяет {@code pacing} (иначе два регулятора гасят друг друга).</li>
  * </ul>
  * Если включены оба режима опыта, их множители перемножаются, а догоняющий режим работает
  * и тогда, когда общий темп ещё не растянут до целевых часов. Spawn-rate на опыт не влияет.
@@ -105,6 +108,69 @@ public class GameMasterConfig {
 
     /** Верхняя граница итогового множителя опыта. */
     public double exp_multiplier_max = 5.0;
+
+    // ------------------------------------------------------------------
+    // 2b. Автобаланс (динамическое управление балансом)
+    // ------------------------------------------------------------------
+
+    /**
+     * Вместо фиксированной цели «N часов» держать игрока в коридоре темпа и
+     * подстраивать под него сложность мобов, лут и награду.
+     * Если выключено — работает старый режим {@code pacing} с {@code target_hours}.
+     */
+    public boolean auto_balance = true;
+
+    /** Целевое время первого уровня, минуты. */
+    public double auto_start_minutes = 14.0;
+
+    /** Целевое время последнего уровня, минуты. */
+    public double auto_end_minutes = 70.0;
+
+    /** Форма роста цели: 1 — линейно по логарифму, 2 — долго держит низкие уровни. */
+    public double auto_curve = 1.0;
+
+    /** «Мёртвая зона» вокруг цели: ±20% не трогаем, чтобы не было качелей. */
+    public double auto_dead_zone = 0.2;
+
+    /** Границы множителя опыта от автобаланса. */
+    public double auto_exp_min = 0.35;
+    public double auto_exp_max = 3.0;
+
+    /** Максимальное изменение множителя опыта за минуту (0.25 = ±25%). */
+    public double auto_exp_step_per_minute = 0.25;
+
+    /** Смертей в час, после которых включается «мягкий режим». */
+    public double auto_deaths_brake = 2.5;
+
+    /** Смертей в час, ниже которых можно поднять сложность (если игрок идёт быстро). */
+    public double auto_challenge_deaths = 0.3;
+
+    /** Во сколько раз дольше цели считается «застреванием». */
+    public double auto_rescue_factor = 2.0;
+
+    /** Границы множителей HP и урона мобов от автобаланса. */
+    public double auto_mob_health_min = 0.7;
+    public double auto_mob_health_max = 1.35;
+    public double auto_mob_damage_min = 0.7;
+    public double auto_mob_damage_max = 1.3;
+
+    /** Верхняя граница множителя лута от автобаланса (нижняя всегда 1.0). */
+    public double auto_loot_max = 1.35;
+
+    /** Через сколько минут непрерывной игры включается «усталость сессии». */
+    public double auto_session_fatigue_minutes = 150;
+
+    /** Перерыв в часах, после которого возвращение получает лёгкий разгон. 0 — выключено. */
+    public double auto_welcome_hours = 96;
+
+    /** Разрешить автобалансу менять HP и урон мобов. */
+    public boolean auto_touch_mobs = true;
+
+    /** Разрешить автобалансу менять шанс дропа. */
+    public boolean auto_touch_loot = true;
+
+    /** Максимальное изменение серверных множителей мобов за минуту. */
+    public double auto_global_step_per_minute = 0.05;
 
     // ------------------------------------------------------------------
     // 3. Спавн мобов вокруг игроков
@@ -211,6 +277,24 @@ public class GameMasterConfig {
         }
         exp_multiplier_min = clamp(exp_multiplier_min, 0.001, 1000);
         exp_multiplier_max = clamp(exp_multiplier_max, exp_multiplier_min, 1000);
+        auto_start_minutes = clamp(auto_start_minutes, 0.5, 100000);
+        auto_end_minutes = clamp(auto_end_minutes, auto_start_minutes, 100000);
+        auto_curve = clamp(auto_curve, 0.1, 10);
+        auto_dead_zone = clamp(auto_dead_zone, 0, 0.9);
+        auto_exp_min = clamp(auto_exp_min, 0.01, 1000);
+        auto_exp_max = clamp(auto_exp_max, auto_exp_min, 1000);
+        auto_exp_step_per_minute = clamp(auto_exp_step_per_minute, 0.001, 100);
+        auto_deaths_brake = clamp(auto_deaths_brake, 0.01, 1000);
+        auto_challenge_deaths = clamp(auto_challenge_deaths, 0, 1000);
+        auto_rescue_factor = clamp(auto_rescue_factor, 1.05, 100);
+        auto_mob_health_min = clamp(auto_mob_health_min, 0.05, 100);
+        auto_mob_health_max = clamp(auto_mob_health_max, auto_mob_health_min, 100);
+        auto_mob_damage_min = clamp(auto_mob_damage_min, 0.05, 100);
+        auto_mob_damage_max = clamp(auto_mob_damage_max, auto_mob_damage_min, 100);
+        auto_loot_max = clamp(auto_loot_max, 1, 100);
+        auto_session_fatigue_minutes = clamp(auto_session_fatigue_minutes, 1, 100000);
+        auto_welcome_hours = clamp(auto_welcome_hours, 0, 100000);
+        auto_global_step_per_minute = clamp(auto_global_step_per_minute, 0.001, 100);
         afk_threshold_seconds = (int) clamp(afk_threshold_seconds, 5, 86400);
         snapshot_interval_seconds = (int) clamp(snapshot_interval_seconds, 10, 86400);
         save_interval_seconds = (int) clamp(save_interval_seconds, 5, 3600);
@@ -263,6 +347,27 @@ public class GameMasterConfig {
                     case "pacing_curve" -> this.pacing_curve = el.getAsDouble();
                     case "pacing_auto_calibrate" -> this.pacing_auto_calibrate = el.getAsBoolean();
                     case "assumed_baseline_hours" -> this.assumed_baseline_hours = el.getAsDouble();
+                    case "auto_balance" -> this.auto_balance = el.getAsBoolean();
+                    case "auto_start_minutes" -> this.auto_start_minutes = el.getAsDouble();
+                    case "auto_end_minutes" -> this.auto_end_minutes = el.getAsDouble();
+                    case "auto_curve" -> this.auto_curve = el.getAsDouble();
+                    case "auto_dead_zone" -> this.auto_dead_zone = el.getAsDouble();
+                    case "auto_exp_min" -> this.auto_exp_min = el.getAsDouble();
+                    case "auto_exp_max" -> this.auto_exp_max = el.getAsDouble();
+                    case "auto_exp_step_per_minute" -> this.auto_exp_step_per_minute = el.getAsDouble();
+                    case "auto_deaths_brake" -> this.auto_deaths_brake = el.getAsDouble();
+                    case "auto_challenge_deaths" -> this.auto_challenge_deaths = el.getAsDouble();
+                    case "auto_rescue_factor" -> this.auto_rescue_factor = el.getAsDouble();
+                    case "auto_mob_health_min" -> this.auto_mob_health_min = el.getAsDouble();
+                    case "auto_mob_health_max" -> this.auto_mob_health_max = el.getAsDouble();
+                    case "auto_mob_damage_min" -> this.auto_mob_damage_min = el.getAsDouble();
+                    case "auto_mob_damage_max" -> this.auto_mob_damage_max = el.getAsDouble();
+                    case "auto_loot_max" -> this.auto_loot_max = el.getAsDouble();
+                    case "auto_session_fatigue_minutes" -> this.auto_session_fatigue_minutes = el.getAsDouble();
+                    case "auto_welcome_hours" -> this.auto_welcome_hours = el.getAsDouble();
+                    case "auto_touch_mobs" -> this.auto_touch_mobs = el.getAsBoolean();
+                    case "auto_touch_loot" -> this.auto_touch_loot = el.getAsBoolean();
+                    case "auto_global_step_per_minute" -> this.auto_global_step_per_minute = el.getAsDouble();
                     case "spawn_rate_enabled" -> this.spawn_rate_enabled = el.getAsBoolean();
                     case "spawn_rate_dynamic" -> this.spawn_rate_dynamic = el.getAsBoolean();
                     case "spawn_rate_manual_multiplier" -> this.spawn_rate_manual_multiplier = el.getAsDouble();

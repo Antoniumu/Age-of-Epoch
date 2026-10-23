@@ -76,7 +76,10 @@ public class GearRaritiesAdder implements ExileRegistryInit {
         GearRarity unique = new GearRarity();
         unique.bonus_effective_lvls = 10;
         unique.affixes = 0;
-        unique.weight = 25;
+        // 25 из 7425 — это 0.34% и один уникат на ~2800 убийств.
+        // 100 даёт ~1.3% и уникат раз в ~700 убийств, что соответствует
+        // 20 предметам на всю игру и 40+ часам прокачки.
+        unique.weight = 100;
         unique.item_tier_power = 2;
         unique.item_value_multi = 2;
         unique.sockets = 0;

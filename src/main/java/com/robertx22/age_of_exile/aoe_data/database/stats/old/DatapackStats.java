@@ -33,22 +33,22 @@ import java.util.UUID;
 public class DatapackStats implements ExileRegistryInit {
 
     public static Stat INT = new CoreStat("intelligence", "Intelligence", CoreStatData.of(Arrays.asList(
-        new OptScaleExactStat(0.1F, SpellPower.getInstance(), ModType.FLAT),
+        new OptScaleExactStat(0.15F, SpellPower.getInstance(), ModType.FLAT),
         new OptScaleExactStat(1, new ElementalResist(Elements.Fire), ModType.FLAT),
         new OptScaleExactStat(1, new ElementalResist(Elements.Water), ModType.FLAT),
         new OptScaleExactStat(1, new ElementalResist(Elements.Earth), ModType.FLAT)
     )));
 
     public static Stat STR = new CoreStat("strength", "Strength", CoreStatData.of(Arrays.asList(
-        new OptScaleExactStat(0.1F, new AttackDamage(Elements.Physical), ModType.FLAT),
+        new OptScaleExactStat(0.15F, new AttackDamage(Elements.Physical), ModType.FLAT),
         new OptScaleExactStat(1, Armor.getInstance(), ModType.FLAT)
     )));
     public static Stat DEX = new CoreStat("dexterity", "Dexterity", CoreStatData.of(Arrays.asList(
-        new OptScaleExactStat(0.1F, new AttackDamage(Elements.Physical), ModType.FLAT),
+        new OptScaleExactStat(0.15F, new AttackDamage(Elements.Physical), ModType.FLAT),
         new OptScaleExactStat(1, DodgeRating.getInstance(), ModType.FLAT)
     )));
     public static Stat VIT = new CoreStat("vitality", "Vitality", CoreStatData.of(Arrays.asList(
-        new OptScaleExactStat(2, Health.getInstance(), ModType.FLAT),
+        new OptScaleExactStat(1.5F, Health.getInstance(), ModType.FLAT),
         new OptScaleExactStat(0.1F, HealthRegen.getInstance(), ModType.FLAT)
     )));
     public static Stat WIS = new CoreStat("wisdom", "Wisdom", CoreStatData.of(Arrays.asList(

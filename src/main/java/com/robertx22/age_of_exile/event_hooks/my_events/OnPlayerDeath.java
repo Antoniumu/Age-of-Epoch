@@ -16,6 +16,11 @@ public class OnPlayerDeath extends EventConsumer<ExileEvents.OnPlayerDeath> {
             Load.Unit(event.player)
                 .onDeath();
 
+            if (event.player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+                com.robertx22.age_of_exile.gamemaster.GameMaster.get()
+                    .onDeath(serverPlayer);
+            }
+
             Load.Unit(event.player)
                 .setEquipsChanged(true);
 

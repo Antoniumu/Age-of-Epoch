@@ -15,6 +15,11 @@ Age of Epoch — численная модель баланса.
 
 Скрипт ничего не меняет в игре — это офлайн-калькулятор, чтобы цифры в
 BALANCE-AUDIT.md можно было перепроверить и пересчитать после правок.
+
+ВНИМАНИЕ: константы ниже соответствуют текущему состоянию кода — то есть уже
+ПОСЛЕ правок из BALANCE-AUDIT.md §13 (энергия и мана ×(1+0.05·(lvl−1)), реген
++8% пула за тик, +1.5 HP за уровень, core-статы с шагом 0.25 уровня, favor 500,
+мобы +1%/уровень). Исторические цифры «до правок» остались в аудите.
 """
 
 MAX_LEVEL = 50
@@ -83,7 +88,8 @@ DODGE_NEED_AT_1 = 15
 
 
 def player_hp(lvl, extra_flat=0.0):
-    return 20 + 10 * N(lvl) + extra_flat * N(lvl)
+    # Unit.addVanillaHpToStats: + PLAYER_HEALTH_PER_LEVEL (1.5) за уровень
+    return 20 + 10 * N(lvl) + 1.5 * (lvl - 1) + extra_flat * N(lvl)
 
 
 def player_attack_damage(lvl, weapon="sword", weapon_ilvl=None):
@@ -107,7 +113,8 @@ def resist_mitigation(lvl, resist_value=None):
 
 
 def mob_hp(lvl, vanilla_hp=20, rarity_hp=1.0):
-    return vanilla_hp * rarity_hp * (1 + 0.02 * lvl) * N(lvl)
+    # ServerContainer.EXTRA_MOB_STATS_PER_LEVEL = 0.01 (было 0.02)
+    return vanilla_hp * rarity_hp * (1 + 0.01 * lvl) * N(lvl)
 
 
 def mob_hit(lvl, vanilla_dmg=3, rarity_dmg=1.0, diff_dmg=1.0, entity_cfg_dmg=1.0):
@@ -147,12 +154,17 @@ def energy_pool(lvl):
     return 30 * N(lvl)
 
 
+# RestoreResourceEvent.getAmountWithPercentRegen: + max * 8% за тик (60 тиков = 3 с)
+REGEN_PERCENT_PER_TICK = 0.08
+
+
 def energy_regen_per_tick(lvl):
-    return 2 + 1 * N(lvl)          # scaled(1) + nonScaled(2)
+    return 2 + 1 * N(lvl) + energy_pool(lvl) * REGEN_PERCENT_PER_TICK
 
 
+# GameBalanceConfig.ENERGY_COST_SCALING = (1, 0.05) — стоимость удара почти не растёт
 def energy_cost_swing(lvl, weapon="sword"):
-    return WEAPON_ENERGY[weapon] * N(lvl)
+    return WEAPON_ENERGY[weapon] * (1 + 0.05 * (lvl - 1))
 
 
 def mana_pool(lvl):
@@ -160,13 +172,13 @@ def mana_pool(lvl):
 
 
 def mana_regen_per_tick(lvl):
-    return 2 + 1 * N(lvl)
+    return 2 + 1 * N(lvl) + mana_pool(lvl) * REGEN_PERCENT_PER_TICK
 
 
 def fireball_cost(lvl):
-    """LeveledValue(0.5*5, 1*5) * MANA_COST_SCALING."""
+    """LeveledValue(0.5*5, 1*5) * MANA_COST_SCALING (теперь 1 + 0.05·(lvl−1))."""
     base = 2.5 + (2.5 / MAX_LEVEL) * min(lvl, MAX_LEVEL)
-    return base * N(min(lvl, MAX_LEVEL))
+    return base * (1 + 0.05 * (min(lvl, MAX_LEVEL) - 1))
 
 
 def fireball_damage(lvl, spell_power=None):
@@ -182,7 +194,7 @@ def fireball_damage(lvl, spell_power=None):
 # --------------------------------------------------------------------------
 
 DROP_RATE = {"gear": 7.0, "gem": 0.5, "ingredient": 5.0, "rune": 0.05, "currency": 0.2}
-GEAR_RARITY_WEIGHT = {"common": 5000, "uncommon": 2000, "rare": 300, "epic": 100, "unique": 25}
+GEAR_RARITY_WEIGHT = {"common": 5000, "uncommon": 2000, "rare": 300, "epic": 100, "unique": 100}
 
 
 def loot_modifier(lvl, rarity="common", vanilla_hp=20):
@@ -201,11 +213,11 @@ def gear_rarity_chances():
     return {k: v / total for k, v in GEAR_RARITY_WEIGHT.items()}
 
 
-FAVOR_START = 100
-FAVOR_PER_KILL = 0.25
+FAVOR_START = 500
+FAVOR_PER_KILL = 0.1
 FAVOR_PER_ITEM = 1.0
-FAVOR_PER_CHEST = 20
-FAVOR_NONE_EXP_MULTI = 0.25
+FAVOR_PER_CHEST = 50
+FAVOR_NONE_EXP_MULTI = 0.5
 
 
 # --------------------------------------------------------------------------
@@ -216,14 +228,21 @@ STAT_POINTS_PER_LEVEL = 2
 TALENT_POINTS_AT_MAX_LEVEL = 100
 SPELL_POINTS_PER_LEVEL = 2
 
-CORE_STAT_EFFECT = {   # на 1 очко, до умножения на N(lvl)
-    "STR": dict(ad=0.1, armor=1.0),
-    "DEX": dict(ad=0.1, dodge=1.0),
-    "INT": dict(spell_power=0.1, resist_each=1.0),
-    "VIT": dict(hp=2.0, hp_regen=0.1),
+CORE_STAT_EFFECT = {   # на 1 очко, до умножения на N(effectiveLevel)
+    "STR": dict(ad=0.15, armor=1.0),
+    "DEX": dict(ad=0.15, dodge=1.0),
+    "INT": dict(spell_power=0.15, resist_each=1.0),
+    "VIT": dict(hp=1.5, hp_regen=0.1),
     "WIS": dict(mana=2.0, mana_regen=0.1),
     "AGI": dict(energy=2.0, energy_regen=0.1),
 }
+
+CORE_STAT_LEVEL_FACTOR = 0.25
+
+
+def core_effective_level(lvl):
+    """CoreStat.getMods: эффективный уровень = 1 + round((lvl−1)·0.25)."""
+    return 1 + round((lvl - 1) * CORE_STAT_LEVEL_FACTOR)
 
 
 # --------------------------------------------------------------------------
@@ -289,7 +308,7 @@ def table_stats():
     print("### 100 очков характеристик (уровень 50)\n")
     print("| Вложено | Эффект на 50 ур. | Сравнение с базой |")
     print("|---|---|---|")
-    n50 = N(50)
+    n50 = N(core_effective_level(50))
     base_hp = player_hp(50)
     base_ad = player_attack_damage(50)
     for stat in ("VIT", "STR", "DEX", "INT", "WIS", "AGI"):
@@ -366,7 +385,7 @@ def table_endgame():
     print("### Эндгейм-боссы (уровень 50)\n")
     base_hp = mob_hp(50, vanilla_hp=20, rarity_hp=MOB_RARITY["boss"]["hp"])
     base_dmg = mob_hit(50, vanilla_dmg=3, rarity_dmg=MOB_RARITY["boss"]["dmg"])
-    print("| Босс | HP | Удар | Ударов игроку (128 HP, 40% брони) | Ударов боссу (урон игрока 43) |")
+    print(f"| Босс | HP | Удар | Ударов игроку ({player_hp(50):.0f} HP, 40% брони) | Ударов боссу (урон игрока {player_attack_damage(50, 'sword'):.0f}) |")
     print("|---|---:|---:|---:|---:|")
     rows = [
         ("Моб-босс (редкость boss)", 1.0, 1.0),
@@ -380,10 +399,9 @@ def table_endgame():
         hits_boss = hp / (player_attack_damage(50, "sword") * (1 - mob_armor_mitigation(50, "boss")))
         print(f"| {name} | {hp:,.0f} | {dmg:,.0f} | {hits_player:.1f} | {hits_boss:,.0f} |".replace(",", " "))
     print()
-    print("Замечание: TowerBoss.scale() умножает ванильный MAX_HEALTH *после* forceRecalculateStats(). "
-          "HP мода считается от ванильного значения, поэтому до первого пересчёта множитель не учтён, "
-          "а так как `equipsChanged` в EntityData никогда не сбрасывается, первый же удар пересчитывает "
-          "статы и HP босса скачком растёт (см. раздел про баги).")
+    print("Примечание: TowerBoss теперь масштабирует ванильный MAX_HEALTH *до* forceRecalculateStats(), "
+          "поэтому HP мода считается уже от новой базы (раньше был скачок после первого удара). "
+          "Таблица башни — оценка через множитель редкости boss, без аффиксов арены.")
     print()
 
 
@@ -412,7 +430,7 @@ def table_pacing():
         hours = kills * (kill_time + 4.0) / 3600.0
         total_fast += hours
 
-        regen = (2 + 1 * N(lvl)) / ENERGY_REGEN_TICK_SECONDS
+        regen = energy_regen_per_tick(lvl) / ENERGY_REGEN_TICK_SECONDS
         cost = energy_cost_swing(lvl, "sword")
         sustained = regen / cost
         dps_sustained = player_attack_damage(lvl, "sword") * sustained
@@ -425,6 +443,63 @@ def table_pacing():
     print(f"Итого 1→50: **{total_fast:.1f} ч** без лимита энергии и **{total_slow:.1f} ч** с её регеном.")
     print()
 
+
+# --------------------------------------------------------------------------
+# автобаланс GameMaster (AutoBalance.java)
+# --------------------------------------------------------------------------
+
+AUTO_START_MINUTES = 14.0
+AUTO_END_MINUTES = 70.0
+AUTO_CURVE = 1.0
+AUTO_DEAD_ZONE = 0.2
+AUTO_EXP_MIN = 0.35
+AUTO_EXP_MAX = 3.0
+
+
+def auto_target_minutes(lvl, max_level=MAX_LEVEL):
+    """Геометрическая интерполяция между 14 и 70 минутами на уровень."""
+    t = max(0.0, min(1.0, (lvl - 1) / (max_level - 1)))
+    t = t ** AUTO_CURVE
+    return AUTO_START_MINUTES * (AUTO_END_MINUTES / AUTO_START_MINUTES) ** t
+
+
+def auto_total_hours(max_level=MAX_LEVEL):
+    return sum(auto_target_minutes(l) for l in range(1, max_level)) / 60.0
+
+
+def auto_exp_for_ratio(ratio):
+    """AutoBalance.evaluate: вне мёртвой зоны опыт = ratio^0.8, затем clamp."""
+    if 1 - AUTO_DEAD_ZONE <= ratio <= 1 + AUTO_DEAD_ZONE:
+        return 1.0
+    return max(AUTO_EXP_MIN, min(AUTO_EXP_MAX, ratio ** 0.8))
+
+
+def table_autobalance():
+    print("### Автобаланс: целевой коридор и реакция на темп\n")
+    print(f"Коридор: {AUTO_START_MINUTES:.0f} мин на 1 ур. → {AUTO_END_MINUTES:.0f} мин на 50 ур., "
+          f"мёртвая зона ±{AUTO_DEAD_ZONE*100:.0f}%.")
+    print(f"Суммарно до максимума: **{auto_total_hours():.1f} ч** (сумма целевых времён уровней).\n")
+    print("| Ур. | Цель, мин | Суммарно, ч |")
+    print("|---:|---:|---:|")
+    total = 0.0
+    for lvl in range(1, MAX_LEVEL):
+        total += auto_target_minutes(lvl)
+        if lvl in (1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 49):
+            print(f"| {lvl} | {auto_target_minutes(lvl):.0f} | {total/60:.1f} |")
+    print()
+    print("Реакция множителя опыта на фактический темп (мёртвая зона ±20%):\n")
+    print("| Факт / цель | Множитель опыта | Что видит игрок |")
+    print("|---:|---:|---|")
+    for ratio in (0.25, 0.5, 0.8, 1.0, 1.2, 1.5, 2.0, 3.0):
+        mult = auto_exp_for_ratio(ratio)
+        if ratio > 1.2:
+            note = "медленнее цели (или застрял): опыт выше"
+        elif ratio < 0.8:
+            note = "быстрее цели: опыт ниже"
+        else:
+            note = "в коридоре: без изменений"
+        print(f"| ×{ratio:.2f} | ×{mult:.2f} | {note} |")
+    print()
 
 if __name__ == "__main__":
     print("# Age of Epoch — расчёт баланса\n")
@@ -439,3 +514,4 @@ if __name__ == "__main__":
     table_armor_curve()
     table_endgame()
     table_pacing()
+    table_autobalance()

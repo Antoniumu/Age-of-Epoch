@@ -79,6 +79,13 @@ public class GameMaster {
     private boolean cachedHasPeers = false;
     private int cachedPeers = 0;
 
+    /** Серверные множители от автобаланса (действуют на всех мобов). */
+    private double autoMobHealth = 1.0;
+    private double autoMobDamage = 1.0;
+    private double autoLoot = 1.0;
+    private long autoGlobalUpdated = 0;
+    private double autoTargetHours = 0;
+
     private long lastSecondTick = 0;
     private long lastStatsTick = 0;
     private long lastSaveTick = 0;
@@ -206,6 +213,27 @@ public class GameMaster {
             ? new HashMap<>() : new HashMap<>(parsed.spawn_rate_player_overrides);
         config.exp_multiplier_min = parsed.exp_multiplier_min;
         config.exp_multiplier_max = parsed.exp_multiplier_max;
+        config.auto_balance = parsed.auto_balance;
+        config.auto_start_minutes = parsed.auto_start_minutes;
+        config.auto_end_minutes = parsed.auto_end_minutes;
+        config.auto_curve = parsed.auto_curve;
+        config.auto_dead_zone = parsed.auto_dead_zone;
+        config.auto_exp_min = parsed.auto_exp_min;
+        config.auto_exp_max = parsed.auto_exp_max;
+        config.auto_exp_step_per_minute = parsed.auto_exp_step_per_minute;
+        config.auto_deaths_brake = parsed.auto_deaths_brake;
+        config.auto_challenge_deaths = parsed.auto_challenge_deaths;
+        config.auto_rescue_factor = parsed.auto_rescue_factor;
+        config.auto_mob_health_min = parsed.auto_mob_health_min;
+        config.auto_mob_health_max = parsed.auto_mob_health_max;
+        config.auto_mob_damage_min = parsed.auto_mob_damage_min;
+        config.auto_mob_damage_max = parsed.auto_mob_damage_max;
+        config.auto_loot_max = parsed.auto_loot_max;
+        config.auto_session_fatigue_minutes = parsed.auto_session_fatigue_minutes;
+        config.auto_welcome_hours = parsed.auto_welcome_hours;
+        config.auto_touch_mobs = parsed.auto_touch_mobs;
+        config.auto_touch_loot = parsed.auto_touch_loot;
+        config.auto_global_step_per_minute = parsed.auto_global_step_per_minute;
         config.afk_exclusion = parsed.afk_exclusion;
         config.afk_threshold_seconds = parsed.afk_threshold_seconds;
         config.snapshot_interval_seconds = parsed.snapshot_interval_seconds;
@@ -239,6 +267,21 @@ public class GameMaster {
                 }
                 if (progress.level < 1) {
                     progress.level = 1;
+                }
+                if (progress.auto_exp_multiplier <= 0) {
+                    progress.auto_exp_multiplier = 1;
+                }
+                if (progress.auto_mob_health <= 0) {
+                    progress.auto_mob_health = 1;
+                }
+                if (progress.auto_mob_damage <= 0) {
+                    progress.auto_mob_damage = 1;
+                }
+                if (progress.auto_loot <= 0) {
+                    progress.auto_loot = 1;
+                }
+                if (progress.auto_state == null) {
+                    progress.auto_state = "stable";
                 }
                 progress.online = false;
                 progress.last_snapshot_playtime = progress.playtime_seconds;
@@ -368,6 +411,9 @@ public class GameMaster {
             }
             progress.level_baseline_seconds = 0;
         }
+        if (progress.level_started_playtime <= 0) {
+            progress.level_started_playtime = progress.playtime_seconds;
+        }
         try {
             progress.favor = Load.playerRPGData(player).favor.getFavor();
         } catch (Exception ignored) {
@@ -388,6 +434,7 @@ public class GameMaster {
 
         if (!afk) {
             progress.playtime_seconds += seconds;
+            progress.session_seconds += seconds;
 
             // нормируем время так, как будто все множители были равны 1 —
             // это и есть «базовое» время сборки, по которому мы калибруемся
@@ -461,6 +508,25 @@ public class GameMaster {
         if (level > progress.level) {
             int completions = level - progress.level;
             data.commitLevelTime(progress.level, progress.level_baseline_seconds, completions);
+
+            // --- автобаланс: фиксируем фактическое время уровня и коридор темпа ---
+            if (config.auto_balance) {
+                double minutes = progress.level_started_playtime > 0
+                    ? Math.max(0, (progress.playtime_seconds - progress.level_started_playtime) / 60.0)
+                    : 0;
+                if (minutes > 0) {
+                    AutoBalance.recordLevel(progress, minutes);
+                    double target = AutoBalance.targetMinutes(progress.level, maxLevelCache, config);
+                    double deadZone = Math.max(0, Math.min(0.9, config.auto_dead_zone));
+                    if (minutes <= target * (1 + deadZone)) {
+                        progress.levels_at_pace++;
+                    }
+                }
+                progress.levels_gained += Math.max(1, completions);
+                progress.deaths_since_level = 0;
+                progress.level_started_playtime = progress.playtime_seconds;
+            }
+
             progress.level_baseline_seconds = 0;
             progress.level = level;
             progress.addHistory(progress.multiplier, now);
@@ -475,13 +541,49 @@ public class GameMaster {
         }
     }
 
+    /**
+     * Смерть игрока: копим статистику для автобаланса (смертность на уровне).
+     * Вызывается из OnPlayerDeath.
+     */
+    public void onDeath(ServerPlayer player) {
+        if (!loaded || player == null) {
+            return;
+        }
+        PlayerProgress progress = data.get(player.getUUID()
+            .toString());
+        if (progress == null) {
+            progress = progressFor(player);
+        }
+        progress.deaths++;
+        progress.deaths_since_level++;
+        if (progress.level_started_playtime <= 0) {
+            progress.level_started_playtime = progress.playtime_seconds;
+        }
+        dirty = true;
+    }
+
+    /** Открыта новая сессия (вход в игру): обновляем среднюю длину сессии. */
+    private void accumulateSession(PlayerProgress progress) {
+        if (progress.session_seconds > 60) {
+            progress.sessions++;
+            progress.avg_session_seconds = ((progress.avg_session_seconds * (progress.sessions - 1))
+                + progress.session_seconds) / progress.sessions;
+        }
+        progress.session_seconds = 0;
+    }
+
     public void onLogin(ServerPlayer player) {
         if (!loaded) {
             return;
         }
         PlayerProgress progress = progressFor(player);
+        long now = now();
+        if (config.auto_balance && config.auto_welcome_hours > 0 && progress.last_seen > 0
+            && now - progress.last_seen >= config.auto_welcome_hours * 3600.0) {
+            progress.welcome_until = now + 1800;
+        }
         progress.online = true;
-        progress.last_seen = now();
+        progress.last_seen = now;
         checkLevel(player, progress);
         progress.multiplier = computeMultiplier(progress);
         if (progress.history.isEmpty()) {
@@ -489,10 +591,11 @@ public class GameMaster {
         }
         dirty = true;
 
-        if (config.enabled && config.announce_on_login && (config.pacing || config.catch_up)) {
+        if (config.enabled && config.announce_on_login && (config.pacing || config.catch_up || config.auto_balance)) {
             MultiplierBreakdown breakdown = breakdown(progress);
             String text = "GameMaster: множитель опыта x" + fmt(breakdown.total)
-                + " (темп x" + fmt(breakdown.pacing) + ", догоняющий x" + fmt(breakdown.catchUp) + ")";
+                + " (темп x" + fmt(breakdown.pacing) + ", догоняющий x" + fmt(breakdown.catchUp)
+                + ", автобаланс x" + fmt(breakdown.auto) + ")";
             player.sendSystemMessage(Component.literal(text)
                 .withStyle(ChatFormatting.GOLD));
         }
@@ -510,6 +613,7 @@ public class GameMaster {
         progress.online = false;
         progress.last_seen = now();
         checkLevel(player, progress);
+        accumulateSession(progress);
         progress.addHistory(progress.multiplier, progress.last_seen);
         progress.last_snapshot_playtime = progress.playtime_seconds;
         progress.last_snapshot_epoch = progress.last_seen;
@@ -574,6 +678,8 @@ public class GameMaster {
             cachedK = -Math.max(0, Math.min(0.99, config.pacing_max_penalty));
         }
 
+        recomputeAuto(now);
+
         for (ServerPlayer player : onlinePlayers()) {
             PlayerProgress progress = data.get(player.getUUID()
                 .toString());
@@ -581,6 +687,77 @@ public class GameMaster {
                 progress.multiplier = computeMultiplier(progress);
             }
         }
+    }
+
+    /**
+     * Пересчитывает решения автобаланса: для каждого онлайн-игрока — множитель опыта,
+     * для сервера — усреднённые множители HP/урона мобов и лута.
+     */
+    private void recomputeAuto(long now) {
+        autoTargetHours = AutoBalance.totalTargetHours(maxLevelCache, config);
+
+        if (!config.auto_balance) {
+            autoMobHealth = 1.0;
+            autoMobDamage = 1.0;
+            autoLoot = 1.0;
+            autoGlobalUpdated = now;
+            return;
+        }
+
+        double sumHealth = 0;
+        double sumDamage = 0;
+        double sumLoot = 0;
+        int count = 0;
+
+        for (ServerPlayer player : onlinePlayers()) {
+            PlayerProgress progress = data.get(player.getUUID()
+                .toString());
+            if (progress == null) {
+                continue;
+            }
+            AutoBalance.Directive directive = AutoBalance.evaluate(progress, config, maxLevelCache, now);
+
+            progress.auto_exp_multiplier = directive.exp;
+            progress.auto_mob_health = directive.mob_health;
+            progress.auto_mob_damage = directive.mob_damage;
+            progress.auto_loot = directive.loot;
+            progress.auto_flow = directive.flow;
+            progress.auto_state = directive.state;
+            progress.auto_updated_epoch = now;
+
+            sumHealth += directive.mob_health;
+            sumDamage += directive.mob_damage;
+            sumLoot += directive.loot;
+            count++;
+        }
+
+        if (count == 0) {
+            return;
+        }
+
+        double minutes = autoGlobalUpdated > 0
+            ? Math.min(60, Math.max(0.1, (now - autoGlobalUpdated) / 60.0))
+            : 60;
+        double step = config.auto_global_step_per_minute;
+
+        if (config.auto_touch_mobs) {
+            autoMobHealth = AutoBalance.rateLimit(autoMobHealth, sumHealth / count, step, minutes);
+            autoMobDamage = AutoBalance.rateLimit(autoMobDamage, sumDamage / count, step, minutes);
+            autoMobHealth = AutoBalance.clamp(autoMobHealth, config.auto_mob_health_min, config.auto_mob_health_max);
+            autoMobDamage = AutoBalance.clamp(autoMobDamage, config.auto_mob_damage_min, config.auto_mob_damage_max);
+        } else {
+            autoMobHealth = 1.0;
+            autoMobDamage = 1.0;
+        }
+
+        if (config.auto_touch_loot) {
+            autoLoot = AutoBalance.rateLimit(autoLoot, sumLoot / count, step, minutes);
+            autoLoot = AutoBalance.clamp(autoLoot, 1.0, config.auto_loot_max);
+        } else {
+            autoLoot = 1.0;
+        }
+
+        autoGlobalUpdated = now;
     }
 
     /** Оценка времени до максимума по замерам (в часах), либо -1, если замеров нет. */
@@ -628,12 +805,17 @@ public class GameMaster {
         }
         double multiplier = 1.0;
 
-        if (config.pacing) {
+        // Автобаланс заменяет фиксированную цель «N часов»: иначе два регулятора
+        // тянут опыт в разные стороны и гасят друг друга.
+        if (config.pacing && !config.auto_balance) {
             multiplier *= ExpTuner.pacingMultiplier(progress.level, cachedK, config.pacing_start_level,
                 maxLevelCache, config.pacing_curve);
         }
         if (config.catch_up) {
             multiplier *= ExpTuner.catchUpMultiplier(progress.level, cachedReferenceLevel, cachedHasPeers, config);
+        }
+        if (config.auto_balance && progress.auto_exp_multiplier > 0) {
+            multiplier *= progress.auto_exp_multiplier;
         }
 
         return ExpTuner.clamp(multiplier, config.exp_multiplier_min, config.exp_multiplier_max);
@@ -645,7 +827,7 @@ public class GameMaster {
         if (!config.enabled) {
             return breakdown;
         }
-        if (config.pacing) {
+        if (config.pacing && !config.auto_balance) {
             breakdown.pacing = ExpTuner.pacingMultiplier(progress.level, cachedK, config.pacing_start_level,
                 maxLevelCache, config.pacing_curve);
         }
@@ -653,8 +835,11 @@ public class GameMaster {
             breakdown.catchUp = ExpTuner.catchUpMultiplier(progress.level, cachedReferenceLevel, cachedHasPeers,
                 config);
         }
-        breakdown.total = ExpTuner.clamp(breakdown.pacing * breakdown.catchUp, config.exp_multiplier_min,
-            config.exp_multiplier_max);
+        if (config.auto_balance && progress.auto_exp_multiplier > 0) {
+            breakdown.auto = progress.auto_exp_multiplier;
+        }
+        breakdown.total = ExpTuner.clamp(breakdown.pacing * breakdown.catchUp * breakdown.auto,
+            config.exp_multiplier_min, config.exp_multiplier_max);
         return breakdown;
     }
 
@@ -894,6 +1079,19 @@ public class GameMaster {
         summary.addProperty("spawn_rate_dynamic", config.spawn_rate_dynamic);
         summary.addProperty("spawn_rate_manual_multiplier", round2(config.spawn_rate_manual_multiplier));
         summary.addProperty("spawn_rate_favor_reference", round2(config.spawn_rate_favor_reference));
+
+        JsonObject auto = new JsonObject();
+        auto.addProperty("enabled", config.enabled && config.auto_balance);
+        auto.addProperty("target_hours", round2(autoTargetHours()));
+        auto.addProperty("target_start_minutes", round2(AutoBalance.targetMinutes(1, maxLevelCache, config)));
+        auto.addProperty("target_end_minutes",
+            round2(AutoBalance.targetMinutes(maxLevelCache, maxLevelCache, config)));
+        auto.addProperty("mob_health", round2(mobHealthMultiplier()));
+        auto.addProperty("mob_damage", round2(mobDamageMultiplier()));
+        auto.addProperty("loot", round2(lootMultiplier()));
+        auto.addProperty("touch_mobs", config.auto_touch_mobs);
+        auto.addProperty("touch_loot", config.auto_touch_loot);
+        summary.add("auto", auto);
         root.add("summary", summary);
 
         List<PlayerProgress> sorted = new ArrayList<>(data.players.values());
@@ -933,6 +1131,23 @@ public class GameMaster {
         json.addProperty("multiplier", round2(breakdown.total));
         json.addProperty("pacing_multiplier", round2(breakdown.pacing));
         json.addProperty("catch_up_multiplier", round2(breakdown.catchUp));
+        json.addProperty("auto_exp_multiplier", round2(breakdown.auto));
+        json.addProperty("auto_state", progress.auto_state);
+        json.addProperty("auto_flow", round2(progress.auto_flow));
+        json.addProperty("auto_mob_health", round2(progress.auto_mob_health));
+        json.addProperty("auto_mob_damage", round2(progress.auto_mob_damage));
+        json.addProperty("auto_loot", round2(progress.auto_loot));
+        json.addProperty("target_minutes", round2(AutoBalance.targetMinutes(progress.level, maxLevelCache, config)));
+        json.addProperty("observed_minutes", round2(progress.ema_minutes_per_level));
+        json.addProperty("minutes_at_level", round2(progress.minutesAtLevel()));
+        json.addProperty("deaths", progress.deaths);
+        json.addProperty("deaths_since_level", progress.deaths_since_level);
+        json.addProperty("deaths_per_hour", round2(AutoBalance.deathsPerHour(progress)));
+        json.addProperty("levels_gained", progress.levels_gained);
+        json.addProperty("levels_at_pace", progress.levels_at_pace);
+        json.addProperty("session_minutes", round2(progress.session_seconds / 60.0));
+        json.addProperty("sessions", progress.sessions);
+        json.addProperty("avg_session_minutes", round2(progress.avg_session_seconds / 60.0));
 
         // для графика хватает ~300 точек, не гоняем весь массив в браузер
         JsonArray history = new JsonArray();
@@ -979,8 +1194,8 @@ public class GameMaster {
         }
         MultiplierBreakdown breakdown = breakdown(progress);
         return "x" + fmt(breakdown.total) + " (темп x" + fmt(breakdown.pacing) + ", догоняющий x"
-            + fmt(breakdown.catchUp) + ", уровень " + progress.level + ", время " + fmt(progress.playtimeHours())
-            + " ч)";
+            + fmt(breakdown.catchUp) + ", автобаланс x" + fmt(breakdown.auto) + ", уровень " + progress.level
+            + ", время " + fmt(progress.playtimeHours()) + " ч)";
     }
 
     /** Геттеры для панели/команд. */
@@ -1008,6 +1223,41 @@ public class GameMaster {
         return ExpTuner.predictedHours(config, cachedBaselineHours, cachedK, maxLevelCache);
     }
 
+    // ------------------------------------------------------------------
+    // Автобаланс: наружу
+    // ------------------------------------------------------------------
+
+    /** Глобальный множитель HP мобов (1 — как в базе). */
+    public double mobHealthMultiplier() {
+        return config.enabled && config.auto_balance && config.auto_touch_mobs ? autoMobHealth : 1.0;
+    }
+
+    /** Глобальный множитель урона мобов. */
+    public double mobDamageMultiplier() {
+        return config.enabled && config.auto_balance && config.auto_touch_mobs ? autoMobDamage : 1.0;
+    }
+
+    /** Глобальный множитель шанса дропа. */
+    public double lootMultiplier() {
+        return config.enabled && config.auto_balance && config.auto_touch_loot ? autoLoot : 1.0;
+    }
+
+    /** Суммарное целевое время 1 → максимум, часы. */
+    public double autoTargetHours() {
+        if (autoTargetHours <= 0) {
+            autoTargetHours = AutoBalance.totalTargetHours(maxLevelCache, config);
+        }
+        return autoTargetHours;
+    }
+
+    /** Решения автобаланса для игрока (или дефолт, если данных нет). */
+    public AutoBalance.Directive autoDirective(PlayerProgress progress) {
+        if (progress == null) {
+            return new AutoBalance.Directive();
+        }
+        return AutoBalance.evaluate(progress, config, maxLevelCache, now());
+    }
+
     public static long now() {
         return System.currentTimeMillis() / 1000L;
     }
@@ -1016,6 +1266,8 @@ public class GameMaster {
     public static class MultiplierBreakdown {
         public double pacing = 1;
         public double catchUp = 1;
+        /** Множитель «режиссёра» (AutoBalance) по темпу и смертям. */
+        public double auto = 1;
         public double total = 1;
     }
 }

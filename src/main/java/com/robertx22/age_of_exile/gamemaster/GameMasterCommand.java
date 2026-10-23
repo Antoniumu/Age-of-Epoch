@@ -62,6 +62,7 @@ public class GameMasterCommand {
                 .then(argument("value", BoolArgumentType.bool())
                     .executes(ctx -> setBool(ctx.getSource(), "enabled", BoolArgumentType.getBool(ctx, "value")))))
             .then(spawnRateCommand())
+            .then(autoCommand())
             .then(literal("hours")
                 .then(argument("hours", DoubleArgumentType.doubleArg(1, 100000))
                     .executes(ctx -> {
@@ -237,6 +238,91 @@ public class GameMasterCommand {
         return 1;
     }
 
+    private static LiteralArgumentBuilder<CommandSourceStack> autoCommand() {
+        return literal("auto")
+            .executes(ctx -> autoStatus(ctx.getSource()))
+            .then(literal("status").executes(ctx -> autoStatus(ctx.getSource())))
+            .then(literal("on").executes(ctx -> setAuto(ctx.getSource(), true)))
+            .then(literal("off").executes(ctx -> setAuto(ctx.getSource(), false)))
+            .then(literal("mobs")
+                .executes(ctx -> toggleAutoKey(ctx.getSource(), "mobs"))
+                .then(argument("value", BoolArgumentType.bool())
+                    .executes(ctx -> setAutoKey(ctx.getSource(), "mobs", BoolArgumentType.getBool(ctx, "value")))))
+            .then(literal("loot")
+                .executes(ctx -> toggleAutoKey(ctx.getSource(), "loot"))
+                .then(argument("value", BoolArgumentType.bool())
+                    .executes(ctx -> setAutoKey(ctx.getSource(), "loot", BoolArgumentType.getBool(ctx, "value")))))
+            .then(literal("minutes")
+                .then(argument("start", DoubleArgumentType.doubleArg(1, 600))
+                    .then(argument("end", DoubleArgumentType.doubleArg(1, 600))
+                        .executes(ctx -> {
+                            GameMasterConfig config = GameMaster.get()
+                                .config();
+                            config.auto_start_minutes = DoubleArgumentType.getDouble(ctx, "start");
+                            config.auto_end_minutes = DoubleArgumentType.getDouble(ctx, "end");
+                            GameMaster.get()
+                                .onConfigEdited();
+                            send(ctx.getSource(), "Коридор: " + GameMaster.fmt(config.auto_start_minutes) + "–"
+                                + GameMaster.fmt(config.auto_end_minutes) + " мин/уровень, суммарно ~"
+                                + GameMaster.fmt(GameMaster.get()
+                                .autoTargetHours()) + " ч.");
+                            return 1;
+                        }))))
+            .then(argument("value", BoolArgumentType.bool())
+                .executes(ctx -> setAuto(ctx.getSource(), BoolArgumentType.getBool(ctx, "value"))));
+    }
+
+    private static int setAuto(CommandSourceStack source, boolean value) {
+        GameMasterConfig config = GameMaster.get()
+            .config();
+        config.auto_balance = value;
+        GameMaster.get()
+            .onConfigEdited();
+        send(source, "Автобаланс: " + onOff(value)
+            + (value ? " — мастер сам держит темп, сложность и лут в коридоре." : "."));
+        return 1;
+    }
+
+    private static int toggleAutoKey(CommandSourceStack source, String key) {
+        GameMasterConfig config = GameMaster.get()
+            .config();
+        boolean value = "mobs".equals(key) ? !config.auto_touch_mobs : !config.auto_touch_loot;
+        return setAutoKey(source, key, value);
+    }
+
+    private static int setAutoKey(CommandSourceStack source, String key, boolean value) {
+        GameMasterConfig config = GameMaster.get()
+            .config();
+        if ("mobs".equals(key)) {
+            config.auto_touch_mobs = value;
+        } else {
+            config.auto_touch_loot = value;
+        }
+        GameMaster.get()
+            .onConfigEdited();
+        send(source, ("mobs".equals(key) ? "Автоподстройка мобов (HP/урон)" : "Автоподстройка лута") + ": "
+            + onOff(value));
+        return 1;
+    }
+
+    private static int autoStatus(CommandSourceStack source) {
+        GameMaster gm = GameMaster.get();
+        GameMasterConfig config = gm.config();
+        send(source, "Автобаланс: " + onOff(config.enabled && config.auto_balance)
+            + ", мобы: " + onOff(config.auto_touch_mobs)
+            + ", лут: " + onOff(config.auto_touch_loot));
+        send(source, "Коридор темпа: " + GameMaster.fmt(config.auto_start_minutes) + " мин на 1 ур. → "
+            + GameMaster.fmt(config.auto_end_minutes) + " мин на макс., мёртвая зона ±"
+            + GameMaster.fmt(config.auto_dead_zone * 100) + "%");
+        send(source, "Суммарно до максимума: ~" + GameMaster.fmt(gm.autoTargetHours()) + " ч (цель подстраивается)");
+        send(source, "Опыт: x" + GameMaster.fmt(config.auto_exp_min) + "…x" + GameMaster.fmt(config.auto_exp_max)
+            + ", шаг " + GameMaster.fmt(config.auto_exp_step_per_minute) + "/мин; тормоз по смертям: "
+            + GameMaster.fmt(config.auto_deaths_brake) + "/ч");
+        send(source, "Сейчас мобы: HP x" + GameMaster.fmt(gm.mobHealthMultiplier()) + ", урон x"
+            + GameMaster.fmt(gm.mobDamageMultiplier()) + ", лут x" + GameMaster.fmt(gm.lootMultiplier()));
+        return 1;
+    }
+
     private static int status(CommandSourceStack source) {
         GameMaster gm = GameMaster.get();
         GameMasterConfig config = gm.config();
@@ -261,6 +347,16 @@ public class GameMasterCommand {
             + GameMaster.fmt(gm.calibrationK()));
         send(source, "Ориентир группы: " + GameMaster.fmt(gm.referenceLevel()) + " уровень (игроков в расчёте: "
             + gm.peerCount() + ")");
+        if (config.auto_balance && config.enabled) {
+            send(source, "Автобаланс: вкл, коридор " + GameMaster.fmt(config.auto_start_minutes) + "–"
+                + GameMaster.fmt(config.auto_end_minutes) + " мин/уровень (±"
+                + GameMaster.fmt(config.auto_dead_zone * 100) + "%), суммарно ~"
+                + GameMaster.fmt(gm.autoTargetHours()) + " ч до максимума");
+            send(source, "Мобы: HP x" + GameMaster.fmt(gm.mobHealthMultiplier()) + ", урон x"
+                + GameMaster.fmt(gm.mobDamageMultiplier()) + ", лут x" + GameMaster.fmt(gm.lootMultiplier()));
+        } else {
+            send(source, "Автобаланс: выкл (/gm auto on).");
+        }
         if (config.web_enabled) {
             send(source, "Панель: http://" + config.web_host + ":" + config.web_port + "/");
         } else {

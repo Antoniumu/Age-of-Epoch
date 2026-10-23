@@ -16,14 +16,17 @@ public class FavorAdder implements ExileRegistryInit {
         none.min = -Integer.MAX_VALUE;
         none.rank = 0;
 
-        none.can_salvage_loot = false;
-        none.excludedRarities = Arrays.asList(IRarity.EPIC_ID, IRarity.RARE_ID);
-        none.drop_currency = false;
-        none.drop_gems = false;
-        none.drop_runes = false;
-        none.drop_lvl_rewards = false;
+        // Пустая Благосклонность раньше отключала почти весь лут и резала опыт вчетверо —
+        // это наказывало за основной цикл игры (убийство мобов). Теперь это мягкий штраф:
+        // опыт вдвое ниже, редкие вещи не выпадают, но играть по-прежнему можно.
+        none.can_salvage_loot = true;
+        none.excludedRarities = Arrays.asList(IRarity.EPIC_ID);
+        none.drop_currency = true;
+        none.drop_gems = true;
+        none.drop_runes = true;
+        none.drop_lvl_rewards = true;
         none.drop_unique_gears = false;
-        none.exp_multi = 0.25F;
+        none.exp_multi = 0.5F;
         none.favor_drain_per_item = 0;
 
         none.locname = "Empty";
@@ -31,9 +34,12 @@ public class FavorAdder implements ExileRegistryInit {
 
         none.addToSerializables();
 
+        // Раньше "low" был недостижим: у "normal" min = 1 и rank = 2, поэтому любой
+        // favor >= 1 сразу давал normal. Теперь ранги идут по возрастанию порога.
         FavorRank low = new FavorRank("low");
-        low.min = 250;
+        low.min = 1;
         low.rank = 1;
+        low.exp_multi = 1F;
 
         low.locname = "Low";
         low.text_format = com.robertx22.forge_compat.common.CompatChatFormatting.getName(ChatFormatting.YELLOW);
@@ -41,7 +47,7 @@ public class FavorAdder implements ExileRegistryInit {
         low.addToSerializables();
 
         FavorRank normal = new FavorRank("normal");
-        normal.min = 1;
+        normal.min = 250;
         normal.rank = 2;
 
         normal.locname = "Normal";

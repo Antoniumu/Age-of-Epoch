@@ -1,6 +1,7 @@
 package com.robertx22.age_of_exile.database.data.stats.datapacks.stats;
 
 import com.robertx22.age_of_exile.capability.entity.EntityData;
+import com.robertx22.age_of_exile.database.data.game_balance_config.GameBalanceConfig;
 import com.robertx22.age_of_exile.database.OptScaleExactStat;
 import com.robertx22.age_of_exile.database.data.stats.StatScaling;
 import com.robertx22.age_of_exile.database.data.stats.datapacks.base.BaseDatapackStat;
@@ -89,11 +90,21 @@ public class CoreStat extends BaseDatapackStat implements ICoreStat {
 
     public List<ExactStatData> getMods(int amount, int lvl) {
 
+        // Вложения очков раньше умножались на полный уровень (x10.8 к 50-му), из-за чего
+        // 100 очков VIT давали x17 HP, а 100 STR — только +150% урона.
+        // Множитель уровня сжимается до CORE_STAT_LEVEL_FACTOR (по умолчанию x3.45).
+        float factor = 1F;
+        try {
+            factor = Math.max(0.01F, Math.min(1F, GameBalanceConfig.get().CORE_STAT_LEVEL_FACTOR));
+        } catch (Exception ignored) {
+        }
+        int effectiveLevel = 1 + Math.round(Math.max(0, lvl - 1) * factor);
+
         return data.stats.stream()
             .map(x -> {
                 ExactStatData exact = ExactStatData.of(amount * x.v1, x.getStat()
                     .getStat(), x.getStat()
-                    .getModType(), Math.max(1, lvl));
+                    .getModType(), Math.max(1, effectiveLevel));
                 return exact;
             })
             .collect(Collectors.toList());
