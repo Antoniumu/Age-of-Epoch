@@ -151,7 +151,7 @@ def rarity_chances(lvl):
 # --------------------------------------------------------------------------
 
 def energy_pool(lvl):
-    return 30 * N(lvl)
+    return 10 + 30 * N(lvl)
 
 
 # RestoreResourceEvent.getAmountWithPercentRegen: + max * 8% за тик (60 тиков = 3 с)
