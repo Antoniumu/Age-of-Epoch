@@ -1,0 +1,143 @@
+package com.robertx22.age_of_exile.vanilla_mc.blocks.runeword_station;
+
+import com.robertx22.age_of_exile.database.data.runewords.RuneWord;
+import com.robertx22.age_of_exile.database.data.unique_items.UniqueGear;
+import com.robertx22.age_of_exile.database.registry.ExileDB;
+import com.robertx22.age_of_exile.loot.blueprints.GearBlueprint;
+import com.robertx22.age_of_exile.mmorpg.registers.common.SlashBlockEntities;
+import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
+import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import com.robertx22.age_of_exile.questbook.QuestBookService;
+import com.robertx22.age_of_exile.uncommon.datasaving.StackSaving;
+import com.robertx22.age_of_exile.vanilla_mc.blocks.bases.BaseModificationStation;
+import com.robertx22.age_of_exile.vanilla_mc.items.gemrunes.RuneItem;
+import com.robertx22.library_of_exile.utils.CLOC;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.MutableComponent;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class RuneWordStationTile extends BaseModificationStation {
+
+    public static List<Integer> RUNE_SLOTS = Arrays.asList(0, 1, 2, 3, 4, 5);
+    public static List<Integer> ITEM_SLOT = Arrays.asList(6);
+    public static List<Integer> STORAGE_SLOTS = Arrays.asList(7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24);
+    public static Integer SLOT_COUNT = RUNE_SLOTS.size() + ITEM_SLOT.size() + STORAGE_SLOTS.size();
+
+    public ItemStack getGearStack() {
+        return itemStacks[ITEM_SLOT.get(0)];
+    }
+
+    public RuneWordStationTile() {
+        super(SlashBlockEntities.RUNEWORD.get(), SLOT_COUNT);
+    }
+
+    public RuneWordStationTile(net.minecraft.core.BlockPos pos, net.minecraft.world.level.block.state.BlockState state) {
+        super(SlashBlockEntities.RUNEWORD.get(), SLOT_COUNT, pos, state);
+    }
+
+    @Override
+    public void tick() {
+
+        try {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public boolean modifyItem(int number, Player player) {
+
+        ItemStack stack = getGearStack();
+        if (stack.isEmpty()) {
+            return false;
+        }
+
+        if (StackSaving.GEARS.has(stack)) {
+            if (player != null && !player.level().isClientSide()) {
+                player.displayClientMessage(com.robertx22.age_of_exile.uncommon.localization.Words.GearHasData.locName(), false);
+            }
+            return false;
+        }
+
+        List<ItemStack> runes = new ArrayList<>();
+
+        for (int slot : RUNE_SLOTS) {
+            runes.add(this.itemStacks[slot]);
+        }
+        runes.removeIf(x -> x.isEmpty() || !(x.getItem() instanceof RuneItem));
+
+        List<String> runeStrings = runes.stream()
+            .map(x -> ((RuneItem) x.getItem()).type.id)
+            .collect(Collectors.toList());
+
+        RuneWord word = null;
+
+        List<RuneWord> list = ExileDB.RuneWords()
+            .getFiltered(x -> x.runesCanActivateRuneWord(runeStrings, true) && x.canApplyOnItem(stack));
+
+        if (!list.isEmpty()) {
+            word = list.get(0);
+        }
+
+        if (word != null) {
+
+            for (int slot : RUNE_SLOTS) {
+                ItemStack runeStack = this.itemStacks[slot];
+                if (!runeStack.isEmpty() && runeStack.getItem() instanceof RuneItem) {
+                    runeStack.shrink(1);
+                    if (runeStack.isEmpty()) {
+                        this.itemStacks[slot] = ItemStack.EMPTY;
+                    }
+                }
+            }
+
+            GearBlueprint b = new GearBlueprint(Load.Unit(player)
+                .getLevel());
+            UniqueGear uniq = ExileDB.UniqueGears()
+                .get(word.uniq_id);
+            b.uniquePart.set(uniq);
+            b.rarity.set(uniq.getUniqueRarity());
+
+            GearItemData gear = b.createData();
+
+            gear.saveToStack(stack);
+            QuestBookService.onRunewordCreated(player, word);
+
+            this.setChanged();
+            if (player != null) {
+                com.robertx22.library_of_exile.utils.SoundUtils.playSound(player, net.minecraft.sounds.SoundEvents.ANVIL_USE, 1, 1);
+                if (player.containerMenu != null) {
+                    player.containerMenu.broadcastChanges();
+                }
+                if (!player.level().isClientSide()) {
+                    com.robertx22.library_of_exile.main.Packets.sendToClient(
+                        player,
+                        new com.robertx22.library_of_exile.packets.TileUpdatePacket(this)
+                    );
+                }
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public AbstractContainerMenu createMenu(int num, Inventory inventory, Player player) {
+        return new RuneWordStationContainer(num, inventory, this, this.getBlockPos());
+    }
+
+    @Override
+    public MutableComponent getDisplayName() {
+        return CLOC.blank("block.mmorpg.runeword_station");
+    }
+}

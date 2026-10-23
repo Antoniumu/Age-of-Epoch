@@ -5,12 +5,9 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "ChestLootGenMixin",
-    "EntityMixin",
-    "ItemStackMixin",
-    "LevelMixin",
     "LivingEntityMixin",
     "MobEntityMixin",
-    "PlayerManagerMixin"
+    "ServerPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 0

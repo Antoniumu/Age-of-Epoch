@@ -1,6 +1,6 @@
 package com.robertx22.world_of_exile.tower;
 
-import com.robertx22.mine_and_slash.mmorpg.registers.common.SlashBlocks;
+import com.robertx22.age_of_exile.mmorpg.registers.common.SlashBlocks;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;

@@ -1,25 +1,23 @@
 package com.robertx22.forge_compat.fml.common;
 
 import com.robertx22.forge_compat.api.distmarker.Dist;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+
+import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Mod {
     String value();
 
+    enum Bus { FORGE, MOD }
+
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.TYPE)
     @interface EventBusSubscriber {
-        Dist[] value() default { Dist.CLIENT, Dist.DEDICATED_SERVER };
-        String modid() default "";
-        Bus bus() default Bus.FORGE;
+        Dist[] value() default {Dist.CLIENT, Dist.DEDICATED_SERVER};
 
-        enum Bus {
-            FORGE, MOD
-        }
+        String modid() default "";
+
+        Bus bus() default Bus.FORGE;
     }
 }

@@ -2,72 +2,65 @@ package com.robertx22.library_of_exile.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
+import info.loenwind.autosave.Reader;
+import info.loenwind.autosave.Writer;
 import net.minecraft.nbt.CompoundTag;
-
 
 public class LoadSave {
 
+    //Use this if AutoSave ever stops working and you need to conditionIsMet the mod
+    private static final boolean useGSON = false;
+    private static final String GSONLOC = "_GSON";
 
     private static final Gson gson = new GsonBuilder().create();
 
     public static CompoundTag Save(Object obj, CompoundTag nbt, String loc) {
 
-
         if (nbt == null) {
             nbt = new CompoundTag();
         }
 
-        String json = null;
-        try {
-            json = gson.toJson(obj);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        if (useGSON) {
+            String json = gson.toJson(obj);
+            nbt.putString(loc + GSONLOC, json);
 
-        if (json != null) {
-            nbt.putString(loc, json);
+        } else {
+            CompoundTag objNbt = new CompoundTag();
+            Writer.write(objNbt, obj);
+            nbt.put(loc, objNbt);
         }
 
         return nbt;
 
     }
 
-    public static <OBJ extends Object> OBJ Load(Class theclass, OBJ newobj, CompoundTag nbt, String loc) {
+    public static <OBJ extends Object> OBJ Load(Class theclass, OBJ newobj,
+                                                CompoundTag nbt, String loc) {
 
-        OBJ o = null;
         if (nbt == null) {
             return null;
         }
 
-        String json = nbt.getStringOr(loc, "");
+        if (useGSON) {
+            String json = nbt.getStringOr(loc + GSONLOC, "");
 
-        if (json.isEmpty()) {
-            return null;
-        }
-
-        try {
-            o = (OBJ) gson.fromJson(json, theclass);
-        } catch (JsonSyntaxException e) {
-            e.printStackTrace();
-        }
-
-        return o;
-
-    }
-
-    public static <OBJ> OBJ loadOrBlank(Class theclass, OBJ newobj, CompoundTag nbt, String loc, OBJ blank) {
-        try {
-            OBJ data = Load(theclass, newobj, nbt, loc);
-            if (data == null) {
-                return blank;
-            } else {
-                return data;
+            if (json.isEmpty()) {
+                return null;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            return (OBJ) gson.fromJson(json, theclass);
+        } else {
+
+            if (nbt.contains(loc)) {
+                CompoundTag thenbt = (CompoundTag) nbt.get(loc);
+                Reader.read(thenbt, newobj);
+                //System.out.println(thenbt.toString());
+            } else {
+                return null;
+            }
         }
-        return blank;
+
+        return newobj;
     }
 
 }

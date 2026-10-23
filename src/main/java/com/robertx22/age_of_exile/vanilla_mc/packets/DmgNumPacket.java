@@ -1,0 +1,65 @@
+package com.robertx22.age_of_exile.vanilla_mc.packets;
+
+import com.robertx22.age_of_exile.a_libraries.dmg_number_particle.DamageParticleAdder;
+import com.robertx22.age_of_exile.config.forge.ClientConfigs;
+import com.robertx22.age_of_exile.mmorpg.SlashRef;
+import com.robertx22.library_of_exile.main.MyPacket;
+import com.robertx22.library_of_exile.packets.ExilePacketContext;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.Identifier;
+import net.minecraft.ChatFormatting;
+
+public class DmgNumPacket extends MyPacket<DmgNumPacket> {
+
+    public String string;
+    public int id;
+    public boolean iscrit = false;
+    public ChatFormatting format = ChatFormatting.RED;
+
+    public DmgNumPacket() {
+
+    }
+
+    public DmgNumPacket(LivingEntity entity, String str, boolean iscrit, ChatFormatting format) {
+        string = str;
+        this.id = entity.getId();
+        this.iscrit = iscrit;
+        this.format = format;
+    }
+
+    @Override
+    public Identifier getIdentifier() {
+        return Identifier.fromNamespaceAndPath(SlashRef.MODID, "dmgnum");
+    }
+
+    @Override
+    public void loadFromData(FriendlyByteBuf tag) {
+        string = tag.readUtf(500);
+        id = tag.readInt();
+        this.iscrit = tag.readBoolean();
+        this.format = com.robertx22.forge_compat.common.CompatChatFormatting.getByName(tag.readUtf(100));
+
+    }
+
+    @Override
+    public void saveToData(FriendlyByteBuf tag) {
+        tag.writeUtf(string);
+        tag.writeInt(id);
+        tag.writeBoolean(iscrit);
+        tag.writeUtf(com.robertx22.forge_compat.common.CompatChatFormatting.getName(format));
+
+    }
+
+    @Override
+    public void onReceived(ExilePacketContext ctx) {
+        if (ClientConfigs.getConfig().ENABLE_FLOATING_DMG.get()) {
+            DamageParticleAdder.displayParticle(ctx.getPlayer().level().getEntity(id), this);
+        }
+    }
+
+    @Override
+    public MyPacket<DmgNumPacket> newInstance() {
+        return new DmgNumPacket();
+    }
+}

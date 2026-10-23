@@ -1,8 +1,0 @@
-{
-  "always_spawn": false,
-  "block_id": "dungeon_realm:uber_teleport",
-  "id": "uber_boss",
-  "max_blocks": 1,
-  "min_blocks": 1,
-  "weight": 0
-}

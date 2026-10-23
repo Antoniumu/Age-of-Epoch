@@ -1,9 +1,7 @@
 package com.robertx22.library_of_exile.packets.registry;
 
 import com.google.common.collect.Lists;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.robertx22.library_of_exile.main.ExileLog;
+import com.robertx22.library_of_exile.main.LibraryOfExile;
 import com.robertx22.library_of_exile.main.MyPacket;
 import com.robertx22.library_of_exile.main.Ref;
 import com.robertx22.library_of_exile.packets.ExilePacketContext;
@@ -11,16 +9,13 @@ import com.robertx22.library_of_exile.registry.Database;
 import com.robertx22.library_of_exile.registry.ExileRegistryContainer;
 import com.robertx22.library_of_exile.registry.ExileRegistryType;
 import com.robertx22.library_of_exile.registry.JsonExileRegistry;
-import com.robertx22.library_of_exile.registry.register_info.ClientSyncRegistration;
-import com.robertx22.library_of_exile.registry.serialization.ISerializable;
+import com.robertx22.library_of_exile.registry.serialization.IByteBuf;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.Identifier;
 
 import java.util.List;
 
-public class EfficientRegistryPacket<T extends ISerializable & JsonExileRegistry> extends MyPacket<EfficientRegistryPacket> {
-    public static final JsonParser PARSER = new JsonParser();
-
+public class EfficientRegistryPacket<T extends IByteBuf & JsonExileRegistry> extends MyPacket<EfficientRegistryPacket> {
     public static Identifier ID = Identifier.fromNamespaceAndPath(Ref.MODID, "eff_reg");
     private List<T> items;
 
@@ -43,43 +38,52 @@ public class EfficientRegistryPacket<T extends ISerializable & JsonExileRegistry
     @Override
     public void loadFromData(FriendlyByteBuf buf) {
 
-        this.type = ExileRegistryType.get(buf.readUtf());
+        this.type = ExileRegistryType.get(buf.readUtf(30));
 
-        ISerializable<T> serializer = type.getSerializer();
+        if (LibraryOfExile.runDevTools()) {
+            //System.out.print("\n Eff packet " + type.name() + " is " + buf.readableBytes() + " bytes big \n");
+        }
+
+        IByteBuf<T> serializer = (IByteBuf<T>) type.getSerializer();
 
         this.items = Lists.newArrayList();
 
         int i = buf.readVarInt();
 
         for (int j = 0; j < i; ++j) {
-            JsonObject json = (JsonObject) PARSER.parse(buf.readUtf(Integer.MAX_VALUE));
-            this.items.add(serializer.fromJson(json));
+            this.items.add(serializer.getFromBuf(buf));
         }
+
     }
 
     @Override
     public void saveToData(FriendlyByteBuf buf) {
 
-        buf.writeUtf(type.id);
+        buf.writeUtf(type.id, 30);
         buf.writeVarInt(this.items.size());
-        items.forEach(x -> {
-            if (x.isFromDatapack()) {
-                buf.writeUtf(x.toJsonString(), Integer.MAX_VALUE);
-            }
-        });
+        items.forEach(x -> x.toBuf(buf));
+
     }
 
     @Override
     public void onReceived(ExilePacketContext ctx) {
-
         ExileRegistryContainer reg = Database.getRegistry(type);
 
+        if (net.minecraft.client.Minecraft.getInstance().hasSingleplayerServer()) {
+            reg.registerSerializables();
+            return;
+        }
+
+        reg.unregisterAllEntriesFromDatapacks();
+
         items.forEach(x -> {
-            x.unregisterFromExileRegistry();
-            x.registerToExileRegistry(ClientSyncRegistration.INSTANCE);
+            reg.unRegister(x);
+            x.registerToExileRegistry();
         });
 
-        ExileLog.get().onlyInConsole("Efficient " + type.id + " reg load on client success with: " + reg.getSize() + " entries.");
+        reg.registerSerializables();
+
+        System.out.println("Efficient " + type.id + " reg load on client success with: " + reg.getSize() + " entries.");
 
     }
 

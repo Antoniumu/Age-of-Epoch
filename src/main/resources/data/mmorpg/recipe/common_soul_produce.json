@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": "minecraft:iron_ingot",
+    "B": "minecraft:cobblestone"
+  },
+  "pattern": [
+    "AAA",
+    "AAA",
+    "BBB"
+  ],
+  "result": {
+    "id": "mmorpg:common_soul_produce",
+    "count": 1
+  }
+}

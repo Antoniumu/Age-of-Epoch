@@ -1,6 +1,6 @@
 {
-  "parent": "item/handheld",
+  "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "mmorpg:item/weapon/staff/iron"
+    "layer0": "mmorpg:items/weapon/staff/iron"
   }
 }

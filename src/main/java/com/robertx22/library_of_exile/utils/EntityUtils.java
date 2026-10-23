@@ -1,9 +1,9 @@
 package com.robertx22.library_of_exile.utils;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import org.joml.Vector3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 public class EntityUtils {
 
@@ -11,8 +11,8 @@ public class EntityUtils {
 
         try {
 
-            float val = (float) com.robertx22.forge_compat.common.CompatHelper.getAttribute(entity, Attributes.MAX_HEALTH)
-                    .getBaseValue();
+            float val = (float) entity.getAttribute(Attributes.MAX_HEALTH)
+                .getBaseValue();
 
             return val;
 
@@ -23,7 +23,7 @@ public class EntityUtils {
         return 0;
     }
 
-    public static void setLoc(LivingEntity entity, Vector3d p, float yaw, float pitch) {
+    public static void setLoc(LivingEntity entity, Vec3 p, float yaw, float pitch) {
         entity.teleportTo(p.x, p.y, p.z);
     }
 

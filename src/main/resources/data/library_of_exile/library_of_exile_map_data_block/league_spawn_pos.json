@@ -1,8 +1,0 @@
-{
-  "aliases": [],
-  "id": "league_spawn_pos",
-  "process_on": "NORMAL",
-  "serializer": "league_spawn_pos",
-  "tags": [],
-  "weight": 1000
-}

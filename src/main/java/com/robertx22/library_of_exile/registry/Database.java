@@ -1,6 +1,5 @@
 package com.robertx22.library_of_exile.registry;
 
-import com.robertx22.library_of_exile.main.ExileLog;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 
@@ -11,15 +10,29 @@ import java.util.List;
 public class Database {
 
     private static HashMap<ExileRegistryType, ExileRegistryContainer> SERVER = new HashMap<>();
-    //  private static HashMap<ExileRegistryType, ExileRegistryContainer> BACKUP = new HashMap<>();
+    private static HashMap<ExileRegistryType, ExileRegistryContainer> BACKUP = new HashMap<>();
 
     public static boolean areDatapacksLoaded(Level world) {
         return ExileRegistryType.getInRegisterOrder(SyncTime.ON_LOGIN)
-                .stream()
-                .allMatch(x -> Database.getRegistry(x)
-                        .isRegistrationDone());
+            .stream()
+            .allMatch(x -> Database.getRegistry(x)
+                .isRegistrationDone());
     }
 
+    public static void backup() {
+        BACKUP = new HashMap<>(SERVER);
+    }
+
+    public static void restoreBackup() {
+        System.out.print("Restoring registry backup, this should never happen!");
+        SERVER = new HashMap<>(BACKUP); // this doesnt appear to be EVER called.. But unsure if good idea to remove
+    }
+
+    public static void restoreFromBackupifEmpty() {
+        if (SERVER.isEmpty()) {
+            restoreBackup();
+        }
+    }
 
     public static List<ExileRegistryContainer> getAllRegistries() {
         return new ArrayList<>(SERVER.values());
@@ -44,37 +57,37 @@ public class Database {
     public static void checkGuidValidity() {
 
         SERVER.values()
-                .forEach(c -> c.getAllIncludingSeriazable()
-                        .forEach(x -> {
-                            ExileRegistry entry = (ExileRegistry) x;
-                            if (!entry.isGuidFormattedCorrectly()) {
-                                throw new RuntimeException(entry.getInvalidGuidMessage());
-                            }
-                        }));
+            .forEach(c -> c.getAllIncludingSeriazable()
+                .forEach(x -> {
+                    ExileRegistry entry = (ExileRegistry) x;
+                    if (!entry.isGuidFormattedCorrectly()) {
+                        throw new RuntimeException(entry.getInvalidGuidMessage());
+                    }
+                }));
 
     }
 
     public static void unregisterInvalidEntries() {
 
-        //System.out.println("Starting Mine and Slash Registry auto validation.");
+        System.out.println("Starting Age of Exile Registry auto validation.");
 
         List<ExileRegistry> invalid = new ArrayList<>();
 
         SERVER.values()
-                .forEach(c -> c.getList()
-                        .forEach(x -> {
-                            ExileRegistry entry = (ExileRegistry) x;
-                            if (!entry.isRegistryEntryValid()) {
-                                invalid.add(entry);
-                            }
-                        }));
+            .forEach(c -> c.getList()
+                .forEach(x -> {
+                    ExileRegistry entry = (ExileRegistry) x;
+                    if (!entry.isRegistryEntryValid()) {
+                        invalid.add(entry);
+                    }
+                }));
 
         invalid.forEach(x -> x.unregisterDueToInvalidity());
 
         if (invalid.isEmpty()) {
-            ExileLog.get().debug("All Mine and Slash registries appear valid.");
+            System.out.println("All Age of Exile registries appear valid.");
         } else {
-            ExileLog.get().warn(invalid.size() + " Mine and Slash entries are INVALID!");
+            System.out.println(invalid.size() + " Age of Exile entries are INVALID!");
         }
 
     }
@@ -82,4 +95,11 @@ public class Database {
     public static void addRegistry(ExileRegistryContainer cont) {
         SERVER.put(cont.getType(), cont);
     }
+
+    public static void initRegistries() {
+        SERVER = new HashMap<>();
+
+        ExileRegistryType.init();
+    }
+
 }

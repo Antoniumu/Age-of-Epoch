@@ -1,8 +1,0 @@
-{
-  "data": {
-    "waves": 5
-  },
-  "id": "has_less_than_x_waves",
-  "serializer": "less_than_x_waves",
-  "weight": 1000
-}

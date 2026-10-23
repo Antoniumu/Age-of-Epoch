@@ -7,16 +7,16 @@ public enum MySpawnReason {
     SPAWNER,
     OTHER;
 
-    public static MySpawnReason get(net.minecraft.world.entity.EntitySpawnReason reason) {
+    public static MySpawnReason get(EntitySpawnReason reason) {
 
-        if (reason == net.minecraft.world.entity.EntitySpawnReason.SPAWNER) {
+        if (reason == EntitySpawnReason.SPAWNER || reason == EntitySpawnReason.TRIAL_SPAWNER) {
             return SPAWNER;
         }
-        if (reason == net.minecraft.world.entity.EntitySpawnReason.NATURAL || reason == net.minecraft.world.entity.EntitySpawnReason.CHUNK_GENERATION || reason == net.minecraft.world.entity.EntitySpawnReason.STRUCTURE) {
-            return NATURAL;
+        if (reason == EntitySpawnReason.BREEDING || reason == EntitySpawnReason.BUCKET || reason == EntitySpawnReason.DISPENSER) {
+            return OTHER;
         }
 
-        return OTHER;
+        return NATURAL;
     }
 
 }

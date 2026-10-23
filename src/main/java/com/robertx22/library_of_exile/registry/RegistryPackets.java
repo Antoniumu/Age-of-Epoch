@@ -2,8 +2,7 @@ package com.robertx22.library_of_exile.registry;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.robertx22.library_of_exile.main.ExileLog;
-import com.robertx22.library_of_exile.registry.register_info.ClientSyncRegistration;
+import com.robertx22.library_of_exile.registry.serialization.IByteBuf;
 import com.robertx22.library_of_exile.utils.Watch;
 
 import java.util.ArrayList;
@@ -24,46 +23,52 @@ public class RegistryPackets {
     }
 
     public static void registerAll(SyncTime sync) {
+        if (net.minecraft.client.Minecraft.getInstance().hasSingleplayerServer()) {
+            Database.getAllRegistries().forEach(ExileRegistryContainer::registerSerializables);
+            map.clear();
+            return;
+        }
+
         Watch watch = new Watch();
         watch.min = 50000;
 
         ExileRegistryType.getInRegisterOrder(sync)
-                .forEach(type -> {
+            .forEach(type -> {
+                ExileRegistryContainer reg = Database.getRegistry(type);
 
-                    if (type.getLoader() != null) {
+                if (reg.isDatapack() && type.getLoader() != null && type.ser instanceof IByteBuf == false) {
 
-                        ExileRegistryContainer reg = Database.getRegistry(type);
+                    List<JsonObject> list = map.get(type);
 
-
-                        List<JsonObject> list = map.get(type);
-
-                        if (list == null || list.isEmpty()) {
-                            throw new RuntimeException("Registry list sent from server is empty! " + type.id);
-                        }
-
-                        list.forEach(x -> {
-
-                            try {
-                                JsonExileRegistry entry = (JsonExileRegistry) type.getSerializer()
-                                        .fromJson(x);
-                                entry.unregisterFromExileRegistry();
-                                entry.registerToExileRegistry(ClientSyncRegistration.INSTANCE);
-
-                            } catch (JsonSyntaxException e) {
-                                ExileLog.get().log("Failed to parse Mine and Slash registry Json!!!");
-                                e.printStackTrace();
-                            }
-
-                        });
-
-                        if (reg.isEmpty()) {
-                            throw new RuntimeException("Mine and Slash Registry of type " + reg.getType() + " is EMPTY after datapack loading!");
-                        } else {
-                            // System.out.println(type.name() + " registry load on client succeeded with: " + reg.getSize() + " entries.");
-
-                        }
+                    if (list == null || list.isEmpty()) {
+                        reg.registerSerializables();
+                        return;
                     }
-                });
+
+                    reg.unregisterAllEntriesFromDatapacks();
+
+                    list.forEach(x -> {
+
+                        try {
+                            JsonExileRegistry entry = (JsonExileRegistry) type.getSerializer()
+                                .fromJson(x);
+                            reg.unRegister(entry);
+                            entry.registerToExileRegistry();
+
+                        } catch (Exception e) {
+                            System.out.println("Failed to parse Age of Exile registry Json!!!");
+                            e.printStackTrace();
+                        }
+
+                    });
+
+                    reg.registerSerializables();
+
+                    if (reg.isEmpty()) {
+                        System.out.println("Age of Exile Registry of type " + reg.getType() + " is EMPTY after datapack loading!");
+                    }
+                }
+            });
 
         watch.print("Registering registry from gson packets on client");
 

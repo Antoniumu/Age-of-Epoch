@@ -1,1 +1,0 @@
-package mezz.jei.api.registration; import mezz.jei.api.recipe.RecipeType; import net.minecraft.world.item.ItemStack; public interface IRecipeCatalystRegistration { void addRecipeCatalyst(ItemStack ingredient, RecipeType<?>... recipeTypes); }

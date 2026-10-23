@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "mmorpg:mat/salvage/salvage1",
+    "mmorpg:mat/salvage/salvage1",
+    "mmorpg:mat/salvage/salvage1",
+    "mmorpg:mat/salvage/salvage1"
+  ],
+  "result": {
+    "id": "mmorpg:mat/salvage/salvage2",
+    "count": 1
+  }
+}

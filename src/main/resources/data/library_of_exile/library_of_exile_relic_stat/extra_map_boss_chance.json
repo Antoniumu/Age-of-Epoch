@@ -1,8 +1,0 @@
-{
-  "base": 0.0,
-  "id": "extra_map_boss_chance",
-  "is_percent": true,
-  "max": 100.0,
-  "min": 0.0,
-  "serializer": "manual_stat"
-}

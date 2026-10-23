@@ -2,38 +2,29 @@
   "schemaVersion": 1,
   "id": "mmorpg",
   "version": "${version}",
-  "name": "Age of Epoch (Mine and Slash Rework Suite)",
-  "description": "Unified Minecraft 26.3 port of the full 6-mod Mine and Slash ARPG suite (Library of Exile, Orbs of Crafting, Mine and Slash, Dungeon Realm, Ancient Obelisks, The Harvest) integrated with custom Age of Epoch endgame systems.",
+  "name": "Age of Exile (Age of Epoch port)",
+  "description": "Turns Minecraft into a hack and slash RPG! Port of Age of Exile to Minecraft 26.3 (Fabric).",
   "authors": [
-    "mcrobertx22 (Robert Skalko)",
-    "Antoniumu (Age of Epoch 26.3 port)"
+    "mcrobertx22",
+    "Antoniumu (26.3 port)"
   ],
   "contact": {
-    "sources": "https://github.com/Antoniumu/Age-of-Epoch"
+    "sources": "https://github.com/RobertSkalko/Age-of-Exile",
+    "issues": "https://github.com/RobertSkalko/Age-of-Exile/issues"
   },
-  "license": "MIT",
+  "license": "All rights reserved",
   "icon": "assets/mmorpg/icon.png",
-  "environment": "*",
   "entrypoints": {
     "main": [
-      "com.robertx22.age_of_exile.mmorpg.AgeOfEpochMod"
+      "com.robertx22.age_of_exile.mmorpg.MMORPG"
     ],
     "client": [
-      "com.robertx22.age_of_exile.mmorpg.AgeOfEpochClientMod"
+      "com.robertx22.age_of_exile.mmorpg.init.ClientInit"
     ]
   },
   "mixins": [
-    "age_of_epoch-mixins.json",
-    "library_of_exile-mixins.json",
-    "mmorpg-mixins.json"
-  ],
-  "provides": [
-    "library_of_exile",
-    "orbs_of_crafting",
-    "dungeon_realm",
-    "ancient_obelisks",
-    "the_harvest",
-    "age_of_exile"
+    "mmorpg-mixins.json",
+    "library_of_exile-mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.19.5",

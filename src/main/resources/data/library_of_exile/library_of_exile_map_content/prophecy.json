@@ -1,8 +1,0 @@
-{
-  "always_spawn": false,
-  "block_id": "mmorpg:prophecy_altar",
-  "id": "prophecy",
-  "max_blocks": 5,
-  "min_blocks": 3,
-  "weight": 1000
-}
