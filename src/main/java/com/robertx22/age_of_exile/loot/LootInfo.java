@@ -81,6 +81,12 @@ public class LootInfo {
 
             info.setupAllFields();
 
+            // один дроп с моба = одна единица счётчика pity
+            if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+                com.robertx22.age_of_exile.gamemaster.GameMaster.get()
+                    .onMobLooted(serverPlayer);
+            }
+
             if (ExileDB.MobRarities()
                 .get(info.mobData.getRarity()).extra_hp_multi > 5 || EntityUtils.getVanillaMaxHealth(mob) > 100) {
                 // is boss basically
@@ -255,7 +261,9 @@ public class LootInfo {
 
         if (mobKilled != null && mobData != null) {
 
-            modifier += ScalingPlayerDiffData.getDMGMulti(mobData.mobScalingDiff) - 1F;
+            // Лут растёт от СОБСТВЕННОГО множителя сложности, а не от урона мобов:
+            // раньше здесь стоял getDMGMulti, и при разных константах лут разъезжался с балансом.
+            modifier += ScalingPlayerDiffData.getLootMulti(mobData.mobScalingDiff) - 1F;
 
             if (this.playerData != null) {
                 modifier += LootUtils.getLevelDistancePunishmentMulti(mobData.getLevel(), playerData.getLevel()) - 1F;

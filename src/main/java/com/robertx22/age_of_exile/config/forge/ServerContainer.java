@@ -47,7 +47,9 @@ public class ServerContainer {
         HP_VALUE_NEEDED_FOR_MAX_ENVIRO_DMG_PROTECTION = b.defineInRange("HP_VALUE_NEEDED_FOR_MAX_ENVIRO_DMG_PROTECTION", 125, 0, 100000);
         MAX_ENVIRO_DMG_PROTECTION_FROM_HP_MULTI = b.defineInRange("MAX_ENVIRO_DMG_PROTECTION_FROM_HP_MULTI", 0.75F, 0, 1);
 
-        MAX_UNIQUE_GEARS_WORN = b.defineInRange("max_uniques_worn", 100, 0, 20);
+        // 100 при диапазоне 0…20 означало «уникатов можно носить сколько угодно»:
+        // пропадал выбор билда, а уник-дроп обесценивался. 3 — слоты, но не все.
+        MAX_UNIQUE_GEARS_WORN = b.defineInRange("max_uniques_worn", 3, 0, 20);
 
         FAVOR_GAIN_PER_CHEST_LOOTED = b.defineInRange("favor_per_chest", 50D, 0, 1000);
         FAVOR_GAIN_PER_SPAWNER_DESTROYED = b.comment("Set this to 0 if there is a way to create spawners in the modpack.")

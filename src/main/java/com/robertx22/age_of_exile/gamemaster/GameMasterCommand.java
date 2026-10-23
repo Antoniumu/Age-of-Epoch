@@ -104,6 +104,15 @@ public class GameMasterCommand {
                 .then(argument("target", EntityArgument.player())
                     .executes(ctx -> playerInfo(ctx.getSource(), EntityArgument.getPlayer(ctx, "target")))))
             .then(literal("list").executes(ctx -> listPlayers(ctx.getSource())))
+            .then(literal("retention")
+                .executes(ctx -> retentionStatus(ctx.getSource()))
+                .then(literal("on").executes(ctx -> setRetention(ctx.getSource(), true)))
+                .then(literal("off").executes(ctx -> setRetention(ctx.getSource(), false)))
+                .then(literal("pity")
+                    .executes(ctx -> toggleRetentionPity(ctx.getSource()))
+                    .then(argument("value", BoolArgumentType.bool())
+                        .executes(ctx -> setRetentionPity(ctx.getSource(), BoolArgumentType.getBool(ctx, "value"))))))
+            .then(literal("export").executes(ctx -> exportCsv(ctx.getSource())))
             .then(literal("reload").executes(ctx -> {
                 GameMaster.get()
                     .reloadConfig();
@@ -323,6 +332,75 @@ public class GameMasterCommand {
         send(source, "Спавн от автобаланса: x" + GameMaster.fmt(config.auto_spawn_min) + "…x"
             + GameMaster.fmt(config.auto_spawn_max)
             + " (итог всегда 0…1; поднимает только урезанный Благосклонностью спавн)");
+        return 1;
+    }
+
+    private static int setRetention(CommandSourceStack source, boolean value) {
+        GameMasterConfig config = GameMaster.get()
+            .config();
+        config.retention_enabled = value;
+        GameMaster.get()
+            .onConfigEdited();
+        send(source, "Удержание (серии, вехи, гарантированные дропы): " + onOff(value));
+        return 1;
+    }
+
+    private static int toggleRetentionPity(CommandSourceStack source) {
+        return setRetentionPity(source, !GameMaster.get()
+            .config().retention_pity);
+    }
+
+    private static int setRetentionPity(CommandSourceStack source, boolean value) {
+        GameMasterConfig config = GameMaster.get()
+            .config();
+        config.retention_pity = value;
+        GameMaster.get()
+            .onConfigEdited();
+        send(source, "Защита от невезения (pity) для уникатов: " + onOff(value));
+        return 1;
+    }
+
+    private static int retentionStatus(CommandSourceStack source) {
+        GameMaster gm = GameMaster.get();
+        GameMasterConfig config = gm.config();
+        if (!config.retention_enabled) {
+            send(source, "Удержание выключено (/gm retention on).");
+            return 1;
+        }
+        send(source, "Удержание: вкл. Ежедневно +" + GameMaster.fmt(config.retention_daily_favor)
+            + " Благосклонности, +" + GameMaster.fmt(config.retention_streak_bonus_favor)
+            + " за день серии (макс +" + GameMaster.fmt(config.retention_streak_max_favor) + ")");
+        send(source, "Веха каждые " + config.retention_milestone_every + " уровней: +"
+            + GameMaster.fmt(config.retention_milestone_favor) + " Благосклонности и гарантированный дроп");
+        send(source, "Pity: " + onOff(config.retention_pity) + ", растёт с "
+            + config.retention_pity_start_kills + " до " + config.retention_pity_full_kills
+            + " убийств без униката");
+        send(source, "Смерть не отнимает опыт до " + config.retention_no_exp_loss_level + " уровня.");
+        long now = GameMaster.now();
+        int best = 0;
+        double risk = 0;
+        int count = 0;
+        for (PlayerProgress progress : gm.data().players.values()) {
+            if (progress == null) {
+                continue;
+            }
+            best = Math.max(best, progress.streak_days);
+            risk += Retention.churnRisk(progress, now);
+            count++;
+        }
+        send(source, "Лучшая серия: " + best + " дн., средний риск ухода: "
+            + GameMaster.fmt(count > 0 ? risk / count : 0) + " (0 — не уйдёт, 1 — уйдёт)");
+        return 1;
+    }
+
+    private static int exportCsv(CommandSourceStack source) {
+        try {
+            java.nio.file.Path path = GameMaster.get()
+                .exportCsv();
+            send(source, "Телеметрия выгружена: " + path);
+        } catch (Exception e) {
+            send(source, "Не удалось выгрузить телеметрию: " + e);
+        }
         return 1;
     }
 

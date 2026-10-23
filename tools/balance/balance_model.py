@@ -22,6 +22,8 @@ BALANCE-AUDIT.md можно было перепроверить и пересч�
 мобы +1%/уровень). Исторические цифры «до правок» остались в аудите.
 """
 
+import math
+
 MAX_LEVEL = 50
 LEVELS_PER_TIER = 10
 
@@ -510,15 +512,27 @@ SPAWN_FAVOR_START = 500.0
 SPAWN_FAVOR_PER_KILL = 0.1
 SPAWN_REFERENCE = 500.0        # spawn_rate_favor_reference (было 100)
 SPAWN_REFERENCE_OLD = 100.0
-SPAWN_MIN = 0.05
+SPAWN_MIN = 0.65             # нижняя полка (spawn_rate_dynamic_min_multiplier)
 SPAWN_MANUAL = 1.0             # spawn_rate_manual_multiplier
 SPAWN_AUTO_RESCUE = 1.35       # автобаланс в состоянии rescue
 TOTAL_KILLS = 8302
 
 
 def spawn_rate(favor, reference=SPAWN_REFERENCE, manual=SPAWN_MANUAL):
-    """Спавн — вероятность на попытку: manual × ref/(ref + favor), 0.05…1."""
-    return max(SPAWN_MIN, min(1.0, manual * reference / (reference + max(0.0, favor))))
+    """
+    Спавн — вероятность на попытку. Формула развёрнута относительно старой:
+      было:  floor(ref/(ref+favor))          — больше favor → меньше мобов
+      стало: floor + (1-floor)·favor/(favor+ref) — больше favor → больше мобов
+    Полка не даёт миру опустеть при нулевой Благосклонности.
+    """
+    floor = SPAWN_MIN
+    dynamic = max(0.0, favor) / (max(0.0, favor) + reference)
+    return max(0.0, min(1.0, manual * (floor + (1.0 - floor) * dynamic)))
+
+
+def spawn_rate_old(favor, reference=SPAWN_REFERENCE_OLD):
+    """Прежняя (обратная) логика — для сравнения «было/стало»."""
+    return max(0.05, min(1.0, reference / (reference + max(0.0, favor))))
 
 
 def favor_after_kills(kills, start=SPAWN_FAVOR_START, per_kill=SPAWN_FAVOR_PER_KILL):
@@ -539,15 +553,16 @@ def average_spawn_rate(reference, kills=TOTAL_KILLS, chest_favor=0.0):
 
 def table_spawn():
     print("### Спавнрейт: Благосклонность → вероятность спавна\n")
-    print("Формула: `rate = manual × ref / (ref + favor)`, итог клампится в 0…1 "
-          "(0.05 — минимум динамики).")
+    print("Формула: `rate = manual × [floor + (1 − floor) × favor/(favor + ref)]`, 0…1.")
+    print(f"Полка floor = {SPAWN_MIN:.2f}: при нулевой Благосклонности остаётся "
+          f"{SPAWN_MIN*100:.0f}% обычного спавна, мир не пустеет.")
     print("Спавн применяется к естественному появлению враждебных мобов, ванильным спавнерам "
           "и волнам спавнеров комнат.\n")
-    print("| Благосклонность | rate при ref=500 (сейчас) | rate при ref=100 (было) |")
+    print("| Благосклонность | rate «сейчас» (рост с favor) | rate «было» (падение с favor) |")
     print("|---:|---:|---:|")
     for favor in (0, 100, 250, 500, 1000, 2000, 5000):
         print(f"| {favor} | ×{spawn_rate(favor, SPAWN_REFERENCE):.2f} | "
-              f"×{spawn_rate(favor, SPAWN_REFERENCE_OLD):.2f} |")
+              f"×{spawn_rate_old(favor, SPAWN_REFERENCE_OLD):.2f} |")
     print()
     print("Как меняется rate за путь 1→50 (favor падает на 0.1 за убийство, сундуки не считаем):\n")
     print("| Убийств | Благосклонность | rate (ref=500) | Средний rate до этого места | "
@@ -561,13 +576,96 @@ def table_spawn():
         print(f"| {kills} | {favor:.0f} | ×{spawn_rate(favor, SPAWN_REFERENCE):.2f} | ×{avg:.2f} | {hours:.1f} |")
     print()
     avg_new = average_spawn_rate(SPAWN_REFERENCE)
-    avg_old = average_spawn_rate(SPAWN_REFERENCE_OLD)
-    print(f"Средний rate за весь путь: **×{avg_new:.2f}** (ref=500) против **×{avg_old:.2f}** (ref=100).")
+    avg_old = sum(spawn_rate_old(favor_after_kills(k)) for k in range(TOTAL_KILLS)) / TOTAL_KILLS
+    print(f"Средний rate за весь путь: **×{avg_new:.2f}** (новая логика) против "
+          f"**×{avg_old:.2f}** (старая логика, ref=100).")
     print(f"Если убийства ограничены спавном (а не DPS), темп растягивается соответственно: "
           f"**{base_hours/avg_new:.1f} ч** вместо {base_hours:.1f} ч, а при старой базе — "
           f"**{base_hours/avg_old:.1f} ч**.")
     print("Автобаланс в состоянии `rescue` поднимает rate до ×1.35 (но не выше 1.0), "
           "в `brake` — опускает до ×0.75.\n")
+
+# --------------------------------------------------------------------------
+# удержание (Retention.java)
+# --------------------------------------------------------------------------
+
+RETENTION_DAILY_FAVOR = 40
+RETENTION_STREAK_BONUS = 25
+RETENTION_STREAK_MAX_FAVOR = 300
+RETENTION_MILESTONE_EVERY = 5
+RETENTION_MILESTONE_FAVOR = 150
+PITY_START = 250
+PITY_FULL = 900
+PITY_MAX_CHANCE = 0.9
+
+
+def pity_chance(kills, start=PITY_START, full=PITY_FULL):
+    if kills < start:
+        return 0.0
+    t = min(1.0, (kills - start) / (full - start))
+    return PITY_MAX_CHANCE * t
+
+
+
+
+def simulate_dry_streaks(per_drop_chance, pity=True, runs=4000, seed=7):
+    """Симуляция: сколько дропов проходит до униката (медиана, p95, максимум)."""
+    import random
+    rnd = random.Random(seed)
+    lengths = []
+    for _ in range(runs):
+        dry = 0
+        for drops in range(1, 20000):
+            chance = per_drop_chance
+            if pity:
+                chance = chance + (1 - chance) * pity_chance(dry)
+            if rnd.random() < chance:
+                lengths.append(drops)
+                break
+            dry += 1
+        else:
+            lengths.append(20000)
+    lengths.sort()
+    median = lengths[len(lengths) // 2]
+    p95 = lengths[int(len(lengths) * 0.95)]
+    return median, p95, lengths[-1]
+
+
+def table_retention():
+    print("### Удержание: серии, вехи, pity\n")
+    print("| День серии | Благосклонность за вход | Гарантия |")
+    print("|---:|---:|---|")
+    for day in (1, 2, 3, 7, 14, 30):
+        favor = RETENTION_DAILY_FAVOR + min(RETENTION_STREAK_MAX_FAVOR,
+                                            RETENTION_STREAK_BONUS * (day - 1))
+        if day == 3 or day == 7:
+            extra = "редкая вещь"
+        elif day == 14:
+            extra = "эпическая вещь"
+        elif day == 30:
+            extra = "2 эпические вещи"
+        else:
+            extra = "—"
+        print(f"| {day} | +{favor} | {extra} |")
+    print()
+    print("Вехи уровней (каждые 5): Благосклонность = 150 × (1 + lvl/50), "
+          "и через раз гарантированный редкий/эпический дроп.\n")
+    print("Pity (защита от невезения): шанс принудительного униката за дроп\n")
+    print("| Убийств без униката | Шанс за дроп |")
+    print("|---:|---:|")
+    for kills in (0, 250, 400, 600, 900):
+        print(f"| {kills} | {pity_chance(kills)*100:.0f}% |")
+    print()
+    base = 0.0133
+    no_pity = simulate_dry_streaks(base, pity=False)
+    with_pity = simulate_dry_streaks(base, pity=True)
+    print("| Сценарий | Медиана дропов до униката | 95-й перцентиль | Худший случай |")
+    print("|---|---:|---:|---:|")
+    print(f"| Без pity | {no_pity[0]:.0f} | {no_pity[1]:.0f} | {no_pity[2]:.0f} |")
+    print(f"| С pity | {with_pity[0]:.0f} | {with_pity[1]:.0f} | {with_pity[2]:.0f} |")
+    print()
+    print("Именно длинные «сухие» серии заставляют игрока уходить: pity срезает хвост "
+          "распределения, не меняя медиану.\n")
 
 if __name__ == "__main__":
     print("# Age of Epoch — расчёт баланса\n")
@@ -583,4 +681,5 @@ if __name__ == "__main__":
     table_endgame()
     table_pacing()
     table_spawn()
+    table_retention()
     table_autobalance()

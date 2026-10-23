@@ -244,6 +244,18 @@ public class GameMaster {
         config.auto_loot_max = parsed.auto_loot_max;
         config.auto_spawn_min = parsed.auto_spawn_min;
         config.auto_spawn_max = parsed.auto_spawn_max;
+        config.retention_enabled = parsed.retention_enabled;
+        config.retention_daily_favor = parsed.retention_daily_favor;
+        config.retention_streak_bonus_favor = parsed.retention_streak_bonus_favor;
+        config.retention_streak_max_favor = parsed.retention_streak_max_favor;
+        config.retention_streak_max_days = parsed.retention_streak_max_days;
+        config.retention_streak_grace_days = parsed.retention_streak_grace_days;
+        config.retention_milestone_every = parsed.retention_milestone_every;
+        config.retention_milestone_favor = parsed.retention_milestone_favor;
+        config.retention_pity = parsed.retention_pity;
+        config.retention_pity_start_kills = parsed.retention_pity_start_kills;
+        config.retention_pity_full_kills = parsed.retention_pity_full_kills;
+        config.retention_no_exp_loss_level = parsed.retention_no_exp_loss_level;
         config.config_version = parsed.config_version;
         config.auto_session_fatigue_minutes = parsed.auto_session_fatigue_minutes;
         config.auto_welcome_hours = parsed.auto_welcome_hours;
@@ -545,6 +557,15 @@ public class GameMaster {
 
             progress.level_baseline_seconds = 0;
             progress.level = level;
+
+            // Веха удержания: награда за каждый N-й уровень.
+            Retention.Reward milestone = Retention.onLevelUp(progress, level, config);
+            if (milestone != null) {
+                grantFavor(player, progress, milestone.favor);
+                player.sendSystemMessage(Component.literal(milestone.text)
+                    .withStyle(ChatFormatting.GOLD));
+            }
+
             progress.addHistory(progress.multiplier, now);
             progress.last_snapshot_playtime = progress.playtime_seconds;
             progress.last_snapshot_epoch = now;
@@ -578,6 +599,124 @@ public class GameMaster {
         dirty = true;
     }
 
+    /** Начисляет Благосклонность игроку и обновляет кэш в прогрессе. */
+    private void grantFavor(ServerPlayer player, PlayerProgress progress, int amount) {
+        if (amount <= 0) {
+            return;
+        }
+        try {
+            var rpg = Load.playerRPGData(player);
+            rpg.favor.addFavor(amount);
+            rpg.syncToClient(player);
+            progress.favor = rpg.favor.getFavor();
+        } catch (Exception e) {
+            progress.favor += amount;
+        }
+        dirty = true;
+    }
+
+    /**
+     * Учитывает убийство моба: копит счётчик для pity-системы.
+     * Вызывается из {@code LootInfo} (один раз на дроп с моба).
+     */
+    public void onMobLooted(ServerPlayer player) {
+        if (!loaded || player == null || !config.retention_enabled) {
+            return;
+        }
+        PlayerProgress progress = data.get(player.getUUID()
+            .toString());
+        if (progress != null) {
+            progress.kills_since_unique++;
+            dirty = true;
+        }
+    }
+
+    /** Учитывает выпадение униката: сбрасывает счётчик pity. */
+    public void onUniqueDropped(ServerPlayer player) {
+        if (!loaded || player == null) {
+            return;
+        }
+        PlayerProgress progress = data.get(player.getUUID()
+            .toString());
+        if (progress != null) {
+            progress.kills_since_unique = 0;
+            dirty = true;
+        }
+    }
+
+    /** Шанс принудительного униката для этого игрока (0…0.9). */
+    public double uniquePityChance(ServerPlayer player) {
+        if (!loaded || player == null || !config.retention_enabled) {
+            return 0;
+        }
+        PlayerProgress progress = data.get(player.getUUID()
+            .toString());
+        if (progress == null) {
+            return 0;
+        }
+        return Retention.pityChance(progress.kills_since_unique, config);
+    }
+
+    /** Сколько зарядов гарантированной редкости есть у игрока (без траты). */
+    public int guaranteedRarityCharges(ServerPlayer player) {
+        if (!loaded || player == null || !config.retention_enabled) {
+            return 0;
+        }
+        PlayerProgress progress = data.get(player.getUUID()
+            .toString());
+        if (progress == null) {
+            return 0;
+        }
+        return progress.guaranteed_epic > 0 ? 2 : (progress.guaranteed_rare > 0 ? 1 : 0);
+    }
+
+    /**
+     * Забирает заряды гарантированного дропа: 2 — эпик, 1 — редкий, 0 — нет.
+     * Заряд тратится только когда реально повышает редкость.
+     */
+    public int consumeGuaranteedRarity(ServerPlayer player) {
+        if (!loaded || player == null || !config.retention_enabled) {
+            return 0;
+        }
+        PlayerProgress progress = data.get(player.getUUID()
+            .toString());
+        if (progress == null) {
+            return 0;
+        }
+        if (progress.guaranteed_epic > 0) {
+            progress.guaranteed_epic--;
+            dirty = true;
+            return 2;
+        }
+        if (progress.guaranteed_rare > 0) {
+            progress.guaranteed_rare--;
+            dirty = true;
+            return 1;
+        }
+        return 0;
+    }
+
+    /** true, если смерть на этом уровне не должна отнимать опыт. */
+    public boolean skipsExpLossOnDeath(ServerPlayer player) {
+        if (!loaded || player == null || !config.retention_enabled) {
+            return false;
+        }
+        // Берём фактический уровень из юнита: прогресс GameMaster обновляется
+        // раз в несколько секунд и может отставать на момент смерти.
+        int level = 0;
+        try {
+            level = Load.Unit(player)
+                .getLevel();
+        } catch (Exception ignored) {
+        }
+        if (level <= 0) {
+            PlayerProgress progress = data.get(player.getUUID()
+                .toString());
+            level = progress != null ? progress.level : 1;
+        }
+        return level < config.retention_no_exp_loss_level;
+    }
+
     /** Открыта новая сессия (вход в игру): обновляем среднюю длину сессии. */
     private void accumulateSession(PlayerProgress progress) {
         if (progress.session_seconds > 60) {
@@ -601,6 +740,22 @@ public class GameMaster {
         progress.online = true;
         progress.last_seen = now;
         checkLevel(player, progress);
+
+        // Удержание: серия входов, ежедневная награда и гарантированные дропы.
+        if (config.retention_enabled) {
+            if (progress.first_seen <= 0) {
+                progress.first_seen = now;
+            }
+            Retention.Reward daily = Retention.onSession(progress, now, config);
+            if (daily.favor > 0 || daily.text != null && !daily.text.isEmpty()) {
+                if (daily.favor > 0) {
+                    grantFavor(player, progress, daily.favor);
+                }
+                player.sendSystemMessage(Component.literal("GameMaster: " + daily.text)
+                    .withStyle(ChatFormatting.AQUA));
+            }
+        }
+
         progress.multiplier = computeMultiplier(progress);
         if (progress.history.isEmpty()) {
             progress.addHistory(progress.multiplier, progress.last_seen);
@@ -1147,6 +1302,31 @@ public class GameMaster {
         auto.addProperty("touch_mobs", config.auto_touch_mobs);
         auto.addProperty("touch_loot", config.auto_touch_loot);
         summary.add("auto", auto);
+
+        JsonObject retention = new JsonObject();
+        int streakMax = 0;
+        int activeSum = 0;
+        int tracked = 0;
+        double riskSum = 0;
+        int pitySum = 0;
+        for (PlayerProgress p : data.players.values()) {
+            if (p == null) {
+                continue;
+            }
+            streakMax = Math.max(streakMax, p.streak_days);
+            activeSum += Retention.activeDaysWithin(p, 7, now());
+            riskSum += Retention.churnRisk(p, now());
+            pitySum += p.kills_since_unique;
+            tracked++;
+        }
+        retention.addProperty("enabled", config.retention_enabled);
+        retention.addProperty("max_streak", streakMax);
+        retention.addProperty("avg_active_days_7", tracked > 0 ? round2(activeSum / (double) tracked) : 0);
+        retention.addProperty("avg_churn_risk", tracked > 0 ? round2(riskSum / tracked) : 0);
+        retention.addProperty("avg_kills_since_unique", tracked > 0 ? pitySum / tracked : 0);
+        retention.addProperty("pity_start_kills", config.retention_pity_start_kills);
+        retention.addProperty("milestone_every", config.retention_milestone_every);
+        summary.add("retention", retention);
         root.add("summary", summary);
 
         List<PlayerProgress> sorted = new ArrayList<>(data.players.values());
@@ -1204,6 +1384,16 @@ public class GameMaster {
         json.addProperty("session_minutes", round2(progress.session_seconds / 60.0));
         json.addProperty("sessions", progress.sessions);
         json.addProperty("avg_session_minutes", round2(progress.avg_session_seconds / 60.0));
+        json.addProperty("streak_days", progress.streak_days);
+        json.addProperty("active_days_7", Retention.activeDaysWithin(progress, 7, now()));
+        json.addProperty("active_days_30",
+            progress.active_days == null ? 0 : progress.active_days.size());
+        json.addProperty("day_of_play", Retention.dayOfPlay(progress, now()));
+        json.addProperty("churn_risk", round2(Retention.churnRisk(progress, now())));
+        json.addProperty("milestones", progress.milestones_claimed);
+        json.addProperty("kills_since_unique", progress.kills_since_unique);
+        json.addProperty("guaranteed_rare", progress.guaranteed_rare);
+        json.addProperty("guaranteed_epic", progress.guaranteed_epic);
 
         // для графика хватает ~300 точек, не гоняем весь массив в браузер
         JsonArray history = new JsonArray();
@@ -1223,6 +1413,63 @@ public class GameMaster {
         }
         json.add("history", history);
         return json;
+    }
+
+    /**
+     * Экспорт телеметрии в CSV — сырьё для офлайн-аналитики и моделей
+     * (прогноз оттока, подбор параметров). В игровом тике ничего не обучается.
+     *
+     * @return путь к файлу
+     */
+    public Path exportCsv() throws java.io.IOException {
+        Path path = baseDir().resolve("gamemaster_export.csv");
+        long now = now();
+        StringBuilder sb = new StringBuilder();
+        sb.append("uuid,name,level,playtime_hours,sessions,avg_session_minutes,streak_days,")
+            .append("active_days_7,day_of_play,churn_risk,deaths,deaths_per_hour,")
+            .append("minutes_per_level,target_minutes,exp_multiplier,auto_state,")
+            .append("kills_since_unique,milestones,guaranteed_rare,guaranteed_epic,last_seen_days\n");
+        for (PlayerProgress p : data.players.values()) {
+            if (p == null) {
+                continue;
+            }
+            sb.append(csv(p.uuid)).append(',')
+                .append(csv(p.name)).append(',')
+                .append(p.level).append(',')
+                .append(round2(p.playtimeHours())).append(',')
+                .append(p.sessions).append(',')
+                .append(round2(p.avg_session_seconds / 60.0)).append(',')
+                .append(p.streak_days).append(',')
+                .append(Retention.activeDaysWithin(p, 7, now)).append(',')
+                .append(Retention.dayOfPlay(p, now)).append(',')
+                .append(round2(Retention.churnRisk(p, now))).append(',')
+                .append(p.deaths).append(',')
+                .append(round2(AutoBalance.deathsPerHour(p))).append(',')
+                .append(round2(p.ema_minutes_per_level)).append(',')
+                .append(round2(AutoBalance.targetMinutes(p.level, maxLevelCache, config))).append(',')
+                .append(round2(p.auto_exp_multiplier)).append(',')
+                .append(csv(p.auto_state)).append(',')
+                .append(p.kills_since_unique).append(',')
+                .append(p.milestones_claimed).append(',')
+                .append(p.guaranteed_rare).append(',')
+                .append(p.guaranteed_epic).append(',')
+                .append(p.last_seen > 0 ? round2((now - p.last_seen) / 86400.0) : -1)
+                .append('\n');
+        }
+        Files.createDirectories(baseDir());
+        Files.write(path, sb.toString()
+            .getBytes(StandardCharsets.UTF_8));
+        return path;
+    }
+
+    private static String csv(String value) {
+        if (value == null) {
+            return "";
+        }
+        String clean = value.replace('"', ' ')
+            .replace(',', ' ')
+            .replace('\n', ' ');
+        return '"' + clean + '"';
     }
 
     public static double round2(double value) {

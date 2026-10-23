@@ -190,6 +190,49 @@ public class GameMasterConfig {
     public double auto_global_step_per_minute = 0.05;
 
     // ------------------------------------------------------------------
+    // 2c. Удержание игрока (см. Retention)
+    // ------------------------------------------------------------------
+
+    /** Ежедневные серии, вехи уровней и защита от невезения. */
+    public boolean retention_enabled = true;
+
+    /** Благосклонность за первый вход за сутки. */
+    public double retention_daily_favor = 40;
+
+    /** Добавка за каждый день серии. */
+    public double retention_streak_bonus_favor = 25;
+
+    /** Потолок добавки за серию. */
+    public double retention_streak_max_favor = 300;
+
+    /** Максимальная длина серии (дней). */
+    public int retention_streak_max_days = 30;
+
+    /** Перерыв в днях, который ещё не рвёт серию (1 = можно пропустить день). */
+    public int retention_streak_grace_days = 1;
+
+    /** Каждый N-й уровень даёт веху с наградой. */
+    public int retention_milestone_every = 5;
+
+    /** Базовый размер награды за веху. */
+    public double retention_milestone_favor = 150;
+
+    /** Включить защиту от невезения (pity) для уникатов. */
+    public boolean retention_pity = true;
+
+    /** Сколько убийств без униката считается «нормой» (до этого pity молчит). */
+    public int retention_pity_start_kills = 250;
+
+    /** На этом числе убийств шанс принудительного униката достигает 90%. */
+    public int retention_pity_full_kills = 900;
+
+    /**
+     * До какого уровня смерть не отнимает опыт: новичок не должен терять прогресс
+     * в первые минуты, это самый частый повод бросить игру.
+     */
+    public int retention_no_exp_loss_level = 5;
+
+    // ------------------------------------------------------------------
     // 3. Спавн мобов вокруг игроков
     // ------------------------------------------------------------------
 
@@ -211,8 +254,17 @@ public class GameMasterConfig {
      */
     public double spawn_rate_favor_reference = 500.0;
 
-    /** Минимальный динамический множитель, чтобы спавн не исчезал полностью. */
-    public double spawn_rate_dynamic_min_multiplier = 0.05;
+    /**
+     * НИЖНЯЯ ПОЛКА спавна — доля попыток, которая проходит даже при нулевой Благосклонности.
+     * <p>
+     * Динамика развёрнута: раньше при высокой Благосклонности спавн падал
+     * ({@code ref/(ref+favor)}), то есть лучший игрок получал пустой мир. Теперь
+     * {@code rate = floor + (1 - floor) × favor/(favor + ref)}: чем выше Благосклонность,
+     * тем больше мобов, а полка не даёт миру опустеть при нуле.
+     * <p>
+     * 0.65 = даже «пустой» игрок сохраняет две трети обычного спавна.
+     */
+    public double spawn_rate_dynamic_min_multiplier = 0.65;
 
     /** UUID игрока → ручной множитель-override (0…1); при его наличии заменяет глобальную ручную настройку. */
     public Map<String, Double> spawn_rate_player_overrides = new HashMap<>();
@@ -315,6 +367,17 @@ public class GameMasterConfig {
         auto_mob_damage_min = clamp(auto_mob_damage_min, 0.05, 100);
         auto_mob_damage_max = clamp(auto_mob_damage_max, auto_mob_damage_min, 100);
         auto_loot_max = clamp(auto_loot_max, 1, 100);
+        retention_daily_favor = clamp(retention_daily_favor, 0, 100000);
+        retention_streak_bonus_favor = clamp(retention_streak_bonus_favor, 0, 100000);
+        retention_streak_max_favor = clamp(retention_streak_max_favor, 0, 1000000);
+        retention_streak_max_days = (int) clamp(retention_streak_max_days, 1, 1000);
+        retention_streak_grace_days = (int) clamp(retention_streak_grace_days, 1, 365);
+        retention_milestone_every = (int) clamp(retention_milestone_every, 1, 50);
+        retention_milestone_favor = clamp(retention_milestone_favor, 0, 100000);
+        retention_pity_start_kills = (int) clamp(retention_pity_start_kills, 1, 1000000);
+        retention_pity_full_kills = (int) clamp(retention_pity_full_kills,
+            retention_pity_start_kills + 1, 10000000);
+        retention_no_exp_loss_level = (int) clamp(retention_no_exp_loss_level, 0, 50);
         auto_spawn_min = clamp(auto_spawn_min, 0.05, 100);
         auto_spawn_max = clamp(auto_spawn_max, auto_spawn_min, 100);
         if (config_version == null) {
@@ -393,6 +456,18 @@ public class GameMasterConfig {
                     case "auto_loot_max" -> this.auto_loot_max = el.getAsDouble();
                     case "auto_spawn_min" -> this.auto_spawn_min = el.getAsDouble();
                     case "auto_spawn_max" -> this.auto_spawn_max = el.getAsDouble();
+                    case "retention_enabled" -> this.retention_enabled = el.getAsBoolean();
+                    case "retention_daily_favor" -> this.retention_daily_favor = el.getAsDouble();
+                    case "retention_streak_bonus_favor" -> this.retention_streak_bonus_favor = el.getAsDouble();
+                    case "retention_streak_max_favor" -> this.retention_streak_max_favor = el.getAsDouble();
+                    case "retention_streak_max_days" -> this.retention_streak_max_days = el.getAsInt();
+                    case "retention_streak_grace_days" -> this.retention_streak_grace_days = el.getAsInt();
+                    case "retention_milestone_every" -> this.retention_milestone_every = el.getAsInt();
+                    case "retention_milestone_favor" -> this.retention_milestone_favor = el.getAsDouble();
+                    case "retention_pity" -> this.retention_pity = el.getAsBoolean();
+                    case "retention_pity_start_kills" -> this.retention_pity_start_kills = el.getAsInt();
+                    case "retention_pity_full_kills" -> this.retention_pity_full_kills = el.getAsInt();
+                    case "retention_no_exp_loss_level" -> this.retention_no_exp_loss_level = el.getAsInt();
                     case "auto_session_fatigue_minutes" -> this.auto_session_fatigue_minutes = el.getAsDouble();
                     case "auto_welcome_hours" -> this.auto_welcome_hours = el.getAsDouble();
                     case "auto_touch_mobs" -> this.auto_touch_mobs = el.getAsBoolean();

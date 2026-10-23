@@ -77,6 +77,26 @@ public class PlayerProgress {
     /** Средняя длительность сессии в секундах. */
     public double avg_session_seconds = 0;
 
+    // ------------------------------------------------------------------
+    // Удержание (см. Retention)
+    // ------------------------------------------------------------------
+
+    /** Длина текущей серии ежедневных входов. */
+    public int streak_days = 0;
+    /** Номер суток (epoch day) последнего засчитанного входа. */
+    public long last_session_day = 0;
+    /** Последние 30 активных суток — для D1/D7 и риска ухода. */
+    public List<Integer> active_days = new ArrayList<>();
+    /** Последний уровень, за который выдана веха. */
+    public int last_milestone_level = 0;
+    /** Сколько вех получено. */
+    public int milestones_claimed = 0;
+    /** Сколько вещей было сгенерировано с момента последнего униката (pity). */
+    public int kills_since_unique = 0;
+    /** Заряды гарантированной редкой/эпической вещи (тратятся на дропе). */
+    public int guaranteed_rare = 0;
+    public int guaranteed_epic = 0;
+
     /** Время последней активности (epoch seconds). */
     public long last_seen = 0;
 

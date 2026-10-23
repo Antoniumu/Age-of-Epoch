@@ -261,6 +261,16 @@
         <div class="hint" id="statAutoPaceHint">минут на уровень</div>
       </div>
       <div class="card stat">
+        <div class="label">Серия входов</div>
+        <div class="value" id="statStreak">—</div>
+        <div class="hint" id="statStreakHint">макс. подряд дней</div>
+      </div>
+      <div class="card stat">
+        <div class="label">Риск ухода</div>
+        <div class="value" id="statChurn">—</div>
+        <div class="hint" id="statChurnHint">0 — останется, 1 — уйдёт</div>
+      </div>
+      <div class="card stat">
         <div class="label">Игроков</div>
         <div class="value" id="statPlayers">—</div>
         <div class="hint" id="statPlayersHint">онлайн / в сезоне</div>
@@ -306,12 +316,14 @@
             <th class="num">Авто XP</th>
             <th class="num">Состояние</th>
             <th class="num">Темп уровня</th>
+            <th class="num">Серия</th>
+            <th class="num">Pity</th>
             <th class="num">Итог XP</th>
             <th class="num">Был(а)</th>
           </tr>
         </thead>
         <tbody id="playerRows">
-          <tr><td colspan="13" class="empty">данных пока нет</td></tr>
+          <tr><td colspan="15" class="empty">данных пока нет</td></tr>
         </tbody>
       </table>
     </div>
@@ -425,6 +437,14 @@
         + ", урон ×" + fmt(auto.mob_damage, 2) + ", лут ×" + fmt(auto.loot, 2)
         + ", спавн ×" + fmt(auto.spawn, 2)
       : "выключен";
+    const retention = summary.retention || {};
+    document.getElementById("statStreak").textContent = (retention.max_streak ?? 0) + " дн";
+    document.getElementById("statStreakHint").textContent =
+      "активных дней за 7: " + fmt(retention.avg_active_days_7, 1);
+    document.getElementById("statChurn").textContent = fmt(retention.avg_churn_risk, 2);
+    document.getElementById("statChurnHint").textContent =
+      "pity: " + (retention.avg_kills_since_unique ?? 0) + " убийств без униката в среднем";
+
     document.getElementById("statAutoMobs").textContent =
       "×" + fmt(auto.mob_health, 2) + " / ×" + fmt(auto.mob_damage, 2);
     document.getElementById("statAutoMobsHint").textContent =
@@ -468,10 +488,12 @@
           <td class="num">×${fmt(p.auto_exp_multiplier, 2)}</td>
           <td class="num muted" title="смертей/час: ${fmt(p.deaths_per_hour, 2)}; спавн ×${fmt(p.auto_spawn, 2)}">${escapeHtml(p.auto_state || "—")}</td>
           <td class="num muted">${fmt(p.minutes_at_level, 0)} / ${fmt(p.target_minutes, 0)} мин</td>
+          <td class="num muted" title="активных дней за 7: ${p.active_days_7 ?? 0}">${p.streak_days ?? 0} дн</td>
+          <td class="num muted" title="убийств без униката; гарант. редких: ${p.guaranteed_rare ?? 0}, эпик: ${p.guaranteed_epic ?? 0}">${p.kills_since_unique ?? 0}</td>
           <td class="num"><span class="badge ${multiplierClass(p.multiplier)}">×${fmt(p.multiplier, 2)}</span></td>
           <td class="num muted">${p.online ? "в сети" : ago(p.last_seen_minutes)}</td>
         </tr>`).join("")
-      : `<tr><td colspan="13" class="empty">данных пока нет</td></tr>`;
+      : `<tr><td colspan="15" class="empty">данных пока нет</td></tr>`;
 
     if (!document.activeElement || !document.activeElement.matches("input, select")) {
       document.getElementById("inpTarget").value = cfg.target_hours ?? "";
