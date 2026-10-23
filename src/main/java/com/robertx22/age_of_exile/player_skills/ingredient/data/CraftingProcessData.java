@@ -4,6 +4,7 @@ import com.robertx22.age_of_exile.database.data.StatModifier;
 import com.robertx22.age_of_exile.database.data.gear_slots.GearSlot;
 import com.robertx22.age_of_exile.database.data.gear_types.bases.BaseGearType;
 import com.robertx22.age_of_exile.database.data.ingredient.SlashIngredient;
+import com.robertx22.age_of_exile.database.data.player_skills.PlayerSkill;
 import com.robertx22.age_of_exile.database.data.rarities.GearRarity;
 import com.robertx22.age_of_exile.database.data.stats.Stat;
 import com.robertx22.age_of_exile.database.data.stats.types.crafting.*;
@@ -46,6 +47,8 @@ public class CraftingProcessData {
     public List<IngredientData> getAllIngredients() {
         return ingredients.stream()
             .filter(x -> x.ing != null)
+            // the ingredient can be missing if the datapack was changed after the item was crafted
+            .filter(x -> x.ing.getIngredient() != null)
             .map(x -> x.ing)
             .collect(Collectors.toList());
     }
@@ -57,6 +60,11 @@ public class CraftingProcessData {
         total += plus;
 
         PlayerSkillEnum skill = getProfession();
+
+        if (player == null || skill == null) {
+            return Mth.clamp(total, 0, 100);
+        }
+
         int skillLvl = Load.playerRPGData(player).professions.getProfessionLevel(skill);
 
         int itemLvl = LevelUtils.tierToLevel(getAverageTier());
@@ -77,10 +85,16 @@ public class CraftingProcessData {
 
     public int getAverageTier() {
 
-        return getAllIngredients().stream()
+        List<IngredientData> all = getAllIngredients();
+
+        if (all.isEmpty()) {
+            return 0; // an empty craft process may exist if the datapack was reloaded
+        }
+
+        return all.stream()
             .mapToInt(x -> x.tier)
             .sum()
-            / getAllIngredients().size();
+            / all.size();
     }
 
     public float getStatMulti() {
@@ -121,6 +135,15 @@ public class CraftingProcessData {
             .withStyle(ChatFormatting.DARK_AQUA);
         tip.add(name);
 
+        if (skill != null) {
+            tip.add(Component.literal("Профессия: ").withStyle(ChatFormatting.GRAY)
+                .append(skill.word.locName()
+                    .withStyle(skill.format)));
+        }
+
+        tip.add(Component.literal("Заготовка: результат определится, когда предмет окажется в вашем инвентаре.")
+            .withStyle(ChatFormatting.GRAY));
+
         tip.add(Component.literal(""));
 
         getAllIngredients().forEach(x -> {
@@ -131,7 +154,7 @@ public class CraftingProcessData {
             });
         });
 
-        if (skill.isGearCraftingProf()) {
+        if (skill != null && skill.isGearCraftingProf()) {
 
             GearRarity min = getMinRarity();
             GearRarity max = getMaxRarity();
@@ -144,10 +167,21 @@ public class CraftingProcessData {
 
         }
 
+        Player clientPlayer = ClientOnly.getPlayer();
+
         tip.add(Component.literal(""));
-        tip.add(Component.literal("Шанс успеха: " + getSuccessChance(ClientOnly.getPlayer()) + "%").withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
+        if (clientPlayer != null) {
+            tip.add(Component.literal("Шанс успеха: " + getSuccessChance(clientPlayer) + "%").withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
+        }
         tip.add(Component.literal(""));
         tip.add(Component.literal("Множитель характеристик: " + (int) (getStatMulti() * 100) + "%").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD));
+
+        tip.add(Component.literal(""));
+        if (skill != null && skill.isGearCraftingProf()) {
+            tip.add(Component.literal("При провале базовая вещь сохранится.").withStyle(ChatFormatting.YELLOW));
+        } else {
+            tip.add(Component.literal("При провале часть материалов потеряется.").withStyle(ChatFormatting.YELLOW));
+        }
 
         if (MMORPG.RUN_DEV_TOOLS) {
             ingredients.forEach(x -> {
@@ -166,6 +200,10 @@ public class CraftingProcessData {
         PlayerSkillEnum skill = getProfession();
 
         List<ExactStatData> stats = new ArrayList<>();
+
+        if (skill == null) {
+            return stats;
+        }
 
         for (CraftSlotData data : ingredients) {
             if (data.ing == null) {
@@ -210,9 +248,18 @@ public class CraftingProcessData {
     }
 
     public PlayerSkillEnum getProfession() {
-        return ExileDB.PlayerSkills()
-            .get(prof).type_enum;
+        if (prof == null || prof.isEmpty()) {
+            return null;
+        }
+        PlayerSkill skill = ExileDB.PlayerSkills()
+            .get(prof);
 
+        // the profession may be gone if the datapack was reloaded without it.
+        // the registry returns an empty placeholder (type NONE) for unknown ids.
+        if (skill == null || skill.type_enum == null || skill.type_enum == PlayerSkillEnum.NONE) {
+            return null;
+        }
+        return skill.type_enum;
     }
 
     GearRarity getMinRarity() {

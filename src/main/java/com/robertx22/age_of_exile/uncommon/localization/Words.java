@@ -26,6 +26,9 @@ public enum Words implements IAutoLocName {
     WrongRecipeIngredient("That ingredient isn't usable in this profession."),
     CantUseMoreOf("Can't use more than 1 ingredient of that type."),
     NoIngredients("No Ingredients."),
+    CraftFailed("Crafting failed. Some materials were lost."),
+    CraftFailedGearKept("Crafting failed, but the base item survived."),
+    CraftLevelTooLow("Profession level is too low: requires %s, you have %s."),
 
     ArmorCraftingDesc("Combine an Armorer's Cloth with a piece of armor and some materials to enchant that item with stats. "),
     JewelCraftingDesc("Combine a Jeweler's Tool with a ring or necklace and some materials to enchant that item with stats."),

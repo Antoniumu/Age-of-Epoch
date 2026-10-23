@@ -17,17 +17,44 @@ public class PlayerSkillData {
 
     public static final int MAX_LEVEL = 999;
 
-    public boolean addExp(Player player, int addExp) {
+    /**
+     * A profession can be this many levels above the combat level, after that no exp is gained.
+     */
+    public static final int MAX_LEVELS_ABOVE_COMBAT_LEVEL = 5;
 
-        if (lvl >= MAX_LEVEL) {
+    /**
+     * Single place that decides if profession exp can be gained. Used both by addExp and by
+     * tooltips, so the tooltip can never promise something the server does not do.
+     */
+    public static boolean canGainExp(Player player, int professionLevel) {
+
+        if (professionLevel >= MAX_LEVEL) {
             return false;
         }
-        if (GameBalanceConfig.get().MAX_LEVEL > lvl) {
-            if (lvl >= Load.Unit(player)
-                .getLevel() + 5) {
-                return false; // don't allow leveling of skills if player level is not higher
-                // edit: 10 lvl diff is fine (maybe)
-            }
+
+        if (player == null) {
+            return true;
+        }
+
+        if (GameBalanceConfig.get().MAX_LEVEL > professionLevel) {
+            return professionLevel < Load.Unit(player)
+                .getLevel() + MAX_LEVELS_ABOVE_COMBAT_LEVEL;
+        }
+
+        return true;
+    }
+
+    /**
+     * Combat level required to keep gaining exp with a profession at that level.
+     */
+    public static int getCombatLevelNeededFor(int professionLevel) {
+        return Math.max(1, professionLevel - MAX_LEVELS_ABOVE_COMBAT_LEVEL + 1);
+    }
+
+    public boolean addExp(Player player, int addExp) {
+
+        if (!canGainExp(player, lvl)) {
+            return false;
         }
 
         this.exp += addExp;
