@@ -172,10 +172,23 @@ public class GameMaster {
                 try (BufferedReader reader = Files.newBufferedReader(configPath(), StandardCharsets.UTF_8)) {
                     GameMasterConfig parsed = GameMasterConfig.GSON.fromJson(reader, GameMasterConfig.class);
                     if (parsed != null) {
+                        // Файл без версии = старый. Тогда Благосклонность стартовала со 100,
+                        // а база спавна была 100. Сейчас старт 500 — при старой базе спавн
+                        // падал бы до x0.167. Поднимаем базу до стартового favor.
+                        if (parsed.config_version == null) {
+                            if (parsed.spawn_rate_favor_reference <= 100.0) {
+                                parsed.spawn_rate_favor_reference = 500.0;
+                            }
+                            parsed.config_version = GameMasterConfig.CONFIG_VERSION;
+                            System.out.println("[GameMaster] Конфиг обновлён до версии "
+                                + GameMasterConfig.CONFIG_VERSION + ": база спавна по Благосклонности = "
+                                + fmt(parsed.spawn_rate_favor_reference));
+                        }
                         copyConfig(parsed);
                     }
                 }
             } else {
+                config.sanitize();
                 saveConfig();
             }
         } catch (Exception e) {
@@ -229,6 +242,9 @@ public class GameMaster {
         config.auto_mob_damage_min = parsed.auto_mob_damage_min;
         config.auto_mob_damage_max = parsed.auto_mob_damage_max;
         config.auto_loot_max = parsed.auto_loot_max;
+        config.auto_spawn_min = parsed.auto_spawn_min;
+        config.auto_spawn_max = parsed.auto_spawn_max;
+        config.config_version = parsed.config_version;
         config.auto_session_fatigue_minutes = parsed.auto_session_fatigue_minutes;
         config.auto_welcome_hours = parsed.auto_welcome_hours;
         config.auto_touch_mobs = parsed.auto_touch_mobs;
@@ -721,6 +737,16 @@ public class GameMaster {
             progress.auto_mob_health = directive.mob_health;
             progress.auto_mob_damage = directive.mob_damage;
             progress.auto_loot = directive.loot;
+
+            // спавн меняем так же плавно, как и серверных мобов, чтобы state-переходы
+            // не давали «мигание» популяции мобов
+            double playerMinutes = progress.auto_updated_epoch > 0
+                ? Math.min(60, Math.max(0.1, (now - progress.auto_updated_epoch) / 60.0))
+                : 60;
+            progress.auto_spawn = AutoBalance.rateLimit(progress.auto_spawn, directive.spawn,
+                config.auto_global_step_per_minute, playerMinutes);
+            progress.auto_spawn = AutoBalance.clamp(progress.auto_spawn, config.auto_spawn_min,
+                config.auto_spawn_max);
             progress.auto_flow = directive.flow;
             progress.auto_state = directive.state;
             progress.auto_updated_epoch = now;
@@ -913,7 +939,26 @@ public class GameMaster {
         if (!loaded || !config.enabled || !config.spawn_rate_enabled) {
             return 1;
         }
-        return ExpTuner.clamp(spawnRateManualMultiplier(uuid) * spawnRateDynamicMultiplier(favor), 0, 1);
+        double rate = spawnRateManualMultiplier(uuid) * spawnRateDynamicMultiplier(favor);
+
+        // Автобаланс может вернуть часть урезанного спавна (или слегка прижать его),
+        // но итог всё равно остаётся вероятностью 0…1.
+        if (config.auto_balance) {
+            rate *= autoSpawnMultiplier(uuid);
+        }
+        return ExpTuner.clamp(rate, 0, 1);
+    }
+
+    /** Множитель спавна от автобаланса для игрока (1 — без изменений). */
+    public double autoSpawnMultiplier(String uuid) {
+        if (uuid == null || !config.auto_balance) {
+            return 1.0;
+        }
+        PlayerProgress progress = data.get(uuid);
+        if (progress == null || progress.auto_spawn <= 0) {
+            return 1.0;
+        }
+        return AutoBalance.clamp(progress.auto_spawn, config.auto_spawn_min, config.auto_spawn_max);
     }
 
     public double spawnRateManualMultiplier(String uuid) {
@@ -1089,6 +1134,16 @@ public class GameMaster {
         auto.addProperty("mob_health", round2(mobHealthMultiplier()));
         auto.addProperty("mob_damage", round2(mobDamageMultiplier()));
         auto.addProperty("loot", round2(lootMultiplier()));
+        double spawnSum = 0;
+        int spawnCount = 0;
+        for (ServerPlayer player : onlinePlayers()) {
+            PlayerProgress progress = data.get(player.getUUID().toString());
+            if (progress != null) {
+                spawnSum += autoSpawnMultiplier(progress.uuid);
+                spawnCount++;
+            }
+        }
+        auto.addProperty("spawn", spawnCount > 0 ? round2(spawnSum / spawnCount) : 1.0);
         auto.addProperty("touch_mobs", config.auto_touch_mobs);
         auto.addProperty("touch_loot", config.auto_touch_loot);
         summary.add("auto", auto);
@@ -1137,6 +1192,7 @@ public class GameMaster {
         json.addProperty("auto_mob_health", round2(progress.auto_mob_health));
         json.addProperty("auto_mob_damage", round2(progress.auto_mob_damage));
         json.addProperty("auto_loot", round2(progress.auto_loot));
+        json.addProperty("auto_spawn", round2(autoSpawnMultiplier(progress.uuid)));
         json.addProperty("target_minutes", round2(AutoBalance.targetMinutes(progress.level, maxLevelCache, config)));
         json.addProperty("observed_minutes", round2(progress.ema_minutes_per_level));
         json.addProperty("minutes_at_level", round2(progress.minutesAtLevel()));

@@ -423,6 +423,7 @@
     document.getElementById("autoInfo").textContent = auto.enabled
       ? "цель ~" + fmt(auto.target_hours, 0) + " ч; сейчас мобы HP ×" + fmt(auto.mob_health, 2)
         + ", урон ×" + fmt(auto.mob_damage, 2) + ", лут ×" + fmt(auto.loot, 2)
+        + ", спавн ×" + fmt(auto.spawn, 2)
       : "выключен";
     document.getElementById("statAutoMobs").textContent =
       "×" + fmt(auto.mob_health, 2) + " / ×" + fmt(auto.mob_damage, 2);
@@ -465,7 +466,7 @@
           <td class="num">×${fmt(p.catch_up_multiplier, 2)}</td>
           <td class="num"><span class="badge ${multiplierClass(p.spawn_rate_multiplier)}">×${fmt(p.spawn_rate_multiplier, 2)}</span></td>
           <td class="num">×${fmt(p.auto_exp_multiplier, 2)}</td>
-          <td class="num muted" title="смертей/час: ${fmt(p.deaths_per_hour, 2)}">${escapeHtml(p.auto_state || "—")}</td>
+          <td class="num muted" title="смертей/час: ${fmt(p.deaths_per_hour, 2)}; спавн ×${fmt(p.auto_spawn, 2)}">${escapeHtml(p.auto_state || "—")}</td>
           <td class="num muted">${fmt(p.minutes_at_level, 0)} / ${fmt(p.target_minutes, 0)} мин</td>
           <td class="num"><span class="badge ${multiplierClass(p.multiplier)}">×${fmt(p.multiplier, 2)}</span></td>
           <td class="num muted">${p.online ? "в сети" : ago(p.last_seen_minutes)}</td>

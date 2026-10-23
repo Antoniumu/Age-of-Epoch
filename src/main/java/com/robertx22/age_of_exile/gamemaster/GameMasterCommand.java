@@ -320,6 +320,9 @@ public class GameMasterCommand {
             + GameMaster.fmt(config.auto_deaths_brake) + "/ч");
         send(source, "Сейчас мобы: HP x" + GameMaster.fmt(gm.mobHealthMultiplier()) + ", урон x"
             + GameMaster.fmt(gm.mobDamageMultiplier()) + ", лут x" + GameMaster.fmt(gm.lootMultiplier()));
+        send(source, "Спавн от автобаланса: x" + GameMaster.fmt(config.auto_spawn_min) + "…x"
+            + GameMaster.fmt(config.auto_spawn_max)
+            + " (итог всегда 0…1; поднимает только урезанный Благосклонностью спавн)");
         return 1;
     }
 

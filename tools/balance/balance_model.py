@@ -501,6 +501,74 @@ def table_autobalance():
         print(f"| ×{ratio:.2f} | ×{mult:.2f} | {note} |")
     print()
 
+# --------------------------------------------------------------------------
+# спавнрейт (GameMaster.spawnRateMultiplier)
+# --------------------------------------------------------------------------
+
+# ServerContainer.STARTING_FAVOR и FavorData.onAnyMobKilledSpendFavor
+SPAWN_FAVOR_START = 500.0
+SPAWN_FAVOR_PER_KILL = 0.1
+SPAWN_REFERENCE = 500.0        # spawn_rate_favor_reference (было 100)
+SPAWN_REFERENCE_OLD = 100.0
+SPAWN_MIN = 0.05
+SPAWN_MANUAL = 1.0             # spawn_rate_manual_multiplier
+SPAWN_AUTO_RESCUE = 1.35       # автобаланс в состоянии rescue
+TOTAL_KILLS = 8302
+
+
+def spawn_rate(favor, reference=SPAWN_REFERENCE, manual=SPAWN_MANUAL):
+    """Спавн — вероятность на попытку: manual × ref/(ref + favor), 0.05…1."""
+    return max(SPAWN_MIN, min(1.0, manual * reference / (reference + max(0.0, favor))))
+
+
+def favor_after_kills(kills, start=SPAWN_FAVOR_START, per_kill=SPAWN_FAVOR_PER_KILL):
+    return max(0.0, start - per_kill * kills)
+
+
+def average_spawn_rate(reference, kills=TOTAL_KILLS, chest_favor=0.0):
+    """
+    Средний rate за путь 1→50. Консервативно: сундуки (которые возвращают favor)
+    не учитываем — с ними средний rate только выше.
+    """
+    total = 0.0
+    for k in range(kills):
+        favor = favor_after_kills(k) + chest_favor
+        total += spawn_rate(favor, reference)
+    return total / max(1, kills)
+
+
+def table_spawn():
+    print("### Спавнрейт: Благосклонность → вероятность спавна\n")
+    print("Формула: `rate = manual × ref / (ref + favor)`, итог клампится в 0…1 "
+          "(0.05 — минимум динамики).")
+    print("Спавн применяется к естественному появлению враждебных мобов, ванильным спавнерам "
+          "и волнам спавнеров комнат.\n")
+    print("| Благосклонность | rate при ref=500 (сейчас) | rate при ref=100 (было) |")
+    print("|---:|---:|---:|")
+    for favor in (0, 100, 250, 500, 1000, 2000, 5000):
+        print(f"| {favor} | ×{spawn_rate(favor, SPAWN_REFERENCE):.2f} | "
+              f"×{spawn_rate(favor, SPAWN_REFERENCE_OLD):.2f} |")
+    print()
+    print("Как меняется rate за путь 1→50 (favor падает на 0.1 за убийство, сундуки не считаем):\n")
+    print("| Убийств | Благосклонность | rate (ref=500) | Средний rate до этого места | "
+          "Часов до 50, если бы весь путь шёл так |")
+    print("|---:|---:|---:|---:|---:|")
+    base_hours = 29.3
+    for kills in (0, 500, 1000, 2500, 5000, TOTAL_KILLS):
+        favor = favor_after_kills(kills)
+        avg = average_spawn_rate(SPAWN_REFERENCE, kills) if kills else spawn_rate(SPAWN_FAVOR_START, SPAWN_REFERENCE)
+        hours = base_hours / avg if avg > 0 else float("inf")
+        print(f"| {kills} | {favor:.0f} | ×{spawn_rate(favor, SPAWN_REFERENCE):.2f} | ×{avg:.2f} | {hours:.1f} |")
+    print()
+    avg_new = average_spawn_rate(SPAWN_REFERENCE)
+    avg_old = average_spawn_rate(SPAWN_REFERENCE_OLD)
+    print(f"Средний rate за весь путь: **×{avg_new:.2f}** (ref=500) против **×{avg_old:.2f}** (ref=100).")
+    print(f"Если убийства ограничены спавном (а не DPS), темп растягивается соответственно: "
+          f"**{base_hours/avg_new:.1f} ч** вместо {base_hours:.1f} ч, а при старой базе — "
+          f"**{base_hours/avg_old:.1f} ч**.")
+    print("Автобаланс в состоянии `rescue` поднимает rate до ×1.35 (но не выше 1.0), "
+          "в `brake` — опускает до ×0.75.\n")
+
 if __name__ == "__main__":
     print("# Age of Epoch — расчёт баланса\n")
     print("Формулы: `N(lvl) = 1 + 0.2 × (lvl − 1)`, на 50 уровне N = 10.8.\n")
@@ -514,4 +582,5 @@ if __name__ == "__main__":
     table_armor_curve()
     table_endgame()
     table_pacing()
+    table_spawn()
     table_autobalance()

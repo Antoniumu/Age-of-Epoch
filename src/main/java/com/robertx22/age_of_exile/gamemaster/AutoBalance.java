@@ -199,11 +199,22 @@ public final class AutoBalance {
             d.state = "welcome";
         }
 
+        // --- 6. Спавн -------------------------------------------------------
+        // Итоговый rate всегда ограничен 0…1 (это вероятность на попытку спавна),
+        // поэтому автобаланс реально «возвращает» спавн только там, где он урезан
+        // Благосклонностью или ручным множителем.
+        switch (d.state) {
+            case "rescue" -> d.spawn = 1.35;
+            case "brake" -> d.spawn = 0.75;
+            case "welcome" -> d.spawn = 1.15;
+            default -> d.spawn = 1.0;
+        }
+        d.spawn = clamp(d.spawn, config.auto_spawn_min, config.auto_spawn_max);
+
         d.exp = clamp(exp, config.auto_exp_min, config.auto_exp_max);
         d.mob_health = clamp(d.mob_health, config.auto_mob_health_min, config.auto_mob_health_max);
         d.mob_damage = clamp(d.mob_damage, config.auto_mob_damage_min, config.auto_mob_damage_max);
         d.loot = clamp(d.loot, 1.0, config.auto_loot_max);
-        d.spawn = clamp(d.spawn, 0.5, 1.5);
 
         // Плавность: за один пересчёт множитель не должен прыгать.
         double minutes = progress.auto_updated_epoch > 0

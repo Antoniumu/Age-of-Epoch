@@ -27,8 +27,8 @@ import java.util.UUID;
  *     <li>{@code spawn_rate_enabled}/{@code spawn_rate_dynamic} — ручной и динамический
  *     множители частоты появления враждебных мобов.</li>
  *     <li>{@code auto_balance} — «режиссёр»: вместо фиксированных {@code target_hours} держит
- *     коридор «минут на уровень» и подстраивает опыт, HP/урон мобов и лут. При включении
- *     заменяет {@code pacing} (иначе два регулятора гасят друг друга).</li>
+ *     коридор «минут на уровень» и подстраивает опыт, HP/урон мобов, лут и частоту спавна.
+ *     При включении заменяет {@code pacing} (иначе два регулятора гасят друг друга).</li>
  * </ul>
  * Если включены оба режима опыта, их множители перемножаются, а догоняющий режим работает
  * и тогда, когда общий темп ещё не растянут до целевых часов. Spawn-rate на опыт не влияет.
@@ -37,6 +37,15 @@ public class GameMasterConfig {
 
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting()
         .create();
+
+    /** Текущая версия файла конфига. Нужна, чтобы мягко мигрировать старые файлы. */
+    public static final int CONFIG_VERSION = 2;
+
+    /**
+     * null — файл был создан до появления версии (старый). После первой загрузки
+     * выставляется в {@link #CONFIG_VERSION} и сохраняется.
+     */
+    public Integer config_version = null;
 
     /** Мастер-выключатель всей системы. */
     public boolean enabled = true;
@@ -157,6 +166,14 @@ public class GameMasterConfig {
     /** Верхняя граница множителя лута от автобаланса (нижняя всегда 1.0). */
     public double auto_loot_max = 1.35;
 
+    /**
+     * Границы множителя частоты спавна от автобаланса.
+     * Спавн — вероятность на попытку, итог всегда клампится в 0…1, поэтому «поднять»
+     * он может только там, где спавн уже урезан (Благосклонность, ручной множитель).
+     */
+    public double auto_spawn_min = 0.6;
+    public double auto_spawn_max = 1.5;
+
     /** Через сколько минут непрерывной игры включается «усталость сессии». */
     public double auto_session_fatigue_minutes = 150;
 
@@ -185,8 +202,14 @@ public class GameMasterConfig {
     /** Ручной глобальный множитель вероятности спавна (1 = без ручного штрафа). */
     public double spawn_rate_manual_multiplier = 1.0;
 
-    /** Благосклонность, при которой динамический множитель равен 0.5. */
-    public double spawn_rate_favor_reference = 100.0;
+    /**
+     * Благосклонность, при которой динамический множитель равен 0.5.
+     * <p>
+     * Должна совпадать со стартовой Благосклонностью ({@code starting_favor}, сейчас 500):
+     * иначе старт с 500 favor и базой 100 даёт спавн ×0.167 — втрое меньше прежнего ×0.5,
+     * и игрок оказывается в почти пустом мире, а темп прокачки растягивается в разы.
+     */
+    public double spawn_rate_favor_reference = 500.0;
 
     /** Минимальный динамический множитель, чтобы спавн не исчезал полностью. */
     public double spawn_rate_dynamic_min_multiplier = 0.05;
@@ -292,6 +315,11 @@ public class GameMasterConfig {
         auto_mob_damage_min = clamp(auto_mob_damage_min, 0.05, 100);
         auto_mob_damage_max = clamp(auto_mob_damage_max, auto_mob_damage_min, 100);
         auto_loot_max = clamp(auto_loot_max, 1, 100);
+        auto_spawn_min = clamp(auto_spawn_min, 0.05, 100);
+        auto_spawn_max = clamp(auto_spawn_max, auto_spawn_min, 100);
+        if (config_version == null) {
+            config_version = CONFIG_VERSION;
+        }
         auto_session_fatigue_minutes = clamp(auto_session_fatigue_minutes, 1, 100000);
         auto_welcome_hours = clamp(auto_welcome_hours, 0, 100000);
         auto_global_step_per_minute = clamp(auto_global_step_per_minute, 0.001, 100);
@@ -363,6 +391,8 @@ public class GameMasterConfig {
                     case "auto_mob_damage_min" -> this.auto_mob_damage_min = el.getAsDouble();
                     case "auto_mob_damage_max" -> this.auto_mob_damage_max = el.getAsDouble();
                     case "auto_loot_max" -> this.auto_loot_max = el.getAsDouble();
+                    case "auto_spawn_min" -> this.auto_spawn_min = el.getAsDouble();
+                    case "auto_spawn_max" -> this.auto_spawn_max = el.getAsDouble();
                     case "auto_session_fatigue_minutes" -> this.auto_session_fatigue_minutes = el.getAsDouble();
                     case "auto_welcome_hours" -> this.auto_welcome_hours = el.getAsDouble();
                     case "auto_touch_mobs" -> this.auto_touch_mobs = el.getAsBoolean();

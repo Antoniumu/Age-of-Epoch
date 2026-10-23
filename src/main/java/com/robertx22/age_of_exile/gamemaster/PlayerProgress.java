@@ -56,6 +56,8 @@ public class PlayerProgress {
     public double auto_mob_health = 1;
     public double auto_mob_damage = 1;
     public double auto_loot = 1;
+    /** Множитель частоты спавна от автобаланса (итог всегда клампится в 0…1). */
+    public double auto_spawn = 1;
     /** 0…1: насколько игрок близок к целевому темпу. */
     public double auto_flow = 0.5;
     /** Состояние автобаланса: stable / rescue / brake / push / welcome. */
