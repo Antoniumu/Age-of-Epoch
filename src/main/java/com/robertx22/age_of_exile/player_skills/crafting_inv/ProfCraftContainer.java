@@ -26,6 +26,9 @@ public class ProfCraftContainer extends BaseTileContainer {
 
     PlayerSkillEnum skill;
 
+    String lastSentReasonKey = null;
+    java.util.List<String> lastSentReasonArgs = java.util.Collections.emptyList();
+
     public ProfCraftContainer(int syncid, Inventory playerinv, FriendlyByteBuf buf) {
         this(
             resolveHandStack(playerinv.player, buf),
@@ -107,11 +110,7 @@ public class ProfCraftContainer extends BaseTileContainer {
 
             ProfCraftResult result = ProfCraftingRecipe.canCraft(player, craftInv, resultInv, skill);
 
-            if (result.reason != null) {
-                Packets.sendToClient(player, new FailReasonPacket(result.reason.locName()));
-            } else {
-                Packets.sendToClient(player, new FailReasonPacket(com.robertx22.age_of_exile.uncommon.localization.Words.EmptyString.locName()));
-            }
+            sendFailReason(result);
 
             if (result.canCraft) {
                 ItemStack resultstack = ProfCraftingRecipe.craftResult(craftInv, resultInv, skill);
@@ -122,6 +121,26 @@ public class ProfCraftContainer extends BaseTileContainer {
         }
         super.slotsChanged(inv);
 
+    }
+
+    /**
+     * slotsChanged is called for every slot interaction, sending the same message over and over
+     * spams the client with packets. Only send it when the message actually changed.
+     */
+    private void sendFailReason(ProfCraftResult result) {
+        String key = result == null || result.reasonKey == null ? "" : result.reasonKey;
+        java.util.List<String> args = result == null || result.reasonArgs == null
+            ? java.util.Collections.emptyList()
+            : result.reasonArgs;
+
+        if (key.equals(lastSentReasonKey) && args.equals(lastSentReasonArgs)) {
+            return;
+        }
+
+        lastSentReasonKey = key;
+        lastSentReasonArgs = new java.util.ArrayList<>(args);
+
+        Packets.sendToClient(player, new FailReasonPacket(key, lastSentReasonArgs));
     }
 
     @Override
@@ -213,14 +232,26 @@ public class ProfCraftContainer extends BaseTileContainer {
 
         @Override
         public boolean mayPlace(ItemStack stack) {
+            if (skill == null || stack.isEmpty()) {
+                return false;
+            }
             if (skill.isGearCraftingProf()) {
                 if (skill.gearMatchesProfession(stack.getItem())) {
                     return true;
                 }
             }
-            return StackSaving.INGREDIENTS.has(stack) && StackSaving.INGREDIENTS.loadFrom(stack)
-                .getIngredient()
-                .isAllowedInProfession(skill.id);
+            if (!StackSaving.INGREDIENTS.has(stack)) {
+                return false;
+            }
+            com.robertx22.age_of_exile.player_skills.ingredient.data.IngredientData data =
+                StackSaving.INGREDIENTS.loadFrom(stack);
+
+            if (data == null) {
+                return false;
+            }
+            com.robertx22.age_of_exile.database.data.ingredient.SlashIngredient ing = data.getIngredient();
+
+            return ing != null && ing.isAllowedInProfession(skill.id);
         }
     }
 }

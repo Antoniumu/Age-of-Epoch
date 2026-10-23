@@ -7,31 +7,53 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class FailReasonPacket extends MyPacket<FailReasonPacket> {
 
-    Component text;
+    String key = "";
+    List<String> args = Collections.emptyList();
 
     public FailReasonPacket() {
 
     }
 
-    public FailReasonPacket(Component text) {
-        this.text = text;
+    public FailReasonPacket(String key, List<String> args) {
+        this.key = key == null ? "" : key;
+        this.args = args == null ? Collections.emptyList() : new ArrayList<>(args);
     }
 
     @Override
     public void loadFromData(FriendlyByteBuf buf) {
-        text = Component.literal(buf.readUtf(32767));
+        key = buf.readUtf(500);
+        int size = buf.readInt();
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            list.add(buf.readUtf(500));
+        }
+        args = list;
     }
 
     @Override
     public void saveToData(FriendlyByteBuf buf) {
-        buf.writeUtf(text != null ? text.getString() : "");
+        buf.writeUtf(key == null ? "" : key, 500);
+        List<String> list = args == null ? Collections.emptyList() : args;
+        buf.writeInt(list.size());
+        list.forEach(x -> buf.writeUtf(x == null ? "" : x, 500));
     }
 
     @Override
     public void onReceived(ExilePacketContext ctx) {
-        ProfCraftScreen.FAIL_REASON = this.text;
+        // translate on the client, the server only knows the key
+        if (key == null || key.isEmpty()) {
+            ProfCraftScreen.FAIL_REASON = null;
+        } else if (args == null || args.isEmpty()) {
+            ProfCraftScreen.FAIL_REASON = Component.translatable(key);
+        } else {
+            ProfCraftScreen.FAIL_REASON = Component.translatable(key, args.toArray());
+        }
     }
 
     @Override

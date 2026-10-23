@@ -7,6 +7,7 @@ import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.player_skills.items.foods.SkillItemTier;
 import com.robertx22.age_of_exile.saveclasses.gearitem.gear_bases.ITooltipList;
 import com.robertx22.age_of_exile.saveclasses.gearitem.gear_bases.TooltipInfo;
+import com.robertx22.age_of_exile.saveclasses.player_skills.PlayerSkillData;
 import com.robertx22.age_of_exile.saveclasses.player_skills.PlayerSkillEnum;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.localization.Words;
@@ -194,17 +195,14 @@ public class PlayerSkill implements JsonExileRegistry<PlayerSkill>, IAutoGson<Pl
             nextStats.forEach(x -> list.addAll(x.GetTooltipString(info)));
         }
 
-        if (lvl >= GameBalanceConfig.get().MAX_LEVEL) {
-
-        } else {
-            if (lvl >= Load.Unit(info.player)
-                .getLevel()) {
-                if (lvl < GameBalanceConfig.get().MAX_LEVEL) {
-                    list.add(Component.literal(""));
-                    list.add(Component.literal("Уровень навыка ограничен боевым уровнем.").withStyle(ChatFormatting.RED));
-                    list.add(Component.literal("Повысьте боевой уровень для дальнейшего развития.").withStyle(ChatFormatting.RED));
-                }
-            }
+        // The old check compared against the combat level directly, while the server
+        // actually stops exp at combatLevel + PlayerSkillData.MAX_LEVELS_ABOVE_COMBAT_LEVEL.
+        if (lvl < GameBalanceConfig.get().MAX_LEVEL && !PlayerSkillData.canGainExp(info.player, lvl)) {
+            int needed = PlayerSkillData.getCombatLevelNeededFor(lvl);
+            list.add(Component.literal(""));
+            list.add(Component.literal("Опыт профессии не начисляется: уровень профессии не может быть выше боевого более чем на "
+                + PlayerSkillData.MAX_LEVELS_ABOVE_COMBAT_LEVEL + ".").withStyle(ChatFormatting.RED));
+            list.add(Component.literal("Требуется боевой уровень " + needed + ".").withStyle(ChatFormatting.RED));
         }
 
         TooltipUtils.removeDoubleBlankLines(list);
