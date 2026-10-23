@@ -63,7 +63,7 @@ public class RuneWordStationTile extends BaseModificationStation {
 
         if (StackSaving.GEARS.has(stack)) {
             if (player != null && !player.level().isClientSide()) {
-                player.displayClientMessage(com.robertx22.age_of_exile.uncommon.localization.Words.GearHasData.locName(), false);
+                player.sendSystemMessage(com.robertx22.age_of_exile.uncommon.localization.Words.GearHasData.locName());
             }
             return false;
         }
