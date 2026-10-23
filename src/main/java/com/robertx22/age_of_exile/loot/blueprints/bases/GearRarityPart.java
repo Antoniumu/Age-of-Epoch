@@ -59,6 +59,7 @@ public class GearRarityPart extends BlueprintPart<GearRarity, GearBlueprint> {
     protected GearRarity generateIfNull() {
 
         if (this.specialRar != null) {
+            trackRarity(specialRar);
             return specialRar;
         }
 
@@ -72,7 +73,24 @@ public class GearRarityPart extends BlueprintPart<GearRarity, GearBlueprint> {
             }
         }
 
-        return applyRetention(rar);
+        GearRarity result = applyRetention(rar);
+        trackRarity(result);
+        return result;
+    }
+
+    /** Телеметрия: какая редкость реально выпала (см. Telemetry). */
+    private void trackRarity(GearRarity rarity) {
+        try {
+            if (rarity == null || lootInfo == null) {
+                return;
+            }
+            if (lootInfo.player instanceof ServerPlayer player) {
+                GameMaster.get()
+                    .telemetry()
+                    .gear(player, rarity.GUID(), "", lootInfo.level);
+            }
+        } catch (Exception ignored) {
+        }
     }
 
     /**

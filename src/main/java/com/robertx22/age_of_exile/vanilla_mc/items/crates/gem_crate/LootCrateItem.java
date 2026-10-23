@@ -96,6 +96,19 @@ public class LootCrateItem extends Item implements IGUID {
                 SoundUtils.ding(player.level(), player.blockPosition());
                 PlayerUtils.giveItem(reward, player);
 
+                // Телеметрия: какие сундуки открывают и что из них падает.
+                try {
+                    if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+                        String rewardId = reward.isEmpty() ? "" : net.minecraft.core.registries.BuiltInRegistries.ITEM
+                            .getKey(reward.getItem())
+                            .toString();
+                        com.robertx22.age_of_exile.gamemaster.GameMaster.get()
+                            .telemetry()
+                            .crate(serverPlayer, data.type.name(), rewardId);
+                    }
+                } catch (Exception ignored) {
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

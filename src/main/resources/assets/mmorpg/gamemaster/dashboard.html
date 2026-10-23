@@ -132,6 +132,21 @@
     background: linear-gradient(180deg, var(--violet), #4c1d95);
   }
   .heat-label { font-size: 9px; color: var(--muted); }
+  .toplist { display: flex; flex-direction: column; gap: 7px; margin-top: 10px; }
+  .toprow { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; font-size: 12.5px; }
+  .toprow .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .toprow .val { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .topbar { grid-column: 1 / -1; height: 4px; border-radius: 999px; background: #0c1118; overflow: hidden; }
+  .topbar i { display: block; height: 100%; background: linear-gradient(90deg, #2563eb, var(--blue)); }
+  .feed { max-height: 340px; overflow: auto; display: flex; flex-direction: column; gap: 4px; margin-top: 10px; }
+  .feed-row {
+    display: grid; grid-template-columns: 46px 92px 1fr auto; gap: 8px; align-items: center;
+    font-size: 12px; padding: 4px 6px; border-radius: 7px; background: rgba(255,255,255,.02);
+  }
+  .feed-row .t { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .feed-row .k { color: var(--blue); }
+  .feed-row .who2 { color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .feed-row .sub2 { color: var(--muted); font-size: 11.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   @media (max-width: 620px) { main, header { padding-left: 14px; padding-right: 14px; } }
 </style>
 </head>
@@ -194,9 +209,25 @@
       <div class="card toggle">
         <div>
           <h3>Динамика по Благосклонности</h3>
-          <p>При Благосклонности 100 динамический множитель равен ×0.5; при 0 — ×1.0.</p>
+          <p>Больше Благосклонности — больше спавна: ×0.65 при нуле, ×0.82 при 500, ×0.97 при 5000.</p>
         </div>
         <div class="switch" id="swSpawnDynamic" data-key="spawn_rate_dynamic" title="Динамика spawn-rate"></div>
+      </div>
+
+      <div class="card toggle">
+        <div>
+          <h3>Телеметрия</h3>
+          <p>События, биомы, мобы, смерти, профили игроков и отчёты по сезону.</p>
+        </div>
+        <div class="switch" id="swTelemetry" data-key="telemetry_enabled" title="Телеметрия"></div>
+      </div>
+
+      <div class="card toggle">
+        <div>
+          <h3>Журнал событий (JSONL)</h3>
+          <p>Построчная запись на диск для анализа между сезонами. Агрегаты работают и без неё.</p>
+        </div>
+        <div class="switch" id="swTelemetryEvents" data-key="telemetry_events" title="Журнал событий"></div>
       </div>
     </div>
   </section>
@@ -308,6 +339,11 @@
         <div class="value" id="statPrime">—</div>
         <div class="hint" id="statPrimeHint">когда обычно играют</div>
       </div>
+      <div class="card stat">
+        <div class="label">Телеметрия</div>
+        <div class="value" id="statTel">—</div>
+        <div class="hint" id="statTelHint">событий за сезон</div>
+      </div>
     </div>
   </section>
 
@@ -330,6 +366,28 @@
     <div class="card" style="margin-top:16px">
       <h3>Первые события сервера</h3>
       <div class="sub" id="firstsText">—</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Телеметрия</h2>
+    <div class="grid cols-2">
+      <div class="card">
+        <h3>Живая лента</h3>
+        <div class="sub" id="feedInfo">—</div>
+        <div class="feed" id="feedRows"></div>
+      </div>
+      <div class="card">
+        <h3>Куда уходит время и на что</h3>
+        <div class="sub">Биомы, измерения, мобы, смерти, редкости — за текущий сезон</div>
+        <div class="toplist" id="topBiomes"></div>
+        <div class="toplist" id="topDimensions"></div>
+        <div class="toplist" id="topMobs"></div>
+        <div class="toplist" id="topDeaths"></div>
+        <div class="toplist" id="topGear"></div>
+        <div class="toplist" id="topSpells"></div>
+        <div class="toplist" id="topChests"></div>
+      </div>
     </div>
   </section>
 
@@ -371,6 +429,7 @@
             <th class="num">Авто XP</th>
             <th class="num">Состояние</th>
             <th class="num">Темп уровня</th>
+            <th class="num">Профиль</th>
             <th class="num">Цель</th>
             <th class="num">Серия</th>
             <th class="num">Pity</th>
@@ -379,7 +438,7 @@
           </tr>
         </thead>
         <tbody id="playerRows">
-          <tr><td colspan="16" class="empty">данных пока нет</td></tr>
+          <tr><td colspan="17" class="empty">данных пока нет</td></tr>
         </tbody>
       </table>
     </div>
@@ -459,6 +518,70 @@
     return "flat";
   }
 
+  function prettyKey(key) {
+    if (!key) return "—";
+    return String(key)
+      .replace(/^minecraft:/, "")
+      .replace(/^age_of_exile:/, "")
+      .replace(/_/g, " ");
+  }
+
+  function fmtDuration(seconds) {
+    const value = Number(seconds) || 0;
+    if (value < 60) return Math.round(value) + " с";
+    if (value < 3600) return Math.round(value / 60) + " мин";
+    return fmt(value / 3600, 1) + " ч";
+  }
+
+  function renderTop(containerId, title, items, asTime) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    if (!items.length) {
+      container.innerHTML = "";
+      return;
+    }
+    const max = Math.max(...items.map((item) => Number(item.value) || 0), 1);
+    const rows = items.slice(0, 5).map((item) => {
+      const value = Number(item.value) || 0;
+      const width = Math.max(2, Math.round((value / max) * 100));
+      const text = asTime ? fmtDuration(value) : fmtInt(Math.round(value));
+      return `<div class="toprow"><span class="name">${escapeHtml(prettyKey(item.key))}</span>`
+        + `<span class="val">${text}</span>`
+        + `<div class="topbar"><i style="width:${width}%"></i></div></div>`;
+    }).join("");
+    container.innerHTML = `<div class="sub" style="margin-top:6px">${escapeHtml(title)}</div>`
+      + `<div class="toplist">${rows}</div>`;
+  }
+
+  function renderFeed(entries) {
+    const container = document.getElementById("feedRows");
+    if (!container) return;
+    const labels = {
+      login: "вход", logout: "выход", level: "уровень", death: "смерть", kill: "убийство",
+      kill_env: "убийство", loot: "дроп", gear: "предмет", spell: "заклинание",
+      crate: "сундук", retain: "награда", season_start: "сезон"
+    };
+    if (!entries.length) {
+      container.innerHTML = `<div class="empty">событий пока нет</div>`;
+      return;
+    }
+    container.innerHTML = entries.slice().reverse().map((entry) => {
+      const date = new Date((entry.t || 0) * 1000);
+      const time = String(date.getHours()).padStart(2, "0") + ":" + String(date.getMinutes()).padStart(2, "0");
+      const label = labels[entry.type] || entry.type;
+      const subject = prettyKey(entry.subject || "");
+      const detail = [subject, entry.extra ? escapeHtml(entry.extra) : "",
+        entry.biome ? prettyKey(entry.biome) : ""].filter(Boolean).join(" · ");
+      const who = entry.player ? escapeHtml(entry.player) : "сервер";
+      const value = Number(entry.value) || 0;
+      const suffix = entry.type === "loot" ? ` ×${value}` : (entry.type === "retain" ? ` ×${fmt(value, 0)}` : "");
+      return `<div class="feed-row"><span class="t">${time}</span>`
+        + `<span class="k">${escapeHtml(label)}</span>`
+        + `<span class="who2">${who}<span class="sub2"> ${detail}${suffix}</span></span>`
+        + `<span class="val muted">${entry.level ? "ур. " + entry.level : ""}</span></div>`;
+    }).join("");
+  }
+
   function render() {
     if (!state) return;
     const cfg = state.config || {};
@@ -471,6 +594,8 @@
     setSwitch(document.getElementById("swSpawnRate"), cfg.spawn_rate_enabled, busy);
     setSwitch(document.getElementById("swSpawnDynamic"), cfg.spawn_rate_dynamic, busy);
     setSwitch(document.getElementById("swAuto"), cfg.auto_balance && cfg.enabled, busy);
+    setSwitch(document.getElementById("swTelemetry"), cfg.telemetry_enabled, busy);
+    setSwitch(document.getElementById("swTelemetryEvents"), cfg.telemetry_events, busy);
 
     document.getElementById("catchupInfo").textContent =
       "+" + fmt((cfg.catch_up_per_level || 0) * 100, 0) + "% за уровень отставания, максимум +" +
@@ -563,6 +688,24 @@
           + `${escapeHtml(firstLabels[key] || key)} — ${escapeHtml(firsts[key])}</span>`).join("")
       : "пока никого — стань первым";
 
+    const tel = summary.telemetry || {};
+    document.getElementById("statTel").textContent = fmtInt(tel.events ?? 0);
+    document.getElementById("statTelHint").textContent =
+      "сезон «" + (tel.season || "—") + "» · " + fmt(tel.days, 1) + " дн · ср. сессия "
+      + fmt(tel.avg_session_minutes, 0) + " мин";
+
+    document.getElementById("feedInfo").textContent = (tel.enabled ? "сбор включён" : "сбор выключен")
+      + " · журнал: " + (tel.journal ? escapeHtml(tel.journal) : "в памяти")
+      + " · обновление каждые 5 с";
+    renderFeed(tel.feed || []);
+    renderTop("topBiomes", "Биомы", tel.biomes || [], true);
+    renderTop("topDimensions", "Измерения", tel.dimensions || [], true);
+    renderTop("topMobs", "Убитые мобы", tel.mobs || [], false);
+    renderTop("topDeaths", "Причины смерти", tel.death_causes || [], false);
+    renderTop("topGear", "Редкости предметов", tel.gear || [], false);
+    renderTop("topSpells", "Способности", tel.spells || [], false);
+    renderTop("topChests", "Сундуки", tel.chests || [], false);
+
     document.getElementById("statPlayers").textContent = (summary.online ?? 0) + " / " + (summary.tracked ?? 0);
     document.getElementById("statPlayersHint").textContent = "онлайн / в сезоне";
     document.getElementById("statPredictedHint").textContent =
@@ -593,13 +736,14 @@
           <td class="num">×${fmt(p.auto_exp_multiplier, 2)}</td>
           <td class="num muted" title="смертей/час: ${fmt(p.deaths_per_hour, 2)}; спавн ×${fmt(p.auto_spawn, 2)}">${escapeHtml(p.auto_state || "—")}</td>
           <td class="num muted">${fmt(p.minutes_at_level, 0)} / ${fmt(p.target_minutes, 0)} мин</td>
+          <td class="num muted" title="${escapeHtml((p.preferences && p.preferences.top_biome) || "нет данных")}; любимый час: ${escapeHtml((p.preferences && p.preferences.top_hour) || "—")}">${escapeHtml((p.preferences && p.preferences.style) || "—")}</td>
           <td class="num muted" title="цель сессии: убийства; бонус за возвращение ×${fmt(p.return_bonus, 2)}">${p.session_goal_progress ?? 0}/${p.session_goal_target ?? 0}</td>
           <td class="num muted" title="активных дней за 7: ${p.active_days_7 ?? 0}">${p.streak_days ?? 0} дн</td>
           <td class="num muted" title="убийств без униката; гарант. редких: ${p.guaranteed_rare ?? 0}, эпик: ${p.guaranteed_epic ?? 0}">${p.kills_since_unique ?? 0}</td>
           <td class="num"><span class="badge ${multiplierClass(p.multiplier)}">×${fmt(p.multiplier, 2)}</span></td>
           <td class="num muted">${p.online ? "в сети" : ago(p.last_seen_minutes)}</td>
         </tr>`).join("")
-      : `<tr><td colspan="16" class="empty">данных пока нет</td></tr>`;
+      : `<tr><td colspan="17" class="empty">данных пока нет</td></tr>`;
 
     if (!document.activeElement || !document.activeElement.matches("input, select")) {
       document.getElementById("inpTarget").value = cfg.target_hours ?? "";

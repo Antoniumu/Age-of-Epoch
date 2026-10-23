@@ -313,6 +313,19 @@ public class LootInfo {
 
         amount = LootUtils.WhileRoll(chance);
 
+        // Телеметрия: сколько дропа реально выпало с моба (и в каком биоме).
+        try {
+            if (lootOrigin == LootOrigin.MOB && player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+                String mobId = mobKilled == null ? "" : net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE
+                    .getKey(mobKilled.getType())
+                    .toString();
+                String rarity = mobData == null ? "" : mobData.getRarity();
+                com.robertx22.age_of_exile.gamemaster.GameMaster.get()
+                    .telemetry()
+                    .loot(serverPlayer, lootOrigin.name(), mobId, rarity, amount, tier);
+            }
+        } catch (Exception ignored) {
+        }
     }
 
 }

@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.robertx22.age_of_exile.vanilla_mc.commands.CommandRefs;
 import net.minecraft.ChatFormatting;
@@ -13,7 +14,10 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
@@ -120,6 +124,17 @@ public class GameMasterCommand {
                     .then(argument("kills", IntegerArgumentType.integer(0, 100000000))
                         .executes(ctx -> setSocialGoal(ctx.getSource(),
                             IntegerArgumentType.getInteger(ctx, "kills"))))))
+            .then(literal("telemetry")
+                .executes(ctx -> telemetryStatus(ctx.getSource()))
+                .then(literal("on").executes(ctx -> setTelemetry(ctx.getSource(), true)))
+                .then(literal("off").executes(ctx -> setTelemetry(ctx.getSource(), false)))
+                .then(literal("report").executes(ctx -> telemetryReport(ctx.getSource()))))
+            .then(literal("season")
+                .executes(ctx -> seasonInfo(ctx.getSource()))
+                .then(literal("new")
+                    .executes(ctx -> newSeason(ctx.getSource(), ""))
+                    .then(argument("name", StringArgumentType.word())
+                        .executes(ctx -> newSeason(ctx.getSource(), StringArgumentType.getString(ctx, "name"))))))
             .then(literal("export").executes(ctx -> exportCsv(ctx.getSource())))
             .then(literal("reload").executes(ctx -> {
                 GameMaster.get()
@@ -458,6 +473,112 @@ public class GameMasterCommand {
             for (var entry : gm.data().firsts.entrySet()) {
                 send(source, "  ★ " + entry.getKey() + " — " + entry.getValue());
             }
+        }
+        return 1;
+    }
+
+    private static int setTelemetry(CommandSourceStack source, boolean value) {
+        GameMasterConfig config = GameMaster.get()
+            .config();
+        config.telemetry_enabled = value;
+        GameMaster.get()
+            .onConfigEdited();
+        send(source, "Телеметрия: " + onOff(value));
+        return 1;
+    }
+
+    private static int telemetryStatus(CommandSourceStack source) {
+        GameMaster gm = GameMaster.get();
+        GameMasterConfig config = gm.config();
+        Telemetry telemetry = gm.telemetry();
+        Telemetry.State state = telemetry.state();
+        send(source, "Телеметрия: " + onOff(config.telemetry_enabled)
+            + "; сезон «" + state.season + "», дней: "
+            + GameMaster.fmt(state.started > 0 ? (GameMaster.now() - state.started) / 86400.0 : 0)
+            + ", событий: " + state.events + ", игроков: " + state.players.size());
+        send(source, "Журнал: " + (config.telemetry_events
+            ? (telemetry.journalPath().isEmpty() ? "будет создан при первом событии" : telemetry.journalPath())
+            : "выключен (telemetry_events)"));
+        printTop(source, state.counters, "biome_time|", "Биомы (часы)", 5, true);
+        printTop(source, state.counters, "kill_mob|", "Убитые мобы", 5, false);
+        printTop(source, state.counters, "subject_death|", "Причины смерти", 5, false);
+        printTop(source, state.counters, "subject_spell|", "Способности", 5, false);
+        send(source, "Отчёт: /gm telemetry report · новый сезон: /gm season new <название>");
+        return 1;
+    }
+
+    private static void printTop(CommandSourceStack source, Map<String, Double> counters,
+                                 String prefix, String title, int limit, boolean hours) {
+        if (counters == null) {
+            return;
+        }
+        List<Map.Entry<String, Double>> list = new ArrayList<>();
+        for (Map.Entry<String, Double> entry : counters.entrySet()) {
+            if (entry.getKey()
+                .startsWith(prefix)) {
+                list.add(Map.entry(entry.getKey()
+                    .substring(prefix.length()), entry.getValue()));
+            }
+        }
+        if (list.isEmpty()) {
+            return;
+        }
+        list.sort(Map.Entry.<String, Double>comparingByValue()
+            .reversed());
+        StringBuilder sb = new StringBuilder(title).append(": ");
+        for (int i = 0; i < Math.min(limit, list.size()); i++) {
+            if (i > 0) {
+                sb.append(", ");
+            }
+            double value = list.get(i)
+                .getValue();
+            sb.append(list.get(i)
+                    .getKey()).append(" ")
+                .append(GameMaster.fmt(hours ? value / 3600.0 : value));
+            if (hours) {
+                sb.append(" ч");
+            }
+        }
+        send(source, sb.toString());
+    }
+
+    private static int telemetryReport(CommandSourceStack source) {
+        try {
+            java.nio.file.Path path = GameMaster.get()
+                .telemetry()
+                .writeSeasonReport(GameMaster.now());
+            send(source, "Отчёт по сезону: " + path);
+        } catch (Exception e) {
+            send(source, "Не удалось записать отчёт: " + e);
+        }
+        return 1;
+    }
+
+    private static int seasonInfo(CommandSourceStack source) {
+        GameMaster gm = GameMaster.get();
+        Telemetry.State state = gm.telemetry()
+            .state();
+        send(source, "Сезон «" + state.season + "» начат " + (state.started > 0 ? "давно" : "ещё нет")
+            + ", дней: " + GameMaster.fmt(state.started > 0 ? (GameMaster.now() - state.started) / 86400.0 : 0));
+        send(source, "Событий: " + state.events + ", игроков с данными: " + state.players.size()
+            + ", счётчиков: " + state.counters.size());
+        send(source, "/gm season new <название> — архив старых данных, отчёт и обнуление счётчиков");
+        return 1;
+    }
+
+    private static int newSeason(CommandSourceStack source, String name) {
+        try {
+            GameMaster gm = GameMaster.get();
+            java.nio.file.Path report = gm.telemetry()
+                .startSeason(name, GameMaster.now());
+            gm.save();
+            send(source, "Новый сезон: «" + gm.telemetry()
+                .state().season + "». Счётчики обнулены.");
+            if (report != null) {
+                send(source, "Отчёт прошлого сезона: " + report);
+            }
+        } catch (Exception e) {
+            send(source, "Не удалось начать сезон: " + e);
         }
         return 1;
     }

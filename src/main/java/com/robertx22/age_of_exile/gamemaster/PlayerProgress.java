@@ -109,6 +109,12 @@ public class PlayerProgress {
     /** До какого момента (epoch seconds) действует усиленный опыт после перерыва. */
     public long return_until = 0;
 
+    /** Пройденное расстояние в блоках (для профиля «исследователь / фарм на месте»). */
+    public double distance_travelled = 0;
+
+    /** Когда последний раз сэмплировали биом/измерение (телеметрия). */
+    public transient long telemetry_sample_epoch = 0;
+
     /** Время последней активности (epoch seconds). */
     public long last_seen = 0;
 

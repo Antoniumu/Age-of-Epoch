@@ -58,6 +58,9 @@ public class GameMaster {
     private final GameMasterConfig config = new GameMasterConfig();
     private final GameMasterData data = new GameMasterData();
 
+    /** Телеметрия: журнал событий, агрегаты, отчёты по сезону. */
+    private final Telemetry telemetry = new Telemetry(this);
+
     private boolean loaded = false;
     private boolean dirty = false;
 
@@ -146,6 +149,10 @@ public class GameMaster {
     }
 
     public void stop() {
+        try {
+            telemetry.close();
+        } catch (Exception ignored) {
+        }
         stopWeb();
         save();
         for (PlayerProgress progress : data.players.values()) {
@@ -161,6 +168,15 @@ public class GameMaster {
 
     public GameMasterConfig config() {
         return config;
+    }
+
+    public Telemetry telemetry() {
+        return telemetry;
+    }
+
+    /** Пометить данные как изменённые (используется телеметрией). */
+    public void markDirty() {
+        dirty = true;
     }
 
     public GameMasterData data() {
@@ -286,6 +302,13 @@ public class GameMaster {
         config.social_goal_kills = parsed.social_goal_kills;
         config.social_goal_favor = parsed.social_goal_favor;
         config.social_goal_rare = parsed.social_goal_rare;
+        config.telemetry_enabled = parsed.telemetry_enabled;
+        config.telemetry_events = parsed.telemetry_events;
+        config.telemetry_sample_seconds = parsed.telemetry_sample_seconds;
+        config.telemetry_max_file_mb = parsed.telemetry_max_file_mb;
+        config.telemetry_retention_days = parsed.telemetry_retention_days;
+        config.telemetry_season = parsed.telemetry_season;
+        config.telemetry_panel_top = parsed.telemetry_panel_top;
         config.config_version = parsed.config_version;
         config.auto_session_fatigue_minutes = parsed.auto_session_fatigue_minutes;
         config.auto_welcome_hours = parsed.auto_welcome_hours;
@@ -470,6 +493,8 @@ public class GameMaster {
         }
         coopCache = Math.max(1, activePlayers);
 
+        telemetry.flush();
+
         if (now - lastStatsTick >= 5) {
             recomputeStats(now);
         }
@@ -529,6 +554,9 @@ public class GameMaster {
             maybeSnapshot(progress, now);
         }
 
+        // Телеметрия: раз в N секунд фиксируем биом, измерение и время суток.
+        telemetry.sample(player, progress, afk, seconds, now);
+
         progress.multiplier = computeMultiplier(progress);
         dirty = true;
     }
@@ -550,6 +578,14 @@ public class GameMaster {
             if (dx * dx + dy * dy + dz * dz > 0.0025) {
                 progress.last_moved_epoch = now;
                 moved = true;
+                double step = Math.sqrt(dx * dx + dy * dy + dz * dz);
+                // телепорты и переходы между измерениями не считаем «исследованием»
+                if (step < 64) {
+                    progress.distance_travelled += step;
+                    telemetry.addFor(player.getUUID()
+                        .toString(), "distance", step);
+                    telemetry.add("distance", step);
+                }
             }
         }
         progress.last_x = x;
@@ -613,6 +649,8 @@ public class GameMaster {
             progress.level_baseline_seconds = 0;
             progress.level = level;
 
+            telemetry.levelUp(player, level);
+
             // «Первые» события сервера: первый 10-й уровень, 20-й и т.д.
             // На маленьком сервере это личная слава — и повод зайти остальным.
             for (int milestoneLevel : new int[]{10, 20, 30, 40, 50}) {
@@ -628,6 +666,7 @@ public class GameMaster {
                 grantFavor(player, progress, milestone.favor);
                 player.sendSystemMessage(Component.literal(milestone.text)
                     .withStyle(ChatFormatting.GOLD));
+                telemetry.retained(player, "milestone", "level=" + level, milestone.favor);
             }
 
             progress.addHistory(progress.multiplier, now);
@@ -712,6 +751,7 @@ public class GameMaster {
             grantFavor(player, progress, goalReward);
             player.sendSystemMessage(Component.literal("GameMaster: цель сессии выполнена! +"
                 + goalReward + " Благосклонности").withStyle(ChatFormatting.GREEN));
+            telemetry.retained(player, "session_goal", "", goalReward);
         }
         dirty = true;
     }
@@ -864,6 +904,7 @@ public class GameMaster {
                             + Math.round(config.social_goal_favor) + " Благосклонности"
                             + (config.social_goal_rare > 0 ? " и гарантированная редкая вещь" : ""))
                         .withStyle(ChatFormatting.GOLD));
+                    telemetry.retained(player, "weekly_goal", "", config.social_goal_favor);
                 } else if (!reached) {
                     player.sendSystemMessage(Component.literal("GameMaster: цель недели — "
                             + Social.goalText(data.week_kills, config.social_goal_kills))
@@ -1024,6 +1065,7 @@ public class GameMaster {
                 }
                 player.sendSystemMessage(Component.literal("GameMaster: " + daily.text)
                     .withStyle(ChatFormatting.AQUA));
+                telemetry.retained(player, "streak", "day=" + progress.streak_days, daily.favor);
             }
 
             // Короткая цель на сессию: одна конкретная задача вместо «играй как хочешь».
@@ -1040,6 +1082,8 @@ public class GameMaster {
         }
 
         announceSocialState(player, progress, now);
+
+        telemetry.login(player);
 
         progress.multiplier = computeMultiplier(progress);
         if (progress.history.isEmpty()) {
@@ -1069,6 +1113,7 @@ public class GameMaster {
         if (progress == null) {
             return;
         }
+        telemetry.logout(player, progress.session_seconds);
         progress.online = false;
         progress.last_seen = now();
         checkLevel(player, progress);
@@ -1682,6 +1727,8 @@ public class GameMaster {
         social.add("firsts", firsts);
         summary.add("social", social);
 
+        summary.add("telemetry", telemetry.panelJson(config.telemetry_panel_top));
+
         root.add("summary", summary);
 
         List<PlayerProgress> sorted = new ArrayList<>(data.players.values());
@@ -1695,6 +1742,28 @@ public class GameMaster {
         }
         root.add("players", players);
 
+        return GSON.toJson(root);
+    }
+
+    /** JSON для внешних инструментов: живые топы, лента и профили игроков. */
+    public String buildTelemetryJson() {
+        JsonObject root = new JsonObject();
+        root.addProperty("server_time", now());
+        root.add("telemetry", telemetry.panelJson(Math.max(20, config.telemetry_panel_top)));
+        JsonArray players = new JsonArray();
+        for (PlayerProgress progress : data.players.values()) {
+            if (progress == null) {
+                continue;
+            }
+            JsonObject item = new JsonObject();
+            item.addProperty("uuid", progress.uuid);
+            item.addProperty("name", progress.name);
+            item.addProperty("level", progress.level);
+            item.addProperty("online", progress.online);
+            item.add("preferences", telemetry.preferencesJson(progress.uuid));
+            players.add(item);
+        }
+        root.add("players", players);
         return GSON.toJson(root);
     }
 
@@ -1755,6 +1824,11 @@ public class GameMaster {
         json.addProperty("session_goal_target", progress.session_goal_target);
         json.addProperty("session_goal_done", progress.session_goal_done);
         json.addProperty("return_bonus", round2(Retention.returnExpBonus(progress, now(), config)));
+        json.addProperty("distance", round2(progress.distance_travelled));
+        JsonObject preferences = telemetry.preferencesJson(progress.uuid);
+        if (preferences.size() > 0) {
+            json.add("preferences", preferences);
+        }
 
         // для графика хватает ~300 точек, не гоняем весь массив в браузер
         JsonArray history = new JsonArray();
@@ -1790,7 +1864,8 @@ public class GameMaster {
             .append("active_days_7,day_of_play,churn_risk,deaths,deaths_per_hour,")
             .append("minutes_per_level,target_minutes,exp_multiplier,auto_state,")
             .append("kills_since_unique,milestones,guaranteed_rare,guaranteed_epic,last_seen_days,")
-            .append("goal_progress,goal_target,return_bonus,coop_multiplier\n");
+            .append("goal_progress,goal_target,return_bonus,coop_multiplier,")
+            .append("distance,top_biome,style\n");
         for (PlayerProgress p : data.players.values()) {
             if (p == null) {
                 continue;
@@ -1819,13 +1894,42 @@ public class GameMaster {
                 .append(p.session_goal_progress).append(',')
                 .append(p.session_goal_target).append(',')
                 .append(round2(Retention.returnExpBonus(p, now, config))).append(',')
-                .append(round2(config.social_enabled ? Social.coopExp(coopCache, config) : 1))
+                .append(round2(config.social_enabled ? Social.coopExp(coopCache, config) : 1)).append(',')
+                .append(round2(p.distance_travelled)).append(',')
+                .append(csv(telemetryTop(p.uuid, "biome_time|"))).append(',')
+                .append(csv(telemetryStyle(p.uuid)))
                 .append('\n');
         }
         Files.createDirectories(baseDir());
         Files.write(path, sb.toString()
             .getBytes(StandardCharsets.UTF_8));
         return path;
+    }
+
+    /** Верхний ключ профиля игрока (для CSV/отчётов). */
+    private String telemetryTop(String uuid, String prefix) {
+        try {
+            JsonObject preferences = telemetry.preferencesJson(uuid);
+            String key = prefix.equals("biome_time|") ? "top_biome" : "";
+            if (!key.isEmpty() && preferences.has(key)) {
+                return preferences.get(key)
+                    .getAsString();
+            }
+        } catch (Exception ignored) {
+        }
+        return "";
+    }
+
+    private String telemetryStyle(String uuid) {
+        try {
+            JsonObject preferences = telemetry.preferencesJson(uuid);
+            if (preferences.has("style")) {
+                return preferences.get("style")
+                    .getAsString();
+            }
+        } catch (Exception ignored) {
+        }
+        return "";
     }
 
     private static String csv(String value) {

@@ -309,6 +309,31 @@ public class GameMasterConfig {
     public int social_goal_rare = 1;
 
     // ------------------------------------------------------------------
+    // 2e. Телеметрия (см. Telemetry)
+    // ------------------------------------------------------------------
+
+    /** Собирать телеметрию: агрегаты, журнал событий, отчёты по сезону. */
+    public boolean telemetry_enabled = true;
+
+    /** Писать построчный журнал событий (JSONL) на диск. */
+    public boolean telemetry_events = true;
+
+    /** Как часто (в секундах) сэмплировать биом/измерение/время суток игрока. */
+    public int telemetry_sample_seconds = 10;
+
+    /** Максимальный размер одного файла журнала, МБ (потом начинается новый). */
+    public int telemetry_max_file_mb = 16;
+
+    /** Сколько дней хранить журналы событий (0 — не удалять). */
+    public int telemetry_retention_days = 60;
+
+    /** Название текущего сезона (используется в отчётах и журнале). */
+    public String telemetry_season = "season-1";
+
+    /** Сколько строк в топах на панели. */
+    public int telemetry_panel_top = 8;
+
+    // ------------------------------------------------------------------
     // 3. Спавн мобов вокруг игроков
     // ------------------------------------------------------------------
 
@@ -471,6 +496,13 @@ public class GameMasterConfig {
         social_goal_kills = (int) clamp(social_goal_kills, 0, 100000000);
         social_goal_favor = clamp(social_goal_favor, 0, 100000);
         social_goal_rare = (int) clamp(social_goal_rare, 0, 100);
+        telemetry_sample_seconds = (int) clamp(telemetry_sample_seconds, 1, 3600);
+        telemetry_max_file_mb = (int) clamp(telemetry_max_file_mb, 1, 4096);
+        telemetry_retention_days = (int) clamp(telemetry_retention_days, 0, 3650);
+        telemetry_panel_top = (int) clamp(telemetry_panel_top, 3, 30);
+        if (telemetry_season == null || telemetry_season.isEmpty()) {
+            telemetry_season = "season-1";
+        }
         auto_spawn_min = clamp(auto_spawn_min, 0.05, 100);
         auto_spawn_max = clamp(auto_spawn_max, auto_spawn_min, 100);
         if (config_version == null) {
@@ -585,6 +617,13 @@ public class GameMasterConfig {
                     case "social_goal_kills" -> this.social_goal_kills = el.getAsInt();
                     case "social_goal_favor" -> this.social_goal_favor = el.getAsDouble();
                     case "social_goal_rare" -> this.social_goal_rare = el.getAsInt();
+                    case "telemetry_enabled" -> this.telemetry_enabled = el.getAsBoolean();
+                    case "telemetry_events" -> this.telemetry_events = el.getAsBoolean();
+                    case "telemetry_sample_seconds" -> this.telemetry_sample_seconds = el.getAsInt();
+                    case "telemetry_max_file_mb" -> this.telemetry_max_file_mb = el.getAsInt();
+                    case "telemetry_retention_days" -> this.telemetry_retention_days = el.getAsInt();
+                    case "telemetry_season" -> this.telemetry_season = el.getAsString();
+                    case "telemetry_panel_top" -> this.telemetry_panel_top = el.getAsInt();
                     case "auto_session_fatigue_minutes" -> this.auto_session_fatigue_minutes = el.getAsDouble();
                     case "auto_welcome_hours" -> this.auto_welcome_hours = el.getAsDouble();
                     case "auto_touch_mobs" -> this.auto_touch_mobs = el.getAsBoolean();

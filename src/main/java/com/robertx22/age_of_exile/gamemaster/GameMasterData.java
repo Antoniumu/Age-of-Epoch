@@ -46,6 +46,9 @@ public class GameMasterData {
     /** Кто уже получил награду за цель недели. */
     public List<String> week_claimed = new ArrayList<>();
 
+    /** Телеметрия: сезон, счётчики, профили (см. Telemetry). */
+    public Telemetry.State telemetry = new Telemetry.State();
+
     /** Добавляет человеко-секунды в корзину часа (0–23). */
     public void addActivity(int hour, long seconds) {
         if (hour < 0 || hour > 23) {
@@ -114,5 +117,6 @@ public class GameMasterData {
         week_kills = 0;
         week_goal_epoch = 0;
         week_claimed = new ArrayList<>();
+        telemetry = new Telemetry.State();
     }
 }

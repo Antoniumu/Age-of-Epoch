@@ -47,6 +47,18 @@ public class OnLootChestEvent extends EventConsumer<ExileEvents.OnChestLooted> {
 
         List<ItemStack> items = MasterLootGen.generateLoot(info);
 
+        // Телеметрия: сундуки мира и данжей — что и сколько из них достают.
+        try {
+            if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+                boolean mapWorld = WorldUtils.isMapWorldClass(player.level());
+                com.robertx22.age_of_exile.gamemaster.GameMaster.get()
+                    .telemetry()
+                    .event("chest", serverPlayer, mapWorld ? "dungeon" : "world", items.size(),
+                        "lvl=" + info.level + "|tier=" + info.tier);
+            }
+        } catch (Exception ignored) {
+        }
+
         List<Integer> list1 = mygetEmptySlotsRandomized(event.inventory, new Random());
 
         if (list1.isEmpty()) {
