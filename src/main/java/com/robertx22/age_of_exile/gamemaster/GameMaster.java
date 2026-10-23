@@ -3,6 +3,7 @@ package com.robertx22.age_of_exile.gamemaster;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.robertx22.age_of_exile.gamemaster.PlayerProgress.HistoryPoint;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
@@ -21,14 +22,16 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Ядро системы GameMaster.
  * <p>
  * Считает реальное время игры, хранит историю прогресса, вычисляет множители опыта
- * (догоняющий и «темповый»), сохраняет всё в JSON и обслуживает веб-панель.
+ * и spawn-rate мобов, сохраняет всё в JSON и обслуживает веб-панель.
  * <p>
  * Все методы, работающие с {@link PlayerProgress}/{@link GameMasterData}, вызываются
  * только из серверного потока. Веб-сервер маршалит свои запросы в основной поток.
@@ -44,7 +47,7 @@ public class GameMaster {
         return INSTANCE;
     }
 
-    /** true, если система загружена и может вмешиваться в опыт. */
+    /** true, если GameMaster загружен и может применять настройки опыта/спавна. */
     public static boolean isActive() {
         return INSTANCE != null && INSTANCE.loaded && INSTANCE.server != null;
     }
@@ -194,6 +197,13 @@ public class GameMaster {
         config.pacing_curve = parsed.pacing_curve;
         config.pacing_auto_calibrate = parsed.pacing_auto_calibrate;
         config.assumed_baseline_hours = parsed.assumed_baseline_hours;
+        config.spawn_rate_enabled = parsed.spawn_rate_enabled;
+        config.spawn_rate_dynamic = parsed.spawn_rate_dynamic;
+        config.spawn_rate_manual_multiplier = parsed.spawn_rate_manual_multiplier;
+        config.spawn_rate_favor_reference = parsed.spawn_rate_favor_reference;
+        config.spawn_rate_dynamic_min_multiplier = parsed.spawn_rate_dynamic_min_multiplier;
+        config.spawn_rate_player_overrides = parsed.spawn_rate_player_overrides == null
+            ? new HashMap<>() : new HashMap<>(parsed.spawn_rate_player_overrides);
         config.exp_multiplier_min = parsed.exp_multiplier_min;
         config.exp_multiplier_max = parsed.exp_multiplier_max;
         config.afk_exclusion = parsed.afk_exclusion;
@@ -357,6 +367,10 @@ public class GameMaster {
             } catch (Exception ignored) {
             }
             progress.level_baseline_seconds = 0;
+        }
+        try {
+            progress.favor = Load.playerRPGData(player).favor.getFavor();
+        } catch (Exception ignored) {
         }
         return progress;
     }
@@ -689,6 +703,78 @@ public class GameMaster {
         return computeMultiplier(progress);
     }
 
+    /** Полный множитель вероятности спавна для игрока с учётом общего и динамического режимов. */
+    public double spawnRateMultiplier(ServerPlayer player) {
+        if (player == null || !loaded || !config.enabled || !config.spawn_rate_enabled) {
+            return 1;
+        }
+        if (!config.spawn_rate_dynamic) {
+            return spawnRateMultiplier(player.getUUID().toString(), 0);
+        }
+        int favor = 100;
+        try {
+            favor = Load.playerRPGData(player).favor.getFavor();
+        } catch (Exception ignored) {
+            PlayerProgress progress = data.get(player.getUUID().toString());
+            if (progress != null) {
+                favor = progress.favor;
+            }
+        }
+        return spawnRateMultiplier(player.getUUID().toString(), favor);
+    }
+
+    /** Версия для веб-панели/команд, использующая последнее сохранённое значение Благосклонности. */
+    public double spawnRateMultiplier(String uuid, int favor) {
+        if (!loaded || !config.enabled || !config.spawn_rate_enabled) {
+            return 1;
+        }
+        return ExpTuner.clamp(spawnRateManualMultiplier(uuid) * spawnRateDynamicMultiplier(favor), 0, 1);
+    }
+
+    public double spawnRateManualMultiplier(String uuid) {
+        Double override = uuid == null ? null : config.spawn_rate_player_overrides.get(uuid);
+        return override == null ? config.spawn_rate_manual_multiplier : override;
+    }
+
+    public double spawnRateDynamicMultiplier(int favor) {
+        if (!config.spawn_rate_dynamic) {
+            return 1;
+        }
+        return ExpTuner.favorSpawnRate(favor, config.spawn_rate_favor_reference,
+            config.spawn_rate_dynamic_min_multiplier);
+    }
+
+    public Double spawnRatePlayerOverride(String uuid) {
+        return uuid == null ? null : config.spawn_rate_player_overrides.get(uuid);
+    }
+
+    public void setSpawnRatePlayerOverride(String uuid, double multiplier) {
+        if (uuid == null) {
+            return;
+        }
+        try {
+            uuid = UUID.fromString(uuid).toString();
+        } catch (IllegalArgumentException e) {
+            return;
+        }
+        double value = GameMasterConfig.clamp(multiplier, 0, 1);
+        Double previous = config.spawn_rate_player_overrides.put(uuid, value);
+        if (previous == null || Math.abs(previous - value) > 0.000001) {
+            onConfigEdited();
+        }
+    }
+
+    public boolean clearSpawnRatePlayerOverride(String uuid) {
+        if (uuid == null) {
+            return false;
+        }
+        boolean removed = config.spawn_rate_player_overrides.remove(uuid) != null;
+        if (removed) {
+            onConfigEdited();
+        }
+        return removed;
+    }
+
     private List<ServerPlayer> onlinePlayers() {
         if (server == null) {
             return new ArrayList<>();
@@ -740,9 +826,33 @@ public class GameMaster {
         webStartedToken = null;
     }
 
-    /** Применяет JSON из веб-панели: переключатели и параметры. */
+    /** Применяет JSON из веб-панели: настройки и ручной override конкретного игрока. */
     public List<String> applyConfigJson(JsonObject json) {
         List<String> changed = config.applyJson(json);
+        if (json != null && json.has("spawn_rate_player_uuid")) {
+            try {
+                JsonElement uuidElement = json.get("spawn_rate_player_uuid");
+                String uuid = UUID.fromString(uuidElement.getAsString()).toString();
+                boolean clear = json.has("spawn_rate_player_clear")
+                    && json.get("spawn_rate_player_clear").getAsBoolean();
+                if (clear) {
+                    if (config.spawn_rate_player_overrides.remove(uuid) != null) {
+                        changed.add("spawn_rate_player_overrides");
+                    }
+                } else if (json.has("spawn_rate_player_multiplier")) {
+                    double multiplier = json.get("spawn_rate_player_multiplier").getAsDouble();
+                    if (Double.isFinite(multiplier)) {
+                        multiplier = GameMasterConfig.clamp(multiplier, 0, 1);
+                        Double previous = config.spawn_rate_player_overrides.put(uuid, multiplier);
+                        if (previous == null || Math.abs(previous - multiplier) > 0.000001) {
+                            changed.add("spawn_rate_player_overrides");
+                        }
+                    }
+                }
+            } catch (Exception ignored) {
+                // некорректный UUID или значение — игнорируем только override
+            }
+        }
         if (!changed.isEmpty()) {
             onConfigEdited();
         }
@@ -780,6 +890,10 @@ public class GameMaster {
         summary.addProperty("peers", cachedPeers);
         summary.addProperty("tracked", data.players.size());
         summary.addProperty("online", onlinePlayers().size());
+        summary.addProperty("spawn_rate_enabled", config.enabled && config.spawn_rate_enabled);
+        summary.addProperty("spawn_rate_dynamic", config.spawn_rate_dynamic);
+        summary.addProperty("spawn_rate_manual_multiplier", round2(config.spawn_rate_manual_multiplier));
+        summary.addProperty("spawn_rate_favor_reference", round2(config.spawn_rate_favor_reference));
         root.add("summary", summary);
 
         List<PlayerProgress> sorted = new ArrayList<>(data.players.values());
@@ -808,6 +922,12 @@ public class GameMaster {
         json.addProperty("online", progress.online);
         json.addProperty("last_seen", progress.last_seen);
         json.addProperty("last_seen_minutes", progress.last_seen > 0 ? (now() - progress.last_seen) / 60 : -1);
+        json.addProperty("favor", progress.favor);
+        json.addProperty("spawn_rate_multiplier", round2(spawnRateMultiplier(progress.uuid, progress.favor)));
+        json.addProperty("spawn_rate_dynamic_multiplier", round2(spawnRateDynamicMultiplier(progress.favor)));
+        json.addProperty("spawn_rate_manual_multiplier", round2(spawnRateManualMultiplier(progress.uuid)));
+        Double spawnOverride = spawnRatePlayerOverride(progress.uuid);
+        json.addProperty("spawn_rate_override", spawnOverride == null ? -1 : round2(spawnOverride));
 
         MultiplierBreakdown breakdown = breakdown(progress);
         json.addProperty("multiplier", round2(breakdown.total));

@@ -61,6 +61,7 @@ public class GameMasterCommand {
                 .executes(ctx -> toggle(ctx.getSource(), "enabled"))
                 .then(argument("value", BoolArgumentType.bool())
                     .executes(ctx -> setBool(ctx.getSource(), "enabled", BoolArgumentType.getBool(ctx, "value")))))
+            .then(spawnRateCommand())
             .then(literal("hours")
                 .then(argument("hours", DoubleArgumentType.doubleArg(1, 100000))
                     .executes(ctx -> {
@@ -132,6 +133,110 @@ public class GameMasterCommand {
         dispatcher.register(literal(CommandRefs.ID).then(gm));
     }
 
+    private static LiteralArgumentBuilder<CommandSourceStack> spawnRateCommand() {
+        return literal("spawnrate")
+            .executes(ctx -> spawnRateStatus(ctx.getSource()))
+            .then(literal("status").executes(ctx -> spawnRateStatus(ctx.getSource())))
+            .then(literal("enabled")
+                .executes(ctx -> toggleSpawnRate(ctx.getSource(), null))
+                .then(argument("value", BoolArgumentType.bool())
+                    .executes(ctx -> toggleSpawnRate(ctx.getSource(), BoolArgumentType.getBool(ctx, "value")))))
+            .then(literal("dynamic")
+                .executes(ctx -> toggleSpawnRateDynamic(ctx.getSource(), null))
+                .then(argument("value", BoolArgumentType.bool())
+                    .executes(ctx -> toggleSpawnRateDynamic(ctx.getSource(), BoolArgumentType.getBool(ctx, "value")))))
+            .then(literal("manual")
+                .then(argument("multiplier", DoubleArgumentType.doubleArg(0, 1))
+                    .executes(ctx -> setManualSpawnRate(ctx.getSource(), DoubleArgumentType.getDouble(ctx, "multiplier")))))
+            .then(literal("player")
+                .then(argument("target", EntityArgument.player())
+                    .executes(ctx -> spawnRatePlayerInfo(ctx.getSource(), EntityArgument.getPlayer(ctx, "target")))
+                    .then(argument("multiplier", DoubleArgumentType.doubleArg(0, 1))
+                        .executes(ctx -> setPlayerSpawnRate(ctx.getSource(), EntityArgument.getPlayer(ctx, "target"),
+                            DoubleArgumentType.getDouble(ctx, "multiplier"))))
+                    .then(literal("reset")
+                        .executes(ctx -> clearPlayerSpawnRate(ctx.getSource(), EntityArgument.getPlayer(ctx, "target"))))));
+    }
+
+    private static int spawnRateStatus(CommandSourceStack source) {
+        GameMaster gm = GameMaster.get();
+        GameMasterConfig config = gm.config();
+        send(source, "Спавн мобов: " + onOff(config.enabled && config.spawn_rate_enabled)
+            + " (динамика: " + onOff(config.spawn_rate_dynamic) + ").");
+        send(source, "Ручной множитель: x" + GameMaster.fmt(config.spawn_rate_manual_multiplier)
+            + ", база Благосклонности: " + GameMaster.fmt(config.spawn_rate_favor_reference)
+            + ", динамический минимум: x" + GameMaster.fmt(config.spawn_rate_dynamic_min_multiplier) + ".");
+        send(source, "Динамика: 0 Благосклонности → x1, " + GameMaster.fmt(config.spawn_rate_favor_reference)
+            + " → x" + GameMaster.fmt(gm.spawnRateDynamicMultiplier((int) config.spawn_rate_favor_reference))
+            + "; ручной множитель игрока заменяет глобальный, динамика затем умножается.");
+        return 1;
+    }
+
+    private static int toggleSpawnRate(CommandSourceStack source, Boolean requested) {
+        GameMaster gm = GameMaster.get();
+        GameMasterConfig config = gm.config();
+        config.spawn_rate_enabled = requested == null ? !config.spawn_rate_enabled : requested;
+        gm.onConfigEdited();
+        send(source, "Спавн мобов: " + onOff(config.spawn_rate_enabled));
+        return 1;
+    }
+
+    private static int toggleSpawnRateDynamic(CommandSourceStack source, Boolean requested) {
+        GameMaster gm = GameMaster.get();
+        GameMasterConfig config = gm.config();
+        config.spawn_rate_dynamic = requested == null ? !config.spawn_rate_dynamic : requested;
+        gm.onConfigEdited();
+        send(source, "Динамика спавна по Благосклонности: " + onOff(config.spawn_rate_dynamic));
+        return 1;
+    }
+
+    private static int setManualSpawnRate(CommandSourceStack source, double multiplier) {
+        GameMaster gm = GameMaster.get();
+        gm.config().spawn_rate_manual_multiplier = multiplier;
+        gm.onConfigEdited();
+        send(source, "Глобальный ручной множитель спавна: x" + GameMaster.fmt(multiplier)
+            + ". Динамический множитель Благосклонности применяется отдельно.");
+        return 1;
+    }
+
+    private static int spawnRatePlayerInfo(CommandSourceStack source, ServerPlayer target) {
+        GameMaster gm = GameMaster.get();
+        String uuid = target.getUUID().toString();
+        Double override = gm.spawnRatePlayerOverride(uuid);
+        int favor = 100;
+        try {
+            favor = com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(target).favor.getFavor();
+        } catch (Exception ignored) {
+            PlayerProgress progress = gm.data().get(uuid);
+            if (progress != null) {
+                favor = progress.favor;
+            }
+        }
+        send(source, target.getGameProfile().name() + ": Благосклонность " + favor
+            + ", итоговый spawn-rate x" + GameMaster.fmt(gm.spawnRateMultiplier(target)) + ".");
+        send(source, "Ручной множитель: " + (override == null ? "глобальный x"
+            + GameMaster.fmt(gm.config().spawn_rate_manual_multiplier) : "override x" + GameMaster.fmt(override))
+            + ", динамический x" + GameMaster.fmt(gm.spawnRateDynamicMultiplier(favor)) + ".");
+        return 1;
+    }
+
+    private static int setPlayerSpawnRate(CommandSourceStack source, ServerPlayer target, double multiplier) {
+        GameMaster gm = GameMaster.get();
+        gm.setSpawnRatePlayerOverride(target.getUUID().toString(), multiplier);
+        send(source, "Ручной override спавна для " + target.getGameProfile().name() + ": x"
+            + GameMaster.fmt(multiplier) + ". Динамика по Благосклонности продолжает применяться.");
+        return 1;
+    }
+
+    private static int clearPlayerSpawnRate(CommandSourceStack source, ServerPlayer target) {
+        GameMaster gm = GameMaster.get();
+        boolean removed = gm.clearSpawnRatePlayerOverride(target.getUUID().toString());
+        send(source, removed
+            ? "Ручной override спавна для " + target.getGameProfile().name() + " удалён."
+            : "У " + target.getGameProfile().name() + " нет ручного override спавна.");
+        return 1;
+    }
+
     private static int status(CommandSourceStack source) {
         GameMaster gm = GameMaster.get();
         GameMasterConfig config = gm.config();
@@ -141,6 +246,10 @@ public class GameMasterCommand {
         send(source, "Мастер-выключатель: " + onOff(config.enabled)
             + ", уравнивание: " + onOff(config.catch_up)
             + ", темп: " + onOff(config.pacing));
+        send(source, "Спавн мобов: " + onOff(config.enabled && config.spawn_rate_enabled)
+            + ", динамика по Благосклонности: " + onOff(config.spawn_rate_dynamic)
+            + ", ручной множитель: x" + GameMaster.fmt(config.spawn_rate_manual_multiplier)
+            + ", игроков с override: " + config.spawn_rate_player_overrides.size());
         send(source, "Цель: " + GameMaster.fmt(config.target_hours) + " ч, старт штрафа: "
             + config.pacing_start_level + " уровень, макс. штраф: "
             + GameMaster.fmt(config.pacing_max_penalty * 100) + "%");
@@ -213,7 +322,10 @@ public class GameMasterCommand {
         }
         GameMaster.MultiplierBreakdown breakdown = gm.breakdown(progress);
         send(source, target.getGameProfile()
-            .name() + ": уровень " + progress.level + ", время " + GameMaster.fmt(progress.playtimeHours()) + " ч");
+            .name() + ": уровень " + progress.level + ", время " + GameMaster.fmt(progress.playtimeHours())
+            + " ч, Благосклонность " + progress.favor);
+        send(source, "Spawn-rate мобов: x" + GameMaster.fmt(gm.spawnRateMultiplier(target))
+            + " (динамический x" + GameMaster.fmt(gm.spawnRateDynamicMultiplier(progress.favor)) + ")");
         send(source, "Множитель: x" + GameMaster.fmt(breakdown.total)
             + " (темп x" + GameMaster.fmt(breakdown.pacing)
             + ", догоняющий x" + GameMaster.fmt(breakdown.catchUp) + ")");
@@ -234,7 +346,8 @@ public class GameMasterCommand {
         for (PlayerProgress progress : players) {
             GameMaster.MultiplierBreakdown breakdown = gm.breakdown(progress);
             send(source, progress.name + " — " + progress.level + " ур., "
-                + GameMaster.fmt(progress.playtimeHours()) + " ч, x" + GameMaster.fmt(breakdown.total)
+                + GameMaster.fmt(progress.playtimeHours()) + " ч, опыт x" + GameMaster.fmt(breakdown.total)
+                + ", спавн x" + GameMaster.fmt(gm.spawnRateMultiplier(progress.uuid, progress.favor))
                 + (progress.online ? " (в сети)" : ""));
         }
         return 1;

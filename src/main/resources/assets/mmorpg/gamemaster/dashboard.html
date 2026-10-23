@@ -74,7 +74,11 @@
     background: #0c1118; border: 1px solid var(--line); color: var(--text);
     border-radius: 9px; padding: 7px 9px; font-size: 13px; width: 120px; outline: none;
   }
-  input:focus { border-color: #3d516d; }
+  input:focus, select:focus { border-color: #3d516d; }
+  select {
+    background: #0c1118; border: 1px solid var(--line); color: var(--text);
+    border-radius: 9px; padding: 7px 9px; font-size: 13px; min-width: 190px; outline: none;
+  }
   button.apply {
     align-self: flex-end; background: #1f2a3a; border: 1px solid var(--line); color: var(--text);
     border-radius: 9px; padding: 8px 13px; cursor: pointer; font-size: 13px;
@@ -143,16 +147,33 @@
       <div class="card toggle">
         <div>
           <h3>Мастер-выключатель</h3>
-          <p>Полностью отключает вмешательство в опыт. Статистика и графики продолжают собираться.</p>
+          <p>Полностью отключает вмешательство GameMaster. Статистика и графики продолжают собираться.</p>
           <div class="muted" style="margin-top:8px;font-size:12px" id="masterInfo">—</div>
         </div>
         <div class="switch" id="swEnabled" data-key="enabled" title="Вся система"></div>
+      </div>
+
+      <div class="card toggle">
+        <div>
+          <h3>Спавн мобов</h3>
+          <p>Уменьшает появление враждебных мобов рядом с игроками: естественный спавн, блоки-спавнеры и спавнеры комнат данжей.</p>
+          <div class="muted" style="margin-top:8px;font-size:12px" id="spawnRateInfo">—</div>
+        </div>
+        <div class="switch" id="swSpawnRate" data-key="spawn_rate_enabled" title="Настройка spawn-rate"></div>
+      </div>
+
+      <div class="card toggle">
+        <div>
+          <h3>Динамика по Благосклонности</h3>
+          <p>При Благосклонности 100 динамический множитель равен ×0.5; при 0 — ×1.0.</p>
+        </div>
+        <div class="switch" id="swSpawnDynamic" data-key="spawn_rate_dynamic" title="Динамика spawn-rate"></div>
       </div>
     </div>
   </section>
 
   <section>
-    <h2>Параметры темпа</h2>
+    <h2>Параметры темпа и спавна</h2>
     <div class="card">
       <div class="inline-inputs">
         <label class="field">Цель, реальных часов
@@ -173,9 +194,18 @@
         <label class="field">Макс. бонус догоняющего
           <input type="number" id="inpCatchMax" min="0" max="20" step="0.1">
         </label>
+        <label class="field">Ручной множитель спавна (0–1)
+          <input type="number" id="inpSpawnManual" min="0" max="1" step="0.05">
+        </label>
+        <label class="field">Благосклонность для ×0.5
+          <input type="number" id="inpFavorReference" min="1" max="1000000" step="10">
+        </label>
+        <label class="field">Минимум динамики спавна
+          <input type="number" id="inpSpawnMin" min="0" max="1" step="0.01">
+        </label>
         <button class="apply" id="btnApply">Применить</button>
       </div>
-      <div class="note">Значения сохраняются в <code>config/age_of_epoch/gamemaster.json</code>. Те же переключатели доступны командой <code>/mine_and_slash gm</code>.</div>
+      <div class="note">Ручной множитель задаётся в диапазоне 0–1: 0.5 означает половину спавна, 1 — без ручного штрафа. Динамика ×100/(100+Благосклонность): при 0 — ×1, при 100 — ×0.5. Ручной override игрока заменяет глобальный ручной множитель, динамика затем умножается. Значения сохраняются в <code>config/age_of_epoch/gamemaster.json</code>.</div>
     </div>
   </section>
 
@@ -239,18 +269,34 @@
           <tr>
             <th>Игрок</th>
             <th class="num">Уровень</th>
+            <th class="num">Благосклонность</th>
             <th class="num">Время игры</th>
             <th class="num">Опыт (факт / база)</th>
             <th class="num">Темп</th>
             <th class="num">Догоняющий</th>
-            <th class="num">Итог</th>
+            <th class="num">Спавн мобов</th>
+            <th class="num">Итог XP</th>
             <th class="num">Был(а)</th>
           </tr>
         </thead>
         <tbody id="playerRows">
-          <tr><td colspan="8" class="empty">данных пока нет</td></tr>
+          <tr><td colspan="10" class="empty">данных пока нет</td></tr>
         </tbody>
       </table>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <h3 style="margin:0 0 4px;font-size:14px">Ручной override spawn-rate игрока</h3>
+      <div class="muted" style="font-size:12px">Override заменяет глобальный ручной множитель для выбранного игрока; динамика по его Благосклонности продолжает применяться.</div>
+      <div class="inline-inputs">
+        <label class="field">Игрок
+          <select id="spawnOverridePlayer"></select>
+        </label>
+        <label class="field">Ручной множитель (0–1)
+          <input type="number" id="spawnOverrideValue" min="0" max="1" step="0.05" placeholder="например 0.5">
+        </label>
+        <button class="apply" id="btnSetSpawnOverride">Сохранить override</button>
+        <button class="apply" id="btnClearSpawnOverride">Сбросить к глобальному</button>
+      </div>
     </div>
     <div class="note">
       Время считается по реальному времени игры и не учитывает AFK. Всё хранится в
@@ -323,13 +369,23 @@
     setSwitch(document.getElementById("swCatchUp"), cfg.catch_up && cfg.enabled, busy);
     setSwitch(document.getElementById("swPacing"), cfg.pacing && cfg.enabled, busy);
     setSwitch(document.getElementById("swEnabled"), cfg.enabled, busy);
+    setSwitch(document.getElementById("swSpawnRate"), cfg.spawn_rate_enabled, busy);
+    setSwitch(document.getElementById("swSpawnDynamic"), cfg.spawn_rate_dynamic, busy);
 
     document.getElementById("catchupInfo").textContent =
       "+" + fmt((cfg.catch_up_per_level || 0) * 100, 0) + "% за уровень отставания, максимум +" +
       fmt((cfg.catch_up_max_bonus || 0) * 100, 0) + "%; ориентир " + fmt(summary.reference_level, 1) + " ур.";
     document.getElementById("pacingInfo").textContent =
       "штраф после " + (cfg.pacing_start_level ?? "—") + " уровня; прогноз " + fmt(summary.predicted_hours, 1) + " ч, k=" + fmt(summary.k, 2);
-    document.getElementById("masterInfo").textContent = cfg.enabled ? "система активна" : "вмешательство в опыт отключено";
+    document.getElementById("masterInfo").textContent = cfg.enabled ? "система активна" : "вмешательство GameMaster отключено";
+    const favorBase = Math.max(1, Number(cfg.spawn_rate_favor_reference) || 100);
+    const dynamicAt100 = cfg.spawn_rate_dynamic
+      ? Math.max(Number(cfg.spawn_rate_dynamic_min_multiplier || 0), favorBase / (favorBase + 100))
+      : 1;
+    document.getElementById("spawnRateInfo").textContent =
+      (cfg.enabled && cfg.spawn_rate_enabled ? "активно" : "выключено") + "; ручной ×" +
+      fmt(cfg.spawn_rate_manual_multiplier, 2) + "; при Благосклонности 100 итог примерно ×" +
+      fmt(cfg.spawn_rate_manual_multiplier * dynamicAt100, 2);
 
     document.getElementById("statBaseline").textContent = fmt(summary.baseline_hours, 1) + " ч";
     document.getElementById("statPredicted").textContent = fmt(summary.predicted_hours, 1) + " ч";
@@ -356,27 +412,83 @@
             </div>
           </td>
           <td class="num">${p.level}</td>
+          <td class="num">${fmtInt(p.favor)}</td>
           <td class="num">${fmt(p.playtime_hours, 1)} ч</td>
           <td class="num muted">${fmtInt(p.exp_gained)} / ${fmtInt(p.raw_exp_gained)}</td>
           <td class="num">×${fmt(p.pacing_multiplier, 2)}</td>
           <td class="num">×${fmt(p.catch_up_multiplier, 2)}</td>
+          <td class="num"><span class="badge ${multiplierClass(p.spawn_rate_multiplier)}">×${fmt(p.spawn_rate_multiplier, 2)}</span></td>
           <td class="num"><span class="badge ${multiplierClass(p.multiplier)}">×${fmt(p.multiplier, 2)}</span></td>
           <td class="num muted">${p.online ? "в сети" : ago(p.last_seen_minutes)}</td>
         </tr>`).join("")
-      : `<tr><td colspan="8" class="empty">данных пока нет</td></tr>`;
+      : `<tr><td colspan="10" class="empty">данных пока нет</td></tr>`;
 
-    if (!document.activeElement || !document.activeElement.matches("input")) {
+    if (!document.activeElement || !document.activeElement.matches("input, select")) {
       document.getElementById("inpTarget").value = cfg.target_hours ?? "";
       document.getElementById("inpStart").value = cfg.pacing_start_level ?? "";
       document.getElementById("inpPenalty").value = cfg.pacing_max_penalty ?? "";
       document.getElementById("inpCurve").value = cfg.pacing_curve ?? "";
       document.getElementById("inpCatchLevel").value = cfg.catch_up_per_level ?? "";
       document.getElementById("inpCatchMax").value = cfg.catch_up_max_bonus ?? "";
+      document.getElementById("inpSpawnManual").value = cfg.spawn_rate_manual_multiplier ?? "";
+      document.getElementById("inpFavorReference").value = cfg.spawn_rate_favor_reference ?? "";
+      document.getElementById("inpSpawnMin").value = cfg.spawn_rate_dynamic_min_multiplier ?? "";
     }
+    renderSpawnOverrideForm(players);
 
     drawLevelChart(players, summary, state.max_level || 50);
     drawMultiplierChart(players);
     renderLegend(players);
+  }
+
+  function renderSpawnOverrideForm(players) {
+    const select = document.getElementById("spawnOverridePlayer");
+    const valueInput = document.getElementById("spawnOverrideValue");
+    if (!select || !valueInput) return;
+
+    const selectedUuid = select.value;
+    if (document.activeElement !== select) {
+      select.innerHTML = players.length
+        ? players.map(p => `<option value="${escapeHtml(p.uuid)}">${escapeHtml(p.name || p.uuid)}</option>`).join("")
+        : `<option value="">Нет отслеживаемых игроков</option>`;
+      if (players.some(p => p.uuid === selectedUuid)) select.value = selectedUuid;
+      select.disabled = !players.length;
+    }
+
+    if (document.activeElement !== valueInput) {
+      const player = players.find(p => p.uuid === select.value);
+      valueInput.value = player && Number(player.spawn_rate_override) >= 0
+        ? Number(player.spawn_rate_override).toFixed(2).replace(/\.0+$/, "")
+        : "";
+    }
+  }
+
+  async function saveSpawnOverride(clear) {
+    if (busy) return;
+    const uuid = document.getElementById("spawnOverridePlayer").value;
+    if (!uuid) return;
+    const patch = { spawn_rate_player_uuid: uuid };
+    if (clear) {
+      patch.spawn_rate_player_clear = true;
+    } else {
+      const multiplier = Number(document.getElementById("spawnOverrideValue").value);
+      if (!Number.isFinite(multiplier) || multiplier < 0 || multiplier > 1) {
+        window.alert("Введите ручной множитель от 0 до 1.");
+        return;
+      }
+      patch.spawn_rate_player_multiplier = multiplier;
+    }
+
+    busy = true;
+    try {
+      await postConfig(patch);
+      await refresh();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      busy = false;
+      if (state) render();
+    }
   }
 
   function escapeHtml(text) {
@@ -629,7 +741,10 @@
       pacing_max_penalty: Number(document.getElementById("inpPenalty").value),
       pacing_curve: Number(document.getElementById("inpCurve").value),
       catch_up_per_level: Number(document.getElementById("inpCatchLevel").value),
-      catch_up_max_bonus: Number(document.getElementById("inpCatchMax").value)
+      catch_up_max_bonus: Number(document.getElementById("inpCatchMax").value),
+      spawn_rate_manual_multiplier: Number(document.getElementById("inpSpawnManual").value),
+      spawn_rate_favor_reference: Number(document.getElementById("inpFavorReference").value),
+      spawn_rate_dynamic_min_multiplier: Number(document.getElementById("inpSpawnMin").value)
     };
     Object.keys(patch).forEach(k => {
       if (!Number.isFinite(patch[k])) delete patch[k];
@@ -648,6 +763,11 @@
 
   document.querySelectorAll(".switch").forEach(el => el.addEventListener("click", () => toggle(el)));
   document.getElementById("btnApply").addEventListener("click", applyInputs);
+  document.getElementById("spawnOverridePlayer").addEventListener("change", () => {
+    if (state) renderSpawnOverrideForm(state.players || []);
+  });
+  document.getElementById("btnSetSpawnOverride").addEventListener("click", () => saveSpawnOverride(false));
+  document.getElementById("btnClearSpawnOverride").addEventListener("click", () => saveSpawnOverride(true));
   window.addEventListener("resize", () => { if (state) render(); });
 
   refresh();

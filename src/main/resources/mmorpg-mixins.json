@@ -6,6 +6,7 @@
   "mixins": [
     "ArrowShootMixin",
     "BlockPropertiesIdMixin",
+    "BaseSpawnerSpawnRateMixin",
     "DisableMobSpawnsInDungeon",
     "EntityNbtCapBridgeMixin",
     "FallingBlockEntityMixin",
