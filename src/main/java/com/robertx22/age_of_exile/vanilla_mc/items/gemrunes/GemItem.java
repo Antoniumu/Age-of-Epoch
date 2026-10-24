@@ -342,10 +342,10 @@ public class GemItem extends BaseGemRuneItem implements IGUID, IAutoModel, IAuto
         CRACKED("Cracked", 0, 0.1F, 100, 100999, 0F),
         CHIPPED("Chipped", 1, 0.2F, 75, 25999, 0.1F),
         FLAWED("Flawed", 2, 0.3F, 50, 5000, 0.2F),
-        REGULAR("Regular", 3, 0.4F, 25, 1000, 0.5F),
-        GRAND("Grand", 4, 0.6F, 10, 200, 0.75F),
-        GLORIOUS("Glorious", 5, 0.8F, 5, 25, 0.9F),
-        DIVINE("Divine", 6, 1F, 0, 1, 0.95F);
+        REGULAR("Regular", 3, 0.4F, 30, 1000, 0.5F),
+        GRAND("Grand", 4, 0.6F, 15, 400, 0.75F),
+        GLORIOUS("Glorious", 5, 0.8F, 10, 250, 0.9F),
+        DIVINE("Divine", 6, 1F, 0, 200, 0.95F);
 
         public String locName;
         public int tier;
@@ -419,9 +419,14 @@ public class GemItem extends BaseGemRuneItem implements IGUID, IAutoModel, IAuto
 
             tooltip.add(Component.literal(""));
 
-            if (getGem().hasHigherTierGem()) {
+            Gem gem = getGem();
+            tooltip.add(Component.literal("Начинает выпадать с " + gem.getReqLevelToDrop() + " уровня")
+                .withStyle(ChatFormatting.GRAY));
+            if (gem.hasHigherTierGem()) {
                 tooltip.add(Component.literal("Возьмите 3 самоцвета для попытки улучшения"));
-                tooltip.add(Component.literal("Шанс улучшения: " + getGem().perc_upgrade_chance + "%"));
+                tooltip.add(Component.literal("Шанс улучшения: " + gem.perc_upgrade_chance + "%"));
+                tooltip.add(Component.literal("При неудаче все 3 самоцвета теряются")
+                    .withStyle(ChatFormatting.RED));
             }
         } catch (Exception e) {
             e.printStackTrace();

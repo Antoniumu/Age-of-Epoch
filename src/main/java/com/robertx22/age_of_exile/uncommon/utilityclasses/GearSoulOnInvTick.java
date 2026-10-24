@@ -74,7 +74,7 @@ public class GearSoulOnInvTick {
                         StackNBT.set(stack, new CompoundTag()); // clear the craft process nbt
                         StackSaving.GEARS.saveTo(stack, data);
 
-                        int exp = (int) (25 * pdata.getIngredientsCount());
+                        int exp = (int) (40 * pdata.getIngredientsCount());
                         Load.playerRPGData(player).professions.addExp(player, pdata.getProfession(), exp);
 
                     } else {
@@ -82,7 +82,7 @@ public class GearSoulOnInvTick {
                         StackNBT.set(stack, new CompoundTag()); // clear the craft process nbt
                         StackSaving.CRAFTED_CONSUMABLE.saveTo(stack, data);
 
-                        int exp = (int) (25 * pdata.getIngredientsCount());
+                        int exp = (int) (40 * pdata.getIngredientsCount());
                         Load.playerRPGData(player).professions.addExp(player, pdata.getProfession(), exp);
                     }
 

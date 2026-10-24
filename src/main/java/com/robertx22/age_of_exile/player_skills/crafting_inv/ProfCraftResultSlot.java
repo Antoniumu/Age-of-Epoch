@@ -27,6 +27,11 @@ public class ProfCraftResultSlot extends Slot {
         return false;
     }
 
+    @Override
+    public boolean mayPickup(Player player) {
+        return menu == null || menu.canTakeCraftResult();
+    }
+
     void useIngredients() {
         for (int i = 0; i < craftSlots.getContainerSize(); i++) {
             ItemStack ing = craftSlots.getItem(i);

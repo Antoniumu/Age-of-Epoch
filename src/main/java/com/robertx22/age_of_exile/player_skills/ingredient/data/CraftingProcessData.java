@@ -66,6 +66,10 @@ public class CraftingProcessData {
             total += 10;
         } else if (skillLvl > itemLvl + 4) {
             total += 5;
+        } else if (skillLvl < itemLvl) {
+            // Мягкий гейт: низкий уровень профессии повышает риск, но никогда
+            // не делает новые tiers принципиально недоступными.
+            total -= Math.min(30, (itemLvl - skillLvl) * 2);
         }
 
         return Mth.clamp(total, 0, 100);

@@ -29,6 +29,7 @@ public class Gems implements ExileRegistryInit {
             gem.text_format = x.gemType.format.name();
 
             gem.perc_upgrade_chance = x.gemRank.upgradeChance;
+            gem.level_to_drop = x.levelToStartDrop;
 
             gem.weight = x.weight;
 

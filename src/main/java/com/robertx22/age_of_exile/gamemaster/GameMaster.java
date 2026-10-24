@@ -807,7 +807,10 @@ public class GameMaster {
         if (config.social_enabled && config.social_goal_enabled) {
             ensureWeek(now);
             data.week_kills++;
-            if (config.social_goal_kills > 0 && data.week_kills == config.social_goal_kills) {
+            if (config.social_goal_kills > 0 && data.week_kills >= config.social_goal_kills
+                && data.week_goal_epoch <= 0) {
+                // >= + persisted epoch handles a host changing the goal mid-week:
+                // progress above the new target must not silently miss the announcement.
                 data.week_goal_epoch = now;
                 broadcast("★ Общая цель недели выполнена: " + data.week_kills
                     + " убийств! Каждому, кто зайдёт, — награда.", ChatFormatting.GOLD);

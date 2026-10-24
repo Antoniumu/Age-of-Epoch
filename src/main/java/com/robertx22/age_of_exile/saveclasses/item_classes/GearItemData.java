@@ -211,19 +211,21 @@ public class GearItemData implements ICommonDataItem<GearRarity> {
     }
 
     public int getTotalSockets() {
-        int base = getRarity().sockets;
+        int sockets = getRarity().sockets;
+        int upgradeLevel = this.up.getUpgradeLevel();
 
-        // У уникатов и рунных слов базовых сокетов нет - бонусные им тоже не выдаём,
-        // иначе "0 сокетов" в данных ничего не значит.
-        if (base <= 0) {
-            return 0;
+        // Апгрейды имеют три ступени на слот (UP1/UP2/UP3), поэтому
+        // uncommon (2 слота), rare (3) и epic/unique (5) могут достичь +4/+8/+12.
+        if (upgradeLevel >= 4) {
+            sockets++;
         }
-
-        // +1 сокет за каждые 2 уровня апгрейда, максимум +2.
-        // Пороги 4/8/12 были недостижимы: у uncommon максимум +2, у rare +3, у epic +5.
-        int bonus = Math.min(2, this.up.getUpgradeLevel() / 2);
-
-        return base + bonus;
+        if (upgradeLevel >= 8) {
+            sockets++;
+        }
+        if (upgradeLevel >= 12) {
+            sockets++;
+        }
+        return sockets;
     }
 
     public int getEmptySockets() {

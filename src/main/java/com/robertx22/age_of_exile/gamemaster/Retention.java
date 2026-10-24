@@ -180,7 +180,9 @@ public final class Retention {
             if (kind == GOAL_CHESTS) {
                 target = (int) clamp(2 + level / 10, 2, Math.min(6, cap));
             } else if (kind == GOAL_CRAFTS) {
-                target = (int) clamp(3 + level / 8, 3, Math.min(8, cap));
+                // Ремесленная цель должна закрываться в обычную 2-часовую сессию,
+                // даже если у игрока ещё невелик шанс успешного крафта.
+                target = (int) clamp(2 + level / 10, 2, Math.min(6, cap));
             } else {
                 target = (int) Math.round(clamp(12 + level * 1.5, 12, cap));
             }

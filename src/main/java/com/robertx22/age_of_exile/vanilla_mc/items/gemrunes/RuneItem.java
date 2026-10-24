@@ -78,11 +78,12 @@ public class RuneItem extends Item implements IGUID, IAutoModel, IAutoLocName, I
      *
      * YUN и VEN раньше были тиром 5, то есть падали только с 50 уровня: четыре из
      * семи рунных слов требуют YUN, и до 50-го уровня их нельзя было начать собирать.
-     * Теперь они тир 4 (с 40 уровня) и всё ещё самые редкие по весу (400 из 12 800).
+     * Теперь они тир 4; веса ключевых рун YUN/VEN/ORU/WIR подняты до 800/800/800/500
+     * при суммарном весе 13 900, чтобы компания чаще собирала редкие слова без гарантии дропа.
      */
     public enum RuneType {
-        YUN(400, "yun", "Yun", 4),
-        VEN(400, "ven", "Ven", 4),
+        YUN(800, "yun", "Yun", 4),
+        VEN(800, "ven", "Ven", 4),
         NOS(1000, "nos", "Nos", 1),
         MOS(1000, "mos", "Mos", 1),
         ITA(1000, "ita", "Ita", 1),
@@ -91,8 +92,8 @@ public class RuneItem extends Item implements IGUID, IAutoModel, IAutoLocName, I
         DOS(1000, "dos", "Dos", 2),
         ANO(1000, "ano", "Ano", 2),
         TOQ(1000, "toq", "Toq", 2),
-        ORU(600, "oru", "Oru", 4),
-        WIR(400, "wir", "Wir", 4),
+        ORU(800, "oru", "Oru", 4),
+        WIR(500, "wir", "Wir", 4),
         ENO(1000, "eno", "Eno", 3),
         HAR(1000, "har", "Har", 3),
         XER(1000, "xer", "Xer", 3);

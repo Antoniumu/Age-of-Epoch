@@ -1,6 +1,7 @@
 package com.robertx22.age_of_exile.database.data.gems;
 
 import com.robertx22.age_of_exile.database.data.BaseRuneGem;
+import com.robertx22.age_of_exile.database.data.game_balance_config.GameBalanceConfig;
 import com.robertx22.age_of_exile.database.registry.ExileDB;
 import com.robertx22.age_of_exile.database.registry.ExileRegistryTypes;
 import com.robertx22.library_of_exile.registry.ExileRegistryType;
@@ -22,6 +23,27 @@ public class Gem extends BaseRuneGem implements IAutoGson<Gem>, JsonExileRegistr
     public String text_format = "";
 
     public int perc_upgrade_chance = 0;
+
+    /** Доля максимального уровня, с которого ранг может выпадать (0..1). */
+    public float level_to_drop = 0;
+
+    @Override
+    public int getReqLevelToDrop() {
+        if (Float.isFinite(level_to_drop) && level_to_drop > 0) {
+            int maxLevel = 50;
+            try {
+                GameBalanceConfig config = GameBalanceConfig.get();
+                if (config != null && config.MAX_LEVEL > 0) {
+                    maxLevel = config.MAX_LEVEL;
+                }
+            } catch (Exception ignored) {
+                // При отсутствии datapack сохраняем безопасный дефолт 50.
+            }
+            return Math.max(1, (int) Math.ceil(maxLevel * level_to_drop));
+        }
+        // Ранги из старых datapack-ов без level_to_drop продолжают работать по tier.
+        return super.getReqLevelToDrop();
+    }
 
     public ChatFormatting getFormat() {
         try {

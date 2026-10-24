@@ -1,6 +1,5 @@
 package com.robertx22.age_of_exile.saveclasses.player_skills;
 
-import com.robertx22.age_of_exile.database.data.game_balance_config.GameBalanceConfig;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.LevelUtils;
 import info.loenwind.autosave.annotations.Storable;
@@ -22,12 +21,12 @@ public class PlayerSkillData {
         if (lvl >= MAX_LEVEL) {
             return false;
         }
-        if (GameBalanceConfig.get().MAX_LEVEL > lvl) {
-            if (lvl >= Load.Unit(player)
-                .getLevel() + 5) {
-                return false; // don't allow leveling of skills if player level is not higher
-                // edit: 10 lvl diff is fine (maybe)
-            }
+        // Профессия может опережать персонажа на 5 уровней, но не должна
+        // терять потолок после MAX_LEVEL персонажа (раньше на уровне навыка 50
+        // проверка отключалась и навык мог расти до 999 без ограничений).
+        int maxAllowedLevel = Math.min(MAX_LEVEL, Math.max(1, Load.Unit(player).getLevel() + 5));
+        if (lvl >= maxAllowedLevel) {
+            return false;
         }
 
         this.exp += addExp;

@@ -514,6 +514,24 @@ def auto_exp_for_ratio(ratio):
     return max(AUTO_EXP_MIN, min(AUTO_EXP_MAX, ratio ** 0.8))
 
 
+def simulated_kills_in_minutes(minutes, step=5.0):
+    """AutoBalance pace model: same XP/level formulas and 5-minute steps as season_sim."""
+    level = 1
+    exp = 0
+    kills = 0
+    elapsed = 0.0
+    while elapsed < minutes:
+        kills_per_minute = (exp_required(level + 1) / mob_exp(level)) / auto_target_minutes(level)
+        step_kills = max(1, int(round(kills_per_minute * step)))
+        kills += step_kills
+        exp += mob_exp(level) * step_kills
+        while level < MAX_LEVEL and exp >= exp_required(level + 1):
+            exp -= exp_required(level + 1)
+            level += 1
+        elapsed += step
+    return kills
+
+
 def table_social():
     print("### Маленький сервер (4–6 игроков)")
     print()
@@ -529,18 +547,21 @@ def table_social():
     print("Спавн дополнительно клампится в 0…1: при Благосклонности 500 "
           "базовый rate ×0.82 и кооп ×1.6 дают уже ×1.0, дальше потолок.")
     print()
-    print("Общая цель недели (убийства всей командой, при ~100 убийствах в час на игрока):")
+
+    weekly_kills_per_player = simulated_kills_in_minutes(48 * 60) / 8
+    weekly_goal = 6000
+    print("Недельная цель 6000 убийств, рассчитана по тому же темпу AutoBalance "
+          "(3 вечера × 2 часа на игрока):")
     print()
-    print("| Игроков | Часов в неделю каждый | Убийств за неделю | Цель 1500 |")
-    print("|---:|---:|---:|---|")
+    print("| Игроков | Убийств за неделю | Доля цели | Сессий до цели (из 3) |")
+    print("|---:|---:|---:|---:|")
     for players in (4, 5, 6):
-        for hours in (3, 5, 8):
-            kills = players * hours * 100
-            mark = "выполнена" if kills >= 1500 else f"нужно ещё {1500 - kills}"
-            print(f"| {players} | {hours} | {kills} | {mark} |")
+        kills = weekly_kills_per_player * players
+        sessions = weekly_goal / (kills / 3)
+        print(f"| {players} | {kills:.0f} | {kills / weekly_goal:.0%} | {sessions:.1f} |")
     print()
-    print("Цель 1500 подобрана так, чтобы её закрывала команда из 4–6 человек "
-          "за 3–5 часов в неделю суммарно на игрока — то есть без гринда.\n")
+    print("Личная скорость взята из симуляции уровня/опыта, а не из условных 100 убийств в час; "
+          "для четырёх игроков цель закрывается к третьей сессии.\n")
 
 
 def table_soft_death():

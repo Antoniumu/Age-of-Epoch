@@ -103,6 +103,11 @@ public class ProfCraftContainer extends BaseTileContainer {
 
     }
 
+    boolean canTakeCraftResult() {
+        return player != null && skill != null
+            && ProfCraftingRecipe.canCraft(player, craftInv, resultInv, skill).canCraft;
+    }
+
     @Override
     public void slotsChanged(Container inv) {
 
