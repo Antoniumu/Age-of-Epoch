@@ -241,6 +241,12 @@ public final class WikiLibrary {
             if (page.id.contains(q)) {
                 points += 25;
             }
+            for (String itemId : page.items) {
+                if (itemId.contains(q)) {
+                    points += 18;
+                    break;
+                }
+            }
             for (String tag : page.tags) {
                 if (tag.contains(q)) {
                     points += 20;
