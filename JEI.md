@@ -56,7 +56,7 @@ src/main/java/com/robertx22/age_of_exile/compat/jei/
 Интеграция включена по умолчанию и **не является рантайм-зависимостью**:
 
 ```gradle
-modCompileOnly "mezz.jei:jei-26.3-fabric-api:${jei_version}"
+compileOnly "mezz.jei:jei-26.3-fabric-api:${jei_version}"   // НЕ modCompileOnly: Loom 1.18 убрал mod*-конфигурации
 ```
 
 - Версия JEI задаётся в `gradle.properties` (`jei_version=31.16.0` — линия 31.x под MC 26.3).
