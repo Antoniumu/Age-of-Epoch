@@ -1,0 +1,144 @@
+;; Манифест вики. Формат:
+;;   # category <id> <Название>  — начало категории
+;;   <id>                        — страница (файл ru/<id>.md)
+
+# home start/overview
+
+# category start Начало
+start/overview
+start/first-hour
+start/controls
+start/leveling
+
+# category combat Бой
+combat/damage-types
+combat/physical
+combat/elemental
+combat/dodge
+combat/crit
+combat/defense
+combat/resources
+
+# category world Мир
+world/location-level
+world/difficulty
+world/dungeons
+world/towers
+world/delves
+world/favor
+
+# category items Предметы
+items/gear
+items/sockets
+items/rarities
+items/affixes
+items/upgrades
+items/loot
+
+# category craft Ремесло
+craft/professions
+craft/tools
+craft/alchemy
+craft/cooking
+craft/salvage
+
+# category gems Самоцветы
+gems/overview
+gems/tourmaline
+gems/azurite
+gems/garnet
+gems/opal
+gems/topaz
+gems/amethyst
+gems/ruby
+gems/emerald
+gems/sapphire
+
+# category runes Руны
+runes/overview
+runes/nos
+runes/mos
+runes/ita
+runes/cen
+runes/fey
+runes/dos
+runes/ano
+runes/toq
+runes/eno
+runes/har
+runes/xer
+runes/oru
+runes/wir
+runes/yun
+runes/ven
+
+# category runewords Рунные слова
+runewords/overview
+runewords/bone_shatterer
+runewords/air_disaster
+runewords/playful_hope
+runewords/heavenly_rainbow
+runewords/insight
+runewords/heavenly_tear
+runewords/skull_cleaver
+
+# category currency Валюта и сферы
+currency/overview
+currency/orb_of_transmutation
+currency/clear_corruption
+currency/crystal_of_purification
+currency/randomize_affixes
+currency/reroll_affix_numbers
+currency/stone_of_hope
+currency/reroll_primary_stats_numbers
+currency/number_reroll
+currency/reroll_unique_numbers
+currency/clear_instability
+currency/orb_of_corruption
+currency/orb_of_infinity
+currency/plus_one_upgrade
+currency/plus_two_upgrade
+currency/plus_three_upgrade
+currency/epic_safe_scroll
+currency/legendary_safe_scroll
+
+# category uniques Уникальное снаряжение
+uniques/overview
+uniques/iron_bulwark
+uniques/swift_stride
+uniques/pathfinder
+uniques/bloodletter
+uniques/worldsplitter
+uniques/whisperwind
+uniques/starfall
+uniques/mana_dominion
+uniques/spring_blossoms
+uniques/autumn_harvest
+uniques/winter_chill
+uniques/summer_heat
+uniques/rabbit_paw
+uniques/ghast_necklace
+uniques/skull_of_spirits
+uniques/witch_brew
+uniques/ghostly_shores
+uniques/azuna_ring
+
+# category materials Материалы
+materials/ingredients
+materials/essences
+materials/potions
+
+# category systems Системы
+systems/talents
+systems/spells
+systems/questbook
+systems/daily
+systems/season
+systems/divine
+systems/backpack
+systems/teleport
+systems/gamemaster
+
+# category meta Справка
+meta/faq
+meta/glossary

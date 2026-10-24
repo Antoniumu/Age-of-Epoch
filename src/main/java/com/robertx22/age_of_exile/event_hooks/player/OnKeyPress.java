@@ -2,6 +2,7 @@ package com.robertx22.age_of_exile.event_hooks.player;
 
 import com.robertx22.age_of_exile.a_libraries.mob_plates.MobPlateStyleHud;
 import com.robertx22.age_of_exile.gui.screens.character_screen.CharacterScreen;
+import com.robertx22.age_of_exile.gui.screens.wikibook.WikiBookScreen;
 import com.robertx22.age_of_exile.questbook.QuestBookScreen;
 import com.robertx22.age_of_exile.mmorpg.registers.client.KeybindsRegister;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.ChatUtils;
@@ -38,6 +39,9 @@ public class OnKeyPress {
             cooldown = 10;
         } else if (KeybindsRegister.QUESTBOOK_KEY.isDown()) {
             mc.gui.setScreen(new QuestBookScreen());
+            cooldown = 10;
+        } else if (KeybindsRegister.WIKI_KEY.isDown()) {
+            mc.gui.setScreen(new WikiBookScreen());
             cooldown = 10;
         } else {
 
