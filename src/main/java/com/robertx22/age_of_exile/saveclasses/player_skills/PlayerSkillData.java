@@ -32,15 +32,19 @@ public class PlayerSkillData {
 
         this.exp += addExp;
 
-        int needed = getExpNeededToLevel();
-
-        if (this.exp >= needed) {
-            this.exp -= needed;
+        // Поднимаемся на столько уровней, сколько хватает опыта (раньше максимум один за вызов,
+        // и большой прирост опыта тянулся через несколько крафтов).
+        boolean leveledUp = false;
+        while (lvl < MAX_LEVEL && this.exp >= getExpNeededToLevel()) {
+            this.exp -= getExpNeededToLevel();
             lvl++;
-            return true;
+            leveledUp = true;
+            if (GameBalanceConfig.get().MAX_LEVEL > lvl && lvl >= Load.Unit(player).getLevel() + 5) {
+                break; // дальше навык не растёт, пока персонаж не догонит
+            }
         }
 
-        return false;
+        return leveledUp;
     }
 
     public void setLvl(int lvl) {

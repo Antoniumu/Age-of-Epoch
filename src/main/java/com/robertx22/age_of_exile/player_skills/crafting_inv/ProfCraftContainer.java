@@ -2,11 +2,13 @@ package com.robertx22.age_of_exile.player_skills.crafting_inv;
 
 import com.robertx22.age_of_exile.mmorpg.registers.common.SlashContainers;
 import com.robertx22.age_of_exile.player_skills.ingredient.ProfCraftingRecipe;
+import com.robertx22.age_of_exile.player_skills.ingredient.data.IngredientData;
 import com.robertx22.age_of_exile.player_skills.ingredient.items.CraftToolItem;
 import com.robertx22.age_of_exile.saveclasses.player_skills.PlayerSkillEnum;
 import com.robertx22.age_of_exile.uncommon.datasaving.StackSaving;
 import com.robertx22.age_of_exile.vanilla_mc.blocks.BaseTileContainer;
-import com.robertx22.library_of_exile.main.Packets;
+import com.robertx22.age_of_exile.uncommon.localization.Words;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -25,9 +27,6 @@ public class ProfCraftContainer extends BaseTileContainer {
     net.minecraft.world.InteractionHand hand = net.minecraft.world.InteractionHand.MAIN_HAND;
 
     PlayerSkillEnum skill;
-
-    /** Последняя причина отказа, отправленная клиенту (чтобы не спамить пакетами). */
-    private String lastFailReason = "";
 
     public ProfCraftContainer(int syncid, Inventory playerinv, FriendlyByteBuf buf) {
         this(
@@ -108,21 +107,33 @@ public class ProfCraftContainer extends BaseTileContainer {
             && ProfCraftingRecipe.canCraft(player, craftInv, resultInv, skill).canCraft;
     }
 
+    /**
+     * Причина, почему крафт сейчас невозможен, или null, если рецепт готов.
+     * Считается по состоянию контейнера и на клиенте, и на сервере, поэтому
+     * экрану не нужно ждать пакета (раньше пакет приходил до открытия экрана и терялся).
+     */
+    public Component getFailReason() {
+        if (player == null || skill == null) {
+            return null;
+        }
+        ProfCraftResult result = ProfCraftingRecipe.canCraft(player, craftInv, resultInv, skill);
+        if (result.canCraft || result.reason == null || result.reason == Words.EmptyString) {
+            return null;
+        }
+        return result.reason.locName();
+    }
+
+    /** Предмет, который получится при крафте (на клиенте синхронизируется как обычный слот), или пусто. */
+    public ItemStack getResultPreview() {
+        return resultInv.getItem(0);
+    }
+
     @Override
     public void slotsChanged(Container inv) {
 
         if (player != null && skill != null && !player.level().isClientSide()) {
 
             ProfCraftResult result = ProfCraftingRecipe.canCraft(player, craftInv, resultInv, skill);
-
-            String reason = result.reason != null ? result.reason.locName().getString() : "";
-
-            if (!reason.equals(lastFailReason)) {
-                lastFailReason = reason;
-                Packets.sendToClient(player, new FailReasonPacket(result.reason != null
-                    ? result.reason.locName()
-                    : com.robertx22.age_of_exile.uncommon.localization.Words.EmptyString.locName()));
-            }
 
             if (result.canCraft) {
                 ItemStack resultstack = ProfCraftingRecipe.craftResult(craftInv, resultInv, skill);
@@ -154,19 +165,15 @@ public class ProfCraftContainer extends BaseTileContainer {
             int resultSlotIndex = craftStart + 6;  // 42
 
             if (index == resultSlotIndex) {
+                // Результат можно забрать только если рецепт готов (как и обычным кликом, см. mayPickup)
+                if (!canTakeCraftResult()) {
+                    return ItemStack.EMPTY;
+                }
                 if (!this.moveItemStackTo(stackInSlot, getPlayerInvStart(), getPlayerInvEnd() + 1, true)) {
                     return ItemStack.EMPTY;
                 }
-                slot.onQuickCraft(stackInSlot, result);
-                if (stackInSlot.isEmpty()) {
-                    slot.set(ItemStack.EMPTY);
-                } else {
-                    slot.setChanged();
-                }
-                if (stackInSlot.getCount() == result.getCount()) {
-                    return ItemStack.EMPTY;
-                }
-                slot.onTake(playerIn, stackInSlot);
+                // Результат ушёл игроку: списываем ингредиенты и пересчитываем следующий результат
+                slot.onTake(playerIn, result);
                 this.broadcastChanges();
                 return result;
             } else if (isPlayerInventory(index)) {
@@ -222,6 +229,21 @@ public class ProfCraftContainer extends BaseTileContainer {
             return true;
         }
 
+        /**
+         * В один слот кладётся ровно один ингредиент. Без этого стак из 3 ингредиентов
+         * (лут выпадает стаками до 3) считался бы одним ингредиентом, а лишние штуки
+         * после крафта оставались бы в сетке.
+         */
+        @Override
+        public int getMaxStackSize() {
+            return 1;
+        }
+
+        @Override
+        public int getMaxStackSize(ItemStack stack) {
+            return 1;
+        }
+
         @Override
         public boolean mayPlace(ItemStack stack) {
             if (skill.isGearCraftingProf()) {
@@ -229,9 +251,13 @@ public class ProfCraftContainer extends BaseTileContainer {
                     return true;
                 }
             }
-            return StackSaving.INGREDIENTS.has(stack) && StackSaving.INGREDIENTS.loadFrom(stack)
-                .getIngredient()
-                .isAllowedInProfession(skill.id);
+            if (!StackSaving.INGREDIENTS.has(stack)) {
+                return false;
+            }
+            IngredientData data = StackSaving.INGREDIENTS.loadFrom(stack);
+            // Ингредиент мог быть удалён из базы данных: тогда данных нет, и класть его нельзя
+            return data != null && data.getIngredient() != null
+                && data.getIngredient().isAllowedInProfession(skill.id);
         }
     }
 }

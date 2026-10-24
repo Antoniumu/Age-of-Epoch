@@ -76,11 +76,14 @@ public class CraftingProcessData {
     }
 
     public int getAverageTier() {
-
-        return getAllIngredients().stream()
+        List<IngredientData> all = getAllIngredients();
+        if (all.isEmpty()) {
+            return 0; // без ингредиентов среднего тира нет; такой крафт всё равно не проходит canCraft
+        }
+        return all.stream()
             .mapToInt(x -> x.tier)
             .sum()
-            / getAllIngredients().size();
+            / all.size();
     }
 
     public float getStatMulti() {
@@ -89,6 +92,7 @@ public class CraftingProcessData {
 
         List<SlashIngredient> distinct = getAllIngredients().stream()
             .map(x -> x.getIngredient())
+            .filter(x -> x != null)
             .distinct()
             .collect(Collectors.toList());
 
@@ -97,7 +101,7 @@ public class CraftingProcessData {
         for (SlashIngredient x : distinct) {
             int amount = (int) this.getAllIngredients()
                 .stream()
-                .filter(e -> e.getIngredient()
+                .filter(e -> e.getIngredient() != null && e.getIngredient()
                     .GUID()
                     .equals(x.GUID()))
                 .count();
@@ -187,13 +191,9 @@ public class CraftingProcessData {
                 if (s.GetStat() instanceof RandomCraftingStat) {
                     int random = (int) s.max;
                     for (int i = 0; i < random; i++) {
-                        StatModifier mod = RandomUtils.randomFromList(ExileDB.Ingredients()
-                            .getFilterWrapped(e -> e.isAllowedInProfession(prof))
-                            .random().stats);
-                        while (mod.GetStat() instanceof DoNotTransferToCraftedMarker) {
-                            mod = mod = RandomUtils.randomFromList(ExileDB.Ingredients()
-                                .getFilterWrapped(e -> e.isAllowedInProfession(prof))
-                                .random().stats);
+                        StatModifier mod = randomTransferableStat();
+                        if (mod == null) {
+                            break; // нет подходящих статов — просто ничего не добавляем
                         }
                         ExactStatData stat = mod.ToExactStat(perc, lvl);
                         stat.multiplyBy(skill.craftedStatMulti);
@@ -207,6 +207,28 @@ public class CraftingProcessData {
         }
 
         return stats;
+    }
+
+    /**
+     * Случайный стат из случайного ингредиента, доступного профессии, из тех, что переносятся в крафт.
+     * Ограничено числом попыток, чтобы не зависнуть, если таких статов нет.
+     */
+    private StatModifier randomTransferableStat() {
+        for (int attempt = 0; attempt < 50; attempt++) {
+            SlashIngredient ing = ExileDB.Ingredients()
+                .getFilterWrapped(e -> e.isAllowedInProfession(prof))
+                .random();
+            if (ing == null) {
+                return null;
+            }
+            List<StatModifier> transferable = ing.stats.stream()
+                .filter(s -> !(s.GetStat() instanceof DoNotTransferToCraftedMarker))
+                .collect(Collectors.toList());
+            if (!transferable.isEmpty()) {
+                return RandomUtils.randomFromList(transferable);
+            }
+        }
+        return null;
     }
 
     public PlayerSkillEnum getProfession() {
@@ -296,10 +318,16 @@ public class CraftingProcessData {
         GearItemData data = new GearItemData();
 
         GearSlot slot = GearSlot.getSlotOf(stack.getItem());
+        if (slot == null) {
+            return null;
+        }
 
         BaseGearType baseGearType = ExileDB.GearTypes()
             .getFilterWrapped(x -> x.gear_slot.equals(slot.GUID()))
             .random();
+        if (baseGearType == null) {
+            return null;
+        }
 
         GearRarity rar = RandomUtils.weightedRandom(getPossibleRarities());
 
