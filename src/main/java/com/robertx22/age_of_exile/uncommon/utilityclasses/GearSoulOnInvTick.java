@@ -74,7 +74,7 @@ public class GearSoulOnInvTick {
                         StackNBT.set(stack, new CompoundTag()); // clear the craft process nbt
                         StackSaving.GEARS.saveTo(stack, data);
 
-                        int exp = (int) (40 * pdata.getIngredientsCount());
+                        int exp = (int) (25 * pdata.getIngredientsCount());
                         Load.playerRPGData(player).professions.addExp(player, pdata.getProfession(), exp);
 
                     } else {
@@ -82,7 +82,7 @@ public class GearSoulOnInvTick {
                         StackNBT.set(stack, new CompoundTag()); // clear the craft process nbt
                         StackSaving.CRAFTED_CONSUMABLE.saveTo(stack, data);
 
-                        int exp = (int) (40 * pdata.getIngredientsCount());
+                        int exp = (int) (25 * pdata.getIngredientsCount());
                         Load.playerRPGData(player).professions.addExp(player, pdata.getProfession(), exp);
                     }
 
@@ -93,24 +93,8 @@ public class GearSoulOnInvTick {
                     }
 
                 } else {
-                    PlayerSkillEnum skill = pdata.getProfession();
-
-                    if (skill.isGearCraftingProf()) {
-                        // Провал больше не уничтожает базу снаряжения: теряются только
-                        // ингредиенты. Раньше игрок лишался и базы (железный нагрудник,
-                        // кольцо), и 6 ингредиентов, и не получал опыта — это был
-                        // гарантированный минус к прогрессу.
-                        StackNBT.getOrCreate(stack)
-                            .remove(StackSaving.CRAFT_PROCESS.GUID());
-                        if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
-                            serverPlayer.sendSystemMessage(net.minecraft.network.chat.Component.literal(
-                                    "Крафт не удался: ингредиенты потеряны, предмет сохранён.")
-                                .withStyle(net.minecraft.ChatFormatting.RED));
-                        }
-                    } else {
-                        stack.shrink(1);
-                        PlayerUtils.giveItem(new ItemStack(Items.GUNPOWDER), player);
-                    }
+                    stack.shrink(1);
+                    PlayerUtils.giveItem(new ItemStack(Items.GUNPOWDER), player); // todo give specific fail items for each profession?
                 }
                 return true;
             } catch (Exception e) {

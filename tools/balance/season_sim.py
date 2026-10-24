@@ -38,8 +38,8 @@ WEEKLY_GOAL_KILLS = 6000
 
 # --- дроп (проценты на событие лута, без множителя моба) -------------------
 GEAR_DROP = 7.0
-GEM_DROP = 1.5
-RUNE_DROP = 0.15
+GEM_DROP = 0.5
+RUNE_DROP = 0.05
 INGREDIENT_DROP = 5.0
 CURRENCY_DROP = 0.2
 
@@ -49,11 +49,11 @@ RUNE_PITY = (200, 700)         # по убийствам
 GEM_PITY = (120, 400)          # по убийствам
 
 GEAR_WEIGHTS = {"common": 5000, "uncommon": 2000, "rare": 300, "epic": 100,
-                "unique": 100, "runeword": 0}
+                "unique": 25, "runeword": 0}
 UNIQUE_POOL = 18               # 7 колец, 3 амулета, шлем, 4 оружия, 3 брони
 
 # 15 рун: (id, вес, тир)
-RUNES = [("yun", 800, 4), ("ven", 800, 4), ("oru", 800, 4), ("wir", 500, 4),
+RUNES = [("yun", 100, 5), ("ven", 100, 5), ("oru", 500, 4), ("wir", 200, 4),
          ("nos", 1000, 1), ("mos", 1000, 1), ("ita", 1000, 1),
          ("cen", 1000, 2), ("fey", 1000, 2), ("dos", 1000, 2),
          ("ano", 1000, 2), ("toq", 1000, 2),
@@ -71,18 +71,18 @@ RUNEWORDS = {
 
 # ранги: (tier, вес); дробные пороги из GemRank.lvlToDrop * MAX_LEVEL.
 # В Java ранг одинаково часто выпадает для каждого из 9 типов камня.
-GEM_RANKS = [(0, 100999), (1, 25999), (2, 5000), (3, 1000), (4, 400), (5, 250), (6, 200)]
+GEM_RANKS = [(0, 100999), (1, 25999), (2, 5000), (3, 1000), (4, 200), (5, 25), (6, 1)]
 GEM_DROP_LEVEL_FRACTIONS = [0.0, 0.1, 0.2, 0.5, 0.75, 0.9, 0.95]
 GEM_MIN_LEVEL = {rank: max(1, math.ceil(fraction * bm.MAX_LEVEL))
                  for rank, fraction in enumerate(GEM_DROP_LEVEL_FRACTIONS)}
-GEM_UPGRADE_CHANCES = {0: 100, 1: 75, 2: 50, 3: 30, 4: 15, 5: 10}
+GEM_UPGRADE_CHANCES = {0: 100, 1: 75, 2: 50, 3: 25, 4: 10, 5: 5}
 GEM_TYPES = 9
 
 CRAFT_N = 4
-CRAFT_EXP_PER_INGREDIENT = 40
+CRAFT_EXP_PER_INGREDIENT = 25
 CRAFT_SUCCESS = 100 - 10 * (CRAFT_N - 1)
 CRAFT_RARITY_WEIGHTS = [("uncommon", 2000), ("rare", 300), ("epic", 100)]
-CRAFT_STAT_CAP = {"common": 2, "uncommon": 3, "rare": 4, "epic": 5}
+CRAFT_STAT_CAP = {"common": 0, "uncommon": 1, "rare": 2, "epic": 3}   # GearRarity.affixes, как в апстриме
 
 
 def kills_for_level(level):

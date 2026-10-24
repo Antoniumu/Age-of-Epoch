@@ -109,50 +109,8 @@ public class ProfCraftingRecipe {
             return ProfCraftResult.fail(Words.NoIngredients);
         }
 
-        // Уровень профессии наконец что-то гейтит.
-        //
-        // Раньше CraftingReq создавался только для алхимии и не читался нигде: игрок
-        // 1-го уровня мог положить шесть ингредиентов 4-го тира и получить предмет
-        // 40-го уровня. Теперь требования растут по тиру ингредиентов
-        // (тир 1 → 1, 2 → 10, 3 → 20, 4 → 30, 5 → 40), а уровень профессии растёт
-        // от крафта (25 опыта за ингредиент) и ограничен уровнем персонажа +5.
-        int req = profLevelRequiredFor(list);
-        int have = com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(player)
-            .professions.getProfessionLevel(skill);
-        if (have < req) {
-            return ProfCraftResult.fail(Words.ProfLevelTooLow);
-        }
-
         return ProfCraftResult.success();
 
-    }
-
-    /**
-     * Минимальный уровень профессии для набора ингредиентов.
-     *
-     * Считается по среднему тиру: тир 1 → 1, тир 2 → 10, тир 3 → 20, тир 4 → 30,
-     * тир 5 → 40. Потолок в 40 (а не 50) специально: уровень профессии растёт от
-     * крафта и упирается в уровень персонажа +5, поэтому требование 50 закрыло бы
-     * крафт пятого тира для всех, кто докачался до 50 естественным путём.
-     */
-    public static int profLevelRequiredFor(List<IngredientData> ingredients) {
-        if (ingredients == null || ingredients.isEmpty()) {
-            return 1;
-        }
-        int tier = 0;
-        int count = 0;
-        for (IngredientData data : ingredients) {
-            if (data == null) {
-                continue;
-            }
-            tier += Math.max(0, data.tier);
-            count++;
-        }
-        if (count == 0) {
-            return 1;
-        }
-        int avg = tier / count;
-        return Math.max(1, Math.min(40, avg * 10));
     }
 
     public static ItemStack craftResult(CraftingContainer inv, SimpleContainer resultinv, PlayerSkillEnum skill) {

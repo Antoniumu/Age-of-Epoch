@@ -48,40 +48,9 @@ public class GameBalanceConfig implements JsonExileRegistry<GameBalanceConfig>, 
 
     public LevelScalingConfig NORMAL_STAT_SCALING = new LevelScalingConfig(1, 0.2F, false);
     public LevelScalingConfig SLOW_STAT_SCALING = new LevelScalingConfig(1, 0.01F, true);
-
-    /**
-     * Стоимость маны растёт медленнее уровня: x3.45 к 50-му вместо x10.8.
-     * Иначе один каст базового заклинания на 50-м уровне стоит 12 секунд регена.
-     */
-    public LevelScalingConfig MANA_COST_SCALING = new LevelScalingConfig(1, 0.05F, true);
-
-    /**
-     * Стоимость удара оружием. Раньше энергия стоила {@code slot.energy_cost * N(lvl)},
-     * из-за чего к 50-му уровню устойчивый темп падал до 0.1 удара в секунду.
-     * Теперь стоимость растёт всего в 3.45 раза, а шкала держит ~23 удара.
-     */
-    public LevelScalingConfig ENERGY_COST_SCALING = new LevelScalingConfig(1, 0.05F, true);
-
+    public LevelScalingConfig MANA_COST_SCALING = new LevelScalingConfig(1, 0.2F, true);
     public LevelScalingConfig CORE_STAT_SCALING = new LevelScalingConfig(1, 0.05F, true);
     public LevelScalingConfig STAT_REQ_SCALING = new LevelScalingConfig(2, 2, true);
-
-    /**
-     * Какую долю максимального запаса восстанавливает регенерация за секунду
-     * (сверх плоского значения стата регена). 0.08 = 8% в секунду.
-     * Благодаря этому темп боя не отстаёт от роста стоимости ударов.
-     */
-    public float ENERGY_REGEN_PERCENT_PER_SECOND = 0.08F;
-    public float MANA_REGEN_PERCENT_PER_SECOND = 0.08F;
-
-    /** Сколько «плоских» HP даёт каждый уровень игрока сверх базовых. */
-    public float PLAYER_HEALTH_PER_LEVEL = 1.5F;
-
-    /**
-     * Насколько сильно вложения в характеристики масштабируются уровнем.
-     * 1.0 — как раньше (x10.8 к 50-му, что давало x17 HP за 100 очков VIT).
-     * 0.25 — вклад растёт как x3.45 к 50-му, и очки остаются сопоставимы с лутом.
-     */
-    public float CORE_STAT_LEVEL_FACTOR = 0.25F;
 
     public double TALENT_POINTS_AT_MAX_LEVEL = 100;
     public double STAT_POINTS_PER_LEVEL = 2;

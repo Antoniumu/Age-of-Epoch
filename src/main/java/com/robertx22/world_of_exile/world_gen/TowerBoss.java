@@ -390,23 +390,13 @@ public final class TowerBoss {
         try {
             var data = Load.Unit(entity);
             if (data != null) {
-                data.setLevel(bossLevel(level, entity, arena, rank));
+                data.setLevel(Math.max(data.getLevel(), rank + 2));
                 data.setRarity(IRarity.BOSS_ID);
-            }
-        } catch (Exception ignored) {
-        }
-        // Порядок важен: HP мода считается от ванильного MAX_HEALTH, поэтому
-        // множители ростера нужно применить ДО пересчёта статов. Раньше было
-        // наоборот — босс получал HP без множителей, а после первого удара
-        // пересчитывался и прыгал в размерах на глазах у игрока.
-        scale(entity, def, rank, champion);
-        try {
-            var data = Load.Unit(entity);
-            if (data != null) {
                 data.forceRecalculateStats();
             }
         } catch (Exception ignored) {
         }
+        scale(entity, def, rank, champion);
         entity.setHealth(entity.getMaxHealth());
         entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 120, 0, false, false));
         level.sendParticles(net.minecraft.core.particles.ParticleTypes.SOUL_FIRE_FLAME,
@@ -414,48 +404,18 @@ public final class TowerBoss {
         return entity;
     }
 
-    /**
-     * База, к которой приводятся все боссы башни. Без неё разоритель (100 HP)
-     * автоматически в 5 раз толще зомби, и множители ростера ложатся поверх
-     * этой случайности: HP «финального» босса уходил в сотни тысяч.
-     */
-    private static final double BOSS_BASE_HEALTH = 20.0D;
-    private static final double BOSS_BASE_DAMAGE = 2.0D;
-
-    /** Общий понижающий коэффициент «здоровья» из TowerRoster (1.3…3.6). */
-    private static final double BOSS_HEALTH_TUNING = 0.65D;
-
-    /**
-     * Уровень босса: не ниже ранга и не ниже ближайшего игрока — иначе башня
-     * либо бессмысленна (уровень 3–6), либо превращается в мясорубку.
-     */
-    private static int bossLevel(ServerLevel level, LivingEntity entity, Arena arena, int rank) {
-        int fallback = Math.max(1, rank * 10);
-        try {
-            Player fighter = nearestFighter(level, entity, arena);
-            if (fighter != null) {
-                int playerLevel = Load.Unit(fighter)
-                    .getLevel();
-                return Math.max(fallback, Math.max(1, playerLevel));
-            }
-        } catch (Exception ignored) {
-        }
-        return fallback;
-    }
-
-    /** Applies the roster multipliers on top of the normalized vanilla attributes. */
+    /** Applies the roster multipliers on top of the vanilla mob attributes. */
     private static void scale(LivingEntity entity, TowerBossDef def, int rank, boolean champion) {
         double rankBonus = 1.0D + (rank - 1) * 0.12D;
         double championPenalty = champion ? 0.55D : 1.0D;
         try {
             var health = entity.getAttribute(Attributes.MAX_HEALTH);
             if (health != null) {
-                health.setBaseValue(BOSS_BASE_HEALTH * def.health() * BOSS_HEALTH_TUNING
-                    * rankBonus * championPenalty);
+                health.setBaseValue(health.getBaseValue() * def.health() * rankBonus * championPenalty);
             }
             var damage = entity.getAttribute(Attributes.ATTACK_DAMAGE);
             if (damage != null) {
-                damage.setBaseValue(BOSS_BASE_DAMAGE * def.damage()
+                damage.setBaseValue(Math.max(damage.getBaseValue(), 4.0D) * def.damage()
                     * (1.0D + (rank - 1) * 0.08D) * championPenalty);
             }
             var speed = entity.getAttribute(Attributes.MOVEMENT_SPEED);

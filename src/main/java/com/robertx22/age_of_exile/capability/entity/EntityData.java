@@ -577,11 +577,8 @@ public class EntityData implements ICommonPlayerCap, INeededForClient {
             GearSlot slot = data.weaponData.GetBaseGearType()
                 .getGearSlot();
 
-            // Стоимость удара растёт в 3.45 раза к 50-му уровню, а не в 10.8:
-            // иначе шкала энергии заканчивалась за 7 ударов и бой вставал на минуту.
-            float cost = slot.energy_cost
-                * com.robertx22.age_of_exile.database.data.game_balance_config.GameBalanceConfig.get().ENERGY_COST_SCALING
-                .getMultiFor(getLevel());
+            float cost = Energy.getInstance()
+                .scale(ModType.FLAT, slot.energy_cost, getLevel());
             SpendResourceEvent event = new SpendResourceEvent(entity, ResourceType.energy, cost);
             event.calculateEffects();
 

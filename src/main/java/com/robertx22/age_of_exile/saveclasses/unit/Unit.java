@@ -447,13 +447,8 @@ public class Unit {
             float maxhp = Mth.clamp(entity.getMaxHealth(), 0, 500);
             // all increases after this would just reduce enviro damage
 
-            // Урон мобов растёт как N(lvl) (x10.8 к 50-му), а ванильные 20 HP — нет.
-            // Без добавки за уровень игрок к эндгейму умирает за 6 ударов вместо 11.
-            float perLevel = GameBalanceConfig.get().PLAYER_HEALTH_PER_LEVEL
-                * Math.max(0, data.getLevel() - 1);
-
             getStats().getStatInCalculation(Health.getInstance())
-                .addAlreadyScaledFlat(maxhp + perLevel);
+                .addAlreadyScaledFlat(maxhp);
 
             // add vanila hp to extra hp
         }

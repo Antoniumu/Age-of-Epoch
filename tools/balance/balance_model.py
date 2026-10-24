@@ -90,8 +90,8 @@ DODGE_NEED_AT_1 = 15
 
 
 def player_hp(lvl, extra_flat=0.0):
-    # Unit.addVanillaHpToStats: + PLAYER_HEALTH_PER_LEVEL (1.5) за уровень
-    return 20 + 10 * N(lvl) + 1.5 * (lvl - 1) + extra_flat * N(lvl)
+    # Unit.addVanillaHpToStats: только ванильные 20 HP, без добавки за уровень
+    return 20 + 10 * N(lvl) + extra_flat * N(lvl)
 
 
 def player_attack_damage(lvl, weapon="sword", weapon_ilvl=None):
@@ -156,17 +156,17 @@ def energy_pool(lvl):
     return 10 + 30 * N(lvl)
 
 
-# RestoreResourceEvent.getAmountWithPercentRegen: + max * 8% за тик (60 тиков = 3 с)
-REGEN_PERCENT_PER_TICK = 0.08
+# Апстрим: процентного регена нет, только плоский стат регена раз в 3 с
+REGEN_PERCENT_PER_TICK = 0.0
 
 
 def energy_regen_per_tick(lvl):
     return 2 + 1 * N(lvl) + energy_pool(lvl) * REGEN_PERCENT_PER_TICK
 
 
-# GameBalanceConfig.ENERGY_COST_SCALING = (1, 0.05) — стоимость удара почти не растёт
+# Апстрим: cost = Energy.scale(FLAT, slot.energy_cost, lvl) = cost * NORMAL_SCALING(lvl)
 def energy_cost_swing(lvl, weapon="sword"):
-    return WEAPON_ENERGY[weapon] * (1 + 0.05 * (lvl - 1))
+    return WEAPON_ENERGY[weapon] * (1 + 0.2 * (lvl - 1))
 
 
 def mana_pool(lvl):
@@ -178,9 +178,9 @@ def mana_regen_per_tick(lvl):
 
 
 def fireball_cost(lvl):
-    """LeveledValue(0.5*5, 1*5) * MANA_COST_SCALING (теперь 1 + 0.05·(lvl−1))."""
+    """LeveledValue(0.5*5, 1*5) * MANA_COST_SCALING (апстрим: 1 + 0.2·(lvl−1))."""
     base = 2.5 + (2.5 / MAX_LEVEL) * min(lvl, MAX_LEVEL)
-    return base * (1 + 0.05 * (min(lvl, MAX_LEVEL) - 1))
+    return base * (1 + 0.2 * (min(lvl, MAX_LEVEL) - 1))
 
 
 def fireball_damage(lvl, spell_power=None):
@@ -195,8 +195,8 @@ def fireball_damage(lvl, spell_power=None):
 # дроп и благосклонность (favor)
 # --------------------------------------------------------------------------
 
-DROP_RATE = {"gear": 7.0, "gem": 1.5, "ingredient": 5.0, "rune": 0.15, "currency": 0.2}
-GEAR_RARITY_WEIGHT = {"common": 5000, "uncommon": 2000, "rare": 300, "epic": 100, "unique": 100}
+DROP_RATE = {"gear": 7.0, "gem": 0.5, "ingredient": 5.0, "rune": 0.05, "currency": 0.2}
+GEAR_RARITY_WEIGHT = {"common": 5000, "uncommon": 2000, "rare": 300, "epic": 100, "unique": 25}
 
 
 def loot_modifier(lvl, rarity="common", vanilla_hp=20):
@@ -238,11 +238,11 @@ def gear_rarity_chances():
     return {k: v / total for k, v in GEAR_RARITY_WEIGHT.items()}
 
 
-FAVOR_START = 500
+FAVOR_START = 100
 FAVOR_PER_KILL = 0.1
 FAVOR_PER_ITEM = 1.0
-FAVOR_PER_CHEST = 50
-FAVOR_NONE_EXP_MULTI = 0.5
+FAVOR_PER_CHEST = 20
+FAVOR_NONE_EXP_MULTI = 0.25
 
 
 # --------------------------------------------------------------------------
@@ -262,11 +262,11 @@ CORE_STAT_EFFECT = {   # на 1 очко, до умножения на N(effecti
     "AGI": dict(energy=2.0, energy_regen=0.1),
 }
 
-CORE_STAT_LEVEL_FACTOR = 0.25
+CORE_STAT_LEVEL_FACTOR = 1.0
 
 
 def core_effective_level(lvl):
-    """CoreStat.getMods: эффективный уровень = 1 + round((lvl−1)·0.25)."""
+    """CoreStat.getMods: эффективный уровень = уровень персонажа (фактор 1.0)."""
     return 1 + round((lvl - 1) * CORE_STAT_LEVEL_FACTOR)
 
 
@@ -640,7 +640,7 @@ def table_autobalance():
 # --------------------------------------------------------------------------
 
 # ServerContainer.STARTING_FAVOR и FavorData.onAnyMobKilledSpendFavor
-SPAWN_FAVOR_START = 500.0
+SPAWN_FAVOR_START = 100.0
 SPAWN_FAVOR_PER_KILL = 0.1
 SPAWN_REFERENCE = 500.0        # spawn_rate_favor_reference (было 100)
 SPAWN_REFERENCE_OLD = 100.0

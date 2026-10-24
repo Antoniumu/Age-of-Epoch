@@ -36,7 +36,6 @@ public class GearRaritiesAdder implements ExileRegistryInit {
         uncommon.higher_rar = IRarity.RARE_ID;
         uncommon.upgrades = 2;
         uncommon.rar_ess_per_sal = 1;
-        // Требует четыре уровня апгрейда; на двух слотах достижимо через +3 и +1.
         uncommon.upgrade_lvl_to_increase_rar = 4;
         uncommon.unbreaking_chance = 10;
         uncommon.setUncommonFields();
@@ -53,7 +52,6 @@ public class GearRaritiesAdder implements ExileRegistryInit {
         rare.item_value_multi = 1.5F;
         rare.higher_rar = IRarity.EPIC_ID;
         rare.rar_ess_per_sal = 1;
-        // Требует восемь суммарных уровней; три слота позволяют +3, +3 и +2.
         rare.upgrade_lvl_to_increase_rar = 8;
         rare.setRareFields();
         rare.unbreaking_chance = 25;
@@ -78,10 +76,7 @@ public class GearRaritiesAdder implements ExileRegistryInit {
         GearRarity unique = new GearRarity();
         unique.bonus_effective_lvls = 10;
         unique.affixes = 0;
-        // 25 из 7425 — это 0.34% и один уникат на ~2800 убийств.
-        // 100 даёт ~1.3% и уникат раз в ~700 убийств, что соответствует
-        // 20 предметам на всю игру и 40+ часам прокачки.
-        unique.weight = 100;
+        unique.weight = 25;
         unique.item_tier_power = 2;
         unique.item_value_multi = 2;
         unique.sockets = 0;

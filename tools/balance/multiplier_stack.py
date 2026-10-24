@@ -9,8 +9,9 @@ Age of Epoch — реестр множителей и их «стек» на к�
   * шанса дропа,
   * Благосклонности (favor).
 
-Все формулы — из кода порта. Константы «до» (BEFORE) — состояние до правок
-из BALANCE-AUDIT.md §13, «после» (AFTER) — текущее состояние кода.
+Все формулы — из кода порта. Константы «до» (BEFORE) — апстрим (main),
+«после» (AFTER) — текущее состояние кода. Балансные правки откачены,
+поэтому обе колонки совпадают: это и есть проверка, что откат полный.
 
 Запуск:  python3 tools/balance/multiplier_stack.py
 """
@@ -22,19 +23,19 @@ MAX_LEVEL = 50
 # --------------------------------------------------------------------------
 
 AFTER = dict(
-    player_hp_per_level=1.5,        # Unit.addVanillaHpToStats
-    mob_extra_per_level=0.01,       # ServerContainer.EXTRA_MOB_STATS_PER_LEVEL
-    energy_cost_per_level=0.05,     # GameBalanceConfig.ENERGY_COST_SCALING
-    mana_cost_per_level=0.05,       # GameBalanceConfig.MANA_COST_SCALING
-    regen_percent=0.08,             # GameBalanceConfig.*_REGEN_PERCENT_PER_SECOND
-    core_stat_factor=0.25,          # GameBalanceConfig.CORE_STAT_LEVEL_FACTOR
-    favor_start=500,
-    favor_per_kill=0.1,
-    favor_per_chest=50,
-    favor_none_exp=0.5,
-    unique_weight=100,
-    tower_hp_tuning=0.65,           # TowerBoss.BOSS_HEALTH_TUNING
-    overworld_scales=True,
+    player_hp_per_level=0.0,        # добавки нет (апстрим)
+    mob_extra_per_level=0.02,       # ServerContainer.EXTRA_MOB_STATS_PER_LEVEL
+    energy_cost_per_level=0.2,      # cost = slot.energy_cost * N(lvl)
+    mana_cost_per_level=0.2,        # GameBalanceConfig.MANA_COST_SCALING
+    regen_percent=0.0,              # процентного регена нет
+    core_stat_factor=1.0,           # CoreStat: полный уровень
+    favor_start=100,
+    favor_per_kill=0.25,
+    favor_per_chest=20,
+    favor_none_exp=0.25,
+    unique_weight=25,
+    tower_hp_tuning=1.0,            # множители ложатся на ванильный HP
+    overworld_scales=False,
 )
 
 # --------------------------------------------------------------------------
