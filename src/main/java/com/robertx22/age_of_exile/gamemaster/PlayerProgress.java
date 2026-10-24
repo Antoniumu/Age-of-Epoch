@@ -108,6 +108,8 @@ public class PlayerProgress {
     /** Сутки, на которые назначена цель. */
     public long session_goal_day = 0;
     public boolean session_goal_done = false;
+    /** Когда последний раз показывали прогресс цели дня в actionbar (epoch seconds). */
+    public long last_daily_hint = 0;
 
     /** До какого момента (epoch seconds) действует усиленный опыт после перерыва. */
     public long return_until = 0;

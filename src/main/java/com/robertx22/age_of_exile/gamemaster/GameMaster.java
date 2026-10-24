@@ -601,6 +601,7 @@ public class GameMaster {
             progress.level_baseline_seconds += baseSeconds;
 
             maybeSnapshot(progress, now);
+            maybeShowDailyGoal(player, progress, now);
         }
 
         // Телеметрия: раз в N секунд фиксируем биом, измерение и время суток.
@@ -641,6 +642,29 @@ public class GameMaster {
         progress.last_y = y;
         progress.last_z = z;
         return moved;
+    }
+
+    /**
+     * Показывает прогресс ежедневной цели в actionbar раз в 4 минуты.
+     *
+     * <p>Раньше цель дня сообщалась только при входе: игрок закрывал чат — и до конца
+     * сессии не видел, сколько осталось. Actionbar не спамит в чат, но всегда перед
+     * глазами, пока цель не выполнена.
+     */
+    private void maybeShowDailyGoal(ServerPlayer player, PlayerProgress progress, long now) {
+        if (!config.retention_enabled || !config.retention_session_goal) {
+            return;
+        }
+        Retention.SessionGoal goal = Retention.goalOf(progress);
+        if (goal == null || goal.done) {
+            return;
+        }
+        if (now - progress.last_daily_hint < 240) {
+            return;
+        }
+        progress.last_daily_hint = now;
+        player.displayClientMessage(Component.literal(goal.text)
+            .withStyle(ChatFormatting.YELLOW), true);
     }
 
     private void maybeSnapshot(PlayerProgress progress, long now) {
