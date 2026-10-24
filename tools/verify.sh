@@ -21,6 +21,8 @@ python3 tools/verify/check_invariants.py || status=1
 
 line "2/5. Контент: дерево талантов, перки, иконки"
 python3 tools/verify/check_content.py || status=1
+# вики: страница на каждый предмет/блок, >=1000 видимых символов, целые ссылки
+python3 tools/wiki_gen/verify_wiki.py || status=1
 
 line "3/5. Модель баланса"
 python3 tools/balance/balance_model.py || status=1
