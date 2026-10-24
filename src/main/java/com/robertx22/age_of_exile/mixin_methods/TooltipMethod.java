@@ -89,6 +89,13 @@ public class TooltipMethod {
         } catch (Throwable e) {
             e.printStackTrace();
         }
+
+        try {
+            List<Component> tooltip = list.getReturnValue();
+            com.robertx22.age_of_exile.wiki.WikiHoldToOpen.appendToTooltip(stack, tooltip);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     private static void buildTooltip(ItemStack stack, Player entity, TooltipFlag tooltipContext, CallbackInfoReturnable<List<Component>> list) {

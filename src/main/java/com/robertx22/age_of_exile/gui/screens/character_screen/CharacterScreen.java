@@ -37,7 +37,7 @@ import com.robertx22.age_of_exile.questbook.QuestBookScreen;
 import com.robertx22.age_of_exile.gui.screens.player_skills.ProfessionsScreen;
 import com.robertx22.age_of_exile.gui.screens.skill_tree.TalentsScreen;
 import com.robertx22.age_of_exile.gui.screens.spell.SpellScreen;
-import com.robertx22.age_of_exile.gui.screens.wiki.WikiScreen;
+import com.robertx22.age_of_exile.wiki.ModWikiScreen;
 import com.robertx22.age_of_exile.mmorpg.MMORPG;
 import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.saveclasses.unit.StatData;
@@ -245,7 +245,7 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
             screens.add(new SpellScreen());
             screens.add(new TalentsScreen());
             screens.add(new ProfessionsScreen());
-            screens.add(new WikiScreen());
+            screens.add(new ModWikiScreen());
             screens.add(new com.robertx22.age_of_exile.simulation.SimulationScreen());
             screens.add(new GuidesScreen());
             screens.add(new QuestBookScreen());
