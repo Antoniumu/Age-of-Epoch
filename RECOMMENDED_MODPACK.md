@@ -1,10 +1,10 @@
-# Рекомендуемая сборка Age of Epoch — 73 мода
+# Рекомендуемая сборка Age of Epoch — 72 мода
 
 **Направление:** ARPG-прогрессия Age of Epoch + исследование + переделанные данжи + живой мир +
 удобная база + атмосфера и кооператив. Версия — **Minecraft 26.3 / Fabric**.
 
 Это **одна целостная комбинация**, а не каталог взаимозаменяемых кандидатов. Лимит в 100 модов
-не заполняется ради числа: **47 🟢 нейтральных и 26 🟡 требующих настройки**, 🔴 модов с явно
+не заполняется ради числа: **46 🟢 нейтральных и 26 🟡 требующих настройки**, 🔴 модов с явно
 конкурирующей боевой системой в составе нет. Age of Epoch, Fabric API, Trinkets Updated и
 библиотеки-зависимости не включены в число 73.
 
@@ -23,7 +23,7 @@
 | **Работа с добычей** | JEI, Adaptive Tooltips, Inventory Profiles Next, Tom's Storage, ShulkerBoxTooltip, Pick Up Notifier | Длинные аффиксы остаются читаемыми, добычу удобно сортировать и разбирать после экспедиции. Это поддерживает основной ARPG-цикл, а не добавляет новую прогрессию. |
 | **Противники и жизнь мира** | Friends&Foes, Variants&Ventures, More Mobs, Naturalist | Разнообразие преимущественно обычных существ и окружения. Нет Alex's Mobs/Mutant Monsters с отдельными боссами, питомцами и экипировкой, способными переписать баланс. |
 | **База между вылазками** | Farmer's Delight, Cooking for Blockheads, Tom's Storage, 8 модулей Macaw's | Есть понятный домашний цикл: привезти добычу → разобрать → приготовить еду → улучшить базу → снова отправиться в башню или данж. |
-| **Атмосфера и кооператив** | Sodium/Iris, звук, анимации, Distant Horizons, Simple Voice Chat | Улучшается подача уже выбранного контента. Голосовой чат полезен в кооперативных башнях и Delves, но не меняет их правила. |
+| **Атмосфера и кооператив** | Sodium/Iris, звук, анимации и Simple Voice Chat | Улучшается подача уже выбранного контента. Голосовой чат полезен в кооперативных башнях и Delves, но не меняет их правила. |
 | **Производительность** | Sodium-стек, Lithium, FerriteCore, Krypton, Chunky, spark и дополнительные оптимизации | Это обязательная основа для тяжёлого worldgen, больших структур и большого числа сущностей, а не необязательное дополнение. |
 
 ### Логика игрового цикла
@@ -51,7 +51,7 @@
 
 | № | Мод | Роль в этой комбинации |
 |---:|---|---|
-| 1 | 🟢 [Sodium](https://modrinth.com/mod/sodium/versions?g=26.3&l=fabric) | Основа клиентского рендера; нужна для больших структур, Iris и Distant Horizons. |
+| 1 | 🟢 [Sodium](https://modrinth.com/mod/sodium/versions?g=26.3&l=fabric) | Основа клиентского рендера; нужна для больших структур и Iris. |
 | 2 | 🟢 [Lithium](https://modrinth.com/mod/lithium/versions?g=26.3&l=fabric) | Оптимизация игровой логики без изменения RPG-статов. |
 | 3 | 🟢 [FerriteCore](https://modrinth.com/mod/ferrite-core/versions?g=26.3&l=fabric) | Снижает потребление памяти полной сборкой. |
 | 4 | 🟢 [EntityCulling](https://modrinth.com/mod/entityculling/versions?g=26.3&l=fabric) | Не рисует скрытые сущности в плотных данжах. |
@@ -147,20 +147,35 @@ DnT-overhauls ниже — самостоятельные модули; осно
 | 62 | 🟢 [Macaw's Paths and Pavings](https://modrinth.com/mod/macaws-paths-and-pavings/versions?g=26.3&l=fabric) | Дороги между домом, фермой, хранилищем и Waystone. |
 | 63 | 🟢 [Macaw's Bridges](https://modrinth.com/mod/macaws-bridges/versions?g=26.3&l=fabric) | Мосты через реки и ущелья Terralith/Tectonic; хорошо завершает инфраструктуру базы. |
 
-## 7. Графика, звук и кооператив — 10
+## 7. Графика, звук и кооператив — 9
 
 | № | Мод | Роль в этой комбинации |
 |---:|---|---|
 | 64 | 🟢 [LambDynamicLights](https://modrinth.com/mod/lambdynamiclights/versions?g=26.3&l=fabric) | Свет факела в руке при исследовании пещер и шахт. |
 | 65 | 🟢 [Iris Shaders](https://modrinth.com/mod/iris/versions?g=26.3&l=fabric) | Шейдеры по желанию; начинать со стабильной совместимой пары Sodium/Iris, не с новейшей Beta. |
 | 66 | 🟢 [Raised](https://modrinth.com/project/nCQRBEiR/versions?g=26.3&l=fabric) | Исправляет вертикальное положение хотбара; проверить вместе с HUD Age of Epoch. |
-| 67 | 🟢 [Distant Horizons](https://modrinth.com/mod/distanthorizons/versions?g=26.3&l=fabric) | Дальние ориентиры и виды Terralith. Первый кандидат на отключение при нехватке FPS/памяти; мир от этого не ломается. |
-| 68 | 🟢 [Sound Physics Remastered](https://modrinth.com/mod/sound-physics-remastered/versions?g=26.3&l=fabric) | Эхо и затухание звука в больших DnT-залах и пещерах. |
-| 69 | 🟢 [AmbientSounds](https://modrinth.com/mod/ambientsounds/versions?g=26.3&l=fabric) | Фоновая звуковая картина биомов и окружения. |
-| 70 | 🟢 [Presence Footsteps](https://modrinth.com/mod/presence-footsteps/versions?g=26.3&l=fabric) | Шаги по разным поверхностям для походов и построек. |
-| 71 | 🟢 [Not Enough Animations](https://modrinth.com/mod/not-enough-animations/versions?g=26.3&l=fabric) | Дополнительные анимации третьего лица без Better Combat. |
-| 72 | 🟢 [Better Animations Collection](https://modrinth.com/mod/better-animations-collection/versions?g=26.3&l=fabric) | Более живые движения ванильных существ без изменения их характеристик. |
-| 73 | 🟢 [Simple Voice Chat](https://modrinth.com/mod/simple-voice-chat/versions?g=26.3&l=fabric) | Голосовая координация в кооперативных башнях, DnT-рейдах и Delves; нужен отдельный UDP-порт на сервере. |
+| 67 | 🟢 [Sound Physics Remastered](https://modrinth.com/mod/sound-physics-remastered/versions?g=26.3&l=fabric) | Эхо и затухание звука в больших DnT-залах и пещерах. |
+| 68 | 🟢 [AmbientSounds](https://modrinth.com/mod/ambientsounds/versions?g=26.3&l=fabric) | Фоновая звуковая картина биомов и окружения. |
+| 69 | 🟢 [Presence Footsteps](https://modrinth.com/mod/presence-footsteps/versions?g=26.3&l=fabric) | Шаги по разным поверхностям для походов и построек. |
+| 70 | 🟢 [Not Enough Animations](https://modrinth.com/mod/not-enough-animations/versions?g=26.3&l=fabric) | Дополнительные анимации третьего лица без Better Combat. |
+| 71 | 🟢 [Better Animations Collection](https://modrinth.com/mod/better-animations-collection/versions?g=26.3&l=fabric) | Более живые движения ванильных существ без изменения их характеристик. |
+| 72 | 🟢 [Simple Voice Chat](https://modrinth.com/mod/simple-voice-chat/versions?g=26.3&l=fabric) | Голосовая координация в кооперативных башнях, DnT-рейдах и Delves; нужен отдельный UDP-порт на сервере. |
+
+
+### Опциональная замена: Distant Horizons вместо Chunky
+
+**Distant Horizons не входит в число 72.** На 24.10.2026 подтверждена авария при создании мира
+на сочетании **Distant Horizons 3.3.4 + Chunky 1.5.3**: DH обращается к `ChunkyProvider.get()`
+до инициализации Chunky и получает `IllegalStateException: Chunky is not loaded`.
+
+- Нужен **Chunky** для обычной предгенерации — используйте основной состав без DH.
+- Нужен **Distant Horizons** — отключите/удалите **Chunky №7**, установите
+  [Distant Horizons](https://modrinth.com/mod/distanthorizons/versions?g=26.3&l=fabric)
+  и используйте его собственный Distant Generation. Общее число останется 72, поскольку это замена.
+- Не включайте эти версии снова вместе после предгенерации: ошибка относится к их совместной
+  инициализации при загрузке чанков, а не только к запущенной задаче Chunky.
+- Более нового исправленного Fabric 26.3-файла этих модов на дату проверки не найдено. Ставить
+  дополнительный сторонний патч только ради сохранения пары не требуется.
 
 ---
 
@@ -229,18 +244,18 @@ spawn-cap боевых существ или создавать непропор
 1. **Ядро:** Age of Epoch + обязательные зависимости + №1–14. Проверить запуск, H/J/K, башню и Delve.
 2. **Интерфейс:** №15–31. Проверить длинные аффиксы, сортировку, хранение и отсутствие дюпа.
 3. **Новый мир:** до создания мира поставить №32–55, затем провести datapack/loot/entity balance-pass.
-4. **База и клиент:** добавить №56–73. Distant Horizons и шейдеры включать после стабильного запуска.
+4. **База и клиент:** добавить №56–72. Шейдеры включать после стабильного запуска.
 5. **Генерация:** только после окончательного worldgen-состава сделать резервную копию и запустить Chunky.
 6. **Бой:** уровни 1/25/50, одинаковая экипировка, ванильные и новые существа; отдельно DnT-мини-боссы.
 7. **Контент:** по одной башне, Delve, DnT Stronghold, Mansion, Nether Fortress и Ocean Monument.
 8. **Кооператив:** spark под нагрузкой, Simple Voice Chat UDP, отсутствие двойного лута и неверных уровней.
 
-Если нужен быстрый облегчённый вариант, сначала убираются **шейдеры и Distant Horizons**, а не
-системные моды Age of Epoch и не оптимизация сервера.
+Если нужен быстрый облегчённый вариант, сначала отключаются **шейдеры**, а Distant Horizons
+просто не добавляется. Системные моды Age of Epoch и оптимизация сервера остаются на месте.
 
 ## Итог
 
-Эти 73 мода выбраны не потому, что каждый «популярный», а потому что закрывают разные части одного
+Эти 72 мода выбраны не потому, что каждый «популярный», а потому что закрывают разные части одного
 цикла: **подготовка → исследование → данж → добыча → база → более сложный контент Age of Epoch**.
 Главная последовательность сборки — единая DnT-серия вместо случайного набора данжей, vanilla-like
 существа вместо второй линейки боссов, инструменты разбора RPG-добычи и отсутствие модов, которые

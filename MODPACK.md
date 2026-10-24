@@ -6,7 +6,7 @@ RPG-системой и главным источником баланса. Эт
 редакции, но прежнее правило «возьмите №1–50» отменено.
 
 Если нужна одна готовая по составу комбинация вместо справочника, см.
-[`RECOMMENDED_MODPACK.md`](RECOMMENDED_MODPACK.md) — **73 мода и объяснение их совместной роли**.
+[`RECOMMENDED_MODPACK.md`](RECOMMENDED_MODPACK.md) — **72 мода и объяснение их совместной роли**.
 
 **Итого: 34 🟢 нейтральных, 25 🟡 условных и 6 🔴 высокорисковых модов.**
 Age of Epoch, Fabric API, Trinkets Updated и библиотеки-зависимости в это число **не входят**.
@@ -174,7 +174,7 @@ Age of Epoch, Fabric API, Trinkets Updated и библиотеки-зависи�
 | 55 | 🟡 [MSS — Moog's Soaring Structures](https://modrinth.com/mod/mss-moogs-soaring-structures/versions?g=26.3&l=fabric) | Не входит в профиль баланса: добавляет острова, мобов и добычу поверх уже плотного набора структур. Возможен только после замеров плотности, Благосклонности и награды в час. |
 | 56 | 🟡 [Carry On](https://modrinth.com/mod/carry-on/versions?g=26.3&l=fabric) | Не входит в профиль баланса: перенос спавнеров, контейнеров и мобов способен обходить устройство данжей и правила наград. Если добавлять — blacklist на спавнеры, наградные контейнеры и боссов. |
 | 57 | 🟡 [Tree Harvester](https://modrinth.com/mod/tree-harvester/versions?g=26.3&l=fabric) | Не входит в профиль баланса: ускоряет ресурсную и профессиональную экономику. Добавлять только после проверки, что опыт и дроп начисляются корректно за каждый блок и не возникает ускоренный фарм. |
-| 58 | 🟢 [Distant Horizons](https://modrinth.com/mod/distanthorizons/versions?g=26.3&l=fabric) | Дальние пейзажи и ориентиры при исследовании. Тяжёлая опция: тестируйте FPS, память и совместную работу с Sodium/Iris. |
+| 58 | 🟢 [BadOptimizations](https://modrinth.com/mod/badoptimizations/versions?g=26.3&l=fabric) | Дополнительные клиентские оптимизации поверх Sodium-стека; не меняет игровой баланс. |
 | 59 | 🔴 [Better Combat](https://modrinth.com/mod/better-combat/versions?g=26.3&l=fabric) | Не входит в профиль баланса до проверки всего пути атаки. Комбо, дальность и скорость меняют DPS и бюджет экспедиций; отдельно проверить valid attack, урон Age of Epoch, заклинания и `gear_compatibility` оружия. |
 | 60 | 🟢 [Sound Physics Remastered](https://modrinth.com/mod/sound-physics-remastered/versions?g=26.3&l=fabric) | Эхо, затухание и направление звука улучшают атмосферу пещер и больших залов. |
 | 61 | 🟢 [AmbientSounds](https://modrinth.com/mod/ambientsounds/versions?g=26.3&l=fabric) | Фоновые звуки биомов и окружения. Клиентский мод, заметный по размеру. |
@@ -182,6 +182,10 @@ Age of Epoch, Fabric API, Trinkets Updated и библиотеки-зависи�
 | 63 | 🟢 [Not Enough Animations](https://modrinth.com/mod/not-enough-animations/versions?g=26.3&l=fabric) | Дополнительные анимации от третьего лица. Если Better Combat добавляется в отдельном custom-профиле, проверьте визуальные пересечения. |
 | 64 | 🟢 [Better Animations Collection](https://modrinth.com/mod/better-animations-collection/versions?g=26.3&l=fabric) | Более живые движения ванильных существ без изменения их характеристик. |
 | 65 | 🟢 [Simple Voice Chat](https://modrinth.com/mod/simple-voice-chat/versions?g=26.3&l=fabric) | Голосовая координация в кооперативных боссах и данжах; нужен только при игре с другими людьми. |
+
+> **Distant Horizons исключён из нумерованного каталога 24.10.2026:** сочетание DH 3.3.4 +
+> Chunky 1.5.3 падает при создании мира с `Chunky is not loaded`. При желании DH можно ставить
+> **вместо Chunky №7**, но не одновременно с ним; в профиле из 50 его место занимает BadOptimizations.
 
 ---
 
