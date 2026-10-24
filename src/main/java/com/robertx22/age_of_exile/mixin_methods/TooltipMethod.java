@@ -12,6 +12,7 @@ import com.robertx22.age_of_exile.uncommon.datasaving.Gear;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.datasaving.StackSaving;
 import com.robertx22.age_of_exile.uncommon.interfaces.data_items.ICommonDataItem;
+import com.robertx22.age_of_exile.uncommon.localization.ItemDescriptions;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.StackNBT;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.TooltipUtils;
 import com.robertx22.forge_compat.client.Screen;
@@ -68,7 +69,29 @@ public class TooltipMethod {
         }
     }
 
+    /**
+     * Точка входа из {@link com.robertx22.age_of_exile.mixins.ItemStackMixin}.
+     * Сначала собирается обычный тултип предмета, затем добавляются Alt-описания
+     * (или подсказка «[Alt] — описание»), поэтому описания есть у всех предметов мода,
+     * даже у тех, чей тултип строится с ранним выходом.
+     */
     public static void getTooltip(ItemStack stack, Player entity, TooltipFlag tooltipContext, CallbackInfoReturnable<List<Component>> list) {
+
+        try {
+            buildTooltip(stack, entity, tooltipContext, list);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+
+        try {
+            List<Component> tooltip = list.getReturnValue();
+            ItemDescriptions.appendToTooltip(stack, tooltip);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void buildTooltip(ItemStack stack, Player entity, TooltipFlag tooltipContext, CallbackInfoReturnable<List<Component>> list) {
 
         List<Component> tooltip = list.getReturnValue();
 
