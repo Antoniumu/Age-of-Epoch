@@ -86,9 +86,31 @@ public class GearSoulOnInvTick {
                         Load.playerRPGData(player).professions.addExp(player, pdata.getProfession(), exp);
                     }
 
+                    // Ежедневная цель: «создать N предметов ремеслом».
+                    if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+                        com.robertx22.age_of_exile.gamemaster.GameMaster.get()
+                            .onCrafted(serverPlayer);
+                    }
+
                 } else {
-                    stack.shrink(1);
-                    PlayerUtils.giveItem(new ItemStack(Items.GUNPOWDER), player); // todo give specific fail items for each profession?
+                    PlayerSkillEnum skill = pdata.getProfession();
+
+                    if (skill.isGearCraftingProf()) {
+                        // Провал больше не уничтожает базу снаряжения: теряются только
+                        // ингредиенты. Раньше игрок лишался и базы (железный нагрудник,
+                        // кольцо), и 6 ингредиентов, и не получал опыта — это был
+                        // гарантированный минус к прогрессу.
+                        StackNBT.getOrCreate(stack)
+                            .remove(StackSaving.CRAFT_PROCESS.GUID());
+                        if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+                            serverPlayer.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                                    "Крафт не удался: ингредиенты потеряны, предмет сохранён.")
+                                .withStyle(net.minecraft.ChatFormatting.RED));
+                        }
+                    } else {
+                        stack.shrink(1);
+                        PlayerUtils.giveItem(new ItemStack(Items.GUNPOWDER), player);
+                    }
                 }
                 return true;
             } catch (Exception e) {

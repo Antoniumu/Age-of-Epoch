@@ -70,10 +70,12 @@ public class ServerContainer {
         PLAYER_VANILLA_DMG_MULTI = b.defineInRange("PLAYER_VANILLA_DMG_MULTI", 0D, 0, 1000);
         PVP_DMG_MULTI = b.defineInRange("pvp_dmg_multi", 1D, 0, 1000);
 
+        // Внимание: это ПРОЦЕНТЫ на одно событие лута (WhileRoll -> RandomUtils.roll,
+        // который сравнивает с nextDouble()*100). Значение 0.5 = 0.5%, а не 50%.
         GEAR_DROPRATE = b.defineInRange("gear_drop_rate", 7D, 0, 1000);
-        GEM_DROPRATE = b.defineInRange("gem_drop_rate", 0.5D, 0, 1000);
+        GEM_DROPRATE = b.defineInRange("gem_drop_rate", 1.5D, 0, 1000);
         INGREDIENT_DROPRATE = b.defineInRange("ingredient_drop_rate", 5D, 0, 1000);
-        RUNE_DROPRATE = b.defineInRange("rune_drop_rate", 0.05D, 0, 1000);
+        RUNE_DROPRATE = b.defineInRange("rune_drop_rate", 0.15D, 0, 1000);
         CURRENCY_DROPRATE = b.defineInRange("currency_drop_rate", 0.2D, 0, 1000);
 
         DIFFICULTY_PER_SECOND = b.defineInRange("DIFFICULTY_PER_SECOND", 0.0005D, -1000, 1000);

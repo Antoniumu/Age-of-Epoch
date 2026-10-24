@@ -182,17 +182,33 @@ public class MasterLootGen {
                 return;
             }
             for (ItemStack stack : items) {
-                if (stack == null || stack.isEmpty() || !Gear.has(stack)) {
+                if (stack == null || stack.isEmpty()) {
+                    continue;
+                }
+
+                // Гир падает ДУШАМИ, поэтому сначала смотрим в душу: раньше кодекс
+                // проверял только Gear.has() и не видел ни одного униката с моба/сундука.
+                if (com.robertx22.age_of_exile.uncommon.datasaving.StackSaving.STAT_SOULS.has(stack)) {
+                    com.robertx22.age_of_exile.saveclasses.stat_soul.StatSoulData soul =
+                        com.robertx22.age_of_exile.uncommon.datasaving.StackSaving.STAT_SOULS.loadFrom(stack);
+                    if (soul != null && soul.uniq != null && !soul.uniq.isEmpty()) {
+                        gm.recordCodex(serverPlayer, soul.uniq);
+                    }
+                    continue;
+                }
+
+                if (!Gear.has(stack)) {
                     continue;
                 }
                 com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData data = Gear.Load(stack);
                 if (data == null || data.getRarity() == null || !data.getRarity().is_unique_item) {
                     continue;
                 }
-                String id = data.item_id == null || data.item_id.isEmpty()
-                    ? BuiltInRegistries.ITEM.getKey(stack.getItem())
-                    .toString()
-                    : data.item_id;
+                String id = data.uniq_id == null || data.uniq_id.isEmpty()
+                    ? (data.item_id == null || data.item_id.isEmpty()
+                    ? BuiltInRegistries.ITEM.getKey(stack.getItem()).toString()
+                    : data.item_id)
+                    : data.uniq_id;
                 gm.recordCodex(serverPlayer, id);
             }
         } catch (Exception ignored) {

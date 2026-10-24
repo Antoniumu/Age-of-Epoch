@@ -17,8 +17,8 @@ public class RunewordBuilder {
         word.runes = runes.stream()
             .map(x -> x.id)
             .collect(Collectors.toList());
-        word.addToSerializables();
         word.slots.addAll(Arrays.asList(gear_slots));
+        word.addToSerializables();
     }
 
 }

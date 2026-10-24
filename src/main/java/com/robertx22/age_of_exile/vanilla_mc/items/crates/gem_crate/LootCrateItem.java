@@ -74,12 +74,16 @@ public class LootCrateItem extends Item implements IGUID {
                     Gem gem = ExileDB.Gems()
                         .getFilterWrapped(x -> data.tier == x.tier)
                         .random();
-                    reward = new ItemStack(gem.getItem());
+                    if (gem != null) {
+                        reward = new ItemStack(gem.getItem());
+                    }
                 } else if (data.type == LootType.Rune) {
                     Rune rune = ExileDB.Runes()
                         .getFilterWrapped(x -> data.tier >= x.tier)
                         .random();
-                    reward = new ItemStack(rune.getItem());
+                    if (rune != null) {
+                        reward = new ItemStack(rune.getItem());
+                    }
                 } else if (data.type == LootType.Currency) {
                     CurrencyItem currency = ExileDB.CurrencyItems()
                         .getFilterWrapped(x -> data.tier >= x.getTier())
@@ -89,6 +93,15 @@ public class LootCrateItem extends Item implements IGUID {
                             .random();
                     }
                     reward = new ItemStack(currency);
+                }
+
+                if (reward.isEmpty()) {
+                    // Например, рунной краты 0-го тира: подходящих рун ещё нет.
+                    // Раньше здесь был NPE, крат оставался в инвентаре без объяснений.
+                    player.sendSystemMessage(Component.literal(
+                            "Из этого сундука пока нечего получить: подходящих предметов для вашего уровня ещё нет.")
+                        .withStyle(ChatFormatting.RED));
+                    return InteractionResult.PASS;
                 }
 
                 stack.shrink(1);

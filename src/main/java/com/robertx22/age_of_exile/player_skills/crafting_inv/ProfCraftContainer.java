@@ -26,6 +26,9 @@ public class ProfCraftContainer extends BaseTileContainer {
 
     PlayerSkillEnum skill;
 
+    /** Последняя причина отказа, отправленная клиенту (чтобы не спамить пакетами). */
+    private String lastFailReason = "";
+
     public ProfCraftContainer(int syncid, Inventory playerinv, FriendlyByteBuf buf) {
         this(
             resolveHandStack(playerinv.player, buf),
@@ -107,10 +110,13 @@ public class ProfCraftContainer extends BaseTileContainer {
 
             ProfCraftResult result = ProfCraftingRecipe.canCraft(player, craftInv, resultInv, skill);
 
-            if (result.reason != null) {
-                Packets.sendToClient(player, new FailReasonPacket(result.reason.locName()));
-            } else {
-                Packets.sendToClient(player, new FailReasonPacket(com.robertx22.age_of_exile.uncommon.localization.Words.EmptyString.locName()));
+            String reason = result.reason != null ? result.reason.locName().getString() : "";
+
+            if (!reason.equals(lastFailReason)) {
+                lastFailReason = reason;
+                Packets.sendToClient(player, new FailReasonPacket(result.reason != null
+                    ? result.reason.locName()
+                    : com.robertx22.age_of_exile.uncommon.localization.Words.EmptyString.locName()));
             }
 
             if (result.canCraft) {

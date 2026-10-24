@@ -195,7 +195,7 @@ def fireball_damage(lvl, spell_power=None):
 # дроп и благосклонность (favor)
 # --------------------------------------------------------------------------
 
-DROP_RATE = {"gear": 7.0, "gem": 0.5, "ingredient": 5.0, "rune": 0.05, "currency": 0.2}
+DROP_RATE = {"gear": 7.0, "gem": 1.5, "ingredient": 5.0, "rune": 0.15, "currency": 0.2}
 GEAR_RARITY_WEIGHT = {"common": 5000, "uncommon": 2000, "rare": 300, "epic": 100, "unique": 100}
 
 
@@ -208,6 +208,29 @@ def loot_modifier(lvl, rarity="common", vanilla_hp=20):
 
 def drop_chance(lvl, kind, rarity="common"):
     return DROP_RATE[kind] * loot_modifier(lvl, rarity)
+
+
+def pity_ramp(kills, start, full):
+    """Retention.pityChance/runePityChance: 0 до start, линейно до 0.9 к full."""
+    if kills < start:
+        return 0.0
+    return 0.9 * min(1.0, max(0.0, (kills - start) / float(full - start)))
+
+
+def mean_interval(hazard, start=None, full=None, cap=20000):
+    """Среднее число убийств между дропами с учётом pity-валика.
+
+    hazard — базовый шанс на убийство (доля, не проценты). Для уникатов pity
+    бросается только вместе с гиром, поэтому фактический интервал там больше
+    расчётного: это отдельно видно в симуляции сезона (season_sim.py).
+    """
+    survival = 1.0
+    total = 0.0
+    for n in range(cap):
+        h = hazard if start is None else hazard + (1 - hazard) * pity_ramp(n, start, full)
+        survival *= (1 - h)
+        total += survival
+    return total
 
 
 def gear_rarity_chances():
@@ -355,6 +378,21 @@ def table_loot():
         print(f"- {kind}: {rate * loot_modifier(50) :.1f}")
     print()
     print("Редкости гира: " + ", ".join(f"{k} {v*100:.2f}%" for k, v in rar.items()))
+    print()
+
+    # Точный дроп с pity (Retention) — не «на глаз», а матожидание интервала.
+    print("### Дроп с учётом pity (Retention), обычный моб своего уровня\n")
+    base = {k: DROP_RATE[k] * loot_modifier(50) / 100.0 for k in DROP_RATE}
+    rune_i = mean_interval(base["rune"], 150, 450)
+    gem_i = mean_interval(base["gem"], 120, 400)
+    print("| Что | Базовый шанс на убийство | Средний интервал (убийств) | За 8 300 убийств |")
+    print("|---|---:|---:|---:|")
+    print(f"| Уникат | {rar['unique']*base['gear']*100:.3f}% | ~285 (pity 250→900) | ~29 |")
+    print(f"| Руна | {base['rune']*100:.3f}% | {rune_i:.0f} | {8302/rune_i:.0f} |")
+    print(f"| Самоцвет | {base['gem']*100:.3f}% | {gem_i:.0f} | {8302/gem_i:.0f} |")
+    print(f"| Душа гира | {base['gear']*100:.1f}% | {1/base['gear']:.0f} | {8302*base['gear']:.0f} |")
+    print(f"| Ингредиент | {base['ingredient']*100:.1f}% | {1/base['ingredient']:.0f} | {8302*base['ingredient']:.0f} |")
+    print(f"| Валюта | {base['currency']*100:.2f}% | {1/base['currency']:.0f} | {8302*base['currency']:.0f} |")
     print()
 
 
@@ -517,20 +555,30 @@ def table_soft_death():
     print("| 1–4 | −10% опыта | ничего |")
     print("| 5+ | −10% опыта | печать: ×0.85 опыт, 3 убийства или 10 мин |")
     print()
-    print("**Pity рун.** Базовый шанс руны — 5% на дроп (ожидаемое число предметов 0.05),")
-    print("самоцвета — 50%. Поэтому «сухие» серии короткие, но хвост всё равно есть:")
+    rune_hazard = DROP_RATE["rune"] * loot_modifier(50) / 100.0
+    print("**Pity рун.** RUNE_DROPRATE = 0.15 — это 0.15% на событие лута (после WhileRoll")
+    print("и множителя моба ~0.225%), а не «5%». Pity включается после 150 сухих убийств")
+    print("и доходит до 90% к 450. «Сухие» серии при таком базовом шансе:")
     print()
-    print("| Убийств без руны | Вероятность такого везения |")
+    print("| Убийств без руны | Вероятность без pity |")
     print("|---:|---:|")
-    for k in (20, 40, 50, 75, 100, 150):
-        print(f"| {k} | {math.pow(0.95, k)*100:.2f}% |")
+    for k in (150, 300, 450, 600, 900):
+        print(f"| {k} | {math.pow(1 - rune_hazard, k)*100:.2f}% |")
     print()
-    print("Pity включается после 50 убийств и доходит до 90% к 150 — то есть закрывает")
-    print("последние 7–8% случаев, не меняя типичный опыт.")
+    print(f"Средний интервал руны с pity — **{mean_interval(rune_hazard, 150, 450):.0f}** убийств")
+    print(f"(без pity было бы {1/rune_hazard:.0f}). За полный путь 1→50 это ~58 рун.")
     print()
-    print("**Кодекс уникатов.** Каждые 10 разных уникатов — +300×(ступень) Благосклонности")
-    print("и гарантированный эпик. При 60 уникатах в пуле это 6 ступеней и ощутимая")
-    print("мета-цель: «собрано 12 из 60» видно всегда, контент для неё уже есть.")
+    gem_hazard = DROP_RATE["gem"] * loot_modifier(50) / 100.0
+    print(f"**Самоцветы.** Базовый шанс {gem_hazard*100:.2f}% → интервал {1/gem_hazard:.0f} убийств;")
+    print(f"pity (120→400) срабатывает редко (вероятность 120 сухих убийств "
+          f"{math.pow(1-gem_hazard,120)*100:.1f}%), поэтому интервал ~{mean_interval(gem_hazard,120,400):.0f}.")
+    print("Итог за путь: ~195 самоцветов на игрока — этого хватает на 2–3 сокета")
+    print("и несколько попыток повышения ранга, но не на «все 9 видов и 7 рангов».")
+    print()
+    print("**Кодекс уникатов.** Шаг 10 разных уникатов = +300×ступень Благосклонности")
+    print("и эпик. В пуле сейчас 11 базовых уникатов (+1 fabled), то есть достижима")
+    print("ровно одна ступень: кодекс закрывается к ~60% сезона и перестаёт быть целью.")
+    print("Решение: шаг 3 (ступени на 3/6/9) — три награды на тот же пул.")
     print()
 
 

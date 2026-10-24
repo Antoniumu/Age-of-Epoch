@@ -47,6 +47,13 @@ public class OnLootChestEvent extends EventConsumer<ExileEvents.OnChestLooted> {
 
         List<ItemStack> items = MasterLootGen.generateLoot(info);
 
+        // Ежедневная цель: «открыть N сундуков». Считаем до выдачи предметов,
+        // чтобы награда ощущалась в момент открытия.
+        if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+            com.robertx22.age_of_exile.gamemaster.GameMaster.get()
+                .onChestOpened(serverPlayer);
+        }
+
         // Телеметрия: сундуки мира и данжей — что и сколько из них достают.
         try {
             if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {

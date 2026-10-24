@@ -814,15 +814,51 @@ public class GameMaster {
             }
         }
 
-        // Цель сессии: награда выдаётся в момент выполнения.
+        // Цель дня: награда выдаётся в момент выполнения.
         int goalReward = Retention.registerKill(progress, now, config);
+        payGoal(player, progress, goalReward, "убийства");
+        dirty = true;
+    }
+
+    /**
+     * Прогресс ежедневной цели другого типа (сундуки, ремесло).
+     * Вызывается из событий открытия сундука и успешного крафта.
+     */
+    public void onDailyGoalAction(ServerPlayer player, int kind, int amount) {
+        if (!loaded || player == null || !config.retention_enabled) {
+            return;
+        }
+        PlayerProgress progress = data.get(player.getUUID()
+            .toString());
+        if (progress == null) {
+            return;
+        }
+        long now = now();
+        int goalReward = Retention.registerGoalProgress(progress, kind, amount, now, config);
         if (goalReward > 0) {
-            grantFavor(player, progress, goalReward);
-            player.sendSystemMessage(Component.literal("GameMaster: цель сессии выполнена! +"
-                + goalReward + " Благосклонности").withStyle(ChatFormatting.GREEN));
-            telemetry.retained(player, "session_goal", "", goalReward);
+            payGoal(player, progress, goalReward, kind == Retention.GOAL_CHESTS ? "сундуки" : "ремесло");
         }
         dirty = true;
+    }
+
+    /** Открыт сундук (мир или данж) — считаем в ежедневную цель. */
+    public void onChestOpened(ServerPlayer player) {
+        onDailyGoalAction(player, Retention.GOAL_CHESTS, 1);
+    }
+
+    /** Успешный крафт — считаем в ежедневную цель. */
+    public void onCrafted(ServerPlayer player) {
+        onDailyGoalAction(player, Retention.GOAL_CRAFTS, 1);
+    }
+
+    private void payGoal(ServerPlayer player, PlayerProgress progress, int goalReward, String what) {
+        if (goalReward <= 0) {
+            return;
+        }
+        grantFavor(player, progress, goalReward);
+        player.sendSystemMessage(Component.literal("GameMaster: цель дня выполнена (" + what + ")! +"
+            + goalReward + " Благосклонности").withStyle(ChatFormatting.GREEN));
+        telemetry.retained(player, "session_goal", what, goalReward);
     }
 
     /** Учитывает выпадение униката: сбрасывает счётчик pity. */
@@ -2064,6 +2100,7 @@ public class GameMaster {
         json.addProperty("guaranteed_epic", progress.guaranteed_epic);
         json.addProperty("coop_multiplier", round2(config.social_enabled
             ? Social.coopExp(coopCache, config) : 1));
+        json.addProperty("session_goal_kind", progress.session_goal_kind);
         json.addProperty("session_goal_progress", progress.session_goal_progress);
         json.addProperty("session_goal_target", progress.session_goal_target);
         json.addProperty("session_goal_done", progress.session_goal_done);

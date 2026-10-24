@@ -22,7 +22,9 @@ public class GridHelper {
 
         for (int x = 0; x < 3; x++) {
             for (int y = 0; y < 2; y++) {
-                grid[x][y] = ingredients.get(i);
+                // Сетка всегда 3x2; если в сохранении меньше записей (старый NBT
+                // или другая версия контейнера), просто оставляем слот пустым.
+                grid[x][y] = i < ingredients.size() ? ingredients.get(i) : null;
                 placePointMap.put(i, new PointData(x, y));
                 i++;
             }
@@ -54,6 +56,10 @@ public class GridHelper {
                         float multiadd = -1F + ((100F + num) / 100F);
 
                         PointData point = placePointMap.get(x.place);
+
+                        if (point == null) {
+                            continue;
+                        }
 
                         stat.getIngredientsAffected(point)
                             .forEach(s -> {

@@ -33,6 +33,12 @@ public final class Retention {
         public String text = "";
     }
 
+    /** Типы ежедневной цели. */
+    public static final int GOAL_KILLS = 0;
+    public static final int GOAL_CHESTS = 1;
+    public static final int GOAL_CRAFTS = 2;
+    public static final int GOAL_KINDS = 3;
+
     /** Номер суток (UTC) — стабильный «игровой день» без привязки к часовому поясу. */
     public static long dayIndex(long epochSeconds) {
         return Math.max(0, epochSeconds) / 86400L;
@@ -163,9 +169,24 @@ public final class Retention {
         }
         long today = dayIndex(now);
         if (progress.session_goal_day != today || progress.session_goal_target <= 0) {
+            // Три вида ежедневной задачи чередуются по суткам: одна и та же «убей N мобов»
+            // каждый день приедается. Тип зависит от суток и уровня, чтобы у игроков
+            // в компании задачи иногда совпадали, а иногда — нет.
+            int kind = (int) Math.floorMod(today + level / 10, GOAL_KINDS);
+
             int cap = Math.max(1, config.retention_session_goal_max);
-            int target = (int) Math.round(clamp(12 + level * 1.5, 12, cap));
+            int target;
+
+            if (kind == GOAL_CHESTS) {
+                target = (int) clamp(2 + level / 10, 2, Math.min(6, cap));
+            } else if (kind == GOAL_CRAFTS) {
+                target = (int) clamp(3 + level / 8, 3, Math.min(8, cap));
+            } else {
+                target = (int) Math.round(clamp(12 + level * 1.5, 12, cap));
+            }
+
             progress.session_goal_day = today;
+            progress.session_goal_kind = kind;
             progress.session_goal_target = target;
             progress.session_goal_progress = 0;
             progress.session_goal_done = false;
@@ -185,9 +206,15 @@ public final class Retention {
         goal.progress = Math.min(progress.session_goal_progress, progress.session_goal_target);
         goal.reward = progress.session_goal_reward;
         goal.done = progress.session_goal_done;
+        String what = switch (progress.session_goal_kind) {
+            case GOAL_CHESTS -> "открыть " + goal.target + " сундуков";
+            case GOAL_CRAFTS -> "создать " + goal.target + " предметов ремеслом";
+            default -> "убить " + goal.target + " мобов";
+        };
+
         goal.text = goal.done
-            ? "Цель сессии выполнена"
-            : "Цель сессии: убить " + goal.target + " мобов (" + goal.progress + "/" + goal.target
+            ? "Цель дня выполнена"
+            : "Цель дня: " + what + " (" + goal.progress + "/" + goal.target
             + ") → +" + goal.reward + " Благосклонности";
         return goal;
     }
@@ -198,6 +225,16 @@ public final class Retention {
      * @return награда, если цель только что выполнена, иначе 0
      */
     public static int registerKill(PlayerProgress progress, long now, GameMasterConfig config) {
+        return registerGoalProgress(progress, GOAL_KILLS, 1, now, config);
+    }
+
+    /**
+     * Учитывает прогресс ежедневной цели любого типа.
+     *
+     * @return награда, если цель только что выполнена, иначе 0
+     */
+    public static int registerGoalProgress(PlayerProgress progress, int kind, int amount,
+                                           long now, GameMasterConfig config) {
         if (progress == null || config == null || !config.retention_session_goal) {
             return 0;
         }
@@ -207,7 +244,10 @@ public final class Retention {
         if (progress.session_goal_day != dayIndex(now)) {
             return 0;
         }
-        progress.session_goal_progress++;
+        if (progress.session_goal_kind != kind) {
+            return 0;
+        }
+        progress.session_goal_progress += Math.max(1, amount);
         if (progress.session_goal_progress >= progress.session_goal_target) {
             progress.session_goal_done = true;
             return Math.max(0, progress.session_goal_reward);
@@ -289,8 +329,13 @@ public final class Retention {
     // ------------------------------------------------------------------
 
     /**
-     * Шанс «принудительной» руны за один дроп. Рун в игре мало (0.05% базового шанса —
-     * это ~2000 убийств), поэтому сухая серия здесь ещё длиннее, чем у уникатов.
+     * Шанс «принудительной» руны за один дроп.
+     *
+     * База — 0.15% на событие лута (после множителя моба ~0.225%), то есть ~444 убийства
+     * на руну. Без pity половина игроков ждала бы первую руну больше 300 убийств, а
+     * рунные слова — это единственный «долгий» крафт в игре. Pity включается на 200 и
+     * доходит до 90% к 700: матожидание интервала ~190 убийств, за путь 1→50 ~43 руны
+     * (7 рунных слов требуют ~24 руны, то есть на слова хватает, но не «всё сразу»).
      */
     public static double runePityChance(int killsSinceRune, GameMasterConfig config) {
         if (config == null || !config.retention_pity_runes) {

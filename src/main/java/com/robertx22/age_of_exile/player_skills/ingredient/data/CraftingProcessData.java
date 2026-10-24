@@ -317,8 +317,9 @@ public class CraftingProcessData {
 
         data.cr = new CraftedStatsData();
 
-        while (stats.size() > rar.affixes) {
-            // don't allow more stats than rarity allows
+        int maxCrafted = getMaxCraftedStats(rar);
+
+        while (stats.size() > maxCrafted) {
             stats.remove(RandomUtils.RandomRange(0, stats.size() - 1));
         }
 
@@ -333,6 +334,31 @@ public class CraftingProcessData {
         data.up.regenerate(data.getRarity());
 
         return data; // todo
+    }
+
+    /**
+     * Сколько статов от ингредиентов остаётся на скрафченном предмете.
+     *
+     * Раньше лимитом был {@code rar.affixes} — а у common он равен 0. Из-за этого
+     * 67% крафтов выходили вообще без статов, а 6 ингредиентов давали в среднем
+     * 1.2 стата из 6-12. Теперь потолок свой: редкость задаёт максимум, число
+     * ингредиентов — сколько игрок реально вложил (но не меньше 1).
+     */
+    int getMaxCraftedStats(GearRarity rar) {
+        String id = rar == null ? "" : rar.GUID();
+        int byRarity;
+        if (IRarity.COMMON_ID.equals(id)) {
+            byRarity = 2;
+        } else if (IRarity.UNCOMMON.equals(id)) {
+            byRarity = 3;
+        } else if (IRarity.RARE_ID.equals(id)) {
+            byRarity = 4;
+        } else if (IRarity.EPIC_ID.equals(id)) {
+            byRarity = 5;
+        } else {
+            byRarity = 3;
+        }
+        return Math.max(1, Math.min(byRarity, Math.max(1, getIngredientsCount())));
     }
 
     public CraftedConsumableData craftConsumable(Player player) {

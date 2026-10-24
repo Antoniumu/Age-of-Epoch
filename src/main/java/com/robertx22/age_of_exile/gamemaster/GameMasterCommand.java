@@ -401,6 +401,8 @@ public class GameMasterCommand {
             + config.retention_pity_start_kills + " до " + config.retention_pity_full_kills
             + " убийств без униката");
         send(source, "Смерть не отнимает опыт до " + config.retention_no_exp_loss_level + " уровня.");
+        send(source, "Цель дня чередуется: убийства / сундуки / ремесло, награда от "
+            + GameMaster.fmt(config.retention_session_goal_favor) + " Благосклонности.");
         long now = GameMaster.now();
         int best = 0;
         double risk = 0;

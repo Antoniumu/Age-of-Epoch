@@ -97,6 +97,9 @@ public class PlayerProgress {
     public int guaranteed_rare = 0;
     public int guaranteed_epic = 0;
 
+    /** Тип ежедневной цели: 0 — убийства, 1 — сундуки, 2 — ремесло. */
+    public int session_goal_kind = 0;
+
     /** Цель на сессию: сколько убийств нужно и сколько уже сделано. */
     public int session_goal_target = 0;
     public int session_goal_progress = 0;

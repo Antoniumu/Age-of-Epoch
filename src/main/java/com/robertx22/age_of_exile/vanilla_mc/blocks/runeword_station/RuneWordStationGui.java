@@ -91,21 +91,20 @@ public class RuneWordStationGui extends ModificationGui<RuneWordStationContainer
 
                 if (tile.getGearStack()
                     .isEmpty()) {
+                    // Предмета нет — показываем каталог всех слов как справочник,
+                    // но ни одно не помечаем «готово».
                     this.words = ExileDB.RuneWords()
                         .getList();
+                    this.anyReady = false;
 
                 } else {
 
+                    // Список строится по тем же правилам, что и сам крафт (только 6 слотов
+                    // рун + точный набор), иначе GUI обещает слова, которые не соберутся.
                     List<ItemStack> runes = new ArrayList<>();
 
-                    for (int slot : RuneWordStationTile.STORAGE_SLOTS) {
-                        runes.add(tile.itemStacks[slot]);
-                    }
                     for (int slot : RuneWordStationTile.RUNE_SLOTS) {
                         runes.add(tile.itemStacks[slot]);
-                    }
-                    for (int i = 0; i < mc.player.getInventory().getContainerSize(); i++) {
-                        runes.add(mc.player.getInventory().getItem(i));
                     }
 
                     runes.removeIf(x -> x.isEmpty() || x.getItem() instanceof RuneItem == false);
@@ -115,14 +114,16 @@ public class RuneWordStationGui extends ModificationGui<RuneWordStationContainer
                         .collect(Collectors.toList());
 
                     FilterListWrap<RuneWord> wrap = ExileDB.RuneWords()
-                        .getFilterWrapped(x -> x.runesCanActivateRuneWord(runesStrings, false));
+                        .getFilterWrapped(x -> x.runesCanActivateRuneWord(runesStrings, true));
 
                     if (!tile.getGearStack()
                         .isEmpty()) {
                         wrap.of(x -> x.canApplyOnItem(tile.getGearStack()));
                     }
 
-                    words = wrap.list;
+                    words = new ArrayList<>(wrap.list);
+                    words.sort(java.util.Comparator.comparing((RuneWord x) -> x.id));
+                    this.anyReady = !words.isEmpty();
                 }
 
                 if (index >= words.size()) {
@@ -138,7 +139,9 @@ public class RuneWordStationGui extends ModificationGui<RuneWordStationContainer
                     if (words.size() > i) {
                         RuneWord word = this.words.get(i);
 
-                        addButton(new RuneWordButton(word, true, this.leftPos + 5, this.topPos + 18 + count * RuneWordButton.Y));
+                        boolean willCraft = this.anyReady && i == 0;
+
+                        addButton(new RuneWordButton(word, willCraft, this.leftPos + 5, this.topPos + 18 + count * RuneWordButton.Y));
 
                         count++;
                     }
@@ -159,6 +162,9 @@ public class RuneWordStationGui extends ModificationGui<RuneWordStationContainer
             this.addButton(new CraftButton(targetPos, this.leftPos + 176, this.topPos + 50));
         }
     }
+
+    /** true, если в станции лежит предмет и в слотах ровно тот набор рун, который соберёт слово. */
+    private boolean anyReady = false;
 
     private static final Identifier BUTTON_TEX = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/craft_button.png");
     private static final Identifier RUNEWORD_BUTTON_TEX = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/runeword_button.png");
@@ -229,9 +235,14 @@ public class RuneWordStationGui extends ModificationGui<RuneWordStationContainer
                     UniqueGear uniq = ExileDB.UniqueGears()
                         .get(word.uniq_id);
 
-                    tooltip.add(uniq.locName()
-                        .withStyle(uniq.getUniqueRarity()
-                            .textFormatting()));
+                    if (uniq == null) {
+                        tooltip.add(Component.literal("Слово без униката: " + word.id)
+                            .withStyle(ChatFormatting.RED));
+                    } else {
+                        tooltip.add(uniq.locName()
+                            .withStyle(uniq.getUniqueRarity()
+                                .textFormatting()));
+                    }
 
                     String runes = "";
 
@@ -244,13 +255,22 @@ public class RuneWordStationGui extends ModificationGui<RuneWordStationContainer
 
                     tooltip.add(Component.literal(runes).withStyle(ChatFormatting.GOLD));
 
-                    String usedOn = "";
-                    for (String slot : word.slots) {
-                        usedOn += ExileDB.GearSlots()
-                            .get(slot)
-                            .translate();
-                    }
+                    String usedOn = word.slots.stream()
+                        .map(slot -> {
+                            var gearSlot = ExileDB.GearSlots()
+                                .get(slot);
+                            return gearSlot == null ? slot : gearSlot.translate();
+                        })
+                        .collect(Collectors.joining(", "));
                     tooltip.add(Component.literal(ChatFormatting.GREEN + "Можно применить к: " + usedOn));
+
+                    if (canCreate) {
+                        tooltip.add(Component.literal(
+                                ChatFormatting.YELLOW + "Готово: нажмите кнопку «Модифицировать»"));
+                    } else {
+                        tooltip.add(Component.literal(
+                                ChatFormatting.DARK_GRAY + "Положите ровно эти руны в слоты станции"));
+                    }
 
                     GuiUtils.renderTooltip(matrix,
                         tooltip, x, y);
@@ -266,9 +286,10 @@ public class RuneWordStationGui extends ModificationGui<RuneWordStationContainer
 
             super.render(matrices, mouseX, mouseY, delta);
 
-            String name = ExileDB.UniqueGears()
-                .get(word.uniq_id)
-                .translate();
+            UniqueGear uniq = ExileDB.UniqueGears()
+                .get(word.uniq_id);
+
+            String name = uniq == null ? word.id : uniq.translate();
 
             GuiUtils.renderScaledText(matrices, this.x + X / 2, this.y + Y / 2, 1D, name, ChatFormatting.YELLOW);
 
