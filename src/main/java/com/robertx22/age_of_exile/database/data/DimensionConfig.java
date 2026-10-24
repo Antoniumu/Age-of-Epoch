@@ -28,10 +28,6 @@ public class DimensionConfig implements JsonExileRegistry<DimensionConfig>, ISer
         DimensionConfig c = new DimensionConfig(1, "minecraft:overworld");
         c.min_lvl = 1;
         c.max_lvl = 50;
-        // Обычный мир подстраивается под игрока: иначе после прокачки нужно уходить
-        // на 4950 блоков от спавна, чтобы встретить мобов своего уровня.
-        // Незер и Энд остаются «зонами по расстоянию» — там сложность растёт от места.
-        c.scale_to_nearest_player = true;
         return c;
     }
 
