@@ -36,7 +36,8 @@ public class GearRaritiesAdder implements ExileRegistryInit {
         uncommon.higher_rar = IRarity.RARE_ID;
         uncommon.upgrades = 2;
         uncommon.rar_ess_per_sal = 1;
-        uncommon.upgrade_lvl_to_increase_rar = 4;
+        // Порог должен быть достижим при upgrades = 2, иначе камень редкости - мёртвый предмет.
+        uncommon.upgrade_lvl_to_increase_rar = 2;
         uncommon.unbreaking_chance = 10;
         uncommon.setUncommonFields();
         uncommon.addToSerializables();
@@ -52,7 +53,8 @@ public class GearRaritiesAdder implements ExileRegistryInit {
         rare.item_value_multi = 1.5F;
         rare.higher_rar = IRarity.EPIC_ID;
         rare.rar_ess_per_sal = 1;
-        rare.upgrade_lvl_to_increase_rar = 8;
+        // 3 слота апгрейда -> максимум +3, значит и порог 3, а не 8.
+        rare.upgrade_lvl_to_increase_rar = 3;
         rare.setRareFields();
         rare.unbreaking_chance = 25;
         rare.upgrades = 3;

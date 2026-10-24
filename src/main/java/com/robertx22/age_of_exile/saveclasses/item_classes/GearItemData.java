@@ -105,7 +105,25 @@ public class GearItemData implements ICommonDataItem<GearRarity> {
             this.affixes.addOneRandomAffix(this);
         }
 
-        this.up.regenerate(rar);
+        // Не regenerate() - иначе игрок терял бы все вложенные камни улучшения
+        // ровно в момент, когда они понадобились для повышения редкости.
+        // Досоздаём/убираем только пустые слоты под новый потолок редкости.
+        while (this.up.ups.size() < rar.upgrades) {
+            this.up.ups.add(UpgradeData.SlotType.EMPTY);
+        }
+        while (this.up.ups.size() > rar.upgrades) {
+            int lastEmpty = -1;
+            for (int i = this.up.ups.size() - 1; i >= 0; i--) {
+                if (this.up.ups.get(i).isEmptySlot) {
+                    lastEmpty = i;
+                    break;
+                }
+            }
+            if (lastEmpty == -1) {
+                break;
+            }
+            this.up.ups.remove(lastEmpty);
+        }
     }
 
     public void onUpgrade(Player player, UpgradeData.SlotType type) {
@@ -187,21 +205,19 @@ public class GearItemData implements ICommonDataItem<GearRarity> {
     }
 
     public int getTotalSockets() {
-        int sockets = 0;
-        sockets += getRarity().sockets;
+        int base = getRarity().sockets;
 
-        int uplvl = this.up.getUpgradeLevel();
+        // У уникатов и рунных слов базовых сокетов нет - бонусные им тоже не выдаём,
+        // иначе "0 сокетов" в данных ничего не значит.
+        if (base <= 0) {
+            return 0;
+        }
 
-        if (uplvl >= 4) {
-            sockets++;
-        }
-        if (uplvl >= 8) {
-            sockets++;
-        }
-        if (uplvl >= 12) {
-            sockets++;
-        }
-        return sockets;
+        // +1 сокет за каждые 2 уровня апгрейда, максимум +2.
+        // Пороги 4/8/12 были недостижимы: у uncommon максимум +2, у rare +3, у epic +5.
+        int bonus = Math.min(2, this.up.getUpgradeLevel() / 2);
+
+        return base + bonus;
     }
 
     public int getEmptySockets() {
