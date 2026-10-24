@@ -446,10 +446,18 @@ public class WikiBookScreen extends BaseScreen implements INamedScreen {
     }
 
     private void drawTopBar(PoseStack pose, int mouseX, int mouseY) {
-        // логотип
-        scaledText(pose, "ЭПОХА ИЗГНАННИКА", panelX + 12, panelY + 11, 1.15f, COL_GOLD);
-        int logoWidth = (int) (mc.font.width("ЭПОХА ИЗГНАННИКА") * 1.15f);
-        AbstractGui.drawString(mc.font, pose, "ВИКИ", panelX + 16 + logoWidth, panelY + 13, COL_ACCENT);
+        // логотип: на узких окнах длинный заголовок не влезает — оставляем только «ВИКИ»
+        float logoScale = 1.15f;
+        int longWidth = (int) (mc.font.width("ЭПОХА ИЗГНАННИКА") * logoScale)
+            + 6 + mc.font.width("ВИКИ");
+        boolean fits = panelX + 12 + longWidth < searchX - 6;
+        if (fits) {
+            scaledText(pose, "ЭПОХА ИЗГНАННИКА", panelX + 12, panelY + 11, logoScale, COL_GOLD);
+            AbstractGui.drawString(mc.font, pose, "ВИКИ",
+                panelX + 18 + (int) (mc.font.width("ЭПОХА ИЗГНАННИКА") * logoScale), panelY + 13, COL_ACCENT);
+        } else {
+            AbstractGui.drawString(mc.font, pose, "ВИКИ", panelX + 12, panelY + 13, COL_GOLD);
+        }
 
         // строка поиска
         boolean hovered = inside(mouseX, mouseY, searchX, searchY, searchW, searchH);
