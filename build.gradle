@@ -37,8 +37,11 @@ dependencies {
 
     // JEI is optional: compile-only, never shipped. Build with -PnoJei to drop the
     // integration and the dependency (useful on offline machines).
+    // Plain `compileOnly`, not `modCompileOnly`: Loom 1.18 (unobfuscated Minecraft
+    // 26.x, no dependency remapping) removed the `mod*` configurations - everything
+    // uses the standard Gradle ones, like `implementation` above.
     if (!project.hasProperty('noJei')) {
-        modCompileOnly "mezz.jei:jei-${project.minecraft_version}-fabric-api:${project.jei_version}"
+        compileOnly "mezz.jei:jei-${project.minecraft_version}-fabric-api:${project.jei_version}"
     }
 }
 
