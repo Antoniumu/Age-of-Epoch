@@ -1,7 +1,7 @@
 @title Эссенции и камни уровней
 @en Essences
 @category materials
-@tags эссенции,пыль,камни,разбор,materials
+@tags эссенции, пыль, камни, разбор, materials
 @item mmorpg:mat/smelted/0
 @item mmorpg:mat/salvage/salvage0
 @item mmorpg:mat/condensed_salvage/c0

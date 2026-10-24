@@ -1,7 +1,7 @@
 @title Ингредиенты
 @en Ingredients
 @category materials
-@tags ингредиенты,травы,кристаллы,материалы,ingredients
+@tags ингредиенты, травы, кристаллы, материалы, ingredients
 @item mmorpg:ingredient/guardian_scales
 @item mmorpg:ingredient/fresh_heart
 @item mmorpg:ingredient/slime_bolus

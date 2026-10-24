@@ -1,7 +1,7 @@
 @title Азурит (Azurite)
 @en Azurite
 @category gems
-@tags самоцвет,камень,azurite,azurite,камень мага
+@tags самоцвет, камень, azurite, камень мага
 @item mmorpg:gems/azurite/0
 @item mmorpg:gems/azurite/1
 @item mmorpg:gems/azurite/2

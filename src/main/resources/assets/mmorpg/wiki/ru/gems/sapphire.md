@@ -1,7 +1,7 @@
 @title Сапфир (Sapphire)
 @en Sapphire
 @category gems
-@tags самоцвет,камень,sapphire,sapphire,камень воды
+@tags самоцвет, камень, sapphire, камень воды
 @item mmorpg:gems/sapphire/0
 @item mmorpg:gems/sapphire/1
 @item mmorpg:gems/sapphire/2

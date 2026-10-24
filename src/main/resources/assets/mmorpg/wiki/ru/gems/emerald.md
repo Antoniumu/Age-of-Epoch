@@ -1,7 +1,7 @@
 @title Изумруд (Emerald)
 @en Emerald
 @category gems
-@tags самоцвет,камень,emerald,emerald,камень природы
+@tags самоцвет, камень, emerald, камень природы
 @item mmorpg:gems/emerald/0
 @item mmorpg:gems/emerald/1
 @item mmorpg:gems/emerald/2

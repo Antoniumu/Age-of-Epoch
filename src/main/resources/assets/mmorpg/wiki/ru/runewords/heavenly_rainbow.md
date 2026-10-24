@@ -1,7 +1,7 @@
 @title «Небесная радуга» (Heavenly Rainbow)
 @en Heavenly Rainbow
 @category runewords
-@tags рунное слово,heavenly_rainbow,heavenly rainbow,посох
+@tags рунное слово, heavenly_rainbow, heavenly rainbow, посох
 @item mmorpg:weapon/staff/diamond
 
 «Небесная радуга» — самое дорогое слово: четыре руны, включая обе верховные (Юн и Вен). Это посох для кастера, который играет сразу от нескольких стихий. Собрать его — отдельная цель на сезон.

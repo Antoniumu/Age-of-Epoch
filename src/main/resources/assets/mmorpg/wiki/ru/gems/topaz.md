@@ -1,7 +1,7 @@
 @title Топаз (Topaz)
 @en Topaz
 @category gems
-@tags самоцвет,камень,topaz,topaz,камень энергии
+@tags самоцвет, камень, topaz, камень энергии
 @item mmorpg:gems/topaz/0
 @item mmorpg:gems/topaz/1
 @item mmorpg:gems/topaz/2

@@ -1,7 +1,7 @@
 @title Руна Хар (Har)
 @en Har
 @category runes
-@tags руна,har,har
+@tags руна, har
 @item mmorpg:runes/har
 
 Хар — руна ярости. Вместе с Ано, Ток и Мос она собирает «Черепоруб» — меч, который особенно злобно бьёт нежить.

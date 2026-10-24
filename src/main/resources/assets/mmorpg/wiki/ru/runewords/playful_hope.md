@@ -1,7 +1,7 @@
 @title «Игривая надежда» (Playful Hope)
 @en Playful Hope
 @category runewords
-@tags рунное слово,playful_hope,playful hope,кольцо
+@tags рунное слово, playful_hope, playful hope, кольцо
 @item mmorpg:jewelry/ring/diamond
 
 «Игривая надежда» — самое азартное слово в моде. Юн, Фей и Ору дают кольцо, у которого сопротивления всем трём стихиям бросаются в диапазоне от −50 % до +15 %. Может выйти почти бесполезное кольцо, а может — очень плотное.

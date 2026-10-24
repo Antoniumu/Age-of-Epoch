@@ -1,7 +1,7 @@
 @title Рюкзак и автосбор
 @en Backpack
 @category systems
-@tags рюкзак,backpack,автосбор,авторазбор,улучшения рюкзака
+@tags рюкзак, backpack, автосбор, авторазбор, улучшения рюкзака
 @item mmorpg:backpack/normal
 @item mmorpg:backpack/upgrade/size0
 @item mmorpg:backpack/upgrade/size1

@@ -1,7 +1,7 @@
 @title Руны
 @en Runes
 @category runes
-@tags руны,слова,крафт,runes
+@tags руны, слова, крафт, runes
 @item mmorpg:runes/yun
 @item mmorpg:runes/nos
 

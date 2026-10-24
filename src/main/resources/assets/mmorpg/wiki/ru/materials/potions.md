@@ -1,7 +1,7 @@
 @title Зелья, еда и свитки
 @en Consumables
 @category materials
-@tags зелья,еда,свитки,расходники,potions
+@tags зелья, еда, свитки, расходники, potions
 @item mmorpg:alchemy/potion/health/0
 @item mmorpg:alchemy/potion/mana/0
 @item mmorpg:alchemy/potion/health/1

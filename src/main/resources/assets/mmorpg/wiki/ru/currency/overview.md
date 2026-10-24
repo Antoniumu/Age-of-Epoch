@@ -1,7 +1,7 @@
 @title Валюта и сферы
 @en Currency
 @category currency
-@tags валюта,сферы,орбы,улучшения,currency
+@tags валюта, сферы, орбы, улучшения, currency
 @item mmorpg:currency/orb_of_transmutation
 @item mmorpg:currency/clear_corruption
 @item mmorpg:currency/crystal_of_purification

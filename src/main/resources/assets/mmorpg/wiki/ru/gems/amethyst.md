@@ -1,7 +1,7 @@
 @title Аметист (Amethyst)
 @en Amethyst
 @category gems
-@tags самоцвет,камень,amethyst,amethyst,камень кастера
+@tags самоцвет, камень, amethyst, камень кастера
 @item mmorpg:gems/amethyst/0
 @item mmorpg:gems/amethyst/1
 @item mmorpg:gems/amethyst/2

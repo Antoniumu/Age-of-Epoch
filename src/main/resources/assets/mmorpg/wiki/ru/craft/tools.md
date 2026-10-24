@@ -1,7 +1,7 @@
 @title Инструменты профессий
 @en Craft tools
 @category craft
-@tags инструменты,ступка,котёл,молот,tools
+@tags инструменты, ступка, котёл, молот, tools
 @item mmorpg:craft_tools/cooking
 @item mmorpg:craft_tools/alchemy
 @item mmorpg:craft_tools/inscribing

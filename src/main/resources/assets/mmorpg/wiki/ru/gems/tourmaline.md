@@ -1,7 +1,7 @@
 @title Турмалин (Tourmaline)
 @en Tourmaline
 @category gems
-@tags самоцвет,камень,tourmaline,tourmaline,камень выживания
+@tags самоцвет, камень, tourmaline, камень выживания
 @item mmorpg:gems/tourmaline/0
 @item mmorpg:gems/tourmaline/1
 @item mmorpg:gems/tourmaline/2

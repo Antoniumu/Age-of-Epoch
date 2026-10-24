@@ -1,7 +1,7 @@
 @title Опал (Opal)
 @en Opal
 @category gems
-@tags самоцвет,камень,opal,opal,камень крита
+@tags самоцвет, камень, opal, камень крита
 @item mmorpg:gems/opal/0
 @item mmorpg:gems/opal/1
 @item mmorpg:gems/opal/2

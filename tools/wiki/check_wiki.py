@@ -208,6 +208,8 @@ def main():
 
     listed = {}
     for category in categories:
+        if len(category["pages"]) < 2:
+            fail(f"категория {category['id']}: меньше двух страниц")
         for page in category["pages"]:
             page["category"] = category["id"]
             listed[page["id"]] = page
@@ -265,7 +267,10 @@ def main():
             if target not in listed:
                 fail(f"{page_id}: ссылка на несуществующую страницу '{target}'")
         if len(targets) < 2:
-            warn(f"{page_id}: меньше двух исходящих ссылок ({len(targets)})")
+            fail(f"{page_id}: меньше двух исходящих ссылок ({len(targets)})")
+        tags = [t.strip().lower() for t in meta.get("tags", "").split(",") if t.strip()]
+        if len(tags) != len(set(tags)):
+            warn(f"{page_id}: повторяющиеся @tags")
 
     incoming = {page_id: 0 for page_id in listed}
     for page_id, targets in links.items():
@@ -286,6 +291,18 @@ def main():
             if item not in registered:
                 fail(f"{page_id}: предмета '{item}' нет в реестре мода")
             covered.add(item)
+
+    owners = {}
+    for page_id, items in declared.items():
+        for item in items:
+            if item in required:
+                owners.setdefault(item, []).append(page_id)
+    for item, pages in owners.items():
+        if len(pages) > 2:
+            warn(f"предмет {item} указан на {len(pages)} страницах: " + ", ".join(sorted(pages)))
+    for page_id, items in declared.items():
+        if len(items) != len(set(items)):
+            fail(f"{page_id}: один и тот же @item указан дважды")
 
     missing = sorted(set(required) - covered)
     if missing:

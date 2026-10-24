@@ -1,7 +1,7 @@
 @title Рубин (Ruby)
 @en Ruby
 @category gems
-@tags самоцвет,камень,ruby,ruby,камень огня
+@tags самоцвет, камень, ruby, камень огня
 @item mmorpg:gems/ruby/0
 @item mmorpg:gems/ruby/1
 @item mmorpg:gems/ruby/2

@@ -1,7 +1,7 @@
 @title «Ария бедствия» (Aria of Disaster)
 @en Aria of Disaster
 @category runewords
-@tags рунное слово,air_disaster,aria of disaster,кольцо
+@tags рунное слово, air_disaster, aria of disaster, кольцо
 @item mmorpg:jewelry/ring/diamond
 
 «Ария бедствия» — кольцо поддержки. Ано, Ору и Дос складываются в предмет, который усиливает песни-баффы и добавляет площадной урон. Это редкий случай, когда рунное слово полезно не только владельцу, но и группе.

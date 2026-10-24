@@ -1,7 +1,7 @@
 @title Гранат (Garnet)
 @en Garnet
 @category gems
-@tags самоцвет,камень,garnet,garnet,камень ловкача
+@tags самоцвет, камень, garnet, камень ловкача
 @item mmorpg:gems/garnet/0
 @item mmorpg:gems/garnet/1
 @item mmorpg:gems/garnet/2

@@ -1,7 +1,7 @@
 @title Уникальное снаряжение
 @en Unique Gear
 @category uniques
-@tags уникаты,уникальное снаряжение,unique,легендарки
+@tags уникаты, уникальное снаряжение, unique, легендарки
 @item mmorpg:jewelry/ring/diamond
 @item mmorpg:weapon/staff/diamond
 

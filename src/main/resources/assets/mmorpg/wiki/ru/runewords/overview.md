@@ -1,7 +1,7 @@
 @title Рунные слова
 @en Runewords
 @category runewords
-@tags рунные слова,runewords,руны,крафт
+@tags рунные слова, runewords, руны, крафт
 @item mmorpg:runeword_station
 
 Рунное слово — это рецепт, который превращает обычный предмет в уникат. В отличие от

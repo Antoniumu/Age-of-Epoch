@@ -1,7 +1,7 @@
 @title Возврат и перемещение
 @en Teleport
 @category systems
-@tags телепорт,возврат,port,выход,teleport
+@tags телепорт, возврат, port, выход, teleport
 
 В моде есть предмет возврата — «Телепорт назад» (`mmorpg:misc/teleport_back`).
 Он нужен, чтобы не идти пешком через полкарты после забега.

@@ -1,7 +1,7 @@
 @title «Небесная слеза» (Heavenly Tear)
 @en Heavenly Tear
 @category runewords
-@tags рунное слово,heavenly_tear,heavenly tear,ожерелье
+@tags рунное слово, heavenly_tear, heavenly tear, ожерелье
 @item mmorpg:jewelry/necklace/diamond
 
 «Небесная слеза» — ожерелье поддержки. Четыре руны (Ток, Дос, Юн и редкая Вир) дают силу лечения: всё, что ты лечишь, лечит сильнее. Слово узкое, зато в своей нише незаменимое.

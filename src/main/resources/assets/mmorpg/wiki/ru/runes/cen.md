@@ -1,7 +1,7 @@
 @title Руна Цен (Cen)
 @en Cen
 @category runes
-@tags руна,cen,cen
+@tags руна, cen
 @item mmorpg:runes/cen
 
 Цен — руна дальнего боя. Она открывает лук «Костелом» и встречается в подземельях второго десятка уровней.
