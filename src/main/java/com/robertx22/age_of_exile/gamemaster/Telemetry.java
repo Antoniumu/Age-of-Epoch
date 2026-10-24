@@ -983,7 +983,7 @@ public class Telemetry {
         try {
             return level.getBiome(pos)
                 .unwrapKey()
-                .map(key -> key.location()
+                .map(key -> key.identifier()
                     .toString())
                 .orElse("unknown");
         } catch (Exception e) {

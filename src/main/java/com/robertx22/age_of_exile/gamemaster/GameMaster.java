@@ -663,8 +663,10 @@ public class GameMaster {
             return;
         }
         progress.last_daily_hint = now;
-        player.displayClientMessage(Component.literal(goal.text)
-            .withStyle(ChatFormatting.YELLOW), true);
+        com.robertx22.age_of_exile.uncommon.utilityclasses.OnScreenMessageUtils.sendMessage(
+            player,
+            Component.literal(goal.text).withStyle(ChatFormatting.YELLOW),
+            com.robertx22.forge_compat.network.ClientboundTitleCompatPacket.Type.ACTIONBAR);
     }
 
     private void maybeSnapshot(PlayerProgress progress, long now) {
@@ -2017,7 +2019,7 @@ public class GameMaster {
             }
         }
         social.add("firsts", firsts);
-        social.add("codex_unique", codexUniqueTotal());
+        social.addProperty("codex_unique", codexUniqueTotal());
         int codexSum = 0;
         int codexPlayers = 0;
         for (PlayerProgress p : data.players.values()) {

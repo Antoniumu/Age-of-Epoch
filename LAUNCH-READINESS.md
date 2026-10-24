@@ -44,6 +44,23 @@ python3 tools/balance/season_sim.py      # сезон компании 6 чел�
 | `tools/verify/check_invariants.py` | **80 инвариантов**: константы сверяются с исходниками, а таблицы рун/самоцветов — с симулятором | проверяет числа, а не логику |
 | `tools/verify.sh` | одна команда: инварианты + контент + модель + симуляция + (если есть JDK) сборка | без JDK сборка пропускается |
 
+### 1.1. Первый настоящий запуск компилятора
+
+Сборка `./gradlew build` на JDK 25 (Windows) впервые дошла до `:compileJava` и нашла
+**5 ошибок типов**, которые синтаксическая проверка поймать не могла. Все исправлены:
+
+| Файл | Ошибка | Исправление |
+|---|---|---|
+| `GameMaster` (actionbar цели дня) | у `ServerPlayer` в этой версии нет `displayClientMessage` | отправка через `OnScreenMessageUtils.sendMessage(..., Type.ACTIONBAR)` — тот же путь, что у сообщения об опыте |
+| `GameMaster` (отчёт `/gm telemetry`) | `JsonObject.add` принимает `JsonElement`, а передавался `int` | `addProperty("codex_unique", …)` |
+| `Telemetry.biome` | у `ResourceKey` в этой версии `identifier()`, а не `location()` | `key.identifier()` (как в `Telemetry.dimension`) |
+| `Telemetry.biome` | следствие предыдущего: тип `Object` вместо `String` | ушло вместе с исправлением выше |
+| `GridHelper` | `continue` внутри лямбды `forEach` запрещён | `return` — выход из итерации лямбды, смысл сохранён |
+
+Это ровно тот риск, о котором предупреждал §16.2: синтаксис был чист, а типы — нет.
+После правок ожидается повторная сборка; до её успеха статус компиляции остаётся
+«не подтверждён».
+
 Сверка с upstream (`RobertSkalko/Age-of-Exile`) ранее показала: базовые константы ядра
 (`GameBalanceConfig`, `LevelUtils`, `MobStatUtils`, `GearSlots`, `WeaponTypes`, `SpellCalcs`)
 идентичны апстриму — то есть всё, что ниже, это либо унаследованный баланс, либо осознанные

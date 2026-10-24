@@ -58,7 +58,7 @@ public class GridHelper {
                         PointData point = placePointMap.get(x.place);
 
                         if (point == null) {
-                            continue;
+                            return; // выход из итерации forEach, а не из цикла
                         }
 
                         stat.getIngredientsAffected(point)
