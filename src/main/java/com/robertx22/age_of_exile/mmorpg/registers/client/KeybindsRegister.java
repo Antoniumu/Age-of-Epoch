@@ -12,6 +12,7 @@ public class KeybindsRegister {
 
     public static KeyMapping HUB_SCREEN_KEY = new KeyMapping("Main Hub Screen", InputConstants.KEY_H, CATEGORY);
     public static KeyMapping QUESTBOOK_KEY = new KeyMapping("key.mmorpg.open_questbook", InputConstants.KEY_K, CATEGORY);
+    public static KeyMapping WIKI_KEY = new KeyMapping("key.mmorpg.open_wiki", InputConstants.KEY_P, CATEGORY);
 
     public static KeyMapping SPELL_HOTBAR_1 = new KeyMapping("Use Spell 1", InputConstants.KEY_R, CATEGORY);
     public static KeyMapping SPELL_HOTBAR_2 = new KeyMapping("Use Spell 2", InputConstants.KEY_V, CATEGORY);
@@ -43,6 +44,7 @@ public class KeybindsRegister {
 
         ClientRegistry.registerKeyBinding(HUB_SCREEN_KEY);
         ClientRegistry.registerKeyBinding(QUESTBOOK_KEY);
+        ClientRegistry.registerKeyBinding(WIKI_KEY);
 
         ClientRegistry.registerKeyBinding(SPELL_HOTBAR_1);
         ClientRegistry.registerKeyBinding(SPELL_HOTBAR_2);
