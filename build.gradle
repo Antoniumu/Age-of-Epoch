@@ -16,6 +16,16 @@ repositories {
     maven { url = 'https://maven.nucleoid.xyz/releases' }
     maven { url = 'https://maven.gnomecraft.net/releases' }
     maven { url = 'https://maven.architectury.dev' }
+    // JEI API (compile-only). The API pulls in mezz's config library, which lives in
+    // the same maven, so allow both groups.
+    maven {
+        name = 'BlameJared'
+        url = 'https://maven.blamejared.com'
+        content {
+            includeGroup 'mezz.jei'
+            includeGroupByRegex 'net\\.mezzdev.*'
+        }
+    }
 }
 
 dependencies {
@@ -24,6 +34,19 @@ dependencies {
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
     // Trinkets Updated (replaces Curios for trinket/accessory slots)
     implementation "eu.pb4:trinkets:4.2.1+26.3"
+
+    // JEI is optional: compile-only, never shipped. Build with -PnoJei to drop the
+    // integration and the dependency (useful on offline machines).
+    if (!project.hasProperty('noJei')) {
+        modCompileOnly "mezz.jei:jei-${project.minecraft_version}-fabric-api:${project.jei_version}"
+    }
+}
+
+if (project.hasProperty('noJei')) {
+    // Remove the plugin sources from the jar (fabric.mod.json entrypoint is disabled
+    // in processResources below).
+    sourceSets.main.java.exclude 'com/robertx22/age_of_exile/compat/jei/**'
+    logger.lifecycle('JEI integration disabled (-PnoJei)')
 }
 
 // ---------------------------------------------------------------------------
@@ -61,8 +84,14 @@ if (project.hasProperty('mcSingleJar')) {
 
 processResources {
     inputs.property 'version', project.version
+    inputs.property 'jeiEntrypoint', !project.hasProperty('noJei')
     filesMatching('fabric.mod.json') {
         expand 'version': project.version
+        if (project.hasProperty('noJei')) {
+            // Rename the JEI entrypoint key so JEI does not try to load a class that
+            // was excluded from this build.
+            filter { line -> line.replace('"jei_mod_plugin"', '"jei_mod_plugin_disabled"') }
+        }
     }
 }
 

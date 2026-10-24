@@ -260,6 +260,8 @@ public enum Words implements IAutoLocName {
 
     PressAltForStatInfo("Press Alt for Stat Desc"),
 
+    PressAltForItemDescription("[Alt]: Item Description"),
+
     MustBeMap("Must be an Adventure Map"),
 
     MustBeGear("Must be a Gear Item"),
