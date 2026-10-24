@@ -20,7 +20,13 @@
     ],
     "client": [
       "com.robertx22.age_of_exile.mmorpg.init.ClientInit"
+    ],
+    "jei_mod_plugin": [
+      "com.robertx22.age_of_exile.compat.jei.AgeOfEpochJeiPlugin"
     ]
+  },
+  "suggests": {
+    "jei": ">=31.16.0"
   },
   "mixins": [
     "mmorpg-mixins.json",
