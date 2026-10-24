@@ -35,6 +35,119 @@ public class PlayerProgress {
     /** Последний рассчитанный итоговый множитель. */
     public double multiplier = 1;
 
+    // ------------------------------------------------------------------
+    // Автобаланс (см. AutoBalance)
+    // ------------------------------------------------------------------
+
+    /** Сглаженное время прохождения уровня в реальных минутах. 0 — замеров ещё нет. */
+    public double ema_minutes_per_level = 0;
+
+    /** Значение playtime_seconds на момент получения текущего уровня. */
+    public double level_started_playtime = 0;
+
+    /** Смертей на текущем уровне (сбрасывается при повышении). */
+    public int deaths_since_level = 0;
+
+    /** Смертей всего. */
+    public int deaths = 0;
+
+    /** Текущий множитель опыта от автобаланса. */
+    public double auto_exp_multiplier = 1;
+    public double auto_mob_health = 1;
+    public double auto_mob_damage = 1;
+    public double auto_loot = 1;
+    /** Множитель частоты спавна от автобаланса (итог всегда клампится в 0…1). */
+    public double auto_spawn = 1;
+    /** 0…1: насколько игрок близок к целевому темпу. */
+    public double auto_flow = 0.5;
+    /** Состояние автобаланса: stable / rescue / brake / push / welcome. */
+    public String auto_state = "stable";
+    /** Когда последний раз пересчитывали автобаланс (epoch seconds). */
+    public long auto_updated_epoch = 0;
+
+    /** Уровней, пройденных внутри целевого коридора (для панели). */
+    public int levels_at_pace = 0;
+    /** Уровней пройдено всего (для панели). */
+    public int levels_gained = 0;
+
+    /** Длительность текущей сессии в секундах (без AFK). */
+    public double session_seconds = 0;
+    /** Количество сессий. */
+    public int sessions = 0;
+    /** Средняя длительность сессии в секундах. */
+    public double avg_session_seconds = 0;
+
+    // ------------------------------------------------------------------
+    // Удержание (см. Retention)
+    // ------------------------------------------------------------------
+
+    /** Длина текущей серии ежедневных входов. */
+    public int streak_days = 0;
+    /** Номер суток (epoch day) последнего засчитанного входа. */
+    public long last_session_day = 0;
+    /** Последние 30 активных суток — для D1/D7 и риска ухода. */
+    public List<Integer> active_days = new ArrayList<>();
+    /** Последний уровень, за который выдана веха. */
+    public int last_milestone_level = 0;
+    /** Сколько вех получено. */
+    public int milestones_claimed = 0;
+    /** Сколько вещей было сгенерировано с момента последнего униката (pity). */
+    public int kills_since_unique = 0;
+    /** Заряды гарантированной редкой/эпической вещи (тратятся на дропе). */
+    public int guaranteed_rare = 0;
+    public int guaranteed_epic = 0;
+
+    /** Тип ежедневной цели: 0 — убийства, 1 — сундуки, 2 — ремесло. */
+    public int session_goal_kind = 0;
+
+    /** Цель на сессию: сколько убийств нужно и сколько уже сделано. */
+    public int session_goal_target = 0;
+    public int session_goal_progress = 0;
+    /** Награда за выполненную цель (Благосклонность). */
+    public int session_goal_reward = 0;
+    /** Сутки, на которые назначена цель. */
+    public long session_goal_day = 0;
+    public boolean session_goal_done = false;
+    /** Когда последний раз показывали прогресс цели дня в actionbar (epoch seconds). */
+    public long last_daily_hint = 0;
+
+    /** До какого момента (epoch seconds) действует усиленный опыт после перерыва. */
+    public long return_until = 0;
+
+    /** Пройденное расстояние в блоках (для профиля «исследователь / фарм на месте»). */
+    public double distance_travelled = 0;
+
+    /** Когда последний раз сэмплировали биом/измерение (телеметрия). */
+    public transient long telemetry_sample_epoch = 0;
+
+    // ------------------------------------------------------------------
+    // Pity для рун/самоцветов, мягкая смерть и кодекс
+    // ------------------------------------------------------------------
+
+    /** Убийств без выпавшей руны (pity). */
+    public int kills_since_rune = 0;
+
+    /** Убийств без выпавшего самоцвета (pity). */
+    public int kills_since_gem = 0;
+
+    /** До какого момента действует «печать» после смерти (epoch seconds). */
+    public long seal_until = 0;
+
+    /** Сколько убийств осталось, чтобы снять печать досрочно. */
+    public int seal_kills_left = 0;
+
+    /** Сколько раз печать уже вешали (для статистики). */
+    public int seal_count = 0;
+
+    /** Собранные уникаты (id предметов) — кодекс. */
+    public List<String> codex = new ArrayList<>();
+
+    /** Сколько ступеней награды за кодекс уже выдано. */
+    public int codex_rewarded = 0;
+
+    /** До какого уровня доигран онбординг (подсказка «куда идти дальше»). */
+    public int onboarding_level = 0;
+
     /** Время последней активности (epoch seconds). */
     public long last_seen = 0;
 
@@ -54,6 +167,8 @@ public class PlayerProgress {
     public transient boolean has_pos = false;
     public transient long last_moved_epoch = 0;
     public transient boolean online = false;
+    /** До какого момента (epoch seconds) действует «тёплый приём» после долгого перерыва. */
+    public transient long welcome_until = 0;
 
     public double playtimeHours() {
         return playtime_seconds / 3600.0;
@@ -61,6 +176,14 @@ public class PlayerProgress {
 
     public double baselineHours() {
         return baseline_seconds / 3600.0;
+    }
+
+    /** Минут, проведённых на текущем уровне. */
+    public double minutesAtLevel() {
+        if (level_started_playtime <= 0) {
+            return 0;
+        }
+        return Math.max(0, (playtime_seconds - level_started_playtime) / 60.0);
     }
 
     public void addHistory(double multiplier, long epochSeconds) {

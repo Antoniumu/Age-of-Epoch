@@ -87,7 +87,18 @@ public class RarityUpgradeStone extends Item implements ICurrencyItemEffect, IGU
 
         if (context.isGear()) {
             GearItemData gear = (GearItemData) context.data;
-            if (rar != null && gear.up.getUpgradeLevel() >= rar.upgrade_lvl_to_increase_rar) {
+            if (rar == null || !rar.hasHigherRarity()) {
+                return false;
+            }
+            // Камень работает только на предмете СВОЕЙ редкости и только если следующая
+            // редкость существует. Без этой проверки камень uncommon на epic-предмете
+            // уходил в upgradeToHigherRarity() -> getHigherRarity() == null -> NPE.
+            if (gear.getRarity() == null || !gear.getRarity()
+                .GUID()
+                .equals(rar.GUID())) {
+                return false;
+            }
+            if (gear.up.getUpgradeLevel() >= rar.upgrade_lvl_to_increase_rar) {
                 return true;
             }
         }

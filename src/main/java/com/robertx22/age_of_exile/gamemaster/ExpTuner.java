@@ -124,15 +124,26 @@ public class ExpTuner {
     }
 
     /**
-     * Динамический множитель спавна от Благосклонности.
-     * При базовой Благосклонности 100 и текущем значении 100 возвращает 0.5;
-     * при 0 возвращает 1.0, а с ростом Благосклонности постепенно стремится к минимуму.
+     * Динамика спавна от Благосклонности.
+     *
+     * <p>Раньше было {@code ref/(ref+favor)}: чем лучше игрок играл (выше
+     * Благосклонность), тем <b>реже</b> спавнились мобы, и мир пустел ровно у тех,
+     * кто активнее всего играет. Это работало против удержания и против опыта в час.
+     *
+     * <p>Теперь наоборот: {@code floor + (1 - floor) × favor/(favor + ref)}.
+     * Больше Благосклонности — больше мобов, но есть полка {@code floor}, чтобы при
+     * нуле мир не превращался в пустыню.
+     *
+     * @param favor              текущая Благосклонность
+     * @param referenceFavor     Благосклонность «половины пути» (обычно = стартовая)
+     * @param minimumMultiplier  нижняя полка вероятности (0…1)
      */
     public static double favorSpawnRate(int favor, double referenceFavor, double minimumMultiplier) {
         double reference = Math.max(0.01, referenceFavor);
         double value = Math.max(0, favor);
-        double rate = reference / (reference + value);
-        return clamp(rate, clamp(minimumMultiplier, 0, 1), 1);
+        double floor = clamp(minimumMultiplier, 0, 1);
+        double rate = floor + (1.0 - floor) * (value / (value + reference));
+        return clamp(rate, 0, 1);
     }
 
     /**

@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.robertx22.age_of_exile.vanilla_mc.commands.CommandRefs;
 import net.minecraft.ChatFormatting;
@@ -13,7 +14,10 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
@@ -62,6 +66,7 @@ public class GameMasterCommand {
                 .then(argument("value", BoolArgumentType.bool())
                     .executes(ctx -> setBool(ctx.getSource(), "enabled", BoolArgumentType.getBool(ctx, "value")))))
             .then(spawnRateCommand())
+            .then(autoCommand())
             .then(literal("hours")
                 .then(argument("hours", DoubleArgumentType.doubleArg(1, 100000))
                     .executes(ctx -> {
@@ -103,6 +108,36 @@ public class GameMasterCommand {
                 .then(argument("target", EntityArgument.player())
                     .executes(ctx -> playerInfo(ctx.getSource(), EntityArgument.getPlayer(ctx, "target")))))
             .then(literal("list").executes(ctx -> listPlayers(ctx.getSource())))
+            .then(literal("retention")
+                .executes(ctx -> retentionStatus(ctx.getSource()))
+                .then(literal("on").executes(ctx -> setRetention(ctx.getSource(), true)))
+                .then(literal("off").executes(ctx -> setRetention(ctx.getSource(), false)))
+                .then(literal("pity")
+                    .executes(ctx -> toggleRetentionPity(ctx.getSource()))
+                    .then(argument("value", BoolArgumentType.bool())
+                        .executes(ctx -> setRetentionPity(ctx.getSource(), BoolArgumentType.getBool(ctx, "value"))))))
+            .then(literal("social")
+                .executes(ctx -> socialStatus(ctx.getSource()))
+                .then(literal("on").executes(ctx -> setSocial(ctx.getSource(), true)))
+                .then(literal("off").executes(ctx -> setSocial(ctx.getSource(), false)))
+                .then(literal("goal")
+                    .then(argument("kills", IntegerArgumentType.integer(0, 100000000))
+                        .executes(ctx -> setSocialGoal(ctx.getSource(),
+                            IntegerArgumentType.getInteger(ctx, "kills"))))))
+            .then(literal("codex")
+                .executes(ctx -> codexStatus(ctx.getSource())))
+            .then(literal("telemetry")
+                .executes(ctx -> telemetryStatus(ctx.getSource()))
+                .then(literal("on").executes(ctx -> setTelemetry(ctx.getSource(), true)))
+                .then(literal("off").executes(ctx -> setTelemetry(ctx.getSource(), false)))
+                .then(literal("report").executes(ctx -> telemetryReport(ctx.getSource()))))
+            .then(literal("season")
+                .executes(ctx -> seasonInfo(ctx.getSource()))
+                .then(literal("new")
+                    .executes(ctx -> newSeason(ctx.getSource(), ""))
+                    .then(argument("name", StringArgumentType.word())
+                        .executes(ctx -> newSeason(ctx.getSource(), StringArgumentType.getString(ctx, "name"))))))
+            .then(literal("export").executes(ctx -> exportCsv(ctx.getSource())))
             .then(literal("reload").executes(ctx -> {
                 GameMaster.get()
                     .reloadConfig();
@@ -237,6 +272,363 @@ public class GameMasterCommand {
         return 1;
     }
 
+    private static LiteralArgumentBuilder<CommandSourceStack> autoCommand() {
+        return literal("auto")
+            .executes(ctx -> autoStatus(ctx.getSource()))
+            .then(literal("status").executes(ctx -> autoStatus(ctx.getSource())))
+            .then(literal("on").executes(ctx -> setAuto(ctx.getSource(), true)))
+            .then(literal("off").executes(ctx -> setAuto(ctx.getSource(), false)))
+            .then(literal("mobs")
+                .executes(ctx -> toggleAutoKey(ctx.getSource(), "mobs"))
+                .then(argument("value", BoolArgumentType.bool())
+                    .executes(ctx -> setAutoKey(ctx.getSource(), "mobs", BoolArgumentType.getBool(ctx, "value")))))
+            .then(literal("loot")
+                .executes(ctx -> toggleAutoKey(ctx.getSource(), "loot"))
+                .then(argument("value", BoolArgumentType.bool())
+                    .executes(ctx -> setAutoKey(ctx.getSource(), "loot", BoolArgumentType.getBool(ctx, "value")))))
+            .then(literal("minutes")
+                .then(argument("start", DoubleArgumentType.doubleArg(1, 600))
+                    .then(argument("end", DoubleArgumentType.doubleArg(1, 600))
+                        .executes(ctx -> {
+                            GameMasterConfig config = GameMaster.get()
+                                .config();
+                            config.auto_start_minutes = DoubleArgumentType.getDouble(ctx, "start");
+                            config.auto_end_minutes = DoubleArgumentType.getDouble(ctx, "end");
+                            GameMaster.get()
+                                .onConfigEdited();
+                            send(ctx.getSource(), "Коридор: " + GameMaster.fmt(config.auto_start_minutes) + "–"
+                                + GameMaster.fmt(config.auto_end_minutes) + " мин/уровень, суммарно ~"
+                                + GameMaster.fmt(GameMaster.get()
+                                .autoTargetHours()) + " ч.");
+                            return 1;
+                        }))))
+            .then(argument("value", BoolArgumentType.bool())
+                .executes(ctx -> setAuto(ctx.getSource(), BoolArgumentType.getBool(ctx, "value"))));
+    }
+
+    private static int setAuto(CommandSourceStack source, boolean value) {
+        GameMasterConfig config = GameMaster.get()
+            .config();
+        config.auto_balance = value;
+        GameMaster.get()
+            .onConfigEdited();
+        send(source, "Автобаланс: " + onOff(value)
+            + (value ? " — мастер сам держит темп, сложность и лут в коридоре." : "."));
+        return 1;
+    }
+
+    private static int toggleAutoKey(CommandSourceStack source, String key) {
+        GameMasterConfig config = GameMaster.get()
+            .config();
+        boolean value = "mobs".equals(key) ? !config.auto_touch_mobs : !config.auto_touch_loot;
+        return setAutoKey(source, key, value);
+    }
+
+    private static int setAutoKey(CommandSourceStack source, String key, boolean value) {
+        GameMasterConfig config = GameMaster.get()
+            .config();
+        if ("mobs".equals(key)) {
+            config.auto_touch_mobs = value;
+        } else {
+            config.auto_touch_loot = value;
+        }
+        GameMaster.get()
+            .onConfigEdited();
+        send(source, ("mobs".equals(key) ? "Автоподстройка мобов (HP/урон)" : "Автоподстройка лута") + ": "
+            + onOff(value));
+        return 1;
+    }
+
+    private static int autoStatus(CommandSourceStack source) {
+        GameMaster gm = GameMaster.get();
+        GameMasterConfig config = gm.config();
+        send(source, "Автобаланс: " + onOff(config.enabled && config.auto_balance)
+            + ", мобы: " + onOff(config.auto_touch_mobs)
+            + ", лут: " + onOff(config.auto_touch_loot));
+        send(source, "Коридор темпа: " + GameMaster.fmt(config.auto_start_minutes) + " мин на 1 ур. → "
+            + GameMaster.fmt(config.auto_end_minutes) + " мин на макс., мёртвая зона ±"
+            + GameMaster.fmt(config.auto_dead_zone * 100) + "%");
+        send(source, "Суммарно до максимума: ~" + GameMaster.fmt(gm.autoTargetHours()) + " ч (цель подстраивается)");
+        send(source, "Опыт: x" + GameMaster.fmt(config.auto_exp_min) + "…x" + GameMaster.fmt(config.auto_exp_max)
+            + ", шаг " + GameMaster.fmt(config.auto_exp_step_per_minute) + "/мин; тормоз по смертям: "
+            + GameMaster.fmt(config.auto_deaths_brake) + "/ч");
+        send(source, "Сейчас мобы: HP x" + GameMaster.fmt(gm.mobHealthMultiplier()) + ", урон x"
+            + GameMaster.fmt(gm.mobDamageMultiplier()) + ", лут x" + GameMaster.fmt(gm.lootMultiplier()));
+        send(source, "Спавн от автобаланса: x" + GameMaster.fmt(config.auto_spawn_min) + "…x"
+            + GameMaster.fmt(config.auto_spawn_max)
+            + " (итог всегда 0…1; поднимает только урезанный Благосклонностью спавн)");
+        return 1;
+    }
+
+    private static int setRetention(CommandSourceStack source, boolean value) {
+        GameMasterConfig config = GameMaster.get()
+            .config();
+        config.retention_enabled = value;
+        GameMaster.get()
+            .onConfigEdited();
+        send(source, "Удержание (серии, вехи, гарантированные дропы): " + onOff(value));
+        return 1;
+    }
+
+    private static int toggleRetentionPity(CommandSourceStack source) {
+        return setRetentionPity(source, !GameMaster.get()
+            .config().retention_pity);
+    }
+
+    private static int setRetentionPity(CommandSourceStack source, boolean value) {
+        GameMasterConfig config = GameMaster.get()
+            .config();
+        config.retention_pity = value;
+        GameMaster.get()
+            .onConfigEdited();
+        send(source, "Защита от невезения (pity) для уникатов: " + onOff(value));
+        return 1;
+    }
+
+    private static int retentionStatus(CommandSourceStack source) {
+        GameMaster gm = GameMaster.get();
+        GameMasterConfig config = gm.config();
+        if (!config.retention_enabled) {
+            send(source, "Удержание выключено (/mine_and_slash gm retention on).");
+            return 1;
+        }
+        send(source, "Удержание: вкл. Ежедневно +" + GameMaster.fmt(config.retention_daily_favor)
+            + " Благосклонности, +" + GameMaster.fmt(config.retention_streak_bonus_favor)
+            + " за день серии (макс +" + GameMaster.fmt(config.retention_streak_max_favor) + ")");
+        send(source, "Веха каждые " + config.retention_milestone_every + " уровней: +"
+            + GameMaster.fmt(config.retention_milestone_favor) + " Благосклонности и гарантированный дроп");
+        send(source, "Pity: " + onOff(config.retention_pity) + ", растёт с "
+            + config.retention_pity_start_kills + " до " + config.retention_pity_full_kills
+            + " убийств без униката");
+        send(source, "Смерть не отнимает опыт до " + config.retention_no_exp_loss_level + " уровня.");
+        send(source, "Цель дня чередуется: убийства / сундуки / ремесло, награда от "
+            + GameMaster.fmt(config.retention_session_goal_favor) + " Благосклонности.");
+        long now = GameMaster.now();
+        int best = 0;
+        double risk = 0;
+        int count = 0;
+        for (PlayerProgress progress : gm.data().players.values()) {
+            if (progress == null) {
+                continue;
+            }
+            best = Math.max(best, progress.streak_days);
+            risk += Retention.churnRisk(progress, now);
+            count++;
+        }
+        send(source, "Лучшая серия: " + best + " дн., средний риск ухода: "
+            + GameMaster.fmt(count > 0 ? risk / count : 0) + " (0 — не уйдёт, 1 — уйдёт)");
+        return 1;
+    }
+
+    private static int setSocial(CommandSourceStack source, boolean value) {
+        GameMasterConfig config = GameMaster.get()
+            .config();
+        config.social_enabled = value;
+        GameMaster.get()
+            .onConfigEdited();
+        send(source, "Социальный слой (кооп-бонус, прайм-тайм, общая цель): " + onOff(value));
+        return 1;
+    }
+
+    private static int setSocialGoal(CommandSourceStack source, int kills) {
+        GameMasterConfig config = GameMaster.get()
+            .config();
+        config.social_goal_kills = kills;
+        config.social_goal_enabled = kills > 0;
+        GameMaster.get()
+            .onConfigEdited();
+        send(source, kills > 0
+            ? "Общая цель недели: " + kills + " убийств на весь сервер."
+            : "Общая цель недели выключена.");
+        return 1;
+    }
+
+    private static int socialStatus(CommandSourceStack source) {
+        GameMaster gm = GameMaster.get();
+        GameMasterConfig config = gm.config();
+        if (!config.social_enabled) {
+            send(source, "Социальный слой выключен (/mine_and_slash gm social on).");
+            return 1;
+        }
+        int online = gm.onlineCount();
+        send(source, "Онлайн: " + online + "; кооп-бонус: опыт x" + GameMaster.fmt(gm.coopExpMultiplier())
+            + ", лут x" + GameMaster.fmt(gm.coopLootMultiplier())
+            + ", спавн x" + GameMaster.fmt(gm.coopSpawnMultiplier()));
+        send(source, "Темп бонуса: +" + GameMaster.fmt(config.social_coop_exp_per_player * 100)
+            + "% опыта за каждого сверх первого (потолок x" + GameMaster.fmt(config.social_coop_max) + ")");
+        if (Social.hasActivity(gm.data().hour_activity)) {
+            int start = Social.bestWindowStart(gm.data().hour_activity, config.social_prime_window_hours);
+            send(source, "Прайм-тайм сервера: "
+                + Social.formatWindow(start, config.social_prime_window_hours));
+        } else {
+            send(source, "Прайм-тайм: данных пока нет (нужно несколько сессий).");
+        }
+        if (config.social_goal_enabled && config.social_goal_kills > 0) {
+            send(source, "Общая цель недели: " + Social.goalText(gm.weeklyKills(), config.social_goal_kills)
+                + (gm.weeklyGoalReached() ? " — выполнена" : "")
+                + "; награда: +" + GameMaster.fmt(config.social_goal_favor) + " Благосклонности");
+        } else {
+            send(source, "Общая цель недели выключена (/mine_and_slash gm social goal <убийств>).");
+        }
+        send(source, "Мобы: +" + GameMaster.fmt(config.social_group_hp_per_player * 100)
+            + "% HP за каждого игрока рядом (радиус " + GameMaster.fmt(config.social_group_radius)
+            + ", потолок x" + GameMaster.fmt(config.social_group_hp_max) + ")");
+        if (gm.data().firsts != null && !gm.data().firsts.isEmpty()) {
+            for (var entry : gm.data().firsts.entrySet()) {
+                send(source, "  ★ " + entry.getKey() + " — " + entry.getValue());
+            }
+        }
+        return 1;
+    }
+
+    private static int codexStatus(CommandSourceStack source) {
+        GameMaster gm = GameMaster.get();
+        GameMasterConfig config = gm.config();
+        if (!config.codex_enabled) {
+            send(source, "Кодекс выключен (codex_enabled).");
+            return 1;
+        }
+        send(source, "Кодекс: " + gm.codexUniqueTotal() + " разных уникатов собрано на сервере; "
+            + "награда каждые " + config.codex_reward_step + " штук (+"
+            + GameMaster.fmt(config.codex_reward_favor) + " Благосклонности)");
+        List<PlayerProgress> sorted = new ArrayList<>(gm.data().players.values());
+        sorted.sort(Comparator.comparingInt(Retention::codexSize)
+            .reversed());
+        for (int i = 0; i < Math.min(10, sorted.size()); i++) {
+            PlayerProgress progress = sorted.get(i);
+            if (progress == null || Retention.codexSize(progress) == 0) {
+                continue;
+            }
+            send(source, "  " + progress.name + ": " + Retention.codexSize(progress)
+                + " уникатов (ступеней: " + progress.codex_rewarded + ")");
+        }
+        send(source, "Мягкая смерть: " + onOff(config.retention_soft_death)
+            + " (печать " + GameMaster.fmt(config.retention_seal_minutes) + " мин или "
+            + config.retention_seal_kills + " убийств, опыт ×"
+            + GameMaster.fmt(config.retention_seal_exp_penalty) + ")");
+        send(source, "Pity рун: " + onOff(config.retention_pity_runes) + " (с "
+            + config.retention_pity_rune_start_kills + " до "
+            + config.retention_pity_rune_full_kills + " убийств)");
+        return 1;
+    }
+
+    private static int setTelemetry(CommandSourceStack source, boolean value) {
+        GameMasterConfig config = GameMaster.get()
+            .config();
+        config.telemetry_enabled = value;
+        GameMaster.get()
+            .onConfigEdited();
+        send(source, "Телеметрия: " + onOff(value));
+        return 1;
+    }
+
+    private static int telemetryStatus(CommandSourceStack source) {
+        GameMaster gm = GameMaster.get();
+        GameMasterConfig config = gm.config();
+        Telemetry telemetry = gm.telemetry();
+        Telemetry.State state = telemetry.state();
+        send(source, "Телеметрия: " + onOff(config.telemetry_enabled)
+            + "; сезон «" + state.season + "», дней: "
+            + GameMaster.fmt(state.started > 0 ? (GameMaster.now() - state.started) / 86400.0 : 0)
+            + ", событий: " + state.events + ", игроков: " + state.players.size());
+        send(source, "Журнал: " + (config.telemetry_events
+            ? (telemetry.journalPath().isEmpty() ? "будет создан при первом событии" : telemetry.journalPath())
+            : "выключен (telemetry_events)"));
+        printTop(source, state.counters, "biome_time|", "Биомы (часы)", 5, true);
+        printTop(source, state.counters, "kill_mob|", "Убитые мобы", 5, false);
+        printTop(source, state.counters, "subject_death|", "Причины смерти", 5, false);
+        printTop(source, state.counters, "subject_spell|", "Способности", 5, false);
+        send(source, "Отчёт: /mine_and_slash gm telemetry report · новый сезон: /mine_and_slash gm season new <название>");
+        return 1;
+    }
+
+    private static void printTop(CommandSourceStack source, Map<String, Double> counters,
+                                 String prefix, String title, int limit, boolean hours) {
+        if (counters == null) {
+            return;
+        }
+        List<Map.Entry<String, Double>> list = new ArrayList<>();
+        for (Map.Entry<String, Double> entry : counters.entrySet()) {
+            if (entry.getKey()
+                .startsWith(prefix)) {
+                list.add(Map.entry(entry.getKey()
+                    .substring(prefix.length()), entry.getValue()));
+            }
+        }
+        if (list.isEmpty()) {
+            return;
+        }
+        list.sort(Map.Entry.<String, Double>comparingByValue()
+            .reversed());
+        StringBuilder sb = new StringBuilder(title).append(": ");
+        for (int i = 0; i < Math.min(limit, list.size()); i++) {
+            if (i > 0) {
+                sb.append(", ");
+            }
+            double value = list.get(i)
+                .getValue();
+            sb.append(list.get(i)
+                    .getKey()).append(" ")
+                .append(GameMaster.fmt(hours ? value / 3600.0 : value));
+            if (hours) {
+                sb.append(" ч");
+            }
+        }
+        send(source, sb.toString());
+    }
+
+    private static int telemetryReport(CommandSourceStack source) {
+        try {
+            java.nio.file.Path path = GameMaster.get()
+                .telemetry()
+                .writeSeasonReport(GameMaster.now());
+            send(source, "Отчёт по сезону: " + path);
+        } catch (Exception e) {
+            send(source, "Не удалось записать отчёт: " + e);
+        }
+        return 1;
+    }
+
+    private static int seasonInfo(CommandSourceStack source) {
+        GameMaster gm = GameMaster.get();
+        Telemetry.State state = gm.telemetry()
+            .state();
+        send(source, "Сезон «" + state.season + "» начат " + (state.started > 0 ? "давно" : "ещё нет")
+            + ", дней: " + GameMaster.fmt(state.started > 0 ? (GameMaster.now() - state.started) / 86400.0 : 0));
+        send(source, "Событий: " + state.events + ", игроков с данными: " + state.players.size()
+            + ", счётчиков: " + state.counters.size());
+        send(source, "/mine_and_slash gm season new <название> — архив старых данных, отчёт и обнуление счётчиков");
+        return 1;
+    }
+
+    private static int newSeason(CommandSourceStack source, String name) {
+        try {
+            GameMaster gm = GameMaster.get();
+            java.nio.file.Path report = gm.telemetry()
+                .startSeason(name, GameMaster.now());
+            gm.save();
+            send(source, "Новый сезон: «" + gm.telemetry()
+                .state().season + "». Счётчики обнулены.");
+            if (report != null) {
+                send(source, "Отчёт прошлого сезона: " + report);
+            }
+        } catch (Exception e) {
+            send(source, "Не удалось начать сезон: " + e);
+        }
+        return 1;
+    }
+
+    private static int exportCsv(CommandSourceStack source) {
+        try {
+            java.nio.file.Path path = GameMaster.get()
+                .exportCsv();
+            send(source, "Телеметрия выгружена: " + path);
+        } catch (Exception e) {
+            send(source, "Не удалось выгрузить телеметрию: " + e);
+        }
+        return 1;
+    }
+
     private static int status(CommandSourceStack source) {
         GameMaster gm = GameMaster.get();
         GameMasterConfig config = gm.config();
@@ -261,6 +653,16 @@ public class GameMasterCommand {
             + GameMaster.fmt(gm.calibrationK()));
         send(source, "Ориентир группы: " + GameMaster.fmt(gm.referenceLevel()) + " уровень (игроков в расчёте: "
             + gm.peerCount() + ")");
+        if (config.auto_balance && config.enabled) {
+            send(source, "Автобаланс: вкл, коридор " + GameMaster.fmt(config.auto_start_minutes) + "–"
+                + GameMaster.fmt(config.auto_end_minutes) + " мин/уровень (±"
+                + GameMaster.fmt(config.auto_dead_zone * 100) + "%), суммарно ~"
+                + GameMaster.fmt(gm.autoTargetHours()) + " ч до максимума");
+            send(source, "Мобы: HP x" + GameMaster.fmt(gm.mobHealthMultiplier()) + ", урон x"
+                + GameMaster.fmt(gm.mobDamageMultiplier()) + ", лут x" + GameMaster.fmt(gm.lootMultiplier()));
+        } else {
+            send(source, "Автобаланс: выкл (/mine_and_slash gm auto on).");
+        }
         if (config.web_enabled) {
             send(source, "Панель: http://" + config.web_host + ":" + config.web_port + "/");
         } else {

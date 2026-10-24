@@ -17,6 +17,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.ChatFormatting;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -85,7 +86,22 @@ public class RuneWordStationTile extends BaseModificationStation {
             .getFiltered(x -> x.runesCanActivateRuneWord(runeStrings, true) && x.canApplyOnItem(stack));
 
         if (!list.isEmpty()) {
-            word = list.get(0);
+            // Порядок регистрации рунных слов зависит от загрузки датапака, поэтому
+            // сортируем по id: номер из пакета и «первое слово» должны совпадать
+            // с тем, что клиент видит в списке.
+            list.sort(java.util.Comparator.comparing((RuneWord x) -> x.id));
+            int index = Math.max(0, Math.min(number, list.size() - 1));
+            word = list.get(index);
+        }
+
+        if (word == null) {
+            // Раньше кнопка молча ничего не делала: игрок не понимал, что набор рун не тот.
+            if (player != null && !player.level().isClientSide()) {
+                player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                        "Ни одно рунное слово не собирается: нужен точный набор рун в 6 слотах и подходящий предмет.")
+                    .withStyle(ChatFormatting.RED));
+            }
+            return false;
         }
 
         if (word != null) {

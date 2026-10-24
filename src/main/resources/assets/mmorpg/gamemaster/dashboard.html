@@ -112,6 +112,41 @@
   .note { color: var(--muted); font-size: 12px; margin-top: 10px; }
   code { background: #0c1118; border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; font-size: 12px; }
   .empty { color: var(--muted); padding: 24px 6px; text-align: center; }
+  .card h3 { margin: 0 0 6px; font-size: 15px; }
+  .card .sub { color: var(--muted); font-size: 12.5px; }
+  .progress {
+    height: 10px; border-radius: 999px; background: #0c1118; border: 1px solid var(--line);
+    overflow: hidden; margin: 12px 0 8px;
+  }
+  .progress-fill {
+    height: 100%; width: 0; border-radius: 999px;
+    background: linear-gradient(90deg, #2f6d45, var(--green)); transition: width .3s;
+  }
+  .heat {
+    display: grid; grid-auto-flow: column; grid-template-columns: repeat(24, 1fr);
+    gap: 4px; align-items: end; height: 96px; margin-top: 10px;
+  }
+  .heat-col { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; gap: 4px; }
+  .heat-bar {
+    width: 100%; min-height: 2px; border-radius: 3px 3px 0 0;
+    background: linear-gradient(180deg, var(--violet), #4c1d95);
+  }
+  .heat-label { font-size: 9px; color: var(--muted); }
+  .toplist { display: flex; flex-direction: column; gap: 7px; margin-top: 10px; }
+  .toprow { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; font-size: 12.5px; }
+  .toprow .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .toprow .val { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .topbar { grid-column: 1 / -1; height: 4px; border-radius: 999px; background: #0c1118; overflow: hidden; }
+  .topbar i { display: block; height: 100%; background: linear-gradient(90deg, #2563eb, var(--blue)); }
+  .feed { max-height: 340px; overflow: auto; display: flex; flex-direction: column; gap: 4px; margin-top: 10px; }
+  .feed-row {
+    display: grid; grid-template-columns: 46px 92px 1fr auto; gap: 8px; align-items: center;
+    font-size: 12px; padding: 4px 6px; border-radius: 7px; background: rgba(255,255,255,.02);
+  }
+  .feed-row .t { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .feed-row .k { color: var(--blue); }
+  .feed-row .who2 { color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .feed-row .sub2 { color: var(--muted); font-size: 11.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   @media (max-width: 620px) { main, header { padding-left: 14px; padding-right: 14px; } }
 </style>
 </head>
@@ -164,10 +199,59 @@
 
       <div class="card toggle">
         <div>
+          <h3>Автобаланс</h3>
+          <p>GameMaster сам держит темп: если уровни идут медленнее цели — повышает опыт, быстрее — снижает. Много смертей — мобы мягче, мало — крепче. Застрявшим выдаёт «режим спасения».</p>
+          <div class="muted" style="margin-top:8px;font-size:12px" id="autoInfo">—</div>
+        </div>
+        <div class="switch" id="swAuto" data-key="auto_balance" title="Автобаланс"></div>
+      </div>
+
+      <div class="card toggle">
+        <div>
           <h3>Динамика по Благосклонности</h3>
-          <p>При Благосклонности 100 динамический множитель равен ×0.5; при 0 — ×1.0.</p>
+          <p>Больше Благосклонности — больше спавна: ×0.65 при нуле, ×0.82 при 500, ×0.97 при 5000.</p>
         </div>
         <div class="switch" id="swSpawnDynamic" data-key="spawn_rate_dynamic" title="Динамика spawn-rate"></div>
+      </div>
+
+      <div class="card toggle">
+        <div>
+          <h3>Мягкая смерть (печать)</h3>
+          <p>Вместо потери опыта — дебафф на 10 минут или 3 убийства. Прогресс не теряется.</p>
+        </div>
+        <div class="switch" id="swSoftDeath" data-key="retention_soft_death" title="Мягкая смерть"></div>
+      </div>
+
+      <div class="card toggle">
+        <div>
+          <h3>Pity для рун и самоцветов</h3>
+          <p>Длинная серия без руны (0.05% базового шанса) заканчивается принудительной руной.</p>
+        </div>
+        <div class="switch" id="swRunePity" data-key="retention_pity_runes" title="Pity рун"></div>
+      </div>
+
+      <div class="card toggle">
+        <div>
+          <h3>Кодекс уникатов</h3>
+          <p>Счёт собранных уникатов и награды каждые 10 штук.</p>
+        </div>
+        <div class="switch" id="swCodex" data-key="codex_enabled" title="Кодекс"></div>
+      </div>
+
+      <div class="card toggle">
+        <div>
+          <h3>Телеметрия</h3>
+          <p>События, биомы, мобы, смерти, профили игроков и отчёты по сезону.</p>
+        </div>
+        <div class="switch" id="swTelemetry" data-key="telemetry_enabled" title="Телеметрия"></div>
+      </div>
+
+      <div class="card toggle">
+        <div>
+          <h3>Журнал событий (JSONL)</h3>
+          <p>Построчная запись на диск для анализа между сезонами. Агрегаты работают и без неё.</p>
+        </div>
+        <div class="switch" id="swTelemetryEvents" data-key="telemetry_events" title="Журнал событий"></div>
       </div>
     </div>
   </section>
@@ -194,6 +278,15 @@
         <label class="field">Макс. бонус догоняющего
           <input type="number" id="inpCatchMax" min="0" max="20" step="0.1">
         </label>
+        <label class="field">Автобаланс: старт, мин/уровень
+          <input type="number" id="inpAutoStart" min="1" max="600" step="1">
+        </label>
+        <label class="field">Автобаланс: максимум, мин/уровень
+          <input type="number" id="inpAutoEnd" min="1" max="600" step="1">
+        </label>
+        <label class="field">Автобаланс: мёртвая зона (±)
+          <input type="number" id="inpAutoDead" min="0" max="0.9" step="0.05">
+        </label>
         <label class="field">Ручной множитель спавна (0–1)
           <input type="number" id="inpSpawnManual" min="0" max="1" step="0.05">
         </label>
@@ -203,9 +296,12 @@
         <label class="field">Минимум динамики спавна
           <input type="number" id="inpSpawnMin" min="0" max="1" step="0.01">
         </label>
+        <label class="field">Общая цель недели, убийств
+          <input type="number" id="inpGoalKills" min="0" max="100000000" step="50">
+        </label>
         <button class="apply" id="btnApply">Применить</button>
       </div>
-      <div class="note">Ручной множитель задаётся в диапазоне 0–1: 0.5 означает половину спавна, 1 — без ручного штрафа. Динамика ×100/(100+Благосклонность): при 0 — ×1, при 100 — ×0.5. Ручной override игрока заменяет глобальный ручной множитель, динамика затем умножается. Значения сохраняются в <code>config/age_of_epoch/gamemaster.json</code>.</div>
+      <div class="note">Ручной множитель задаётся в диапазоне 0–1: 0.5 означает половину спавна. Динамика: <code>floor + (1 − floor) × Благосклонность/(Благосклонность + база)</code> — чем выше Благосклонность, тем <b>больше</b> спавн, но не ниже <code>floor</code>. Ручной override игрока заменяет глобальный множитель. Общая цель недели: 0 — выключить. Значения сохраняются в <code>config/age_of_epoch/gamemaster.json</code>.</div>
     </div>
   </section>
 
@@ -233,9 +329,93 @@
         <div class="hint" id="statReferenceHint">средний уровень с поправкой на лидера</div>
       </div>
       <div class="card stat">
+        <div class="label">Автобаланс: мобы</div>
+        <div class="value" id="statAutoMobs">—</div>
+        <div class="hint" id="statAutoMobsHint">HP / урон мобов</div>
+      </div>
+      <div class="card stat">
+        <div class="label">Автобаланс: коридор</div>
+        <div class="value" id="statAutoPace">—</div>
+        <div class="hint" id="statAutoPaceHint">минут на уровень</div>
+      </div>
+      <div class="card stat">
+        <div class="label">Серия входов</div>
+        <div class="value" id="statStreak">—</div>
+        <div class="hint" id="statStreakHint">макс. подряд дней</div>
+      </div>
+      <div class="card stat">
+        <div class="label">Риск ухода</div>
+        <div class="value" id="statChurn">—</div>
+        <div class="hint" id="statChurnHint">0 — останется, 1 — уйдёт</div>
+      </div>
+      <div class="card stat">
         <div class="label">Игроков</div>
         <div class="value" id="statPlayers">—</div>
         <div class="hint" id="statPlayersHint">онлайн / в сезоне</div>
+      </div>
+      <div class="card stat">
+        <div class="label">Кооп-бонус</div>
+        <div class="value" id="statCoop">—</div>
+        <div class="hint" id="statCoopHint">опыт / лут / спавн</div>
+      </div>
+      <div class="card stat">
+        <div class="label">Прайм-тайм</div>
+        <div class="value" id="statPrime">—</div>
+        <div class="hint" id="statPrimeHint">когда обычно играют</div>
+      </div>
+      <div class="card stat">
+        <div class="label">Кодекс</div>
+        <div class="value" id="statCodex">—</div>
+        <div class="hint" id="statCodexHint">разных уникатов собрано</div>
+      </div>
+      <div class="card stat">
+        <div class="label">Телеметрия</div>
+        <div class="value" id="statTel">—</div>
+        <div class="hint" id="statTelHint">событий за сезон</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Сервер</h2>
+    <div class="grid cols-2">
+      <div class="card">
+        <h3>Общая цель недели</h3>
+        <div class="sub" id="goalText">—</div>
+        <div class="progress"><div class="progress-fill" id="goalFill"></div></div>
+        <div class="sub" id="goalNote">—</div>
+      </div>
+      <div class="card">
+        <h3>Когда все играют</h3>
+        <div class="sub" id="primeText">—</div>
+        <div class="heat" id="heatBars"></div>
+        <div class="sub" style="margin-top:8px">Столбик — активность сервера в этот час (всё время наблюдений).</div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>Первые события сервера</h3>
+      <div class="sub" id="firstsText">—</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Телеметрия</h2>
+    <div class="grid cols-2">
+      <div class="card">
+        <h3>Живая лента</h3>
+        <div class="sub" id="feedInfo">—</div>
+        <div class="feed" id="feedRows"></div>
+      </div>
+      <div class="card">
+        <h3>Куда уходит время и на что</h3>
+        <div class="sub">Биомы, измерения, мобы, смерти, редкости — за текущий сезон</div>
+        <div class="toplist" id="topBiomes"></div>
+        <div class="toplist" id="topDimensions"></div>
+        <div class="toplist" id="topMobs"></div>
+        <div class="toplist" id="topDeaths"></div>
+        <div class="toplist" id="topGear"></div>
+        <div class="toplist" id="topSpells"></div>
+        <div class="toplist" id="topChests"></div>
       </div>
     </div>
   </section>
@@ -275,12 +455,19 @@
             <th class="num">Темп</th>
             <th class="num">Догоняющий</th>
             <th class="num">Спавн мобов</th>
+            <th class="num">Авто XP</th>
+            <th class="num">Состояние</th>
+            <th class="num">Темп уровня</th>
+            <th class="num">Профиль</th>
+            <th class="num">Цель</th>
+            <th class="num">Серия</th>
+            <th class="num">Pity</th>
             <th class="num">Итог XP</th>
             <th class="num">Был(а)</th>
           </tr>
         </thead>
         <tbody id="playerRows">
-          <tr><td colspan="10" class="empty">данных пока нет</td></tr>
+          <tr><td colspan="17" class="empty">данных пока нет</td></tr>
         </tbody>
       </table>
     </div>
@@ -360,6 +547,70 @@
     return "flat";
   }
 
+  function prettyKey(key) {
+    if (!key) return "—";
+    return String(key)
+      .replace(/^minecraft:/, "")
+      .replace(/^age_of_exile:/, "")
+      .replace(/_/g, " ");
+  }
+
+  function fmtDuration(seconds) {
+    const value = Number(seconds) || 0;
+    if (value < 60) return Math.round(value) + " с";
+    if (value < 3600) return Math.round(value / 60) + " мин";
+    return fmt(value / 3600, 1) + " ч";
+  }
+
+  function renderTop(containerId, title, items, asTime) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    if (!items.length) {
+      container.innerHTML = "";
+      return;
+    }
+    const max = Math.max(...items.map((item) => Number(item.value) || 0), 1);
+    const rows = items.slice(0, 5).map((item) => {
+      const value = Number(item.value) || 0;
+      const width = Math.max(2, Math.round((value / max) * 100));
+      const text = asTime ? fmtDuration(value) : fmtInt(Math.round(value));
+      return `<div class="toprow"><span class="name">${escapeHtml(prettyKey(item.key))}</span>`
+        + `<span class="val">${text}</span>`
+        + `<div class="topbar"><i style="width:${width}%"></i></div></div>`;
+    }).join("");
+    container.innerHTML = `<div class="sub" style="margin-top:6px">${escapeHtml(title)}</div>`
+      + `<div class="toplist">${rows}</div>`;
+  }
+
+  function renderFeed(entries) {
+    const container = document.getElementById("feedRows");
+    if (!container) return;
+    const labels = {
+      login: "вход", logout: "выход", level: "уровень", death: "смерть", kill: "убийство",
+      kill_env: "убийство", loot: "дроп", gear: "предмет", spell: "заклинание",
+      crate: "сундук", retain: "награда", season_start: "сезон"
+    };
+    if (!entries.length) {
+      container.innerHTML = `<div class="empty">событий пока нет</div>`;
+      return;
+    }
+    container.innerHTML = entries.slice().reverse().map((entry) => {
+      const date = new Date((entry.t || 0) * 1000);
+      const time = String(date.getHours()).padStart(2, "0") + ":" + String(date.getMinutes()).padStart(2, "0");
+      const label = labels[entry.type] || entry.type;
+      const subject = prettyKey(entry.subject || "");
+      const detail = [subject, entry.extra ? escapeHtml(entry.extra) : "",
+        entry.biome ? prettyKey(entry.biome) : ""].filter(Boolean).join(" · ");
+      const who = entry.player ? escapeHtml(entry.player) : "сервер";
+      const value = Number(entry.value) || 0;
+      const suffix = entry.type === "loot" ? ` ×${value}` : (entry.type === "retain" ? ` ×${fmt(value, 0)}` : "");
+      return `<div class="feed-row"><span class="t">${time}</span>`
+        + `<span class="k">${escapeHtml(label)}</span>`
+        + `<span class="who2">${who}<span class="sub2"> ${detail}${suffix}</span></span>`
+        + `<span class="val muted">${entry.level ? "ур. " + entry.level : ""}</span></div>`;
+    }).join("");
+  }
+
   function render() {
     if (!state) return;
     const cfg = state.config || {};
@@ -371,6 +622,12 @@
     setSwitch(document.getElementById("swEnabled"), cfg.enabled, busy);
     setSwitch(document.getElementById("swSpawnRate"), cfg.spawn_rate_enabled, busy);
     setSwitch(document.getElementById("swSpawnDynamic"), cfg.spawn_rate_dynamic, busy);
+    setSwitch(document.getElementById("swAuto"), cfg.auto_balance && cfg.enabled, busy);
+    setSwitch(document.getElementById("swTelemetry"), cfg.telemetry_enabled, busy);
+    setSwitch(document.getElementById("swSoftDeath"), cfg.retention_soft_death, busy);
+    setSwitch(document.getElementById("swRunePity"), cfg.retention_pity_runes, busy);
+    setSwitch(document.getElementById("swCodex"), cfg.codex_enabled, busy);
+    setSwitch(document.getElementById("swTelemetryEvents"), cfg.telemetry_events, busy);
 
     document.getElementById("catchupInfo").textContent =
       "+" + fmt((cfg.catch_up_per_level || 0) * 100, 0) + "% за уровень отставания, максимум +" +
@@ -379,18 +636,112 @@
       "штраф после " + (cfg.pacing_start_level ?? "—") + " уровня; прогноз " + fmt(summary.predicted_hours, 1) + " ч, k=" + fmt(summary.k, 2);
     document.getElementById("masterInfo").textContent = cfg.enabled ? "система активна" : "вмешательство GameMaster отключено";
     const favorBase = Math.max(1, Number(cfg.spawn_rate_favor_reference) || 100);
+    const floor = Number(cfg.spawn_rate_dynamic_min_multiplier ?? 0.65);
     const dynamicAt100 = cfg.spawn_rate_dynamic
-      ? Math.max(Number(cfg.spawn_rate_dynamic_min_multiplier || 0), favorBase / (favorBase + 100))
+      ? floor + (1 - floor) * (100 / (favorBase + 100))
       : 1;
     document.getElementById("spawnRateInfo").textContent =
       (cfg.enabled && cfg.spawn_rate_enabled ? "активно" : "выключено") + "; ручной ×" +
       fmt(cfg.spawn_rate_manual_multiplier, 2) + "; при Благосклонности 100 итог примерно ×" +
       fmt(cfg.spawn_rate_manual_multiplier * dynamicAt100, 2);
 
+    const auto = summary.auto || {};
+    document.getElementById("autoInfo").textContent = auto.enabled
+      ? "цель ~" + fmt(auto.target_hours, 0) + " ч; сейчас мобы HP ×" + fmt(auto.mob_health, 2)
+        + ", урон ×" + fmt(auto.mob_damage, 2) + ", лут ×" + fmt(auto.loot, 2)
+        + ", спавн ×" + fmt(auto.spawn, 2)
+      : "выключен";
+    const retention = summary.retention || {};
+    document.getElementById("statStreak").textContent = (retention.max_streak ?? 0) + " дн";
+    document.getElementById("statStreakHint").textContent =
+      "активных дней за 7: " + fmt(retention.avg_active_days_7, 1);
+    document.getElementById("statChurn").textContent = fmt(retention.avg_churn_risk, 2);
+    document.getElementById("statChurnHint").textContent =
+      "pity: " + (retention.avg_kills_since_unique ?? 0) + " убийств без униката в среднем";
+
+    document.getElementById("statAutoMobs").textContent =
+      "×" + fmt(auto.mob_health, 2) + " / ×" + fmt(auto.mob_damage, 2);
+    document.getElementById("statAutoMobsHint").textContent =
+      "HP / урон мобов, лут ×" + fmt(auto.loot, 2);
+    document.getElementById("statAutoPace").textContent =
+      fmt(auto.target_start_minutes, 0) + "–" + fmt(auto.target_end_minutes, 0) + " мин";
+    document.getElementById("statAutoPaceHint").textContent =
+      "цель ~" + fmt(auto.target_hours, 0) + " ч до максимума";
+
     document.getElementById("statBaseline").textContent = fmt(summary.baseline_hours, 1) + " ч";
     document.getElementById("statPredicted").textContent = fmt(summary.predicted_hours, 1) + " ч";
     document.getElementById("statTarget").textContent = fmt(summary.target_hours, 1) + " ч";
     document.getElementById("statReference").textContent = fmt(summary.reference_level, 1) + " ур.";
+    const social = summary.social || {};
+    document.getElementById("statCoop").textContent = "×" + fmt(social.coop_exp, 2);
+    document.getElementById("statCoopHint").textContent =
+      "лут ×" + fmt(social.coop_loot, 2) + ", спавн ×" + fmt(social.coop_spawn, 2)
+      + ", HP мобов ×" + fmt(social.group_hp, 2);
+    document.getElementById("statPrime").textContent =
+      (social.prime_start ?? -1) >= 0 ? social.prime_window : "—";
+    document.getElementById("statPrimeHint").textContent =
+      (social.online ?? 0) + " сейчас · " + (social.prime_start >= 0 ? "окно компании" : "мало данных");
+
+    const goalKills = social.goal_kills ?? 0;
+    const goalTarget = social.goal_target ?? 0;
+    const goalFavor = cfg.social_goal_favor ?? 0;
+    document.getElementById("goalText").textContent = goalTarget > 0
+      ? goalKills + " / " + goalTarget + " убийств всей командой"
+      : "цель выключена (/gm social goal <убийств>)";
+    document.getElementById("goalFill").style.width =
+      goalTarget > 0 ? Math.min(100, (100 * goalKills) / goalTarget).toFixed(1) + "%" : "0%";
+    document.getElementById("goalNote").textContent = goalTarget <= 0
+      ? "—"
+      : (social.goal_reached
+        ? "выполнена — награда ждёт всех, кто зайдёт (получили: " + (social.goal_claimed ?? 0) + ")"
+        : "осталось " + Math.max(0, goalTarget - goalKills) + " убийств · награда +"
+          + fmt(goalFavor, 0) + " Благосклонности каждому");
+
+    document.getElementById("primeText").textContent = (social.prime_start ?? -1) >= 0
+      ? "Обычно собираются " + social.prime_window + " · онлайн сейчас " + (social.online ?? 0)
+      : "Нужно несколько сессий, чтобы увидеть расписание";
+    const heat = social.heat || [];
+    document.getElementById("heatBars").innerHTML = Array.from({ length: 24 }, (_, hour) => {
+      const value = Math.max(0, Math.min(1, Number(heat[hour] || 0)));
+      const label = hour % 3 === 0 ? String(hour).padStart(2, "0") : "";
+      return `<div class="heat-col" title="${String(hour).padStart(2, "0")}:00 — активность ${(value * 100).toFixed(0)}%">`
+        + `<div class="heat-bar" style="height:${(value * 100).toFixed(0)}%"></div>`
+        + `<div class="heat-label">${label}</div></div>`;
+    }).join("");
+
+    const firsts = social.firsts || {};
+    const firstLabels = {
+      level_10: "первый 10 уров.", level_20: "первый 20 уров.", level_30: "первый 30 уров.",
+      level_40: "первый 40 уров.", level_50: "первый 50 уров.", unique: "первый уникат"
+    };
+    const firstKeys = Object.keys(firsts);
+    document.getElementById("firstsText").innerHTML = firstKeys.length
+      ? firstKeys.map((key) => `<span class="badge flat" style="margin:0 8px 6px 0">★ `
+          + `${escapeHtml(firstLabels[key] || key)} — ${escapeHtml(firsts[key])}</span>`).join("")
+      : "пока никого — стань первым";
+
+    document.getElementById("statCodex").textContent = (social.codex_unique ?? 0) + " шт";
+    document.getElementById("statCodexHint").textContent =
+      "всего собрано " + (social.codex_total ?? 0) + " · игроков с кодексом " + (social.codex_players ?? 0);
+
+    const tel = summary.telemetry || {};
+    document.getElementById("statTel").textContent = fmtInt(tel.events ?? 0);
+    document.getElementById("statTelHint").textContent =
+      "сезон «" + (tel.season || "—") + "» · " + fmt(tel.days, 1) + " дн · ср. сессия "
+      + fmt(tel.avg_session_minutes, 0) + " мин";
+
+    document.getElementById("feedInfo").textContent = (tel.enabled ? "сбор включён" : "сбор выключен")
+      + " · журнал: " + (tel.journal ? escapeHtml(tel.journal) : "в памяти")
+      + " · обновление каждые 5 с";
+    renderFeed(tel.feed || []);
+    renderTop("topBiomes", "Биомы", tel.biomes || [], true);
+    renderTop("topDimensions", "Измерения", tel.dimensions || [], true);
+    renderTop("topMobs", "Убитые мобы", tel.mobs || [], false);
+    renderTop("topDeaths", "Причины смерти", tel.death_causes || [], false);
+    renderTop("topGear", "Редкости предметов", tel.gear || [], false);
+    renderTop("topSpells", "Способности", tel.spells || [], false);
+    renderTop("topChests", "Сундуки", tel.chests || [], false);
+
     document.getElementById("statPlayers").textContent = (summary.online ?? 0) + " / " + (summary.tracked ?? 0);
     document.getElementById("statPlayersHint").textContent = "онлайн / в сезоне";
     document.getElementById("statPredictedHint").textContent =
@@ -418,10 +769,17 @@
           <td class="num">×${fmt(p.pacing_multiplier, 2)}</td>
           <td class="num">×${fmt(p.catch_up_multiplier, 2)}</td>
           <td class="num"><span class="badge ${multiplierClass(p.spawn_rate_multiplier)}">×${fmt(p.spawn_rate_multiplier, 2)}</span></td>
+          <td class="num">×${fmt(p.auto_exp_multiplier, 2)}</td>
+          <td class="num muted" title="смертей/час: ${fmt(p.deaths_per_hour, 2)}; спавн ×${fmt(p.auto_spawn, 2)}; печать: ${p.seal_active ? "активна (" + (p.seal_kills_left ?? 0) + " убийств)" : "нет"}; pity рун: ${p.kills_since_rune ?? 0}">${escapeHtml(p.auto_state || "—")}${p.seal_active ? " 🕯" : ""}</td>
+          <td class="num muted">${fmt(p.minutes_at_level, 0)} / ${fmt(p.target_minutes, 0)} мин</td>
+          <td class="num muted" title="${escapeHtml((p.preferences && p.preferences.top_biome) || "нет данных")}; любимый час: ${escapeHtml((p.preferences && p.preferences.top_hour) || "—")}; кодекс: ${p.codex ?? 0}">${escapeHtml((p.preferences && p.preferences.style) || "—")}</td>
+          <td class="num muted" title="цель сессии: убийства; бонус за возвращение ×${fmt(p.return_bonus, 2)}">${p.session_goal_progress ?? 0}/${p.session_goal_target ?? 0}</td>
+          <td class="num muted" title="активных дней за 7: ${p.active_days_7 ?? 0}">${p.streak_days ?? 0} дн</td>
+          <td class="num muted" title="убийств без униката; гарант. редких: ${p.guaranteed_rare ?? 0}, эпик: ${p.guaranteed_epic ?? 0}">${p.kills_since_unique ?? 0}</td>
           <td class="num"><span class="badge ${multiplierClass(p.multiplier)}">×${fmt(p.multiplier, 2)}</span></td>
           <td class="num muted">${p.online ? "в сети" : ago(p.last_seen_minutes)}</td>
         </tr>`).join("")
-      : `<tr><td colspan="10" class="empty">данных пока нет</td></tr>`;
+      : `<tr><td colspan="17" class="empty">данных пока нет</td></tr>`;
 
     if (!document.activeElement || !document.activeElement.matches("input, select")) {
       document.getElementById("inpTarget").value = cfg.target_hours ?? "";
@@ -433,6 +791,10 @@
       document.getElementById("inpSpawnManual").value = cfg.spawn_rate_manual_multiplier ?? "";
       document.getElementById("inpFavorReference").value = cfg.spawn_rate_favor_reference ?? "";
       document.getElementById("inpSpawnMin").value = cfg.spawn_rate_dynamic_min_multiplier ?? "";
+      document.getElementById("inpGoalKills").value = cfg.social_goal_kills ?? "";
+      document.getElementById("inpAutoStart").value = cfg.auto_start_minutes ?? "";
+      document.getElementById("inpAutoEnd").value = cfg.auto_end_minutes ?? "";
+      document.getElementById("inpAutoDead").value = cfg.auto_dead_zone ?? "";
     }
     renderSpawnOverrideForm(players);
 
@@ -744,7 +1106,11 @@
       catch_up_max_bonus: Number(document.getElementById("inpCatchMax").value),
       spawn_rate_manual_multiplier: Number(document.getElementById("inpSpawnManual").value),
       spawn_rate_favor_reference: Number(document.getElementById("inpFavorReference").value),
-      spawn_rate_dynamic_min_multiplier: Number(document.getElementById("inpSpawnMin").value)
+      spawn_rate_dynamic_min_multiplier: Number(document.getElementById("inpSpawnMin").value),
+      social_goal_kills: Number(document.getElementById("inpGoalKills").value),
+      auto_start_minutes: Number(document.getElementById("inpAutoStart").value),
+      auto_end_minutes: Number(document.getElementById("inpAutoEnd").value),
+      auto_dead_zone: Number(document.getElementById("inpAutoDead").value)
     };
     Object.keys(patch).forEach(k => {
       if (!Number.isFinite(patch[k])) delete patch[k];

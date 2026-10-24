@@ -94,8 +94,14 @@ public class GearItemData implements ICommonDataItem<GearRarity> {
     public void upgradeToHigherRarity() {
 
         GearRarity old = this.getRarity();
-        GearRarity rar = this.getRarity()
-            .getHigherRarity();
+        if (old == null) {
+            return;
+        }
+        GearRarity rar = old.getHigherRarity();
+        if (rar == null) {
+            // Финальная редкость (epic/unique/runeword) вверх не растёт.
+            return;
+        }
 
         this.rarity = rar.GUID();
 
@@ -105,7 +111,25 @@ public class GearItemData implements ICommonDataItem<GearRarity> {
             this.affixes.addOneRandomAffix(this);
         }
 
-        this.up.regenerate(rar);
+        // Не regenerate() - иначе игрок терял бы все вложенные камни улучшения
+        // ровно в момент, когда они понадобились для повышения редкости.
+        // Досоздаём/убираем только пустые слоты под новый потолок редкости.
+        while (this.up.ups.size() < rar.upgrades) {
+            this.up.ups.add(UpgradeData.SlotType.EMPTY);
+        }
+        while (this.up.ups.size() > rar.upgrades) {
+            int lastEmpty = -1;
+            for (int i = this.up.ups.size() - 1; i >= 0; i--) {
+                if (this.up.ups.get(i).isEmptySlot) {
+                    lastEmpty = i;
+                    break;
+                }
+            }
+            if (lastEmpty == -1) {
+                break;
+            }
+            this.up.ups.remove(lastEmpty);
+        }
     }
 
     public void onUpgrade(Player player, UpgradeData.SlotType type) {
@@ -187,18 +211,18 @@ public class GearItemData implements ICommonDataItem<GearRarity> {
     }
 
     public int getTotalSockets() {
-        int sockets = 0;
-        sockets += getRarity().sockets;
+        int sockets = getRarity().sockets;
+        int upgradeLevel = this.up.getUpgradeLevel();
 
-        int uplvl = this.up.getUpgradeLevel();
-
-        if (uplvl >= 4) {
+        // Апгрейды имеют три ступени на слот (UP1/UP2/UP3), поэтому
+        // uncommon (2 слота), rare (3) и epic/unique (5) могут достичь +4/+8/+12.
+        if (upgradeLevel >= 4) {
             sockets++;
         }
-        if (uplvl >= 8) {
+        if (upgradeLevel >= 8) {
             sockets++;
         }
-        if (uplvl >= 12) {
+        if (upgradeLevel >= 12) {
             sockets++;
         }
         return sockets;

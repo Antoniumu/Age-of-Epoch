@@ -40,6 +40,22 @@ public abstract class BaseLootGen<T extends ItemBlueprint> {
         return list;
     }
 
+    /**
+     * Генерирует один предмет в обход шанса — для pity (защиты от невезения).
+     * Возвращает {@code null}, если условия генератора не выполнены.
+     */
+    public ItemStack generateForced() {
+        try {
+            if (!condition()) {
+                return null;
+            }
+            ItemStack stack = generateOne();
+            return stack == null || stack.isEmpty() ? null : stack;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public LootInfo info;
 
     public BaseLootGen(LootInfo info) {

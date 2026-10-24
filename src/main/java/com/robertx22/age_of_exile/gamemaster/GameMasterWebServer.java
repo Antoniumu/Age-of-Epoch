@@ -183,6 +183,32 @@ public class GameMasterWebServer {
                 return;
             }
 
+            if (path.equals("/api/telemetry")) {
+                respond(socket, 200, "application/json; charset=utf-8", telemetryJson());
+                return;
+            }
+
+            if (path.equals("/api/report") && method.equals("POST")) {
+                JsonObject response = new JsonObject();
+                try {
+                    java.nio.file.Path report = onServerThread(() -> {
+                        try {
+                            return gameMaster.telemetry()
+                                .writeSeasonReport(GameMaster.now());
+                        } catch (Exception e) {
+                            return null;
+                        }
+                    });
+                    response.addProperty("ok", true);
+                    response.addProperty("path", report == null ? "" : report.toString());
+                } catch (Exception e) {
+                    response.addProperty("ok", false);
+                    response.addProperty("error", String.valueOf(e));
+                }
+                respond(socket, 200, "application/json; charset=utf-8", response.toString());
+                return;
+            }
+
             if (path.equals("/api/config") && method.equals("POST")) {
                 JsonObject json;
                 try {
@@ -217,6 +243,14 @@ public class GameMasterWebServer {
         } catch (Exception ignored) {
             // браузер закрыл соединение или таймаут — это нормально
         }
+    }
+
+    private String telemetryJson() {
+        String json = onServerThread(gameMaster::buildTelemetryJson);
+        if (json == null) {
+            return "{\"error\":\"server_not_ready\"}";
+        }
+        return json;
     }
 
     private String stateJson() {
