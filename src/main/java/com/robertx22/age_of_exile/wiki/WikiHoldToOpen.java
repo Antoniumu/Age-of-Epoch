@@ -95,9 +95,85 @@ public final class WikiHoldToOpen {
         }
     }
 
+    // ---- опрос клавиши ----
+    // KeyMapping.isDown() не обязан обновляться, пока открыт чужой экран
+    // (инвентарь перехватывает клавиатуру раньше маппингов), а тултип живёт
+    // именно в инвентаре. Поэтому, как hasAltDown() в compat Screen,
+    // дополнительно опрашиваем сырое состояние назначенной клавиши через
+    // InputConstants.isKeyDown(...). Код назначенной клавиши достаём
+    // рефлексией (имена геттеров KeyMapping/Key гуляют между версиями),
+    // чтобы переназначение в настройках продолжало работать.
+    private static java.lang.reflect.Method boundKeyGetter;
+    private static java.lang.reflect.Method keyValueGetter;
+    private static boolean reflectionTried;
+
+    private static int boundKeyCode() {
+        try {
+            Object mapping = KeybindsRegister.WIKI_HOLD_KEY;
+            if (mapping == null) {
+                return -1;
+            }
+            if (!reflectionTried) {
+                reflectionTried = true;
+                String[] names = {"getKey", "key", "getBoundKey", "boundKey", "getDefaultKey", "defaultKey"};
+                for (String name : names) {
+                    try {
+                        boundKeyGetter = mapping.getClass().getMethod(name);
+                        break;
+                    } catch (Throwable ignored) {
+                    }
+                }
+            }
+            if (boundKeyGetter == null) {
+                return -1;
+            }
+            Object key = boundKeyGetter.invoke(mapping);
+            if (key == null) {
+                return -1;
+            }
+            if (key instanceof Number) {
+                return ((Number) key).intValue();
+            }
+            if (keyValueGetter == null || !keyValueGetter.getDeclaringClass().isInstance(key)) {
+                keyValueGetter = null;
+                String[] valueNames = {"getValue", "value", "getCode", "code"};
+                for (String name : valueNames) {
+                    try {
+                        keyValueGetter = key.getClass().getMethod(name);
+                        break;
+                    } catch (Throwable ignored) {
+                    }
+                }
+            }
+            if (keyValueGetter == null) {
+                return -1;
+            }
+            Object value = keyValueGetter.invoke(key);
+            return value instanceof Number ? ((Number) value).intValue() : -1;
+        } catch (Throwable ignored) {
+            return -1;
+        }
+    }
+
     private static boolean keyHeld() {
         try {
-            return KeybindsRegister.WIKI_HOLD_KEY != null && KeybindsRegister.WIKI_HOLD_KEY.isDown();
+            if (KeybindsRegister.WIKI_HOLD_KEY != null && KeybindsRegister.WIKI_HOLD_KEY.isDown()) {
+                return true;
+            }
+        } catch (Throwable ignored) {
+        }
+        try {
+            int code = boundKeyCode();
+            // GLFW-коды клавиатуры начинаются с 32 (пробел); кнопки мыши (0..7)
+            // этим опросом не покрываются — их ловит isDown() выше.
+            if (code >= 32) {
+                return com.mojang.blaze3d.platform.InputConstants.isKeyDown(code);
+            }
+        } catch (Throwable ignored) {
+        }
+        try {
+            return com.mojang.blaze3d.platform.InputConstants.isKeyDown(
+                com.mojang.blaze3d.platform.InputConstants.KEY_B);
         } catch (Throwable ignored) {
             return false;
         }
