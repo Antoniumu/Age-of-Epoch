@@ -12,7 +12,7 @@ python3 tools/balance/season_sim.py       # сколько целей реаль
 > (`docs/QUESTBOOK.md`) — это кампания от 1 до 100 %, она не сбрасывается по дням.
 > Всё «ежедневное» живёт в одном месте — `gamemaster/Retention.java` +
 > `gamemaster/GameMaster.java`, и настраивается через `GameMasterConfig`
-> (`config/age_of_epoch/gamemaster.json`) или команды `/gm retention …`.
+> (`config/age_of_epoch/gamemaster.json`) или команды `/mine_and_slash gm retention …`.
 
 ---
 
@@ -20,14 +20,14 @@ python3 tools/balance/season_sim.py       # сколько целей реаль
 
 | # | Механика | Период | Что даёт | Код | Команда |
 |---|---|---|---|---|---|
-| 1 | Серия входов (streak) | сутки | Благосклонность 40 → 340/день, редкая/эпическая вещь на 3/7/14/30 дне | `Retention.onSession` | `/gm retention` |
+| 1 | Серия входов (streak) | сутки | Благосклонность 40 → 340/день, редкая/эпическая вещь на 3/7/14/30 дне | `Retention.onSession` | `/mine_and_slash gm retention` |
 | 2 | Цель дня | сутки | 122 → 240 Благосклонности | `Retention.ensureSessionGoal` | — |
 | 3 | Вехи уровней | каждые 5 ур. | 165 → 300 Благосклонности + редкая/эпическая вещь | `Retention.onLevelUp` | — |
-| 4 | Кодекс уникатов | сезон | 4 ступени: 300/600/900/1200 Благосклонности + эпик | `Retention.registerCodexEntry` | `/gm codex` |
-| 5 | Общая цель недели (6 000 убийств) | неделя | 400 Благосклонности + редкая вещь каждому | `GameMaster` + `Social` | `/gm social goal <n>` |
+| 4 | Кодекс уникатов | сезон | 4 ступени: 300/600/900/1200 Благосклонности + эпик | `Retention.registerCodexEntry` | `/mine_and_slash gm codex` |
+| 5 | Общая цель недели (6 000 убийств) | неделя | 400 Благосклонности + редкая вещь каждому | `GameMaster` + `Social` | `/mine_and_slash gm social goal <n>` |
 | 6 | Пакет возвращения | после 3+ дней | 2 ч опыта ×1.25 + редкая вещь | `Retention.shouldGrantReturn` | — |
 | 7 | Печать смерти | после смерти | опыт ×0.85, 10 мин или 3 убийства | `Retention.applySeal` | — |
-| 8 | Защита от невезения (pity) | постоянно | срезает «сухие» серии: p95 униката 2141 → 434 убийства | `Retention.pityChance`, `runePityChance`, `gemPityChance` | `/gm retention pity on|off` |
+| 8 | Защита от невезения (pity) | постоянно | срезает «сухие» серии: p95 униката 2141 → 434 убийства | `Retention.pityChance`, `runePityChance`, `gemPityChance` | `/mine_and_slash gm retention pity on|off` |
 
 Ниже — каждая по отдельности: формула, таблица значений, где вызывается, что видит игрок
 и как это проверить на сервере.
@@ -326,12 +326,16 @@ GameMaster: С возвращением! Опыт ×1.25 на 2 ч. Гарант
 
 ## Как проверить на сервере за 2 минуты
 
+> Все команды мода живут под корнем `/mine_and_slash` (константа `CommandRefs.ID`), то есть
+> правильно — `/mine_and_slash gm …`, а не `/gm …`. Нужен уровень оператора 2
+> (`Commands.LEVEL_GAMEMASTERS`); обычный игрок эти команды не увидит.
+
 ```
-/gm status              # активен ли GameMaster, множители, онлайн
-/gm retention           # серия, вехи, pity, цель дня (текст без чисел прогресса)
-/gm social goal 6000    # цель недели (по умолчанию уже 6000)
-/gm codex               # состояние кодекса по игрокам
-/gm telemetry report    # отчёт по удержанию за сезон
+/mine_and_slash gm status              # активен ли GameMaster, множители, онлайн
+/mine_and_slash gm retention           # серия, вехи, pity, цель дня (текст без чисел прогресса)
+/mine_and_slash gm social goal 6000    # цель недели (по умолчанию уже 6000)
+/mine_and_slash gm codex               # состояние кодекса по игрокам
+/mine_and_slash gm telemetry report    # отчёт по удержанию за сезон
 ```
 
 Ожидаемое поведение при проверке одним игроком:

@@ -52,7 +52,7 @@ python3 tools/balance/season_sim.py      # сезон компании 6 чел�
 | Файл | Ошибка | Исправление |
 |---|---|---|
 | `GameMaster` (actionbar цели дня) | у `ServerPlayer` в этой версии нет `displayClientMessage` | отправка через `OnScreenMessageUtils.sendMessage(..., Type.ACTIONBAR)` — тот же путь, что у сообщения об опыте |
-| `GameMaster` (отчёт `/gm telemetry`) | `JsonObject.add` принимает `JsonElement`, а передавался `int` | `addProperty("codex_unique", …)` |
+| `GameMaster` (отчёт `/mine_and_slash gm telemetry`) | `JsonObject.add` принимает `JsonElement`, а передавался `int` | `addProperty("codex_unique", …)` |
 | `Telemetry.biome` | у `ResourceKey` в этой версии `identifier()`, а не `location()` | `key.identifier()` (как в `Telemetry.dimension`) |
 | `Telemetry.biome` | следствие предыдущего: тип `Object` вместо `String` | ушло вместе с исправлением выше |
 | `GridHelper` | `continue` внутри лямбды `forEach` запрещён | `return` — выход из итерации лямбды, смысл сохранён |
@@ -484,7 +484,7 @@ Regular ~72, Grand ~720, Glorious ~14 400, Divine ~432 000 Cracked. Поэтом
 уровень, измерение, биом, тип/субъект события и свободную деталь; отдельные сэмплы каждые
 10 секунд дают `biome_time`, `dim_time` и час активности. Агрегаты на игрока и на сервер
 сохраняются в `gamemaster_data.json`, живая лента панели хранит последние 80 событий.
-`/gm season new <имя>` сначала пишет отчёт Markdown и архив агрегатов текущего сезона JSON,
+`/mine_and_slash gm season new <имя>` сначала пишет отчёт Markdown и архив агрегатов текущего сезона JSON,
 потом обнуляет счётчики нового сезона; сырой журнал остаётся по сезонам в JSONL и чистится
 по сроку хранения. События включают вход/выход, убийство/смерть, уровень, добычу и редкость,
 сундук, крафт, заклинание, удержание и первые достижения. Ошибка телеметрии не должна
@@ -670,8 +670,8 @@ Regular ~72, Grand ~720, Glorious ~14 400, Divine ~432 000 Cracked. Поэтом
 
 1. **Сборка и старт.** `./gradlew build`, запустить сервер, в логе не должно быть
    исключений из `UniqueGearReg`, `Runes`, `GameMaster.load`, `DataHolder`.
-2. **Команды.** `/gm status`, `/gm retention`, `/gm daily`, `/gm codex`, `/gm telemetry` —
-   все должны отвечать без стектрейсов; `/gm daily` показывает тип и прогресс цели.
+2. **Команды.** `/mine_and_slash gm status`, `/mine_and_slash gm retention`, `/mine_and_slash gm daily`, `/mine_and_slash gm codex`, `/mine_and_slash gm telemetry` —
+   все должны отвечать без стектрейсов; `/mine_and_slash gm daily` показывает тип и прогресс цели.
 3. **Лут-цикл.** Убить 200–300 мобов: души падают (~1 на 10), самоцветы (~1 на 45),
    руна (~1 на 150–200 с pity), уникат (~1 на 285). Проверить, что счётчики
    `kills_since_*` в `/gm` сбрасываются.
