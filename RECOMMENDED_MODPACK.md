@@ -44,6 +44,8 @@
 - Обязательные библиотеки выбранных версий — через **Required content** Modrinth или автоматически
   в Modrinth App. Не подменяйте их версиями для другого Minecraft.
 - Для каждой ссылки ниже выбирается файл **26.3 / Fabric**, предпочтительно Release.
+- Лёгко-средний профиль графики и клавиш: [`modpack-settings/options.txt`](modpack-settings/options.txt);
+  изменения и установка описаны в [`modpack-settings/README.md`](modpack-settings/README.md).
 
 ---
 
