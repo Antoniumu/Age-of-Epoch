@@ -78,6 +78,10 @@ public class ProfCraftingRecipe {
             if (StackSaving.INGREDIENTS.has(stack)) {
                 IngredientData data = StackSaving.INGREDIENTS.loadFrom(stack);
                 if (data != null) {
+                    // Ингредиент мог остаться в NBT после обновления датапака.
+                    if (data.getIngredient() == null) {
+                        return ProfCraftResult.fail(Words.WrongRecipeIngredient);
+                    }
                     if (!data.getIngredient()
                         .isAllowedInProfession(skill.id)) {
                         return ProfCraftResult.fail(Words.WrongRecipeIngredient);

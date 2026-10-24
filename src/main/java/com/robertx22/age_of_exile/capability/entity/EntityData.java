@@ -327,7 +327,16 @@ public class EntityData implements ICommonPlayerCap, INeededForClient {
         if (entity instanceof Player) {
             Player player = (Player) entity;
 
-            int expLoss = (int) (exp * ServerContainer.get().EXP_LOSS_ON_DEATH.get());
+            // Новичкам смерть не должна стоить прогресса: до retention_no_exp_loss_level
+            // опыт не отнимается (это самая частая причина «бросил на первом часу»).
+            boolean skipLoss = false;
+            if (entity instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+                skipLoss = GameMaster.get()
+                    .skipsExpLossOnDeath(serverPlayer);
+            }
+
+            int expLoss = skipLoss ? 0
+                : (int) (exp * ServerContainer.get().EXP_LOSS_ON_DEATH.get());
 
             if (expLoss > 0) {
                 this.exp = Mth.clamp(exp - expLoss, 0, Integer.MAX_VALUE);
@@ -602,6 +611,9 @@ public class EntityData implements ICommonPlayerCap, INeededForClient {
         float num = vanilla * rar.DamageMultiplier() * getMapDifficulty().dmg_multi;
 
         num *= ExileDB.getEntityConfig(entity, this).dmg_multi;
+
+        num *= (float) GameMaster.get()
+            .mobDamageMultiplier();
 
         num = new AttackDamage(Elements.Physical).scale(ModType.FLAT, num, getLevel());
 

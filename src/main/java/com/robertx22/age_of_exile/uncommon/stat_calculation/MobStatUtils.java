@@ -1,5 +1,6 @@
 package com.robertx22.age_of_exile.uncommon.stat_calculation;
 
+import com.robertx22.age_of_exile.gamemaster.GameMaster;
 import com.robertx22.age_of_exile.aoe_data.database.stats.Stats;
 import com.robertx22.age_of_exile.capability.entity.EntityData;
 import com.robertx22.age_of_exile.capability.player.data.ScalingPlayerDiffData;
@@ -152,6 +153,15 @@ public class MobStatUtils {
         }
 
         hpToAdd *= ScalingPlayerDiffData.getHPMulti(unitdata.mobScalingDiff);
+
+        // «режиссёр» может мягко регулировать живучесть мобов
+        hpToAdd *= (float) GameMaster.get()
+            .mobHealthMultiplier();
+
+        // Маленький сервер: если рядом несколько игроков, моб крепче.
+        // Считается один раз — в момент спавна/пересчёта статов.
+        hpToAdd *= (float) GameMaster.get()
+            .mobGroupHealthMultiplier(en);
 
         stats.add(ExactStatData.scaleTo(hpToAdd, ModType.FLAT, Health.getInstance()
             .GUID(), lvl));

@@ -219,16 +219,21 @@ public class DelveMarkerBlockEntity extends BlockEntity {
         mob.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
         mob.setDropChance(EquipmentSlot.HEAD,0.0F);
         if (!world.addFreshEntity(mob)) return null;
+        // Порядок важен: HP/урон мода считаются от ванильных атрибутов в момент
+        // пересчёта статов. Раньше глубинные множители применялись ПОСЛЕ пересчёта,
+        // поэтому реальный HP делвовских мобов не менялся вовсе (а после следующего
+        // пересчёта прыгал). Сначала правим базу, потом пересчитываем.
+        var health=mob.getAttribute(Attributes.MAX_HEALTH);
+        if (health != null) health.setBaseValue(health.getBaseValue() * (1.0 + depth()*0.15) * (boss ? 2.5 : 1.0));
+        var attack=mob.getAttribute(Attributes.ATTACK_DAMAGE);
+        if (attack != null) attack.setBaseValue(attack.getBaseValue() * (1.0 + depth()*0.1));
+
         var unit = Load.Unit(mob);
         if (unit != null) {
             unit.setLevel(data.getIntOr("base_level",1) + (depth()-1)*4 + (boss ? 2 : 0));
             if (boss) unit.setRarity(IRarity.BOSS_ID);
             unit.forceRecalculateStats();
         }
-        var health=mob.getAttribute(Attributes.MAX_HEALTH);
-        if (health != null) health.setBaseValue(health.getBaseValue() * (1.0 + depth()*0.15) * (boss ? 2.5 : 1.0));
-        var attack=mob.getAttribute(Attributes.ATTACK_DAMAGE);
-        if (attack != null) attack.setBaseValue(attack.getBaseValue() * (1.0 + depth()*0.1));
         mob.setHealth(mob.getMaxHealth());
         mob.setTarget(target);
         mob.setAggressive(true);

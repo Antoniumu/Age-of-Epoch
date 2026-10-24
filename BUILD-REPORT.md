@@ -3,6 +3,10 @@
 Дата: 2026-10-20. Рабочая папка `C:\Code\Age-of-Epoch`.
 Связка: JDK 25.0.4.1, Gradle 9.7.1, Fabric Loom 1.18.4, Minecraft 26.3, Fabric API 0.163.0+26.3.
 
+> **Срез не относится к текущему HEAD.** Указанный `BUILD SUCCESSFUL` — сборка состояния
+> от 2026-10-20. Последующие правки ветки, включая текущую ревизию, отдельно не компилировались;
+> см. актуальный статус и тесты в [`LAUNCH-READINESS.md`](LAUNCH-READINESS.md).
+
 > **Обновление 2026-10-21 — плашки мобов.** Добавлены три стиля плашек вместо одной
 > жёстко заданной (`a_libraries/mob_plates/`: `MobPlateRenderer`, `PlateDraw`,
 > `MobPlateSettings`; стиль — `config/forge/MobPlateStyle`). Опции клиента

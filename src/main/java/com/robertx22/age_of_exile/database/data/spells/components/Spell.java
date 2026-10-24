@@ -188,6 +188,16 @@ public final class Spell implements IGUID, IAutoGson<Spell>, JsonExileRegistry<S
             // arm swing handled by item use / packet
         }
 
+        // Телеметрия: какие способности реально используются.
+        if (caster instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+            try {
+                com.robertx22.age_of_exile.gamemaster.GameMaster.get()
+                    .telemetry()
+                    .spell(serverPlayer, this.GUID());
+            } catch (Exception ignored) {
+            }
+        }
+
         if (imbue && this.config.cast_type == SpellCastType.USE_ITEM) {
             ctx.spellsCap.getCastingData()
                 .imbueSpell(this, config.imbues);

@@ -1,6 +1,7 @@
 package com.robertx22.age_of_exile.gamemaster;
 
 import com.robertx22.forge_compat.event.TickEvent;
+import com.robertx22.forge_compat.event.entity.living.LivingDeathEvent;
 import com.robertx22.forge_compat.event.entity.player.PlayerEvent;
 import com.robertx22.forge_compat.fml.event.server.FMLServerStartedEvent;
 import com.robertx22.forge_compat.fml.event.server.FMLServerStoppedEvent;
@@ -40,6 +41,29 @@ public class GameMasterEvents {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        });
+
+        // Телеметрия: смерти мобов и игроков (с причиной и убийцей).
+        ForgeEvents.registerForgeEvent(LivingDeathEvent.class, event -> {
+            try {
+                if (event.getEntityLiving() == null || event.getEntityLiving()
+                    .level()
+                    .isClientSide()) {
+                    return;
+                }
+                String cause = event.getSource() == null ? "unknown" : event.getSource()
+                    .getMsgId();
+                ServerPlayer killer = null;
+                if (event.getSource() != null && event.getSource()
+                    .getEntity() instanceof ServerPlayer player) {
+                    killer = player;
+                }
+                GameMaster.get()
+                    .telemetry()
+                    .onLivingDeath(event.getEntityLiving(), cause, killer);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
 

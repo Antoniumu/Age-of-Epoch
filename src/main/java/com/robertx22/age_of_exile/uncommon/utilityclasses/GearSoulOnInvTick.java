@@ -86,6 +86,12 @@ public class GearSoulOnInvTick {
                         Load.playerRPGData(player).professions.addExp(player, pdata.getProfession(), exp);
                     }
 
+                    // Ежедневная цель: «создать N предметов ремеслом».
+                    if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+                        com.robertx22.age_of_exile.gamemaster.GameMaster.get()
+                            .onCrafted(serverPlayer);
+                    }
+
                 } else {
                     stack.shrink(1);
                     PlayerUtils.giveItem(new ItemStack(Items.GUNPOWDER), player); // todo give specific fail items for each profession?
