@@ -29,12 +29,17 @@ line "4/5. Симуляция сезона (6 игроков, 8 недель)"
 python3 tools/balance/season_sim.py || status=1
 
 line "5/5. Компиляция мода"
-if [ -x ./gradlew ] && command -v java >/dev/null 2>&1; then
+missing=""
+[ -x ./gradlew ] || missing="./gradlew не исполняемый (chmod +x gradlew)"
+command -v java >/dev/null 2>&1 || missing="${missing:+$missing; }java не в PATH"
+
+if [ -z "$missing" ]; then
     ./gradlew compileJava --offline -q || status=1
 else
-    echo "ПРОПУЩЕНО: нет ./gradlew или java."
+    echo "ПРОПУЩЕНО: $missing"
     echo "Это единственная проверка, которую нельзя сделать в песочнице."
-    echo "На машине с JDK 21: ./gradlew build   (или ./gradlew compileJava)"
+    echo "Проекту нужен JDK 25 (build.gradle: release = 25)."
+    echo "На машине с JDK 25: ./gradlew build   (или ./gradlew compileJava)"
 fi
 
 line "Итог"
