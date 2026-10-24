@@ -17,6 +17,13 @@ public class OnKeyPress {
 
     public static void onEndTick(Minecraft mc) {
 
+        // открытие вики по удержанию клавиши на предмете (WikiHoldToOpen):
+        // ставится в очередь из тултипа, выполняется здесь — в тике, а не в рендере
+        if (com.robertx22.age_of_exile.wiki.WikiHoldToOpen.consumePendingOpen()) {
+            cooldown = 10;
+            return;
+        }
+
         if (cooldown > 0) {
             cooldown--;
             return;

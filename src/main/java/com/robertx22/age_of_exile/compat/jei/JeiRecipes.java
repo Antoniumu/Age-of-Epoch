@@ -5,7 +5,7 @@ import com.robertx22.age_of_exile.compat.jei.category.CurrencyRecipe;
 import com.robertx22.age_of_exile.compat.jei.category.ProfessionCraftRecipe;
 import com.robertx22.age_of_exile.compat.jei.category.RunewordRecipe;
 import com.robertx22.age_of_exile.compat.jei.category.SalvageRecipe;
-import com.robertx22.age_of_exile.database.data.currency.base.BaseLocRequirement;
+import com.robertx22.age_of_exile.database.data.currency.loc_reqs.BaseLocRequirement;
 import com.robertx22.age_of_exile.database.data.currency.base.CurrencyItem;
 import com.robertx22.age_of_exile.database.data.ingredient.SlashIngredient;
 import com.robertx22.age_of_exile.database.data.rarities.GearRarity;
