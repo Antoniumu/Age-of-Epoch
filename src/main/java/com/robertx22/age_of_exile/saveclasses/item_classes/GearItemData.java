@@ -94,8 +94,14 @@ public class GearItemData implements ICommonDataItem<GearRarity> {
     public void upgradeToHigherRarity() {
 
         GearRarity old = this.getRarity();
-        GearRarity rar = this.getRarity()
-            .getHigherRarity();
+        if (old == null) {
+            return;
+        }
+        GearRarity rar = old.getHigherRarity();
+        if (rar == null) {
+            // Финальная редкость (epic/unique/runeword) вверх не растёт.
+            return;
+        }
 
         this.rarity = rar.GUID();
 
