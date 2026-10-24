@@ -24,6 +24,7 @@ import com.robertx22.age_of_exile.mmorpg.registers.common.C2SPacketRegister;
 import com.robertx22.age_of_exile.mmorpg.registers.common.SlashCapabilities;
 import com.robertx22.age_of_exile.mmorpg.registers.common.SlashItemTags;
 import com.robertx22.age_of_exile.mmorpg.registers.deferred_wrapper.SlashDeferred;
+import com.robertx22.age_of_exile.tpa.TpaAddon;
 import com.robertx22.age_of_exile.uncommon.datasaving.StackSaving;
 import com.robertx22.library_of_exile.events.base.EventConsumer;
 import com.robertx22.library_of_exile.events.base.ExileEvents;
@@ -120,6 +121,7 @@ public class MMORPG implements net.fabricmc.api.ModInitializer {
         ExileDBInit.registerAllItems(); // after config registerAll
         DMRegInit.init();
 
+        TpaAddon.init();
         CommonEvents.register();
 
         C2SPacketRegister.register();
