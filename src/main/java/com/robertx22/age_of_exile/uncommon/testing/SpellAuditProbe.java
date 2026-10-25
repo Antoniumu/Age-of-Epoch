@@ -146,10 +146,12 @@ public final class SpellAuditProbe {
      *
      * <p>Раньше они стояли в упор по центру (1.5 блока), и в видео был виден
      * только зомби: ни партиклов, ни полёта снаряда за ним. Теперь это широкая
-     * дуга — ближние умения достают, а картинка остаётся читаемой.
+     * дуга — ближние умения достают, а картинка остаётся читаемой: в центре
+     * кадра цель в 4.5 блока, а самый ближний манекен сдвинут вбок, иначе он
+     * закрывал половину кадра в роликах.
      */
     private static final double[][] DUMMY_PLACEMENT = {
-        {1.3D, 0D}, {3.5D, -2.2D}, {4.5D, 0D}, {4.0D, 2.2D}, {6.5D, 0D}
+        {1.4D, -2.4D}, {2.6D, 2.4D}, {4.5D, 0D}, {6.5D, -1.8D}, {6.5D, 1.8D}
     };
 
     private static Runner active;
@@ -1122,16 +1124,31 @@ public final class SpellAuditProbe {
          * глаз до центра ближайшего манекена.
          */
         private void aimAtNearestDummy(ServerPlayer player, ServerLevel level) {
+            // Целимся не в самый ближний манекен, а в тот, что лучше всего стоит
+            // по направлению взгляда: ближний сосед сбоку иначе разворачивал
+            // камеру на себя и закрывал собой полкадра в ролике. Близость тоже
+            // учитывается — иначе бот смотрел бы мимо целей.
             LivingEntity target = null;
             double best = Double.MAX_VALUE;
+            double yawRad = Math.toRadians(player.getYRot());
+            double dirX = -Math.sin(yawRad);
+            double dirZ = Math.cos(yawRad);
             for (UUID id : dummies) {
                 LivingEntity living = dummy(level, id);
-                if (living != null && living.isAlive()) {
-                    double distance = living.distanceToSqr(player);
-                    if (distance < best) {
-                        best = distance;
-                        target = living;
-                    }
+                if (living == null || !living.isAlive()) {
+                    continue;
+                }
+                double dx = living.getX() - player.getX();
+                double dz = living.getZ() - player.getZ();
+                double forward = dx * dirX + dz * dirZ;
+                if (forward <= 0.2D) {
+                    continue; // за спиной — в кадр не попадёт
+                }
+                double lateral = Math.abs(dx * dirZ - dz * dirX);
+                double score = Math.sqrt(dx * dx + dz * dz) + 2.0D * lateral;
+                if (score < best) {
+                    best = score;
+                    target = living;
                 }
             }
             if (target == null) {

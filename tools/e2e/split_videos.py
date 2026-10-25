@@ -178,6 +178,12 @@ def write_readme(outdir, produced, by_school, report):
                  "умения, его описание из тултипа и живые цифры: урон, попадания, "
                  "лечение, эффекты и итог проверки.")
     lines.append("")
+    lines.append("| класс | ролик | умений |")
+    lines.append("|---|---|---|")
+    for school, (title, _about) in produced.items():
+        lines.append("| %s | [%s.mp4](%s.mp4) | %d |" % (
+            title, school, school, len(by_school.get(school, []))))
+    lines.append("")
     for school, (title, about) in produced.items():
         lines.append("## %s — %s" % (title, about))
         lines.append("")
@@ -190,15 +196,16 @@ def write_readme(outdir, produced, by_school, report):
         lines.append("")
         spells = by_school.get(school, [])
         if spells:
-            lines.append("| умение | итог | урон | попаданий | эффекты |")
+            lines.append("| умение | итог | урон | попаданий | чем подтверждено |")
             lines.append("|---|---|---|---|---|")
             for spell in spells:
                 verdict = spell.get("verdict", "?")
                 mark = "OK" if verdict == "PASS" else "**" + verdict + "**"
-                effects = ", ".join(spell.get("effects") or []) or "—"
+                effects = ", ".join(spell.get("effects") or [])
+                proof = spell.get("evidence") or effects or "—"
                 lines.append("| `%s` | %s | %s | %s | %s |" % (
                     spell.get("id", "?"), mark, spell.get("damage", 0),
-                    spell.get("hits", 0), effects))
+                    spell.get("hits", 0), proof))
             lines.append("")
     with open(os.path.join(outdir, "README.md"), "w", encoding="utf-8") as handle:
         handle.write("\n".join(lines) + "\n")
