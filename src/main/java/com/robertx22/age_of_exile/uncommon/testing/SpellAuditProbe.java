@@ -6,13 +6,20 @@ import com.robertx22.age_of_exile.capability.entity.EntityData;
 import com.robertx22.age_of_exile.database.data.spell_school.SpellSchool;
 import com.robertx22.age_of_exile.database.data.spells.components.ComponentPart;
 import com.robertx22.age_of_exile.database.data.spells.components.MapHolder;
+import com.robertx22.age_of_exile.database.data.gear_types.bases.BaseGearType;
 import com.robertx22.age_of_exile.database.data.spells.components.Spell;
+import com.robertx22.age_of_exile.database.data.spells.spell_classes.CastingWeapon;
+import com.robertx22.age_of_exile.loot.blueprints.GearBlueprint;
+import com.robertx22.age_of_exile.database.data.spells.spell_classes.bases.SpellCastContext;
 import com.robertx22.age_of_exile.database.data.spells.components.actions.SpellAction;
 import com.robertx22.age_of_exile.database.registry.ExileDB;
 import com.robertx22.age_of_exile.saveclasses.PointData;
+import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
 import com.robertx22.age_of_exile.saveclasses.spells.SpellCastingData;
 import com.robertx22.age_of_exile.saveclasses.unit.ResourceType;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import com.robertx22.age_of_exile.vanilla_mc.packets.spells.TellClientToCastSpellPacket;
+import com.robertx22.library_of_exile.main.Packets;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -26,9 +33,11 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
@@ -99,6 +108,9 @@ public final class SpellAuditProbe {
     private static final String NOBODY = "no_school";
     /** Служебные заклинания: не обязаны быть в школе и не нужны в видео. */
     private static final Set<String> SERVICE = Set.of("test_command", "test_spell", "demon");
+
+    /** Уровень, на котором проверяются умения: к этому моменту открыто всё. */
+    private static final int AUDIT_LEVEL = 40;
 
     /** Площадка: ровный пол из кварца в небе — чтобы видео было чистым. */
     private static final int PLATFORM_Y = 99;
@@ -268,6 +280,7 @@ public final class SpellAuditProbe {
         boolean sound;
         boolean summon;
         boolean canCast;
+        boolean serverCast;
         int castTicks;
         float damageDealt;
         int hits;
@@ -434,6 +447,7 @@ public final class SpellAuditProbe {
                 case SETUP -> {
                     buildPlatform(level, player);
                     enterCreative(player);
+                    prepareCharacter(player);
                     marker("audit_start", sanitize(what));
                     writeLog(TAG + " start what=" + sanitize(what) + " groups=" + groups.size());
                     // Пауза на старте: запись видео (ffmpeg/x11grab) должна успеть
@@ -458,6 +472,7 @@ public final class SpellAuditProbe {
                         return finish(player);
                     }
                     resetPlayer(player, level);
+                    holdWeapon(player, spell);
                     spawnDummies(player, level);
                     snapshot(player, level);
                     SpellAuditState.setPhase("ПОДГОТОВКА");
@@ -644,6 +659,96 @@ public final class SpellAuditProbe {
          * Урон, лечение и эффекты при этом считаются настоящие — их делает само
          * заклинание.
          */
+        /**
+         * Бот получает настоящий уровень и оружие под тип каста.
+         *
+         * <p>Без этого замер врёт дважды: у голого игрока 1-го уровня урон
+         * умений, которые масштабируются от атаки оружия
+         * ({@code ValueCalculation.scaleWithAttack}), выходит почти нулевым, а
+         * каст с требованием «посох/лук/меч» вообще не проходит проверку. То
+         * есть проверялось бы «есть ли у бота меч», а не «работает ли умение».
+         *
+         * <p>Оружие создаётся тем же генератором, что и дроп
+         * ({@code GearBlueprint}), поэтому статы настоящие, а не подставленные.
+         */
+        private void prepareCharacter(ServerPlayer player) {
+            try {
+                Load.Unit(player).setLevel(AUDIT_LEVEL);
+                writeLog(TAG + " уровень игрока выставлен на " + AUDIT_LEVEL);
+            } catch (Throwable error) {
+                writeLog(TAG + " не удалось выставить уровень: " + error);
+            }
+            equipFor(player, CastingWeapon.MELEE_WEAPON);
+            equipFor(player, CastingWeapon.RANGED);
+            equipFor(player, CastingWeapon.MAGE_WEAPON);
+        }
+
+        /** Кладёт в руку подходящее оружие нужного типа (посох/лук/меч). */
+        private void equipFor(ServerPlayer player, CastingWeapon weapon) {
+            try {
+                BaseGearType.SlotTag tag = switch (weapon) {
+                    case RANGED -> BaseGearType.SlotTag.ranger_casting_weapon;
+                    case MAGE_WEAPON -> BaseGearType.SlotTag.mage_weapon;
+                    case MELEE_WEAPON -> BaseGearType.SlotTag.melee_weapon;
+                    default -> null;
+                };
+                if (tag == null) {
+                    return;
+                }
+                BaseGearType type = ExileDB.GearTypes()
+                    .getFilterWrapped(x -> x.getTags().contains(tag)
+                        && x.getLevelRange().isLevelInRange(AUDIT_LEVEL))
+                    .random();
+                if (type == null) {
+                    LOGGER.warn("{} нет типа снаряжения с тегом {} на уровне {}",
+                        TAG, tag, AUDIT_LEVEL);
+                    return;
+                }
+                GearBlueprint blueprint = new GearBlueprint(AUDIT_LEVEL, 0);
+                blueprint.level.set(AUDIT_LEVEL);
+                blueprint.gearItemSlot.set(type);
+                ItemStack stack = blueprint.createStack();
+                // Держим оружие в инвентаре и переставляем в руку перед замером:
+                // рука может понадобиться другому типу каста.
+                player.getInventory().add(stack);
+            } catch (Throwable error) {
+                LOGGER.warn("{} снаряжение {} не создано: {}", TAG, weapon, error.toString());
+            }
+        }
+
+        /** Выбирает из инвентаря оружие под тип каста и берёт его в руку. */
+        private void holdWeapon(ServerPlayer player, Spell spell) {
+            try {
+                BaseGearType.SlotTag tag = switch (spell.getConfig().castingWeapon) {
+                    case RANGED -> BaseGearType.SlotTag.ranger_casting_weapon;
+                    case MAGE_WEAPON -> BaseGearType.SlotTag.mage_weapon;
+                    case MELEE_WEAPON -> BaseGearType.SlotTag.melee_weapon;
+                    default -> BaseGearType.SlotTag.weapon_family;
+                };
+                ItemStack best = ItemStack.EMPTY;
+                for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+                    ItemStack stack = player.getInventory().getItem(i);
+                    if (stack.isEmpty()) {
+                        continue;
+                    }
+                    GearItemData gear = com.robertx22.age_of_exile.uncommon.datasaving.Gear.Load(stack);
+                    if (gear == null) {
+                        continue;
+                    }
+                    if (tag == BaseGearType.SlotTag.weapon_family
+                        || gear.GetBaseGearType().getTags().contains(tag)) {
+                        best = stack;
+                        break;
+                    }
+                }
+                if (!best.isEmpty()) {
+                    player.setItemSlot(EquipmentSlot.MAINHAND, best);
+                }
+            } catch (Throwable error) {
+                LOGGER.warn("{} оружие не взято в руку: {}", TAG, error.toString());
+            }
+        }
+
         private void enterCreative(ServerPlayer player) {
             try {
                 player.setGameMode(GameType.CREATIVE);
@@ -862,13 +967,49 @@ public final class SpellAuditProbe {
             writeLog(text.toString());
         }
 
+        /**
+         * Применяет умение.
+         *
+         * <p>Почему не через очередь каста ({@code setToCast} → тик за тиком), как
+         * это делает хотбар: в одиночной игре ту же очередь тикает ещё и клиент
+         * (её состояние синхронизируется), и стороны гоняют друг друга — на
+         * практике примерно у трети умений каст завершался только на клиенте,
+         * где урон не считается, а эффекты живут лишь в клиентской копии. Аудит
+         * тогда мерил не умение, а гонку.
+         *
+         * <p>Поэтому здесь два честных шага:
+         * <ol>
+         *   <li>на сервере — та же точка входа, что и в конце очереди каста:
+         *       {@code Spell.cast(ctx, true)} — она и наносит урон, и накладывает
+         *       эффекты, и выдаёт предметы;</li>
+         *   <li>клиенту — штатный пакет {@code TellClientToCastSpellPacket}: он
+         *       проигрывает ту же заклинательную анимацию, партиклы и звук
+         *       (частицы в моде рисуются только на клиенте), поэтому в кадре
+         *       видно то же, что увидел бы игрок.</li>
+         * </ol>
+         * Проверка требований (оружие, мана, кулдаун) остаётся отдельной и honest:
+         * её результат пишется в {@code can_cast}.
+         */
         private void doCast(ServerPlayer player) {
             try {
-                SpellCastingData data = Load.spells(player).getCastingData();
-                data.setToCast(spell, player);
-                current.castTicks = Math.max(0, data.castingTicksLeft);
+                SpellCastContext ctx = new SpellCastContext(player, 0, spell);
+                current.castTicks = Math.max(0, spell.getCastTimeTicks(ctx));
+            } catch (Throwable error) {
+                current.castTicks = 0;
+                current.note("не удалось посчитать время каста: " + error);
+            }
+            try {
+                SpellCastContext ctx = new SpellCastContext(player, 0, spell);
+                spell.cast(ctx, true);
+                current.serverCast = true;
             } catch (Throwable error) {
                 current.problem("каст упал с ошибкой: " + error);
+            }
+            try {
+                // Клиенту — та же команда, что мод шлёт для отрисовки чужого каста.
+                Packets.sendToClient(player, new TellClientToCastSpellPacket(player, spell));
+            } catch (Throwable error) {
+                current.note("клиент не получил команду на отрисовку: " + error);
             }
             maxObserve = Math.min(220, Math.max(45, current.castTicks + 45));
             if (current.damage) {
@@ -879,7 +1020,7 @@ public final class SpellAuditProbe {
             }
             SpellAuditState.setPhase("ПРИМЕНЕНИЕ");
             writeLog(TAG + " cast spell=" + current.id + " can_cast=" + current.canCast
-                + " cast_ticks=" + current.castTicks);
+                + " cast_ticks=" + current.castTicks + " server_cast=" + current.serverCast);
         }
 
         /** @return true — наблюдение закончено */
@@ -1089,6 +1230,7 @@ public final class SpellAuditProbe {
                 + " particles=" + current.particles
                 + " sound=" + current.sound
                 + " can_cast=" + current.canCast
+                + " server_cast=" + current.serverCast
                 + (current.problems.isEmpty() ? "" : " problems=" + String.join("|", current.problems)));
             marker("spell_end", current.id);
             writeReports();
