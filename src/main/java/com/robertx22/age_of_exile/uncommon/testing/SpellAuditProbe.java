@@ -944,7 +944,9 @@ public final class SpellAuditProbe {
                 for (UUID id : dummies) {
                     Entity entity = level.getEntity(id);
                     if (entity instanceof LivingEntity living) {
-                        living.addEffect(new MobEffectInstance(effect, 20 * 20, 0, false, true));
+                        living.addEffect(new MobEffectInstance(
+                            net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect),
+                            20 * 20, 0, false, true));
                     }
                 }
                 current.note("подготовка: на манекены наложен " + current.requiredEffect);
