@@ -1117,37 +1117,22 @@ public final class SpellAuditProbe {
         /**
          * Наводит взгляд на ближайший манекен.
          *
-         * <p>Раньше бот смотрел строго на север с постоянным наклоном. Снаряды и
-         * «эффект в точку взгляда» уходили мимо манекенов, и в отчёте это
-         * выглядело как поломка умения: урон не нанесён, эффекты не наложены.
-         * Живой игрок целится в цель — вот и бот целится: считаем yaw/pitch от
-         * глаз до центра ближайшего манекена.
+         * <p>Раньше бот смотрел строго на север. Снаряды и «эффект в точку взгляда»
+     * уходили мимо манекенов, и в отчёте это выглядело как поломка умения: урон
+     * не нанесён, эффекты не наложены. Живой игрок целится в цель — вот и бот
+     * целится: поворот (yaw) считается на ближайший манекен.
          */
         private void aimAtNearestDummy(ServerPlayer player, ServerLevel level) {
-            // Целимся не в самый ближний манекен, а в тот, что лучше всего стоит
-            // по направлению взгляда: ближний сосед сбоку иначе разворачивал
-            // камеру на себя и закрывал собой полкадра в ролике. Близость тоже
-            // учитывается — иначе бот смотрел бы мимо целей.
             LivingEntity target = null;
             double best = Double.MAX_VALUE;
-            double yawRad = Math.toRadians(player.getYRot());
-            double dirX = -Math.sin(yawRad);
-            double dirZ = Math.cos(yawRad);
             for (UUID id : dummies) {
                 LivingEntity living = dummy(level, id);
                 if (living == null || !living.isAlive()) {
                     continue;
                 }
-                double dx = living.getX() - player.getX();
-                double dz = living.getZ() - player.getZ();
-                double forward = dx * dirX + dz * dirZ;
-                if (forward <= 0.2D) {
-                    continue; // за спиной — в кадр не попадёт
-                }
-                double lateral = Math.abs(dx * dirZ - dz * dirX);
-                double score = Math.sqrt(dx * dx + dz * dz) + 2.0D * lateral;
-                if (score < best) {
-                    best = score;
+                double distance = living.distanceToSqr(player);
+                if (distance < best) {
+                    best = distance;
                     target = living;
                 }
             }
@@ -1160,14 +1145,18 @@ public final class SpellAuditProbe {
             net.minecraft.world.phys.Vec3 eyes = player.getEyePosition();
             double dx = target.getX() - eyes.x;
             double dz = target.getZ() - eyes.z;
-            double dy = target.getY() + target.getBbHeight() * 0.5D - eyes.y;
             double horizontal = Math.sqrt(dx * dx + dz * dz);
             float yaw = (float) Math.toDegrees(Math.atan2(-dx, dz));
-            float pitch = (float) (horizontal < 0.001D ? 0D
-                : Math.toDegrees(Math.atan2(-dy, horizontal)));
             player.setYRot(yaw);
             player.setYHeadRot(yaw);
-            player.setXRot(pitch);
+            // Наклон остаётся фиксированным (AIM_PITCH), а не «в центр манекена».
+            // Причина не в лени: этим наклоном задаётся дальность «эффекта в точку
+            // взгляда». Ровный взгляд на цель в 4.5 блока уводит точку прицела на
+            // 11 блоков — и тотем с щитом в радиусе 3 блоков достаёт уже не
+            // игрока, а пустоту (так прогон потерял guard_totem, chilling_field,
+            // meteor и shooting_star). Крутой наклон кладёт точку прицела в ~2.8
+            // блока перед игроком — рядом и с игроком, и с манекенами.
+            player.setXRot(AIM_PITCH);
         }
 
         /**
