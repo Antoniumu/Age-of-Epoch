@@ -1,0 +1,63 @@
+name: Withdraw pending Modrinth review request
+
+on:
+  push:
+    branches:
+      - arena/ad7c45b3-age-of-epoch
+    paths:
+      - modrinth/withdraw-review.json
+
+permissions:
+  contents: read
+
+jobs:
+  withdraw:
+    name: Return the Modrinth project to draft
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out withdrawal trigger
+        uses: actions/checkout@v7
+
+      - name: Withdraw pending review request
+        shell: bash
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          MODRINTH_PROJECT_ID: ${{ vars.MODRINTH_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          [[ -n "$MODRINTH_TOKEN" ]] || { echo '::error::Missing repository secret MODRINTH_TOKEN'; exit 1; }
+          [[ -n "$MODRINTH_PROJECT_ID" ]] || { echo '::error::Missing repository variable MODRINTH_PROJECT_ID'; exit 1; }
+          api='https://api.modrinth.com/v2'
+          response="$(mktemp)"
+          headers=(-H "Authorization: $MODRINTH_TOKEN" -H 'User-Agent: Antoniumu/Age-of-Epoch/5.0.0 (https://github.com/Antoniumu/Age-of-Epoch)')
+          code="$(curl --silent --show-error --output "$response" --write-out '%{http_code}' \
+            -X PATCH "${headers[@]}" \
+            -H 'Content-Type: application/json' \
+            --data '{"requested_status":"draft"}' \
+            "$api/project/$MODRINTH_PROJECT_ID")"
+          if [[ "$code" != 204 ]]; then
+            echo "::error::Could not withdraw the pending Modrinth review request (HTTP $code)."
+            cat "$response"
+            exit 1
+          fi
+          code="$(curl --silent --show-error --output "$response" --write-out '%{http_code}' "${headers[@]}" "$api/project/$MODRINTH_PROJECT_ID")"
+          if [[ "$code" != 200 ]]; then
+            echo "::error::Could not verify the Modrinth project's draft status (HTTP $code)."
+            cat "$response"
+            exit 1
+          fi
+          status="$(jq -r '.status // "unknown"' "$response")"
+          requested="$(jq -r '.requested_status // "none"' "$response")"
+          if [[ "$status" != 'draft' || ( "$requested" != 'draft' && "$requested" != 'none' ) ]]; then
+            echo "::error::Modrinth did not confirm withdrawal (status=$status, requested_status=$requested)."
+            cat "$response"
+            exit 1
+          fi
+          {
+            echo '### Modrinth review request withdrawn'
+            echo "- Current status: $status"
+            echo "- Requested status: $requested"
+            echo '- The project was returned to draft and is not being submitted for public approval.'
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "Confirmed: Modrinth status=$status, requested_status=$requested."
