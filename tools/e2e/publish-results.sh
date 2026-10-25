@@ -62,6 +62,7 @@ copy_tail "$root/run/logs/latest.log" latest.log 400
 copy_tail "$root/run/e2e/gradle.log" gradle.log 500
 copy_tail "$root/run/e2e/xvfb.log" xvfb.log 50
 copy_tail "$root/run/e2e/xdpyinfo.txt" xdpyinfo.txt 40
+copy_tail "$root/run/e2e/graphics.txt" graphics.txt 80
 copy_tail "$src/steps.log" steps.log 400
 [ -f "$src/index.txt" ] && cp "$src/index.txt" index.txt
 

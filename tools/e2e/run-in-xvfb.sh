@@ -20,6 +20,17 @@ client_timeout="${CLIENT_TIMEOUT:-1500}"
 mkdir -p "$outdir" run/e2e run/logs
 : > run/e2e/gradle.log
 
+# Minecraft 26.3 рисует через SDL3 + renderpearl. Под Xvfb его OpenGL-бэкенд
+# не находит sRGB-capable GLX visual, поэтому клиент обязан уйти в Vulkan.
+# Lavapipe (mesa-vulkan-drivers) даёт программный Vulkan с VK_KHR_surface прямо
+# в Xvfb — без него оба бэкенда падают и окно не появляется вовсе.
+export LIBGL_ALWAYS_SOFTWARE=1
+export GALLIUM_DRIVER=llvmpipe
+if [ -f /usr/share/vulkan/icd.d/lvp_icd.x86_64.json ]; then
+    export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/lvp_icd.x86_64.json
+fi
+export SDL_VIDEODRIVER="${SDL_VIDEODRIVER:-x11}"
+
 echo "=== Xvfb ${width}x${height} на :${display_num} ==="
 Xvfb ":${display_num}" -screen 0 "${width}x${height}x24" -nolisten tcp > run/e2e/xvfb.log 2>&1 &
 xvfb_pid=$!
@@ -29,6 +40,14 @@ for _ in $(seq 1 20); do
     sleep 1
 done
 head -8 run/e2e/xdpyinfo.txt 2>/dev/null || true
+
+# Диагностика графики: без неё непонятно, какой бэкенд доступен клиенту.
+{
+    echo "--- vulkaninfo --summary"
+    vulkaninfo --summary 2>&1 | head -40 || echo "vulkaninfo нет"
+    echo "--- glxinfo -B"
+    glxinfo -B 2>&1 | head -20 || echo "glxinfo нет"
+} > run/e2e/graphics.txt
 
 # Настройки клиента: фиксированный размер окна и размер GUI, чтобы координаты
 # кликов и содержимое кадров были одинаковыми от прогона к прогону.

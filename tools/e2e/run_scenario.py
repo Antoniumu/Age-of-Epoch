@@ -21,7 +21,7 @@
     type hello                  ввести текст
     wait 1500                   пауза, мс
     wait_window Minecraft 90000 ждать окно по подстроке заголовка, мс
-    wait_log <regex> <мс>       ждать строку в run/logs/latest.log
+    wait_log 120000 <regex>     ждать строку в run/logs/latest.log
     log текст                   записать в журнал
 
 Запуск:
@@ -203,7 +203,14 @@ class Runner:
                 elif command == "wait_window":
                     self.wait_window(args[0] if args else "Minecraft", int(args[1]) if len(args) > 1 else 120000)
                 elif command == "wait_log":
-                    self.wait_log(args[0], int(args[1]) if len(args) > 1 else 120000)
+                    # Формат: wait_log <таймаут_мс> <regex с пробелами...>
+                    # Таймаут идёт первым именно потому, что regex почти всегда
+                    # содержит пробелы ("Sound engine started") и делить его
+                    # по пробелам нельзя.
+                    if len(args) < 2:
+                        self.fail("wait_log требует: <таймаут_мс> <regex>")
+                    else:
+                        self.wait_log(rest[len(args[0]):].strip(), int(args[0]))
                 elif command == "log":
                     self.note(rest)
                 else:

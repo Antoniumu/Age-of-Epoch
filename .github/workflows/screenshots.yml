@@ -43,14 +43,18 @@ jobs:
         with:
           cache-read-only: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork }}
 
+      # mesa-vulkan-drivers обязателен: MC 26.3 (SDL3 + renderpearl) под Xvfb не
+      # может создать OpenGL-контекст (нет sRGB-capable GLX visual) и должен
+      # уйти в Vulkan. Lavapipe даёт программный Vulkan с VK_KHR_surface.
       - name: Пакеты для headless-клиента и снятия экрана
         run: |
           sudo apt-get update -q
           sudo apt-get install -y -q --no-install-recommends \
             xvfb x11-utils xdotool imagemagick x11-apps \
-            libgl1 libglu1-mesa libgl1-mesa-dri \
+            libgl1 libglu1-mesa libgl1-mesa-dri mesa-utils \
+            mesa-vulkan-drivers vulkan-tools \
             libxi6 libxcursor1 libxrandr2 libxinerama1 libxxf86vm1 \
-            libopenal1 libpulse0
+            libopenal1 libpulse0 libegl1 libegl-mesa0
 
       - name: Клиент + сценарий + скриншоты
         id: run

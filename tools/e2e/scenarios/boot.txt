@@ -4,8 +4,8 @@
 #
 # Формат команд описан в tools/e2e/run_scenario.py.
 
-wait_window Minecraft 240000
-wait_log Sound engine started 300000
+wait_window Minecraft 300000
+wait_log 300000 Sound engine started
 wait 5000
 shot 00-main-menu
 
