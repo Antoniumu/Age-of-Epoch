@@ -3,7 +3,7 @@ name: Branch build and downloadable release
 on:
   push:
     branches:
-      - arena/22136743-age-of-epoch
+      - arena/ad7c45b3-age-of-epoch
   pull_request:
     branches:
       - main
@@ -52,7 +52,7 @@ jobs:
 
       - name: Keep Gradle log on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: gradle-build-log-${{ github.sha }}
           path: ci-build.log
@@ -73,7 +73,7 @@ jobs:
           echo "Found $jar_path"
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Age-of-Epoch-${{ github.sha }}
           path: ${{ steps.mod-jar.outputs.path }}
@@ -82,14 +82,14 @@ jobs:
 
       # Each pushed revision has its own prerelease, tied to an exact source commit.
       - name: Publish downloadable prerelease for the Arena branch
-        if: github.event_name == 'push' && github.ref == 'refs/heads/arena/22136743-age-of-epoch'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/arena/ad7c45b3-age-of-epoch'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: arena-22136743-${{ github.sha }}
+          tag_name: arena-ad7c45b3-${{ github.sha }}
           target_commitish: ${{ github.sha }}
           name: Age of Epoch — branch build ${{ github.sha }}
           body: |
-            Automatically built from branch `arena/22136743-age-of-epoch`.
+            Automatically built from branch `arena/ad7c45b3-age-of-epoch`.
 
             Source commit: `${{ github.sha }}`
 
@@ -98,3 +98,34 @@ jobs:
           draft: false
           prerelease: true
           make_latest: false
+
+      - name: Check Modrinth publishing configuration
+        id: modrinth-config
+        if: github.event_name == 'push' && github.ref == 'refs/heads/arena/ad7c45b3-age-of-epoch'
+        shell: bash
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          MODRINTH_PROJECT_ID: ${{ vars.MODRINTH_PROJECT_ID }}
+        run: |
+          if [[ -n "$MODRINTH_TOKEN" && -n "$MODRINTH_PROJECT_ID" ]]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Modrinth upload skipped. Configure repository secret MODRINTH_TOKEN and variable MODRINTH_PROJECT_ID."
+          fi
+
+      - name: Publish alpha build to Modrinth
+        if: github.event_name == 'push' && github.ref == 'refs/heads/arena/ad7c45b3-age-of-epoch' && steps.modrinth-config.outputs.enabled == 'true'
+        uses: Kira-NT/mc-publish@v3.3.2
+        with:
+          modrinth-id: ${{ vars.MODRINTH_PROJECT_ID }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          files: ${{ steps.mod-jar.outputs.path }}
+          name: "Age of Epoch 5.0.0 — branch build #${{ github.run_number }}"
+          version: 5.0.0-arena.${{ github.run_number }}
+          version-type: alpha
+          changelog: Automated alpha build from arena/ad7c45b3-age-of-epoch (commit ${{ github.sha }}).
+          loaders: fabric
+          game-versions: 26.3
+          java: '25'
+          modrinth-featured: false

@@ -74,6 +74,10 @@ build.bat singlejar client        :: собрать без слияния client
 врёт сам JDK: `build.bat jcheck` сравнит все установленные JDK, рабочий нужно поставить
 в `.jdks\` или указать в `JAVA_HOME`. Подробности — [`BUILD-REPORT.md`](BUILD-REPORT.md) §6.
 
+## CI и публикация ветки
+
+Для ветки `arena/ad7c45b3-age-of-epoch` GitHub Actions собирает мод на Java 25, прикладывает JAR к prerelease и, если заданы `MODRINTH_TOKEN` и `MODRINTH_PROJECT_ID`, публикует alpha-версию на Modrinth. Пошаговая настройка — [`docs/MODRINTH-PUBLISHING.md`](docs/MODRINTH-PUBLISHING.md).
+
 ## Управление
 
 Всё управление прежнее (кнопка H — хаб, панель заклинаний и т.д.), перевод выполнен
