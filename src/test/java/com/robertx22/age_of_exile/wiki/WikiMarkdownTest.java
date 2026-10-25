@@ -36,6 +36,12 @@ public class WikiMarkdownTest {
 
     private static final Path WIKI = Paths.get("src/main/resources/assets/mmorpg/wiki_pages");
     private static final int MIN_VISIBLE = 1000;
+    /**
+     * Страницы-разделы ({@code categories/*}) — навигационные: список предметов
+     * плюс пара абзацев. Требовать от них 1000 символов значит заставлять
+     * дописывать «воду», поэтому порог ниже, но пустых заглушек быть не должно.
+     */
+    private static final int MIN_VISIBLE_CATEGORY = 600;
 
     private static final Pattern LINK = Pattern.compile("\\[\\[([^\\]|#]+)(?:#([^\\]|]+))?(?:\\|[^\\]]*)?\\]\\]");
 
@@ -54,6 +60,22 @@ public class WikiMarkdownTest {
             pages.put(id, new String(Files.readAllBytes(file), StandardCharsets.UTF_8));
         }
         return pages;
+    }
+
+    /** Тело страницы: без frontmatter (между двумя строками «---»). */
+    private static String bodyOf(String raw) {
+        if (raw == null) {
+            return "";
+        }
+        String text = raw;
+        if (text.startsWith("---")) {
+            int end = text.indexOf("\n---", 3);
+            if (end >= 0) {
+                int next = text.indexOf('\n', end + 1);
+                text = next >= 0 ? text.substring(next + 1) : "";
+            }
+        }
+        return text;
     }
 
     private static void collect(File dir, List<Path> out) {
@@ -102,8 +124,9 @@ public class WikiMarkdownTest {
                 problems.add(entry.getKey() + ": нет блоков");
             }
             int visible = visibleChars(page);
-            if (visible < MIN_VISIBLE) {
-                problems.add(entry.getKey() + ": видимого текста " + visible + " < " + MIN_VISIBLE);
+            int min = entry.getKey().startsWith("categories/") ? MIN_VISIBLE_CATEGORY : MIN_VISIBLE;
+            if (visible < min) {
+                problems.add(entry.getKey() + ": видимого текста " + visible + " < " + min);
             }
         }
         assertTrue(problems.isEmpty(), "проблемные страницы:\n  " + String.join("\n  ", problems));
