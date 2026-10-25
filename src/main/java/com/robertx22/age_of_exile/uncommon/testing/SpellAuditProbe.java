@@ -132,7 +132,7 @@ public final class SpellAuditProbe {
     private static final int AUDIT_LEVEL = 40;
 
     /** Площадка: ровный пол из кварца в небе — чтобы видео было чистым. */
-    private static final int PLATFORM_Y = 99;
+    private static final int PLATFORM_Y = 79;
     private static final int PLATFORM_RADIUS = 11;
     /** Сколько блоков воздуха расчищается над площадкой (рельеф заранее неизвестен). */
     private static final int PLATFORM_CLEAR_HEIGHT = 32;
@@ -162,9 +162,11 @@ public final class SpellAuditProbe {
         if (vanillaAmount <= 0F) {
             return;
         }
-        // Событие урона несёт id умения: урон снаряда, выпущенного прошлым
-        // умением, не приписывается текущему (иначе «сделать стрелы» получало
-        // урон стрел предыдущего заклинания).
+        // Урон засчитывается умению, которое его вызвало. Если событие не несёт
+        // id (урон от блока, ловушки, доты) — виднее по источнику, а не по id:
+        // такой урон засчитывается только пока активно окно наблюдения после
+        // каста, и не другому умению. Снаряды прошлого умения к этому моменту
+        // уже убраны (clearStrayEntities перед спавном манекенов).
         if (spellId != null && !spellId.isEmpty() && !spellId.equals(runner.current.id)) {
             return;
         }
