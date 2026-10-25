@@ -13,6 +13,8 @@ import com.robertx22.age_of_exile.uncommon.enumclasses.PlayStyle;
 import com.robertx22.age_of_exile.uncommon.enumclasses.WeaponTypes;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -263,8 +265,13 @@ public final class CombatProbe {
             if (!(player.level() instanceof ServerLevel level)) {
                 return false;
             }
-            Entity created = EntityType.ZOMBIE.create(level, EntitySpawnReason.COMMAND);
+            // Статические константы EntityType (EntityType.ZOMBIE) в этой версии
+            // недоступны, поэтому берём тип из реестра — так же, как это делает
+            // SimulationManager.spawnTargetDummy.
+            EntityType<?> zombie = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.withDefaultNamespace("zombie"));
+            Entity created = zombie != null ? zombie.create(level, EntitySpawnReason.COMMAND) : null;
             if (!(created instanceof Mob mob)) {
+                LOGGER.warn("{} не удалось создать манекен: тип zombie не найден", TAG);
                 return false;
             }
             mob.snapTo(player.getX() + 2.0D, player.getY(), player.getZ(), 0F, 0F);
