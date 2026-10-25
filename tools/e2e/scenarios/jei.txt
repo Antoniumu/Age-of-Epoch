@@ -9,8 +9,9 @@
 #     по реальному снимку jei-04-jei-overlay.
 # После каждого поиска делается снимок результата, а затем снимок страницы U.
 # JEI по U открывает первую категорию по сортировке (обычно Information),
-# поэтому дополнительно кликаем 2-ю (503,72) и 3-ю (540,72) вкладки категорий
-# и снимаем кадры *-tab2 / *-tab3 — именно там наши категории Age of Epoch.
+# поэтому дополнительно кликаем вкладки категорий 2/3/4 — (503,72), (566,72),
+# (614,72) — и снимаем кадры *-tab2 / *-tab3 / *-tab4: там наши категории
+# Age of Epoch (например, для души 4-я вкладка — Stat Souls).
 # Если раскладка JEI изменится, по этим снимкам координаты легко поправить.
 
 wait_window Minecraft 420000
@@ -427,6 +428,77 @@ wait 1500
 move 640 650
 wait 300
 shot 27d-backpack-uses-tab4
+key Escape
+wait 1500
+
+# --- Уникальная душа: вкладки Unique Gear / Stat Souls -------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type unique helmet soul
+wait 2500
+shot 28-search-unique-soul
+click 640 520
+move 965 70
+wait 500
+key u
+wait 3000
+move 640 650
+wait 500
+shot 29-unique-soul-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 29b-unique-soul-uses-tab2
+click 566 72
+wait 1500
+move 640 650
+wait 300
+shot 29c-unique-soul-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 29d-unique-soul-uses-tab4
+click 662 72
+wait 1500
+move 640 650
+wait 300
+shot 29e-unique-soul-uses-tab5
+key Escape
+wait 1500
+
+# --- Сундук: катализатор мировых источников лута --------------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type chest
+wait 2500
+shot 30-search-chest
+click 640 520
+move 965 70
+wait 500
+key u
+wait 3000
+move 640 650
+wait 500
+shot 31-chest-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 31b-chest-uses-tab2
+click 566 72
+wait 1500
+move 640 650
+wait 300
+shot 31c-chest-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 31d-chest-uses-tab4
 key Escape
 wait 1500
 
