@@ -1,1 +1,1 @@
-combat
+wiki,combat
