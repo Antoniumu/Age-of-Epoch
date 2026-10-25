@@ -156,27 +156,30 @@ jobs:
             cat "$response"
             exit 1
           fi
-          if ! jq -e --slurpfile expected modrinth/project-metadata.json '
-            .title == $expected[0].title and
-            .description == $expected[0].description and
-            .body == $expected[0].body and
-            (.categories | sort) == ($expected[0].categories | sort) and
-            .source_url == $expected[0].source_url and
-            .issues_url == $expected[0].issues_url and
-            .wiki_url == $expected[0].wiki_url and
-            .license.id == $expected[0].license_id and
-            .client_side == $expected[0].client_side and
-            .server_side == $expected[0].server_side and
-            .icon_url != null and
-            .requested_status == "approved"
-          ' "$response" >/dev/null; then
-            echo '::error::Modrinth returned success, but the stored listing fields or review request did not match the submitted metadata.'
-            cat "$response"
-            exit 1
-          fi
+          mismatches="$(jq -r --slurpfile expected modrinth/project-metadata.json '
+            [
+              (if .title != $expected[0].title then "title" else empty end),
+              (if .description != $expected[0].description then "description" else empty end),
+              (if .body != $expected[0].body then "body" else empty end),
+              (if (.categories | sort) != ($expected[0].categories | sort) then "categories" else empty end),
+              (if .source_url != $expected[0].source_url then "source_url" else empty end),
+              (if .issues_url != $expected[0].issues_url then "issues_url" else empty end),
+              (if .wiki_url != $expected[0].wiki_url then "wiki_url" else empty end),
+              (if .license.id != $expected[0].license_id then "license" else empty end),
+              (if .client_side != $expected[0].client_side then "client_side" else empty end),
+              (if .server_side != $expected[0].server_side then "server_side" else empty end),
+              (if .icon_url == null then "icon_url" else empty end),
+              (if (.requested_status != "approved" and .status != "processing") then "requested_status" else empty end)
+            ] | join(",")
+          ' "$response")"
           status="$(jq -r '.status // "unknown"' "$response")"
           requested="$(jq -r '.requested_status // "none"' "$response")"
           queued="$(jq -r '.queued // "not queued"' "$response")"
+          if [[ -n "$mismatches" ]]; then
+            echo "::error::Modrinth response verification mismatch in: $mismatches (status=$status, requested_status=$requested, queued=$queued)."
+            cat "$response"
+            exit 1
+          fi
           {
             echo '### Modrinth listing updated'
             echo "- Project: https://modrinth.com/project/$MODRINTH_PROJECT_ID"
