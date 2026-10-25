@@ -38,7 +38,13 @@ public class OnKeyPress {
         }
 
         if (KeybindsRegister.MOB_PLATE_STYLE_KEY.isDown()) {
-            MobPlateStyleHud.cycle();
+            // Shift+J switches how entities with a vanilla nickname are treated,
+            // plain J cycles the visual style.
+            if (mc.hasShiftDown()) {
+                MobPlateStyleHud.cycleNamedMode();
+            } else {
+                MobPlateStyleHud.cycle();
+            }
             cooldown = 12;
         } else if (KeybindsRegister.HUB_SCREEN_KEY.isDown()) {
             mc.gui.setScreen(new CharacterScreen());
