@@ -132,8 +132,13 @@ public final class SpellAuditProbe {
     private static final int AUDIT_LEVEL = 40;
 
     /** Площадка: ровный пол из кварца в небе — чтобы видео было чистым. */
-    private static final int PLATFORM_Y = 79;
-    private static final int PLATFORM_RADIUS = 11;
+    private static final int PLATFORM_Y = 99;
+    /**
+     * Радиус арены. Больше, чем нужно манекенам (6.5 блока), потому что луч
+     * «в точку взгляда» у части умений тянется на 32 блока: склон горы в 18
+     * блоках от центра перехватывал его, и умение выглядело нерабочим.
+     */
+    private static final int PLATFORM_RADIUS = 18;
     /** Сколько блоков воздуха расчищается над площадкой (рельеф заранее неизвестен). */
     private static final int PLATFORM_CLEAR_HEIGHT = 32;
     /**
@@ -407,6 +412,8 @@ public final class SpellAuditProbe {
     }
 
     private static final class Runner {
+        /** Сколько раз пробуем вернуть игрока на арену, прежде чем строить её под ним. */
+        private static final int TELEPORT_RETRIES = 40;
         private final String what;
         private final List<Group> groups = new ArrayList<>();
         private final List<SpellResult> results = new ArrayList<>();
@@ -414,6 +421,14 @@ public final class SpellAuditProbe {
         private final Map<UUID, Float> lastHealth = new LinkedHashMap<>();
         /** Модовое максимальное здоровье манекена: нужно, чтобы вернуть урон в «настоящие» единицы. */
         private final Map<UUID, Float> dummyModMaxHealth = new LinkedHashMap<>();
+        /** Сами манекены: искать их по UUID через игру ненадёжно (см. {@link #dummy}). */
+        private final Map<UUID, Mob> dummyRefs = new LinkedHashMap<>();
+
+        private int arenaX;
+        private int arenaY;
+        private int arenaZ;
+        private int teleportAttempts;
+        private boolean fallbackBuilt;
 
         private int groupIndex;
         private int spellIndex;
@@ -562,6 +577,7 @@ public final class SpellAuditProbe {
                     phaseTicks = 0;
                 }
                 case WARMUP -> {
+                    keepPlayerOnPlatform(player, level);
                     if (phaseTicks > 70) {
                         phase = Phase.PREPARE;
                         phaseTicks = 0;
@@ -578,6 +594,7 @@ public final class SpellAuditProbe {
                     holdWeapon(player, spell);
                     clearStrayEntities(level, player);
                     spawnDummies(player, level);
+                    writeLog(TAG + " dummies " + dummiesReport(level, player));
                     applyRequiredEffect(level);
                     snapshot(player, level);
                     SpellAuditState.setPhase("ПОДГОТОВКА");
@@ -800,7 +817,31 @@ public final class SpellAuditProbe {
         // ---- площадка и манекены
 
         private void buildPlatform(ServerLevel level, ServerPlayer player) {
-            BlockPos center = new BlockPos(0, PLATFORM_Y, 0);
+            arenaX = 0;
+            arenaY = PLATFORM_Y;
+            arenaZ = 0;
+            teleportAttempts = 0;
+            fallbackBuilt = false;
+            try {
+                // Чанк арены форсируется заранее: иначе площадка может оказаться в
+                // «пограничном» чанке, и сущности, поставленные в неё, не попадают в
+                // индекс `level.getEntity(uuid)` — манекен есть, а найти его нельзя.
+                level.setChunkForced(0, 0, true);
+                level.getChunk(0, 0);
+            } catch (Throwable error) {
+                writeLog(TAG + " platform_chunk_failed " + error);
+            }
+            buildArena(level, arenaX, arenaY, arenaZ);
+            teleport(player, level, arenaX + 0.5D, arenaY + 1, arenaZ + 0.5D);
+            player.setYRot(0F);
+            player.setXRot(0F);
+            writeLog(String.format(Locale.ROOT, "%s platform ready at y=%d player=%.1f/%.1f/%.1f",
+                TAG, PLATFORM_Y + 1, player.getX(), player.getY(), player.getZ()));
+        }
+
+        /** Пол и столб воздуха. Годится и для небесной арены, и для запасной площадки. */
+        private void buildArena(ServerLevel level, int x0, int y0, int z0) {
+            BlockPos center = new BlockPos(x0, y0, z0);
             int radius = PLATFORM_RADIUS;
             for (int x = -radius; x <= radius; x++) {
                 for (int z = -radius; z <= radius; z++) {
@@ -824,10 +865,46 @@ public final class SpellAuditProbe {
                     }
                 }
             }
-            teleport(player, level, 0.5D, PLATFORM_Y + 1, 0.5D);
-            player.setYRot(0F);
-            player.setXRot(0F);
-            writeLog(TAG + " platform ready at y=" + (PLATFORM_Y + 1));
+        }
+
+        /**
+         * Игрок обязан оказаться на арене.
+         *
+         * <p>Мир создаётся прямо перед прогоном, и первый же телепорт может не
+         * сработать: сервер ещё не подтвердил позицию клиента, клиент «выигрывает»
+         * и оставляет игрока на точке спавна. Тогда арена остаётся в стороне,
+         * манекены появляются далеко от игрока, и весь отчёт превращается в «нет
+         * попаданий» — так прогон однажды уже соврал (33/72 при полностью живых
+         * умениях). Поэтому позиция проверяется на каждом тике прогрева, телепорт
+         * повторяется, а если он так и не сработал — арена строится прямо под
+         * игроком, где бы он ни стоял.
+         */
+        private void keepPlayerOnPlatform(ServerPlayer player, ServerLevel level) {
+            if (onArena(player)) {
+                return;
+            }
+            if (teleportAttempts < TELEPORT_RETRIES) {
+                teleportAttempts++;
+                teleport(player, level, arenaX + 0.5D, arenaY + 1, arenaZ + 0.5D);
+                return;
+            }
+            if (!fallbackBuilt) {
+                fallbackBuilt = true;
+                int x = (int) Math.floor(player.getX());
+                int z = (int) Math.floor(player.getZ());
+                int y = (int) Math.floor(player.getY()) - 1;
+                buildArena(level, x, y, z);
+                arenaX = x;
+                arenaY = y;
+                arenaZ = z;
+                writeLog(TAG + " platform_fallback построена под игроком " + x + "/" + y + "/" + z);
+            }
+        }
+
+        private boolean onArena(ServerPlayer player) {
+            return Math.abs(player.getX() - (arenaX + 0.5D)) < 4D
+                && Math.abs(player.getZ() - (arenaZ + 0.5D)) < 4D
+                && Math.abs(player.getY() - (arenaY + 1)) < 4D;
         }
 
         /**
@@ -981,7 +1058,7 @@ public final class SpellAuditProbe {
             player.setDeltaMovement(0, 0, 0);
             player.setRemainingFireTicks(0);
             player.clearFire();
-            teleport(player, level, 0.5D, PLATFORM_Y + 1, 0.5D);
+            teleport(player, level, arenaX + 0.5D, arenaY + 1, arenaZ + 0.5D);
             player.setYRot(0F);
             // Смотрим вниз на ~30°: снаряды «в точку взгляда» падают на площадку
             // впереди (а не за спинами манекенов), стрелы летят туда же.
@@ -1048,8 +1125,8 @@ public final class SpellAuditProbe {
             LivingEntity target = null;
             double best = Double.MAX_VALUE;
             for (UUID id : dummies) {
-                Entity entity = level.getEntity(id);
-                if (entity instanceof LivingEntity living && living.isAlive()) {
+                LivingEntity living = dummy(level, id);
+                if (living != null && living.isAlive()) {
                     double distance = living.distanceToSqr(player);
                     if (distance < best) {
                         best = distance;
@@ -1153,6 +1230,7 @@ public final class SpellAuditProbe {
                 mob.setCustomNameVisible(true);
                 level.addFreshEntity(mob);
                 dummies.add(mob.getUUID());
+                dummyRefs.put(mob.getUUID(), mob);
                 lastHealth.put(mob.getUUID(), mob.getHealth());
                 // Урон в моде считается в «настоящих» единицах здоровья, а на
                 // ванильную сущность он переводится как
@@ -1172,14 +1250,44 @@ public final class SpellAuditProbe {
 
         private void clearDummies(ServerLevel level) {
             for (UUID id : new ArrayList<>(dummies)) {
-                Entity entity = level.getEntity(id);
+                Entity entity = dummy(level, id);
                 if (entity != null) {
                     entity.discard();
                 }
             }
             dummies.clear();
+            dummyRefs.clear();
             lastHealth.clear();
             dummyModMaxHealth.clear();
+        }
+
+        /**
+         * Манекен по UUID.
+         *
+         * <p>Через игру искать нельзя: во время прогона {@code level.getEntity(uuid)}
+         * возвращал null для только что поставленных манекенов (сущность есть,
+         * попадания идут, а поиск пустой) — и тогда замер «не видел» ни целей, ни
+         * их здоровья. Поэтому сначала берём ту самую сущность, которую создали.
+         */
+        private LivingEntity dummy(ServerLevel level, UUID id) {
+            Mob known = dummyRefs.get(id);
+            if (known != null && known.isAlive()) {
+                return known;
+            }
+            Entity entity = level.getEntity(id);
+            return entity instanceof LivingEntity living ? living : null;
+        }
+
+        private String dummiesReport(ServerLevel level, ServerPlayer player) {
+            int ready = 0;
+            for (UUID id : dummies) {
+                LivingEntity living = dummy(level, id);
+                if (living != null && living.isAlive()) {
+                    ready++;
+                }
+            }
+            return String.format(Locale.ROOT, "n=%d ready=%d player=%.1f/%.1f/%.1f",
+                dummies.size(), ready, player.getX(), player.getY(), player.getZ());
         }
 
         // ---- каст и замер
@@ -1265,8 +1373,8 @@ public final class SpellAuditProbe {
                 .append(" can_cast=").append(current.canCast)
                 .append(" dummies=").append(dummies.size());
             for (UUID id : dummies) {
-                Entity entity = level.getEntity(id);
-                if (entity instanceof LivingEntity living) {
+                LivingEntity living = dummy(level, id);
+                if (living != null) {
                     double distance = Math.sqrt(living.distanceToSqr(player));
                     text.append(" [").append(String.format(Locale.ROOT, "%.1fб hp=%.0f",
                         distance, living.getHealth())).append("]");
@@ -1372,8 +1480,8 @@ public final class SpellAuditProbe {
         /** @return true — наблюдение закончено */
         private boolean observe(ServerPlayer player, ServerLevel level) {
             for (Map.Entry<UUID, Float> entry : lastHealth.entrySet()) {
-                Entity entity = level.getEntity(entry.getKey());
-                if (!(entity instanceof LivingEntity living)) {
+                LivingEntity living = dummy(level, entry.getKey());
+                if (living == null) {
                     continue;
                 }
                 float now = living.getHealth();
@@ -1410,8 +1518,8 @@ public final class SpellAuditProbe {
             } catch (Throwable ignored) {
             }
             for (UUID id : dummies) {
-                Entity entity = level.getEntity(id);
-                if (!(entity instanceof LivingEntity living)) {
+                LivingEntity living = dummy(level, id);
+                if (living == null) {
                     continue;
                 }
                 try {
