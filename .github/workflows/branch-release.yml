@@ -20,21 +20,44 @@ jobs:
   build-and-publish:
     name: Build mod and publish branch release
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
       - name: Check out source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - name: Set up Java 25
-        uses: actions/setup-java@v4
+      - name: Set up build environment (Java 25 + Gradle cache)
+        uses: ./.github/actions/setup-build-env
         with:
-          distribution: temurin
-          java-version: '25'
-
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+          cache-read-only: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork }}
 
       - name: Build mod
-        run: ./gradlew --no-daemon clean build
+        shell: bash
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon --stacktrace clean build 2>&1 | tee ci-build.log
+
+      - name: Report build failure details
+        if: failure()
+        shell: bash
+        run: |
+          if [[ -f ci-build.log ]]; then
+            echo '### Gradle failure details' >> "$GITHUB_STEP_SUMMARY"
+            echo '```text' >> "$GITHUB_STEP_SUMMARY"
+            tail -n 70 ci-build.log >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+            while IFS= read -r line; do
+              echo "::error::$line"
+            done < <(grep -E '(^e: | error:|What went wrong:|Execution failed|BUILD FAILED|Caused by:)' ci-build.log | tail -n 25)
+          fi
+
+      - name: Keep Gradle log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-build-log-${{ github.sha }}
+          path: ci-build.log
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Find distributable mod jar
         id: mod-jar
@@ -57,8 +80,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      # Every pushed revision of the Arena branch gets its own prerelease, so older
-      # builds remain downloadable and each file is tied to an exact source commit.
+      # Each pushed revision has its own prerelease, tied to an exact source commit.
       - name: Publish downloadable prerelease for the Arena branch
         if: github.event_name == 'push' && github.ref == 'refs/heads/arena/22136743-age-of-epoch'
         uses: softprops/action-gh-release@v2
