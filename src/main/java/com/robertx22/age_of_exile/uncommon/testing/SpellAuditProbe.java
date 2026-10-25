@@ -1685,32 +1685,50 @@ public final class SpellAuditProbe {
             }
         }
 
-        /** Короткая сводка того, что реально произошло: для подписи в видео. */
+        /** Короткая сводка того, что реально произошло: для подписи в видео и в отчёте. */
         private String evidenceSummary() {
+            return evidence(current);
+        }
+
+        /**
+         * Чем подтверждено срабатывание: только измеренные факты.
+         *
+         * <p>Если измеримого нет — так и написано. «PASS» без единой цифры читался
+         * бы как «умение проверено и работает», хотя у части умений эффект просто
+         * не наблюдаем снаружи (агро, сброс кулдаунов, открытие сундука).
+         */
+        private static String evidence(SpellResult result) {
             List<String> parts = new ArrayList<>();
-            if (current.hits > 0) {
-                parts.add("урон " + fmt(current.damageDealt) + " (" + current.hits + " поп.)");
+            if (result.hits > 0) {
+                parts.add("урон " + fmt(result.damageDealt) + " (" + result.hits + " поп.)");
             }
-            if (current.healsApplied > 0) {
-                parts.add("лечение +" + fmt(current.healed));
+            if (result.healsApplied > 0) {
+                parts.add("лечение +" + fmt(result.healed)
+                    + (result.healsApplied > 1 ? " ×" + result.healsApplied : ""));
             }
-            if (current.manaApplied > 0) {
-                parts.add("мана +" + fmt(current.manaGained));
+            if (result.manaApplied > 0) {
+                parts.add("мана +" + fmt(result.manaGained)
+                    + (result.manaApplied > 1 ? " ×" + result.manaApplied : ""));
             }
-            if (current.shieldGained > 0.5F) {
-                parts.add("щит +" + fmt(current.shieldGained));
+            if (result.shieldGained > 0.5F) {
+                parts.add("щит +" + fmt(result.shieldGained));
             }
-            if (!current.effects.isEmpty()) {
-                parts.add("эффекты: " + String.join(", ", current.effects));
+            if (!result.effects.isEmpty()) {
+                parts.add("эффекты: " + String.join(", ", result.effects));
             }
-            if (current.moved > 0.3F) {
-                parts.add("перемещение " + fmt(current.moved) + " бл.");
+            if (result.moved > 0.3F) {
+                parts.add("перемещение " + fmt(result.moved) + " бл.");
             }
-            if (current.itemsGained > 0) {
-                parts.add("предметы +" + current.itemsGained);
+            if (result.itemsGained > 0) {
+                parts.add("предметы +" + result.itemsGained);
             }
             if (parts.isEmpty()) {
-                parts.add(current.spawned > 0 ? "создано сущностей: " + current.spawned : "сработало");
+                parts.add(result.spawned > 0
+                    ? "создано сущностей: " + result.spawned
+                    : "только каст: измеримых эффектов нет (агро/кулдаун/меню снаружи не видны)");
+            }
+            if (!result.notes.isEmpty()) {
+                parts.add("прим.: " + String.join("; ", result.notes));
             }
             return String.join(" · ", parts);
         }
@@ -1888,10 +1906,16 @@ public final class SpellAuditProbe {
             md.append(String.format(Locale.ROOT,
                 "Проверено: **%d**, прошло: **%d**, провалилось: **%d**\n\n",
                 results.size(), passed, results.size() - passed));
+            md.append("Колонка «чем подтверждено» — только измеренные факты: урон из "
+                + "событий урона самого умения, лечение и мана из сработавших действий, "
+                + "щит из ресурсов игрока, эффекты и перемещение — по изменению состояния. "
+                + "Умения, у которых снаружи нечего измерить (агро, сброс кулдаунов, меню), "
+                + "помечены явно.\n\n");
             md.append("Каждое заклинание применялось тем же путём, что и с хотбара "
                 + "(`setToCast` → тик каста → `Spell.cast`), по манекенам впереди игрока. "
                 + "Если урон не прошёл, делался второй заход с кольцом манекенов вокруг игрока.\n\n");
-            md.append("| школа | заклинание | итог | урон | попаданий | лечение | мана | эффекты | партиклы | проблемы |\n");
+            md.append("| школа | заклинание | итог | урон | попаданий | лечение | мана |"
+                + " чем подтверждено | партиклы | проблемы |\n");
             md.append("|---|---|---|---|---|---|---|---|---|---|\n");
             for (SpellResult result : results) {
                 md.append("| ").append(escape(result.school))
@@ -1901,7 +1925,7 @@ public final class SpellAuditProbe {
                     .append(" | ").append(result.hits)
                     .append(" | ").append(fmt(result.healed)).append(countSuffix(result.healsApplied))
                     .append(" | ").append(fmt(result.manaGained)).append(countSuffix(result.manaApplied))
-                    .append(" | ").append(result.effects.isEmpty() ? "—" : escape(String.join(", ", result.effects)))
+                    .append(" | ").append(escape(evidence(result)))
                     .append(" | ").append(result.particles ? "да" : "нет")
                     .append(" | ").append(result.problems.isEmpty() ? "—" : escape(String.join("; ", result.problems)))
                     .append(" |\n");
@@ -1939,6 +1963,7 @@ public final class SpellAuditProbe {
                     out.append("\"").append(jsonEscape(effect)).append("\"");
                 }
                 out.append("], ");
+                out.append("\"evidence\": \"").append(jsonEscape(evidence(result))).append("\", ");
                 out.append("\"problems\": [");
                 int p = 0;
                 for (String problem : result.problems) {
