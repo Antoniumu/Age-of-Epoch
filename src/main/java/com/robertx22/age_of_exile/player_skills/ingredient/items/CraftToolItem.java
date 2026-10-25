@@ -43,6 +43,8 @@ public class CraftToolItem extends AutoItem implements IShapedRecipe {
 
         tooltip.add(Component.literal("Используется для: ").append(skill.word.locName()));
         tooltip.add(Component.literal("ПКМ, чтобы открыть меню ремесла.").withStyle(ChatFormatting.LIGHT_PURPLE));
+        tooltip.add(Component.literal("ЛКМ по предмету в инвентаре — добавить 1 штуку в сетку.")
+            .withStyle(ChatFormatting.LIGHT_PURPLE));
 
         if (skill.isGearCraftingProf()) {
             tooltip.add(Component.literal("Требуется подходящий предмет снаряжения."));
