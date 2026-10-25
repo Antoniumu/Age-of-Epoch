@@ -95,8 +95,12 @@ jobs:
             # Снимки и журналы — плоско и с префиксом сценария: так их находит
             # publish-results.sh и не путаются одноимённые шаги.
             if [ -d "run/e2e/shots/$name" ]; then
+              # index.txt пересобираем плоско: в каталоге сценария он свой,
+              # а шагу «Комментарий с картинками в PR» нужен общий список.
               for f in run/e2e/shots/"$name"/*.png; do
-                [ -e "$f" ] && cp "$f" "run/e2e/shots/${name}-$(basename "$f")"
+                [ -e "$f" ] || continue
+                cp "$f" "run/e2e/shots/${name}-$(basename "$f")"
+                echo "${name}-$(basename "$f" .png)" >> run/e2e/shots/index.txt
               done
               [ -f "run/e2e/shots/$name/steps.log" ] && cp "run/e2e/shots/$name/steps.log" "run/e2e/shots/steps-$name.log"
               for f in run/e2e/shots/"$name"/jstack-*.txt; do
