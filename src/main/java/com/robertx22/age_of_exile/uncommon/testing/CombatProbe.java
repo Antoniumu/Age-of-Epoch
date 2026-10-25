@@ -8,9 +8,12 @@ import com.robertx22.age_of_exile.aoe_data.database.base_gear_types.BaseGearType
 import com.robertx22.age_of_exile.database.data.affixes.Affix;
 import com.robertx22.age_of_exile.database.data.stats.types.resources.health.Health;
 import com.robertx22.age_of_exile.database.registry.ExileDB;
+import com.robertx22.age_of_exile.event_hooks.my_events.CollectGearEvent;
+import com.robertx22.age_of_exile.event_hooks.my_events.OnEntityTick;
 import com.robertx22.age_of_exile.loot.blueprints.GearBlueprint;
 import com.robertx22.age_of_exile.saveclasses.gearitem.gear_parts.AffixData;
 import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
+import com.robertx22.age_of_exile.saveclasses.unit.GearData;
 import com.robertx22.age_of_exile.saveclasses.unit.ResourceType;
 import com.robertx22.age_of_exile.uncommon.datasaving.Gear;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
@@ -178,6 +181,9 @@ public final class CombatProbe {
         private float gearMaxBefore;
         private ItemStack gearChest = ItemStack.EMPTY;
         private ItemStack gearChestSaved = ItemStack.EMPTY;
+        private boolean gearEquipOk;
+        private boolean gearUnequipOk;
+        private boolean gearInplaceOk;
 
         private int settle;
         private boolean dpsReported;
@@ -515,10 +521,11 @@ public final class CombatProbe {
                     return;
                 }
                 float raised = maxRealHealth(data);
+                gearEquipOk = raised > gearMaxBefore + 0.01F;
                 Report report = new Report("gear_equip");
                 report.put("max_before", fmt(gearMaxBefore));
                 report.put("max_after", fmt(raised));
-                report.check("equip_raises_max", raised > gearMaxBefore + 0.01F);
+                report.check("equip_raises_max", gearEquipOk);
                 lines.add(report.line());
                 checks += report.checks;
                 failed += report.failed;
@@ -542,11 +549,11 @@ public final class CombatProbe {
                     return;
                 }
                 float back = maxRealHealth(data);
+                gearUnequipOk = Math.abs(back - gearMaxBefore) < Math.max(0.5F, gearMaxBefore * 0.02F);
                 Report report = new Report("gear_unequip");
                 report.put("max_before", fmt(gearMaxBefore));
                 report.put("max_after", fmt(back));
-                report.check("unequip_restores_max",
-                    Math.abs(back - gearMaxBefore) < Math.max(0.5F, gearMaxBefore * 0.02F));
+                report.check("unequip_restores_max", gearUnequipOk);
                 lines.add(report.line());
                 checks += report.checks;
                 failed += report.failed;
@@ -586,13 +593,66 @@ public final class CombatProbe {
                     return;
                 }
                 float after = maxRealHealth(data);
+                gearInplaceOk = after < gearMaxBefore - 0.01F;
                 Report report = new Report("gear_inplace");
                 report.put("max_before", fmt(gearMaxBefore));
                 report.put("max_after", fmt(after));
-                report.check("inplace_reroll_updates_max", after < gearMaxBefore - 0.01F);
+                report.check("inplace_reroll_updates_max", gearInplaceOk);
                 lines.add(report.line());
                 checks += report.checks;
                 failed += report.failed;
+                player.setItemSlot(EquipmentSlot.CHEST, gearChestSaved.isEmpty() ? ItemStack.EMPTY : gearChestSaved.copy());
+                if (gearEquipOk && gearUnequipOk && gearInplaceOk) {
+                    gearReported = true;
+                } else {
+                    // Строгие проверки провалились — локализуем разрыв цепочки
+                    // «экипировка → пересчёт статов» рантайм-проверками.
+                    gearStage = 7;
+                    gearWait = 0;
+                }
+                return;
+            }
+            if (gearStage == 7) {
+                // Диагностика (только при провале): те же статы теми же путями.
+                // 1) надеть заново и дернуть штатный триггер ВРУЧНУЮ;
+                // 2) если он не помог — forceRecalculateStats (чистый пересчёт);
+                // 3) параллельно: пережил ли нагрудник NBT-кругооборот и видит ли
+                //    сбор экипировки его стат здоровья.
+                float base = maxRealHealth(data);
+                player.setItemSlot(EquipmentSlot.CHEST, gearChest.copy());
+
+                ItemStack worn = player.getItemBySlot(EquipmentSlot.CHEST);
+                GearItemData wornData = worn == null ? null : Gear.Load(worn);
+                boolean wornHealth = wornData != null && wornData.GetAllStats()
+                    .stream()
+                    .anyMatch(s -> Health.GUID.equals(s.getStatId()));
+
+                List<GearData> collected = new ArrayList<>();
+                new CollectGearEvent.CollectedGearStacks(player, collected, null);
+                boolean collectHealth = collected.stream()
+                    .anyMatch(x -> x.gear != null && x.gear.GetAllStats()
+                        .stream()
+                        .anyMatch(s -> Health.GUID.equals(s.getStatId())));
+
+                OnEntityTick.checkGearChanged(player); // штатный триггер, но зовём сами
+                float afterManual = maxRealHealth(data);
+
+                data.forceRecalculateStats();
+                float afterForce = maxRealHealth(data);
+
+                Report report = new Report("gear_diag");
+                report.put("base", fmt(base));
+                report.put("after_manual", fmt(afterManual));
+                report.put("after_force", fmt(afterForce));
+                report.put("collect_n", collected.size());
+                report.check("chest_keeps_health", wornHealth);
+                report.check("collect_sees_health", collectHealth);
+                report.check("manual_trigger_works", afterManual > base + 0.01F);
+                report.check("forced_recalc_works", afterForce > base + 0.01F);
+                lines.add(report.line());
+                checks += report.checks;
+                failed += report.failed;
+
                 player.setItemSlot(EquipmentSlot.CHEST, gearChestSaved.isEmpty() ? ItemStack.EMPTY : gearChestSaved.copy());
                 gearReported = true;
             }
