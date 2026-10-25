@@ -109,6 +109,9 @@ public final class SpellAuditProbe {
     /** Служебные заклинания: не обязаны быть в школе и не нужны в видео. */
     private static final Set<String> SERVICE = Set.of("test_command", "test_spell", "demon");
 
+    /** Наклон взгляда бота: снаряды должны падать на площадку с манекенами. */
+    private static final float AIM_PITCH = 30F;
+
     /** Уровень, на котором проверяются умения: к этому моменту открыто всё. */
     private static final int AUDIT_LEVEL = 40;
 
@@ -317,6 +320,8 @@ public final class SpellAuditProbe {
         private final List<SpellResult> results = new ArrayList<>();
         private final Set<UUID> dummies = new HashSet<>();
         private final Map<UUID, Float> lastHealth = new LinkedHashMap<>();
+        /** Модовое максимальное здоровье манекена: нужно, чтобы вернуть урон в «настоящие» единицы. */
+        private final Map<UUID, Float> dummyModMaxHealth = new LinkedHashMap<>();
 
         private int groupIndex;
         private int spellIndex;
@@ -566,8 +571,10 @@ public final class SpellAuditProbe {
                         } else if (matches(type, SpellAction.RESTORE_MANA)) {
                             result.mana = true;
                         } else if (matches(type, SpellAction.GIVE_SHIELD)) {
+                            // Щит меряется отдельным счётчиком (shieldGained), а
+                            // не «наложенными эффектами»: иначе умение, которое
+                            // честно выдало щит, считалось проваленным.
                             result.shield = true;
-                            result.effect = true;
                         } else if (matches(type, SpellAction.EXILE_EFFECT)
                             || matches(type, SpellAction.POTION)) {
                             result.effect = true;
@@ -803,7 +810,9 @@ public final class SpellAuditProbe {
             player.clearFire();
             teleport(player, level, 0.5D, PLATFORM_Y + 1, 0.5D);
             player.setYRot(0F);
-            player.setXRot(0F);
+            // Смотрим вниз на ~30°: снаряды «в точку взгляда» падают на площадку
+            // впереди (а не за спинами манекенов), стрелы летят туда же.
+            player.setXRot(AIM_PITCH);
             try {
                 EntityData data = Load.Unit(player);
                 // Ману и щит обнуляем: восстановление маны и выдача щита видны
@@ -881,6 +890,17 @@ public final class SpellAuditProbe {
                 level.addFreshEntity(mob);
                 dummies.add(mob.getUUID());
                 lastHealth.put(mob.getUUID(), mob.getHealth());
+                // Урон в моде считается в «настоящих» единицах здоровья, а на
+                // ванильную сущность он переводится как
+                // (урон / модовый максимум * ванильный максимум). Обратный
+                // пересчёт нужен, чтобы в отчёте были единицы урона, а не
+                // проценты от полоски манекена.
+                float modMax = 1F;
+                try {
+                    modMax = com.robertx22.age_of_exile.uncommon.utilityclasses.HealthUtils.getMaxHealth(mob);
+                } catch (Throwable ignored) {
+                }
+                dummyModMaxHealth.put(mob.getUUID(), modMax > 0 ? modMax : 1F);
             } catch (Throwable error) {
                 LOGGER.warn("{} манекен не создан: {}", TAG, error.toString());
             }
@@ -895,6 +915,7 @@ public final class SpellAuditProbe {
             }
             dummies.clear();
             lastHealth.clear();
+            dummyModMaxHealth.clear();
         }
 
         // ---- каст и замер
@@ -1011,7 +1032,10 @@ public final class SpellAuditProbe {
             } catch (Throwable error) {
                 current.note("клиент не получил команду на отрисовку: " + error);
             }
-            maxObserve = Math.min(220, Math.max(45, current.castTicks + 45));
+            // 130 тиков (6.5 с) — нижняя граница: часть умений сначала ставит
+            // тотем/сферу, а урон или лечение идёт раз в секунду или при её
+            // истечении (чёрная дыра бьёт через 5 с).
+            maxObserve = Math.min(300, Math.max(130, current.castTicks + 80));
             if (current.damage) {
                 try {
                     diagnostics((ServerLevel) player.level(), player, "cast");
@@ -1032,8 +1056,8 @@ public final class SpellAuditProbe {
                 }
                 float now = living.getHealth();
                 float before = entry.getValue();
-                if (now < before - 0.001F) {
-                    current.damageDealt += before - now;
+                if (now < before - 0.0001F) {
+                    current.damageDealt += toRealDamage(living, before - now);
                     current.hits++;
                 }
                 entry.setValue(now);
@@ -1086,13 +1110,22 @@ public final class SpellAuditProbe {
                 ? "ПРИМЕНЕНИЕ" : "НАБЛЮДЕНИЕ");
 
             boolean castDone = current.castTicks == 0 || phaseTicks > current.castTicks + 8;
+            // Появление сущности (тотем, сфера) само по себе не повод закончить
+            // наблюдение: эффект у таких умений идёт позже, по тикам.
             boolean worthWaiting = current.damageDealt > 0 || current.healed > 0
-                || !current.effects.isEmpty() || current.shieldGained > 0 || current.itemsGained > 0
-                || current.spawned > 0;
+                || !current.effects.isEmpty() || current.shieldGained > 0
+                || current.itemsGained > 0 || current.manaGained > 0.5F;
             if (phaseTicks >= maxObserve) {
                 return true;
             }
             return castDone && worthWaiting && phaseTicks > 30;
+        }
+
+        /** Обратный пересчёт: падение ванильного здоровья → урон в единицах мода. */
+        private float toRealDamage(LivingEntity dummy, float vanillaDrop) {
+            float vanillaMax = Math.max(0.001F, dummy.getMaxHealth());
+            float modMax = dummyModMaxHealth.getOrDefault(dummy.getUUID(), vanillaMax);
+            return vanillaDrop / vanillaMax * modMax;
         }
 
         /** Имена ванильных эффектов (без префикса effect.minecraft.). */
@@ -1180,8 +1213,8 @@ public final class SpellAuditProbe {
             }
             if (current.damage && current.damageDealt <= 0.1F) {
                 current.problem(current.damageEvents > 0
-                    ? "урон посчитан (" + fmt(current.damageEventsTotal)
-                        + "), но манекены его не получили"
+                    ? "урон посчитан (" + current.damageEvents
+                        + " соб.), но здоровье манекенов не изменилось"
                     : "урон не нанесён (нет попаданий)");
                 try {
                     diagnostics(level, player, "nodmg");
