@@ -12,9 +12,8 @@ on:
   workflow_dispatch:
     inputs:
       scenario:
-        description: 'Сценарии из tools/e2e/scenarios через запятую (имя файла без .txt); каждый — отдельный прогон'
+        description: 'Сценарии через запятую (имя файла без .txt). Пусто — берётся tools/e2e/active.txt'
         required: false
-        default: 'boot'
   pull_request:
   push:
     branches: [main]
@@ -61,22 +60,50 @@ jobs:
         env:
           CLIENT_TIMEOUT: '1500'
         run: |
-          # При ручном запуске можно перечислить несколько сценариев через запятую,
-          # тогда каждый идёт отдельным прогоном клиента в свой каталог снимков.
-          list="${{ inputs.scenario || 'boot' }}"
-          scenario="tools/e2e/scenarios/${list%%,*}.txt"
+          # Какой сценарий прогонять, задаётся без правки workflow:
+          #   * tools/e2e/active.txt — обычный случай (правится пушем);
+          #   * параметр при ручном запуске;
+          #   * перечисление через запятую — каждый сценарий отдельным прогоном.
+          list="${{ inputs.scenario }}"
+          [ -n "$list" ] || list="$(tr -d '\n' < tools/e2e/active.txt 2>/dev/null)"
+          [ -n "$list" ] || list="boot"
           echo "сценарии: $list"
+
           set +e
-          bash tools/e2e/run-in-xvfb.sh "$scenario" run/e2e/shots
-          status=$?
+          status=0
+          for name in $(echo "$list" | tr ',' ' '); do
+            scenario="tools/e2e/scenarios/$name.txt"
+            if [ ! -f "$scenario" ]; then
+              echo "::warning::нет сценария $scenario"
+              continue
+            fi
+            echo "=== прогон сценария $name ==="
+            bash tools/e2e/run-in-xvfb.sh "$scenario" "run/e2e/shots/$name"
+            [ $? -eq 0 ] || status=1
+            # Снимки и журналы — плоско и с префиксом сценария: так их находит
+            # publish-results.sh и не путаются одноимённые шаги.
+            if [ -d "run/e2e/shots/$name" ]; then
+              for f in run/e2e/shots/"$name"/*.png; do
+                [ -e "$f" ] && cp "$f" "run/e2e/shots/${name}-$(basename "$f")"
+              done
+              [ -f "run/e2e/shots/$name/steps.log" ] && cp "run/e2e/shots/$name/steps.log" "run/e2e/shots/steps-$name.log"
+              for f in run/e2e/shots/"$name"/jstack-*.txt; do
+                [ -e "$f" ] && cp "$f" "run/e2e/shots/${name}-$(basename "$f")"
+              done
+              rm -rf "run/e2e/shots/$name"
+            fi
+          done
           set -e
+
+          shots=$(find run/e2e/shots -maxdepth 1 -name '*.png' | wc -l)
           echo "status=$status" >> "$GITHUB_OUTPUT"
-          echo "shots=$(find run/e2e/shots -maxdepth 1 -name '*.png' | wc -l)" >> "$GITHUB_OUTPUT"
-          echo "### Снимки: $(find run/e2e/shots -maxdepth 1 -name '*.png' | wc -l), статус сценария: $status"
-          echo "Ошибки шагов (если были):"
-          grep -c "ОШИБКА" run/e2e/shots/steps.log 2>/dev/null || true
-          # Снимков может не быть — это не повод терять диагностику: она уедет
-          # в ветку и в артефакт следующим шагом.
+          echo "shots=$shots" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Снимки: $shots, статус: $status"
+            echo '```'
+            find run/e2e/shots -maxdepth 1 -name '*.png' -printf '%f %k КБ\n' 2>/dev/null | sort
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
           exit 0
 
       - name: Опубликовать результат в ветку ${{ env.BRANCH }}
