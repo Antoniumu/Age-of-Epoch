@@ -28,7 +28,12 @@ public final class TeamNames {
         if (raw == null) {
             return "";
         }
-        String cleaned = raw.replace('§', ' ').replaceAll("\\s+", " ").trim();
+        // Убираем § вместе со следующим символом-кодом: иначе «§c§l» превратится
+        // в «c l» — мусор из букв формата вместо пустого имени.
+        String cleaned = raw.replaceAll("§.", "")
+            .replace("§", "")
+            .replaceAll("\\s+", " ")
+            .trim();
         if (cleaned.length() > MAX_LENGTH) {
             cleaned = cleaned.substring(0, MAX_LENGTH).trim();
         }
