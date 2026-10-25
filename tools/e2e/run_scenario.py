@@ -131,6 +131,40 @@ class Runner:
             displays.insert(0, os.environ["DISPLAY"])
         return displays
 
+    def client_pid(self):
+        """PID JVM клиента (не обёртки /bin/sh xvfb-run)."""
+        code, out = self.run(["pgrep", "-af", "devlaunchinjector"])
+        for line in out.splitlines():
+            parts = line.split(" ", 1)
+            if len(parts) == 2 and "bin/java" in parts[1] and not parts[1].startswith("/bin/sh"):
+                return parts[0]
+        return ""
+
+    def display_from_process(self):
+        """
+        Берёт DISPLAY прямо из окружения процесса клиента. Loom запускает
+        runClient через `xvfb-run --auto-servernum`, который поднимает свой
+        Xvfb с неизвестным номером дисплея — угадывать его перебором сокетов
+        ненадёжно, а /proc/<pid>/environ знает точный ответ.
+        """
+        pid = self.client_pid()
+        if not pid:
+            return ""
+        try:
+            with open("/proc/%s/environ" % pid, "rb") as handle:
+                blob = handle.read()
+        except OSError:
+            return ""
+        for pair in blob.split(b"\0"):
+            if pair.startswith(b"DISPLAY="):
+                value = pair.decode("utf-8", "replace").split("=", 1)[1]
+                if value and value != self.display:
+                    self.note("дисплей клиента из /proc/%s/environ: %s (был %s)"
+                              % (pid, value, self.display))
+                    self.display = value
+                return value
+        return ""
+
     def discover_display(self):
         """
         Ищет дисплей, на котором есть окно клиента. Возвращает True, если нашёл
@@ -159,6 +193,7 @@ class Runner:
         return lines
 
     def find_window(self):
+        self.display_from_process()
         if not self.discover_display():
             return False
         code, name = self.run(["xdotool", "getwindowname", self.window])
@@ -181,9 +216,14 @@ class Runner:
 
     def wait_window(self, pattern, timeout_ms):
         deadline = time.time() + timeout_ms / 1000.0
+        last_note = 0.0
         while time.time() < deadline:
             if self.find_window():
                 return True
+            if time.time() - last_note > 30:
+                last_note = time.time()
+                self.note("жду окно: дисплей %s, X-сокеты: %s"
+                          % (self.display, ", ".join(self.candidate_displays())))
             time.sleep(2)
         self.fail("окно '%s' не появилось за %d мс" % (pattern, timeout_ms))
         self.list_windows()

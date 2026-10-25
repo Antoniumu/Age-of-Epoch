@@ -46,15 +46,28 @@ head -8 run/e2e/xdpyinfo.txt 2>/dev/null || true
 
 # Оконный менеджер нужен не для красоты: без WM окно SDL не маппится
 # нормально, его не находит xdotool, и снимок корня остаётся пустым.
-if command -v openbox >/dev/null 2>&1; then
-    openbox > run/e2e/openbox.log 2>&1 &
-    wm_pid=$!
-    sleep 1
-    echo "openbox запущен"
-else
-    wm_pid=""
-    echo "openbox не установлен — окно может не найтись"
-fi
+# Loom запускает клиент через собственный xvfb-run, поэтому оконный менеджер
+# нужен не только на нашем дисплее: поднимаем openbox на каждом X-дисплее,
+# который появится в системе (включая созданные позже xvfb-run).
+start_wm() {
+    command -v openbox >/dev/null 2>&1 || return 0
+    local display="$1"
+    case " $wm_displays " in *" $display "*) return 0 ;; esac
+    DISPLAY="$display" openbox > "run/e2e/openbox-${display#:}.log" 2>&1 &
+    wm_displays="$wm_displays $display"
+    echo "openbox на $display"
+}
+wm_displays=""
+for _ in $(seq 1 30); do
+    for sock in /tmp/.X11-unix/X*; do
+        [ -e "$sock" ] || continue
+        num="${sock##*/X}"
+        case "$num" in ''|*[!0-9]*) continue ;; esac
+        start_wm ":$num"
+    done
+    sleep 2
+done &
+wm_watcher=$!
 
 # Диагностика графики: без неё непонятно, какой бэкенд доступен клиенту.
 {
@@ -90,7 +103,8 @@ cleanup() {
     pkill -TERM -f 'net.minecraft.client.main.Main' 2>/dev/null || true
     sleep 3
     pkill -KILL -f 'net.fabricmc.devlaunchinjector' 2>/dev/null || true
-    [ -n "${wm_pid:-}" ] && kill -KILL "$wm_pid" 2>/dev/null || true
+    [ -n "${wm_watcher:-}" ] && kill -TERM "$wm_watcher" 2>/dev/null || true
+    pkill -KILL openbox 2>/dev/null || true
     kill -KILL "$xvfb_pid" 2>/dev/null || true
 }
 gradle_pid=""
