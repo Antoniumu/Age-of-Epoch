@@ -193,6 +193,21 @@ public final class SpellAuditProbe {
         }
     }
 
+    /**
+     * Действие восстановления маны реально сработало. Как и с лечением: прибавка
+     * к мане игрока сама по себе ничего не доказывает — мана восстанавливается и
+     * без умения.
+     */
+    public static void noteManaApplied(LivingEntity target, float value) {
+        Runner runner = active;
+        if (runner == null || runner.current == null || target == null) {
+            return;
+        }
+        if (value > 0F) {
+            runner.current.manaApplied++;
+        }
+    }
+
     private SpellAuditProbe() {
     }
 
@@ -362,6 +377,8 @@ public final class SpellAuditProbe {
         int hpDrops;
         /** Сколько раз реально сработало лечение (цель стала здоровее). */
         int healsApplied;
+        /** Сколько раз реально сработало восстановление маны. */
+        int manaApplied;
         float damageEventsTotal;
         final List<String> problems = new ArrayList<>();
         final List<String> notes = new ArrayList<>();
@@ -551,6 +568,7 @@ public final class SpellAuditProbe {
                     }
                     resetPlayer(player, level);
                     holdWeapon(player, spell);
+                    clearStrayEntities(level, player);
                     spawnDummies(player, level);
                     applyRequiredEffect(level);
                     snapshot(player, level);
@@ -1048,6 +1066,26 @@ public final class SpellAuditProbe {
             player.setYRot(yaw);
             player.setYHeadRot(yaw);
             player.setXRot(pitch);
+        }
+
+        /**
+         * Убирает всё, что осталось от предыдущего умения: стрелы, снаряды,
+         * блоки-тотемы.
+         *
+         * <p>Без этого снаряд, выпущенный в конце прошлого замера, попадал в
+         * манекены уже во время следующего — и урон приписывался чужому умению
+         * (у «сделать стрелы» был урон 11.6 от стрел предыдущего умения).
+         */
+        private void clearStrayEntities(ServerLevel level, ServerPlayer player) {
+            try {
+                AABB box = new AABB(player.getX() - 48, player.getY() - 16, player.getZ() - 48,
+                    player.getX() + 48, player.getY() + 32, player.getZ() + 48);
+                for (Entity entity : level.getEntitiesOfClass(Entity.class, box,
+                    e -> !(e instanceof Player) && !dummies.contains(e.getUUID()))) {
+                    entity.discard();
+                }
+            } catch (Throwable ignored) {
+            }
         }
 
         private void spawnDummies(ServerPlayer player, ServerLevel level) {
@@ -1574,6 +1612,14 @@ public final class SpellAuditProbe {
             if (!current.canCast) {
                 current.problem("каст невозможен (canCast=false: требования оружия/маны/уровня)");
             }
+            // В отчёте — только подтверждённые цифры. Прибавка здоровья и маны
+            // «сама по себе» бывает фоновой регенерацией, а не эффектом умения.
+            if (current.healsApplied == 0 && current.healed <= EFFECT_NOISE) {
+                current.healed = 0;
+            }
+            if (current.manaApplied == 0 && current.manaGained <= EFFECT_NOISE) {
+                current.manaGained = 0;
+            }
             if (current.damage && current.damageDealt <= 0.1F) {
                 current.problem(current.damageEvents > 0
                     ? "урон посчитан (" + current.damageEvents
@@ -1587,7 +1633,7 @@ public final class SpellAuditProbe {
             if (current.heal && current.healsApplied == 0 && current.healed <= EFFECT_NOISE) {
                 current.problem("лечение не сработало");
             }
-            if (current.mana && current.manaGained <= EFFECT_NOISE) {
+            if (current.mana && current.manaApplied == 0 && current.manaGained <= EFFECT_NOISE) {
                 current.problem("мана не восстановилась");
             }
             if (current.shield && current.shieldGained <= 0.5F) {
@@ -1636,8 +1682,8 @@ public final class SpellAuditProbe {
         private void cleanup(ServerLevel level, ServerPlayer player) {
             clearDummies(level);
             try {
-                AABB box = new AABB(player.getX() - 16, player.getY() - 4, player.getZ() - 16,
-                    player.getX() + 16, player.getY() + 16, player.getZ() + 16);
+                AABB box = new AABB(player.getX() - 48, player.getY() - 16, player.getZ() - 48,
+                    player.getX() + 48, player.getY() + 32, player.getZ() + 48);
                 for (Entity entity : level.getEntitiesOfClass(Entity.class, box,
                     e -> !(e instanceof Player))) {
                     entity.discard();

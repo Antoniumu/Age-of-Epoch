@@ -37,6 +37,7 @@ public class RestoreManaAction extends SpellAction {
                     .build();
 
                 restore.Activate();
+                com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.noteManaApplied(x, value);
 
             }
 

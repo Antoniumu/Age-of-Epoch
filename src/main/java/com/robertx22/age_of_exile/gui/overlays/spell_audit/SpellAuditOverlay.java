@@ -54,14 +54,18 @@ public final class SpellAuditOverlay extends AbstractGui {
         } catch (Throwable ignored) {
         }
 
-        String head = "ПРОВЕРКА УМЕНИЙ · " + SpellAuditState.school;
+        // Заголовок и название школы — в две строки: одна длинная строка
+        // обрезалась о край панели (и о край кадра в видео).
+        String head = "ПРОВЕРКА УМЕНИЙ";
         String counter = SpellAuditState.index + "/" + SpellAuditState.total;
+        List<String> schoolLines = wrap(mc, SpellAuditState.school, WIDTH - PADDING * 2);
         List<String> description = wrap(mc, SpellAuditState.description, WIDTH - PADDING * 2);
         List<String> metrics = wrap(mc, SpellAuditState.metrics, WIDTH - PADDING * 2);
         List<String> verdict = wrap(mc, SpellAuditState.verdict, WIDTH - PADDING * 2);
 
         int height = PADDING;
         height += 11;                       // заголовок
+        height += schoolLines.size() * 10 + 2;  // название школы
         height += 14;                       // название умения
         height += description.size() * 10 + 3;
         height += 10;                       // фаза
@@ -81,6 +85,11 @@ public final class SpellAuditOverlay extends AbstractGui {
         drawString(pose, mc.font, trim(mc, head, WIDTH - PADDING * 2 - 40), X + PADDING, cy, ACCENT);
         drawString(pose, mc.font, counter, X + WIDTH - PADDING - mc.font.width(counter), cy, MUTED);
         cy += 13;
+        for (String line : schoolLines) {
+            drawString(pose, mc.font, line, X + PADDING, cy, MUTED);
+            cy += 10;
+        }
+        cy += 2;
 
         drawString(pose, mc.font, SpellAuditState.name, X + PADDING, cy, GOLD);
         cy += 14;
