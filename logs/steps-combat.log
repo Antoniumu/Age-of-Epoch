@@ -1,0 +1,62 @@
+[21:14:19] DISPLAY=:99, сценарий combat.txt
+[21:14:19] жду окно: дисплей :99, X-сокеты: :100, :99
+[21:14:30] дисплей клиента из /proc/4843/environ: :101 (был :99)
+[21:14:30] XAUTHORITY клиента: /tmp/xvfb-run.JncTI2/Xauthority
+[21:14:44] окно 2097203 на :101: Minecraft* 26.3 | WINDOW=2097203 X=0 Y=152 WIDTH=1280 HEIGHT=720 SCREEN=0 | Map State: IsViewable
+[21:14:48] в логе найдено: [21:14:47] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/items.png-atlas
+[21:14:56] снимок 00-main-menu (окно 2097203, 716 КБ)
+[21:14:56] курсор 640,296
+[21:14:57] клик 640,296 (экран 640,448, кнопка 1)
+[21:15:02] снимок 01-world-list (окно 2097203, 380 КБ)
+[21:15:02] курсор 640,124
+[21:15:02] клик 640,124 (экран 640,276, кнопка 1)
+[21:15:03] курсор 483,637
+[21:15:03] клик 483,637 (экран 483,789, кнопка 1)
+[21:15:49] снимок 03-in-world (окно 2097203, 320 КБ)
+[21:15:49] курсор 797,637
+[21:15:49] клик 797,637 (экран 797,789, кнопка 1)
+[21:15:52] курсор 480,688
+[21:15:53] клик 480,688 (экран 480,840, кнопка 1)
+[21:16:38] снимок 03b-in-world-created (окно 2097203, 321 КБ)
+[21:16:38] отметка в логе: байт 6405116
+[21:16:38] создан файл-триггер run/aoe-devtest.flag
+[21:16:39] в логе найдено (новое): [21:16:38] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST dps hits=10 requested=400.0 recorded=320.0 elapsed_ms=546 dps_chart=586.1 dps_hud=640.0 fight_activ
+[21:16:39] снимок 04-combat-hud (окно 2097203, 357 КБ)
+[21:16:39] в логе найдено (новое): [21:16:39] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST gear_equip max_before=30.0 max_after=32.4 check_equip_raises_max=true
+[21:16:42] снимок 05-gear-equip-max-hp (окно 2097203, 318 КБ)
+[21:16:47] в логе найдено (новое): [21:16:47] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST gear_unequip max_before=30.0 max_after=30.0 check_unequip_restores_max=true
+[21:16:49] снимок 06-gear-unequip-max-hp (окно 2097203, 325 КБ)
+[21:16:49] в логе найдено (новое): [21:16:48] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST summary checks=43 failed=0
+[21:16:57] снимок 08-after-fight (окно 2097203, 321 КБ)
+[21:16:57] клавиша E
+[21:16:59] курсор 497,490
+[21:17:00] снимок 09-inventory-soulless-decheap (окно 2097203, 145 КБ)
+[21:17:00] курсор 534,490
+[21:17:02] снимок 10-inventory-soulless-neserite (окно 2097203, 140 КБ)
+[21:17:02] курсор 571,490
+[21:17:03] снимок 11-inventory-souled (окно 2097203, 138 КБ)
+[21:17:03] курсор 608,490
+[21:17:05] снимок 12-inventory-soul (окно 2097203, 144 КБ)
+[21:17:05] клавиша E
+[21:17:06] удержание F7 400 мс (фокус: 2097203)
+[21:17:08] снимок 13-hud-hidden (окно 2097203, 319 КБ)
+[21:17:08] удержание F7 400 мс (фокус: 2097203)
+[21:17:10] снимок 14-hud-shown (окно 2097203, 321 КБ)
+[21:17:11] удержание F8 400 мс (фокус: 2097203)
+[21:17:13] снимок 15-hud-position (окно 2097203, 322 КБ)
+[21:17:13] jstack[combat]: pid 4843, 418 строк -> jstack-combat.txt
+[21:17:13] render thread:
+    "Render thread" #3 [4844] prio=5 os_prio=0 cpu=28375.98ms elapsed=164.34s tid=0x00007fdae0030760 nid=4844 runnable  [0x00007fdae99fd000]
+    java.lang.Thread.State: RUNNABLE
+    at java.lang.invoke.LambdaForm$MH/0x000000007b5fcc00.invoke(java.base@25.0.4.1/LambdaForm$MH)
+    at java.lang.invoke.LambdaForm$MH/0x000000007b2aa000.invokeExact_MT(java.base@25.0.4.1/LambdaForm$MH)
+    at jdk.internal.foreign.abi.DowncallStub/0x000000007b2a3400.invoke(java.base@25.0.4.1/Unknown Source)
+    at java.lang.invoke.LambdaForm$DMH/0x000000007b2a3800.invokeStatic(java.base@25.0.4.1/LambdaForm$DMH)
+    at java.lang.invoke.LambdaForm$MH/0x000000007b5fc800.invoke(java.base@25.0.4.1/LambdaForm$MH)
+    at java.lang.invoke.LambdaForm$MH/0x000000007b2a9800.invokeExact_MT(java.base@25.0.4.1/LambdaForm$MH)
+    at org.lwjgl.system.JNIBindingsImpl/0x000000007a2d0000.callPJPV(Unknown Source)
+    at org.lwjgl.system.JNI.callPJPV(JNI.java:2541)
+    at org.lwjgl.vulkan.VK10.nvkDestroyBufferView(VK10.java:2027)
+    at org.lwjgl.vulkan.VK10.vkDestroyBufferView(VK10.java:2032)
+[21:17:13] конец сценария combat
+[21:17:13] итог: снимков 15, ошибок 0
