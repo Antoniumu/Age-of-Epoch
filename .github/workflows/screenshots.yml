@@ -28,7 +28,12 @@ permissions:
 
 env:
   GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx4G'
-  BRANCH: ci-screenshots
+  # Ветка публикации — своя для каждой исходной ветки. Раньше все прогоны
+  # (main, PR разных сессий) писали в общий `ci-screenshots` с force-push, и
+  # более поздний прогон затирал снимки соседнего: результат своего прогона
+  # можно было увидеть только через артефакт, а он лежит в blob-хранилище и
+  # снаружи не читается. Имя санитайзим: слеши в именах веток запрещены.
+  BRANCH_RAW: ci-screenshots-${{ github.head_ref || github.ref_name }}
 
 jobs:
   screenshots:
@@ -37,6 +42,12 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
+
+      # `arena/xxx-age-of-epoch` -> `arena-xxx-age-of-epoch`: слеши в именах
+      # веток git не допускает, а имя ветки публикации должно быть уникальным
+      # для источника, иначе параллельные сессии затирают снимки друг друга.
+      - name: Имя ветки публикации
+        run: echo "BRANCH=$(echo "$BRANCH_RAW" | tr '/' '-')" >> "$GITHUB_ENV"
 
       # Каталог снимков должен быть чистым: иначе в ветку уедут PNG прошлых
       # прогонов с уже неактуальными шагами.
@@ -150,7 +161,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
           exit 0
 
-      - name: Опубликовать результат в ветку ${{ env.BRANCH }}
+      - name: Опубликовать результат в ветку публикации
         if: always() && github.event.pull_request.head.repo.fork != true
         env:
           GH_TOKEN: ${{ github.token }}
