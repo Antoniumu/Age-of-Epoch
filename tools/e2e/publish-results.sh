@@ -26,9 +26,13 @@ token="${GH_TOKEN:?GH_TOKEN не задан}"
 
 mkdir -p "$src"
 
+# Все пути делаем абсолютными ДО перехода в каталог публикации — иначе копирование
+# молча не находит файлы (первый прогон именно так и потерял снимки).
+root="$(cd "$(dirname "$0")/../.." && pwd)"
+src="$(cd "$src" && pwd)"
 shots="$(find "$src" -maxdepth 1 -name '*.png' 2>/dev/null | sort)"
 count="$(printf '%s' "$shots" | grep -c . || true)"
-echo "Снимков: $count"
+echo "Снимков: $count (из $src)"
 
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
@@ -49,22 +53,25 @@ copy_tail() {
     local from="$1" to="$2" lines="${3:-250}"
     if [ -f "$from" ]; then
         tail -n "$lines" "$from" > "logs/$to"
+        echo "  + logs/$to ($(wc -l < "logs/$to") строк)"
+    else
+        echo "  - нет файла $from" >> logs/missing.log
     fi
 }
-copy_tail run/logs/latest.log latest.log 300
-copy_tail run/e2e/gradle.log gradle.log 400
-copy_tail run/e2e/xvfb.log xvfb.log 50
-copy_tail run/e2e/xdpyinfo.txt xdpyinfo.txt 40
+copy_tail "$root/run/logs/latest.log" latest.log 400
+copy_tail "$root/run/e2e/gradle.log" gradle.log 500
+copy_tail "$root/run/e2e/xvfb.log" xvfb.log 50
+copy_tail "$root/run/e2e/xdpyinfo.txt" xdpyinfo.txt 40
 copy_tail "$src/steps.log" steps.log 400
 [ -f "$src/index.txt" ] && cp "$src/index.txt" index.txt
 
-if [ -d run/crash-reports ] && [ -n "$(ls -A run/crash-reports 2>/dev/null)" ]; then
+if [ -d "$root/run/crash-reports" ] && [ -n "$(ls -A "$root/run/crash-reports" 2>/dev/null)" ]; then
     mkdir -p crash-reports
-    cp run/crash-reports/* crash-reports/ 2>/dev/null || true
+    cp "$root"/run/crash-reports/* crash-reports/ 2>/dev/null || true
 fi
 
-grep -E "Sound engine started|Backend library|OpenAL|Setting user|LWJGL|Exception|ERROR|FATAL" \
-    run/logs/latest.log 2>/dev/null | tail -n 40 > logs/key-lines.log || true
+grep -E "Sound engine started|Backend library|OpenAL|Setting user|LWJGL|Exception|ERROR|FATAL|Stopping" \
+    "$root/run/logs/latest.log" 2>/dev/null | tail -n 60 > logs/key-lines.log || true
 
 {
     echo "# Скриншоты dev-клиента"
