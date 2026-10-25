@@ -112,6 +112,9 @@ public final class SpellAuditProbe {
     /** Наклон взгляда бота: снаряды должны падать на площадку с манекенами. */
     private static final float AIM_PITCH = 30F;
 
+    /** Сколько строк трассировки снарядов писать на одно умение. */
+    private static final int PROJECTILE_TRACES = 12;
+
     /** Уровень, на котором проверяются умения: к этому моменту открыто всё. */
     private static final int AUDIT_LEVEL = 40;
 
@@ -229,6 +232,17 @@ public final class SpellAuditProbe {
         }
     }
 
+    /**
+     * Диагностическая строка аудита из любого места мода. Пишется только во время
+     * прогона: в обычной игре такие сообщения не нужны.
+     */
+    public static void diag(String what) {
+        if (!SpellAuditState.active) {
+            return;
+        }
+        writeLog(TAG + " " + what);
+    }
+
     /** Маркер таймлайна: по нему workflow режет видео на классы. */
     private static void marker(String kind, String name) {
         long now = System.currentTimeMillis();
@@ -335,6 +349,7 @@ public final class SpellAuditProbe {
         private float playerHealthAtCast;
         private float manaAtCast;
         private float shieldAtCast;
+        private int projectileTraces;
         private int itemsAtCast;
         private Set<String> playerEffectsAtCast = Set.of();
         private Set<String> playerVanillaAtCast = Set.of();
@@ -938,6 +953,7 @@ public final class SpellAuditProbe {
             startX = player.getX();
             startY = player.getY();
             startZ = player.getZ();
+            projectileTraces = 0;
             try {
                 EntityData data = Load.Unit(player);
                 manaAtCast = data.getResources().getMana();
@@ -972,6 +988,7 @@ public final class SpellAuditProbe {
                 .append(" player=").append(String.format(Locale.ROOT, "%.1f/%.1f/%.1f",
                     player.getX(), player.getY(), player.getZ()))
                 .append(" yaw=").append((int) player.getYRot())
+                .append(" pitch=").append((int) player.getXRot())
                 .append(" cast_ticks=").append(current.castTicks)
                 .append(" can_cast=").append(current.canCast)
                 .append(" dummies=").append(dummies.size());
@@ -1105,6 +1122,7 @@ public final class SpellAuditProbe {
             current.moved = (float) Math.max(current.moved, Math.sqrt(dx * dx + dy * dy + dz * dz));
             current.itemsGained = Math.max(current.itemsGained, countItems(player) - itemsAtCast);
             current.spawned = Math.max(current.spawned, countSpawned(level, player));
+            traceProjectiles(level, player);
             SpellAuditState.setMetrics(metricsLine());
             SpellAuditState.setPhase(current.castTicks > 0 && phaseTicks <= current.castTicks
                 ? "ПРИМЕНЕНИЕ" : "НАБЛЮДЕНИЕ");
@@ -1119,6 +1137,42 @@ public final class SpellAuditProbe {
                 return true;
             }
             return castDone && worthWaiting && phaseTicks > 30;
+        }
+
+        /**
+         * Трассировка снарядов.
+         *
+         * <p>«Снаряд не попал» — это два совершенно разных случая: снаряд вообще
+         * не появился (или появился не там), либо он честно летит мимо цели.
+         * Строка {@code diag_proj} показывает позицию и скорость снаряда
+         * относительно игрока каждый второй тик наблюдения, поэтому видно и
+         * точку старта, и траекторию.
+         */
+        private void traceProjectiles(ServerLevel level, ServerPlayer player) {
+            if (projectileTraces >= PROJECTILE_TRACES || phaseTicks % 2 != 0) {
+                return;
+            }
+            projectileTraces++;
+            List<net.minecraft.world.entity.projectile.AbstractArrow> arrows = level.getEntitiesOfClass(
+                net.minecraft.world.entity.projectile.AbstractArrow.class,
+                player.getBoundingBox()
+                    .inflate(48D));
+            StringBuilder text = new StringBuilder();
+            text.append(TAG).append(" diag_proj spell=").append(current.id)
+                .append(" t=").append(phaseTicks)
+                .append(" n=").append(arrows.size());
+            for (net.minecraft.world.entity.projectile.AbstractArrow arrow : arrows) {
+                net.minecraft.world.phys.Vec3 pos = arrow.position()
+                    .subtract(player.position());
+                net.minecraft.world.phys.Vec3 delta = arrow.getDeltaMovement();
+                text.append(" [")
+                    .append(arrow.getClass()
+                        .getSimpleName())
+                    .append(String.format(Locale.ROOT, " pos=%.2f/%.2f/%.2f d=%.2f/%.2f/%.2f t=%d",
+                        pos.x, pos.y, pos.z, delta.x, delta.y, delta.z, arrow.tickCount))
+                    .append("]");
+            }
+            writeLog(text.toString());
         }
 
         /** Обратный пересчёт: падение ванильного здоровья → урон в единицах мода. */

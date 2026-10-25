@@ -87,6 +87,17 @@ public class ProjectileCastHelper {
             }
             en.setSilent(silent);
 
+            // Диагностика аудита: видно, с каким наклоном/поворотом реально
+            // запущен снаряд и какая у него скорость на первом тике.
+            if (!caster.level().isClientSide()) {
+                com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.diag(
+                    String.format(java.util.Locale.ROOT,
+                        "diag_projshot spell=%s pitch=%.1f yaw=%.1f speed=%.2f start=%.2f/%.2f/%.2f d=%.2f/%.2f/%.2f",
+                        data != null ? data.spell_id : "?", pitch, yaw, shootSpeed,
+                        en.getX(), en.getY(), en.getZ(),
+                        en.getDeltaMovement().x, en.getDeltaMovement().y, en.getDeltaMovement().z));
+            }
+
             boolean added = caster.level().addFreshEntity(en);
             com.robertx22.age_of_exile.uncommon.utilityclasses.SpellLogger.logProjectileShot(
                     caster,
