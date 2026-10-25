@@ -59,19 +59,29 @@ jobs:
         run: |
           scenario="tools/e2e/scenarios/${{ inputs.scenario || 'boot' }}.txt"
           echo "сценарий: $scenario"
-          bash tools/e2e/run-in-xvfb.sh "$scenario" run/e2e/shots || echo "step_status=$?" >> "$GITHUB_OUTPUT"
+          set +e
+          bash tools/e2e/run-in-xvfb.sh "$scenario" run/e2e/shots
+          status=$?
+          set -e
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          echo "shots=$(find run/e2e/shots -maxdepth 1 -name '*.png' | wc -l)" >> "$GITHUB_OUTPUT"
+          echo "### Снимки: $(find run/e2e/shots -maxdepth 1 -name '*.png' | wc -l), статус сценария: $status"
+          echo "Ошибки шагов (если были):"
+          grep -c "ОШИБКА" run/e2e/shots/steps.log 2>/dev/null || true
+          # Снимков может не быть — это не повод терять диагностику: она уедет
+          # в ветку и в артефакт следующим шагом.
+          exit 0
 
-      - name: Опубликовать снимки в ветку ${{ env.BRANCH }}
+      - name: Опубликовать результат в ветку ${{ env.BRANCH }}
         if: always() && github.event.pull_request.head.repo.fork != true
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          bash tools/e2e/publish-shots.sh run/e2e/shots \
-            "Сценарий \`${{ inputs.scenario || 'boot' }}\`, клиент под Xvfb, ветка \`${{ github.head_ref || github.ref_name }}\`" || {
-            echo "::warning::Не удалось опубликовать снимки (нет прав или снимков не было)";
-          }
+          bash tools/e2e/publish-results.sh run/e2e/shots \
+            "Сценарий \`${{ inputs.scenario || 'boot' }}\`, клиент под Xvfb, ветка \`${{ github.head_ref || github.ref_name }}\`" \
+            || echo "::error::Публикация в ветку ${BRANCH} не удалась"
 
       - name: Комментарий с картинками в PR
         if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork != true
