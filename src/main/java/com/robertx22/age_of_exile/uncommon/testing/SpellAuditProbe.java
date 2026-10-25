@@ -1153,15 +1153,15 @@ public final class SpellAuditProbe {
                 return;
             }
             projectileTraces++;
-            List<net.minecraft.world.entity.projectile.AbstractArrow> arrows = level.getEntitiesOfClass(
-                net.minecraft.world.entity.projectile.AbstractArrow.class,
+            List<net.minecraft.world.entity.projectile.arrow.AbstractArrow> arrows = level.getEntitiesOfClass(
+                net.minecraft.world.entity.projectile.arrow.AbstractArrow.class,
                 player.getBoundingBox()
                     .inflate(48D));
             StringBuilder text = new StringBuilder();
             text.append(TAG).append(" diag_proj spell=").append(current.id)
                 .append(" t=").append(phaseTicks)
                 .append(" n=").append(arrows.size());
-            for (net.minecraft.world.entity.projectile.AbstractArrow arrow : arrows) {
+            for (net.minecraft.world.entity.projectile.arrow.AbstractArrow arrow : arrows) {
                 net.minecraft.world.phys.Vec3 pos = arrow.position()
                     .subtract(player.position());
                 net.minecraft.world.phys.Vec3 delta = arrow.getDeltaMovement();
