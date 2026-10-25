@@ -1,0 +1,500 @@
+[17:10:52] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[17:10:52] [Server thread/WARN] (TranslationConventionLogWarnings) 
+	Dev warning - Untranslated Item Tags detected. Please translate your item tags so other mods such as recipe viewers can properly display your tag's name.
+	The format desired is tag.item.<namespace>.<path> for the translation key with slashes in path turned into periods.
+	To disable this message, set this system property in your runs: `-Dfabric-tag-conventions-v2.missingTagTranslationWarning=SILENCED`.
+	To see individual untranslated item tags found, set the system property to `-Dfabric-tag-conventions-v2.missingTagTranslationWarning=VERBOSE`.
+	Default is `SHORT`.
+
+[17:10:52] [Server thread/INFO] (Minecraft) [STDOUT]: [GameMaster] Система запущена. Отслежено игроков: 1, базовое время до макс. уровня: 40 ч, множитель-калибровка k=-0.95
+[17:10:52] [Server thread/INFO] (Minecraft) [STDOUT]: [GameMaster] Панель: http://127.0.0.1:8787/
+[17:10:52] [Server thread/INFO] (Minecraft) [STDOUT]: Registering Age of Exile Commands.
+[17:10:52] [Server thread/INFO] (Minecraft) [STDOUT]: Starting Age of Exile Registry auto validation.
+[17:10:52] [Server thread/INFO] (Minecraft) [STDOUT]: All Age of Exile registries appear valid.
+[17:10:52] [Server thread/INFO] (Minecraft) [STDOUT]: Starting Age of Exile Registry auto validation.
+[17:10:52] [Server thread/INFO] (Minecraft) [STDOUT]: All Age of Exile registries appear valid.
+[17:10:54] [Server thread/INFO] (Minecraft) Loading 49 chunks for player spawn...
+[17:10:54] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[17:10:54] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[17:10:54] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[17:10:54] [Server thread/INFO] (Minecraft) Preparing spawn area: 16%
+[17:10:55] [Server thread/INFO] (Minecraft) Preparing spawn area: 100%
+[17:10:55] [Server thread/INFO] (Minecraft) Time elapsed: 2512 ms
+[17:10:55] [Server thread/INFO] (Minecraft) Player560[local:E:b648b9d1] logged in with entity id 106 at (-53.5, 107.0, 20.5)
+[17:10:55] [Server thread/INFO] (Minecraft) System chat: Player560 joined the game
+[17:10:55] [Render thread/INFO] (Minecraft) [System] [CHAT] GameMaster: Серия входов: 1 дн. (+40 Благосклонности)
+[17:10:55] [Render thread/INFO] (Minecraft) [System] [CHAT] GameMaster: Цель дня: убить 14 мобов (0/14) → +122 Благосклонности
+[17:10:55] [Render thread/INFO] (Minecraft) [System] [CHAT] GameMaster: сейчас ты на сервере один — мобы и лут настроены под одиночную игру.
+[17:10:55] [Render thread/INFO] (Minecraft) [System] [CHAT] GameMaster: цель недели — 0 / 6000 убийств (0%)
+[17:10:55] [Render thread/INFO] (Minecraft) [System] [CHAT] GameMaster: множитель опыта x1 (темп x1, догоняющий x1, автобаланс x1)
+[17:10:56] [Render thread/WARN] (Minecraft) Requested post effect does not exist: minecraft:end_of_frame
+[17:10:56] [Server thread/INFO] (Minecraft) Changing view distance to 2, from 10
+[17:10:56] [Server thread/INFO] (Minecraft) Changing simulation distance to 5, from 0
+[17:10:56] [Render thread/INFO] (Minecraft) Resizing Dynamic Transforms UBO, capacity limit of 2 reached during a single frame. New capacity will be 4.
+[17:10:56] [Worker-Main-3/INFO] (AgeOfEpoch-Wiki) Вики: загружено страниц — 371
+[17:10:56] [Render thread/INFO] (Minecraft) Loaded 2 advancements
+[17:10:56] [Render thread/INFO] (Minecraft) [System] [CHAT] ☆ До общей цели недели осталось 6000 убийств. Вместе это 20–30 минут на человека.
+[17:10:56] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:10:56] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:10:56] [Render thread/INFO] (Minecraft) Resizing Dynamic Transforms UBO, capacity limit of 4 reached during a single frame. New capacity will be 8.
+[17:10:57] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:10:57] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:10:57] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:10:57] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:10:57] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:10:57] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:10:58] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Command Buffer, capacity limit of 2 reached during a single frame. New capacity will be 16.
+[17:10:58] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Instanced, capacity limit of 2 reached during a single frame. New capacity will be 8.
+[17:10:58] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:10:58] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:10:58] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Command Buffer, capacity limit of 16 reached during a single frame. New capacity will be 64.
+[17:10:58] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Instanced, capacity limit of 8 reached during a single frame. New capacity will be 32.
+[17:10:58] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:10:58] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:10:59] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:10:59] [Render thread/INFO] (Minecraft) Resizing Chunk Sections Instanced, capacity limit of 32 reached during a single frame. New capacity will be 64.
+[17:10:59] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:10:59] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:10:59] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:00] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:00] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:00] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:00] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:01] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:01] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:01] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:01] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:02] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:02] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:02] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:02] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:03] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:03] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:03] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:03] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:04] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:04] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:05] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:05] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:05] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:05] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:06] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:06] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:06] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:06] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:07] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:07] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:07] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:07] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:08] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:08] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:08] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:08] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:09] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:09] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:09] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:09] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:10] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:10] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:10] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:10] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:11] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:11] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:12] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:12] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:12] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:12] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:13] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:13] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:13] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:13] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:14] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:14] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:14] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:14] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:15] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:15] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:15] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:15] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:16] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:16] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:16] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:16] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:17] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:17] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:17] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:17] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:18] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:18] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:18] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:18] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:19] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:19] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:19] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:19] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:20] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:20] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:20] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:20] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:21] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:21] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:21] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:21] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:22] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:22] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:22] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:22] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:23] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:23] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:23] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:23] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:24] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:24] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:25] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:25] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:25] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:25] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:26] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:26] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:26] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:26] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:27] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:27] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:27] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:27] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:28] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:28] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:28] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:28] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:29] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:29] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:29] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:29] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:30] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:30] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:30] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:30] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:31] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:31] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:31] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:31] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:32] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:32] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:32] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:32] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:33] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:33] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:34] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:34] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:34] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:34] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:35] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:35] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:35] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:35] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:36] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:36] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:36] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:36] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:37] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:37] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:37] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:37] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:38] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:38] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:38] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:38] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:39] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:39] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:39] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:39] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:40] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:40] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:40] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:40] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:41] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:41] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:41] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:41] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:42] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:42] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:42] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:42] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:43] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:43] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:43] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:43] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:44] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:44] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:44] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:44] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:45] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:45] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:45] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:45] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:46] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:46] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:46] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:46] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:47] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:47] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:47] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:47] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:48] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:48] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:48] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:48] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:49] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:49] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:49] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:49] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:50] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:50] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:50] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:50] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:51] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:51] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:51] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:51] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:52] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:52] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:52] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:52] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:53] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:53] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:53] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:53] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:54] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:54] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:54] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:54] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:55] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:55] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:55] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:55] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:56] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:56] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:56] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:56] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:57] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:57] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:57] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:57] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:58] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:58] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:58] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:58] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:59] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:59] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:59] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:11:59] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:00] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:00] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:00] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:00] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:01] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:01] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:01] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:01] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:02] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:02] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:02] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:02] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:03] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:03] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:03] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:03] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:04] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:04] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:04] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:04] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:05] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:05] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:05] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:05] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:06] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:06] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:06] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:06] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:07] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:07] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:07] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:07] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:08] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:08] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:08] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:08] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:09] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:09] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:09] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:09] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:10] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:10] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:10] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:10] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:11] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:11] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:11] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:11] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:12] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:12] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:12] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:12] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:13] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:13] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:13] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:13] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:14] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:14] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:14] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:14] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:15] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:15] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:15] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:15] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:16] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:16] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:16] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:16] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:17] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:17] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:17] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:17] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:18] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:18] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:18] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:18] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:19] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:19] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:19] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:19] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:20] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:20] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:20] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:20] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:21] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:21] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:21] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:21] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:22] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST старт прогона what=all
+[17:12:22] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:22] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:22] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:22] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:23] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST dps hits=10 requested=400.0 recorded=320.0 elapsed_ms=548 dps_chart=583.9 dps_hud=640.0 fight_active=true check_damage_landed=true check_damage_matches=true check_fight_detected=true check_dps_ratio=true
+[17:12:23] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST heal max=20.0 before=5.0 after_full=20.0 check_heal_positive=true check_heal_reaches_max=true check_never_above_max=true
+[17:12:23] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST heal_partial before=5.0 after=15.0 max=20.0 check_partial_increases=true check_partial_below_max=true
+[17:12:23] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST mana max=40.0 after_spend=0.0 after_restore=40.0 check_spend_works=true check_restore_capped=true
+[17:12:23] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST team raw=ScТихий___авангард shown=Тихий_авангард long_len=24 max_len=24 check_name_kept=true check_no_format_codes=true check_name_trimmed=true
+[17:12:23] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST soulless cheap_rank=1 rich_rank=5 cheap_bq=0.12 rich_bq=0.45 cheap_pct=12 rich_pct=45 check_cheap_created=true check_rich_created=true check_rank_order=true check_cheap_is_common=true check_no_affixes=true normal_perc=266 check_quality_set=true check_rolls_not_crippled=true check_plain_name=true
+[17:12:23] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST soulless_scaling lvl=20 cheap_value=2.1 rich_value=9.1 ratio=4.35 normal_value=15.3 check_below_normal=true check_rich_higher_in_numbers=true check_difference_visible=true
+[17:12:23] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST soulless_soul lvl_after_low_soul=20 value_after_low_soul=1.8 check_low_soul_keeps_level=true check_low_soul_keeps_stats=true rarity_after=rare affixes_after=2 type_kept=true check_inserted=true check_no_longer_soulless=true check_rarity_from_soul=true check_got_affixes=true check_base_stats_kept=true check_same_item_type=true check_soul_tag_removed=true check_name_changed=true
+[17:12:23] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST soulless_guards check_trident_untouched=true check_non_gear_untouched=true check_weapon_like_sword=true check_weapon_like_apple_false=true
+[17:12:23] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST soulless_demo slots=0,1,2,3 check_hotbar_filled=true
+[17:12:23] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST summary checks=40 failed=0
+[17:12:23] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:23] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:23] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:23] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:24] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:24] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:24] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:24] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:25] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:25] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:25] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:25] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:26] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:26] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:26] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:26] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:27] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:27] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:27] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:27] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:28] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:28] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:28] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:28] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:29] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:29] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:29] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:29] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:30] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:30] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:30] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:30] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:31] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:31] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:31] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:31] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:32] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:32] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:32] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:32] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:33] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:33] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:33] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:33] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:34] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:34] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:34] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:34] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:35] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:35] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:35] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:35] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:36] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:36] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:36] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:36] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:37] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:37] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:37] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:37] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:38] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:38] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:38] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:38] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:39] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:39] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:39] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:39] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:40] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:40] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:40] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:40] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:41] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:41] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:41] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:41] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:42] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:42] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:43] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:43] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:43] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:43] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:44] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:44] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:45] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:45] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:45] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:45] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:46] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:46] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:47] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:47] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:47] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:47] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:48] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:48] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:48] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[17:12:48] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
