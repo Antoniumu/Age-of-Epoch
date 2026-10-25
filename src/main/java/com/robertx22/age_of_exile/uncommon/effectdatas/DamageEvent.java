@@ -370,6 +370,10 @@ public class DamageEvent extends EffectEvent {
                 }
                 int inv = LivingEntityAccesor.getInvulnerableTime(target);
                 LivingEntityAccesor.setInvulnerableTime(target, 0);
+                // Диагностика аудита умений: сколько урона реально доходит до
+                // цели. Если событие есть, а здоровье не падает — проблема в
+                // применении, а не в расчёте.
+                com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.noteDamageEvent(vanillaDamage);
                 if (target.level() instanceof net.minecraft.server.level.ServerLevel sl) {
                     target.hurtServer(sl, dmgsource, vanillaDamage);
                 }

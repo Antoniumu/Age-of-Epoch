@@ -103,10 +103,34 @@ public final class SpellAuditProbe {
     /** Площадка: ровный пол из кварца в небе — чтобы видео было чистым. */
     private static final int PLATFORM_Y = 99;
     private static final int PLATFORM_RADIUS = 11;
-    /** Расстояния манекенов от игрока в первом заходе. */
-    private static final double[] DUMMY_DISTANCES = {1.5D, 3D, 5D, 7D};
+    /**
+     * Манекены в первом заходе: расстояние и боковой сдвиг.
+     *
+     * <p>Раньше они стояли в упор по центру (1.5 блока), и в видео был виден
+     * только зомби: ни партиклов, ни полёта снаряда за ним. Теперь это широкая
+     * дуга — ближние умения достают, а картинка остаётся читаемой.
+     */
+    private static final double[][] DUMMY_PLACEMENT = {
+        {1.3D, 0D}, {3.5D, -2.2D}, {4.5D, 0D}, {4.0D, 2.2D}, {6.5D, 0D}
+    };
 
     private static Runner active;
+
+    /**
+     * Счётчик настоящих событий урона: заполняет {@code DamageEvent} прямо перед
+     * тем, как снять здоровье. Нужен, чтобы различать две разные поломки:
+     * «заклинание не нашло цели» и «урон посчитался, но замер его не увидел».
+     */
+    public static void noteDamageEvent(float amount) {
+        Runner runner = active;
+        if (runner == null || runner.current == null) {
+            return;
+        }
+        if (amount > 0F) {
+            runner.current.damageEvents++;
+            runner.current.damageEventsTotal += amount;
+        }
+    }
 
     private SpellAuditProbe() {
     }
@@ -239,6 +263,7 @@ public final class SpellAuditProbe {
         boolean effect;
         boolean move;
         boolean item;
+        boolean utility;
         boolean particles;
         boolean sound;
         boolean summon;
@@ -253,6 +278,8 @@ public final class SpellAuditProbe {
         final Set<String> effects = new LinkedHashSet<>();
         float moved;
         int spawned;
+        int damageEvents;
+        float damageEventsTotal;
         final List<String> problems = new ArrayList<>();
         final List<String> notes = new ArrayList<>();
         boolean pass = true;
@@ -540,8 +567,10 @@ public final class SpellAuditProbe {
                             || matches(type, SpellAction.OPEN_ENDER_CHEST)
                             || matches(type, SpellAction.REFRESH_COOLDOWNS_BY_X_TICKS)) {
                             // Аггро, сундук Края и сброс кулдаунов не двигают
-                            // цифры, но это ровно то, ради чего умение берут.
-                            result.effect = true;
+                            // измеримые цифры, но это ровно то, ради чего умение
+                            // берут: отдельный канал, чтобы не требовать с них
+                            // наложенных эффектов.
+                            result.utility = true;
                         } else if (matches(type, SpellAction.PARTICLES_IN_RADIUS)
                             || matches(type, SpellAction.SWORD_SWEEP_PARTICLES)) {
                             result.particles = true;
@@ -572,7 +601,7 @@ public final class SpellAuditProbe {
                 result.note("нет звука");
             }
             if (!result.damage && !result.heal && !result.mana && !result.effect
-                && !result.move && !result.item && !result.summon) {
+                && !result.move && !result.item && !result.summon && !result.utility) {
                 result.problem("ничего не делает (нет урона/лечения/эффекта/движения)");
             }
         }
@@ -654,6 +683,16 @@ public final class SpellAuditProbe {
             // Здоровье — не полное: иначе лечение нечего измерять (лечить
             // полного игрока бессмысленно, и заклинание честно даёт ноль).
             player.setHealth(Math.max(1F, player.getMaxHealth() * 0.6F));
+            // Эффекты снимаем: часть бафов взаимоисключающие (песни — «один из
+            // типа»), и остаток от предыдущего умения не давал наложить
+            // следующий. Плюс так эффект нельзя спутать с чужим.
+            try {
+                for (MobEffectInstance instance : new ArrayList<>(player.getActiveEffects())) {
+                    player.removeEffect(instance.getEffect());
+                }
+                Load.Unit(player).getStatusEffectsData().exileMap.clear();
+            } catch (Throwable ignored) {
+            }
             player.setDeltaMovement(0, 0, 0);
             player.setRemainingFireTicks(0);
             player.clearFire();
@@ -684,9 +723,19 @@ public final class SpellAuditProbe {
             double yaw = Math.toRadians(player.getYRot());
             double dirX = -Math.sin(yaw);
             double dirZ = Math.cos(yaw);
-            for (double distance : DUMMY_DISTANCES) {
-                spawnDummy(level, player, player.getX() + dirX * distance, player.getZ() + dirZ * distance,
-                    distance < 2 ? "§7[Манекен]" : "§7[Манекен " + (int) distance + "]");
+            // перпендикуляр к направлению взгляда — для бокового сдвига
+            double sideX = -dirZ;
+            double sideZ = dirX;
+            int index = 0;
+            for (double[] placement : DUMMY_PLACEMENT) {
+                double forward = placement[0];
+                double side = placement[1];
+                index++;
+                spawnDummy(level,
+                    player,
+                    player.getX() + dirX * forward + sideX * side,
+                    player.getZ() + dirZ * forward + sideZ * side,
+                    "§7[Манекен " + index + "]");
             }
         }
 
@@ -714,8 +763,12 @@ public final class SpellAuditProbe {
                 mob.setNoAi(true);
                 mob.setSilent(true);
                 mob.setPersistenceRequired();
+                // 100 тысяч, а не 10 миллионов: при огромном максимуме
+                // HealthUtils.realToVanilla() (урон / макс. здоровья мода * макс.
+                // здоровья ванилы) уводит урон в шум, и полоска здоровья
+                // манекена в кадре нечитаема.
                 if (mob.getAttribute(Attributes.MAX_HEALTH) != null) {
-                    mob.getAttribute(Attributes.MAX_HEALTH).setBaseValue(10_000_000D);
+                    mob.getAttribute(Attributes.MAX_HEALTH).setBaseValue(100_000D);
                 }
                 mob.setHealth(mob.getMaxHealth());
                 mob.setCustomName(Component.literal(name));
@@ -785,6 +838,30 @@ public final class SpellAuditProbe {
             SpellAuditState.setMetrics("");
         }
 
+        /** Подробности площадки: без них непонятно, «не попал» или «не работает». */
+        private void diagnostics(ServerLevel level, ServerPlayer player, String tag) {
+            StringBuilder text = new StringBuilder();
+            text.append(TAG).append(" diag_").append(tag)
+                .append(" spell=").append(current.id)
+                .append(" player=").append(String.format(Locale.ROOT, "%.1f/%.1f/%.1f",
+                    player.getX(), player.getY(), player.getZ()))
+                .append(" yaw=").append((int) player.getYRot())
+                .append(" cast_ticks=").append(current.castTicks)
+                .append(" can_cast=").append(current.canCast)
+                .append(" dummies=").append(dummies.size());
+            for (UUID id : dummies) {
+                Entity entity = level.getEntity(id);
+                if (entity instanceof LivingEntity living) {
+                    double distance = Math.sqrt(living.distanceToSqr(player));
+                    text.append(" [").append(String.format(Locale.ROOT, "%.1fб hp=%.0f",
+                        distance, living.getHealth())).append("]");
+                } else {
+                    text.append(" [нет сущности]");
+                }
+            }
+            writeLog(text.toString());
+        }
+
         private void doCast(ServerPlayer player) {
             try {
                 SpellCastingData data = Load.spells(player).getCastingData();
@@ -794,6 +871,12 @@ public final class SpellAuditProbe {
                 current.problem("каст упал с ошибкой: " + error);
             }
             maxObserve = Math.min(220, Math.max(45, current.castTicks + 45));
+            if (current.damage) {
+                try {
+                    diagnostics((ServerLevel) player.level(), player, "cast");
+                } catch (Throwable ignored) {
+                }
+            }
             SpellAuditState.setPhase("ПРИМЕНЕНИЕ");
             writeLog(TAG + " cast spell=" + current.id + " can_cast=" + current.canCast
                 + " cast_ticks=" + current.castTicks);
@@ -946,7 +1029,7 @@ public final class SpellAuditProbe {
             if (current.damage && current.damageDealt <= 0.1F && !secondAttempt) {
                 secondAttempt = true;
                 writeLog(TAG + " retry spell=" + current.id + " с кольцом манекенов");
-                spawnDummyRing(player, level, 2.5D);
+                spawnDummyRing(player, level, 1.2D);
                 snapshot(player, level);
                 phaseTicks = 0;
                 return true;
@@ -955,7 +1038,14 @@ public final class SpellAuditProbe {
                 current.problem("каст невозможен (canCast=false: требования оружия/маны/уровня)");
             }
             if (current.damage && current.damageDealt <= 0.1F) {
-                current.problem("урон не нанесён (нет попаданий)");
+                current.problem(current.damageEvents > 0
+                    ? "урон посчитан (" + fmt(current.damageEventsTotal)
+                        + "), но манекены его не получили"
+                    : "урон не нанесён (нет попаданий)");
+                try {
+                    diagnostics(level, player, "nodmg");
+                } catch (Throwable ignored) {
+                }
             }
             if (current.heal && current.healed <= 0.5F) {
                 current.problem("лечение не сработало");
@@ -989,6 +1079,7 @@ public final class SpellAuditProbe {
                 + " verdict=" + current.verdict()
                 + " dmg=" + fmt(current.damageDealt)
                 + " hits=" + current.hits
+                + " dmg_events=" + current.damageEvents
                 + " heal=" + fmt(current.healed)
                 + " mana=" + fmt(current.manaGained)
                 + " shield=" + fmt(current.shieldGained)

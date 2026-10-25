@@ -15,6 +15,8 @@ import com.robertx22.age_of_exile.uncommon.utilityclasses.AllyOrEnemy;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.DashUtils;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.EntityFinder;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.resources.Identifier;
@@ -102,8 +104,29 @@ public class MapHolder {
         }
     }
 
-    public SimpleParticleType getParticle() {
-        return (SimpleParticleType) BuiltInRegistries.PARTICLE_TYPE.getValue(Identifier.parse(get(MapField.PARTICLE_TYPE)));
+    /**
+     * Частица из данных заклинания — уже в виде опций, готовых к отрисовке.
+     *
+     * <p>Раньше здесь был жёсткий каст к {@link SimpleParticleType}. В MC 26.3
+     * часть частиц (например {@code item_slime}, {@code item_snowball},
+     * {@code dripping_water}, {@code falling_water}, {@code block}) — это типы с
+     * параметром, и каст падал с {@code ClassCastException} прямо в касте
+     * заклинания: клиент отменял каст, а игрок видел «умение не работает» без
+     * единого партикла. Теперь параметрические типы заменяются визуально
+     * близкой простой частицей — каст не падает, эффект видно.
+     */
+    public ParticleOptions getParticle() {
+        String raw = get(MapField.PARTICLE_TYPE);
+        ParticleType<?> type = raw == null || raw.isEmpty()
+            ? null : BuiltInRegistries.PARTICLE_TYPE.getValue(Identifier.parse(raw));
+
+        if (type == null) {
+            return ParticleTypes.CRIT;
+        }
+        if (type instanceof SimpleParticleType simple) {
+            return simple;
+        }
+        return ParticleFallback.simple(type);
     }
 
     public Block getBlock() {

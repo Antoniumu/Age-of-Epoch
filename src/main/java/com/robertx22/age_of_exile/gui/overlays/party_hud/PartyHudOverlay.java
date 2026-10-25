@@ -93,6 +93,12 @@ public final class PartyHudOverlay extends AbstractGui {
         Minecraft mc = Minecraft.getInstance();
         reloadIfChanged();
 
+        // Во время аудита умений панель закрывает правую часть кадра и мешает
+        // смотреть видео: она про группу и цели, а не про проверяемое умение.
+        if (com.robertx22.age_of_exile.uncommon.testing.SpellAuditState.active) {
+            return;
+        }
+
         if (!visible || mc.player == null || mc.getDebugOverlay().showDebugScreen()) {
             return;
         }
