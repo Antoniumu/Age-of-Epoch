@@ -421,6 +421,12 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
 
         drawHeader(matrix, mouseX, mouseY);
         drawSidebar(matrix, mouseX, mouseY);
+        // «Ножницы» для сайдбара. В рендер-пайплайне 26.x scissor недоступен
+        // (см. BUILD-REPORT §4), поэтому подписи длиннее панели рисовались
+        // поверх статьи — это видно на скриншотах из CI. Закрашиваем промежуток
+        // между списком и статьёй цветом панели: всё, что вылезло за край
+        // сайдбара, обрезается, и статья рисуется уже поверх.
+        fill(matrix, sidebarX + sidebarW - 2, sidebarY - 2, articleX, articleY + articleH + 2, 0xFF0E1219);
         drawArticle(matrix, mouseX, mouseY);
         if (hasInfobox) {
             drawInfobox(matrix, mouseX, mouseY, partialTicks);

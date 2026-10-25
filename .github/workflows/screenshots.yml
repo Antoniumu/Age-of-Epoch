@@ -38,6 +38,11 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      # Каталог снимков должен быть чистым: иначе в ветку уедут PNG прошлых
+      # прогонов с уже неактуальными шагами.
+      - name: Очистить прошлые снимки
+        run: rm -rf run/e2e/shots && mkdir -p run/e2e/shots && ls run/e2e/shots
+
       - uses: ./.github/actions/setup-build-env
         with:
           cache-read-only: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork }}
