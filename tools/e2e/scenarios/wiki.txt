@@ -46,9 +46,11 @@ key Next
 wait 800
 shot 06-wiki-scrolled
 
-# Прокрутка статьи вниз и переход по первой ссылке
-move 640 400
-key Next
-wait 600
-shot 05-wiki-scrolled
+# Переход по ссылке внутри статьи: курсор на синюю ссылку правой колонки «Связано».
+move 1060 480
+wait 400
+shot 07-wiki-link-hover
+click 1060 480
+wait 1500
+shot 08-wiki-linked-page
 log конец сценария wiki
