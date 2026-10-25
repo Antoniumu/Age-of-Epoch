@@ -1,4 +1,4 @@
-name: Branch build and downloadable release
+name: Branch build check (publishing paused)
 
 on:
   push:
@@ -13,15 +13,15 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: branch-release-${{ github.ref }}
+  group: branch-build-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  build-and-publish:
-    name: Build mod and publish branch release
+  build:
+    name: Build mod without publishing artifacts
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -52,86 +52,3 @@ jobs:
               echo "::error::$line"
             done < <(grep -E '(^e: | error:|What went wrong:|Execution failed|BUILD FAILED|Caused by:)' ci-build.log | tail -n 25)
           fi
-
-      - name: Keep Gradle log on failure
-        if: failure()
-        uses: actions/upload-artifact@v7
-        with:
-          name: gradle-build-log-${{ github.sha }}
-          path: ci-build.log
-          if-no-files-found: warn
-          retention-days: 14
-
-      - name: Find distributable mod jar
-        id: mod-jar
-        shell: bash
-        run: |
-          jar_path="$(find build/libs -maxdepth 1 -type f -name 'Age-of-Epoch-*.jar' ! -name '*-sources.jar' ! -name '*-javadoc.jar' -print -quit)"
-          if [[ -z "$jar_path" ]]; then
-            echo 'No distributable Age-of-Epoch jar was produced.' >&2
-            ls -la build/libs >&2 || true
-            exit 1
-          fi
-          echo "path=$jar_path" >> "$GITHUB_OUTPUT"
-          echo "Found $jar_path"
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: Age-of-Epoch-${{ github.sha }}
-          path: ${{ steps.mod-jar.outputs.path }}
-          if-no-files-found: error
-          retention-days: 30
-
-      # Each pushed revision has its own prerelease, tied to an exact source commit.
-      - name: Publish downloadable prerelease for the Arena branch
-        if: github.event_name == 'push' && github.ref == 'refs/heads/arena/ad7c45b3-age-of-epoch'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: arena-ad7c45b3-${{ github.sha }}
-          target_commitish: ${{ github.sha }}
-          name: Age of Epoch — branch build ${{ github.sha }}
-          body: |
-            Automatically built from branch `arena/ad7c45b3-age-of-epoch`.
-
-            Source commit: `${{ github.sha }}`
-
-            Download the mod JAR below and place it in your Minecraft `mods` folder.
-          files: ${{ steps.mod-jar.outputs.path }}
-          draft: false
-          prerelease: true
-          make_latest: false
-
-      - name: Check Modrinth publishing configuration
-        id: modrinth-config
-        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/arena/ad7c45b3-age-of-epoch'
-        shell: bash
-        env:
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-          MODRINTH_PROJECT_ID: ${{ vars.MODRINTH_PROJECT_ID }}
-        run: |
-          if [[ -n "$MODRINTH_TOKEN" && -n "$MODRINTH_PROJECT_ID" ]]; then
-            echo "enabled=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "enabled=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::Modrinth upload skipped. Configure repository secret MODRINTH_TOKEN and variable MODRINTH_PROJECT_ID."
-          fi
-
-      - name: Publish alpha build to Modrinth
-        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/arena/ad7c45b3-age-of-epoch' && steps.modrinth-config.outputs.enabled == 'true'
-        uses: Kira-NT/mc-publish@v3.3.2
-        with:
-          modrinth-id: ${{ vars.MODRINTH_PROJECT_ID }}
-          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          files: ${{ steps.mod-jar.outputs.path }}
-          name: "Age of Epoch 5.0.0 — branch build #${{ github.run_number }}"
-          version: 5.0.0-arena.${{ github.run_number }}
-          version-type: alpha
-          changelog: Automated alpha build from arena/ad7c45b3-age-of-epoch (commit ${{ github.sha }}).
-          loaders: fabric
-          game-versions: 26.3
-          java: '25'
-          dependencies: |
-            fabric-api(required){modrinth:P7dR8mSH}
-            trinkets-updated(required){modrinth:XaT8sLP6}
-          modrinth-featured: false

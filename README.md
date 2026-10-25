@@ -76,7 +76,7 @@ build.bat singlejar client        :: собрать без слияния client
 
 ## CI и публикация ветки
 
-Для ветки `arena/ad7c45b3-age-of-epoch` GitHub Actions собирает мод на Java 25, прикладывает JAR к prerelease и, если заданы `MODRINTH_TOKEN` и `MODRINTH_PROJECT_ID`, публикует alpha-версию на Modrinth. Пошаговая настройка — [`docs/MODRINTH-PUBLISHING.md`](docs/MODRINTH-PUBLISHING.md).
+Для ветки `arena/ad7c45b3-age-of-epoch` GitHub Actions проверяет сборку мода на Java 25. Автоматическая публикация JAR и alpha-версий на GitHub и Modrinth временно отключена, пока уточняются права на исходный проект. Подробности — [`docs/MODRINTH-PUBLISHING.md`](docs/MODRINTH-PUBLISHING.md).
 
 ## Управление
 
