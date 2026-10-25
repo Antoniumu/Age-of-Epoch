@@ -7,15 +7,13 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 /**
- * @param id      stable id for JEI bookmarks
- * @param gear    example gear piece of the shown rarity
- * @param outputs salvaged essence (and rarity essence for higher rarities)
- * @param lines   extra explanation drawn under the slots
+ * Input cycles through valid gear/soul examples; every output slot cycles through the
+ * possible tier variants of that output.
  */
 public record SalvageRecipe(
     Identifier id,
-    ItemStack gear,
-    List<ItemStack> outputs,
+    List<ItemStack> input,
+    List<List<ItemStack>> outputs,
     List<Component> lines
 ) {
 }

@@ -1,0 +1,213 @@
+# Сценарий: настоящий JEI в dev-клиенте.
+#
+# tools/e2e/run-in-xvfb.sh запускает именно этот сценарий с -PjeiRuntime,
+# поэтому в клиенте стоит полный JEI, а не только compile-only API.
+#
+# Координаты рассчитаны на окно 1280x720 и guiScale 2:
+#   * поле поиска JEI — справа внизу (1090, 692);
+#   * первый результат JEI — первая ячейка справа вверху (948, 27).
+# После каждого поиска делается снимок результата, а затем снимок страницы U.
+# Если раскладка JEI изменится, по этим снимкам координаты легко поправить.
+
+wait_window Minecraft 420000
+wait_log 300000 Created: .*atlas/items
+wait 8000
+shot 00-main-menu
+
+# Главное меню -> одиночная игра -> создать мир -> подтвердить создание
+move 640 296
+click 640 296
+wait 4000
+shot 01-world-list
+move 480 688
+click 480 688
+wait 3000
+shot 02-create-world
+move 480 688
+click 480 688
+wait 40000
+shot 03-in-world
+
+# Инвентарь: справа должен появиться список предметов JEI.
+hold e 500
+wait 5000
+shot 04-jei-overlay
+
+# --- Stat Soul: U показывает наложение души на основы --------------------
+click 1090 692
+wait 500
+type stat soul
+wait 2500
+shot 05-search-stat-soul
+click 640 520
+move 948 27
+wait 800
+shot 06-stat-soul-hover
+key u
+wait 3000
+shot 07-stat-soul-uses
+key Escape
+wait 1500
+
+# --- Identify Tome: U показывает определение душ --------------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type identify tome
+wait 2500
+shot 08-search-identify-tome
+click 640 520
+move 948 27
+wait 500
+key u
+wait 3000
+shot 09-identify-tome-uses
+key Escape
+wait 1500
+
+# --- Пустая основа: U должно вести обратно к душам/профессиям -------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type iron chestplate
+wait 2500
+shot 10-search-iron-chestplate
+click 640 520
+move 948 27
+wait 500
+key u
+wait 3000
+shot 11-iron-chestplate-uses
+key Escape
+wait 1500
+
+# --- Гем: сокетинг, повышение ранга и извлечение ---------------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type cracked Ruby
+wait 2500
+shot 12-search-cracked-Ruby
+click 640 520
+move 948 27
+wait 500
+key u
+wait 3000
+shot 13-cracked-Ruby-uses
+key Escape
+wait 1500
+
+# --- Валюта на снаряжение ---------------------------------------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type orb of transmutation
+wait 2500
+shot 14-search-orb
+click 640 520
+move 948 27
+wait 500
+key u
+wait 3000
+shot 15-orb-uses
+key Escape
+wait 1500
+
+# --- Разбор -----------------------------------------------------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type salvage hammer
+wait 2500
+shot 16-search-salvage-hammer
+click 640 520
+move 948 27
+wait 500
+key u
+wait 3000
+shot 17-salvage-hammer-uses
+key Escape
+wait 1500
+
+# --- Рунные слова -------------------------------------------------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type runeword station
+wait 2500
+shot 18-search-runeword-station
+click 640 520
+move 948 27
+wait 500
+key u
+wait 3000
+shot 19-runeword-station-uses
+key Escape
+wait 1500
+
+# --- Профессии ---------------------------------------------------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type armorer
+wait 2500
+shot 20-search-armorer-tool
+click 640 520
+move 948 27
+wait 500
+key u
+wait 3000
+shot 21-armorer-tool-uses
+key Escape
+wait 1500
+
+# --- Эссенция редкости: камень повышения и разбор ---------------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type rarity essence
+wait 2500
+shot 22-search-rarity-essence
+click 640 520
+move 948 27
+wait 500
+key u
+wait 3000
+shot 23-rarity-essence-uses
+key Escape
+wait 1500
+
+# --- Ящик гемов: пул возможных результатов ----------------------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type gem loot crate
+wait 2500
+shot 24-search-gem-loot-crate
+click 640 520
+move 948 27
+wait 500
+key u
+wait 3000
+shot 25-gem-loot-crate-uses
+key Escape
+wait 1500
+
+# --- Рюкзак: улучшения --------------------------------------------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type backpack
+wait 2500
+shot 26-search-backpack
+click 640 520
+move 948 27
+wait 500
+key u
+wait 3000
+shot 27-backpack-uses
+key Escape
+wait 1500
+
+jstack jei
+log конец сценария jei
