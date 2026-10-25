@@ -4,6 +4,7 @@ import com.robertx22.age_of_exile.config.forge.ServerContainer;
 import com.robertx22.age_of_exile.loot.LootInfo;
 import com.robertx22.age_of_exile.loot.blueprints.GearBlueprint;
 import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
+import com.robertx22.age_of_exile.saveclasses.stat_soul.SoullessGear;
 import com.robertx22.age_of_exile.saveclasses.stat_soul.StatSoulData;
 import com.robertx22.age_of_exile.uncommon.enumclasses.LootType;
 import net.minecraft.world.item.ItemStack;
@@ -29,6 +30,16 @@ public class GearSoulLootGen extends BaseLootGen<GearBlueprint> {
 
     public static ItemStack createSoulBasedOnGear(GearBlueprint blueprint) {
         GearItemData gear = blueprint.createData();
+
+        // Часть гир-дропа приходит готовым бесдушным предметом: его можно надеть сразу,
+        // а настоящая душа накладывается сверху. Уникаты всегда падают душами —
+        // это главный источник силы, и терять их имя при дропе нельзя.
+        if (!gear.isUnique() && com.robertx22.library_of_exile.utils.RandomUtils.roll(SoullessGear.ITEM_DROP_SHARE)) {
+            ItemStack item = SoullessGear.createLootItem(gear.GetBaseGearType(), gear.lvl);
+            if (!item.isEmpty()) {
+                return item;
+            }
+        }
 
         StatSoulData soul = new StatSoulData();
 

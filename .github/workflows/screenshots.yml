@@ -28,7 +28,12 @@ permissions:
 
 env:
   GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx4G'
-  BRANCH: ci-screenshots
+  # Ветка публикации — своя для каждой исходной ветки. Раньше все прогоны
+  # (main, PR разных сессий) писали в общий `ci-screenshots` с force-push, и
+  # более поздний прогон затирал снимки соседнего: результат своего прогона
+  # можно было увидеть только через артефакт, а он лежит в blob-хранилище и
+  # снаружи не читается. Имя санитайзим: слеши в именах веток запрещены.
+  BRANCH_RAW: ci-screenshots-${{ github.head_ref || github.ref_name }}
 
 jobs:
   screenshots:
@@ -37,6 +42,12 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
+
+      # `arena/xxx-age-of-epoch` -> `arena-xxx-age-of-epoch`: слеши в именах
+      # веток git не допускает, а имя ветки публикации должно быть уникальным
+      # для источника, иначе параллельные сессии затирают снимки друг друга.
+      - name: Имя ветки публикации
+        run: echo "BRANCH=$(echo "$BRANCH_RAW" | tr '/' '-')" >> "$GITHUB_ENV"
 
       # Каталог снимков должен быть чистым: иначе в ветку уедут PNG прошлых
       # прогонов с уже неактуальными шагами.
@@ -111,13 +122,26 @@ jobs:
           done
           set -e
 
-          # Боевые замеры: строки AOETEST из лога клиента. Провал проверки не
-          # валит job (порт ещё нестабилен), но виден и в summary, и в PR.
-          grep -h "AOETEST" run/logs/latest.log 2>/dev/null | awk '!seen[$0]++' > run/e2e/aoetest.log || true
+          # Боевые замеры и проверка «бесдушных основ»: строки AOETEST из лога
+          # клиента. latest.log относится только к последнему сценарию, поэтому
+          # дополнительно читаем aoe-devtest.txt — зонд дописывает туда же.
+          # Провал проверки не валит job (порт ещё нестабилен), но виден и в
+          # summary, и в PR.
+          {
+            grep -h "AOETEST" run/logs/latest.log 2>/dev/null || true
+            cat run/aoe-devtest.txt 2>/dev/null || true
+          } | awk '!seen[$0]++' > run/e2e/aoetest.log
           if [ -s run/e2e/aoetest.log ]; then
             summary=$(grep "AOETEST summary" run/e2e/aoetest.log | tail -1)
             echo "### $summary"
             grep -q "failed=0" <<< "$summary" || echo "::warning::Боевые замеры с провалами: $summary"
+            # «Бесдушные основы»: важно не просто отсутствие падений, а что
+            # проверка вообще дошла до живого мира (иначе клиент не вошёл в мир).
+            if grep -q "AOETEST soulless " run/e2e/aoetest.log; then
+              echo "Проверка бесдушных основ: $(grep -c "AOETEST soulless" run/e2e/aoetest.log) строк"
+            else
+              echo "::warning::Проверка бесдушных основ не выполнилась — клиент не дошёл до мира"
+            fi
           fi
 
           shots=$(find run/e2e/shots -maxdepth 1 -name '*.png' | wc -l)
@@ -137,7 +161,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
           exit 0
 
-      - name: Опубликовать результат в ветку ${{ env.BRANCH }}
+      - name: Опубликовать результат в ветку публикации
         if: always() && github.event.pull_request.head.repo.fork != true
         env:
           GH_TOKEN: ${{ github.token }}

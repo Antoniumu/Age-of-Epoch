@@ -64,7 +64,8 @@ import java.util.Locale;
  *
  * <p>Прогоны: {@code dps} — урон, {@code heal} — лечение/мана, {@code gear} —
  * обновление макс. HP от экипировки (регрессия на «броня не поднимает HP до
- * перезахода»), {@code team} — название команды, {@code all} — всё сразу.</p>
+ * перезахода»), {@code team} — название команды, {@code soulless} — бесдушные
+ * основы, {@code all} — всё сразу.</p>
  */
 public final class CombatProbe {
 
@@ -87,7 +88,7 @@ public final class CombatProbe {
 
     // ------------------------------------------------------------------ запуск
 
-    /** Ставит прогон в очередь: {@code what} = dps | heal | gear | team | all. */
+    /** Ставит прогон в очередь: {@code what} = dps | heal | gear | team | soulless | all. */
     public static void request(String what) {
         if (active != null) {
             LOGGER.info("{} пропуск: прогон уже идёт", TAG);
@@ -182,6 +183,7 @@ public final class CombatProbe {
         private boolean healReported;
         private boolean teamReported;
         private boolean gearReported;
+        private boolean soullessReported;
 
         Runner(String what) {
             this.what = what;
@@ -204,6 +206,18 @@ public final class CombatProbe {
             if (what.equals("team") || what.equals("all")) {
                 if (!teamReported) {
                     teamStep(player);
+                    return false;
+                }
+            }
+            if (what.equals("soulless") || what.equals("all")) {
+                if (!soullessReported) {
+                    // «Бесдушные основы»: проверка в живом мире — без реестров слотов,
+                    // датапака типов предметов и NBT-сохранения её не прогнать.
+                    int[] counters = new int[]{checks, failed};
+                    SoullessProbe.run(player, lines, counters);
+                    checks = counters[0];
+                    failed = counters[1];
+                    soullessReported = true;
                     return false;
                 }
             }
