@@ -37,6 +37,14 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      # Секундная проверка «Класс.КОНСТАНТА без импорта»: она ловит именно те
+      # ошибки, ради которых этот пайплайн и существует, и делает это до того,
+      # как тратить минуты на Gradle.
+      - name: Импорты (быстрая проверка)
+        id: imports
+        continue-on-error: true
+        run: python3 tools/verify/check_imports.py --all
+
       - uses: ./.github/actions/setup-build-env
         with:
           cache-read-only: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork }}
@@ -117,6 +125,10 @@ jobs:
       - name: Вердикт
         if: always()
         run: |
+          if [ "${{ steps.imports.outcome }}" != "success" ]; then
+            echo "::error::check_imports нашёл использование класса без импорта — это ошибка компиляции"
+            exit 1
+          fi
           if [ "${{ steps.compile.outputs.status }}" != "0" ]; then
             echo "::error::compileJava упал — подробности в комментарии PR"
             exit 1
