@@ -44,6 +44,11 @@ LOG = os.path.join(REPO, "run", "logs", "latest.log")
 
 class Runner:
     def __init__(self, outdir):
+        # Дисплей, на котором реально живёт клиент. Loom запускает runClient
+        # через собственный `xvfb-run --auto-servernum`, поэтому это НЕ тот
+        # дисплей, который поднимает run-in-xvfb.sh: его нужно найти перебором
+        # сокетов /tmp/.X11-unix и проверкой, есть ли там окно Minecraft.
+        self.display = os.environ.get("DISPLAY")
         self.outdir = outdir
         os.makedirs(outdir, exist_ok=True)
         self.journal = open(os.path.join(outdir, "steps.log"), "w", encoding="utf-8")
@@ -59,9 +64,17 @@ class Runner:
         self.journal.write(line + "\n")
         self.journal.flush()
 
-    def run(self, cmd, timeout=60):
+    def xenv(self, display=None):
+        env = dict(os.environ)
+        target = display or self.display
+        if target:
+            env["DISPLAY"] = target
+        return env
+
+    def run(self, cmd, timeout=60, display=None):
         try:
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout,
+                                    env=self.xenv(display))
             return result.returncode, (result.stdout or "") + (result.stderr or "")
         except FileNotFoundError:
             return 127, "нет команды: %s" % cmd[0]
@@ -80,12 +93,18 @@ class Runner:
         создано по логу, но в X его нет: видно, на чём стоит render thread
         (создание swapchain, ожидание события SDL, отрисовка кадра).
         """
-        code, out = self.run(["pgrep", "-f", "devlaunchinjector"])
-        pids = [line.strip() for line in out.splitlines() if line.strip().isdigit()]
-        if not pids:
-            self.note("jstack[%s]: процесс клиента не найден" % tag)
+        # pgrep -f находит и обёртку `/bin/sh /usr/bin/xvfb-run ... java ...`,
+        # и сам JVM: нужен второй (в его командной строке есть bin/java).
+        code, out = self.run(["pgrep", "-af", "devlaunchinjector"])
+        pid = ""
+        for line in out.splitlines():
+            parts = line.split(" ", 1)
+            if len(parts) == 2 and "bin/java" in parts[1] and not parts[1].startswith("/bin/sh"):
+                pid = parts[0]
+                break
+        if not pid:
+            self.note("jstack[%s]: JVM клиента не найден (pgrep: %s)" % (tag, out.strip()[:200]))
             return
-        pid = pids[0]
         jstack = os.environ.get("JAVA_HOME", "")
         jstack = os.path.join(jstack, "bin", "jstack") if jstack else "jstack"
         code, out = self.run([jstack, "-l", pid], timeout=120)
@@ -100,29 +119,58 @@ class Runner:
                 self.note("render thread:\n    " + "\n    ".join(l.strip() for l in lines[index:index + 12]))
                 break
 
+    def candidate_displays(self):
+        displays = []
+        try:
+            for name in sorted(os.listdir("/tmp/.X11-unix")):
+                if name.startswith("X") and name[1:].isdigit():
+                    displays.append(":" + name[1:])
+        except OSError:
+            pass
+        if os.environ.get("DISPLAY") and os.environ["DISPLAY"] not in displays:
+            displays.insert(0, os.environ["DISPLAY"])
+        return displays
+
+    def discover_display(self):
+        """
+        Ищет дисплей, на котором есть окно клиента. Возвращает True, если нашёл
+        и запомнил (self.display); перебирает все X-сокеты.
+        """
+        for display in self.candidate_displays():
+            for marker in (["--class", "Minecraft"], ["--name", "Minecraft"],
+                           ["--class", "minecraft"]):
+                code, out = self.run(["xdotool", "search"] + marker, display=display)
+                ids = [line.strip() for line in out.splitlines() if line.strip().isdigit()]
+                if ids:
+                    if display != self.display:
+                        self.note("клиент найден на дисплее %s (был %s)" % (display, self.display))
+                    self.display = display
+                    self.window = ids[-1]
+                    return True
+        return False
+
     def list_windows(self):
         """Диагностика: все окна с именем и геометрией (без WM их легко не найти)."""
         code, out = self.run(["xwininfo", "-root", "-tree"])
+        self.note("дисплей: %s" % self.display)
         lines = [line.strip() for line in out.splitlines() if '"' in line or "xwininfo" in line]
         if lines:
             self.note("окна на дисплее:\n    " + "\n    ".join(lines[:15]))
         return lines
 
     def find_window(self):
-        # Без оконного менеджера окно SDL не попадает под --onlyvisible, поэтому
-        # ищем без фильтра, сначала по классу, потом по имени.
-        for args in (["--class", "Minecraft"], ["--class", "minecraft"],
-                     ["--name", "Minecraft"], ["--name", "Age of Epoch"]):
-            code, out = self.run(["xdotool", "search"] + args)
-            ids = [line.strip() for line in out.splitlines() if line.strip().isdigit()]
-            if ids:
-                self.window = ids[-1]
-                code, name = self.run(["xdotool", "getwindowname", self.window])
-                code, geo = self.run(["xdotool", "getwindowgeometry", "--shell", self.window])
-                self.note("окно %s (%s): %s | %s" % (
-                    self.window, " ".join(args), name.strip(), geo.strip().replace("\n", " ")))
-                return True
-        return False
+        if not self.discover_display():
+            return False
+        code, name = self.run(["xdotool", "getwindowname", self.window])
+        code, geo = self.run(["xdotool", "getwindowgeometry", "--shell", self.window])
+        code, mapped = self.run(["xwininfo", "-id", self.window])
+        state = ""
+        for line in mapped.splitlines():
+            if "Map State" in line:
+                state = line.strip()
+        self.note("окно %s на %s: %s | %s | %s" % (
+            self.window, self.display, name.strip(), geo.strip().replace("\n", " "), state))
+        return True
 
     def focus(self):
         if not self.window and not self.find_window():
