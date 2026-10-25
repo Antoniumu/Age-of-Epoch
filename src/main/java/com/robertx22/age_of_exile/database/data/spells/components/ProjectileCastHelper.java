@@ -49,6 +49,14 @@ public class ProjectileCastHelper {
     public void cast() {
         Level world = caster.level();
 
+        if (!world.isClientSide()) {
+            // Аудит: если снаряд не появился вовсе, эта строка — единственный
+            // след того, что действие вообще запускалось.
+            com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.diag(
+                "diag_projenter spell=" + (data != null ? data.spell_id : "?")
+                    + " type=" + projectile + " count=" + projectilesAmount);
+        }
+
         float addYaw = 0;
 
         Vec3 posAdd = new Vec3(0, 0, 0);

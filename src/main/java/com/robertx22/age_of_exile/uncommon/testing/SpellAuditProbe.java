@@ -113,6 +113,12 @@ public final class SpellAuditProbe {
     private static final float AIM_PITCH = 30F;
 
     /**
+     * Порог «эффект есть»: столько единиц лечения/маны считается фоновым шумом
+     * (регенерация вида «+2 здоровья при тике» случается и без умения).
+     */
+    private static final float EFFECT_NOISE = 2.5F;
+
+    /**
      * Прогрев перед кастом: столько тиков прогон просто стоит и меряет
      * естественный прирост маны и здоровья.
      */
@@ -1309,9 +1315,16 @@ public final class SpellAuditProbe {
             boolean castDone = current.castTicks == 0 || phaseTicks > current.castTicks + 8;
             // Появление сущности (тотем, сфера) само по себе не повод закончить
             // наблюдение: эффект у таких умений идёт позже, по тикам.
-            boolean worthWaiting = current.damageDealt > 0 || current.healed > 0
+            boolean worthWaiting = current.damageDealt > 0 || current.healed > EFFECT_NOISE
                 || !current.effects.isEmpty() || current.shieldGained > 0
-                || current.itemsGained > 0 || current.manaGained > 0.5F;
+                || current.itemsGained > 0 || current.manaGained > EFFECT_NOISE;
+            // Умение что-то создало (тотем, зону, сферу) — досматриваем до конца
+            // окна: у таких умений эффект идёт по тикам и на истечении. Раньше
+            // окно закрывалось на 30-м тике, и урон «чёрной дыры» на 100-м тике
+            // просто не попадал в кадр, а в отчёте оставалось «нет попаданий».
+            if (current.spawned > 0) {
+                worthWaiting = false;
+            }
             if (phaseTicks >= maxObserve) {
                 return true;
             }
@@ -1489,10 +1502,10 @@ public final class SpellAuditProbe {
                 } catch (Throwable ignored) {
                 }
             }
-            if (current.heal && current.healed <= 0.5F) {
+            if (current.heal && current.healed <= EFFECT_NOISE) {
                 current.problem("лечение не сработало");
             }
-            if (current.mana && current.manaGained <= 0.5F) {
+            if (current.mana && current.manaGained <= EFFECT_NOISE) {
                 current.problem("мана не восстановилась");
             }
             if (current.shield && current.shieldGained <= 0.5F) {

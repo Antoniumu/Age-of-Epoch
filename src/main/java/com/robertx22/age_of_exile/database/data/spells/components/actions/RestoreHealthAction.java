@@ -30,12 +30,18 @@ public class RestoreHealthAction extends SpellAction {
                 int value = calc.getCalculatedValue(ctx.levelProvider);
 
                 for (LivingEntity t : targets) {
+                    float before = t.getHealth();
 
                     RestoreResourceEvent restore = EventBuilder.ofRestore(ctx.caster, t, ResourceType.health, RestoreType.heal, value)
                         .setSpell(ctx.calculatedSpellData.getSpell())
                         .build();
 
                     restore.Activate();
+                    com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.diag(String.format(
+                        java.util.Locale.ROOT,
+                        "diag_heal value=%d target=%s before=%.2f after=%.2f max=%.2f",
+                        value, t.getClass()
+                            .getSimpleName(), before, t.getHealth(), t.getMaxHealth()));
 
                 }
 
