@@ -393,6 +393,13 @@ public final class JeiRecipes {
                 uniqueSouls.add(JeiStacks.uniqueSoul(unique, tier, false));
                 uniqueSouls.add(JeiStacks.uniqueSoul(unique, tier, true));
             }
+            // Souls that carry a unique-item rarity without one concrete unique item
+            // (creative tab variants) salvage the same way.
+            for (GearRarity rarity : ExileDB.GearRarities().getList()) {
+                if (rarity != null && rarity.is_unique_item) {
+                    uniqueSouls.addAll(JeiStacks.soulsForRarity(rarity, tier, true));
+                }
+            }
             uniqueSouls = JeiStacks.clean(uniqueSouls);
             if (!uniqueSouls.isEmpty() && !uniqueOutputs.isEmpty()) {
                 List<Component> lines = new ArrayList<>();

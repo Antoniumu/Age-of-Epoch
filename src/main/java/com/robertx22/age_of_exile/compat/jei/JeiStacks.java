@@ -650,6 +650,26 @@ public final class JeiStacks {
         return list;
     }
 
+    /**
+     * Every rarity a stat soul can carry, including the unique and runeword rarities.
+     * Souls of those rarities exist in the creative tab (and unique souls drop in the
+     * world), so JEI pages about souls must accept them too; souls bound to one
+     * concrete unique item additionally get their own Unique Gear page.
+     */
+    public static List<GearRarity> soulRarities() {
+        List<GearRarity> list = new ArrayList<>();
+        try {
+            for (GearRarity rarity : ExileDB.GearRarities().getList()) {
+                if (rarity != null) {
+                    list.add(rarity);
+                }
+            }
+        } catch (Exception e) {
+            // registries not ready
+        }
+        return list;
+    }
+
     public static List<ItemStack> allNormalGearSamples(int tier) {
         List<ItemStack> list = new ArrayList<>();
         for (GearRarity rarity : normalRarities()) {
@@ -1010,7 +1030,7 @@ public final class JeiStacks {
      */
     public static List<ItemStack> soulsForSlot(String slot, int tier, boolean includeIdentified) {
         List<ItemStack> list = new ArrayList<>();
-        for (GearRarity rarity : normalRarities()) {
+        for (GearRarity rarity : soulRarities()) {
             ItemStack plain = soul(slot, rarity, tier, null, false);
             if (!plain.isEmpty()) {
                 list.add(plain);
