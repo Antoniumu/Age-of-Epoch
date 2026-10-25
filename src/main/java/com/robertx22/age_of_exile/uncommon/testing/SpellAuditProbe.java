@@ -112,6 +112,12 @@ public final class SpellAuditProbe {
     /** Наклон взгляда бота: снаряды должны падать на площадку с манекенами. */
     private static final float AIM_PITCH = 30F;
 
+    /**
+     * Прогрев перед кастом: столько тиков прогон просто стоит и меряет
+     * естественный прирост маны и здоровья.
+     */
+    private static final int WARMUP_TICKS = 10;
+
     /** Сколько строк трассировки снарядов писать на одно умение. */
     private static final int PROJECTILE_TRACES = 12;
 
@@ -305,6 +311,12 @@ public final class SpellAuditProbe {
         float manaGained;
         float shieldGained;
         int itemsGained;
+        /** Бафф действует только внутри зоны — прогону нужно в неё зайти. */
+        boolean zone;
+
+        /** Эффект, который умение требует на цели (детонатор холода и т.п.). */
+        String requiredEffect;
+
         final Set<String> effects = new LinkedHashSet<>();
         float moved;
         int spawned;
@@ -350,6 +362,11 @@ public final class SpellAuditProbe {
         private float manaAtCast;
         private float shieldAtCast;
         private int projectileTraces;
+        /** Естественный прирост за тик, до каста. Вычитается из эффекта умения. */
+        private float manaBaseRate;
+        private float healBaseRate;
+        private float baselineMana;
+        private float baselineHealth;
         private int itemsAtCast;
         private Set<String> playerEffectsAtCast = Set.of();
         private Set<String> playerVanillaAtCast = Set.of();
@@ -494,12 +511,22 @@ public final class SpellAuditProbe {
                     resetPlayer(player, level);
                     holdWeapon(player, spell);
                     spawnDummies(player, level);
+                    applyRequiredEffect(level);
                     snapshot(player, level);
                     SpellAuditState.setPhase("ПОДГОТОВКА");
                     phase = Phase.CAST;
                     phaseTicks = 0;
                 }
                 case CAST -> {
+                    // Сначала прогрев без заклинания. Мана и здоровье в моде
+                    // восстанавливаются сами; без этой паузы регенерация за время
+                    // наблюдения выдавала себя за эффект умения, и тотем, который
+                    // ничего не делает, «проходил» проверку.
+                    if (phaseTicks <= WARMUP_TICKS) {
+                        sampleBaseline(player);
+                        return false;
+                    }
+                    aimAtNearestDummy(player, level);
                     doCast(player);
                     phase = Phase.OBSERVE;
                     phaseTicks = 0;
@@ -568,9 +595,60 @@ public final class SpellAuditProbe {
             }
         }
 
+        /**
+         * Все части умения, включая вложенные «на попадание».
+         *
+         * <p>Партиклы и звуки попадания объявлены не в самой части, а в её
+         * дочерних частях ({@code addPerEntityHit}), поэтому обход только верхнего
+         * уровня выдавал ложное «нет партиклов» (например, у проклятий).
+         */
+        private List<ComponentPart> allParts(Spell spell) {
+            List<ComponentPart> parts = new ArrayList<>();
+            for (ComponentPart part : spell.getAttached()
+                .getAllComponents()) {
+                collectParts(part, parts);
+            }
+            return parts;
+        }
+
+        private void collectParts(ComponentPart part, List<ComponentPart> parts) {
+            if (part == null) {
+                return;
+            }
+            parts.add(part);
+            for (ComponentPart child : part.getPerEntityHit()) {
+                collectParts(child, parts);
+            }
+        }
+
         private void annotate(SpellResult result, Spell spell) {
             try {
-                for (ComponentPart part : spell.getAttached().getAllComponents()) {
+                for (ComponentPart part : allParts(spell)) {
+                    if (part != null && part.en_preds != null) {
+                        for (MapHolder pred : part.en_preds) {
+                            if (pred != null && "has_effect".equals(pred.type)) {
+                                try {
+                                    // Умение-детонатор (например «взрыв холода») бьёт
+                                    // только цели с эффектом. Прогон обязан сначала
+                                    // наложить этот эффект, иначе проверяется не
+                                    // умение, а отсутствие подготовки.
+                                    result.requiredEffect = pred.get(com.robertx22.age_of_exile.database.data.spells.map_fields.MapField.POTION_ID);
+                                } catch (Throwable ignored) {
+                                }
+                            }
+                        }
+                    }
+                    if (part != null && part.ifs != null) {
+                        for (MapHolder condition : part.ifs) {
+                            if (condition != null && condition.type != null
+                                && condition.type.equals("is_en_in_radius")) {
+                                // Бафф работает только пока стоишь в зоне: прогон
+                                // обязан в неё зайти, иначе «эффекта нет» — это
+                                // не поломка умения, а незаход в зону.
+                                result.zone = true;
+                            }
+                        }
+                    }
                     if (part == null || part.acts == null) {
                         continue;
                     }
@@ -638,7 +716,8 @@ public final class SpellAuditProbe {
                 result.note("нет звука");
             }
             if (!result.damage && !result.heal && !result.mana && !result.effect
-                && !result.move && !result.item && !result.summon && !result.utility) {
+                && !result.move && !result.item && !result.summon && !result.utility
+                && !result.shield) {
                 result.problem("ничего не делает (нет урона/лечения/эффекта/движения)");
             }
         }
@@ -847,6 +926,75 @@ public final class SpellAuditProbe {
             }
         }
 
+        /**
+         * Подготовка цели: если умение срабатывает только по существам с
+         * эффектом (детонаторы холода и подобное), эффект накладывается на
+         * манекены до каста — как это сделал бы игрок.
+         */
+        private void applyRequiredEffect(ServerLevel level) {
+            if (current.requiredEffect == null || current.requiredEffect.isEmpty()) {
+                return;
+            }
+            try {
+                net.minecraft.world.effect.MobEffect effect = net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.getValue(
+                    Identifier.parse(current.requiredEffect));
+                if (effect == null) {
+                    return;
+                }
+                for (UUID id : dummies) {
+                    Entity entity = level.getEntity(id);
+                    if (entity instanceof LivingEntity living) {
+                        living.addEffect(new MobEffectInstance(effect, 20 * 20, 0, false, true));
+                    }
+                }
+                current.note("подготовка: на манекены наложен " + current.requiredEffect);
+                writeLog(TAG + " prepare_effect spell=" + current.id + " effect=" + current.requiredEffect);
+            } catch (Throwable error) {
+                current.note("не удалось наложить эффект подготовки: " + error);
+            }
+        }
+
+        /**
+         * Наводит взгляд на ближайший манекен.
+         *
+         * <p>Раньше бот смотрел строго на север с постоянным наклоном. Снаряды и
+         * «эффект в точку взгляда» уходили мимо манекенов, и в отчёте это
+         * выглядело как поломка умения: урон не нанесён, эффекты не наложены.
+         * Живой игрок целится в цель — вот и бот целится: считаем yaw/pitch от
+         * глаз до центра ближайшего манекена.
+         */
+        private void aimAtNearestDummy(ServerPlayer player, ServerLevel level) {
+            LivingEntity target = null;
+            double best = Double.MAX_VALUE;
+            for (UUID id : dummies) {
+                Entity entity = level.getEntity(id);
+                if (entity instanceof LivingEntity living && living.isAlive()) {
+                    double distance = living.distanceToSqr(player);
+                    if (distance < best) {
+                        best = distance;
+                        target = living;
+                    }
+                }
+            }
+            if (target == null) {
+                player.setYRot(0F);
+                player.setYHeadRot(0F);
+                player.setXRot(AIM_PITCH);
+                return;
+            }
+            net.minecraft.world.phys.Vec3 eyes = player.getEyePosition();
+            double dx = target.getX() - eyes.x;
+            double dz = target.getZ() - eyes.z;
+            double dy = target.getY() + target.getBbHeight() * 0.5D - eyes.y;
+            double horizontal = Math.sqrt(dx * dx + dz * dz);
+            float yaw = (float) Math.toDegrees(Math.atan2(-dx, dz));
+            float pitch = (float) (horizontal < 0.001D ? 0D
+                : Math.toDegrees(Math.atan2(-dy, horizontal)));
+            player.setYRot(yaw);
+            player.setYHeadRot(yaw);
+            player.setXRot(pitch);
+        }
+
         private void spawnDummies(ServerPlayer player, ServerLevel level) {
             clearDummies(level);
             double yaw = Math.toRadians(player.getYRot());
@@ -980,6 +1128,29 @@ public final class SpellAuditProbe {
             SpellAuditState.setMetrics("");
         }
 
+        /**
+         * Замер естественного восстановления: сколько маны и здоровья
+         * прибавляется за тик, если ничего не применять.
+         */
+        private void sampleBaseline(ServerPlayer player) {
+            try {
+                EntityData data = Load.Unit(player);
+                float mana = data.getResources()
+                    .getMana();
+                if (phaseTicks <= 1) {
+                    baselineMana = mana;
+                    baselineHealth = player.getHealth();
+                    manaBaseRate = 0;
+                    healBaseRate = 0;
+                    return;
+                }
+                int ticks = phaseTicks - 1;
+                manaBaseRate = Math.max(0F, (mana - baselineMana) / ticks);
+                healBaseRate = Math.max(0F, (player.getHealth() - baselineHealth) / ticks);
+            } catch (Throwable ignored) {
+            }
+        }
+
         /** Подробности площадки: без них непонятно, «не попал» или «не работает». */
         private void diagnostics(ServerLevel level, ServerPlayer player, String tag) {
             StringBuilder text = new StringBuilder();
@@ -1079,10 +1250,15 @@ public final class SpellAuditProbe {
                 }
                 entry.setValue(now);
             }
-            current.healed = Math.max(current.healed, player.getHealth() - playerHealthAtCast);
+            // Из прироста вычитаем то, что набежало бы само по себе.
+            int elapsed = phaseTicks + WARMUP_TICKS;
+            float healedRaw = player.getHealth() - playerHealthAtCast;
+            current.healed = Math.max(current.healed, healedRaw - healBaseRate * elapsed);
             try {
                 EntityData data = Load.Unit(player);
-                current.manaGained = Math.max(current.manaGained, data.getResources().getMana() - manaAtCast);
+                float manaRaw = data.getResources()
+                    .getMana() - manaAtCast;
+                current.manaGained = Math.max(current.manaGained, manaRaw - manaBaseRate * elapsed);
                 current.shieldGained = Math.max(current.shieldGained,
                     data.getResources().getShield() - shieldAtCast);
                 for (String effect : data.getStatusEffectsData().exileMap.keySet()) {
@@ -1123,6 +1299,7 @@ public final class SpellAuditProbe {
             current.itemsGained = Math.max(current.itemsGained, countItems(player) - itemsAtCast);
             current.spawned = Math.max(current.spawned, countSpawned(level, player));
             traceProjectiles(level, player);
+            stepIntoZone(level, player);
             SpellAuditState.setMetrics(metricsLine());
             SpellAuditState.setPhase(current.castTicks > 0 && phaseTicks <= current.castTicks
                 ? "ПРИМЕНЕНИЕ" : "НАБЛЮДЕНИЕ");
@@ -1137,6 +1314,41 @@ public final class SpellAuditProbe {
                 return true;
             }
             return castDone && worthWaiting && phaseTicks > 30;
+        }
+
+        /**
+         * Заход в зону.
+         *
+         * <p>Часть умений работает только пока стоишь внутри созданной зоны
+         * (магический круг). Живой игрок в неё заходит; прогон делает то же самое —
+         * один раз, на 15-м тике наблюдения, чтобы в кадре было видно и зону,
+         * и наложенный бафф.
+         */
+        private void stepIntoZone(ServerLevel level, ServerPlayer player) {
+            if (!current.zone || phaseTicks != 15) {
+                return;
+            }
+            Entity zone = null;
+            double best = Double.MAX_VALUE;
+            for (Entity entity : level.getEntitiesOfClass(Entity.class,
+                player.getBoundingBox()
+                    .inflate(16D),
+                e -> !(e instanceof Player) && !dummies.contains(e.getUUID()))) {
+                double distance = entity.distanceToSqr(player);
+                if (distance < best) {
+                    best = distance;
+                    zone = entity;
+                }
+            }
+            if (zone == null || best < 4D) {
+                return;
+            }
+            double x = zone.getX();
+            double z = zone.getZ();
+            double y = zone.getY();
+            teleport(player, level, x, Math.max(y, player.getY()), z);
+            writeLog(String.format(Locale.ROOT,
+                "%s zone_step spell=%s pos=%.1f/%.1f/%.1f", TAG, current.id, x, y, z));
         }
 
         /**

@@ -29,9 +29,21 @@ public class GiveShieldAction extends SpellAction {
             int seconds = data.get(SECONDS)
                 .intValue();
 
+            // Диагностика аудита: видно и «никому не досталось» (пустой список
+            // целей), и «досталось, но щит не появился».
+            com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.diag(
+                "diag_giveshield targets=" + targets.size() + " value=" + value + " seconds=" + seconds
+                    + " caster=" + ctx.caster.getClass()
+                    .getSimpleName());
+
             targets.forEach(x -> {
                 GiveShieldEvent effect = new GiveShieldEvent(value, seconds, ctx.caster, x);
                 effect.Activate();
+                com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.diag(
+                    "diag_giveshield_after target=" + x.getClass()
+                        .getSimpleName() + " total=" + com.robertx22.age_of_exile.uncommon.datasaving.Load.Unit(x)
+                        .getResources()
+                        .getShield());
             });
 
         }

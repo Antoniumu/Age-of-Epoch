@@ -374,9 +374,18 @@ public class DamageEvent extends EffectEvent {
                 // цели. Если событие есть, а здоровье не падает — проблема в
                 // применении, а не в расчёте.
                 com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.noteDamageEvent(vanillaDamage);
+                // Диагностика аудита: кому именно достался урон. Без цели
+                // «события есть, а здоровье манекенов не изменилось» не отличить
+                // от «урон ушёл в другую сущность».
+                com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.diag(String.format(java.util.Locale.ROOT,
+                    "diag_damage target=%s amount=%.4f before=%.4f", target.getClass()
+                        .getSimpleName(), vanillaDamage, target.getHealth()));
+                boolean hurt = false;
                 if (target.level() instanceof net.minecraft.server.level.ServerLevel sl) {
-                    target.hurtServer(sl, dmgsource, vanillaDamage);
+                    hurt = target.hurtServer(sl, dmgsource, vanillaDamage);
                 }
+                com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.diag(String.format(java.util.Locale.ROOT,
+                    "diag_damage_after accepted=%s after=%.4f", hurt, target.getHealth()));
                 LivingEntityAccesor.setInvulnerableTime(target, inv);
             }
 

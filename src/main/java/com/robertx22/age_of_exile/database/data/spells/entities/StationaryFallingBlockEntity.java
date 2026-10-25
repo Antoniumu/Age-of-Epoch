@@ -96,6 +96,14 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
 
         this.age++;
 
+        // Диагностика аудита: видно, что «блок» заклинания (тотем, зона, круг)
+        // действительно появился и на каком расстоянии он от кастера. Без этого
+        // «эффект не сработал» одинаково выглядит и для «блок не появился», и для
+        // «блок появился там, где никого нет».
+        if (this.age == 1 || this.age % 20 == 0) {
+            auditDiag();
+        }
+
         if (entityData.get(IS_FALLING)) {
             if (!this.isNoGravity()) {
 
@@ -136,6 +144,22 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
 
         if (this.age > lifespan || this.getY() < this.level().getMinY() - 32) {
             this.remove(Entity.RemovalReason.DISCARDED);
+        }
+    }
+
+    private void auditDiag() {
+        if (this.level().isClientSide()) {
+            return;
+        }
+        try {
+            EntitySavedSpellData data = this.getSpellData();
+            LivingEntity caster = data == null ? null : data.getCaster(this.level());
+            com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.diag(String.format(java.util.Locale.ROOT,
+                "diag_block spell=%s name=%s age=%d pos=%.2f/%.2f/%.2f dist=%.2f",
+                data == null ? "?" : data.spell_id, getScoreboardName(), this.age,
+                this.getX(), this.getY(), this.getZ(),
+                caster == null ? -1D : Math.sqrt(caster.distanceToSqr(this))));
+        } catch (Throwable ignored) {
         }
     }
 

@@ -65,6 +65,9 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
 
     public Entity ignoreEntity;
 
+    /** Цели, которые этот снаряд уже задел (пробивающие снаряды бьют один раз). */
+    private final java.util.Set<UUID> hitTargets = new java.util.HashSet<>();
+
     /**
      * Строка диагностики для аудита заклинаний (пишется только во время прогона и
      * только на сервере). Нужна, чтобы в отчёте «нет попаданий» можно было
@@ -78,7 +81,7 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
         try {
             com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.diag(what + " spell="
                 + (spellData == null ? "?" : spellData.spell_id)
-                + " t=" + this.tickCount
+                + " uuid=" + this.getUUID() + " t=" + this.tickCount
                 + String.format(java.util.Locale.ROOT, " pos=%.2f/%.2f/%.2f d=%.2f/%.2f/%.2f",
                 this.getX(), this.getY(), this.getZ(),
                 this.getDeltaMovement().x, this.getDeltaMovement().y, this.getDeltaMovement().z));
@@ -423,11 +426,15 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
             }
 
             if (caster != null) {
-                auditDiag("diag_projimpact target=" + en.getClass()
+                auditDiag("diag_projimpact uuid=" + this.getUUID() + " target=" + en.getClass()
                     .getSimpleName() + " already=" + Load.spells(caster)
-                    .alreadyHit(this, en));
-                if (!Load.spells(caster)
-                    .alreadyHit(this, en)) {
+                    .alreadyHit(this, en) + " local_hit=" + this.hitTargets.contains(en.getUUID()));
+                // Дедупликация «одна цель — одно попадание» держится в самом
+                // снаряде, а не в карте игрока по UUID снаряда: карта ключуется
+                // UUID снаряда, и если два снаряда почему-то получили одинаковый
+                // UUID, второй молча не наносил урон (умение «не работает», хотя
+                // попадание есть). Свой набор целей от этого не зависит.
+                if (this.hitTargets.add(en.getUUID())) {
                     this.getSpellData()
                         .getSpell()
                         .getAttached()
