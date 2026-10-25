@@ -1,0 +1,1620 @@
+{
+  "spells": [
+    {
+      "id": "arrow_storm",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/RangerSpells.java",
+      "schools": [
+        "hunting"
+      ],
+      "channels": {
+        "particles": 4,
+        "sound": 2,
+        "damage": 1,
+        "movement": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "astral_totem",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/impl/TotemSpells.java",
+      "schools": [
+        "nature"
+      ],
+      "channels": {
+        "particles": 3,
+        "sound": 2,
+        "mana": 1,
+        "summon": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "awaken_mana",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/HolySpells.java",
+      "schools": [
+        "divine"
+      ],
+      "channels": {
+        "particles": 8,
+        "sound": 1,
+        "mana": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "backflip",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/RangerSpells.java",
+      "schools": [
+        "hunting"
+      ],
+      "channels": {
+        "particles": 6,
+        "sound": 1,
+        "effect": 1,
+        "movement": 2
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "banish",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/HolySpells.java",
+      "schools": [
+        "divine"
+      ],
+      "channels": {
+        "particles": 12,
+        "sound": 2,
+        "effect": 1,
+        "movement": 1,
+        "summon": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "black_hole",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/impl/IntSpells.java",
+      "schools": [
+        "water"
+      ],
+      "channels": {
+        "particles": 4,
+        "sound": 1,
+        "damage": 1,
+        "movement": 1,
+        "summon": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "charge",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/HolySpells.java",
+      "schools": [
+        "divine"
+      ],
+      "channels": {
+        "particles": 16,
+        "sound": 2,
+        "damage": 1,
+        "movement": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "charged_bolt",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/RangerSpells.java",
+      "schools": [
+        "hunting"
+      ],
+      "channels": {
+        "particles": 6,
+        "sound": 3,
+        "damage": 1,
+        "effect": 1,
+        "movement": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "chill_eruption",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/WaterSpells.java",
+      "schools": [
+        "water"
+      ],
+      "channels": {
+        "particles": 6,
+        "sound": 3,
+        "damage": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "chilling_field",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/WaterSpells.java",
+      "schools": [
+        "water"
+      ],
+      "channels": {
+        "particles": 2,
+        "sound": 2,
+        "damage": 1,
+        "effect": 1,
+        "summon": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "conjure_ender_chest",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/impl/UtilitySpells.java",
+      "schools": [
+        "nature"
+      ],
+      "channels": {
+        "particles": 2,
+        "sound": 1,
+        "container": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "curse_of_agony",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/impl/CurseSpells.java",
+      "schools": [
+        "nature"
+      ],
+      "channels": {
+        "particles": 2,
+        "sound": 1,
+        "damage": 1,
+        "effect": 1,
+        "summon": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "curse_of_despair",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/impl/CurseSpells.java",
+      "schools": [
+        "nature"
+      ],
+      "channels": {
+        "particles": 2,
+        "sound": 1,
+        "damage": 1,
+        "effect": 1,
+        "summon": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "curse_of_weak",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/impl/CurseSpells.java",
+      "schools": [
+        "nature"
+      ],
+      "channels": {
+        "particles": 2,
+        "sound": 1,
+        "damage": 1,
+        "effect": 1,
+        "summon": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "dash",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/RangerSpells.java",
+      "schools": [
+        "hunting"
+      ],
+      "channels": {
+        "particles": 6,
+        "sound": 2,
+        "effect": 1,
+        "movement": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "draconic_blood",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/FireSpells.java",
+      "schools": [
+        "fire"
+      ],
+      "channels": {
+        "particles": 6,
+        "sound": 1,
+        "effect": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "entangling_seed",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/NatureSpells.java",
+      "schools": [
+        "nature"
+      ],
+      "channels": {
+        "particles": 4,
+        "sound": 2,
+        "effect": 1,
+        "movement": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "execute",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/impl/DexSpells.java",
+      "schools": [
+        "hunting"
+      ],
+      "channels": {
+        "particles": 7,
+        "sound": 1,
+        "damage": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "explosive_arrow",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/RangerSpells.java",
+      "schools": [
+        "hunting"
+      ],
+      "channels": {
+        "particles": 4,
+        "sound": 3,
+        "damage": 1,
+        "effect": 1,
+        "movement": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "fire_nova",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/FireSpells.java",
+      "schools": [
+        "fire"
+      ],
+      "channels": {
+        "particles": 10,
+        "sound": 1,
+        "damage": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "fire_trap",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/RangerSpells.java",
+      "schools": [
+        "hunting"
+      ],
+      "channels": {
+        "particles": 3,
+        "sound": 2,
+        "damage": 1,
+        "movement": 1,
+        "summon": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "fire_weapon",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/FireSpells.java",
+      "schools": [
+        "fire"
+      ],
+      "channels": {
+        "particles": 6,
+        "sound": 1,
+        "effect": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "fireball",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/FireSpells.java",
+      "schools": [
+        "fire"
+      ],
+      "channels": {
+        "particles": 8,
+        "sound": 2,
+        "damage": 1,
+        "movement": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "flame_strike",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/FireSpells.java",
+      "schools": [
+        "fire"
+      ],
+      "channels": {
+        "particles": 3,
+        "sound": 1,
+        "damage": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "frost_armor",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/WaterSpells.java",
+      "schools": [
+        "water"
+      ],
+      "channels": {
+        "particles": 6,
+        "sound": 1,
+        "effect": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "frost_nova",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/WaterSpells.java",
+      "schools": [
+        "water"
+      ],
+      "channels": {
+        "particles": 4,
+        "sound": 3,
+        "damage": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "frost_trap",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/RangerSpells.java",
+      "schools": [
+        "hunting"
+      ],
+      "channels": {
+        "particles": 3,
+        "sound": 2,
+        "damage": 1,
+        "movement": 1,
+        "summon": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "frostball",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/WaterSpells.java",
+      "schools": [
+        "water"
+      ],
+      "channels": {
+        "particles": 4,
+        "sound": 1,
+        "damage": 1,
+        "movement": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "gong_strike",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/HolySpells.java",
+      "schools": [
+        "divine"
+      ],
+      "channels": {
+        "particles": 8,
+        "sound": 2,
+        "damage": 1,
+        "effect": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "guard_totem",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/impl/TotemSpells.java",
+      "schools": [
+        "nature"
+      ],
+      "channels": {
+        "particles": 3,
+        "sound": 2,
+        "effect": 1,
+        "summon": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "healing_aura",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/HolySpells.java",
+      "schools": [
+        "divine"
+      ],
+      "channels": {
+        "particles": 8,
+        "sound": 2,
+        "heal": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "heart_of_ice",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/WaterSpells.java",
+      "schools": [
+        "water"
+      ],
+      "channels": {
+        "particles": 6,
+        "sound": 2,
+        "heal": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "hunter_potion",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/RangerSpells.java",
+      "schools": [
+        "hunting"
+      ],
+      "channels": {
+        "particles": 4,
+        "sound": 1,
+        "heal": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "ice_comet",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/WaterSpells.java",
+      "schools": [
+        "water"
+      ],
+      "channels": {
+        "particles": 8,
+        "sound": 2,
+        "damage": 1,
+        "summon": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "ice_weapon",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/WaterSpells.java",
+      "schools": [
+        "water"
+      ],
+      "channels": {
+        "particles": 6,
+        "sound": 1,
+        "effect": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "jump_field",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/impl/UtilitySpells.java",
+      "schools": [
+        "hunting"
+      ],
+      "channels": {
+        "particles": 2,
+        "sound": 2,
+        "movement": 1,
+        "summon": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "levitation",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/impl/UtilitySpells.java",
+      "schools": [
+        "hunting"
+      ],
+      "channels": {
+        "particles": 4,
+        "sound": 1,
+        "movement": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "mage_circle",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/WaterSpells.java",
+      "schools": [
+        "water"
+      ],
+      "channels": {
+        "particles": 2,
+        "sound": 2,
+        "effect": 1,
+        "movement": 1,
+        "summon": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "make_arrows",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/RangerSpells.java",
+      "schools": [
+        "hunting"
+      ],
+      "channels": {
+        "particles": 6,
+        "sound": 1,
+        "item": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "mark_for_death",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/impl/DexSpells.java",
+      "schools": [
+        "hunting"
+      ],
+      "channels": {
+        "particles": 6,
+        "sound": 1,
+        "effect": 5,
+        "movement": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "meteor",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/FireSpells.java",
+      "schools": [
+        "fire"
+      ],
+      "channels": {
+        "particles": 18,
+        "sound": 2,
+        "damage": 1,
+        "summon": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "nature_balm",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/NatureSpells.java",
+      "schools": [
+        "nature"
+      ],
+      "channels": {
+        "particles": 6,
+        "sound": 1,
+        "effect": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "night_vision",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/RangerSpells.java",
+      "schools": [
+        "hunting"
+      ],
+      "channels": {
+        "particles": 2,
+        "sound": 1,
+        "effect": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "nourishment",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/WaterSpells.java",
+      "schools": [
+        "water"
+      ],
+      "channels": {
+        "particles": 4,
+        "sound": 2,
+        "effect": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "overload",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/FireSpells.java",
+      "schools": [
+        "fire"
+      ],
+      "channels": {
+        "particles": 6,
+        "sound": 1,
+        "effect": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "poison_arrow",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/RangerSpells.java",
+      "schools": [
+        "hunting"
+      ],
+      "channels": {
+        "particles": 4,
+        "sound": 3,
+        "damage": 1,
+        "effect": 2,
+        "movement": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "poison_ball",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/NatureSpells.java",
+      "schools": [
+        "nature"
+      ],
+      "channels": {
+        "particles": 4,
+        "sound": 1,
+        "damage": 1,
+        "movement": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "poison_cloud",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/NatureSpells.java",
+      "schools": [
+        "nature"
+      ],
+      "channels": {
+        "particles": 4,
+        "sound": 2,
+        "damage": 1,
+        "effect": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "poison_trap",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/RangerSpells.java",
+      "schools": [
+        "hunting"
+      ],
+      "channels": {
+        "particles": 3,
+        "sound": 2,
+        "damage": 1,
+        "movement": 1,
+        "summon": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "poisoned_weapons",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/NatureSpells.java",
+      "schools": [
+        "nature"
+      ],
+      "channels": {
+        "particles": 6,
+        "sound": 1,
+        "effect": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "power_chord",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/impl/SongSpells.java",
+      "schools": [
+        "divine"
+      ],
+      "channels": {
+        "particles": 4,
+        "sound": 1,
+        "damage": 1,
+        "effect": 1,
+        "movement": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "pull",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/HolySpells.java",
+      "schools": [
+        "divine"
+      ],
+      "channels": {
+        "particles": 4,
+        "sound": 1,
+        "damage": 1,
+        "effect": 2,
+        "movement": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "recoil_shot",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/RangerSpells.java",
+      "schools": [
+        "hunting"
+      ],
+      "channels": {
+        "particles": 2,
+        "sound": 2,
+        "damage": 1,
+        "effect": 1,
+        "movement": 2
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "refresh",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/NatureSpells.java",
+      "schools": [
+        "nature"
+      ],
+      "channels": {
+        "particles": 6,
+        "sound": 2,
+        "refresh": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "rejuv_totem",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/impl/TotemSpells.java",
+      "schools": [
+        "nature"
+      ],
+      "channels": {
+        "particles": 3,
+        "sound": 2,
+        "heal": 1,
+        "summon": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "shooting_star",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/HolySpells.java",
+      "schools": [
+        "divine"
+      ],
+      "channels": {
+        "particles": 14,
+        "sound": 1,
+        "heal": 4,
+        "movement": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "shout_warn",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/HolySpells.java",
+      "schools": [
+        "divine"
+      ],
+      "channels": {
+        "particles": 6,
+        "sound": 1,
+        "effect": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "shred",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/impl/StrSpells.java",
+      "schools": [
+        "hunting"
+      ],
+      "channels": {
+        "particles": 11,
+        "sound": 1,
+        "damage": 1,
+        "effect": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "smoke_bomb",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/RangerSpells.java",
+      "schools": [
+        "hunting"
+      ],
+      "channels": {
+        "particles": 4,
+        "sound": 1,
+        "effect": 1,
+        "aggro": 2
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "song_of_perseverance",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/HolySpells.java",
+      "schools": [
+        "divine"
+      ],
+      "channels": {
+        "particles": 8,
+        "sound": 1,
+        "effect": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "song_of_valor",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/HolySpells.java",
+      "schools": [
+        "divine"
+      ],
+      "channels": {
+        "particles": 8,
+        "sound": 1,
+        "effect": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "song_of_vigor",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/HolySpells.java",
+      "schools": [
+        "divine"
+      ],
+      "channels": {
+        "particles": 8,
+        "sound": 1,
+        "effect": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "taunt",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/HolySpells.java",
+      "schools": [
+        "divine"
+      ],
+      "channels": {
+        "particles": 8,
+        "sound": 1,
+        "aggro": 2
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "teleport",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/impl/IntSpells.java",
+      "schools": [
+        "water"
+      ],
+      "channels": {
+        "particles": 2,
+        "sound": 1,
+        "movement": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "test_command",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/impl/TestSpells.java",
+      "schools": [],
+      "channels": {
+        "particles": 6,
+        "sound": 2,
+        "damage": 1,
+        "movement": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "the_hunt",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/RangerSpells.java",
+      "schools": [
+        "hunting"
+      ],
+      "channels": {
+        "particles": 6,
+        "sound": 1,
+        "effect": 2
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "thorn_armor",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/NatureSpells.java",
+      "schools": [
+        "nature"
+      ],
+      "channels": {
+        "particles": 6,
+        "sound": 1,
+        "effect": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "tidal_strike",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/WaterSpells.java",
+      "schools": [
+        "water"
+      ],
+      "channels": {
+        "particles": 7,
+        "sound": 1,
+        "damage": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "undying_will",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/HolySpells.java",
+      "schools": [
+        "divine"
+      ],
+      "channels": {
+        "particles": 8,
+        "sound": 1,
+        "effect": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "vamp_blood",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/FireSpells.java",
+      "schools": [
+        "fire"
+      ],
+      "channels": {
+        "particles": 6,
+        "sound": 1,
+        "effect": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "water_breath",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/WaterSpells.java",
+      "schools": [
+        "water"
+      ],
+      "channels": {
+        "particles": 2,
+        "sound": 1,
+        "effect": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "whirlwind",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/HolySpells.java",
+      "schools": [
+        "divine"
+      ],
+      "channels": {
+        "particles": 12,
+        "sound": 1,
+        "damage": 1,
+        "effect": 1
+      },
+      "problems": [],
+      "warnings": []
+    },
+    {
+      "id": "wish",
+      "file": "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/schools/HolySpells.java",
+      "schools": [
+        "divine"
+      ],
+      "channels": {
+        "particles": 8,
+        "sound": 2,
+        "heal": 1
+      },
+      "problems": [],
+      "warnings": []
+    }
+  ],
+  "schools": {
+    "divine": [
+      {
+        "kind": "spell",
+        "ref": "HolySpells.HEALING_AURA_ID",
+        "id": "healing_aura",
+        "x": 0,
+        "y": 0
+      },
+      {
+        "kind": "spell",
+        "ref": "HolySpells.GONG_STRIKE_ID",
+        "id": "gong_strike",
+        "x": 2,
+        "y": 0
+      },
+      {
+        "kind": "spell",
+        "ref": "HolySpells.WHIRLWIND",
+        "id": "whirlwind",
+        "x": 6,
+        "y": 1
+      },
+      {
+        "kind": "spell",
+        "ref": "HolySpells.CHARGE_ID",
+        "id": "charge",
+        "x": 4,
+        "y": 1
+      },
+      {
+        "kind": "spell",
+        "ref": "HolySpells.SHOOTING_STAR",
+        "id": "shooting_star",
+        "x": 1,
+        "y": 2
+      },
+      {
+        "kind": "spell",
+        "ref": "HolySpells.UNDYING_WILL",
+        "id": "undying_will",
+        "x": 3,
+        "y": 2
+      },
+      {
+        "kind": "spell",
+        "ref": "HolySpells.PULL",
+        "id": "pull",
+        "x": 8,
+        "y": 3
+      },
+      {
+        "kind": "spell",
+        "ref": "HolySpells.INSPIRATION",
+        "id": "awaken_mana",
+        "x": 7,
+        "y": 4
+      },
+      {
+        "kind": "spell",
+        "ref": "HolySpells.HYMN_OF_PERSERVANCE",
+        "id": "song_of_perseverance",
+        "x": 1,
+        "y": 4
+      },
+      {
+        "kind": "spell",
+        "ref": "HolySpells.HYMN_OF_VALOR",
+        "id": "song_of_valor",
+        "x": 2,
+        "y": 4
+      },
+      {
+        "kind": "spell",
+        "ref": "HolySpells.HYMN_OF_VIGOR",
+        "id": "song_of_vigor",
+        "x": 3,
+        "y": 4
+      },
+      {
+        "kind": "spell",
+        "ref": "HolySpells.TAUNT",
+        "id": "taunt",
+        "x": 5,
+        "y": 5
+      },
+      {
+        "kind": "spell",
+        "ref": "HolySpells.BANISH",
+        "id": "banish",
+        "x": 10,
+        "y": 5
+      },
+      {
+        "kind": "spell",
+        "ref": "HolySpells.SHOUT_WARN",
+        "id": "shout_warn",
+        "x": 5,
+        "y": 0
+      },
+      {
+        "kind": "spell",
+        "ref": "\"power_chord\"",
+        "id": "power_chord",
+        "x": 9,
+        "y": 4
+      },
+      {
+        "kind": "spell",
+        "ref": "HolySpells.WISH",
+        "id": "wish",
+        "x": 3,
+        "y": 6
+      }
+    ],
+    "hunting": [
+      {
+        "kind": "spell",
+        "ref": "RangerSpells.ARROW_STORM",
+        "id": "arrow_storm",
+        "x": 0,
+        "y": 0
+      },
+      {
+        "kind": "spell",
+        "ref": "RangerSpells.MAKE_ARROWS",
+        "id": "make_arrows",
+        "x": 10,
+        "y": 0
+      },
+      {
+        "kind": "spell",
+        "ref": "RangerSpells.DASH_ID",
+        "id": "dash",
+        "x": 5,
+        "y": 1
+      },
+      {
+        "kind": "spell",
+        "ref": "RangerSpells.HUNTER_POTION",
+        "id": "hunter_potion",
+        "x": 10,
+        "y": 1
+      },
+      {
+        "kind": "spell",
+        "ref": "RangerSpells.THE_HUNT",
+        "id": "the_hunt",
+        "x": 10,
+        "y": 2
+      },
+      {
+        "kind": "spell",
+        "ref": "RangerSpells.POISON_ARROW",
+        "id": "poison_arrow",
+        "x": 2,
+        "y": 2
+      },
+      {
+        "kind": "spell",
+        "ref": "RangerSpells.SMOKE_BOMB",
+        "id": "smoke_bomb",
+        "x": 7,
+        "y": 2
+      },
+      {
+        "kind": "spell",
+        "ref": "RangerSpells.CHARGED_BOLT",
+        "id": "charged_bolt",
+        "x": 0,
+        "y": 3
+      },
+      {
+        "kind": "spell",
+        "ref": "RangerSpells.BACKFLIP",
+        "id": "backflip",
+        "x": 4,
+        "y": 3
+      },
+      {
+        "kind": "spell",
+        "ref": "RangerSpells.FIRE_TRAP",
+        "id": "fire_trap",
+        "x": 6,
+        "y": 4
+      },
+      {
+        "kind": "spell",
+        "ref": "RangerSpells.FROST_TRAP",
+        "id": "frost_trap",
+        "x": 7,
+        "y": 4
+      },
+      {
+        "kind": "spell",
+        "ref": "RangerSpells.POISON_TRAP",
+        "id": "poison_trap",
+        "x": 8,
+        "y": 4
+      },
+      {
+        "kind": "spell",
+        "ref": "RangerSpells.NIGHT_VISION",
+        "id": "night_vision",
+        "x": 10,
+        "y": 4
+      },
+      {
+        "kind": "spell",
+        "ref": "RangerSpells.EXPLOSIVE_ARROW_ID",
+        "id": "explosive_arrow",
+        "x": 2,
+        "y": 5
+      },
+      {
+        "kind": "spell",
+        "ref": "RangerSpells.RECOIL_SHOT",
+        "id": "recoil_shot",
+        "x": 3,
+        "y": 3
+      },
+      {
+        "kind": "spell",
+        "ref": "\"mark_for_death\"",
+        "id": "mark_for_death",
+        "x": 3,
+        "y": 2
+      },
+      {
+        "kind": "spell",
+        "ref": "\"execute\"",
+        "id": "execute",
+        "x": 5,
+        "y": 4
+      },
+      {
+        "kind": "spell",
+        "ref": "\"shred\"",
+        "id": "shred",
+        "x": 1,
+        "y": 3
+      },
+      {
+        "kind": "spell",
+        "ref": "\"jump_field\"",
+        "id": "jump_field",
+        "x": 0,
+        "y": 1
+      },
+      {
+        "kind": "spell",
+        "ref": "\"levitation\"",
+        "id": "levitation",
+        "x": 1,
+        "y": 4
+      }
+    ],
+    "nature": [
+      {
+        "kind": "spell",
+        "ref": "NatureSpells.POISONBALL_ID",
+        "id": "poison_ball",
+        "x": 0,
+        "y": 0
+      },
+      {
+        "kind": "spell",
+        "ref": "NatureSpells.POISON_WEAPONS",
+        "id": "poisoned_weapons",
+        "x": 7,
+        "y": 0
+      },
+      {
+        "kind": "spell",
+        "ref": "NatureSpells.THORN_ARMOR",
+        "id": "thorn_armor",
+        "x": 10,
+        "y": 1
+      },
+      {
+        "kind": "spell",
+        "ref": "NatureSpells.NATURE_BALM",
+        "id": "nature_balm",
+        "x": 2,
+        "y": 1
+      },
+      {
+        "kind": "spell",
+        "ref": "NatureSpells.ENTANGLE_SEED",
+        "id": "entangling_seed",
+        "x": 4,
+        "y": 2
+      },
+      {
+        "kind": "spell",
+        "ref": "TotemSpells.HEAL_TOTEM_ID",
+        "id": "rejuv_totem",
+        "x": 6,
+        "y": 2
+      },
+      {
+        "kind": "spell",
+        "ref": "TotemSpells.MANA_TOTEM_ID",
+        "id": "astral_totem",
+        "x": 7,
+        "y": 2
+      },
+      {
+        "kind": "spell",
+        "ref": "TotemSpells.GUARD_TOTEM_ID",
+        "id": "guard_totem",
+        "x": 8,
+        "y": 2
+      },
+      {
+        "kind": "spell",
+        "ref": "NatureSpells.POISON_CLOUD",
+        "id": "poison_cloud",
+        "x": 2,
+        "y": 3
+      },
+      {
+        "kind": "spell",
+        "ref": "NatureSpells.REFRESH",
+        "id": "refresh",
+        "x": 10,
+        "y": 6
+      },
+      {
+        "kind": "spell",
+        "ref": "\"curse_of_agony\"",
+        "id": "curse_of_agony",
+        "x": 5,
+        "y": 3
+      },
+      {
+        "kind": "spell",
+        "ref": "\"curse_of_weak\"",
+        "id": "curse_of_weak",
+        "x": 6,
+        "y": 3
+      },
+      {
+        "kind": "spell",
+        "ref": "\"curse_of_despair\"",
+        "id": "curse_of_despair",
+        "x": 7,
+        "y": 3
+      },
+      {
+        "kind": "spell",
+        "ref": "\"conjure_ender_chest\"",
+        "id": "conjure_ender_chest",
+        "x": 0,
+        "y": 4
+      },
+      {
+        "kind": "synergy",
+        "ref": "SynergiesAdder.POISONBALL_POISON",
+        "id": null,
+        "x": 0,
+        "y": 1
+      }
+    ],
+    "fire": [
+      {
+        "kind": "spell",
+        "ref": "FireSpells.FIREBALL_ID",
+        "id": "fireball",
+        "x": 0,
+        "y": 0
+      },
+      {
+        "kind": "spell",
+        "ref": "FireSpells.FLAME_STRIKE_ID",
+        "id": "flame_strike",
+        "x": 5,
+        "y": 0
+      },
+      {
+        "kind": "spell",
+        "ref": "FireSpells.FLAME_WEAPON",
+        "id": "fire_weapon",
+        "x": 7,
+        "y": 1
+      },
+      {
+        "kind": "spell",
+        "ref": "FireSpells.METEOR",
+        "id": "meteor",
+        "x": 2,
+        "y": 3
+      },
+      {
+        "kind": "spell",
+        "ref": "FireSpells.VAMP_BLOOD",
+        "id": "vamp_blood",
+        "x": 5,
+        "y": 4
+      },
+      {
+        "kind": "spell",
+        "ref": "FireSpells.DRACONIC_BLOOD",
+        "id": "draconic_blood",
+        "x": 6,
+        "y": 4
+      },
+      {
+        "kind": "spell",
+        "ref": "FireSpells.OVERLOAD",
+        "id": "overload",
+        "x": 10,
+        "y": 5
+      },
+      {
+        "kind": "spell",
+        "ref": "FireSpells.FIRE_NOVA_ID",
+        "id": "fire_nova",
+        "x": 3,
+        "y": 3
+      },
+      {
+        "kind": "synergy",
+        "ref": "SynergiesAdder.FIREBALL_BURN",
+        "id": null,
+        "x": 0,
+        "y": 1
+      }
+    ],
+    "water": [
+      {
+        "kind": "spell",
+        "ref": "WaterSpells.FROSTBALL_ID",
+        "id": "frostball",
+        "x": 0,
+        "y": 0
+      },
+      {
+        "kind": "spell",
+        "ref": "WaterSpells.TIDAL_STRIKE",
+        "id": "tidal_strike",
+        "x": 4,
+        "y": 0
+      },
+      {
+        "kind": "spell",
+        "ref": "WaterSpells.FROST_NOVA_AOE",
+        "id": "frost_nova",
+        "x": 2,
+        "y": 1
+      },
+      {
+        "kind": "spell",
+        "ref": "WaterSpells.WATER_BREATH",
+        "id": "water_breath",
+        "x": 10,
+        "y": 1
+      },
+      {
+        "kind": "spell",
+        "ref": "WaterSpells.FROST_ARMOR",
+        "id": "frost_armor",
+        "x": 7,
+        "y": 1
+      },
+      {
+        "kind": "spell",
+        "ref": "WaterSpells.ICY_WEAPON",
+        "id": "ice_weapon",
+        "x": 10,
+        "y": 2
+      },
+      {
+        "kind": "spell",
+        "ref": "WaterSpells.CHILLING_FIELD",
+        "id": "chilling_field",
+        "x": 5,
+        "y": 2
+      },
+      {
+        "kind": "spell",
+        "ref": "WaterSpells.NOURISHMENT",
+        "id": "nourishment",
+        "x": 7,
+        "y": 3
+      },
+      {
+        "kind": "spell",
+        "ref": "WaterSpells.ICE_COMET",
+        "id": "ice_comet",
+        "x": 1,
+        "y": 3
+      },
+      {
+        "kind": "spell",
+        "ref": "WaterSpells.CHILL_ERUPTION",
+        "id": "chill_eruption",
+        "x": 2,
+        "y": 3
+      },
+      {
+        "kind": "spell",
+        "ref": "WaterSpells.MAGE_CIRCLE",
+        "id": "mage_circle",
+        "x": 10,
+        "y": 4
+      },
+      {
+        "kind": "spell",
+        "ref": "WaterSpells.HEART_OF_ICE",
+        "id": "heart_of_ice",
+        "x": 8,
+        "y": 5
+      },
+      {
+        "kind": "spell",
+        "ref": "\"teleport\"",
+        "id": "teleport",
+        "x": 5,
+        "y": 5
+      },
+      {
+        "kind": "spell",
+        "ref": "\"black_hole\"",
+        "id": "black_hole",
+        "x": 4,
+        "y": 6
+      },
+      {
+        "kind": "synergy",
+        "ref": "SynergiesAdder.FROSTBALL_CHILL",
+        "id": null,
+        "x": 0,
+        "y": 1
+      }
+    ]
+  },
+  "errors": [],
+  "warnings": [
+    "demon: есть в реестре, но не найдено в исходниках заклинаний",
+    "test_spell: есть в реестре, но не найдено в исходниках заклинаний"
+  ]
+}

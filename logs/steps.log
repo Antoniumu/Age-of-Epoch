@@ -1,0 +1,48 @@
+[20:04:13] DISPLAY=:99, сценарий spells.txt
+[20:04:14] жду окно: дисплей :99, X-сокеты: :99
+[20:04:38] дисплей клиента из /proc/4412/environ: :100 (был :99)
+[20:04:38] XAUTHORITY клиента: /tmp/xvfb-run.erUYCw/Xauthority
+[20:04:44] жду окно: дисплей :100, X-сокеты: :100, :99
+[20:04:48] окно 2097203 на :100: Minecraft* 26.3 | WINDOW=2097203 X=0 Y=152 WIDTH=1280 HEIGHT=720 SCREEN=0 | Map State: IsViewable
+[20:04:52] в логе найдено: [20:04:52] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/items.png-atlas
+[20:05:01] снимок 00-main-menu (окно 2097203, 716 КБ)
+[20:05:01] курсор 640,296
+[20:05:01] клик 640,296 (экран 640,448, кнопка 1)
+[20:05:07] снимок 01-world-list (окно 2097203, 450 КБ)
+[20:05:07] курсор 480,688
+[20:05:07] клик 480,688 (экран 480,840, кнопка 1)
+[20:05:13] снимок 02-create-world (окно 2097203, 458 КБ)
+[20:05:13] курсор 480,688
+[20:05:13] клик 480,688 (экран 480,840, кнопка 1)
+[20:05:59] снимок 03-in-world (окно 2097203, 317 КБ)
+[20:05:59] shell[mkdir -p run/e2e] -> 0
+    
+[20:06:00] shell[bash tools/e2e/spell-video.sh start] -> 0
+    окно клиента: 1280x720+0+152 на :100
+    запись пошла: run/e2e/spell-video.mp4 (48 байт)
+[20:06:02] записан файл-триггер run/aoe-spell-audit.flag: ${AOE_AUDIT_TARGET:-all}
+[20:06:02] флаг аудита поставлен, жду AOEAI done
+[20:12:01] в логе найдено: [20:12:00] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI done spells=72 passed=72 failed=0
+[20:12:06] снимок 04-audit-done (окно 2097203, 227 КБ)
+[20:12:06] удержание h 600 мс (фокус: 2097203)
+[20:12:09] снимок 05-character (окно 2097203, 217 КБ)
+[20:12:10] удержание h 600 мс (фокус: 2097203)
+[20:12:12] shell[bash tools/e2e/spell-video.sh stop] -> 0
+    видео готово: run/e2e/spell-video.mp4 (39M)
+    длительность: 372.5 c
+[20:12:13] jstack[spells]: pid 4412, 382 строк -> jstack-spells.txt
+[20:12:13] render thread:
+    "Render thread" #3 [4413] prio=5 os_prio=0 cpu=37677.55ms elapsed=455.55s tid=0x00007f27b4030760 nid=4413 runnable  [0x00007f27b9bfe000]
+    java.lang.Thread.State: RUNNABLE
+    at java.lang.invoke.LambdaForm$MH/0x00000000645f0400.invoke(java.base@25.0.4.1/LambdaForm$MH)
+    at java.lang.invoke.LambdaForm$MH/0x0000000064295c00.invokeExact_MT(java.base@25.0.4.1/LambdaForm$MH)
+    at jdk.internal.foreign.abi.DowncallStub/0x0000000064293000.invoke(java.base@25.0.4.1/Unknown Source)
+    at java.lang.invoke.LambdaForm$DMH/0x0000000064293400.invokeStatic(java.base@25.0.4.1/LambdaForm$DMH)
+    at java.lang.invoke.LambdaForm$MH/0x00000000645f0000.invoke(java.base@25.0.4.1/LambdaForm$MH)
+    at java.lang.invoke.LambdaForm$MH/0x0000000064295400.invokeExact_MT(java.base@25.0.4.1/LambdaForm$MH)
+    at org.lwjgl.system.JNIBindingsImpl/0x00000000632d8000.callPJPV(Unknown Source)
+    at org.lwjgl.system.JNI.callPJPV(JNI.java:2541)
+    at org.lwjgl.vulkan.VK10.nvkDestroyBufferView(VK10.java:2027)
+    at org.lwjgl.vulkan.VK10.vkDestroyBufferView(VK10.java:2032)
+[20:12:13] конец сценария spells
+[20:12:13] итог: снимков 6, ошибок 0
