@@ -64,6 +64,11 @@ copy_tail "$root/run/e2e/xvfb.log" xvfb.log 50
 copy_tail "$root/run/e2e/xdpyinfo.txt" xdpyinfo.txt 40
 copy_tail "$root/run/e2e/graphics.txt" graphics.txt 80
 copy_tail "$src/steps.log" steps.log 400
+# стеки JVM (если снимались) — по ним видно, где стоит render thread
+for f in "$src"/jstack-*.txt; do
+    [ -e "$f" ] || continue
+    cp "$f" "logs/$(basename "$f")"
+done
 [ -f "$src/index.txt" ] && cp "$src/index.txt" index.txt
 
 if [ -d "$root/run/crash-reports" ] && [ -n "$(ls -A "$root/run/crash-reports" 2>/dev/null)" ]; then

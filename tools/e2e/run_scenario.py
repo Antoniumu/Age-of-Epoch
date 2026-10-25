@@ -23,6 +23,8 @@
     wait_window Minecraft 90000 ждать окно по подстроке заголовка, мс
     wait_log 120000 <regex>     ждать строку в run/logs/latest.log
     windows                     вывести список окон (диагностика)
+    jstack [метка]              сохранить стек клиентского JVM
+    wmctrl                      список окон через WM
     log текст                   записать в журнал
 
 Запуск:
@@ -72,6 +74,32 @@ class Runner:
 
     # ------------------------------------------------------------------ окно
 
+    def dump_threads(self, tag):
+        """
+        Снимок стека клиентского JVM. Без него невозможно понять, почему окно
+        создано по логу, но в X его нет: видно, на чём стоит render thread
+        (создание swapchain, ожидание события SDL, отрисовка кадра).
+        """
+        code, out = self.run(["pgrep", "-f", "devlaunchinjector"])
+        pids = [line.strip() for line in out.splitlines() if line.strip().isdigit()]
+        if not pids:
+            self.note("jstack[%s]: процесс клиента не найден" % tag)
+            return
+        pid = pids[0]
+        jstack = os.environ.get("JAVA_HOME", "")
+        jstack = os.path.join(jstack, "bin", "jstack") if jstack else "jstack"
+        code, out = self.run([jstack, "-l", pid], timeout=120)
+        path = os.path.join(self.outdir, "jstack-%s.txt" % tag)
+        with open(path, "w", encoding="utf-8") as handle:
+            handle.write(out)
+        self.note("jstack[%s]: pid %s, %d строк -> %s" % (tag, pid, len(out.splitlines()), os.path.basename(path)))
+        # короткая выжимка по render thread прямо в журнал
+        lines = out.splitlines()
+        for index, line in enumerate(lines):
+            if "Render thread" in line:
+                self.note("render thread:\n    " + "\n    ".join(l.strip() for l in lines[index:index + 12]))
+                break
+
     def list_windows(self):
         """Диагностика: все окна с именем и геометрией (без WM их легко не найти)."""
         code, out = self.run(["xwininfo", "-root", "-tree"])
@@ -111,6 +139,7 @@ class Runner:
             time.sleep(2)
         self.fail("окно '%s' не появилось за %d мс" % (pattern, timeout_ms))
         self.list_windows()
+        self.dump_threads("no-window")
         return False
 
     def wait_log(self, pattern, timeout_ms):
@@ -231,6 +260,11 @@ class Runner:
                         self.wait_log(rest[len(args[0]):].strip(), int(args[0]))
                 elif command == "windows":
                     self.list_windows()
+                elif command == "jstack":
+                    self.dump_threads(rest.strip() or "dump")
+                elif command == "wmctrl":
+                    code, out = self.run(["wmctrl", "-l", "-p"])
+                    self.note("wmctrl:\n    " + out.strip().replace("\n", "\n    "))
                 elif command == "log":
                     self.note(rest)
                 else:
