@@ -293,6 +293,13 @@ public final class CombatProbe {
 
         // ---- лечение
 
+        /**
+         * Лечение проверяем инвариантами, а не формулой: {@code ResourcesData}
+         * работает в «реальных» единицах мода, а {@code getHealth()} — в
+         * ванильных, и мод пересчитывает одно в другое. Поэтому проверяем то,
+         * что важно игроку: лечение поднимает здоровье, лечит до максимума и
+         * не выводит здоровье за максимум.
+         */
         private void healStep(ServerPlayer player) {
             EntityData data = Load.Unit(player);
             if (healStage == 0) {
@@ -306,42 +313,54 @@ public final class CombatProbe {
                 }
                 player.setHealth(Math.max(1F, max * 0.25F));
                 healBefore = player.getHealth();
-                float amount = max * 0.5F;
-                healExpected = Math.min(max, healBefore + amount);
-                // Единственный настоящий путь лечения в моде:
-                // ResourcesData.modify(Use.RESTORE, health) -> HealthUtils.heal.
+                // Перелечивание: количество заведомо больше максимума.
                 data.getResources()
-                    .restore(player, ResourceType.health, amount);
+                    .restore(player, ResourceType.health, max * 20F);
                 healStage = 1;
                 return;
             }
             if (healStage == 1) {
-                float after = player.getHealth();
-                // Перелечивание не должно выводить за максимум.
-                data.getResources()
-                    .restore(player, ResourceType.health, player.getMaxHealth() * 4F);
-                float overheal = player.getHealth();
-
+                float full = player.getHealth();
                 Report report = new Report("heal");
                 report.put("max", player.getMaxHealth());
                 report.put("before", healBefore);
-                report.put("after", after);
-                report.put("expected", healExpected);
-                report.put("overheal", overheal);
-                report.check("heal_applied", Math.abs(after - healExpected) < 0.01F);
-                report.check("heal_positive", after > healBefore);
-                report.check("overheal_clamped", Math.abs(overheal - player.getMaxHealth()) < 0.01F);
+                report.put("after_full", full);
+                report.check("heal_positive", full > healBefore);
+                report.check("heal_reaches_max", Math.abs(full - player.getMaxHealth()) < 0.01F);
+                report.check("never_above_max", full <= player.getMaxHealth() + 0.01F);
+                lines.add(report.line());
+                checks += report.checks;
+                failed += report.failed;
+
+                // Частичное лечение: снова роняем здоровье и лечим половиной
+                // максимума в реальных единицах — результат обязан быть строго
+                // между текущим значением и максимумом.
+                player.setHealth(Math.max(1F, player.getMaxHealth() * 0.25F));
+                healBefore = player.getHealth();
+                data.getResources()
+                    .restore(player, ResourceType.health, maxRealHealth(data) * 0.5F);
+                healStage = 2;
+                return;
+            }
+            if (healStage == 2) {
+                float partial = player.getHealth();
+                Report report = new Report("heal_partial");
+                report.put("before", healBefore);
+                report.put("after", partial);
+                report.put("max", player.getMaxHealth());
+                report.check("partial_increases", partial > healBefore);
+                report.check("partial_below_max", partial < player.getMaxHealth());
                 lines.add(report.line());
                 checks += report.checks;
                 failed += report.failed;
 
                 manaMax = data.getMaximumResource(ResourceType.mana);
-                healStage = 2;
+                healStage = 3;
                 return;
             }
-            if (healStage == 2) {
+            if (healStage == 3) {
                 if (manaMax <= 0F) {
-                    healStage = 3;
+                    healReported = true;
                     return;
                 }
                 // Мана: восстанавливаем сверх максимума — cap должен срезать.
@@ -363,10 +382,20 @@ public final class CombatProbe {
                 lines.add(report.line());
                 checks += report.checks;
                 failed += report.failed;
-                healStage = 3;
-                return;
+                healReported = true;
             }
-            healReported = true;
+        }
+
+        /** Максимум здоровья в «реальных» единицах мода (для заклинаний и зелий). */
+        private float maxRealHealth(EntityData data) {
+            try {
+                float value = data.getUnit()
+                    .healthData()
+                    .getValue();
+                return value > 0F ? value : 1F;
+            } catch (Exception ignored) {
+                return 1F;
+            }
         }
 
         // ---- название команды

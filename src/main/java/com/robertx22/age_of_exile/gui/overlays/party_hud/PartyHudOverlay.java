@@ -19,8 +19,8 @@ import java.util.Properties;
  * Правая панель «AOE / Обзор»: команда, дневная цель, цель недели и живой DPS
  * в бою.
  *
- * <p>Всё настраивается: панель можно выключить целиком (клавиша O или
- * {@code visible=false}), двигать по четырём углам/центрам (клавиша P или
+ * <p>Всё настраивается: панель можно выключить целиком (клавиша F7 или
+ * {@code visible=false}), двигать по четырём углам/центрам (клавиша F8 или
  * {@code position}), менять ширину и отключать отдельные блоки. Настройки
  * лежат в {@code config/age_of_epoch/party_hud.properties} и перечитываются на
  * лету: файл можно править хоть в игре, панель перестроится сама.
@@ -207,7 +207,7 @@ public final class PartyHudOverlay extends AbstractGui {
             String live = "LIVE · DPS";
             drawString(pose, mc.font, live, x + width - 11 - mc.font.width(live), y + height - 11, ACCENT);
         } else {
-            String hint = trim(mc, "O скрыть · P положение", textWidth);
+            String hint = trim(mc, "F7 скрыть · F8 положение", textWidth);
             drawString(pose, mc.font, hint, x + 11, y + height - 12, 0xFF8293A5);
         }
     }

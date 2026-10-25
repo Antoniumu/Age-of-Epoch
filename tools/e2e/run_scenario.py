@@ -26,6 +26,7 @@
     windows                     вывести список окон (диагностика)
     jstack [метка]              сохранить стек клиентского JVM
     wmctrl                      список окон через WM
+    touch run/aoe-devtest.flag  создать файл-триггер (перезапуск зонда замеров)
     log текст                   записать в журнал
 
 Запуск:
@@ -420,6 +421,16 @@ class Runner:
                 elif command == "wmctrl":
                     code, out = self.run(["wmctrl", "-l", "-p"])
                     self.note("wmctrl:\n    " + out.strip().replace("\n", "\n    "))
+                elif command == "touch":
+                    # touch <путь>: создать файл-триггер. Нужно для зонда
+                    # CombatProbe — он стартует, увидев run/aoe-devtest.flag,
+                    # и сам удаляет флаг после прогона. Так сценарий управляет
+                    # моментом замера: снимок попадает в момент боя.
+                    path = os.path.join(REPO, rest.strip())
+                    os.makedirs(os.path.dirname(path), exist_ok=True)
+                    with open(path, "a", encoding="utf-8"):
+                        pass
+                    self.note("создан файл-триггер " + rest.strip())
                 elif command == "log":
                     self.note(rest)
                 else:
