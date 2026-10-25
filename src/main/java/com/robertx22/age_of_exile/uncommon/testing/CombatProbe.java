@@ -198,6 +198,14 @@ public final class CombatProbe {
 
         /** @return true, когда прогон полностью завершён */
         boolean step(ServerPlayer player) {
+            // Строки пишем сразу (на следующий тик после замера), а не одним
+            // батчем в конце: иначе CI-сценарий видит строку gear_equip только
+            // после всего прогона, когда броня уже снята, и кадр HUD с выросшим
+            // максимумом здоровья не попадает в окно её ношения.
+            if (!lines.isEmpty()) {
+                write(List.copyOf(lines));
+                lines.clear();
+            }
             if (what.equals("dps") || what.equals("all")) {
                 if (!dpsReported) {
                     dpsStep(player);

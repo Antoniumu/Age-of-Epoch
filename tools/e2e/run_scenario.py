@@ -313,7 +313,9 @@ class Runner:
                             return True
                 except OSError:
                     pass
-            time.sleep(1)
+            # 0.3 с: строки зонда пишутся сразу после замера, окно ношения брони
+            # ~8 с — мелкий шаг опроса нужен, чтобы кадр HUD успел в него попасть.
+            time.sleep(0.3)
         self.fail("в логе нет нового /%s/ за %d мс" % (pattern, timeout_ms))
         return False
 
