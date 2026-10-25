@@ -188,10 +188,22 @@ public final class SoullessProbe {
         counters[1] += guards.failed;
 
         // ---- 4. Демо-предметы в хотбар: их снимает сценарий ----
+        // Берём предметы 20 уровня: на 1 уровне базовые числа округляются до «1»
+        // и разницу между 12 % и 45 % в тултипе не видно.
         try {
-            give(player, SLOT_BASE_CHEAP, cheap.copy());
-            give(player, SLOT_BASE_RICH, rich.copy());
-            give(player, SLOT_SOULED, souled.copy());
+            ItemStack demoCheap = new ItemStack(Items.WOODEN_SWORD);
+            com.robertx22.age_of_exile.uncommon.datasaving.Gear.Save(demoCheap, cheapMid);
+            ItemStack demoRich = new ItemStack(Items.NETHERITE_SWORD);
+            com.robertx22.age_of_exile.uncommon.datasaving.Gear.Save(demoRich, richMid);
+
+            ItemStack demoSouled = demoCheap.copy();
+            if (loaded != null && loaded.canInsertIntoStack(demoSouled)) {
+                loaded.insertAsUnidentifiedOn(demoSouled, player);
+            }
+
+            give(player, SLOT_BASE_CHEAP, demoCheap);
+            give(player, SLOT_BASE_RICH, demoRich);
+            give(player, SLOT_SOULED, demoSouled);
             give(player, SLOT_SOUL, soulStack.copy());
         } catch (Exception ignored) {
         }
