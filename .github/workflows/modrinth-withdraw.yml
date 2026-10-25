@@ -34,11 +34,11 @@ jobs:
           code="$(curl --silent --show-error --output "$response" --write-out '%{http_code}' \
             -X PATCH "${headers[@]}" \
             -H 'Content-Type: application/json' \
-            --data '{"requested_status":null}' \
+            --data '{"status":"draft","requested_status":null}' \
             "$api/project/$MODRINTH_PROJECT_ID")"
           if [[ "$code" != 204 ]]; then
-            error="$(jq -r '.description // .error // .message // .' "$response" 2>/dev/null | head -c 500 || true)"
-            echo "::error::Could not clear the pending Modrinth review request (HTTP $code): $error"
+            error="$(jq -c . "$response" 2>/dev/null | head -c 500 || true)"
+            echo "::error::Could not return the Modrinth project to draft (HTTP $code): $error"
             exit 1
           fi
           code="$(curl --silent --show-error --output "$response" --write-out '%{http_code}' "${headers[@]}" "$api/project/$MODRINTH_PROJECT_ID")"
