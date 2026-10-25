@@ -3,7 +3,7 @@ name: Branch build and downloadable release
 on:
   push:
     branches:
-      - arena/22136743-age-of-epoch
+      - arena/1fe8fc74-age-of-epoch
   pull_request:
     branches:
       - main
@@ -82,14 +82,14 @@ jobs:
 
       # Each pushed revision has its own prerelease, tied to an exact source commit.
       - name: Publish downloadable prerelease for the Arena branch
-        if: github.event_name == 'push' && github.ref == 'refs/heads/arena/22136743-age-of-epoch'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/arena/1fe8fc74-age-of-epoch'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: arena-22136743-${{ github.sha }}
+          tag_name: arena-1fe8fc74-${{ github.sha }}
           target_commitish: ${{ github.sha }}
           name: Age of Epoch — branch build ${{ github.sha }}
           body: |
-            Automatically built from branch `arena/22136743-age-of-epoch`.
+            Automatically built from branch `arena/1fe8fc74-age-of-epoch`.
 
             Source commit: `${{ github.sha }}`
 
