@@ -42,6 +42,13 @@ dependencies {
     // uses the standard Gradle ones, like `implementation` above.
     if (!project.hasProperty('noJei')) {
         compileOnly "mezz.jei:jei-${project.minecraft_version}-fabric-api:${project.jei_version}"
+
+        // The screenshot client needs the real JEI mod, not just its API. Keep it
+        // opt-in so normal builds and the shipped jar stay JEI-optional:
+        //   ./gradlew runClient -PjeiRuntime
+        if (project.hasProperty('jeiRuntime')) {
+            runtimeOnly "mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}"
+        }
     }
 
     // Тесты парсера вики (src/test/java). Парсер WikiMarkdown специально не

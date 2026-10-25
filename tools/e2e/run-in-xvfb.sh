@@ -110,7 +110,15 @@ cleanup() {
 gradle_pid=""
 
 echo "=== запуск клиента ==="
-./gradlew runClient --stacktrace --no-problems-report >> run/e2e/gradle.log 2>&1 &
+gradle_args=()
+case "$(basename "$scenario")" in
+    jei.txt)
+        # The JEI scenario must run against the real JEI mod, not only the
+        # compile-time API used by the normal optional integration.
+        gradle_args+=(-PjeiRuntime)
+        ;;
+esac
+./gradlew runClient "${gradle_args[@]}" --stacktrace --no-problems-report >> run/e2e/gradle.log 2>&1 &
 gradle_pid=$!
 
 # Клиент качается/компилируется при первом прогоне: ждём появления окна в сценарии.

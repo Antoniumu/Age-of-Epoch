@@ -1,0 +1,521 @@
+# Сценарий: настоящий JEI в dev-клиенте.
+#
+# tools/e2e/run-in-xvfb.sh запускает именно этот сценарий с -PjeiRuntime,
+# поэтому в клиенте стоит полный JEI, а не только compile-only API.
+#
+# Координаты рассчитаны на окно 1280x720 и guiScale 2:
+#   * поле поиска JEI — справа внизу (1090, 692);
+#   * первый результат JEI — первая ячейка сетки справа (965, 70)
+#     по реальному снимку jei-04-jei-overlay.
+# После каждого поиска делается снимок результата, а затем снимок страницы U.
+# JEI по U открывает первую категорию по сортировке (обычно Information),
+# поэтому дополнительно кликаем вкладки категорий 2/3/4 — (503,72), (566,72),
+# (614,72) — и снимаем кадры *-tab2 / *-tab3 / *-tab4: там наши категории
+# Age of Epoch (например, для души 4-я вкладка — Stat Souls).
+# Если раскладка JEI изменится, по этим снимкам координаты легко поправить.
+
+wait_window Minecraft 420000
+wait_log 300000 Created: .*atlas/items
+wait 8000
+shot 00-main-menu
+
+# Главное меню -> одиночная игра -> войти в мир.
+#
+# В PR workflow JEI идёт третьим сценарием в том же run/: wiki уже создал мир.
+# При существующем мире раскладка Select World другая, поэтому сначала выбираем
+# первую строку и нажимаем Play Selected World (482,637) — по реальному снимку
+# jei-01-world-list. Если JEI запускают отдельно и список пуст, эти клики
+# безвредны, а два клика 480,688 ниже создают мир, как в wiki/combat.
+move 640 296
+click 640 296
+wait 4000
+shot 01-world-list
+move 640 140
+click 640 140
+wait 500
+move 482 637
+click 482 637
+wait 3000
+move 480 688
+click 480 688
+wait 3000
+shot 02-create-world
+move 480 688
+click 480 688
+wait 45000
+shot 03-in-world
+
+# Инвентарь: справа должен появиться список предметов JEI.
+hold e 500
+wait 5000
+shot 04-jei-overlay
+
+# --- Stat Soul: U показывает наложение души на основы --------------------
+# Внимание: варианты душ в JEI называются "<Редкость> <Слот> Soul"
+# (например "Common Helmet Soul"), слова "Stat" в их именах нет, поэтому
+# запрос "stat soul" даёт 0 результатов. Ищем душу конкретного слота.
+click 1090 692
+wait 500
+type helmet soul
+wait 2500
+shot 05-search-stat-soul
+click 640 520
+move 965 70
+wait 800
+shot 06-stat-soul-hover
+key u
+wait 3000
+move 640 650
+wait 500
+shot 07-stat-soul-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 07b-stat-soul-uses-tab2
+click 566 72
+wait 1500
+move 640 650
+wait 300
+shot 07c-stat-soul-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 07d-stat-soul-uses-tab4
+key Escape
+wait 1500
+
+# --- Identify Tome: U показывает определение душ --------------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type identify tome
+wait 2500
+shot 08-search-identify-tome
+click 640 520
+move 965 70
+wait 500
+key u
+wait 3000
+move 640 650
+wait 500
+shot 09-identify-tome-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 09b-identify-tome-uses-tab2
+click 566 72
+wait 1500
+move 640 650
+wait 300
+shot 09c-identify-tome-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 09d-identify-tome-uses-tab4
+key Escape
+wait 1500
+
+# --- Пустая основа: U должно вести обратно к душам/профессиям -------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type iron chestplate
+wait 2500
+shot 10-search-iron-chestplate
+click 640 520
+move 965 70
+wait 500
+key u
+wait 3000
+move 640 650
+wait 500
+shot 11-iron-chestplate-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 11b-iron-chestplate-uses-tab2
+click 566 72
+wait 1500
+move 640 650
+wait 300
+shot 11c-iron-chestplate-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 11d-iron-chestplate-uses-tab4
+click 813 28
+wait 1200
+move 640 650
+wait 300
+shot 11e-iron-chestplate-uses-tabpage2
+click 469 84
+wait 1500
+move 640 650
+wait 300
+shot 11f-iron-chestplate-uses-tabp2-first
+click 521 84
+wait 1500
+move 640 650
+wait 300
+shot 11g-iron-chestplate-uses-tabp2-second
+key Escape
+wait 1500
+
+# --- Гем: сокетинг, повышение ранга и извлечение ---------------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type cracked Ruby
+wait 2500
+shot 12-search-cracked-Ruby
+click 640 520
+move 965 70
+wait 500
+key u
+wait 3000
+move 640 650
+wait 500
+shot 13-cracked-Ruby-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 13b-cracked-Ruby-uses-tab2
+click 566 72
+wait 1500
+move 640 650
+wait 300
+shot 13c-cracked-Ruby-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 13d-cracked-Ruby-uses-tab4
+key Escape
+wait 1500
+
+# --- Валюта на снаряжение ---------------------------------------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type orb of transmutation
+wait 2500
+shot 14-search-orb
+click 640 520
+move 965 70
+wait 500
+key u
+wait 3000
+move 640 650
+wait 500
+shot 15-orb-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 15b-orb-uses-tab2
+click 566 72
+wait 1500
+move 640 650
+wait 300
+shot 15c-orb-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 15d-orb-uses-tab4
+key Escape
+wait 1500
+
+# --- Разбор -----------------------------------------------------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type salvage hammer
+wait 2500
+shot 16-search-salvage-hammer
+click 640 520
+move 965 70
+wait 500
+key u
+wait 3000
+move 640 650
+wait 500
+shot 17-salvage-hammer-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 17b-salvage-hammer-uses-tab2
+click 566 72
+wait 1500
+move 640 650
+wait 300
+shot 17c-salvage-hammer-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 17d-salvage-hammer-uses-tab4
+key Escape
+wait 1500
+
+# --- Рунные слова -------------------------------------------------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type runeword station
+wait 2500
+shot 18-search-runeword-station
+click 640 520
+move 965 70
+wait 500
+key u
+wait 3000
+move 640 650
+wait 500
+shot 19-runeword-station-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 19b-runeword-station-uses-tab2
+click 566 72
+wait 1500
+move 640 650
+wait 300
+shot 19c-runeword-station-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 19d-runeword-station-uses-tab4
+key Escape
+wait 1500
+
+# --- Профессии ---------------------------------------------------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type armorer
+wait 2500
+shot 20-search-armorer-tool
+click 640 520
+move 965 70
+wait 500
+key u
+wait 3000
+move 640 650
+wait 500
+shot 21-armorer-tool-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 21b-armorer-tool-uses-tab2
+click 566 72
+wait 1500
+move 640 650
+wait 300
+shot 21c-armorer-tool-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 21d-armorer-tool-uses-tab4
+key Escape
+wait 1500
+
+# --- Эссенция редкости: камень повышения и разбор ---------------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type rarity essence
+wait 2500
+shot 22-search-rarity-essence
+click 640 520
+move 965 70
+wait 500
+key u
+wait 3000
+move 640 650
+wait 500
+shot 23-rarity-essence-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 23b-rarity-essence-uses-tab2
+click 566 72
+wait 1500
+move 640 650
+wait 300
+shot 23c-rarity-essence-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 23d-rarity-essence-uses-tab4
+key Escape
+wait 1500
+
+# --- Ящик гемов: пул возможных результатов ----------------------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type gem loot crate
+wait 2500
+shot 24-search-gem-loot-crate
+click 640 520
+move 965 70
+wait 500
+key u
+wait 3000
+move 640 650
+wait 500
+shot 25-gem-loot-crate-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 25b-gem-loot-crate-uses-tab2
+click 566 72
+wait 1500
+move 640 650
+wait 300
+shot 25c-gem-loot-crate-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 25d-gem-loot-crate-uses-tab4
+key Escape
+wait 1500
+
+# --- Рюкзак: улучшения --------------------------------------------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type backpack
+wait 2500
+shot 26-search-backpack
+click 640 520
+move 965 70
+wait 500
+key u
+wait 3000
+move 640 650
+wait 500
+shot 27-backpack-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 27b-backpack-uses-tab2
+click 566 72
+wait 1500
+move 640 650
+wait 300
+shot 27c-backpack-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 27d-backpack-uses-tab4
+key Escape
+wait 1500
+
+# --- Уникальная душа: вкладки Unique Gear / Stat Souls -------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type unique helmet soul
+wait 2500
+shot 28-search-unique-soul
+click 640 520
+move 965 70
+wait 500
+key u
+wait 3000
+move 640 650
+wait 500
+shot 29-unique-soul-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 29b-unique-soul-uses-tab2
+click 566 72
+wait 1500
+move 640 650
+wait 300
+shot 29c-unique-soul-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 29d-unique-soul-uses-tab4
+click 662 72
+wait 1500
+move 640 650
+wait 300
+shot 29e-unique-soul-uses-tab5
+key Escape
+wait 1500
+
+# --- Сундук: катализатор мировых источников лута --------------------------
+click 1090 692
+key ctrl+a
+key BackSpace
+type chest
+wait 2500
+shot 30-search-chest
+click 640 520
+move 965 70
+wait 500
+key u
+wait 3000
+move 640 650
+wait 500
+shot 31-chest-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 31b-chest-uses-tab2
+click 566 72
+wait 1500
+move 640 650
+wait 300
+shot 31c-chest-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 31d-chest-uses-tab4
+click 662 66
+wait 1500
+move 640 650
+wait 300
+shot 31e-chest-uses-tab5
+click 710 66
+wait 1500
+move 640 650
+wait 300
+shot 31f-chest-uses-tab6
+click 758 66
+wait 1500
+move 640 650
+wait 300
+shot 31g-chest-uses-tab7
+key Escape
+wait 1500
+
+jstack jei
+log конец сценария jei
