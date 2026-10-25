@@ -373,7 +373,8 @@ public class DamageEvent extends EffectEvent {
                 // Диагностика аудита умений: сколько урона реально доходит до
                 // цели. Если событие есть, а здоровье не падает — проблема в
                 // применении, а не в расчёте.
-                com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.noteDamageEvent(target, vanillaDamage);
+                com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.noteDamageEvent(target, vanillaDamage,
+                    this.data.getStringOr(EventData.SPELL, ""));
                 // Диагностика аудита: кому именно достался урон. Без цели
                 // «события есть, а здоровье манекенов не изменилось» не отличить
                 // от «урон ушёл в другую сущность».

@@ -154,12 +154,18 @@ public final class SpellAuditProbe {
      * тем, как снять здоровье. Нужен, чтобы различать две разные поломки:
      * «заклинание не нашло цели» и «урон посчитался, но замер его не увидел».
      */
-    public static void noteDamageEvent(LivingEntity target, float vanillaAmount) {
+    public static void noteDamageEvent(LivingEntity target, float vanillaAmount, String spellId) {
         Runner runner = active;
         if (runner == null || runner.current == null || target == null) {
             return;
         }
         if (vanillaAmount <= 0F) {
+            return;
+        }
+        // Событие урона несёт id умения: урон снаряда, выпущенного прошлым
+        // умением, не приписывается текущему (иначе «сделать стрелы» получало
+        // урон стрел предыдущего заклинания).
+        if (spellId != null && !spellId.isEmpty() && !spellId.equals(runner.current.id)) {
             return;
         }
         runner.current.damageEvents++;
