@@ -224,7 +224,23 @@ class Runner:
         self.run(["xdotool", "windowraise", self.window], timeout=20)
         self.run(["xdotool", "windowactivate", "--sync", self.window], timeout=20)
         self.run(["xdotool", "windowfocus", "--sync", self.window], timeout=20)
-        self.run(["xdotool", "mousemove", "--window", self.window, "5", "5"], timeout=20)
+        # wmctrl — второй путь: у openbox windowactivate через xdotool иногда
+        # не срабатывает, а без фокуса SDL не отдаёт клавиатуру вообще
+        # (мышь при этом работает, поэтому клики проходят).
+        self.run(["wmctrl", "-i", "-a", str(self.window)], timeout=20)
+        code, active = self.run(["xdotool", "getwindowfocus"])
+        active = active.strip()
+        if active != str(self.window):
+            self.note("фокус на %s вместо %s — ещё одна попытка" % (active or "—", self.window))
+            self.run(["xdotool", "windowfocus", "--sync", "--clearmodifiers", self.window], timeout=20)
+            self.run(["xdotool", "windowraise", self.window], timeout=20)
+            self.run(["wmctrl", "-i", "-a", str(self.window)], timeout=20)
+            time.sleep(0.3)
+            code, active = self.run(["xdotool", "getwindowfocus"])
+            active = active.strip()
+        if active != str(self.window):
+            self.fail("не удалось перевести фокус на окно %s (сейчас %s)" % (self.window, active or "—"))
+            return False
         return True
 
     def wait_window(self, pattern, timeout_ms):
@@ -327,10 +343,11 @@ class Runner:
         if not self.focus():
             self.fail("hold %s: нет окна" % spec)
             return
+        code, before = self.run(["xdotool", "getwindowfocus"])
         self.run(["xdotool", "keydown", "--clearmodifiers", spec])
         time.sleep(millis / 1000.0)
         self.run(["xdotool", "keyup", "--clearmodifiers", spec])
-        self.note("удержание %s %d мс" % (spec, millis))
+        self.note("удержание %s %d мс (фокус: %s)" % (spec, millis, before.strip() or "—"))
 
     def key(self, spec):
         if not self.focus():
