@@ -111,13 +111,26 @@ jobs:
           done
           set -e
 
-          # Боевые замеры: строки AOETEST из лога клиента. Провал проверки не
-          # валит job (порт ещё нестабилен), но виден и в summary, и в PR.
-          grep -h "AOETEST" run/logs/latest.log 2>/dev/null | awk '!seen[$0]++' > run/e2e/aoetest.log || true
+          # Боевые замеры и проверка «бесдушных основ»: строки AOETEST из лога
+          # клиента. latest.log относится только к последнему сценарию, поэтому
+          # дополнительно читаем aoe-devtest.txt — зонд дописывает туда же.
+          # Провал проверки не валит job (порт ещё нестабилен), но виден и в
+          # summary, и в PR.
+          {
+            grep -h "AOETEST" run/logs/latest.log 2>/dev/null || true
+            cat run/aoe-devtest.txt 2>/dev/null || true
+          } | awk '!seen[$0]++' > run/e2e/aoetest.log
           if [ -s run/e2e/aoetest.log ]; then
             summary=$(grep "AOETEST summary" run/e2e/aoetest.log | tail -1)
             echo "### $summary"
             grep -q "failed=0" <<< "$summary" || echo "::warning::Боевые замеры с провалами: $summary"
+            # «Бесдушные основы»: важно не просто отсутствие падений, а что
+            # проверка вообще дошла до живого мира (иначе клиент не вошёл в мир).
+            if grep -q "AOETEST soulless " run/e2e/aoetest.log; then
+              echo "Проверка бесдушных основ: $(grep -c "AOETEST soulless" run/e2e/aoetest.log) строк"
+            else
+              echo "::warning::Проверка бесдушных основ не выполнилась — клиент не дошёл до мира"
+            fi
           fi
 
           shots=$(find run/e2e/shots -maxdepth 1 -name '*.png' | wc -l)
