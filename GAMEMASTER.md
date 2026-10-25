@@ -30,7 +30,7 @@
 Общий выключатель (`enabled`) отключает вмешательство GameMaster в опыт и спавн,
 не прекращая сбор статистики.
 
-Всё настраивается тремя способами: JSON-конфиг, команды `/mine_and_slash gm ...`
+Всё настраивается тремя способами: JSON-конфиг, команды `/aoe gm ...`
 и локальная веб-панель с графиками прогресса всех игроков.
 
 ---
@@ -182,7 +182,7 @@ AFK не учитывается: если игрок не двигался до�
 
 * в сообщении о полученном опыте: `+123 опыта x1.85`;
 * при входе: `GameMaster: множитель опыта x1.85 (темп x0.62, догоняющий x3)`;
-* в команде `/mine_and_slash gm player <ник>`.
+* в команде `/aoe gm player <ник>`.
 
 Отключить сообщения можно в конфиге (`show_multiplier_in_actionbar`, `announce_on_login`).
 
@@ -193,39 +193,39 @@ AFK не учитывается: если игрок не двигался до�
 Все команды требуют прав гейм-мастера (уровень оператора 2):
 
 ```
-/mine_and_slash gm                                  — сводка: переключатели, цель, прогноз, панель
-/mine_and_slash gm status
-/mine_and_slash gm catchup                          — вкл/выкл уравнивание
-/mine_and_slash gm catchup true|false
-/mine_and_slash gm pacing                           — вкл/выкл общий темп
-/mine_and_slash gm pacing true|false
-/mine_and_slash gm enabled                          — мастер-выключатель (опыт и спавн)
-/mine_and_slash gm spawnrate                        — состояние spawn-rate
-/mine_and_slash gm spawnrate enabled true|false     — включить/выключить регулировку спавна
-/mine_and_slash gm spawnrate dynamic true|false     — динамика от Благосклонности
-/mine_and_slash gm spawnrate manual 0.5             — глобальный ручной множитель (0…1)
-/mine_and_slash gm spawnrate player <ник>           — текущие настройки игрока
-/mine_and_slash gm spawnrate player <ник> 0.5       — ручной override игроку
-/mine_and_slash gm spawnrate player <ник> reset      — снять override
-/mine_and_slash gm auto                             — состояние автобаланса
-/mine_and_slash gm auto on|off                      — вкл/выкл автобаланс
-/mine_and_slash gm auto mobs true|false             — разрешить автоподстройку HP/урона мобов
-/mine_and_slash gm auto loot true|false             — разрешить автоподстройку лута
-/mine_and_slash gm auto minutes 14 70               — коридор «минут на уровень» (старт → максимум)
-/mine_and_slash gm retention                        — состояние удержания и риск ухода
-/mine_and_slash gm retention on|off                 — вкл/выкл серии, вехи и pity
-/mine_and_slash gm retention pity true|false        — защита от невезения
-/mine_and_slash gm export                           — CSV телеметрии для офлайн-анализа
-/mine_and_slash gm web                              — вкл/выкл веб-панель
-/mine_and_slash gm web true|false
-/mine_and_slash gm hours 100                        — целевые реальные часы
-/mine_and_slash gm startlevel 20                    — с какого уровня начинать штраф
-/mine_and_slash gm penalty 0.95                     — максимальный штраф (доля)
-/mine_and_slash gm player <ник>                     — множитель и статистика игрока
-/mine_and_slash gm list                             — все отслеживаемые игроки
-/mine_and_slash gm save                             — принудительно сохранить данные
-/mine_and_slash gm reload                           — перечитать gamemaster.json
-/mine_and_slash gm resetdata confirm                — очистить статистику (необратимо)
+/aoe gm                                  — сводка: переключатели, цель, прогноз, панель
+/aoe gm status
+/aoe gm catchup                          — вкл/выкл уравнивание
+/aoe gm catchup true|false
+/aoe gm pacing                           — вкл/выкл общий темп
+/aoe gm pacing true|false
+/aoe gm enabled                          — мастер-выключатель (опыт и спавн)
+/aoe gm spawnrate                        — состояние spawn-rate
+/aoe gm spawnrate enabled true|false     — включить/выключить регулировку спавна
+/aoe gm spawnrate dynamic true|false     — динамика от Благосклонности
+/aoe gm spawnrate manual 0.5             — глобальный ручной множитель (0…1)
+/aoe gm spawnrate player <ник>           — текущие настройки игрока
+/aoe gm spawnrate player <ник> 0.5       — ручной override игроку
+/aoe gm spawnrate player <ник> reset      — снять override
+/aoe gm auto                             — состояние автобаланса
+/aoe gm auto on|off                      — вкл/выкл автобаланс
+/aoe gm auto mobs true|false             — разрешить автоподстройку HP/урона мобов
+/aoe gm auto loot true|false             — разрешить автоподстройку лута
+/aoe gm auto minutes 14 70               — коридор «минут на уровень» (старт → максимум)
+/aoe gm retention                        — состояние удержания и риск ухода
+/aoe gm retention on|off                 — вкл/выкл серии, вехи и pity
+/aoe gm retention pity true|false        — защита от невезения
+/aoe gm export                           — CSV телеметрии для офлайн-анализа
+/aoe gm web                              — вкл/выкл веб-панель
+/aoe gm web true|false
+/aoe gm hours 100                        — целевые реальные часы
+/aoe gm startlevel 20                    — с какого уровня начинать штраф
+/aoe gm penalty 0.95                     — максимальный штраф (доля)
+/aoe gm player <ник>                     — множитель и статистика игрока
+/aoe gm list                             — все отслеживаемые игроки
+/aoe gm save                             — принудительно сохранить данные
+/aoe gm reload                           — перечитать gamemaster.json
+/aoe gm resetdata confirm                — очистить статистику (необратимо)
 ```
 
 ---
@@ -373,11 +373,11 @@ target(level) = auto_start_minutes × (auto_end_minutes / auto_start_minutes) ^ 
   дропа линейно растёт от 0 до 90 % и сбрасывается при выпадении.
 * **Мягкий старт.** До 5 уровня смерть не отнимает опыт.
 * **Риск ухода** считается по давности входа, длине серии и наличию сессий — виден в панели
-  и в `/mine_and_slash gm retention`.
+  и в `/aoe gm retention`.
 
 Именно эти механизмы, а не «нейросеть», решают удержание: они детерминированы, объяснимы
 и настраиваются числами. Для офлайн-моделей есть `GameMaster.exportCsv()`
-(`/mine_and_slash gm export`).
+(`/aoe gm export`).
 
 ---
 
@@ -389,14 +389,14 @@ target(level) = auto_start_minutes × (auto_end_minutes / auto_start_minutes) ^ 
 |---|---|---|
 | Кооп-бонус | опыт `1 + 0.07·(онлайн−1)` (потолок ×1.35), лут `1 + 0.05·(онлайн−1)`, спавн `1 + 0.15·(онлайн−1)` | `social_enabled`, `social_coop_*` |
 | Групповое HP | моб крепче, если рядом несколько игроков: `1 + 0.25·(рядом−1)`, потолок ×2, радиус 24 | `social_group_*` |
-| Общая цель недели | 6000 убийств всем сервером → +400 Благосклонности и редкая вещь каждому; модель закрывает её группами 4–6 | `social_goal_*`, `/mine_and_slash gm social goal <n>` |
+| Общая цель недели | 6000 убийств всем сервером → +400 Благосклонности и редкая вещь каждому; модель закрывает её группами 4–6 | `social_goal_*`, `/aoe gm social goal <n>` |
 | Прайм-тайм | гистограмма активности по часам, окно компании 3 ч, подсказка при входе | `social_prime_*` |
 | «Первые» события | первый 10/20/30/40/50 уровень и первый уникат — объявление всем | `social_announce_firsts` |
 | Ежедневная цель | убийства `12+1.5·lvl` (cap40), сундуки и ремесло `2+lvl/10` (cap6); награда `120·(1+lvl/50)` | `retention_session_goal*` |
 | Пакет возвращения | после 3+ дней: редкая вещь + опыт ×1.25 на 2 ч | `retention_return_*` |
 | Мягкая смерть | вместо −10 % опыта — печать: опыт ×0.85, 10 мин или 3 убийства | `retention_soft_death`, `retention_seal_*` |
 | Pity рун/самоцветов | руна 200→700, гем 120→400, до 90 % | `retention_pity_runes`, `retention_pity_*` |
-| Кодекс уникатов | 18 предметов; награды за каждые 4 разных: +300×ступень Благосклонности и эпик | `codex_*`, `/mine_and_slash gm codex` |
+| Кодекс уникатов | 18 предметов; награды за каждые 4 разных: +300×ступень Благосклонности и эпик | `codex_*`, `/aoe gm codex` |
 | Подсказка цели | раз в час в окно компании: сколько убийств осталось | `social_goal_hint*` |
 
 Важно про AFK: кооп-бонус считается по игрокам, которые двигались за последние
@@ -405,10 +405,10 @@ target(level) = auto_start_minutes × (auto_end_minutes / auto_start_minutes) ^ 
 Команды:
 
 ```
-/mine_and_slash gm codex                  — кодекс: собрано уникатов, ступени, печать, pity рун
-/mine_and_slash gm social                 — онлайн, кооп-множители, прайм-тайм, цель недели
-/mine_and_slash gm social on|off
-/mine_and_slash gm social goal <убийств>  — цель недели (0 — выключить)
+/aoe gm codex                  — кодекс: собрано уникатов, ступени, печать, pity рун
+/aoe gm social                 — онлайн, кооп-множители, прайм-тайм, цель недели
+/aoe gm social on|off
+/aoe gm social goal <убийств>  — цель недели (0 — выключить)
 ```
 
 ---
@@ -428,18 +428,18 @@ target(level) = auto_start_minutes × (auto_end_minutes / auto_start_minutes) ^ 
   колонка «Профиль» в таблице игроков.
 * **Профили** игроков: любимый биом и его доля, любимый час, топ-моб, топ-причина смерти,
   стиль (`воин`, `исследователь`, `фарм на месте`, `смешанный`).
-* **Отчёт по сезону** (`/mine_and_slash gm telemetry report`) — markdown с топами, профилями и
-  автоматическими выводами «что менять в следующем сезоне». `/mine_and_slash gm season new <название>`
+* **Отчёт по сезону** (`/aoe gm telemetry report`) — markdown с топами, профилями и
+  автоматическими выводами «что менять в следующем сезоне». `/aoe gm season new <название>`
   архивирует данные, пишет отчёт и обнуляет счётчики.
 
 Команды:
 
 ```
-/mine_and_slash gm telemetry            — статус и топы
-/mine_and_slash gm telemetry on|off
-/mine_and_slash gm telemetry report     — season_report_<сезон>.md
-/mine_and_slash gm season                — текущий сезон
-/mine_and_slash gm season new <название> — отчёт, архив, новый сезон
+/aoe gm telemetry            — статус и топы
+/aoe gm telemetry on|off
+/aoe gm telemetry report     — season_report_<сезон>.md
+/aoe gm season                — текущий сезон
+/aoe gm season new <название> — отчёт, архив, новый сезон
 ```
 
 Журнал ротируется по 16 МБ и хранится 60 дней (настраивается), ошибки телеметрии
@@ -471,7 +471,7 @@ target(level) = auto_start_minutes × (auto_end_minutes / auto_start_minutes) ^ 
   задаются при спавне и пересчёте статов моба, поэтому уже заспавненные мобы реагируют
   с задержкой (до следующего пересчёта).
 * Опыт профессий автобаланс не трогает. Spawn-rate — отдельный режим и живёт независимо.
-* Множитель опыта применяется ко всем источникам опыта уровня, включая `/mine_and_slash give exp`
+* Множитель опыта применяется ко всем источникам опыта уровня, включая `/aoe give exp`
   (админ тоже увидит изменённое число — это сознательно, чтобы настройка была единой).
 * Уровни ниже `pacing_start_level` не штрафуются — новых игроков темп не душит.
 * Оценка базового времени делается по фактическим замерам и весам опыта. Если на высоких
@@ -507,7 +507,7 @@ target(level) = auto_start_minutes × (auto_end_minutes / auto_start_minutes) ^ 
 | `dimension/spawner/ModSpawnerBlockEntity.java` | spawn-rate обычных волн в спавнерах комнат данжей; босс-вызовы пропускаются |
 | `gamemaster/GameMasterEvents.java` | подписка на старт/стоп сервера, тики, вход/выход игроков |
 | `gamemaster/GameMasterWebServer.java` | локальный HTTP-сервер и API |
-| `gamemaster/GameMasterCommand.java` | команды `/mine_and_slash gm …` |
+| `gamemaster/GameMasterCommand.java` | команды `/aoe gm …` |
 | `resources/assets/mmorpg/gamemaster/dashboard.html` | страница панели (графики на canvas) |
 | `capability/entity/EntityData.java` | применение множителя в `GiveExp` |
 | `mmorpg/LifeCycleEvents.java` | регистрация событий GameMaster |
@@ -573,12 +573,12 @@ Spawn-rate — отдельный режим GameMaster. При `enabled=true` �
 Управление из игры:
 
 ```
-/mine_and_slash gm spawnrate                      — показать настройки
-/mine_and_slash gm spawnrate enabled false        — выключить spawn-rate
-/mine_and_slash gm spawnrate dynamic false        — оставить только ручную настройку
-/mine_and_slash gm spawnrate manual 0.75          — общий ручной множитель ×0.75
-/mine_and_slash gm spawnrate player Alice 0.5     — ручной override игроку
-/mine_and_slash gm spawnrate player Alice reset   — убрать override
+/aoe gm spawnrate                      — показать настройки
+/aoe gm spawnrate enabled false        — выключить spawn-rate
+/aoe gm spawnrate dynamic false        — оставить только ручную настройку
+/aoe gm spawnrate manual 0.75          — общий ручной множитель ×0.75
+/aoe gm spawnrate player Alice 0.5     — ручной override игроку
+/aoe gm spawnrate player Alice reset   — убрать override
 ```
 
 Веб-панель показывает текущую Благосклонность и итоговый spawn-rate для отслеживаемых

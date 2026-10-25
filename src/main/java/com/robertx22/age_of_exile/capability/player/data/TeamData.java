@@ -22,6 +22,8 @@ public class TeamData {
 
     public void leaveTeam() {
         this.team_id = "";
+        this.isLeader = false;
+        this.invitedToTeam = "";
     }
 
     public boolean isOnTeam() {

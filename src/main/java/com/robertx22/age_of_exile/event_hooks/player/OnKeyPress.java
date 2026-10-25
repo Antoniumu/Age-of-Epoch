@@ -2,6 +2,8 @@ package com.robertx22.age_of_exile.event_hooks.player;
 
 import com.robertx22.age_of_exile.a_libraries.mob_plates.MobPlateStyleHud;
 import com.robertx22.age_of_exile.gui.screens.character_screen.CharacterScreen;
+import com.robertx22.age_of_exile.gui.overlays.party_hud.PartyHudOverlay;
+import com.robertx22.age_of_exile.vanilla_mc.packets.PartyHudRequestPacket;
 import com.robertx22.age_of_exile.questbook.QuestBookScreen;
 import com.robertx22.age_of_exile.mmorpg.registers.client.KeybindsRegister;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.ChatUtils;
@@ -13,7 +15,7 @@ import com.robertx22.forge_compat.client.Screen;
 public class OnKeyPress {
 
     public static int cooldown = 0;
-
+    private static int partyHudSyncTicks = 0;
 
     public static void onEndTick(Minecraft mc) {
 
@@ -30,14 +32,26 @@ public class OnKeyPress {
         }
 
         if (mc.player == null) {
+            partyHudSyncTicks = 0;
             return;
+        }
+
+        if (mc.level != null && ++partyHudSyncTicks >= 10) {
+            partyHudSyncTicks = 0;
+            Packets.sendToServer(new PartyHudRequestPacket());
         }
 
         if (ChatUtils.wasChatOpenRecently()) {
             return;
         }
 
-        if (KeybindsRegister.MOB_PLATE_STYLE_KEY.isDown()) {
+        if (KeybindsRegister.PARTY_HUD_TOGGLE_KEY.isDown()) {
+            PartyHudOverlay.toggle();
+            cooldown = 10;
+        } else if (KeybindsRegister.PARTY_HUD_POSITION_KEY.isDown()) {
+            PartyHudOverlay.cyclePosition();
+            cooldown = 10;
+        } else if (KeybindsRegister.MOB_PLATE_STYLE_KEY.isDown()) {
             // Shift+J switches how entities with a vanilla nickname are treated,
             // plain J cycles the visual style.
             if (mc.hasShiftDown()) {

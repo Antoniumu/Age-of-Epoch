@@ -1294,6 +1294,31 @@ public class GameMaster {
         return config.enabled && config.social_enabled ? Social.coopSpawn(coopCache, config) : 1;
     }
 
+    /** Compact, server-authoritative text for the always-on party HUD. */
+    public String dailyHudSummary(ServerPlayer player) {
+        PlayerProgress progress = progressFor(player);
+        if (progress.session_goal_target <= 0) {
+            return "Ежедневная цель ещё не назначена";
+        }
+        String task = switch (progress.session_goal_kind) {
+            case Retention.GOAL_CHESTS -> "Откройте сундуки";
+            case Retention.GOAL_CRAFTS -> "Создайте предметы";
+            default -> "Победите монстров";
+        };
+        String state = progress.session_goal_done ? " · выполнено" : "";
+        return task + " · " + Math.min(progress.session_goal_progress, progress.session_goal_target)
+            + "/" + progress.session_goal_target + state;
+    }
+
+    public String weeklyHudSummary() {
+        int target = Math.max(0, config.social_goal_kills);
+        if (target == 0) {
+            return "Общая цель недели отключена";
+        }
+        return "Победите монстров · " + Math.min(data.week_kills, target) + "/" + target
+            + (weeklyGoalReached() ? " · выполнено" : "");
+    }
+
     /** Убийств всей командой за текущую неделю. */
     public int weeklyKills() {
         return data.week_kills;

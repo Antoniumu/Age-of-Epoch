@@ -23,7 +23,7 @@ import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 
 /**
- * /mine_and_slash gm ... — управление системой GameMaster из игры.
+ * /aoe gm ... — управление системой GameMaster из игры.
  */
 public class GameMasterCommand {
 
@@ -389,7 +389,7 @@ public class GameMasterCommand {
         GameMaster gm = GameMaster.get();
         GameMasterConfig config = gm.config();
         if (!config.retention_enabled) {
-            send(source, "Удержание выключено (/mine_and_slash gm retention on).");
+            send(source, "Удержание выключено (/aoe gm retention on).");
             return 1;
         }
         send(source, "Удержание: вкл. Ежедневно +" + GameMaster.fmt(config.retention_daily_favor)
@@ -447,7 +447,7 @@ public class GameMasterCommand {
         GameMaster gm = GameMaster.get();
         GameMasterConfig config = gm.config();
         if (!config.social_enabled) {
-            send(source, "Социальный слой выключен (/mine_and_slash gm social on).");
+            send(source, "Социальный слой выключен (/aoe gm social on).");
             return 1;
         }
         int online = gm.onlineCount();
@@ -468,7 +468,7 @@ public class GameMasterCommand {
                 + (gm.weeklyGoalReached() ? " — выполнена" : "")
                 + "; награда: +" + GameMaster.fmt(config.social_goal_favor) + " Благосклонности");
         } else {
-            send(source, "Общая цель недели выключена (/mine_and_slash gm social goal <убийств>).");
+            send(source, "Общая цель недели выключена (/aoe gm social goal <убийств>).");
         }
         send(source, "Мобы: +" + GameMaster.fmt(config.social_group_hp_per_player * 100)
             + "% HP за каждого игрока рядом (радиус " + GameMaster.fmt(config.social_group_radius)
@@ -538,7 +538,7 @@ public class GameMasterCommand {
         printTop(source, state.counters, "kill_mob|", "Убитые мобы", 5, false);
         printTop(source, state.counters, "subject_death|", "Причины смерти", 5, false);
         printTop(source, state.counters, "subject_spell|", "Способности", 5, false);
-        send(source, "Отчёт: /mine_and_slash gm telemetry report · новый сезон: /mine_and_slash gm season new <название>");
+        send(source, "Отчёт: /aoe gm telemetry report · новый сезон: /aoe gm season new <название>");
         return 1;
     }
 
@@ -597,7 +597,7 @@ public class GameMasterCommand {
             + ", дней: " + GameMaster.fmt(state.started > 0 ? (GameMaster.now() - state.started) / 86400.0 : 0));
         send(source, "Событий: " + state.events + ", игроков с данными: " + state.players.size()
             + ", счётчиков: " + state.counters.size());
-        send(source, "/mine_and_slash gm season new <название> — архив старых данных, отчёт и обнуление счётчиков");
+        send(source, "/aoe gm season new <название> — архив старых данных, отчёт и обнуление счётчиков");
         return 1;
     }
 
@@ -661,7 +661,7 @@ public class GameMasterCommand {
             send(source, "Мобы: HP x" + GameMaster.fmt(gm.mobHealthMultiplier()) + ", урон x"
                 + GameMaster.fmt(gm.mobDamageMultiplier()) + ", лут x" + GameMaster.fmt(gm.lootMultiplier()));
         } else {
-            send(source, "Автобаланс: выкл (/mine_and_slash gm auto on).");
+            send(source, "Автобаланс: выкл (/aoe gm auto on).");
         }
         if (config.web_enabled) {
             send(source, "Панель: http://" + config.web_host + ":" + config.web_port + "/");
