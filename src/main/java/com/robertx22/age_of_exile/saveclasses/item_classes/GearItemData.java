@@ -99,6 +99,15 @@ public class GearItemData implements ICommonDataItem<GearRarity> {
     @Store
     public boolean sl = false;
 
+    /**
+     * Множитель базовых статов (1 — обычный предмет). У бесдушной основы это
+     * «сила основы»: 0.12 у дешёвого предмета … 0.45 у самого дорогого.
+     * Хранится отдельно от роллов {@code baseStats.perc}, потому что perc лишь
+     * выбирает значение внутри диапазона min..max, а не масштабирует его.
+     */
+    @Store
+    public float bq = 1F;
+
     public boolean isSoulless() {
         return sl;
     }

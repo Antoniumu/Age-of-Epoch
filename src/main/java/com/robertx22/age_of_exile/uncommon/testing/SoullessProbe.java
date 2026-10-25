@@ -72,8 +72,8 @@ public final class SoullessProbe {
         Report base = new Report("soulless");
         base.put("cheap_rank", cheapRank);
         base.put("rich_rank", richRank);
-        base.put("cheap_perc", cheapPerc);
-        base.put("rich_perc", richPerc);
+        base.put("cheap_bq", cheapData == null ? -1F : cheapData.bq);
+        base.put("rich_bq", richData == null ? -1F : richData.bq);
         base.put("cheap_pct", SoullessGear.basePercent(SoullessGear.costFactor(cheap)));
         base.put("rich_pct", SoullessGear.basePercent(SoullessGear.costFactor(rich)));
         base.check("cheap_created", cheapMade && cheapData != null && cheapData.isSoulless());
@@ -85,8 +85,11 @@ public final class SoullessProbe {
         // так проверяется само «ослабление» основы, а не только формула.
         int normalPerc = normalBasePerc(richData);
         base.put("normal_perc", normalPerc);
-        base.check("rich_stronger", richPerc > cheapPerc);
-        base.check("below_normal", normalPerc > 0 && richPerc < normalPerc * 0.8D);
+        base.check("quality_set", cheapData != null && richData != null
+            && Math.abs(cheapData.bq - 0.12F) < 0.01F && Math.abs(richData.bq - 0.45F) < 0.01F);
+        base.check("rolls_not_crippled", cheapPerc > 0 && richPerc > 0
+            && cheapPerc > normalPerc * 0.3D);
+        base.check("below_normal", normalPerc > 0 && richPerc <= normalPerc);
         base.check("plain_name", cheapData != null && plainNameMatches(cheap, cheapData));
         out.add(base.line());
         counters[0] += base.checks;
@@ -109,7 +112,11 @@ public final class SoullessProbe {
         scaling.put("lvl", lvlCompare);
         scaling.put("cheap_value", String.format(java.util.Locale.ROOT, "%.1f", cheapValue));
         scaling.put("rich_value", String.format(java.util.Locale.ROOT, "%.1f", richValue));
+        scaling.put("ratio", String.format(java.util.Locale.ROOT, "%.2f",
+            richValue / Math.max(0.01F, cheapValue)));
         scaling.check("rich_higher_in_numbers", richValue > cheapValue);
+        // 45 % против 12 % — разница должна быть заметно больше, чем «на волосок».
+        scaling.check("difference_visible", richValue > cheapValue * 1.5F);
         out.add(scaling.line());
         counters[0] += scaling.checks;
         counters[1] += scaling.failed;

@@ -242,9 +242,12 @@ public class SoullessGear {
             data.up.regenerate(data.getRarity());
         }
 
+        // Роллы остаются полными (perc лишь выбирает значение внутри min..max),
+        // а «сила основы» применяется множителем bq — иначе 12 % и 45 % давали бы
+        // почти одинаковые числа: perc не масштабирует стат, а двигает его в диапазоне.
         data.baseStats = new BaseStatsData();
         data.baseStats.RerollFully(data);
-        scaleBaseStats(data.baseStats, factor);
+        data.bq = basePercent(factor) / 100F;
 
         data.imp = new ImplicitStatsData();
         data.imp.RerollFully(data);
@@ -269,20 +272,6 @@ public class SoullessGear {
             return null;
         }
         return create(type, lvl, costFactor(stack));
-    }
-
-    private static void scaleBaseStats(BaseStatsData stats, float factor) {
-        if (stats == null || stats.perc == null) {
-            return;
-        }
-        float multi = basePercent(factor) / 100F;
-        for (int i = 0; i < stats.perc.size(); i++) {
-            Integer value = stats.perc.get(i);
-            if (value == null) {
-                continue;
-            }
-            stats.perc.set(i, Math.max(1, Math.round(value * multi)));
-        }
     }
 
     /**
@@ -504,6 +493,8 @@ public class SoullessGear {
         }
 
         soulData.can_sal = base.can_sal;
+        // сила основы (12–45 %) остаётся у предмета и после наложения души
+        soulData.bq = base.bq;
         soulData.sl = false;
         soulData.item_id = base.item_id;
     }
