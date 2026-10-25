@@ -17,6 +17,7 @@
     rclick 640 400              правый клик
     move 640 400                только навести курсор
     key H                       нажать клавишу (xdotool key)
+    hold H 400                  нажать и подержать (для хоткеев через isDown())
     keydown W / keyup W         удержание
     type hello                  ввести текст
     wait 1500                   пауза, мс
@@ -322,6 +323,15 @@ class Runner:
         self.run(["xdotool", "mousemove", str(ox + x), str(oy + y)])
         self.note("курсор %s,%s" % (x, y))
 
+    def hold(self, spec, millis):
+        if not self.focus():
+            self.fail("hold %s: нет окна" % spec)
+            return
+        self.run(["xdotool", "keydown", "--clearmodifiers", spec])
+        time.sleep(millis / 1000.0)
+        self.run(["xdotool", "keyup", "--clearmodifiers", spec])
+        self.note("удержание %s %d мс" % (spec, millis))
+
     def key(self, spec):
         if not self.focus():
             self.fail("клавиша %s: нет окна" % spec)
@@ -356,6 +366,14 @@ class Runner:
                     self.move(int(args[0]), int(args[1]))
                 elif command == "key":
                     self.key(rest.strip())
+                elif command == "hold":
+                    # hold <клавиша> <мс>: нажать, подержать, отпустить.
+                    # Нужно для хоткеев, которые мод читает через isDown() в тике:
+                    # мгновенный key (нажал-отпустил за 10 мс) тик не замечает.
+                    if len(args) < 2:
+                        self.fail("hold требует: <клавиша> <мс>")
+                    else:
+                        self.hold(rest[len(args[0]):].strip(), int(args[1]))
                 elif command == "keydown":
                     self.key("keydown " + rest.strip())
                 elif command == "keyup":

@@ -1,0 +1,40 @@
+# Сценарий: открыть внутриигровую вику и пройти по страницам.
+#
+# Вика открывается из хаба (CharacterScreen → иконка вики) либо с зажатой B на
+# предмете в инвентаре. Здесь идём через хаб: он открывается клавишей H.
+
+wait_window Minecraft 420000
+wait_log 300000 Created: .*atlas/items
+wait 8000
+shot 00-main-menu
+move 640 296
+click 640 296
+wait 4000
+move 480 688
+click 480 688
+wait 3000
+move 480 688
+click 480 688
+wait 40000
+shot 01-in-world
+
+# Хаб
+hold h 500
+wait 3000
+shot 02-hub
+
+# В хабе иконки экранов идут сеткой; вика — крайняя правая в первом ряду.
+# Координаты уточняются по снимку 02-hub.
+move 940 250
+wait 400
+shot 03-hub-hover-wiki
+click 940 250
+wait 3000
+shot 04-wiki
+
+# Прокрутка статьи вниз и переход по первой ссылке
+move 640 400
+key Next
+wait 600
+shot 05-wiki-scrolled
+log конец сценария wiki
