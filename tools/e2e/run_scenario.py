@@ -387,10 +387,13 @@ class Runner:
                     # hold <клавиша> <мс>: нажать, подержать, отпустить.
                     # Нужно для хоткеев, которые мод читает через isDown() в тике:
                     # мгновенный key (нажал-отпустил за 10 мс) тик не замечает.
-                    if len(args) < 2:
+                    # Последний токен — время удержания, всё до него — имя клавиши
+                    # (в xdotool это может быть 'shift+a' или 'ctrl+alt+k').
+                    parts = rest.rsplit(None, 1)
+                    if len(parts) < 2:
                         self.fail("hold требует: <клавиша> <мс>")
                     else:
-                        self.hold(rest[len(args[0]):].strip(), int(args[1]))
+                        self.hold(parts[0].strip(), int(parts[1]))
                 elif command == "keydown":
                     self.key("keydown " + rest.strip())
                 elif command == "keyup":
