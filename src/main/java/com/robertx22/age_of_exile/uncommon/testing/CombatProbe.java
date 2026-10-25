@@ -160,6 +160,7 @@ public final class CombatProbe {
         private boolean dpsReported;
         private boolean healReported;
         private boolean teamReported;
+        private boolean soullessReported;
 
         Runner(String what) {
             this.what = what;
@@ -182,6 +183,18 @@ public final class CombatProbe {
             if (what.equals("team") || what.equals("all")) {
                 if (!teamReported) {
                     teamStep(player);
+                    return false;
+                }
+            }
+            if (what.equals("soulless") || what.equals("all")) {
+                if (!soullessReported) {
+                    // «Бесдушные основы»: проверка в живом мире — без реестров слотов,
+                    // датапака типов предметов и NBT-сохранения её не прогнать.
+                    int[] counters = new int[]{checks, failed};
+                    SoullessProbe.run(player, lines, counters);
+                    checks = counters[0];
+                    failed = counters[1];
+                    soullessReported = true;
                     return false;
                 }
             }

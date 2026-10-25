@@ -50,18 +50,37 @@ wait 300
 wait 8000
 shot 05-after-fight
 
+# --- бесдушные основы: предметы из зонда лежат в хотбаре -----------------
+# Зонд SoullessProbe кладёт в слоты 1-4: бесдушный деревянный меч, бесдушный
+# незеритовый меч, тот же деревянный с наложенной душой и саму душу. Открываем
+# инвентарь и наводим курсор на слоты — в тултипе видно «Бесдушная основа»
+# и разницу статов между дешёвой и дорогой основой.
+key E
+wait 1500
+move 620 480
+wait 1200
+shot 09-inventory-soulless
+move 660 480
+wait 1200
+shot 10-inventory-rich-base
+move 700 480
+wait 1200
+shot 11-inventory-souled
+key E
+wait 800
+
 # --- настройки HUD: горячие клавиши F7 (скрыть) и F8 (положение) ---------
 hold F7 400
 wait 1500
-shot 06-hud-hidden
+shot 12-hud-hidden
 hold F7 400
 wait 1500
-shot 07-hud-shown
+shot 13-hud-shown
 
 # Смена позиции панели
 hold F8 400
 wait 1500
-shot 08-hud-position
+shot 14-hud-position
 
 jstack combat
 log конец сценария combat
