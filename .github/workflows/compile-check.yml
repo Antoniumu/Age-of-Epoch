@@ -51,12 +51,12 @@ jobs:
           status=$?
           set -e
           echo "status=$status" >> "$GITHUB_OUTPUT"
-          grep -E "error:|error;|\.java:[0-9]+: error" compile.log | head -60 || true
+          grep -E "error:|symbol:|location:|\.java:[0-9]+: error" compile.log | head -120 || true
           tail -n 30 compile.log
           {
             echo "### compileJava: статус $status"
             echo '```text'
-            grep -E "error:|\.java:[0-9]+: error" compile.log | head -30 || echo "ошибок в логе нет"
+            grep -E "error:|symbol:" compile.log | head -40 || echo "ошибок в логе нет"
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
           exit 0
@@ -80,7 +80,7 @@ jobs:
               echo "## Компиляция: ошибка ❌ (статус ${STATUS:-?})"
               echo
               echo '```text'
-              grep -E "error:|error;|\.java:[0-9]+: error" compile.log 2>/dev/null | head -60 \
+              grep -E "error:|symbol:|location:" compile.log 2>/dev/null | head -120 \
                 || echo "строк error: в логе нет — смотри хвост ниже"
               echo '```'
               echo
