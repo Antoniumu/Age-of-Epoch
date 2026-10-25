@@ -40,15 +40,51 @@ jobs:
         if: failure()
         shell: bash
         run: |
+          summary="$GITHUB_STEP_SUMMARY"
           if [[ -f ci-build.log ]]; then
-            echo '### Gradle failure details' >> "$GITHUB_STEP_SUMMARY"
-            echo '```text' >> "$GITHUB_STEP_SUMMARY"
-            tail -n 70 ci-build.log >> "$GITHUB_STEP_SUMMARY"
-            echo '```' >> "$GITHUB_STEP_SUMMARY"
+            {
+              echo '### Gradle failure details'
+              echo '```text'
+              tail -n 70 ci-build.log
+              echo '```'
+            } >> "$summary"
             while IFS= read -r line; do
               echo "::error::$line"
             done < <(grep -E '(^e: | error:|What went wrong:|Execution failed|BUILD FAILED|Caused by:)' ci-build.log | tail -n 25)
           fi
+
+          # Имена упавших тестов и причину берём из XML-отчётов: в логе Gradle
+          # видно только «There were failing tests», а какая проверка и почему
+          # упала — нет. Строки из пайтона идут сразу в annotations и в summary.
+          python3 - <<'PY'
+          import glob
+          import os
+          import xml.etree.ElementTree as ET
+
+          failed = []
+          for path in sorted(glob.glob('build/test-results/test/TEST-*.xml')):
+              try:
+                  root = ET.parse(path).getroot()
+              except Exception:
+                  continue
+              for case in root.iter('testcase'):
+                  for kind in ('failure', 'error'):
+                      node = case.find(kind)
+                      if node is None:
+                          continue
+                      raw = (node.get('message') or node.text or '').strip()
+                      first = raw.splitlines()[0][:400] if raw else 'без сообщения'
+                      failed.append('%s.%s: %s' % (case.get('classname'), case.get('name'), first))
+
+          if failed:
+              out = ['### Упавшие тесты (%d)' % len(failed), '```text'] + failed + ['```', '']
+              summary_path = os.environ.get('GITHUB_STEP_SUMMARY')
+              if summary_path:
+                  with open(summary_path, 'a', encoding='utf-8') as handle:
+                      handle.write('\n'.join(out) + '\n')
+              for line in failed:
+                  print('::error::' + line)
+          PY
 
       - name: Keep Gradle log on failure
         if: failure()
