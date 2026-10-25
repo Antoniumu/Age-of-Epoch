@@ -1,5 +1,6 @@
 package com.robertx22.age_of_exile.event_hooks.my_events;
 
+import com.robertx22.age_of_exile.a_libraries.trinkets.MyTrinketUtils;
 import com.robertx22.age_of_exile.capability.bases.EntityGears;
 import com.robertx22.age_of_exile.capability.entity.EntityData;
 import com.robertx22.age_of_exile.dimension.rules.OnTickCancelTargettingOtherMobs;
@@ -15,6 +16,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.List;
+
 public class OnEntityTick extends EventConsumer<ExileEvents.OnEntityTick> {
 
     @Override
@@ -24,8 +27,9 @@ public class OnEntityTick extends EventConsumer<ExileEvents.OnEntityTick> {
         if (entity.level().isClientSide()) {
             return;
         }
-        TowerBoss.contain(entity);
         try {
+            TowerBoss.contain(entity);
+
             if (Load.Unit(entity) == null) {
                 return; // it shouldnt be though
             }
@@ -65,18 +69,30 @@ public class OnEntityTick extends EventConsumer<ExileEvents.OnEntityTick> {
 
         boolean calc = false;
 
+        // Сравниваем по ОТПЕЧАТКУ СОДЕРЖИМОГО (предмет + NBT), а не по ссылке:
+        // иначе прокрутка/апгрейд уже надетого предмета не считалась изменением,
+        // и макс. HP не пересчитывался до перезахода (а снятие — пересчитывался).
         for (EquipmentSlot s : EquipmentSlot.values()) {
             ItemStack now = entity.getItemBySlot(s);
-            ItemStack before = gears.get(s);
 
-            if (now != before) {
+            if (!gears.matches(s, now)) {
                 calc = true;
             }
             gears.put(s, now);
         }
 
-        if (entity instanceof Player player && entity.tickCount % 20 == 0) {
-            calc = true;
+        if (entity instanceof Player player) {
+            // Кольца и ожерелья живут вне EquipmentSlot, но их статы участвуют
+            // в пересчёте — следим и за ними.
+            List<ItemStack> trinkets = MyTrinketUtils.getAllSlots(player);
+            if (!gears.matchesTrinkets(trinkets)) {
+                calc = true;
+            }
+            gears.putTrinkets(trinkets);
+
+            if (entity.tickCount % 20 == 0) {
+                calc = true; // страховка: полный пересчёт раз в секунду
+            }
         }
 
         if (calc) {

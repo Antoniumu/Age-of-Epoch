@@ -387,6 +387,11 @@ public final class TowerBoss {
             }
         }
         level.addFreshEntityWithPassengers(entity);
+        // Множители дефа (HP/урон) применяются ДО пересчёта статов: HP мода
+        // считается от ванильного максимума, и при старом порядке (сначала
+        // пересчёт, потом scale) таблица HP «прыгала» после первого удара —
+        // см. BALANCE-AUDIT §9.3.
+        scale(entity, def, rank, champion);
         try {
             var data = Load.Unit(entity);
             if (data != null) {
@@ -396,7 +401,6 @@ public final class TowerBoss {
             }
         } catch (Exception ignored) {
         }
-        scale(entity, def, rank, champion);
         entity.setHealth(entity.getMaxHealth());
         entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 120, 0, false, false));
         level.sendParticles(net.minecraft.core.particles.ParticleTypes.SOUL_FIRE_FLAME,

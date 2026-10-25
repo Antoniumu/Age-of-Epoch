@@ -273,8 +273,6 @@ public class Unit {
                 return;
             }
 
-            //data.setEquipsChanged(false);
-
             if (data.getUnit() == null) {
                 data.setUnit(this);
             }
@@ -284,10 +282,26 @@ public class Unit {
 
             calcSets(gears);
 
+            // Снимок «до» пересчёта берём ДО очистки карты статов: иначе
+            // getDirtyCheck() читает пустую карту и всегда возвращает 0,
+            // сравнение «изменилось ли HP» теряет смысл.
+            DirtyCheck old = getDirtyCheck();
+
             stats.stats.clear();
             stats.statsInCalc.clear();
 
-            DirtyCheck old = getDirtyCheck();
+            // Модификаторы ванильных атрибутов от прошлого пересчёта снимаем ДО
+            // расчёта: addVanillaHpToStats() читает entity.getMaxHealth(), и с
+            // «висящими» модификаторами HP мода считалось от устаревшего ванильного
+            // максимума (например, у боссов башен таблица HP прыгала после
+            // первого удара — см. BALANCE-AUDIT §9.3).
+            Cached.VANILLA_STAT_UIDS_TO_CLEAR_EVERY_STAT_CALC.forEach(x -> {
+                AttributeInstance in = entity.getAttribute(net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE.wrapAsHolder(x.left));
+                net.minecraft.resources.Identifier modId = net.minecraft.resources.Identifier.fromNamespaceAndPath("mmorpg", x.right.toString());
+                if (in != null && in.getModifier(modId) != null) {
+                    in.removeModifier(modId);
+                }
+            });
 
             List<StatContext> statContexts = new ArrayList<>();
 
@@ -384,14 +398,6 @@ public class Unit {
 
             DirtyCheck aftercalc = getDirtyCheck();
 
-            Cached.VANILLA_STAT_UIDS_TO_CLEAR_EVERY_STAT_CALC.forEach(x -> {
-                AttributeInstance in = entity.getAttribute(net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE.wrapAsHolder(x.left));
-                net.minecraft.resources.Identifier modId = net.minecraft.resources.Identifier.fromNamespaceAndPath("mmorpg", x.right.toString());
-                if (in != null && in.getModifier(modId) != null) {
-                    in.removeModifier(modId);
-                }
-            });
-
             this.getStats().stats.values()
                 .forEach(x -> {
                     if (x.GetStat() instanceof AttributeStat) {
@@ -425,15 +431,22 @@ public class Unit {
                     });
 
             }
-            if (old.isDirty(aftercalc)) {
-                if (!Unit.shouldSendUpdatePackets((LivingEntity) entity)) {
-                    return;
-                }
+            if (old.isDirty(aftercalc) && Unit.shouldSendUpdatePackets(entity)) {
                 Packets.sendToTracking(getUpdatePacketFor(entity, data), entity);
             }
 
-            if (entity instanceof Player) {
-                Packets.sendToClient((Player) entity, new EntityUnitPacket(entity));
+            // Флаг «экипировка изменилась» потреблён успешным пересчётом.
+            // Раньше сброс здесь был закомментирован: needsToRecalcStats()
+            // навсегда залипал в true (статы считались на каждом тике), а после
+            // загрузки из NBT со значением false пересчёт не включался никогда —
+            // броня со статами не поднимала макс. HP до перезахода.
+            data.setEquipsChanged(false);
+
+            if (entity instanceof Player player) {
+                // Владельцу шлём обновление всегда (не только при изменении HP):
+                // клиентское «макс. HP» живёт только в синхронизируемых данных.
+                Packets.sendToClient(player, new EntityUnitPacket(player));
+                data.syncToClient(player);
             }
         } catch (Exception e) {
             e.printStackTrace();

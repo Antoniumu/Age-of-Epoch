@@ -258,7 +258,10 @@ public class EntityData implements ICommonPlayerCap, INeededForClient {
         if (nbt.contains(NEWBIE_STATUS)) {
             this.isNewbie = nbt.getBooleanOr(NEWBIE_STATUS, false);
         }
-        this.equipsChanged = nbt.getBooleanOr(EQUIPS_CHANGED, false);
+        // По умолчанию true: если ключа нет (старые сейвы, частичные NBT),
+        // пересчёт статов всё равно должен включиться — «залипший» false
+        // блокировал обновление макс. HP от экипировки до перезахода.
+        this.equipsChanged = nbt.getBooleanOr(EQUIPS_CHANGED, true);
         this.shouldSync = nbt.getBooleanOr(SHOULD_SYNC, false);
 
         this.unit = UnitNbt.Load(nbt);
