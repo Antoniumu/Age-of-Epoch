@@ -2,12 +2,14 @@ package com.robertx22.age_of_exile.a_libraries.mob_plates;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.robertx22.age_of_exile.config.forge.ClientConfigs;
+import com.robertx22.age_of_exile.config.forge.MobPlateNameMode;
 import com.robertx22.age_of_exile.config.forge.MobPlateStyle;
 import com.robertx22.forge_compat.client.AbstractGui;
 import net.minecraft.client.Minecraft;
 
 /**
- * Tiny in-game confirmation shown when the plate style is cycled with the keybind.
+ * Tiny in-game confirmation shown when the plate settings are cycled with the
+ * keybind (J for the style, Shift+J for the way named entities are handled).
  */
 public final class MobPlateStyleHud {
 
@@ -24,12 +26,28 @@ public final class MobPlateStyleHud {
         ClientConfigs.getConfig()
             .MOB_PLATE_STYLE.set(next);
         MobPlateSettings.save();
-        text = "Плашки мобов: " + next.displayName;
-        showUntilMs = System.currentTimeMillis() + 2600L;
+        announce(next);
+    }
+
+    /**
+     * Cycles how entities with a vanilla name tag are drawn (compact banner above
+     * the nickname / full plate above it / ignore the nickname).
+     */
+    public static void cycleNamedMode() {
+        MobPlateNameMode next = ClientConfigs.getConfig()
+            .MOB_PLATE_NAMED_MODE.get()
+            .next();
+        ClientConfigs.getConfig()
+            .MOB_PLATE_NAMED_MODE.set(next);
+        MobPlateSettings.save();
+        announce(ClientConfigs.getConfig()
+            .MOB_PLATE_STYLE.get());
     }
 
     public static void announce(MobPlateStyle style) {
-        text = "Плашки мобов: " + style.displayName;
+        text = "Плашки мобов: " + style.displayName + " · имена: "
+            + ClientConfigs.getConfig()
+            .MOB_PLATE_NAMED_MODE.get().displayName;
         showUntilMs = System.currentTimeMillis() + 2600L;
     }
 

@@ -1,6 +1,7 @@
 package com.robertx22.age_of_exile.a_libraries.mob_plates;
 
 import com.robertx22.age_of_exile.config.forge.ClientConfigs;
+import com.robertx22.age_of_exile.config.forge.MobPlateNameMode;
 import com.robertx22.age_of_exile.config.forge.MobPlateStyle;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -60,6 +61,10 @@ public final class MobPlateSettings {
         cfg.MOB_PLATE_HIDE_FULL_HEALTH.set(readBool(props.getProperty("hide_full_health"),
             cfg.MOB_PLATE_HIDE_FULL_HEALTH.get()));
         cfg.MOB_PLATE_SHOW_PLAYERS.set(readBool(props.getProperty("show_players"), cfg.MOB_PLATE_SHOW_PLAYERS.get()));
+        cfg.MOB_PLATE_NAMED_MODE.set(MobPlateNameMode.byName(props.getProperty("named_mode",
+            cfg.MOB_PLATE_NAMED_MODE.get().name())));
+        cfg.MOB_PLATE_NAMED_OFFSET.set(clampDouble(props.getProperty("named_offset"),
+            cfg.MOB_PLATE_NAMED_OFFSET.get(), 0.0D, 1.0D));
 
         // Rewrite the file so a missing entry (or a hand-edited typo) is repaired
         // and the defaults become discoverable.
@@ -78,12 +83,15 @@ public final class MobPlateSettings {
         props.setProperty("only_looked_at", String.valueOf(cfg.MOB_PLATE_ONLY_LOOKED_AT.get()));
         props.setProperty("hide_full_health", String.valueOf(cfg.MOB_PLATE_HIDE_FULL_HEALTH.get()));
         props.setProperty("show_players", String.valueOf(cfg.MOB_PLATE_SHOW_PLAYERS.get()));
+        props.setProperty("named_mode", cfg.MOB_PLATE_NAMED_MODE.get().name());
+        props.setProperty("named_offset", String.valueOf(cfg.MOB_PLATE_NAMED_OFFSET.get()));
 
         try {
             Path path = path();
             Files.createDirectories(path.getParent());
             try (OutputStream out = Files.newOutputStream(path)) {
-                props.store(out, "Age of Epoch - mob plates. Styles: CLASSIC, MODERN, RUNE (key J in game)");
+                props.store(out, "Age of Epoch - mob plates. Styles: CLASSIC, MODERN, RUNE (key J in game). "
+                    + "named_mode: COMPACT, FULL, IGNORE");
             }
         } catch (Exception ignored) {
         }

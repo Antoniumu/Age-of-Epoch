@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.robertx22.age_of_exile.capability.entity.EntityData;
 import com.robertx22.age_of_exile.config.forge.ClientConfigs;
+import com.robertx22.age_of_exile.config.forge.MobPlateNameMode;
 import com.robertx22.age_of_exile.config.forge.MobPlateStyle;
 import com.robertx22.age_of_exile.database.data.rarities.MobRarity;
 import com.robertx22.age_of_exile.database.registry.ExileDB;
@@ -43,6 +44,13 @@ import org.joml.Vector3f;
  * <p>The panel geometry is submitted at order {@code -1} and the glyphs at order
  * {@code 0}, which guarantees that the text always sits on top of its own panel
  * regardless of how the transparent phase sorts the geometry.</p>
+ *
+ * <p>Vanilla draws its own name tag at {@code bbHeight + 0.5}. CLASSIC only emits
+ * thin text lines there, but the opaque MODERN / RUNE panels used to sit right on
+ * top of that nickname. Entities which actually have a vanilla name tag (players,
+ * and mobs renamed with a name tag) are therefore lifted above it and, by
+ * default, get a dedicated compact banner that keeps level / HP visible without
+ * printing the same name a second time. See {@link MobPlateNameMode}.</p>
  */
 public final class MobPlateRenderer {
 
@@ -50,6 +58,21 @@ public final class MobPlateRenderer {
     private static final int LIGHT = 0xF000F0;
 
     private static final int TEXT_OUTLINE = 0x90000000;
+
+    /** Vanilla anchors its name tag this far above the entity hitbox. */
+    private static final double VANILLA_NAME_TAG_Y = 0.5D;
+
+    /**
+     * World-space height of that name tag: nine font pixels at the 0.025 name-tag
+     * scale, plus the one-pixel background border vanilla draws around the text.
+     */
+    private static final double VANILLA_NAME_TAG_HEIGHT = 0.24D;
+
+    /**
+     * Lowest world height (above the hitbox) that a plate can occupy without
+     * covering the vanilla nickname; {@code named_offset} is added on top of it.
+     */
+    private static final double VANILLA_NAME_TAG_TOP = VANILLA_NAME_TAG_Y + VANILLA_NAME_TAG_HEIGHT;
 
     private MobPlateRenderer() {
     }
@@ -79,6 +102,8 @@ public final class MobPlateRenderer {
         boolean showPlayers = cfg.MOB_PLATE_SHOW_PLAYERS.get();
         double maxDistance = cfg.MOB_PLATE_MAX_DISTANCE.get();
         float userScale = (float) (double) cfg.MOB_PLATE_SCALE.get();
+        MobPlateNameMode namedMode = cfg.MOB_PLATE_NAMED_MODE.get();
+        double namedOffset = cfg.MOB_PLATE_NAMED_OFFSET.get();
 
         Entity lookedAt = onlyLookedAt ? LookUtils.getEntityLookedAt(mc.player) : null;
         float partialTick = mc.getDeltaTracker().getGameTimeDeltaPartialTick(false);
@@ -137,10 +162,12 @@ public final class MobPlateRenderer {
                 }
 
                 if (style == MobPlateStyle.CLASSIC) {
-                    submitClassic(context, poseStack, camera, entity, info, dx, dy, dz);
-                } else {
-                    submitPanel(context, poseStack, camera, font, info, style, userScale, Math.sqrt(distanceSq),
+                    submitClassic(context, poseStack, camera, entity, info,
+                        info.vanillaName && namedMode.liftsAboveNameTag() ? VANILLA_NAME_TAG_TOP + namedOffset : 0.0D,
                         dx, dy, dz);
+                } else {
+                    submitPanel(context, poseStack, camera, font, info, style, namedMode, namedOffset,
+                        userScale, Math.sqrt(distanceSq), dx, dy, dz);
                 }
             } catch (Exception ignored) {
                 // One broken entity must never take down the whole pass.
@@ -153,7 +180,7 @@ public final class MobPlateRenderer {
     // ------------------------------------------------------------------
 
     private static void submitClassic(LevelRenderContext context, PoseStack poseStack, CameraRenderState camera,
-                                      Entity entity, Info info, double dx, double dy, double dz) {
+                                      Entity entity, Info info, double liftY, double dx, double dy, double dz) {
         MutableComponent title = Component.empty();
         if (info.showLevel) {
             title.append(Component.literal("[Ур. " + info.level + "] ")
@@ -178,14 +205,20 @@ public final class MobPlateRenderer {
         bar.append(Component.literal("]")
             .withStyle(ChatFormatting.DARK_RED));
 
+        // Vanilla prints the nickname at bbHeight + 0.5; the classic pair normally
+        // sits at +0.55 / +0.28, which is fine for unnamed mobs but would fight with
+        // the nickname. When one is present both lines move above it together.
+        double titleY = entity.getBbHeight() + (liftY > 0.0D ? liftY + 0.27D : 0.55D);
+        double barY = entity.getBbHeight() + (liftY > 0.0D ? liftY : 0.28D);
+
         poseStack.pushPose();
         poseStack.translate(dx, dy, dz);
         context.submitNodeCollector()
             .order(0)
-            .submitNameTag(poseStack, new Vec3(0.0D, entity.getBbHeight() + 0.55D, 0.0D), 0, title, false, LIGHT, camera);
+            .submitNameTag(poseStack, new Vec3(0.0D, titleY, 0.0D), 0, title, false, LIGHT, camera);
         context.submitNodeCollector()
             .order(0)
-            .submitNameTag(poseStack, new Vec3(0.0D, entity.getBbHeight() + 0.28D, 0.0D), 0, bar, false, LIGHT, camera);
+            .submitNameTag(poseStack, new Vec3(0.0D, barY, 0.0D), 0, bar, false, LIGHT, camera);
         poseStack.popPose();
     }
 
@@ -194,17 +227,23 @@ public final class MobPlateRenderer {
     // ------------------------------------------------------------------
 
     private static void submitPanel(LevelRenderContext context, PoseStack poseStack, CameraRenderState camera, Font font,
-                                    Info info, MobPlateStyle style, float userScale, double distance,
-                                    double dx, double dy, double dz) {
-        Layout layout = Layout.of(font, info, style);
+                                    Info info, MobPlateStyle style, MobPlateNameMode namedMode, double namedOffset,
+                                    float userScale, double distance, double dx, double dy, double dz) {
+        // A vanilla name tag means the panel has to move up and lose its duplicate
+        // name row; unnamed mobs keep the full plate close to the head.
+        boolean lift = info.vanillaName && namedMode.liftsAboveNameTag();
+        boolean compact = lift && namedMode == MobPlateNameMode.COMPACT;
+        Layout layout = Layout.of(font, info, style, compact);
         // Far-away plates grow a little so the name stays legible without turning
         // into a wall of text up close.
         float proximity = Mth.clamp((float) Math.sqrt(Math.max(distance, 1.0D) / 16.0D), 1.0F, 1.9F);
         float scale = 0.025F * Mth.clamp(userScale, 0.5F, 2.0F) * proximity;
 
-        // The plate grows downwards from its anchor, so lift the anchor by the whole
-        // plate + pointer height and keep a small gap above the mob's head.
-        double anchorY = dy + info.bbHeight + 0.04D + (layout.height + layout.tailHeight) * scale;
+        // The plate grows downwards from its anchor. The tip of its pointer ends at
+        // bottomY, so that is the number that has to clear the vanilla name tag,
+        // which spans bbHeight + 0.5 … bbHeight + 0.74.
+        double bottomY = dy + info.bbHeight + (lift ? VANILLA_NAME_TAG_TOP + namedOffset : 0.04D);
+        double anchorY = bottomY + (layout.height + layout.tailHeight) * scale;
         double anchorX = dx;
         double anchorZ = dz;
 
@@ -280,7 +319,9 @@ public final class MobPlateRenderer {
     }
 
     private static void drawModernText(LevelRenderContext context, PoseStack poseStack, Font font, Info info, Layout l) {
-        text(context, poseStack, info.name, l.nameX, l.nameY, 1.0F, 0xFFFFFFFF, TEXT_OUTLINE, true);
+        if (!l.compact) {
+            text(context, poseStack, info.name, l.nameX, l.nameY, 1.0F, 0xFFFFFFFF, TEXT_OUTLINE, true);
+        }
 
         if (info.showLevel) {
             float lvlScale = 0.78F;
@@ -351,7 +392,9 @@ public final class MobPlateRenderer {
     }
 
     private static void drawRuneText(LevelRenderContext context, PoseStack poseStack, Font font, Info info, Layout l) {
-        text(context, poseStack, info.name, l.nameX, l.nameY, 1.0F, 0xFFFFF3DA, 0xA0301800, true);
+        if (!l.compact) {
+            text(context, poseStack, info.name, l.nameX, l.nameY, 1.0F, 0xFFFFF3DA, 0xA0301800, true);
+        }
 
         if (info.showLevel) {
             float lvlScale = 0.70F;
@@ -464,12 +507,18 @@ public final class MobPlateRenderer {
         boolean levelHidden;
         boolean showLevel;
         boolean showHpText;
+        /**
+         * True when Minecraft itself draws a name tag for this entity, so the panel
+         * has to move up and must not print the same name again.
+         */
+        boolean vanillaName;
 
         static Info of(LivingEntity entity, EntityData data, int playerLevel, boolean showLevel, boolean showHpText) {
             Info info = new Info();
             info.showLevel = showLevel;
             info.showHpText = showHpText;
             info.bbHeight = entity.getBbHeight();
+            info.vanillaName = hasVanillaNameTag(entity);
 
             ChatFormatting format = ChatFormatting.RED;
             String icon = "";
@@ -515,11 +564,33 @@ public final class MobPlateRenderer {
     }
 
     /**
+     * Mirrors vanilla's "is a name tag drawn for this entity" decision closely
+     * enough for layout purposes.
+     *
+     * <ul>
+     *     <li>Players always carry a name tag, except while sneaking (vanilla hides
+     *     it so the player can hide) or spectating.</li>
+     *     <li>Every other living entity only shows one when it was renamed with a
+     *     name tag and that custom name is visible. A plain cow without a name tag
+     *     therefore keeps the usual full plate.</li>
+     * </ul>
+     */
+    private static boolean hasVanillaNameTag(LivingEntity entity) {
+        if (entity instanceof Player player) {
+            return !player.isCrouching() && !player.isSpectator();
+        }
+        return entity.hasCustomName() && entity.isCustomNameVisible();
+    }
+
+    /**
      * Pixel layout shared by both sides of a panel: the vertex geometry and the
      * text glyphs are positioned from the same numbers so they can never drift
      * apart.
      */
     private static final class Layout {
+        /** Compact banner: no name row, because vanilla already prints the name below. */
+        boolean compact;
+
         float width;
         float height;
         float tailHeight;
@@ -541,12 +612,18 @@ public final class MobPlateRenderer {
         float barY;
         float barH;
 
-        static Layout of(Font font, Info info, MobPlateStyle style) {
+        static Layout of(Font font, Info info, MobPlateStyle style, boolean compact) {
             Layout l = new Layout();
+            l.compact = compact;
+            // In compact mode the vanilla name tag below already prints the name, so
+            // the panel drops its own name row and spends the freed space on the
+            // level badge and the health numbers.
+            float nameW = compact ? 0.0F : font.width(info.name);
+            float nameGap = info.showLevel && nameW > 0.0F ? 4.0F : 0.0F;
+
             if (style == MobPlateStyle.RUNE) {
                 float padX = 5.0F;
                 float padTop = 3.0F;
-                float nameW = font.width(info.name);
                 float lvlScale = 0.70F;
                 float hpScale = 0.68F;
 
@@ -554,7 +631,8 @@ public final class MobPlateRenderer {
                 l.badgeH = 11.0F;
                 float hpW = info.showHpText ? font.width(info.hpText) * hpScale : 0.0F;
 
-                l.width = Math.max(70.0F, padX * 2.0F + (info.showLevel ? l.badgeW + 4.0F : 0.0F) + nameW
+                l.width = Math.max(compact ? 56.0F : 70.0F, padX * 2.0F
+                    + (info.showLevel ? l.badgeW + nameGap : 0.0F) + nameW
                     + (info.showHpText ? 8.0F + hpW : 0.0F));
                 l.barH = 6.0F;
                 l.height = padTop + l.badgeH + 2.0F + l.barH + padTop;
@@ -562,7 +640,7 @@ public final class MobPlateRenderer {
 
                 l.badgeX = -l.width / 2.0F + padX;
                 l.badgeY = padTop;
-                l.nameX = l.badgeX + (info.showLevel ? l.badgeW + 4.0F : 0.0F);
+                l.nameX = l.badgeX + (info.showLevel ? l.badgeW + nameGap : 0.0F);
                 l.nameY = padTop + 1.0F;
 
                 l.barY = padTop + l.badgeH + 2.0F;
@@ -570,7 +648,7 @@ public final class MobPlateRenderer {
                 l.barX1 = l.width / 2.0F - padX;
 
                 l.hpScale = hpScale;
-                l.hpX = l.width / 2.0F - padX - hpW;
+                l.hpX = hpX(l, info, padX, hpW, compact);
                 l.hpY = padTop + 2.2F;
             } else {
                 float padX = 2.5F;
@@ -578,11 +656,11 @@ public final class MobPlateRenderer {
 
                 l.badgeH = 11.0F;
                 l.badgeW = info.showLevel ? Math.max(11.0F, font.width(info.level) + 6.0F) : 0.0F;
-                float nameW = font.width(info.name);
                 float hpScale = 0.72F;
                 float hpW = info.showHpText ? font.width(info.hpText) * hpScale : 0.0F;
 
-                l.width = Math.max(56.0F, padX * 2.0F + (info.showLevel ? l.badgeW + 4.0F : 0.0F) + nameW
+                l.width = Math.max(compact ? 48.0F : 56.0F, padX * 2.0F
+                    + (info.showLevel ? l.badgeW + nameGap : 0.0F) + nameW
                     + (info.showHpText ? 6.0F + hpW : 0.0F));
                 l.barH = 4.0F;
                 l.height = padTop + l.badgeH + 2.0F + l.barH + padTop;
@@ -590,7 +668,7 @@ public final class MobPlateRenderer {
 
                 l.badgeX = -l.width / 2.0F + padX;
                 l.badgeY = padTop;
-                l.nameX = l.badgeX + (info.showLevel ? l.badgeW + 4.0F : 0.0F);
+                l.nameX = l.badgeX + (info.showLevel ? l.badgeW + nameGap : 0.0F);
                 l.nameY = padTop + 1.0F;
 
                 l.barY = padTop + l.badgeH + 2.0F;
@@ -598,10 +676,24 @@ public final class MobPlateRenderer {
                 l.barX1 = l.width / 2.0F - padX;
 
                 l.hpScale = hpScale;
-                l.hpX = l.width / 2.0F - padX - hpW;
+                l.hpX = hpX(l, info, padX, hpW, compact);
                 l.hpY = padTop + 2.2F;
             }
             return l;
+        }
+
+        /**
+         * Health numbers sit flush right next to the name. With the name gone they
+         * are centred in the space that is left between the level badge and the
+         * right padding, so the banner does not look lopsided.
+         */
+        private static float hpX(Layout l, Info info, float padX, float hpW, boolean compact) {
+            float right = l.width / 2.0F - padX - hpW;
+            if (!compact) {
+                return right;
+            }
+            float left = l.badgeX + (info.showLevel ? l.badgeW + 4.0F : 0.0F);
+            return left + Math.max(0.0F, (right - left) / 2.0F);
         }
     }
 }

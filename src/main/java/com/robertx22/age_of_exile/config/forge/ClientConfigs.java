@@ -40,6 +40,8 @@ public class ClientConfigs {
         MOB_PLATE_ONLY_LOOKED_AT = b.define("mob_plate_only_looked_at", false);
         MOB_PLATE_HIDE_FULL_HEALTH = b.define("mob_plate_hide_full_health", false);
         MOB_PLATE_SHOW_PLAYERS = b.define("mob_plate_show_players", true);
+        MOB_PLATE_NAMED_MODE = b.defineEnum("mob_plate_named_mode", MobPlateNameMode.COMPACT);
+        MOB_PLATE_NAMED_OFFSET = b.defineInRange("mob_plate_named_offset", 0.06D, 0.0D, 1.0D);
         b.pop();
 
         ITEM_RARITY_OPACITY = b.defineInRange("ITEM_RARITY_OPACITY", 0.75F, 0, 1F);
@@ -68,6 +70,8 @@ public class ClientConfigs {
     public ForgeConfigSpec.BooleanValue MOB_PLATE_ONLY_LOOKED_AT;
     public ForgeConfigSpec.BooleanValue MOB_PLATE_HIDE_FULL_HEALTH;
     public ForgeConfigSpec.BooleanValue MOB_PLATE_SHOW_PLAYERS;
+    public ForgeConfigSpec.EnumValue<MobPlateNameMode> MOB_PLATE_NAMED_MODE;
+    public ForgeConfigSpec.DoubleValue MOB_PLATE_NAMED_OFFSET;
 
     public ForgeConfigSpec.EnumValue<GlintType> ITEM_RARITY_BACKGROUND_TYPE;
     public ForgeConfigSpec.EnumValue<GuiPosition> GUI_POSITION;
