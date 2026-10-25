@@ -134,6 +134,8 @@ public final class SpellAuditProbe {
     /** Площадка: ровный пол из кварца в небе — чтобы видео было чистым. */
     private static final int PLATFORM_Y = 99;
     private static final int PLATFORM_RADIUS = 11;
+    /** Сколько блоков воздуха расчищается над площадкой (рельеф заранее неизвестен). */
+    private static final int PLATFORM_CLEAR_HEIGHT = 32;
     /**
      * Манекены в первом заходе: расстояние и боковой сдвиг.
      *
@@ -779,9 +781,21 @@ public final class SpellAuditProbe {
                     level.setBlock(center.offset(x, 0, z), Blocks.SMOOTH_QUARTZ.defaultBlockState(), 2);
                 }
             }
-            for (int x = -radius; x <= radius; x += 4) {
-                for (int z = -radius; z <= radius; z += 4) {
-                    level.setBlock(center.offset(x, 4, z), Blocks.GLASS.defaultBlockState(), 2);
+            // Над площадкой — воздух: мир создаётся случайным, и площадка может
+            // оказаться внутри горы. Тогда «эффект в точку взгляда» упирается в
+            // камень и уезжает вверх на десятки блоков, а манекены стоят в
+            // монолите — умения выглядят нерабочими по причинам, не связанным с
+            // умениями. Сквозной столб воздуха делает прогон воспроизводимым на
+            // любом рельефе.
+            for (int y = 1; y <= PLATFORM_CLEAR_HEIGHT; y++) {
+                for (int x = -radius; x <= radius; x++) {
+                    for (int z = -radius; z <= radius; z++) {
+                        BlockPos pos = center.offset(x, y, z);
+                        if (!level.getBlockState(pos)
+                            .isAir()) {
+                            level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
+                        }
+                    }
                 }
             }
             teleport(player, level, 0.5D, PLATFORM_Y + 1, 0.5D);
