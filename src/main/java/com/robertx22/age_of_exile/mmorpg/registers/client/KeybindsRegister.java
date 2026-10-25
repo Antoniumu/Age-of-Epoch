@@ -21,8 +21,8 @@ public class KeybindsRegister {
     public static KeyMapping WIKI_HOLD_KEY = new KeyMapping("key.mmorpg.hold_open_wiki", InputConstants.KEY_B, CATEGORY);
 
     public static KeyMapping MOB_PLATE_STYLE_KEY = new KeyMapping("Cycle Mob Plate Style", InputConstants.KEY_J, CATEGORY);
-    public static KeyMapping PARTY_HUD_TOGGLE_KEY = new KeyMapping("key.aoe.party_hud_toggle", InputConstants.KEY_O, CATEGORY);
-    public static KeyMapping PARTY_HUD_POSITION_KEY = new KeyMapping("key.aoe.party_hud_position", InputConstants.KEY_P, CATEGORY);
+    public static KeyMapping PARTY_HUD_TOGGLE_KEY = new KeyMapping("key.aoe.party_hud_toggle", InputConstants.KEY_F7, CATEGORY);
+    public static KeyMapping PARTY_HUD_POSITION_KEY = new KeyMapping("key.aoe.party_hud_position", InputConstants.KEY_F8, CATEGORY);
 
     public static KeyMapping getSpellHotbar(int num) {
         int n = num;

@@ -1,6 +1,7 @@
 package com.robertx22.age_of_exile.vanilla_mc.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.robertx22.age_of_exile.capability.PlayerDamageChart;
 import com.robertx22.age_of_exile.capability.player.data.TeamData;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
@@ -33,11 +34,11 @@ public final class TeamCommand {
     private static void showTeam(Player player) {
         TeamData data = Load.playerRPGData(player).team;
         if (!data.isOnTeam()) {
-            player.sendSystemMessage(info("Вы не состоите в команде. Создайте её: /aoe teams create"));
+            player.sendSystemMessage(info("Вы не состоите в команде. Создайте её: /aoe teams create <название>"));
             return;
         }
-        String shortId = data.team_id.length() > 8 ? data.team_id.substring(0, 8) : data.team_id;
-        player.sendSystemMessage(Component.literal("✦ Команда " + shortId + (data.isLeader ? " · лидер" : ""))
+        player.sendSystemMessage(Component.literal("✦ Команда «" + data.displayName() + "»"
+                + (data.isLeader ? " · лидер" : ""))
             .withStyle(ChatFormatting.AQUA));
         List<Player> members = TeamUtils.getOnlineMembers(player);
         members.forEach(member -> player.sendSystemMessage(Component.literal("  • ")
@@ -58,14 +59,40 @@ public final class TeamCommand {
                 .append(Component.literal(": " + (int) PlayerDamageChart.getDamage(member)).withStyle(ChatFormatting.GRAY))));
     }
 
-    private static int create(ServerPlayer player) {
+    private static int create(ServerPlayer player, String name) {
         TeamData team = Load.playerRPGData(player).team;
         if (team.isOnTeam()) {
             player.sendSystemMessage(info("Вы уже состоите в команде. Сначала выйдите: /aoe teams leave"));
             return 0;
         }
-        team.createTeam();
-        player.sendSystemMessage(Component.literal("✦ Команда создана. Пригласите союзников: /aoe teams invite <игрок>")
+        String cleaned = TeamData.sanitizeName(name);
+        team.createTeam(cleaned);
+        String label = team.displayName();
+        player.sendSystemMessage(Component.literal("✦ Команда «" + label + "» создана."
+                + (cleaned.isEmpty() ? " Название можно задать: /aoe teams rename <название>" : ""))
+            .withStyle(ChatFormatting.GREEN));
+        player.sendSystemMessage(info("Пригласите союзников: /aoe teams invite <игрок>"));
+        return 1;
+    }
+
+    /** Переименование команды: доступно только лидеру, имя чистится от §-кодов. */
+    private static int rename(ServerPlayer player, String name) {
+        TeamData team = Load.playerRPGData(player).team;
+        if (!team.isOnTeam()) {
+            player.sendSystemMessage(info("Вы не состоите в команде. Создайте её: /aoe teams create <название>"));
+            return 0;
+        }
+        if (!team.isLeader) {
+            player.sendSystemMessage(info("Переименовать команду может только лидер."));
+            return 0;
+        }
+        String cleaned = TeamData.sanitizeName(name);
+        if (cleaned.isEmpty()) {
+            player.sendSystemMessage(info("Название пустое: используйте /aoe teams rename <название>"));
+            return 0;
+        }
+        team.team_name = cleaned;
+        player.sendSystemMessage(Component.literal("✦ Команда переименована в «" + cleaned + "»")
             .withStyle(ChatFormatting.GREEN));
         return 1;
     }
@@ -191,11 +218,19 @@ public final class TeamCommand {
         dispatcher.register(literal(CommandRefs.ID)
             .then(literal("teams")
                 .then(literal("help").executes(ctx -> {
-                    ctx.getSource().sendSuccess(() -> Component.literal("Команды команды: /aoe teams create, invite <игрок>, join <пригласивший>, leave, members, dps. Лидер: kick <игрок>, make_leader <игрок>.")
+                    ctx.getSource().sendSuccess(() -> Component.literal("Команды команды: /aoe teams create [название], rename <название>, invite <игрок>, join <пригласивший>, leave, members, dps. Лидер: kick <игрок>, make_leader <игрок>.")
                         .withStyle(ChatFormatting.AQUA), false);
                     return 1;
                 }))
-                .then(literal("create").executes(ctx -> create(ctx.getSource().getPlayerOrException())))
+                .then(literal("create")
+                    .executes(ctx -> create(ctx.getSource().getPlayerOrException(), ""))
+                    .then(argument("name", StringArgumentType.greedyString())
+                        .executes(ctx -> create(ctx.getSource().getPlayerOrException(),
+                            StringArgumentType.getString(ctx, "name")))))
+                .then(literal("rename")
+                    .then(argument("name", StringArgumentType.greedyString())
+                        .executes(ctx -> rename(ctx.getSource().getPlayerOrException(),
+                            StringArgumentType.getString(ctx, "name")))))
                 .then(literal("leave").executes(ctx -> leave(ctx.getSource().getPlayerOrException())))
                 .then(literal("members").executes(ctx -> { showTeam(ctx.getSource().getPlayerOrException()); return 1; }))
                 .then(literal("list_members").executes(ctx -> { showTeam(ctx.getSource().getPlayerOrException()); return 1; }))

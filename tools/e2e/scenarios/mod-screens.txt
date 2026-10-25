@@ -1,0 +1,44 @@
+# Сценарий: создать мир и открыть экраны мода.
+#
+# Каждый прогон начинается с главного меню, поэтому шаги идут с самого начала.
+# Координаты — под окно 1280x720 (run/options.txt) и guiScale 2.
+# Хоткеи мода читаются через isDown() в тике, поэтому для них нужен hold.
+
+wait_window Minecraft 420000
+wait_log 300000 Created: .*atlas/items
+wait 8000
+
+shot 00-main-menu
+move 640 296
+click 640 296
+wait 4000
+shot 01-singleplayer
+
+# «Create New World» в списке миров, затем подтверждение в меню создания
+move 480 688
+click 480 688
+wait 3000
+shot 02-create-world
+move 480 688
+click 480 688
+
+# Мир генерируется; ждём загрузки чанков и первых кадров
+wait 40000
+shot 03-in-world
+
+
+# Хаб мода (H) — CharacterScreen
+hold h 500
+wait 2500
+shot 04-hub
+
+# Книга квестов (K)
+hold k 500
+wait 2500
+shot 05-questbook
+
+# Закрыть экран и открыть вики через удержание B на предмете нельзя без предмета,
+# поэтому вики проверяем отдельным сценарием wiki.txt.
+
+jstack screens
+log конец сценария mod-screens

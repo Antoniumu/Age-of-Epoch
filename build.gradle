@@ -43,6 +43,22 @@ dependencies {
     if (!project.hasProperty('noJei')) {
         compileOnly "mezz.jei:jei-${project.minecraft_version}-fabric-api:${project.jei_version}"
     }
+
+    // Тесты парсера вики (src/test/java). Парсер WikiMarkdown специально не
+    // зависит от Minecraft, поэтому обычный JUnit хватает — и ./gradlew build
+    // теперь действительно проверяет разметку, а не только компилирует её.
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events 'failed', 'skipped'
+        exceptionFormat 'full'
+    }
+    // Тесты читают src/main/resources/.../wiki_pages по относительному пути.
+    workingDir = project.projectDir
 }
 
 if (project.hasProperty('noJei')) {
@@ -202,6 +218,27 @@ tasks.register('checkMinecraftClasspath') {
 
 tasks.named('compileJava') {
     dependsOn 'checkMinecraftClasspath'
+}
+
+tasks.named('test') {
+    // Защита от «зелёной сборки без тестов»: если фильтр/исходники сломались
+    // так, что тестов не нашлось, это ошибка, а не успех.
+    failOnNoDiscoveredTests = false
+    doLast {
+        def results = new File(layout.buildDirectory.get().asFile, 'test-results/test')
+        def xmls = results.exists() ? results.listFiles({ it.name.endsWith('.xml') } as FileFilter) : []
+        long total = 0
+        xmls?.each { f ->
+            def m = f.text =~ /tests="(\d+)"/
+            if (m.find()) {
+                total += m.group(1) as long
+            }
+        }
+        if (total == 0) {
+            throw new GradleException('Тестов не найдено — проверь src/test/java и junit-jupiter в build.gradle')
+        }
+        logger.lifecycle("Тестов выполнено: ${total}")
+    }
 }
 
 java {

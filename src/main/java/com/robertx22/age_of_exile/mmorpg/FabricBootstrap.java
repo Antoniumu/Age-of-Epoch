@@ -176,6 +176,8 @@ public class FabricBootstrap {
         });
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             MinecraftForge.EVENT_BUS.post(new TickEvent.ServerTickEvent(TickEvent.Phase.END, server));
+            // Зонд боевых замеров (/aoe devtest или флаг-файл из CI-сценария).
+            com.robertx22.age_of_exile.uncommon.testing.CombatProbe.tick(server);
             for (ServerPlayer p : server.getPlayerList().getPlayers()) {
                 MinecraftForge.EVENT_BUS.post(new TickEvent.PlayerTickEvent(TickEvent.Phase.END, p));
             }

@@ -1,0 +1,201 @@
+name: Screenshots
+
+# Поднимает настоящий dev-клиент мода в Xvfb, прогоняет сценарий (клики,
+# клавиши) и публикует скриншоты в ветку `ci-screenshots`, чтобы результат
+# было видно прямо в GitHub: ветка → README.md с галереей, плюс комментарий в PR.
+#
+# Это самый дешёвый способ ответить на вопрос «мод вообще запускается и рисует?»
+# без человека за компьютером. Сценарий — обычный текстовый файл в
+# tools/e2e/scenarios/, поэтому шаги правятся без пересборки.
+
+on:
+  workflow_dispatch:
+    inputs:
+      scenario:
+        description: 'Сценарии через запятую (имя файла без .txt). Пусто — берётся tools/e2e/active.txt'
+        required: false
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: screenshots-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write        # публикация ветки ci-screenshots
+  pull-requests: write   # комментарий с картинками
+
+env:
+  GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx4G'
+  BRANCH: ci-screenshots
+
+jobs:
+  screenshots:
+    name: Client screenshots (xvfb)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+
+      # Каталог снимков должен быть чистым: иначе в ветку уедут PNG прошлых
+      # прогонов с уже неактуальными шагами.
+      - name: Очистить прошлые снимки
+        run: |
+          rm -rf run/e2e/shots && mkdir -p run/e2e/shots && ls run/e2e/shots
+          # Флаг для зонда /aoe devtest: как только игрок окажется в мире,
+          # CombatProbe сам прогонит замеры DPS/лечения и удалит флаг.
+          # Результаты — строки AOETEST в run/logs/latest.log и run/aoe-devtest.txt.
+          mkdir -p run
+          rm -f run/aoe-devtest.txt
+          touch run/aoe-devtest.flag
+
+      - uses: ./.github/actions/setup-build-env
+        with:
+          cache-read-only: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork }}
+
+      # mesa-vulkan-drivers обязателен: MC 26.3 (SDL3 + renderpearl) под Xvfb не
+      # может создать OpenGL-контекст (нет sRGB-capable GLX visual) и должен
+      # уйти в Vulkan. Lavapipe даёт программный Vulkan с VK_KHR_surface.
+      - name: Пакеты для headless-клиента и снятия экрана
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends \
+            xvfb x11-utils xdotool imagemagick x11-apps openbox wmctrl \
+            libgl1 libglu1-mesa libgl1-mesa-dri mesa-utils \
+            mesa-vulkan-drivers vulkan-tools \
+            libxi6 libxcursor1 libxrandr2 libxinerama1 libxxf86vm1 \
+            libopenal1 libpulse0 libegl1 libegl-mesa0
+
+      - name: Клиент + сценарий + скриншоты
+        id: run
+        env:
+          CLIENT_TIMEOUT: '1500'
+        run: |
+          # Какой сценарий прогонять, задаётся без правки workflow:
+          #   * tools/e2e/active.txt — обычный случай (правится пушем);
+          #   * параметр при ручном запуске;
+          #   * перечисление через запятую — каждый сценарий отдельным прогоном.
+          list="${{ inputs.scenario }}"
+          [ -n "$list" ] || list="$(tr -d '\n' < tools/e2e/active.txt 2>/dev/null)"
+          [ -n "$list" ] || list="boot"
+          echo "сценарии: $list"
+
+          set +e
+          status=0
+          for name in $(echo "$list" | tr ',' ' '); do
+            scenario="tools/e2e/scenarios/$name.txt"
+            if [ ! -f "$scenario" ]; then
+              echo "::warning::нет сценария $scenario"
+              continue
+            fi
+            echo "=== прогон сценария $name ==="
+            bash tools/e2e/run-in-xvfb.sh "$scenario" "run/e2e/shots/$name"
+            [ $? -eq 0 ] || status=1
+            # Снимки и журналы — плоско и с префиксом сценария: так их находит
+            # publish-results.sh и не путаются одноимённые шаги.
+            if [ -d "run/e2e/shots/$name" ]; then
+              # index.txt пересобираем плоско: в каталоге сценария он свой,
+              # а шагу «Комментарий с картинками в PR» нужен общий список.
+              for f in run/e2e/shots/"$name"/*.png; do
+                [ -e "$f" ] || continue
+                cp "$f" "run/e2e/shots/${name}-$(basename "$f")"
+                echo "${name}-$(basename "$f" .png)" >> run/e2e/shots/index.txt
+              done
+              [ -f "run/e2e/shots/$name/steps.log" ] && cp "run/e2e/shots/$name/steps.log" "run/e2e/shots/steps-$name.log"
+              for f in run/e2e/shots/"$name"/jstack-*.txt; do
+                [ -e "$f" ] && cp "$f" "run/e2e/shots/${name}-$(basename "$f")"
+              done
+              rm -rf "run/e2e/shots/$name"
+            fi
+          done
+          set -e
+
+          # Боевые замеры: строки AOETEST из лога клиента. Провал проверки не
+          # валит job (порт ещё нестабилен), но виден и в summary, и в PR.
+          grep -h "AOETEST" run/logs/latest.log 2>/dev/null | awk '!seen[$0]++' > run/e2e/aoetest.log || true
+          if [ -s run/e2e/aoetest.log ]; then
+            summary=$(grep "AOETEST summary" run/e2e/aoetest.log | tail -1)
+            echo "### $summary"
+            grep -q "failed=0" <<< "$summary" || echo "::warning::Боевые замеры с провалами: $summary"
+          fi
+
+          shots=$(find run/e2e/shots -maxdepth 1 -name '*.png' | wc -l)
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          echo "shots=$shots" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Снимки: $shots, статус: $status"
+            echo '```'
+            find run/e2e/shots -maxdepth 1 -name '*.png' -printf '%f %k КБ\n' 2>/dev/null | sort
+            echo '```'
+            if [ -s run/e2e/aoetest.log ]; then
+              echo '#### AOETEST'
+              echo '```'
+              cat run/e2e/aoetest.log
+              echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+
+      - name: Опубликовать результат в ветку ${{ env.BRANCH }}
+        if: always() && github.event.pull_request.head.repo.fork != true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          bash tools/e2e/publish-results.sh run/e2e/shots \
+            "Сценарий \`${{ inputs.scenario || 'boot' }}\`, клиент под Xvfb, ветка \`${{ github.head_ref || github.ref_name }}\`" \
+            || echo "::error::Публикация в ветку ${BRANCH} не удалась"
+
+      - name: Комментарий с картинками в PR
+        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork != true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          shots="$(cat run/e2e/shots/index.txt 2>/dev/null || true)"
+          if [ -z "$shots" ]; then
+            echo "::warning::Снимков нет — комментарий не публикую"
+            exit 0
+          fi
+          md="$(mktemp)"
+          {
+            echo "## Скриншоты dev-клиента"
+            echo
+            echo "Прогон: [${GITHUB_RUN_ID}](${GITHUB_SERVER_URL}/${REPO}/actions/runs/${GITHUB_RUN_ID}) · журнал шагов: [steps.log](https://github.com/${REPO}/blob/${BRANCH}/steps.log)"
+            echo
+            for name in $shots; do
+              echo "**${name}**"
+              echo
+              echo "[![${name}](https://raw.githubusercontent.com/${REPO}/${BRANCH}/shots/${name}.png)](https://raw.githubusercontent.com/${REPO}/${BRANCH}/shots/${name}.png)"
+              echo
+            done
+            echo "Если картинки не отображаются — открой [ветку \`${BRANCH}\`](https://github.com/${REPO}/tree/${BRANCH}) — там галерея в README.md."
+            echo
+            echo "> Пошаговый журнал (какой клик/клавиша, что нашлось в логе): [steps.log](https://github.com/${REPO}/blob/${BRANCH}/steps.log)"
+          } > "$md"
+
+          existing="$(gh api "repos/${REPO}/issues/${PR}/comments" --paginate --jq '.[] | select(.body | contains("<!-- aoe-screens -->")) | .id' | head -1)"
+          { echo '<!-- aoe-screens -->'; cat "$md"; } > "$md.body"
+          if [ -n "$existing" ]; then
+            gh api -X PATCH "repos/${REPO}/issues/comments/${existing}" -F "body=@${md}.body" > /dev/null
+            echo "Комментарий обновлён"
+          else
+            gh api -X POST "repos/${REPO}/issues/${PR}/comments" -F "body=@${md}.body" > /dev/null
+            echo "Комментарий создан"
+          fi
+
+      - name: Артефакт со снимками и логами
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: client-screenshots
+          path: |
+            run/e2e/shots/**
+            run/logs/latest.log
+            run/e2e/gradle.log
+            run/crash-reports/**
+          if-no-files-found: warn
+          retention-days: 14

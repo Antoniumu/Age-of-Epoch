@@ -270,6 +270,8 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
         }
         int y = 2;
         int numbered = 0;
+        // доступная ширина строки статьи; от неё же зависит перенос длинных токенов
+        int textW = Math.max(24, articleW - 12);
         for (Block block : page.blocks) {
             if (block.kind == Kind.NUMBERED_ITEM) {
                 numbered++;
@@ -331,12 +333,7 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
                     if (word.length() == 0) {
                         continue;
                     }
-                    Span piece = new Span(word, span.bold, span.italic, span.code, span.link);
-                    Frag frag = new Frag();
-                    frag.rendered = decoratedPrefix + decorate(piece, block.kind);
-                    frag.link = span.link;
-                    frag.width = mc.font.width(frag.rendered) + 4;
-                    words.add(frag);
+                    addWord(words, word, span, block.kind, decoratedPrefix, textW);
                     decoratedPrefix = "";
                     firstWord = false;
                 }
@@ -365,6 +362,50 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
         articleContentH = y + 4;
     }
 
+    /**
+     * Кладёт одно слово в строку вёрстки. Обычные слова режутся только по пробелам,
+     * а неразрывно длинные токены (идентификаторы предметов вида
+     * `mmorpg:currency/reroll_primary_stats_numbers`, пути к конфигам, длинные
+     * термины без пробелов) дополнительно режутся по символам — иначе слово шире
+     * статьи уезжало за её правый край: scissor в 26.x-пайплайне недоступен, и
+     * обрезать такой вылет на отрисовке нечем.
+     */
+    private void addWord(List<Frag> words, String word, Span span, Kind kind,
+                         String decoratedPrefix, int maxWidth) {
+        Span piece = new Span(word, span.bold, span.italic, span.code, span.link);
+        Frag whole = new Frag();
+        whole.rendered = decoratedPrefix + decorate(piece, kind);
+        whole.link = span.link;
+        whole.width = mc.font.width(whole.rendered) + 4;
+
+        if (whole.width <= maxWidth || word.length() < 2) {
+            words.add(whole);
+            return;
+        }
+
+        // Режем по символам на куски, каждый из которых гарантированно влезает.
+        String rest = word;
+        String prefixForChunk = decoratedPrefix;
+        while (rest.length() > 0) {
+            int take = rest.length();
+            while (take > 1) {
+                Span probe = new Span(rest.substring(0, take), span.bold, span.italic, span.code, span.link);
+                if (mc.font.width(prefixForChunk + decorate(probe, kind)) + 4 <= maxWidth) {
+                    break;
+                }
+                take--;
+            }
+            Span chunk = new Span(rest.substring(0, take), span.bold, span.italic, span.code, span.link);
+            Frag frag = new Frag();
+            frag.rendered = prefixForChunk + decorate(chunk, kind);
+            frag.link = span.link;
+            frag.width = mc.font.width(frag.rendered) + 4;
+            words.add(frag);
+            rest = rest.substring(take);
+            prefixForChunk = "";
+        }
+    }
+
     // ---------------------------------------------------------------- отрисовка
 
     @Override
@@ -380,6 +421,12 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
 
         drawHeader(matrix, mouseX, mouseY);
         drawSidebar(matrix, mouseX, mouseY);
+        // «Ножницы» для сайдбара. В рендер-пайплайне 26.x scissor недоступен
+        // (см. BUILD-REPORT §4), поэтому подписи длиннее панели рисовались
+        // поверх статьи — это видно на скриншотах из CI. Закрашиваем промежуток
+        // между списком и статьёй цветом панели: всё, что вылезло за край
+        // сайдбара, обрезается, и статья рисуется уже поверх.
+        fill(matrix, sidebarX + sidebarW - 2, sidebarY - 2, articleX, articleY + articleH + 2, 0xFF0E1219);
         drawArticle(matrix, mouseX, mouseY);
         if (hasInfobox) {
             drawInfobox(matrix, mouseX, mouseY, partialTicks);
@@ -452,7 +499,7 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
         fill(matrix, sidebarX - 2, sidebarY - 1, sidebarX + sidebarW, sidebarY + sidebarH, 0x80101824);
         int y = sidebarY - sidebarScroll;
         for (Page p : indexList) {
-            if (y + 14 >= sidebarY && y < sidebarY + sidebarH) {
+            if (y >= sidebarY && y + 13 <= sidebarY + sidebarH) {
                 boolean current = p.id.equals(pageId);
                 boolean hovered = inside(mouseX, mouseY, sidebarX, y, sidebarW - 2, 13);
                 if (current || hovered) {
@@ -486,12 +533,19 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
     private void drawArticle(PoseStack matrix, int mouseX, int mouseY) {
         int top = articleY + 3;
         int bottom = articleY + articleH;
+        int rightEdge = articleX + articleW - 4;
         for (Line line : lines) {
             int y = top + line.y - articleScroll;
-            if (y + line.height < top || y > bottom) {
+            // scissor в 26.x-пайплайне недоступен, поэтому рисуем только полностью
+            // видимые строки и фрагменты: частично вылезшая строка иначе ложится
+            // поверх рамки и инфобокса.
+            if (y < top || y + line.height > bottom) {
                 continue;
             }
             for (Frag frag : line.frags) {
+                if (articleX + frag.x >= rightEdge) {
+                    continue;
+                }
                 // подчёркивание наведённой ссылки пересобираем на лету
                 String text = frag.rendered;
                 if (frag.link != null && frag.link.equals(hoveredLink) && !text.contains("§n")) {

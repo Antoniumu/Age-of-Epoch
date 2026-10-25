@@ -29,7 +29,7 @@ public class PartyHudRequestPacket extends MyPacket<PartyHudRequestPacket> {
         if (!(ctx.getPlayer() instanceof ServerPlayer player)) return;
         var teamData = Load.playerRPGData(player).team;
         String team = teamData.isOnTeam()
-            ? "Команда · " + (teamData.team_id.length() > 8 ? teamData.team_id.substring(0, 8) : teamData.team_id)
+            ? "Команда · " + teamData.displayName()
             : "Без команды";
         String daily = "Ежедневная цель ещё не назначена";
         String weekly = "Общая цель недели отключена";

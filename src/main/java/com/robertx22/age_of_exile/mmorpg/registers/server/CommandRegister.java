@@ -49,6 +49,7 @@ public class CommandRegister {
         TpaCommand.register(dispatcher);
 
         RunTestCommand.register(dispatcher);
+        DevTestCommand.register(dispatcher);
 
         OpenHub.register(dispatcher);
         com.robertx22.age_of_exile.simulation.SimCommand.register(dispatcher);
