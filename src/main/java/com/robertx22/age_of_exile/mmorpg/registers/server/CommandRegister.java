@@ -2,6 +2,7 @@ package com.robertx22.age_of_exile.mmorpg.registers.server;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.robertx22.age_of_exile.gamemaster.GameMasterCommand;
+import com.robertx22.age_of_exile.tpa.TpCommandBridge;
 import com.robertx22.age_of_exile.tpa.TpaCommand;
 import com.robertx22.age_of_exile.vanilla_mc.commands.*;
 import com.robertx22.age_of_exile.vanilla_mc.commands.entity.*;
@@ -47,6 +48,9 @@ public class CommandRegister {
         TeamCommand.register(dispatcher);
         RollCommand.register(dispatcher);
         TpaCommand.register(dispatcher);
+        // Без прав оператора ванильный /tp должен вести в /tpa вместе со всеми его лимитами.
+        // Патчим узел /tp уже после того, как ваниль зарегистрировала свои команды.
+        TpCommandBridge.install(dispatcher);
 
         RunTestCommand.register(dispatcher);
         DevTestCommand.register(dispatcher);
