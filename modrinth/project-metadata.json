@@ -1,0 +1,18 @@
+{
+  "title": "Age of Epoch",
+  "description": "An unofficial Fabric port of Age of Exile for Minecraft 26.3: a Russian-localized hack-and-slash RPG with skills, spells, loot, dungeons, towers, professions, and dynamic balancing.",
+  "body": "# Age of Epoch\n\nAge of Epoch is a Russian-localized, hack-and-slash RPG overhaul for **Minecraft Java Edition 26.3** on **Fabric**. This is an unofficial community port of [Age of Exile](https://github.com/RobertSkalko/Age-of-Exile), maintained in this repository. It is not affiliated with Mojang, Microsoft, Fabric, or the upstream project authors.\n\n## Features\n\n- Character progression with attributes, talent trees, spells, equipment, affixes, loot, and crafting professions.\n- Dungeons, expeditions, themed towers, Divine Missions, a questbook, and an in-game wiki.\n- Optional JEI integration for profession recipes and related crafting information.\n- Russian localization and the GameMaster progression and balance systems.\n\n## Requirements\n\n- Minecraft Java Edition **26.3**.\n- **Java 25** or newer.\n- **Fabric Loader 0.19.5** or newer and **Fabric API 0.163.0+26.3** or newer.\n- **Trinkets Updated 4.2.1+26.3**.\n\nInstall this mod and its required dependencies on both the client and server. Place the JARs in the `mods` folder.\n\n## Controls\n\nThe hub uses **H**, the questbook uses **K**, and the compact party HUD uses **O** to toggle and **P** to cycle its position. Spell and other keybinds can be changed in Minecraft's Controls settings.\n\n## Source, issues, and attribution\n\n- Source code and issue tracker: [Antoniumu/Age-of-Epoch](https://github.com/Antoniumu/Age-of-Epoch).\n- Upstream project: [RobertSkalko/Age-of-Exile](https://github.com/RobertSkalko/Age-of-Exile).\n\nThe project declares **All Rights Reserved (ARR)**. Upstream attribution is provided above; this listing does not grant additional rights to redistribute upstream code or assets.\n\n# Эпоха (русский)\n\nРусская локализация и RPG-порт Age of Exile для Minecraft 26.3 на Fabric: характеристики, таланты, заклинания, экипировка, аффиксы, профессии, подземелья, башни, миссии и внутриигровой квестбук. Это неофициальный порт; исходный проект указан в разделе атрибуции.",
+  "categories": [
+    "adventure",
+    "equipment",
+    "magic",
+    "fabric"
+  ],
+  "source_url": "https://github.com/Antoniumu/Age-of-Epoch",
+  "issues_url": "https://github.com/Antoniumu/Age-of-Epoch/issues",
+  "wiki_url": "https://github.com/Antoniumu/Age-of-Epoch/blob/main/WIKI.md",
+  "license_id": "ARR",
+  "client_side": "required",
+  "server_side": "required",
+  "requested_status": "approved"
+}

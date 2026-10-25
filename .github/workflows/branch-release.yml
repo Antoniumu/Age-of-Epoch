@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - arena/ad7c45b3-age-of-epoch
+    paths-ignore:
+      - modrinth/project-metadata.json
+      - modrinth/project-icon.png
   pull_request:
     branches:
       - main
@@ -128,4 +131,7 @@ jobs:
           loaders: fabric
           game-versions: 26.3
           java: '25'
+          dependencies: |
+            fabric-api(required){modrinth:P7dR8mSH}
+            trinkets-updated(required){modrinth:XaT8sLP6}
           modrinth-featured: false
