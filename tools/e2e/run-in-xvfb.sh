@@ -130,6 +130,18 @@ if [ -d run/crash-reports ] && [ -n "$(ls -A run/crash-reports 2>/dev/null)" ]; 
     scenario_status=1
 fi
 
+# Проверки зонда (AOETEST). Боевые замеры dps/heal/team — как договорено в
+# workflow, только предупреждение (тайминги боя нестабильны). А регрессия gear
+# (макс. HP от экипировки) валит job: она детерминированная и означает, что
+# фикс обновления здоровья сломан. Снимки к этому моменту уже сняты.
+if grep -h "AOETEST gear" run/logs/latest.log run/aoe-devtest.txt 2>/dev/null | awk '!seen[$0]++' | grep -qE "=fail|fatal="; then
+    echo "=== AOETEST: провалились проверки экипировки/макс. HP ==="
+    grep -h "AOETEST gear" run/logs/latest.log run/aoe-devtest.txt 2>/dev/null | awk '!seen[$0]++'
+    mkdir -p run/e2e
+    touch run/e2e/aoetest-gear-failed
+    scenario_status=1
+fi
+
 echo "=== окна на дисплее (xwininfo) ==="
 xwininfo -root -tree 2>&1 | head -30 || true
 
