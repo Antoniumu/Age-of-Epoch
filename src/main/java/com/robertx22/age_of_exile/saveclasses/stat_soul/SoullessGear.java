@@ -476,6 +476,12 @@ public class SoullessGear {
         // Предмет остаётся собой: алмазный меч не превращается в случайный меч из души.
         soulData.gear_type = base.gear_type;
 
+        // Уровень предмета не может упасть ниже уровня основы: иначе дешёвая
+        // низкотировая душа «омолаживала» бы готовый предмет и обнуляла его
+        // базовые статы (в живом клиенте у меча 20 уровня после души первого
+        // тира оставалось Physical Damage: 0).
+        soulData.lvl = Math.max(base.lvl, soulData.lvl);
+
         if (base.baseStats != null) {
             soulData.baseStats = base.baseStats;
         }

@@ -137,8 +137,7 @@ public final class SoullessProbe {
         StatSoulData soul = new StatSoulData();
         soul.slot = "sword";
         soul.rar = "rare";
-        soul.tier = Math.max(0, com.robertx22.age_of_exile.uncommon.utilityclasses.LevelUtils
-            .levelToTier(Math.max(1, player.experienceLevel)));
+        soul.tier = com.robertx22.age_of_exile.uncommon.utilityclasses.LevelUtils.levelToTier(20);
         ItemStack soulStack = soul.toStack();
 
         ItemStack souled = cheap.copy();
@@ -156,7 +155,23 @@ public final class SoullessProbe {
             && souledData.baseStats.perc.equals(percBefore);
         boolean soulConsumed = !com.robertx22.age_of_exile.uncommon.datasaving.StackSaving.STAT_SOULS.has(souled);
 
+        // Регресс: душа низкого тира не должна «омолаживать» предмет и обнулять его статы.
+        GearItemData levelBase = SoullessGear.create(cheapData.GetBaseGearType(), 20,
+            SoullessGear.costFactor(cheap));
+        StatSoulData lowSoul = new StatSoulData();
+        lowSoul.slot = "sword";
+        lowSoul.rar = "common";
+        lowSoul.tier = 0;
+        GearItemData lowSoulData = lowSoul.createGearData(null, player);
+        SoullessGear.applySoul(lowSoulData, levelBase);
+        int lvlAfterLowSoul = lowSoulData.lvl;
+        float valueAfterLowSoul = totalBaseValue(lowSoulData);
+
         Report soulReport = new Report("soulless_soul");
+        soulReport.put("lvl_after_low_soul", lvlAfterLowSoul);
+        soulReport.put("value_after_low_soul", String.format(java.util.Locale.ROOT, "%.1f", valueAfterLowSoul));
+        soulReport.check("low_soul_keeps_level", lvlAfterLowSoul >= 20);
+        soulReport.check("low_soul_keeps_stats", valueAfterLowSoul > 0F);
         soulReport.put("rarity_after", rarityAfter);
         soulReport.put("affixes_after", souledData == null ? -1 : souledData.affixes.getNumberOfAffixes());
         soulReport.put("type_kept", typeBefore.equals(typeAfter));
