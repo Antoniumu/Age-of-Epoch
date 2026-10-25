@@ -8,6 +8,9 @@
 #   * первый результат JEI — первая ячейка сетки справа (965, 70)
 #     по реальному снимку jei-04-jei-overlay.
 # После каждого поиска делается снимок результата, а затем снимок страницы U.
+# JEI по U открывает первую категорию по сортировке (обычно Information),
+# поэтому дополнительно кликаем 2-ю (503,72) и 3-ю (540,72) вкладки категорий
+# и снимаем кадры *-tab2 / *-tab3 — именно там наши категории Age of Epoch.
 # Если раскладка JEI изменится, по этим снимкам координаты легко поправить.
 
 wait_window Minecraft 420000
@@ -61,7 +64,19 @@ wait 800
 shot 06-stat-soul-hover
 key u
 wait 3000
+move 640 650
+wait 500
 shot 07-stat-soul-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 07b-stat-soul-uses-tab2
+click 540 72
+wait 1500
+move 640 650
+wait 300
+shot 07c-stat-soul-uses-tab3
 key Escape
 wait 1500
 
@@ -77,7 +92,19 @@ move 965 70
 wait 500
 key u
 wait 3000
+move 640 650
+wait 500
 shot 09-identify-tome-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 09b-identify-tome-uses-tab2
+click 540 72
+wait 1500
+move 640 650
+wait 300
+shot 09c-identify-tome-uses-tab3
 key Escape
 wait 1500
 
@@ -93,7 +120,19 @@ move 965 70
 wait 500
 key u
 wait 3000
+move 640 650
+wait 500
 shot 11-iron-chestplate-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 11b-iron-chestplate-uses-tab2
+click 540 72
+wait 1500
+move 640 650
+wait 300
+shot 11c-iron-chestplate-uses-tab3
 key Escape
 wait 1500
 
@@ -109,7 +148,19 @@ move 965 70
 wait 500
 key u
 wait 3000
+move 640 650
+wait 500
 shot 13-cracked-Ruby-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 13b-cracked-Ruby-uses-tab2
+click 540 72
+wait 1500
+move 640 650
+wait 300
+shot 13c-cracked-Ruby-uses-tab3
 key Escape
 wait 1500
 
@@ -125,7 +176,19 @@ move 965 70
 wait 500
 key u
 wait 3000
+move 640 650
+wait 500
 shot 15-orb-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 15b-orb-uses-tab2
+click 540 72
+wait 1500
+move 640 650
+wait 300
+shot 15c-orb-uses-tab3
 key Escape
 wait 1500
 
@@ -141,7 +204,19 @@ move 965 70
 wait 500
 key u
 wait 3000
+move 640 650
+wait 500
 shot 17-salvage-hammer-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 17b-salvage-hammer-uses-tab2
+click 540 72
+wait 1500
+move 640 650
+wait 300
+shot 17c-salvage-hammer-uses-tab3
 key Escape
 wait 1500
 
@@ -157,7 +232,19 @@ move 965 70
 wait 500
 key u
 wait 3000
+move 640 650
+wait 500
 shot 19-runeword-station-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 19b-runeword-station-uses-tab2
+click 540 72
+wait 1500
+move 640 650
+wait 300
+shot 19c-runeword-station-uses-tab3
 key Escape
 wait 1500
 
@@ -173,7 +260,19 @@ move 965 70
 wait 500
 key u
 wait 3000
+move 640 650
+wait 500
 shot 21-armorer-tool-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 21b-armorer-tool-uses-tab2
+click 540 72
+wait 1500
+move 640 650
+wait 300
+shot 21c-armorer-tool-uses-tab3
 key Escape
 wait 1500
 
@@ -189,7 +288,19 @@ move 965 70
 wait 500
 key u
 wait 3000
+move 640 650
+wait 500
 shot 23-rarity-essence-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 23b-rarity-essence-uses-tab2
+click 540 72
+wait 1500
+move 640 650
+wait 300
+shot 23c-rarity-essence-uses-tab3
 key Escape
 wait 1500
 
@@ -205,7 +316,19 @@ move 965 70
 wait 500
 key u
 wait 3000
+move 640 650
+wait 500
 shot 25-gem-loot-crate-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 25b-gem-loot-crate-uses-tab2
+click 540 72
+wait 1500
+move 640 650
+wait 300
+shot 25c-gem-loot-crate-uses-tab3
 key Escape
 wait 1500
 
@@ -221,7 +344,19 @@ move 965 70
 wait 500
 key u
 wait 3000
+move 640 650
+wait 500
 shot 27-backpack-uses
+click 503 72
+wait 1500
+move 640 650
+wait 300
+shot 27b-backpack-uses-tab2
+click 540 72
+wait 1500
+move 640 650
+wait 300
+shot 27c-backpack-uses-tab3
 key Escape
 wait 1500
 
