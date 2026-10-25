@@ -209,7 +209,6 @@ public final class JeiRecipes {
 
     private static List<Component> professionLines(PlayerSkillEnum skill) {
         List<Component> lines = new ArrayList<>();
-        lines.add(tr("mmorpg.jei.prof.tool", skill.word.locName()));
         lines.add(tr("mmorpg.jei.prof.grid"));
         lines.add(tr("mmorpg.jei.prof.success"));
         lines.add(tr("mmorpg.jei.prof.multiplier"));
