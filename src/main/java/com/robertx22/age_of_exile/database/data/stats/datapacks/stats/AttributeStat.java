@@ -58,7 +58,7 @@ public class AttributeStat extends BaseDatapackStat {
         if (IsPercent()) {
             operation = AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL;
 
-            val = (00F + val) / 100F;
+            val = val / 100F;
         }
 
         Identifier modId = Identifier.fromNamespaceAndPath("mmorpg", uuid.toString());

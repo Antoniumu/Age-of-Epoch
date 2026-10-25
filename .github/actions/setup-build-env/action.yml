@@ -1,0 +1,47 @@
+name: Setup build environment
+description: >
+  Temurin JDK 25 + Gradle (с кэшем Gradle User Home и Loom). Один общий шаг для
+  ci.yml и release.yml, чтобы версия JDK и настройки кэша не разъезжались.
+  Minecraft 26.x требует Java 25 (build.gradle: options.release = 25).
+
+inputs:
+  cache-read-only:
+    description: Только читать кэш Gradle, не писать новый (для PR из форков).
+    required: false
+    default: 'false'
+
+runs:
+  using: composite
+  steps:
+    - name: JDK 25 (Temurin)
+      uses: actions/setup-java@v6
+      with:
+        distribution: temurin
+        java-version: '25'
+        java-package: jdk
+
+    - name: Проверить, что javac действительно 25
+      shell: bash
+      run: |
+        java -version
+        javac -version
+        major="$(javac -version 2>&1 | sed -E 's/^javac ([0-9]+).*/\1/')"
+        if [ "$major" != "25" ]; then
+          echo "::error::Ожидался JDK 25, а в PATH javac $major. Mojang/Fabric 26.3 не соберутся на другой версии."
+          exit 1
+        fi
+
+    - name: Кэш Gradle (Gradle User Home, Loom, wrapper)
+      uses: gradle/actions/setup-gradle@v6
+      with:
+        cache-read-only: ${{ inputs.cache-read-only }}
+        cache-cleanup: on-success
+        # Сводку в конец job-а печатаем только при падении, иначе она шумит в PR.
+        add-job-summary: on-failure
+        # Кэш GitHub ограничен ~10 ГБ на репозиторий; Loom умеет раздуваться.
+        # Убираем из кэша то, что восстанавливается за секунды и ничего не стоит.
+        gradle-home-cache-excludes: |
+          caches/*/kotlin-dsl
+          daemon
+          workers
+          jdks

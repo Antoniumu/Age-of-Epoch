@@ -1,0 +1,69 @@
+name: Release
+
+# Собирает мод и создаёт GitHub Release, когда в репозиторий пушат тег вида v5.0.0.
+#   git tag v5.0.0 && git push origin v5.0.0
+#
+# Тег обязан совпадать с mod_version в gradle.properties — иначе job упадёт,
+# чтобы релиз не разошёлся с версией внутри jar.
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Тег, который релизим (например v5.0.0)'
+        required: true
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx4G'
+
+jobs:
+  release:
+    name: Build & publish release
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+          fetch-depth: 0
+
+      - uses: ./.github/actions/setup-build-env
+
+      - name: Тег совпадает с mod_version
+        env:
+          TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          tag_version="${TAG#v}"
+          mod_version="$(sed -nE 's/^mod_version=(.*)$/\1/p' gradle.properties | tr -d '[:space:]')"
+          echo "тег: $tag_version, mod_version: $mod_version"
+          if [ "$tag_version" != "$mod_version" ]; then
+            echo "::error::Тег $TAG не совпадает с mod_version=$mod_version в gradle.properties"
+            exit 1
+          fi
+
+      - name: ./gradlew build
+        run: ./gradlew build --stacktrace --no-problems-report
+
+      - name: Проверить содержимое jar
+        run: bash tools/ci/check-jar.sh build/libs
+
+      - name: Опубликовать релиз
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          # Файлы: основной jar и jar с исходниками (sources удобно класть в IDE).
+          gh release create "$TAG" \
+            build/libs/*.jar \
+            --title "Age of Epoch $TAG" \
+            --generate-notes \
+            --verify-tag

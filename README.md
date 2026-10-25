@@ -40,7 +40,15 @@
 
 ## Сборка
 
-Требования: **JDK 25**, доступ в интернет к `maven.fabricmc.net` и Mojang-репозиториям.
+Сборка и проверки автоматизированы: см. [`.github/workflows/ci.yml`](.github/workflows/ci.yml) и
+[`docs/CI.md`](docs/CI.md). GitHub Actions сам ставит **JDK 25**, собирает jar и публикует его
+артефактом — забрать готовый мод можно одной командой, без локального JDK:
+
+```bash
+gh run download --name Age-of-Epoch-jar -D mods
+```
+
+Локально требования: **JDK 25**, доступ в интернет к `maven.fabricmc.net` и Mojang-репозиториям.
 
 ```bash
 ./gradlew build          # результат: build/libs/Age-of-Epoch-*.jar
