@@ -26,6 +26,8 @@ public class SongSpells implements ExileRegistryInit {
                     .setSwingArm()
                     .applyCastSpeedToCooldown(), "Power Chord",
                 Arrays.asList(SpellTag.projectile, SpellTag.damage))
+            .manualDesc("Send a chord of sound that deals " + SpellCalcs.POWER_CHORD.getLocDmgTooltip(Elements.Elemental)
+                + " and charms the enemy it hits for 6 s.")
             .weaponReq(CastingWeapon.MAGE_WEAPON)
             .onCast(PartBuilder.playSound(SoundEvents.SNOWBALL_THROW, 1D, 1D))
             .onCast(PartBuilder.justAction(SpellAction.SUMMON_PROJECTILE.create(Items.AIR, 1D, 1D, SlashEntities.SIMPLE_PROJECTILE.get(), 20D, false)))

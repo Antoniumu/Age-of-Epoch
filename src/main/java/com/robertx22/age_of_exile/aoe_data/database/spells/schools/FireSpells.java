@@ -50,29 +50,41 @@ public class FireSpells implements ExileRegistryInit {
 
         SpellBuilder.of(OVERLOAD, SpellConfiguration.Builder.nonInstant(10, 60 * 20 * 3, 30), "Overload",
                 Arrays.asList())
-            .manualDesc("Gives effect to self.")
+            .manualDesc("Overload for 10 s: cooldowns are shorter, but every spell costs more mana and you move slower.")
             .onCast(PartBuilder.playSound(SoundEvents.ILLUSIONER_CAST_SPELL, 1D, 1D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.ANGRY_VILLAGER, 40D, 2D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.WITCH, 60D, 2D))
+            .onCast(PartBuilder.groundEdgeParticles(ParticleTypes.END_ROD, 40D, 2D, 0.4D, ParticleMotion.Upwards))
             .onCast(PartBuilder.giveSelfExileEffect(BeneficialEffects.OVERLOAD.resourcePath, 20 * 10D))
             .build();
 
         SpellBuilder.of(VAMP_BLOOD, SpellConfiguration.Builder.nonInstant(10, 60 * 20 * 3, 30), "Vampiric BLood",
                 Arrays.asList())
-            .manualDesc("Gives effect to nearby allies.")
+            .manualDesc("Give Vampiric Blood to allies within 5 blocks for 60 s: their hits heal them.")
             .onCast(PartBuilder.playSound(SoundEvents.ILLUSIONER_CAST_SPELL, 1D, 1D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.DAMAGE_INDICATOR, 40D, 3D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.HEART, 40D, 3D))
+            .onCast(PartBuilder.groundEdgeParticles(ParticleTypes.END_ROD, 40D, 3D, 0.4D, ParticleMotion.Upwards))
             .onCast(PartBuilder.giveExileEffectToAlliesInRadius(5D, BeneficialEffects.VAMPIRIC_BLOOD.resourcePath, 20 * 60D))
             .build();
 
         SpellBuilder.of(DRACONIC_BLOOD, SpellConfiguration.Builder.nonInstant(10, 60 * 20 * 3, 30), "Draconic BLood",
                 Arrays.asList())
-            .manualDesc("Gives effect to nearby allies.")
+            .manualDesc("Give Dragon Blood to allies within 5 blocks for 60 s: their spells steal life.")
             .onCast(PartBuilder.playSound(SoundEvents.ILLUSIONER_CAST_SPELL, 1D, 1D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.SOUL_FIRE_FLAME, 50D, 3D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.WITCH, 50D, 3D))
+            .onCast(PartBuilder.groundEdgeParticles(ParticleTypes.FLAME, 40D, 3D, 0.4D, ParticleMotion.Upwards))
             .onCast(PartBuilder.giveExileEffectToAlliesInRadius(5D, BeneficialEffects.DRACONIC_BLOOD.resourcePath, 20 * 60D))
             .build();
 
         SpellBuilder.of(FLAME_WEAPON, SpellConfiguration.Builder.instant(10, 20 * 30), "Flame Weapon",
                 Arrays.asList())
-            .manualDesc("Gives effect to nearby allies.")
+            .manualDesc("Set the weapons of allies within 5 blocks alight for 10 s: their hits deal extra Fire damage.")
             .onCast(PartBuilder.playSound(SoundEvents.ILLUSIONER_CAST_SPELL, 1D, 1D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.FLAME, 70D, 3D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.SMOKE, 40D, 3D))
+            .onCast(PartBuilder.groundEdgeParticles(ParticleTypes.LAVA, 20D, 3D, 0.4D, ParticleMotion.Upwards))
             .onCast(PartBuilder.giveExileEffectToAlliesInRadius(5D, BeneficialEffects.FIRE_WEAPON.resourcePath, 20 * 10D))
             .build();
 
@@ -108,6 +120,8 @@ public class FireSpells implements ExileRegistryInit {
 
         SpellBuilder.of(FIRE_NOVA_ID, SpellConfiguration.Builder.instant(20, 20 * 25), "Fire Nova",
                 Arrays.asList(SpellTag.area, SpellTag.damage))
+            .manualDesc("Explode with fire around you, dealing "
+                + SpellCalcs.FIRE_NOVA.getLocDmgTooltip(Elements.Fire) + " to every enemy within 3 blocks.")
             .onCast(PartBuilder.playSound(SoundEvents.GENERIC_EXPLODE.value(), 1D, 1D))
 
             .onCast(PartBuilder.nova(ParticleTypes.FLAME, 200D, 2.8D, 0.05D))

@@ -38,7 +38,7 @@ public class NatureSpells implements ExileRegistryInit {
         SpellBuilder.of(POISON_CLOUD, SpellConfiguration.Builder.instant(30, 25 * 20), "Poison Cloud",
                 Arrays.asList(SpellTag.area, SpellTag.damage))
             .manualDesc(
-                "Erupt with poisonous gas, dealing " + SpellCalcs.FROST_NOVA.getLocDmgTooltip()
+                "Erupt with poisonous gas, dealing " + SpellCalcs.POISON_CLOUD.getLocDmgTooltip()
                     + " " + Elements.Earth.getIconNameDmg() + " to nearby enemies and applying Poison.")
             .weaponReq(CastingWeapon.ANY_WEAPON)
             .onCast(PartBuilder.playSound(SoundEvents.PLAYER_SPLASH_HIGH_SPEED, 0.5D, 1D))
@@ -67,9 +67,11 @@ public class NatureSpells implements ExileRegistryInit {
             .build();
         SpellBuilder.of(THORN_ARMOR, SpellConfiguration.Builder.instant(15, 200 * 20), "Thorn Armor",
                 Arrays.asList(SpellTag.damage))
-            .manualDesc("Gives buff to self:")
-
+            .manualDesc("Thorns cover you for 45 s: Earth resistance, armor and dodge chance rise.")
             .onCast(PartBuilder.playSound(SoundEvents.ILLUSIONER_CAST_SPELL, 1D, 1D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.HAPPY_VILLAGER, 60D, 2.5D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.COMPOSTER, 50D, 2.5D))
+            .onCast(PartBuilder.groundEdgeParticles(ParticleTypes.END_ROD, 40D, 2.5D, 0.4D, ParticleMotion.Upwards))
             .onCast(PartBuilder.giveSelfExileEffect(BeneficialEffects.THORN_ARMOR.resourcePath, 20 * 45D))
             .build();
 
@@ -93,17 +95,23 @@ public class NatureSpells implements ExileRegistryInit {
 
         SpellBuilder.of(POISON_WEAPONS, SpellConfiguration.Builder.instant(15, 160 * 20), "Poison Weapons",
                 Arrays.asList(SpellTag.damage))
-            .manualDesc("Gives effect to nearby allies.")
+            .manualDesc("Poison the weapons of allies within 5 blocks for 30 s: their hits deal extra Earth damage and poison more often.")
             .attackStyle(PlayStyle.ranged)
             .onCast(PartBuilder.playSound(SoundEvents.ILLUSIONER_CAST_SPELL, 1D, 1D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.ITEM_SLIME, 60D, 3D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.SNEEZE, 50D, 3D))
+            .onCast(PartBuilder.groundEdgeParticles(ParticleTypes.SNEEZE, 40D, 3D, 0.4D, ParticleMotion.OutwardMotion))
             .onCast(PartBuilder.giveExileEffectToAlliesInRadius(5D, BeneficialEffects.POISON_WEAPONS.resourcePath, 20 * 30D))
             .build();
 
         SpellBuilder.of(NATURE_BALM, SpellConfiguration.Builder.nonInstant(15, 60 * 20, 30)
                     .setScaleManaToPlayer(), "Nature's Balm",
                 Arrays.asList(SpellTag.heal))
-            .manualDesc("Gives buff to allies nearby:")
+            .manualDesc("Give Nature's Balm to allies within 3 blocks for 15 s: they regenerate health.")
             .onCast(PartBuilder.playSound(SoundEvents.ILLUSIONER_CAST_SPELL, 1D, 1D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.HAPPY_VILLAGER, 50D, 3D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.HEART, 40D, 3D))
+            .onCast(PartBuilder.groundEdgeParticles(ParticleTypes.COMPOSTER, 40D, 3D, 0.4D, ParticleMotion.Upwards))
             .onCast(PartBuilder.giveExileEffectToAlliesInRadius(3D, BeneficialEffects.REGENERATE.resourcePath, 20 * 15D))
             .build();
 

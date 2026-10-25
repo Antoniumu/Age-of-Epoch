@@ -1,0 +1,289 @@
+name: Spell audit (all schools + video)
+
+# Что делает этот пайплайн:
+#   1) Структурный аудит без игры (tools/verify/check_spells.py): у каждого
+#      заклинания должно быть описание, иконка, партиклы, звук, полезный эффект
+#      и место в дереве школы.
+#   2) Живой аудит: dev-клиент под Xvfb создаёт мир, SpellAuditProbe применяет
+#      КАЖДОЕ заклинание настоящим путём (тот же setToCast, что у хотбара) по
+#      манекенам и замеряет урон/лечение/эффекты. Строки AOEAI и отчёт
+#      spell-audit.md — в артефактах и в ветке.
+#   3) Видео: весь прогон пишется через ffmpeg/x11grab, затем режется на ролики
+#      по классам (маркеры таймлайна пишет сам зонд). В кадре — подпись, что за
+#      умение и что оно делает, плюс живые цифры.
+#
+# Job остаётся красным, пока хотя бы одно умение провалило проверку: это и есть
+# цикл «багфиксим, пока не станет зелёным».
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Что проверять: all | school=fire | spells=fireball,meteor'
+        required: false
+        default: 'all'
+  pull_request:
+    paths:
+      - 'src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/**'
+      - 'src/main/java/com/robertx22/age_of_exile/database/data/spells/**'
+      - 'src/main/java/com/robertx22/age_of_exile/aoe_data/database/spell_schools/**'
+      - 'src/main/java/com/robertx22/age_of_exile/uncommon/testing/**'
+      - 'src/main/java/com/robertx22/age_of_exile/gui/overlays/spell_audit/**'
+      - 'src/main/resources/assets/mmorpg/textures/gui/spells/**'
+      - 'tools/verify/check_spells.py'
+      - 'tools/e2e/**'
+      - '.github/workflows/spell-audit.yml'
+  push:
+    branches: [main]
+
+concurrency:
+  group: spell-audit-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write        # публикация ветки ci-spell-audit
+  pull-requests: write   # комментарий с итогами и видео
+
+env:
+  GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx4G'
+  BRANCH: ci-spell-audit
+  AUDIT_TARGET: ${{ inputs.target || 'all' }}
+
+jobs:
+  audit:
+    name: Live spell audit + per-class video
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Каталог прогона чистый
+        run: |
+          rm -rf run/spell-audit* run/e2e/videos run/e2e/spell-video.mp4 run/e2e/video-start.txt run/e2e/video-end.txt
+          mkdir -p run/e2e/shots
+          rm -f run/aoe-spell-audit.flag run/aoe-devtest.flag
+          ls -la run 2>/dev/null || true
+
+      # ---- 1. структурный аудит: секунды, без игры -------------------------
+      - name: Структурный аудит заклинаний
+        id: structural
+        run: |
+          set +e
+          python3 tools/verify/check_spells.py \
+            --markdown run/e2e/spell-audit-structural.md \
+            --json run/e2e/spell-audit-structural.json > run/e2e/structural.log 2>&1
+          status=$?
+          set -e
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          tail -n 40 run/e2e/structural.log
+          {
+            echo "### Структурный аудит: статус $status"
+            echo '```'
+            tail -n 30 run/e2e/structural.log
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+
+      - uses: ./.github/actions/setup-build-env
+        with:
+          cache-read-only: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork }}
+
+      # mesa-vulkan-drivers обязателен: MC 26.3 (SDL3 + renderpearl) под Xvfb не
+      # создаёт OpenGL-контекст и уходит в Vulkan (lavapipe). ffmpeg нужен для
+      # записи видео прогона.
+      - name: Пакеты для headless-клиента, скриншотов и записи видео
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends \
+            xvfb x11-utils xdotool imagemagick x11-apps openbox wmctrl \
+            libgl1 libglu1-mesa libgl1-mesa-dri mesa-utils \
+            mesa-vulkan-drivers vulkan-tools ffmpeg \
+            libxi6 libxcursor1 libxrandr2 libxinerama1 libxxf86vm1 \
+            libopenal1 libpulse0 libegl1 libegl-mesa0
+
+      # ---- 2. живой аудит + 3. запись видео --------------------------------
+      - name: Клиент, аудит всех умений, запись видео
+        id: live
+        continue-on-error: true
+        env:
+          CLIENT_TIMEOUT: '3600'
+        run: |
+          set +e
+          bash tools/e2e/run-in-xvfb.sh tools/e2e/scenarios/spells.txt run/e2e/shots/spells
+          status=$?
+          set -e
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+
+          grep -h "AOEAI " run/logs/latest.log 2>/dev/null | awk '!seen[$0]++' > run/e2e/aoeai.log || true
+          shots=$(find run/e2e/shots -name '*.png' | wc -l)
+          echo "снимков=$shots, статус сценария=$status"
+          {
+            echo "### Сценарий: статус $status, снимков $shots"
+            if [ -s run/e2e/aoeai.log ]; then
+              grep -E "AOEAI (done|fatal)" run/e2e/aoeai.log | tail -3
+            fi
+            ls -la run/e2e/*.mp4 run/spell-audit.* 2>/dev/null || true
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+
+      # ---- 4. нарезка видео по классам ------------------------------------
+      - name: Нарезать видео по классам
+        id: videos
+        run: |
+          ls -la run/e2e/*.mp4 2>/dev/null || echo "видео нет"
+          set +e
+          python3 tools/e2e/split_videos.py \
+            --video run/e2e/spell-video.mp4 \
+            --timeline run/spell-audit-timeline.txt \
+            --start run/e2e/video-start.txt \
+            --out run/e2e/videos \
+            --report run/spell-audit.json
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+          set -e
+          ls -la run/e2e/videos 2>/dev/null || true
+          {
+            echo "### Видео"
+            echo '```'
+            ls -la run/e2e/videos 2>/dev/null || echo "нет"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Сводка аудита в summary
+        if: always()
+        run: |
+          {
+            echo "## Аудит умений"
+            if [ -s run/e2e/aoeai.log ]; then
+              echo '```'
+              grep -h "AOEAI done" run/e2e/aoeai.log | tail -1
+              echo '```'
+              echo "### Провалы"
+              echo '```'
+              grep -h "AOEAI spell=" run/e2e/aoeai.log | grep "verdict=FAIL" | head -40 || echo "нет"
+              echo '```'
+            else
+              echo "Строк AOEAI нет: клиент не дошёл до аудита."
+            fi
+            if [ -f run/spell-audit.md ]; then
+              echo
+              sed -n '1,6p' run/spell-audit.md
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Опубликовать отчёт и видео в ветку ${{ env.BRANCH }}
+        if: always() && github.event.pull_request.head.repo.fork != true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          AUDIT_TITLE: "Цель: `${{ env.AUDIT_TARGET }}`, клиент под Xvfb, ветка `${{ github.head_ref || github.ref_name }}`"
+        run: |
+          bash tools/e2e/publish-spell-audit.sh run/e2e \
+            || echo "::error::Публикация в ветку ${BRANCH} не удалась"
+
+      - name: Комментарий в PR с итогами и видео
+        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork != true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          md="$(mktemp)"
+          raw="https://raw.githubusercontent.com/${REPO}/${BRANCH}"
+          {
+            echo "## Аудит умений: живой прогон + видео по классам"
+            echo
+            echo "Прогон: [${GITHUB_RUN_ID}](${GITHUB_SERVER_URL}/${REPO}/actions/runs/${GITHUB_RUN_ID}) · ветка: [\`${BRANCH}\`](https://github.com/${REPO}/tree/${BRANCH})"
+            echo
+            if [ -s run/e2e/aoeai.log ]; then
+              summary="$(grep -h "AOEAI done" run/e2e/aoeai.log | tail -1)"
+              failed_total="$(grep -h "AOEAI spell=" run/e2e/aoeai.log | grep -c "verdict=FAIL" || true)"
+              echo "**Итог:** \`${summary:-нет строки done}\`"
+              echo
+              if [ "${failed_total:-0}" -gt 0 ]; then
+                echo "### Провалились"
+                echo
+                echo "| умение | школа | проблемы |"
+                echo "|---|---|---|"
+                grep -h "AOEAI spell=" run/e2e/aoeai.log | grep "verdict=FAIL" \
+                  | sed -E 's/.*spell=([^ ]+).*school=([^ ]+).*problems=([^ ]*).*/| `\1` | \2 | \3 |/' \
+                  | head -40
+                echo
+              fi
+            else
+              echo "> Строк AOEAI нет — клиент не дошёл до аудита. Смотри ветку \`${BRANCH}\` (logs/steps.log)."
+              echo
+            fi
+            if ls run/e2e/videos/*.mp4 >/dev/null 2>&1; then
+              echo "### Видео по классам"
+              echo
+              for f in run/e2e/videos/*.mp4; do
+                base="$(basename "$f" .mp4)"
+                echo "* [▶ ${base}](${raw}/videos/${base}.mp4)"
+              done
+              echo
+              echo "Подпись в кадре: название умения, описание из тултипа и живые цифры."
+              echo
+            else
+              echo "_Видео не собралось — смотри артефакт прогона._"
+              echo
+            fi
+            echo "> Отчёт: [\`spell-audit.md\`](${raw}/reports/spell-audit.md) · структурный: [\`spell-audit-structural.md\`](${raw}/reports/spell-audit-structural.md)"
+          } > "$md"
+
+          existing="$(gh api "repos/${REPO}/issues/${PR}/comments" --paginate \
+            --jq '.[] | select(.body | contains("<!-- aoe-spell-audit -->")) | .id' | head -1)"
+          { echo '<!-- aoe-spell-audit -->'; cat "$md"; } > "$md.body"
+          if [ -n "$existing" ]; then
+            gh api -X PATCH "repos/${REPO}/issues/comments/${existing}" -F "body=@${md}.body" > /dev/null
+            echo "комментарий обновлён"
+          else
+            gh api -X POST "repos/${REPO}/issues/${PR}/comments" -F "body=@${md}.body" > /dev/null
+            echo "комментарий создан"
+          fi
+
+      - name: Артефакты (полное видео, отчёты, логи)
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: spell-audit
+          path: |
+            run/e2e/spell-video.mp4
+            run/e2e/videos/**
+            run/e2e/spell-audit-structural.md
+            run/e2e/spell-audit-structural.json
+            run/spell-audit.md
+            run/spell-audit.json
+            run/spell-audit.log
+            run/spell-audit-timeline.txt
+            run/e2e/aoeai.log
+            run/e2e/structural.log
+            run/e2e/ffmpeg.log
+            run/logs/latest.log
+            run/e2e/gradle.log
+            run/e2e/shots/**
+          if-no-files-found: warn
+          retention-days: 30
+
+      # ---- 5. красный job, пока есть провалы ------------------------------
+      - name: Вердикт
+        if: always()
+        run: |
+          failed_total=0
+          if [ -s run/e2e/aoeai.log ]; then
+            failed_total="$(grep -h "AOEAI spell=" run/e2e/aoeai.log | grep -c "verdict=FAIL" || true)"
+            total="$(grep -h "AOEAI spell=" run/e2e/aoeai.log | grep -c "verdict=" || true)"
+            echo "умений: $total, провалов: $failed_total"
+          else
+            echo "::error::Аудит не отработал: строк AOEAI нет"
+            exit 1
+          fi
+          if [ "$failed_total" -gt 0 ]; then
+            echo "::error::Провалили проверку $failed_total умений — смотри spell-audit.md"
+            exit 1
+          fi
+          if [ "${{ steps.structural.outputs.status }}" != "0" ]; then
+            echo "::error::Структурный аудит нашёл проблемы — смотри spell-audit-structural.md"
+            exit 1
+          fi
+          echo "Все умения прошли проверку"

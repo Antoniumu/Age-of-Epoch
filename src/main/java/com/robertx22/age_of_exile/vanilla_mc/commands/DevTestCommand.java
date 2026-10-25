@@ -2,6 +2,7 @@ package com.robertx22.age_of_exile.vanilla_mc.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.robertx22.age_of_exile.uncommon.testing.CombatProbe;
+import com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -29,7 +30,24 @@ public final class DevTestCommand {
                 .executes(ctx -> run(ctx.getSource().getPlayerOrException(), "all"))
                 .then(literal("dps").executes(ctx -> run(ctx.getSource().getPlayerOrException(), "dps")))
                 .then(literal("heal").executes(ctx -> run(ctx.getSource().getPlayerOrException(), "heal")))
-                .then(literal("all").executes(ctx -> run(ctx.getSource().getPlayerOrException(), "all")))));
+                .then(literal("all").executes(ctx -> run(ctx.getSource().getPlayerOrException(), "all"))))
+            .then(literal("spellaudit")
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                .executes(ctx -> audit(ctx.getSource().getPlayerOrException(), "all"))
+                .then(literal("all").executes(ctx -> audit(ctx.getSource().getPlayerOrException(), "all")))
+                .then(literal("no_school")
+                    .executes(ctx -> audit(ctx.getSource().getPlayerOrException(), "school=no_school")))
+                .then(Commands.argument("what", com.mojang.brigadier.arguments.StringArgumentType.string())
+                    .executes(ctx -> audit(ctx.getSource().getPlayerOrException(),
+                        com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "what"))))));
+    }
+
+    private static int audit(ServerPlayer player, String what) {
+        String target = what == null || what.isBlank() ? "all" : what.trim();
+        SpellAuditProbe.request(target);
+        player.sendSystemMessage(Component.literal(
+            "§a[Аудит умений] " + target + ": запущено, результат — строки AOEAI в логе и spell-audit.md"));
+        return 1;
     }
 
     private static int run(ServerPlayer player, String what) {

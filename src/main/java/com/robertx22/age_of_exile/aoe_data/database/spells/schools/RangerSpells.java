@@ -108,6 +108,9 @@ public class RangerSpells implements ExileRegistryInit {
             .onCast(PartBuilder.playSound(SoundEvents.CREEPER_PRIMED, 1D, 1.6D))
             .onCast(PartBuilder.giveSelfEffect(MobEffects.SLOW_FALLING, 25D))
             .onCast(PartBuilder.playSound(SoundEvents.FIRE_EXTINGUISH, 1D, 1.6D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.CLOUD, 40D, 1.5D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.END_ROD, 25D, 1.5D))
+            .onCast(PartBuilder.groundEdgeParticles(ParticleTypes.CRIT, 20D, 1.5D, 0.3D, ParticleMotion.OutwardMotion))
 
             .teleportForward()
 
@@ -149,6 +152,9 @@ public class RangerSpells implements ExileRegistryInit {
             .onCast(PartBuilder.giveSelfEffect(MobEffects.NIGHT_VISION, 20D * 30))
             .onCast(PartBuilder.giveSelfEffect(MobEffects.SPEED, 20D * 30))
             .onCast(PartBuilder.addEffectToEnemiesInAoe(MobEffects.GLOWING, 20D, 20D * 20))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.WITCH, 80D, 3D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.ENCHANT, 80D, 3D))
+            .onCast(PartBuilder.groundEdgeParticles(ParticleTypes.END_ROD, 60D, 3D, 0.4D, ParticleMotion.Upwards))
 
             .build();
 
@@ -157,6 +163,10 @@ public class RangerSpells implements ExileRegistryInit {
             .weaponReq(CastingWeapon.ANY_WEAPON)
             .attackStyle(PlayStyle.ranged)
             .manualDesc("Jump back and gain Cleanse for a short time.")
+            .onCast(PartBuilder.playSound(SoundEvents.CHORUS_FRUIT_TELEPORT, 0.8D, 1.4D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.CLOUD, 40D, 1.5D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.CRIT, 20D, 1.5D))
+            .onCast(PartBuilder.groundEdgeParticles(ParticleTypes.END_ROD, 20D, 1.5D, 0.3D, ParticleMotion.Upwards))
             .onCast(PartBuilder.justAction(SpellAction.SET_ADD_MOTION.create(SetAdd.SET, -1.5D, ParticleMotion.CasterLook)
                     .put(MapField.IGNORE_Y, true))
                 .addTarget(TargetSelector.CASTER.create()))
@@ -216,6 +226,8 @@ public class RangerSpells implements ExileRegistryInit {
 
         SpellBuilder.of(RECOIL_SHOT, SpellConfiguration.Builder.arrowSpell(10, 20 * 10), "Recoil Shot",
                 Arrays.asList(SpellTag.projectile, SpellTag.damage))
+            .manualDesc("Shoot an arrow that deals " + SpellCalcs.DIRECT_ARROW_HIT.getLocDmgTooltip(Elements.Physical)
+                + " and opens a wound, while the recoil throws you backwards.")
             .weaponReq(CastingWeapon.RANGED)
             .attackStyle(PlayStyle.ranged)
             .onCast(PartBuilder.playSound(SoundEvents.ARROW_SHOOT, 1D, 1D))
@@ -236,6 +248,9 @@ public class RangerSpells implements ExileRegistryInit {
             .attackStyle(PlayStyle.ranged)
             .onCast(PartBuilder.playSound(SoundEvents.ARROW_SHOOT, 1D, 1D))
             .onCast(PartBuilder.justAction(SpellAction.GIVE_ITEM.create(Items.ARROW, 64D)))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.CRIT, 40D, 1.5D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.ENCHANT, 40D, 1.5D))
+            .onCast(PartBuilder.groundEdgeParticles(ParticleTypes.END_ROD, 30D, 1.5D, 0.3D, ParticleMotion.Upwards))
             .build();
 
     }

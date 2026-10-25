@@ -38,6 +38,12 @@ public class SpellSchoolsAdder implements ExileRegistryInit {
             .addSpell(HolySpells.TAUNT, new PointData(5, 5))
             .addSpell(HolySpells.BANISH, new PointData(10, 5))
 
+            // Раньше эти два умения были зарегистрированы, но не входили ни в одну школу —
+            // игрок физически не мог их выучить. Shout Warn стоит рядом с Taunt,
+            // Power Chord — рядом с гимнами, т.к. это тоже песня.
+            .addSpell(HolySpells.SHOUT_WARN, new PointData(5, 0))
+            .addSpell("power_chord", new PointData(9, 4))
+
             .addSpell(HolySpells.WISH, new PointData(3, 6))
 
             .build();
@@ -63,6 +69,14 @@ public class SpellSchoolsAdder implements ExileRegistryInit {
 
             .addSpell(RangerSpells.EXPLOSIVE_ARROW_ID, new PointData(2, 5))
 
+            // Возвращены в дерево школы: раньше они существовали, но были недостижимы.
+            .addSpell(RangerSpells.RECOIL_SHOT, new PointData(3, 3))
+            .addSpell("mark_for_death", new PointData(3, 2))
+            .addSpell("execute", new PointData(5, 4))
+            .addSpell("shred", new PointData(1, 3))
+            .addSpell("jump_field", new PointData(0, 1))
+            .addSpell("levitation", new PointData(1, 4))
+
             .build();
 
         SchoolBuilder.of(NATURE, "Nature")
@@ -81,6 +95,12 @@ public class SpellSchoolsAdder implements ExileRegistryInit {
 
             .addSpell(NatureSpells.REFRESH, new PointData(10, 6))
 
+            // Проклятия — порча, логично в школе природы.
+            .addSpell("curse_of_agony", new PointData(5, 3))
+            .addSpell("curse_of_weak", new PointData(6, 3))
+            .addSpell("curse_of_despair", new PointData(7, 3))
+            .addSpell("conjure_ender_chest", new PointData(0, 4))
+
             .addSynergy(SynergiesAdder.POISONBALL_POISON, new PointData(0, 1))
 
             .build();
@@ -97,6 +117,8 @@ public class SpellSchoolsAdder implements ExileRegistryInit {
             .addSpell(FireSpells.DRACONIC_BLOOD, new PointData(6, 4))
 
             .addSpell(FireSpells.OVERLOAD, new PointData(10, 5))
+            // Fire Nova уже была в коде, но забыта в дереве школы.
+            .addSpell(FireSpells.FIRE_NOVA_ID, new PointData(3, 3))
 
             .addSynergy(SynergiesAdder.FIREBALL_BURN, new PointData(0, 1))
 
@@ -118,6 +140,10 @@ public class SpellSchoolsAdder implements ExileRegistryInit {
             .addSpell(WaterSpells.CHILL_ERUPTION, new PointData(2, 3))
 
             .addSpell(WaterSpells.MAGE_CIRCLE, new PointData(10, 4))
+            .addSpell(WaterSpells.HEART_OF_ICE, new PointData(8, 5))
+            // Арканные умения (телепорт, чёрная дыра) — в водной школе, рядом с Mage Circle.
+            .addSpell("teleport", new PointData(5, 5))
+            .addSpell("black_hole", new PointData(4, 6))
 
             .addSynergy(SynergiesAdder.FROSTBALL_CHILL, new PointData(0, 1))
             .build();
