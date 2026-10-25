@@ -220,8 +220,10 @@ class Runner:
     def focus(self):
         if not self.window and not self.find_window():
             return False
+        self.run(["xdotool", "windowraise", self.window], timeout=20)
         self.run(["xdotool", "windowactivate", "--sync", self.window], timeout=20)
         self.run(["xdotool", "windowfocus", "--sync", self.window], timeout=20)
+        self.run(["xdotool", "mousemove", "--window", self.window, "5", "5"], timeout=20)
         return True
 
     def wait_window(self, pattern, timeout_ms):
@@ -289,26 +291,43 @@ class Runner:
 
     # ------------------------------------------------------------------ действия
 
+    def window_origin(self):
+        """Абсолютная позиция окна на экране (нужна для XTEST-координат)."""
+        code, geo = self.run(["xdotool", "getwindowgeometry", "--shell", self.window])
+        x = y = 0
+        for line in geo.splitlines():
+            if line.startswith("X="):
+                x = int(line.split("=", 1)[1] or 0)
+            elif line.startswith("Y="):
+                y = int(line.split("=", 1)[1] or 0)
+        return x, y
+
     def click(self, x, y, button=1):
         if not self.focus():
             self.fail("клик %s,%s: нет окна" % (x, y))
             return
-        self.run(["xdotool", "mousemove", "--window", self.window, str(x), str(y)])
-        time.sleep(0.15)
-        self.run(["xdotool", "click", "--window", self.window, str(button)])
-        self.note("клик %s,%s" % (x, y))
+        ox, oy = self.window_origin()
+        # XTEST, а не `xdotool click --window`: синтетические события,
+        # отправленные прямо в окно (XSendEvent), SDL3 игнорирует, поэтому
+        # клик по кнопке меню не срабатывал. XTEST двигает настоящий курсор.
+        self.run(["xdotool", "mousemove", str(ox + x), str(oy + y)])
+        time.sleep(0.2)
+        self.run(["xdotool", "click", str(button)])
+        self.note("клик %s,%s (экран %s,%s, кнопка %s)" % (x, y, ox + x, oy + y, button))
 
     def move(self, x, y):
         if not self.focus():
             return
-        self.run(["xdotool", "mousemove", "--window", self.window, str(x), str(y)])
+        ox, oy = self.window_origin()
+        self.run(["xdotool", "mousemove", str(ox + x), str(oy + y)])
         self.note("курсор %s,%s" % (x, y))
 
     def key(self, spec):
         if not self.focus():
             self.fail("клавиша %s: нет окна" % spec)
             return
-        self.run(["xdotool", "key", "--window", self.window, "--clearmodifiers", spec])
+        # Клавиши — тоже через XTEST (без --window), иначе SDL3 их не увидит.
+        self.run(["xdotool", "key", "--clearmodifiers", spec])
         self.note("клавиша " + spec)
 
     # ------------------------------------------------------------------ цикл

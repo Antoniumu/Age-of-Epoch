@@ -15,10 +15,15 @@ wait 8000
 shot 00-main-menu
 jstack after-first-shot
 
-# Главное меню: «Одиночная игра» — первая кнопка сверху.
-# Координаты считаются от размера окна из run/options.txt (1280x720, guiScale 2).
+# Главное меню: «Singleplayer» — первая кнопка сверху (окно 1280x720).
+move 640 296
+wait 400
 click 640 296
-wait 3000
+wait 4000
 shot 01-world-list
+# В списке миров: кнопка «Создать новый мир» внизу слева.
+move 400 650
+wait 400
+shot 02-world-list-hover
 
 log конец сценария загрузки
