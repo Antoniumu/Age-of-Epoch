@@ -672,9 +672,22 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
         loadPage(id, true);
     }
 
+    /**
+     * В путях доставки ввода 26.x левая кнопка встречается и как 0, и как 1
+     * (compat Button тоже обрабатывает 1 как нажатие). Вики ничего не меняет
+     * в мире, поэтому активируемся от обеих кодировок.
+     */
+    private static boolean isActivateButton(int button) {
+        return button == 0 || button == 1;
+    }
+
+    /** Видели ли мы нажатие для текущего отпускания (для запасного пути ниже). */
+    private boolean pressSeenForRelease = false;
+
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == 0) {
+        if (isActivateButton(button)) {
+            pressSeenForRelease = true;
             // поиск: фокус
             if (inside(mouseX, mouseY, searchX, searchY, searchW, 14)) {
                 searchFocused = true;
@@ -744,7 +757,7 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        if (draggingPreview && button == 0) {
+        if (draggingPreview && isActivateButton(button)) {
             spinDragOffset += deltaX * 0.03;
             return true;
         }
@@ -753,10 +766,29 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (button == 0) {
+        if (isActivateButton(button)) {
+            boolean wasDragging = draggingPreview;
             draggingPreview = false;
+            boolean sawPress = pressSeenForRelease;
+            pressSeenForRelease = false;
+            // Запасной путь: если нажатие до этого экрана по какой-то причине
+            // не дошло (мостики ввода 26.x), срабатываем на отпускании.
+            if (!wasDragging && !sawPress) {
+                return mouseClicked(mouseX, mouseY, button);
+            }
         }
         return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    // ---- прямые обработчики событий Minecraft 26.x ----
+    // Не полагаемся на мост compat Screen: у этого экрана нет compat-кнопок,
+    // вся интерактивность — собственные хитбоксы выше.
+    public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean doubleClick) {
+        return mouseClicked(event.x(), event.y(), event.button());
+    }
+
+    public boolean mouseReleased(net.minecraft.client.input.MouseButtonEvent event) {
+        return mouseReleased(event.x(), event.y(), event.button());
     }
 
     @Override
