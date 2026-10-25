@@ -6,7 +6,6 @@ import com.robertx22.age_of_exile.database.data.gear_slots.GearSlot;
 import com.robertx22.age_of_exile.database.data.rarities.GearRarity;
 import com.robertx22.age_of_exile.database.registry.ExileDB;
 import com.robertx22.age_of_exile.mmorpg.registers.common.items.SlashItems;
-import com.robertx22.age_of_exile.player_skills.crafting_inv.ProfCraftContainer;
 import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
 import com.robertx22.age_of_exile.saveclasses.stat_soul.StatSoulData;
 import com.robertx22.age_of_exile.saveclasses.stat_soul.StatSoulItem;
@@ -35,15 +34,6 @@ public class OnItemInteract {
         }
 
         ItemStack cursor = screen.getCarried();
-
-        // In profession windows, a plain left-click on an eligible inventory stack
-        // deposits exactly one item into the next available craft slot. Right-click
-        // and clicks with an item already on the cursor retain vanilla behavior.
-        if (j == 0 && cursor.isEmpty() && screen instanceof ProfCraftContainer craftMenu
-            && craftMenu.insertOneFromPlayerInventory(i, player)) {
-            ci.cancel();
-            return;
-        }
 
         if (!cursor.isEmpty()) {
 

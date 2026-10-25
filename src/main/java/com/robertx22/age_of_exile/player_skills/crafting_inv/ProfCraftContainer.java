@@ -102,50 +102,6 @@ public class ProfCraftContainer extends BaseTileContainer {
 
     }
 
-    /**
-     * Inserts one item into the first compatible empty craft slot when the player
-     * left-clicks an item in their inventory with an empty cursor. This keeps the
-     * one-item-per-slot recipe semantics without making players pick up a whole
-     * stack (or use Shift-click) just to add a single ingredient.
-     */
-    public boolean insertOneFromPlayerInventory(int sourceSlotIndex, Player clicker) {
-        if (clicker == null || clicker != player || skill == null
-            || !isPlayerInventory(sourceSlotIndex) || sourceSlotIndex >= this.slots.size()) {
-            return false;
-        }
-
-        Slot sourceSlot = this.slots.get(sourceSlotIndex);
-        if (sourceSlot == null || !sourceSlot.hasItem()) {
-            return false;
-        }
-
-        ItemStack sourceStack = sourceSlot.getItem();
-        int craftStart = getContainerStart();
-        int craftEnd = Math.min(this.slots.size(), craftStart + craftInv.getContainerSize());
-        Slot targetSlot = null;
-
-        for (int i = craftStart; i < craftEnd; i++) {
-            Slot candidate = this.slots.get(i);
-            if (candidate != null && !candidate.hasItem() && candidate.mayPlace(sourceStack)) {
-                targetSlot = candidate;
-                break;
-            }
-        }
-
-        if (targetSlot == null) {
-            return false;
-        }
-
-        ItemStack inserted = sourceStack.split(1);
-        sourceSlot.set(sourceStack.isEmpty() ? ItemStack.EMPTY : sourceStack);
-        targetSlot.set(inserted);
-        sourceSlot.setChanged();
-        targetSlot.setChanged();
-        this.slotsChanged(this.craftInv);
-        this.broadcastChanges();
-        return true;
-    }
-
     boolean canTakeCraftResult() {
         return player != null && skill != null
             && ProfCraftingRecipe.canCraft(player, craftInv, resultInv, skill).canCraft;
