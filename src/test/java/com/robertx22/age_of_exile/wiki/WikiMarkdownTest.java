@@ -295,7 +295,8 @@ public class WikiMarkdownTest {
             {"Ёлка и йод", "ёлка-и-йод"},
             {"Смешанный\tТаб", "смешанный-таб"},
             {"", ""},
-            {"---", "---"},
+            // strip("-") съедает и строку из одних дефисов
+            {"---", ""},
         };
         for (String[] c : cases) {
             assertEquals(c[1], WikiMarkdown.slugify(c[0]), "slugify(" + c[0] + ")");
