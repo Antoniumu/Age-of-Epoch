@@ -231,7 +231,7 @@ jobs:
         if: always()
         run: |
           if [ -f run/e2e/aoetest-gear-failed ]; then
-            echo "::error::Зонд экипировки провалился: макс. HP не обновляется от брони — см. AOETEST в job summary и ветке ci-screenshots"
+            echo "::error::Зонд экипировки провалился: макс. HP не обновляется от брони — см. AOETEST в job summary и в ветке ${BRANCH}"
             exit 1
           fi
           echo "Проверки экипировки/макс. HP прошли."

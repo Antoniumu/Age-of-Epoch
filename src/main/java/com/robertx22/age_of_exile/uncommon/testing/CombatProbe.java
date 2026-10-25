@@ -4,6 +4,7 @@ import com.robertx22.age_of_exile.capability.PlayerDamageChart;
 import com.robertx22.age_of_exile.capability.player.data.TeamData;
 import com.robertx22.age_of_exile.capability.entity.EntityData;
 import com.robertx22.age_of_exile.combat.CombatPartyTracker;
+import com.robertx22.age_of_exile.aoe_data.database.base_gear_types.BaseGearTypes;
 import com.robertx22.age_of_exile.database.data.affixes.Affix;
 import com.robertx22.age_of_exile.database.data.stats.types.resources.health.Health;
 import com.robertx22.age_of_exile.database.registry.ExileDB;
@@ -603,13 +604,11 @@ public final class CombatProbe {
                 int lvl = Math.max(1, Load.Unit(player).getLevel());
                 GearBlueprint bp = new GearBlueprint(lvl, 0);
                 bp.item = Items.DIAMOND_CHESTPLATE;
-                var type = ExileDB.GearTypes()
-                    .getList()
-                    .stream()
-                    .filter(g -> g.GUID().contains("plate_chest") || (g.gear_slot != null && g.gear_slot.contains("plate_chest")))
-                    .findFirst()
-                    .orElse(null);
+                // GUID базовых типов короткий («chest», «boots», …) — не путать
+                // с slotHint-ами вида «plate_chest» из SimulationManager.
+                var type = ExileDB.GearTypes().get(BaseGearTypes.CHEST.GUID());
                 if (type == null) {
+                    LOGGER.warn("{} нет базового типа нагрудника в реестре", TAG);
                     return ItemStack.EMPTY;
                 }
                 bp.gearItemSlot.set(type);
@@ -619,6 +618,7 @@ public final class CombatProbe {
                 ItemStack stack = bp.createStack();
                 GearItemData gearData = Gear.Load(stack);
                 if (gearData == null) {
+                    LOGGER.warn("{} сгенерированный нагрудник не распознан как GearItemData", TAG);
                     return ItemStack.EMPTY;
                 }
                 AffixData hp = new AffixData(Affix.Type.prefix);
@@ -630,7 +630,11 @@ public final class CombatProbe {
                 boolean hasHealth = gearData.GetAllStats()
                     .stream()
                     .anyMatch(s -> Health.GUID.equals(s.getStatId()));
-                return hasHealth ? stack : ItemStack.EMPTY;
+                if (!hasHealth) {
+                    LOGGER.warn("{} у нагрудника нет стата здоровья после аффикса virile", TAG);
+                    return ItemStack.EMPTY;
+                }
+                return stack;
             } catch (Exception e) {
                 LOGGER.warn("{} не удалось создать тестовую броню: {}", TAG, e.toString());
                 return ItemStack.EMPTY;
