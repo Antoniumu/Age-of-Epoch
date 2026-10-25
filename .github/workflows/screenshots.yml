@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
     inputs:
       scenario:
-        description: 'Сценарий из tools/e2e/scenarios (имя файла без .txt)'
+        description: 'Сценарии из tools/e2e/scenarios через запятую (имя файла без .txt); каждый — отдельный прогон'
         required: false
         default: 'boot'
   pull_request:
@@ -61,8 +61,11 @@ jobs:
         env:
           CLIENT_TIMEOUT: '1500'
         run: |
-          scenario="tools/e2e/scenarios/${{ inputs.scenario || 'boot' }}.txt"
-          echo "сценарий: $scenario"
+          # При ручном запуске можно перечислить несколько сценариев через запятую,
+          # тогда каждый идёт отдельным прогоном клиента в свой каталог снимков.
+          list="${{ inputs.scenario || 'boot' }}"
+          scenario="tools/e2e/scenarios/${list%%,*}.txt"
+          echo "сценарии: $list"
           set +e
           bash tools/e2e/run-in-xvfb.sh "$scenario" run/e2e/shots
           status=$?
