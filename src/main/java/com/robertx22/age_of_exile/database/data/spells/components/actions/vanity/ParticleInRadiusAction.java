@@ -6,7 +6,6 @@ import com.robertx22.age_of_exile.database.data.spells.components.actions.SpellA
 import com.robertx22.age_of_exile.database.data.spells.spell_classes.SpellCtx;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.ParticleUtils;
 import com.robertx22.library_of_exile.utils.GeometryUtils;
-import com.robertx22.library_of_exile.utils.RandomUtils;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.phys.Vec3;
@@ -44,10 +43,8 @@ public class ParticleInRadiusAction extends SpellAction {
 
             float height = data.getOrDefault(HEIGHT, 0D)
                 .floatValue();
-            int amount = data.get(PARTICLE_COUNT)
-                .intValue();
-
-            amount *= ctx.calculatedSpellData.area_multi;
+            double scaledAmount = data.get(PARTICLE_COUNT) * ctx.calculatedSpellData.area_multi;
+            int amount = scaledAmount > 0D ? Math.max(1, (int) Math.round(scaledAmount)) : 0;
 
             ParticleMotion motion = null;
 
@@ -65,9 +62,9 @@ public class ParticleInRadiusAction extends SpellAction {
                 .floatValue();
 
             if (shape == Shape.CIRCLE) {
-                // the tickCount check avoids spawning at a stale position on the first tick,
-                // but expiry bursts (e.g. meteor ground impact) must never be suppressed by it
-                if (ctx.sourceEntity.tickCount > 1 || ctx.activation == EntityActivation.ON_EXPIRE) {
+                // Tick-driven effects can see a stale entity position on its first tick. Cast,
+                // hit, and expiry events already have a concrete position and should not vanish.
+                if (ctx.sourceEntity.tickCount > 1 || ctx.activation != EntityActivation.ON_TICK) {
                     for (int i = 0; i < amount; i++) {
 
                         // todo unsure if this helps
@@ -82,14 +79,14 @@ public class ParticleInRadiusAction extends SpellAction {
                 }
             } else if (shape == Shape.HORIZONTAL_CIRCLE) {
                 for (int i = 0; i < amount; i++) {
-                    float yRandom = (int) RandomUtils.RandomRange(0, yrand);
+                    float yRandom = ctx.world.getRandom().nextFloat() * yrand;
                     Vec3 p = GeometryUtils.getRandomHorizontalPosInRadiusCircle(ctx.vecPos.x(), ctx.vecPos.y() + height + yRandom, ctx.vecPos.z(), radius);
                     ParticleUtils.spawn(particle, ctx.world, p, motion.getMotion(p, ctx)
                         .scale(motionMulti));
                 }
             } else if (shape == Shape.HORIZONTAL_CIRCLE_EDGE) {
                 for (int i = 0; i < amount; i++) {
-                    float yRandom = (int) RandomUtils.RandomRange(0, yrand);
+                    float yRandom = ctx.world.getRandom().nextFloat() * yrand;
                     Vec3 p = randomEdgeCirclePos(ctx.vecPos.x(), ctx.vecPos.y() + height + yRandom, ctx.vecPos.z(), radius);
                     ParticleUtils.spawn(particle, ctx.world, p, motion.getMotion(p, ctx)
                         .scale(motionMulti));
