@@ -582,7 +582,10 @@ public final class CombatProbe {
                     gearReported = true;
                     return;
                 }
-                gearData.affixes.pre.get(0).perc = 0;
+                // Обнуляем ВСЕ аффиксы: в списке до virile может лежать случайный
+                // префикс от randomize — достаточно ли было бы нулевого первого.
+                gearData.affixes.pre.forEach(a -> a.perc = 0);
+                gearData.affixes.suf.forEach(a -> a.perc = 0);
                 Gear.Save(worn, gearData);
                 gearStage = 6;
                 gearWait = 0;
@@ -664,6 +667,11 @@ public final class CombatProbe {
                 int lvl = Math.max(1, Load.Unit(player).getLevel());
                 GearBlueprint bp = new GearBlueprint(lvl, 0);
                 bp.item = Items.DIAMOND_CHESTPLATE;
+                // Уровень предмета фиксируем: LevelPart по умолчанию роллит ±3
+                // уровня, предмет может оказаться «выше игрока» — тогда
+                // isUsableBy его отвергает и тест ложно падает (раньше он был
+                // зелёным только при удачном ролле).
+                bp.level.LevelRange = false;
                 // GUID базовых типов короткий («chest», «boots», …) — не путать
                 // с slotHint-ами вида «plate_chest» из SimulationManager.
                 var type = ExileDB.GearTypes().get(BaseGearTypes.CHEST.GUID());
