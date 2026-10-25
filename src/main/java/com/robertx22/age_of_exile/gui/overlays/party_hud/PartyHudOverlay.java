@@ -36,7 +36,7 @@ public final class PartyHudOverlay extends AbstractGui {
 
     public void onHudRender(PoseStack pose, float partialTick) {
         Minecraft mc = Minecraft.getInstance();
-        if (!visible || mc.player == null || mc.options.hideGui || mc.getDebugOverlay().showDebugScreen()) return;
+        if (!visible || mc.player == null || mc.getDebugOverlay().showDebugScreen()) return;
         if (mc.player.isSpectator()) return;
 
         boolean combat = PartyHudState.combat && System.currentTimeMillis() - PartyHudState.lastUpdate < 3_000L;

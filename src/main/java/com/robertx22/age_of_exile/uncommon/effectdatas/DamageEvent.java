@@ -422,7 +422,7 @@ public class DamageEvent extends EffectEvent {
                     com.robertx22.age_of_exile.combat.CombatPartyTracker.recordDamage(
                         (Player) source, target, dmg);
 
-                    GenerateThreatEvent = new GenerateThreatEvent((Player) source, (Mob) target, ThreatGenType.deal_dmg, dmg);
+                    GenerateThreatEvent threatEvent = new GenerateThreatEvent((Player) source, (Mob) target, ThreatGenType.deal_dmg, dmg);
                     threatEvent.Activate();
                 }
             } else if (source instanceof Mob) {
