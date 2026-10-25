@@ -1,0 +1,43 @@
+name: Setup build environment
+description: >
+  Temurin JDK 25 + Gradle с кэшем Gradle User Home (включая Loom/Minecraft).
+  Minecraft 26.x требует Java 25 — build.gradle задаёт options.release = 25.
+
+inputs:
+  cache-read-only:
+    description: Только читать кэш (например, при сборке PR из форка).
+    required: false
+    default: 'false'
+
+runs:
+  using: composite
+  steps:
+    - name: JDK 25 (Temurin)
+      uses: actions/setup-java@v6
+      with:
+        distribution: temurin
+        java-version: '25'
+        java-package: jdk
+
+    - name: Verify Java compiler version
+      shell: bash
+      run: |
+        java -version
+        javac -version
+        major="$(javac -version 2>&1 | sed -E 's/^javac ([0-9]+).*/\1/')"
+        if [ "$major" != "25" ]; then
+          echo "::error::Expected JDK 25, found javac $major"
+          exit 1
+        fi
+
+    - name: Set up Gradle and cache Loom/Minecraft
+      uses: gradle/actions/setup-gradle@v6
+      with:
+        cache-read-only: ${{ inputs.cache-read-only }}
+        cache-cleanup: on-success
+        add-job-summary: on-failure
+        gradle-home-cache-excludes: |
+          caches/*/kotlin-dsl
+          daemon
+          workers
+          jdks

@@ -11,8 +11,8 @@
 |---|---|---|
 | Агрегаты, сезон, профили | `gamemaster_data.json` | постоянно, раз в `save_interval_seconds` |
 | Сырые события | `telemetry/events-<дата>-<id>.jsonl` | на каждое событие (буфер, сброс раз в секунду) |
-| Архив прошлых сезонов | `seasons/<сезон>-<timestamp>.json` | при `/mine_and_slash gm season new` |
-| Отчёт по сезону | `season_report_<сезон>.md` | `/mine_and_slash gm telemetry report` и автоматически при смене сезона |
+| Архив прошлых сезонов | `seasons/<сезон>-<timestamp>.json` | при `/aoe gm season new` |
+| Отчёт по сезону | `season_report_<сезон>.md` | `/aoe gm telemetry report` и автоматически при смене сезона |
 
 ---
 
@@ -125,11 +125,11 @@
 ### Команды
 
 ```
-/mine_and_slash gm telemetry            — статус + топы (биомы, мобы, смерти, способности)
-/mine_and_slash gm telemetry on|off
-/mine_and_slash gm telemetry report     — записать season_report_<сезон>.md
-/mine_and_slash gm season                — текущий сезон: дни, события, игроки
-/mine_and_slash gm season new <название> — отчёт, архив, обнуление счётчиков
+/aoe gm telemetry            — статус + топы (биомы, мобы, смерти, способности)
+/aoe gm telemetry on|off
+/aoe gm telemetry report     — записать season_report_<сезон>.md
+/aoe gm season                — текущий сезон: дни, события, игроки
+/aoe gm season new <название> — отчёт, архив, обнуление счётчиков
 ```
 
 ---
@@ -162,7 +162,7 @@
 
 ## 4. Между сезонами: рабочий процесс
 
-1. За несколько дней до конца: `/mine_and_slash gm telemetry report` — появляется `season_report_<сезон>.md`.
+1. За несколько дней до конца: `/aoe gm telemetry report` — появляется `season_report_<сезон>.md`.
 2. Прочитать раздел **«Выводы и что менять»** — там автоматические правила, например:
    * биомы с долей < 1 % — куда не доходит контент;
    * биом с долей > 50 % — «дом», нужны причины выходить;
@@ -171,7 +171,7 @@
    * способности не используются — проверить ману/подсказки;
    * меньше 4 игроков с данными — приоритет не контент, а приглашение.
 3. При необходимости — выгрузить сырые данные и посчитать своё (см. §5).
-4. `/mine_and_slash gm season new <название>` — архив `seasons/*.json`, отчёт и чистые счётчики.
+4. `/aoe gm season new <название>` — архив `seasons/*.json`, отчёт и чистые счётчики.
    Настройки баланса при этом **не сбрасываются** — их надо менять осознанно.
 
 ---
@@ -268,4 +268,4 @@ GameMaster.get().telemetry().event("trade", player, itemId, amount, "npc=merchan
 | `loot/blueprints/bases/GearRarityPart.java` | редкость сгенерированных предметов |
 | `database/data/spells/components/Spell.java` | касты способностей |
 | `vanilla_mc/items/crates/gem_crate/LootCrateItem.java` | открытие сундуков |
-| `gamemaster/GameMasterCommand.java` | `/mine_and_slash gm telemetry`, `/mine_and_slash gm season` |
+| `gamemaster/GameMasterCommand.java` | `/aoe gm telemetry`, `/aoe gm season` |

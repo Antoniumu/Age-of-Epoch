@@ -8,6 +8,7 @@ import com.robertx22.age_of_exile.event_hooks.player.OnKeyPress;
 import com.robertx22.age_of_exile.gui.overlays.bar_overlays.types.RPGGuiOverlay;
 import com.robertx22.age_of_exile.gui.overlays.death_stats.DeathStatsOverlay;
 import com.robertx22.age_of_exile.gui.overlays.mob_bar.MobBarScreen;
+import com.robertx22.age_of_exile.gui.overlays.party_hud.PartyHudOverlay;
 import com.robertx22.age_of_exile.gui.overlays.spell_cast_bar.SpellCastBarOverlay;
 import com.robertx22.age_of_exile.gui.overlays.spell_hotbar.SpellHotbarOverlay;
 import com.robertx22.forge_compat.client.event.RenderGameOverlayEvent;
@@ -24,6 +25,7 @@ public class Client {
         SpellCastBarOverlay castbar = new SpellCastBarOverlay();
         RPGGuiOverlay rpggui = new RPGGuiOverlay();
         MobBarScreen mobBar = new MobBarScreen();
+        PartyHudOverlay partyHud = new PartyHudOverlay();
 
         AnotherTry.register();
 
@@ -45,6 +47,7 @@ public class Client {
             death.onHudRender(event.getMatrixStack(), event.getPartialTicks());
             rpggui.onHudRender(event.getMatrixStack(), event.getPartialTicks());
             mobBar.onHudRender(event.getMatrixStack(), event.getPartialTicks());
+            partyHud.onHudRender(event.getMatrixStack(), event.getPartialTicks());
             DamageParticleRenderer.renderHudParticles(event.getMatrixStack());
             MobPlateStyleHud.render(event.getMatrixStack());
 

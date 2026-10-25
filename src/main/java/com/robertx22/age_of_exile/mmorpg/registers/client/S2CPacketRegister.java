@@ -22,6 +22,7 @@ public class S2CPacketRegister {
         Packets.registerServerToClient(MMORPG.NETWORK, new SkillLevelUpToClient(), i++);
         Packets.registerServerToClient(MMORPG.NETWORK, new TellClientEntityIsCastingSpellPacket(), i++);
         Packets.registerServerToClient(MMORPG.NETWORK, new TotemAnimationPacket(), i++);
+        Packets.registerServerToClient(MMORPG.NETWORK, new com.robertx22.age_of_exile.vanilla_mc.packets.PartyHudSyncPacket(), i++);
 
     }
 }
