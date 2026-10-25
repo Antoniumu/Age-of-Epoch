@@ -5,7 +5,8 @@
 #
 # Координаты рассчитаны на окно 1280x720 и guiScale 2:
 #   * поле поиска JEI — справа внизу (1090, 692);
-#   * первый результат JEI — первая ячейка справа вверху (948, 27).
+#   * первый результат JEI — первая ячейка сетки справа (965, 70)
+#     по реальному снимку jei-04-jei-overlay.
 # После каждого поиска делается снимок результата, а затем снимок страницы U.
 # Если раскладка JEI изменится, по этим снимкам координаты легко поправить.
 
@@ -52,7 +53,7 @@ type stat soul
 wait 2500
 shot 05-search-stat-soul
 click 640 520
-move 948 27
+move 965 70
 wait 800
 shot 06-stat-soul-hover
 key u
@@ -69,7 +70,7 @@ type identify tome
 wait 2500
 shot 08-search-identify-tome
 click 640 520
-move 948 27
+move 965 70
 wait 500
 key u
 wait 3000
@@ -85,7 +86,7 @@ type iron chestplate
 wait 2500
 shot 10-search-iron-chestplate
 click 640 520
-move 948 27
+move 965 70
 wait 500
 key u
 wait 3000
@@ -101,7 +102,7 @@ type cracked Ruby
 wait 2500
 shot 12-search-cracked-Ruby
 click 640 520
-move 948 27
+move 965 70
 wait 500
 key u
 wait 3000
@@ -117,7 +118,7 @@ type orb of transmutation
 wait 2500
 shot 14-search-orb
 click 640 520
-move 948 27
+move 965 70
 wait 500
 key u
 wait 3000
@@ -133,7 +134,7 @@ type salvage hammer
 wait 2500
 shot 16-search-salvage-hammer
 click 640 520
-move 948 27
+move 965 70
 wait 500
 key u
 wait 3000
@@ -149,7 +150,7 @@ type runeword station
 wait 2500
 shot 18-search-runeword-station
 click 640 520
-move 948 27
+move 965 70
 wait 500
 key u
 wait 3000
@@ -165,7 +166,7 @@ type armorer
 wait 2500
 shot 20-search-armorer-tool
 click 640 520
-move 948 27
+move 965 70
 wait 500
 key u
 wait 3000
@@ -181,7 +182,7 @@ type rarity essence
 wait 2500
 shot 22-search-rarity-essence
 click 640 520
-move 948 27
+move 965 70
 wait 500
 key u
 wait 3000
@@ -197,7 +198,7 @@ type gem loot crate
 wait 2500
 shot 24-search-gem-loot-crate
 click 640 520
-move 948 27
+move 965 70
 wait 500
 key u
 wait 3000
@@ -213,7 +214,7 @@ type backpack
 wait 2500
 shot 26-search-backpack
 click 640 520
-move 948 27
+move 965 70
 wait 500
 key u
 wait 3000

@@ -358,6 +358,15 @@ class Runner:
         self.run(["xdotool", "key", "--clearmodifiers", spec])
         self.note("клавиша " + spec)
 
+    def type_text(self, text):
+        if not self.focus():
+            self.fail("ввод текста %r: нет окна" % text)
+            return
+        # Важно: это должна быть отдельная подкоманда `xdotool type`.
+        # Передача "type --delay ..." как spec в `xdotool key` не вводит текст.
+        self.run(["xdotool", "type", "--delay", "60", text])
+        self.note("ввод текста " + text)
+
     # ------------------------------------------------------------------ цикл
 
     def execute(self, path):
@@ -400,7 +409,7 @@ class Runner:
                 elif command == "keyup":
                     self.key("keyup " + rest.strip())
                 elif command == "type":
-                    self.key("type --delay 60 " + rest)
+                    self.type_text(rest)
                 elif command == "wait":
                     time.sleep(int(args[0]) / 1000.0)
                 elif command == "wait_window":
