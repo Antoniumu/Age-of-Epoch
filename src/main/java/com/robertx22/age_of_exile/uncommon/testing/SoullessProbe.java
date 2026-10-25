@@ -89,7 +89,8 @@ public final class SoullessProbe {
             && Math.abs(cheapData.bq - 0.12F) < 0.01F && Math.abs(richData.bq - 0.45F) < 0.01F);
         base.check("rolls_not_crippled", cheapPerc > 0 && richPerc > 0
             && cheapPerc > normalPerc * 0.3D);
-        base.check("below_normal", normalPerc > 0 && richPerc <= normalPerc);
+        // Роллы больше не урезаются — «слабость» основы задаёт множитель bq,
+        // поэтому проверяем именно его: дешёвая основа 12 %, дорогая 45 %.
         base.check("plain_name", cheapData != null && plainNameMatches(cheap, cheapData));
         out.add(base.line());
         counters[0] += base.checks;
@@ -108,12 +109,20 @@ public final class SoullessProbe {
         float cheapValue = totalBaseValue(cheapMid);
         float richValue = totalBaseValue(richMid);
 
+        // Эталон: тот же дорогой предмет, но без ослабления (bq = 1).
+        GearItemData normalMid = SoullessGear.create(richData.GetBaseGearType(), lvlCompare,
+            SoullessGear.costFactor(rich));
+        normalMid.bq = 1F;
+        float normalValue = totalBaseValue(normalMid);
+
         Report scaling = new Report("soulless_scaling");
         scaling.put("lvl", lvlCompare);
         scaling.put("cheap_value", String.format(java.util.Locale.ROOT, "%.1f", cheapValue));
         scaling.put("rich_value", String.format(java.util.Locale.ROOT, "%.1f", richValue));
         scaling.put("ratio", String.format(java.util.Locale.ROOT, "%.2f",
             richValue / Math.max(0.01F, cheapValue)));
+        scaling.put("normal_value", String.format(java.util.Locale.ROOT, "%.1f", normalValue));
+        scaling.check("below_normal", normalValue > 0 && richValue < normalValue * 0.6F);
         scaling.check("rich_higher_in_numbers", richValue > cheapValue);
         // 45 % против 12 % — разница должна быть заметно больше, чем «на волосок».
         scaling.check("difference_visible", richValue > cheapValue * 1.5F);
