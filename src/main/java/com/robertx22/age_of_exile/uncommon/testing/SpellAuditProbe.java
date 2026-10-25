@@ -27,7 +27,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import org.slf4j.Logger;
@@ -290,8 +292,9 @@ public final class SpellAuditProbe {
         private float shieldAtCast;
         private int itemsAtCast;
         private Set<String> playerEffectsAtCast = Set.of();
+        private Set<String> playerVanillaAtCast = Set.of();
         private Set<String> dummyEffectsAtCast = Set.of();
-        private int dummyVanillaAtCast;
+        private Set<String> dummyVanillaAtCast = Set.of();
         private double startX;
         private double startY;
         private double startZ;
@@ -403,6 +406,7 @@ public final class SpellAuditProbe {
             switch (phase) {
                 case SETUP -> {
                     buildPlatform(level, player);
+                    enterCreative(player);
                     marker("audit_start", sanitize(what));
                     writeLog(TAG + " start what=" + sanitize(what) + " groups=" + groups.size());
                     // Пауза на старте: запись видео (ffmpeg/x11grab) должна успеть
@@ -424,7 +428,7 @@ public final class SpellAuditProbe {
                         return false;
                     }
                     if (phase == Phase.DONE) {
-                        return finish();
+                        return finish(player);
                     }
                     resetPlayer(player, level);
                     spawnDummies(player, level);
@@ -455,7 +459,7 @@ public final class SpellAuditProbe {
                     phaseTicks = 0;
                 }
                 case DONE -> {
-                    return finish();
+                    return finish(player);
                 }
             }
             return false;
@@ -532,6 +536,12 @@ public final class SpellAuditProbe {
                             result.move = true;
                         } else if (matches(type, SpellAction.GIVE_ITEM)) {
                             result.item = true;
+                        } else if (matches(type, SpellAction.AGGRO)
+                            || matches(type, SpellAction.OPEN_ENDER_CHEST)
+                            || matches(type, SpellAction.REFRESH_COOLDOWNS_BY_X_TICKS)) {
+                            // Аггро, сундук Края и сброс кулдаунов не двигают
+                            // цифры, но это ровно то, ради чего умение берут.
+                            result.effect = true;
                         } else if (matches(type, SpellAction.PARTICLES_IN_RADIUS)
                             || matches(type, SpellAction.SWORD_SWEEP_PARTICLES)) {
                             result.particles = true;
@@ -596,6 +606,31 @@ public final class SpellAuditProbe {
             writeLog(TAG + " platform ready at y=" + (PLATFORM_Y + 1));
         }
 
+        /**
+         * На время прогона игрок — в креативе, и это не «читерство ради зелёного
+         * отчёта»: {@code SpellCastingData.canCast} пускает креатив дальше
+         * проверок оружия и маны. Без этого из 74 умений применялась едва
+         * четверть — остальные требуют посоха/лука/меча и полной маны, то есть
+         * замерялось не «работает ли умение», а «есть ли у бота нужный меч».
+         * Урон, лечение и эффекты при этом считаются настоящие — их делает само
+         * заклинание.
+         */
+        private void enterCreative(ServerPlayer player) {
+            try {
+                player.setGameMode(GameType.CREATIVE);
+                writeLog(TAG + " режим: creative (иначе требования оружия и маны не дают применить умение)");
+            } catch (Throwable error) {
+                writeLog(TAG + " creative не включился: " + error);
+            }
+        }
+
+        private void restoreGameMode(ServerPlayer player) {
+            try {
+                player.setGameMode(GameType.SURVIVAL);
+            } catch (Throwable ignored) {
+            }
+        }
+
         private void teleport(ServerPlayer player, ServerLevel level, double x, double y, double z) {
             try {
                 player.teleportTo(level, x, y, z, Set.of(), player.getYRot(), player.getXRot(), false);
@@ -609,7 +644,16 @@ public final class SpellAuditProbe {
                 Load.spells(player).getCastingData().cancelCast(player);
             } catch (Throwable ignored) {
             }
-            player.setHealth(player.getMaxHealth());
+            // conjure_ender_chest (и любой будущий «открыть меню») открывает
+            // клиенту экран: он заслонил бы подпись и все следующие умения в
+            // видео, поэтому закрываем его перед каждым замером.
+            try {
+                player.closeContainer();
+            } catch (Throwable ignored) {
+            }
+            // Здоровье — не полное: иначе лечение нечего измерять (лечить
+            // полного игрока бессмысленно, и заклинание честно даёт ноль).
+            player.setHealth(Math.max(1F, player.getMaxHealth() * 0.6F));
             player.setDeltaMovement(0, 0, 0);
             player.setRemainingFireTicks(0);
             player.clearFire();
@@ -618,8 +662,14 @@ public final class SpellAuditProbe {
             player.setXRot(0F);
             try {
                 EntityData data = Load.Unit(player);
-                data.getResources().restore(player, ResourceType.mana, 1_000_000F);
-                data.getResources().restore(player, ResourceType.health, 1_000_000F);
+                // Ману и щит обнуляем: восстановление маны и выдача щита видны
+                // только «от нуля». В креативе стоимость каста всё равно не
+                // списывается, поэтому пустой пул ничего не ломает.
+                float mana = data.getResources().getMana();
+                if (mana > 0) {
+                    data.getResources().spend(player, ResourceType.mana, mana);
+                }
+                data.getResources().shields.shields.clear();
                 if (data.getCooldowns() != null) {
                     data.getCooldowns().onTicksPass(1_000_000);
                 }
@@ -716,12 +766,13 @@ public final class SpellAuditProbe {
                 playerEffectsAtCast = new LinkedHashSet<>(data.getStatusEffectsData().exileMap.keySet());
             } catch (Throwable ignored) {
             }
-            dummyVanillaAtCast = 0;
+            playerVanillaAtCast = vanillaEffects(player);
             Set<String> dummyEffects = new LinkedHashSet<>();
+            Set<String> dummyVanilla = new LinkedHashSet<>();
             for (UUID id : dummies) {
                 Entity entity = level.getEntity(id);
                 if (entity instanceof LivingEntity living) {
-                    dummyVanillaAtCast += living.getActiveEffects().size();
+                    dummyVanilla.addAll(vanillaEffects(living));
                     try {
                         dummyEffects.addAll(Load.Unit(living).getStatusEffectsData().exileMap.keySet());
                     } catch (Throwable ignored) {
@@ -729,6 +780,7 @@ public final class SpellAuditProbe {
                 }
             }
             dummyEffectsAtCast = dummyEffects;
+            dummyVanillaAtCast = dummyVanilla;
             itemsAtCast = countItems(player);
             SpellAuditState.setMetrics("");
         }
@@ -773,6 +825,11 @@ public final class SpellAuditProbe {
                         current.effects.add(effect);
                     }
                 }
+                for (String effect : vanillaEffects(player)) {
+                    if (!playerVanillaAtCast.contains(effect)) {
+                        current.effects.add(effect);
+                    }
+                }
             } catch (Throwable ignored) {
             }
             for (UUID id : dummies) {
@@ -788,8 +845,10 @@ public final class SpellAuditProbe {
                     }
                 } catch (Throwable ignored) {
                 }
-                if (dummyVanillaAtCast == 0 && !living.getActiveEffects().isEmpty()) {
-                    current.effects.add("ванильный эффект");
+                for (String effect : vanillaEffects(living)) {
+                    if (!dummyVanillaAtCast.contains(effect)) {
+                        current.effects.add(effect);
+                    }
                 }
             }
             double dx = player.getX() - startX;
@@ -810,6 +869,21 @@ public final class SpellAuditProbe {
                 return true;
             }
             return castDone && worthWaiting && phaseTicks > 30;
+        }
+
+        /** Имена ванильных эффектов (без префикса effect.minecraft.). */
+        private Set<String> vanillaEffects(LivingEntity entity) {
+            Set<String> names = new LinkedHashSet<>();
+            for (MobEffectInstance instance : entity.getActiveEffects()) {
+                try {
+                    Identifier key = BuiltInRegistries.MOB_EFFECT.getKey(instance.getEffect().value());
+                    if (key != null) {
+                        names.add(key.getPath());
+                    }
+                } catch (Throwable ignored) {
+                }
+            }
+            return names;
         }
 
         private int countSpawned(ServerLevel level, ServerPlayer player) {
@@ -876,6 +950,9 @@ public final class SpellAuditProbe {
                 snapshot(player, level);
                 phaseTicks = 0;
                 return true;
+            }
+            if (!current.canCast) {
+                current.problem("каст невозможен (canCast=false: требования оружия/маны/уровня)");
             }
             if (current.damage && current.damageDealt <= 0.1F) {
                 current.problem("урон не нанесён (нет попаданий)");
@@ -945,7 +1022,7 @@ public final class SpellAuditProbe {
             spell = null;
         }
 
-        private boolean finish() {
+        private boolean finish(ServerPlayer player) {
             long passed = results.stream().filter(r -> r.pass).count();
             long failed = results.size() - passed;
             writeLog(String.format(Locale.ROOT, "%s done spells=%d passed=%d failed=%d",
@@ -953,6 +1030,7 @@ public final class SpellAuditProbe {
             marker("audit_end", "spells_" + results.size() + "_failed_" + failed);
             writeReports();
             SpellAuditState.end();
+            restoreGameMode(player);
             return true;
         }
 
