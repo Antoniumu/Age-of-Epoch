@@ -92,6 +92,28 @@ public final class SoullessProbe {
         counters[0] += base.checks;
         counters[1] += base.failed;
 
+        // ---- 1b. Разница видна не только в процентах, но и в числах ----
+        // На 1 уровне базовые числа предмета крошечные (2–4 урона), поэтому
+        // 12 % и 45 % округляются в одни и те же «1». Сравниваем на реальном
+        // уровне игры: статы пересчитываются через ExactStatData, как в бою.
+        int lvlCompare = 20;
+        GearItemData cheapMid = SoullessGear.create(cheapData.GetBaseGearType(), lvlCompare,
+            SoullessGear.costFactor(cheap));
+        GearItemData richMid = SoullessGear.create(richData.GetBaseGearType(), lvlCompare,
+            SoullessGear.costFactor(rich));
+
+        float cheapValue = totalBaseValue(cheapMid);
+        float richValue = totalBaseValue(richMid);
+
+        Report scaling = new Report("soulless_scaling");
+        scaling.put("lvl", lvlCompare);
+        scaling.put("cheap_value", String.format(java.util.Locale.ROOT, "%.1f", cheapValue));
+        scaling.put("rich_value", String.format(java.util.Locale.ROOT, "%.1f", richValue));
+        scaling.check("rich_higher_in_numbers", richValue > cheapValue);
+        out.add(scaling.line());
+        counters[0] += scaling.checks;
+        counters[1] += scaling.failed;
+
         // ---- 2. Душа накладывается поверх: редкость/имя от души, база от предмета ----
         String typeBefore = cheapData == null ? "" : cheapData.gear_type;
         List<Integer> percBefore = cheapData == null ? List.of() : List.copyOf(cheapData.baseStats.perc);
@@ -174,6 +196,22 @@ public final class SoullessProbe {
         player.getInventory()
             .setChanged();
         player.inventoryMenu.broadcastChanges();
+    }
+
+    /** Суммарное значение базовых статов после пересчёта по уровню предмета. */
+    private static float totalBaseValue(GearItemData data) {
+        try {
+            if (data == null || data.baseStats == null) {
+                return -1F;
+            }
+            float sum = 0F;
+            for (com.robertx22.age_of_exile.saveclasses.ExactStatData stat : data.baseStats.GetAllStats(data)) {
+                sum += Math.abs(stat.getAverageValue());
+            }
+            return sum;
+        } catch (Exception e) {
+            return -1F;
+        }
     }
 
     private static int sumPerc(GearItemData data) {
