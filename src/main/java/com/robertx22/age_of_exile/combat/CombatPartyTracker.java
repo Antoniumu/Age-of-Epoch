@@ -59,7 +59,9 @@ public final class CombatPartyTracker {
             Fighter own = encounter.fighters.get(player.getUUID());
             long activeFighters = encounter.fighters.values().stream()
                 .filter(fighter -> now - fighter.lastHit <= FIGHT_TIMEOUT_MS).count();
-            if (own != null && now - own.lastHit <= FIGHT_TIMEOUT_MS && activeFighters >= 3
+            // Панель боя показывает и одиночную драку: раньше требовалось
+            // 3+ участника, из-за чего соло-игрок не видел свой DPS вообще.
+            if (own != null && now - own.lastHit <= FIGHT_TIMEOUT_MS && activeFighters >= 1
                 && own.lastHit > ownLastHit) {
                 selected = encounter;
                 ownLastHit = own.lastHit;
@@ -75,7 +77,7 @@ public final class CombatPartyTracker {
                 members.add(new Member(fighter.name, fighter.color, dps(fighter, now)));
             }
         }
-        if (members.size() < 3) {
+        if (members.isEmpty()) {
             return Snapshot.idle();
         }
         members.sort(Comparator.comparingDouble((Member row) -> row.dps).reversed());

@@ -83,6 +83,14 @@ fi
 grep -E "Sound engine started|Backend library|OpenAL|Setting user|LWJGL|Exception|ERROR|FATAL|Stopping" \
     "$root/run/logs/latest.log" 2>/dev/null | tail -n 60 > logs/key-lines.log || true
 
+# Результаты боевых замеров: /aoe devtest печатает AOETEST-строки в лог.
+# Их разбирает README ветки и job summary, поэтому кладём отдельным файлом.
+{
+    grep -h "AOETEST" "$root/run/logs/latest.log" 2>/dev/null
+    grep -h "AOETEST" "$root/run/aoe-devtest.txt" 2>/dev/null
+} | awk '!seen[$0]++' > logs/aoetest.log || true
+echo "  + logs/aoetest.log ($(wc -l < logs/aoetest.log 2>/dev/null || echo 0) строк)"
+
 {
     echo "# Скриншоты dev-клиента"
     echo
@@ -107,6 +115,14 @@ grep -E "Sound engine started|Backend library|OpenAL|Setting user|LWJGL|Exceptio
         echo "![${base}](${f})"
         echo
     done
+    if [ -s logs/aoetest.log ]; then
+        echo "## Боевые замеры (DPS / лечение)"
+        echo
+        echo '```'
+        cat logs/aoetest.log
+        echo '```'
+        echo
+    fi
     echo "## Диагностика"
     echo
     for f in logs/*; do

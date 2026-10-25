@@ -41,7 +41,14 @@ jobs:
       # Каталог снимков должен быть чистым: иначе в ветку уедут PNG прошлых
       # прогонов с уже неактуальными шагами.
       - name: Очистить прошлые снимки
-        run: rm -rf run/e2e/shots && mkdir -p run/e2e/shots && ls run/e2e/shots
+        run: |
+          rm -rf run/e2e/shots && mkdir -p run/e2e/shots && ls run/e2e/shots
+          # Флаг для зонда /aoe devtest: как только игрок окажется в мире,
+          # CombatProbe сам прогонит замеры DPS/лечения и удалит флаг.
+          # Результаты — строки AOETEST в run/logs/latest.log и run/aoe-devtest.txt.
+          mkdir -p run
+          rm -f run/aoe-devtest.txt
+          touch run/aoe-devtest.flag
 
       - uses: ./.github/actions/setup-build-env
         with:
@@ -100,6 +107,15 @@ jobs:
           done
           set -e
 
+          # Боевые замеры: строки AOETEST из лога клиента. Провал проверки не
+          # валит job (порт ещё нестабилен), но виден и в summary, и в PR.
+          grep -h "AOETEST" run/logs/latest.log 2>/dev/null | awk '!seen[$0]++' > run/e2e/aoetest.log || true
+          if [ -s run/e2e/aoetest.log ]; then
+            summary=$(grep "AOETEST summary" run/e2e/aoetest.log | tail -1)
+            echo "### $summary"
+            grep -q "failed=0" <<< "$summary" || echo "::warning::Боевые замеры с провалами: $summary"
+          fi
+
           shots=$(find run/e2e/shots -maxdepth 1 -name '*.png' | wc -l)
           echo "status=$status" >> "$GITHUB_OUTPUT"
           echo "shots=$shots" >> "$GITHUB_OUTPUT"
@@ -108,6 +124,12 @@ jobs:
             echo '```'
             find run/e2e/shots -maxdepth 1 -name '*.png' -printf '%f %k КБ\n' 2>/dev/null | sort
             echo '```'
+            if [ -s run/e2e/aoetest.log ]; then
+              echo '#### AOETEST'
+              echo '```'
+              cat run/e2e/aoetest.log
+              echo '```'
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
           exit 0
 

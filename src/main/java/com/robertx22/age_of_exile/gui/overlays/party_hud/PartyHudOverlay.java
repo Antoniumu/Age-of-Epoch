@@ -10,99 +10,204 @@ import net.minecraft.client.Minecraft;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
-/** A small, configurable right-side MMO-style party/goal/combat panel. */
+/**
+ * Правая панель «AOE / Обзор»: команда, дневная цель, цель недели и живой DPS
+ * в бою.
+ *
+ * <p>Всё настраивается: панель можно выключить целиком (клавиша O или
+ * {@code visible=false}), двигать по четырём углам/центрам (клавиша P или
+ * {@code position}), менять ширину и отключать отдельные блоки. Настройки
+ * лежат в {@code config/age_of_epoch/party_hud.properties} и перечитываются на
+ * лету: файл можно править хоть в игре, панель перестроится сама.
+ *
+ * <p>Длинный текст (например «Победите монстров · 0/25») больше не обрезается
+ * многоточием: он переносится по словам на несколько строк, а высота панели
+ * считается по фактической вёрстке. Раньше хвост цели просто пропадал.
+ */
 public final class PartyHudOverlay extends AbstractGui {
-    private static final int WIDTH = 154;
+
     private static final int BG = 0xD9111822;
     private static final int INNER = 0xC91D2938;
     private static final int MUTED = 0xFF9EAFC2;
     private static final int WHITE = 0xFFF0F5FA;
     private static final int ACCENT = 0xFF63D7C2;
     private static final int GOLD = 0xFFF3C978;
+    private static final int LINE = 0x554D6073;
+
+    /** Пределы ширины панели: уже — не влезает «ЦЕЛЬ НЕДЕЛИ», шире — лезет на хотбар. */
+    private static final int MIN_WIDTH = 132;
+    private static final int MAX_WIDTH = 220;
+
     private static boolean visible = true;
     private static int position = 0;
+    private static int width = 154;
+    private static boolean showTeam = true;
+    private static boolean showDaily = true;
+    private static boolean showWeekly = true;
+    private static boolean showCombat = true;
     private static float combatBlend = 0;
     private static long lastSave = 0;
+    private static long configLoadedAt = 0;
 
     public PartyHudOverlay() {
         load();
+        // Файл настроек создаём сразу: иначе игроку неоткуда узнать про
+        // visible/position/width, пока он случайно не нажмёт O или P.
+        if (!Files.exists(configPath())) {
+            save();
+        }
     }
 
-    public static boolean isVisible() { return visible; }
-    public static void toggle() { visible = !visible; save(); }
-    public static void cyclePosition() { position = (position + 1) % 4; save(); }
+    // ------------------------------------------------------------------ состояние
+
+    public static boolean isVisible() {
+        return visible;
+    }
+
+    public static void toggle() {
+        visible = !visible;
+        save();
+    }
+
+    public static void cyclePosition() {
+        position = (position + 1) % 4;
+        save();
+    }
+
+    public static int getPosition() {
+        return position;
+    }
+
+    public static int getWidth() {
+        return width;
+    }
+
+    // ------------------------------------------------------------------ отрисовка
 
     public void onHudRender(PoseStack pose, float partialTick) {
         Minecraft mc = Minecraft.getInstance();
-        if (!visible || mc.player == null || mc.getDebugOverlay().showDebugScreen()) return;
-        if (mc.player.isSpectator()) return;
+        reloadIfChanged();
 
-        boolean combat = PartyHudState.combat && System.currentTimeMillis() - PartyHudState.lastUpdate < 3_000L;
+        if (!visible || mc.player == null || mc.getDebugOverlay().showDebugScreen()) {
+            return;
+        }
+        if (mc.player.isSpectator()) {
+            return;
+        }
+
+        boolean combat = showCombat && PartyHudState.combat
+            && System.currentTimeMillis() - PartyHudState.lastUpdate < 3_000L;
         combatBlend += ((combat ? 1.0f : 0.0f) - combatBlend) * 0.22f;
         int rows = combat ? Math.min(4, PartyHudState.members.size()) : 0;
-        int height = combat ? 119 + rows * 17 : 110;
+
+        int textWidth = width - 22;
+
+        // Сначала считаем текст, потом высоту: панель должна расти под переносы,
+        // а не обрезать цель многоточием.
+        List<String> teamLines = showTeam ? wrap(mc, PartyHudState.team, textWidth, 2) : List.of();
+        List<String> dailyLines = showDaily ? wrap(mc, PartyHudState.daily, textWidth, 2) : List.of();
+        List<String> weeklyLines = showWeekly ? wrap(mc, PartyHudState.weekly, textWidth, 2) : List.of();
+
+        int height = 12;                                   // заголовок
+        if (!teamLines.isEmpty()) {
+            height += teamLines.size() * 10 + 3;
+        }
+        if (!dailyLines.isEmpty()) {
+            height += 14 + dailyLines.size() * 10;         // подпись + строки
+        }
+        if (!weeklyLines.isEmpty()) {
+            height += 6 + 14 + weeklyLines.size() * 10;
+        }
+        if (combat && rows > 0) {
+            height += 12;                                  // разделитель
+            height += 13;                                  // название отряда
+            height += rows * 17;
+        }
+        height += 15;                                      // футер
+
         int screenW = mc.getWindow().getGuiScaledWidth();
         int screenH = mc.getWindow().getGuiScaledHeight();
-        int x = switch (position) {
-            case 1 -> screenW - WIDTH - 8;
-            case 2 -> screenW - WIDTH - 8;
-            case 3 -> 8;
-            default -> screenW - WIDTH - 8;
-        };
+        int x = position == 3 ? 8 : screenW - width - 8;
         int y = switch (position) {
             case 1 -> 34;
             case 2 -> screenH - height - 34;
             default -> (screenH - height) / 2;
         };
-        x = Math.max(4, Math.min(screenW - WIDTH - 4, x));
+        x = Math.max(4, Math.min(screenW - width - 4, x));
         y = Math.max(4, Math.min(screenH - height - 4, y));
 
-        fill(pose, x, y, x + WIDTH, y + height, BG);
+        fill(pose, x, y, x + width, y + height, BG);
         fill(pose, x, y, x + 2, y + height, blendColor(ACCENT, 0xFF8FC8FF, combatBlend));
-        fill(pose, x + 2, y, x + WIDTH, y + 1, 0x663D5268);
+        fill(pose, x + 2, y, x + width, y + 1, 0x663D5268);
 
         String header = combat ? "✦  AOE  /  БОЙ" : "✦  AOE  /  ОБЗОР";
         drawShadow(mc.font, pose, header, x + 11, y + 8, ACCENT);
-        String team = PartyHudState.team;
-        drawString(pose, mc.font, truncate(mc, team, WIDTH - 22), x + 11, y + 22, WHITE);
-        fill(pose, x + 10, y + 35, x + WIDTH - 10, y + 36, 0x554D6073);
 
-        int contentY = y + 43;
-        drawString(pose, mc.font, "◷  ДНЕВНАЯ ЦЕЛЬ", x + 11, contentY, GOLD);
-        drawString(pose, mc.font, truncate(mc, PartyHudState.daily, WIDTH - 22), x + 11, contentY + 11, MUTED);
-        contentY += 27;
-        drawString(pose, mc.font, "◇  ЦЕЛЬ НЕДЕЛИ", x + 11, contentY, 0xFF8FC8FF);
-        drawString(pose, mc.font, truncate(mc, PartyHudState.weekly, WIDTH - 22), x + 11, contentY + 11, MUTED);
+        int cy = y + 20;
+        for (String line : teamLines) {
+            drawString(pose, mc.font, line, x + 11, cy, WHITE);
+            cy += 10;
+        }
+        if (!teamLines.isEmpty()) {
+            cy += 3;
+            fill(pose, x + 10, cy, x + width - 10, cy + 1, LINE);
+            cy += 2;
+        }
+
+        if (!dailyLines.isEmpty()) {
+            drawString(pose, mc.font, "◷  ДНЕВНАЯ ЦЕЛЬ", x + 11, cy + 3, GOLD);
+            int ty = cy + 7;
+            for (String line : dailyLines) {
+                drawString(pose, mc.font, line, x + 11, ty + 6, MUTED);
+                ty += 10;
+            }
+            cy = ty + 6;
+        }
+
+        if (!weeklyLines.isEmpty()) {
+            drawString(pose, mc.font, "◇  ЦЕЛЬ НЕДЕЛИ", x + 11, cy + 3, 0xFF8FC8FF);
+            int ty = cy + 7;
+            for (String line : weeklyLines) {
+                drawString(pose, mc.font, line, x + 11, ty + 6, MUTED);
+                ty += 10;
+            }
+            cy = ty + 6;
+        }
 
         if (combat && rows > 0) {
-            int dividerY = contentY + 26;
-            fill(pose, x + 10, dividerY, x + WIDTH - 10, dividerY + 1, 0x554D6073);
+            fill(pose, x + 10, cy, x + width - 10, cy + 1, LINE);
             drawString(pose, mc.font, PartyHudState.squadIcon + "  " + PartyHudState.squadName,
-                x + 11, dividerY + 6, WHITE);
-            double maxDps = PartyHudState.members.stream().mapToDouble(CombatPartyTracker.Member::dps).max().orElse(1);
-            int rowY = dividerY + 19;
+                x + 11, cy + 6, WHITE);
+            double maxDps = PartyHudState.members.stream()
+                .mapToDouble(CombatPartyTracker.Member::dps).max().orElse(1);
+            int rowY = cy + 19;
             for (int i = 0; i < rows; i++) {
                 CombatPartyTracker.Member member = PartyHudState.members.get(i);
                 int color = 0xFF000000 | (member.color() & 0xFFFFFF);
                 fill(pose, x + 11, rowY + 2, x + 15, rowY + 7, color);
-                String name = truncate(mc, member.name(), 76);
-                drawString(pose, mc.font, name, x + 19, rowY, i == 0 ? WHITE : MUTED);
                 String dps = formatDps(member.dps());
-                drawString(pose, mc.font, dps, x + WIDTH - 11 - mc.font.width(dps), rowY, i == 0 ? GOLD : WHITE);
+                int nameWidth = width - 32 - mc.font.width(dps) - 6;
+                drawString(pose, mc.font, trim(mc, member.name(), nameWidth), x + 19, rowY,
+                    i == 0 ? WHITE : MUTED);
+                drawString(pose, mc.font, dps, x + width - 11 - mc.font.width(dps), rowY,
+                    i == 0 ? GOLD : WHITE);
                 int barX = x + 19;
                 int barY = rowY + 10;
-                int barW = WIDTH - 32;
+                int barW = width - 32;
                 fill(pose, barX, barY, barX + barW, barY + 2, INNER);
                 int fillW = Math.max(1, (int) (barW * Math.min(1, member.dps() / Math.max(1, maxDps))));
                 fill(pose, barX, barY, barX + fillW, barY + 2, color);
                 rowY += 17;
             }
             String live = "LIVE · DPS";
-            drawString(pose, mc.font, live, x + WIDTH - 11 - mc.font.width(live), y + height - 11, ACCENT);
+            drawString(pose, mc.font, live, x + width - 11 - mc.font.width(live), y + height - 11, ACCENT);
         } else {
-            String hint = "O скрыть  ·  P положение";
+            String hint = trim(mc, "O скрыть · P положение", textWidth);
             drawString(pose, mc.font, hint, x + 11, y + height - 12, 0xFF8293A5);
         }
     }
@@ -116,38 +221,82 @@ public final class PartyHudOverlay extends AbstractGui {
     }
 
     private static String formatDps(double dps) {
-        if (dps >= 1_000_000) return String.format(java.util.Locale.ROOT, "%.1fM", dps / 1_000_000);
-        if (dps >= 10_000) return String.format(java.util.Locale.ROOT, "%.0fk", dps / 1_000);
-        if (dps >= 1_000) return String.format(java.util.Locale.ROOT, "%.1fk", dps / 1_000);
-        return String.format(java.util.Locale.ROOT, "%.0f", dps);
+        if (dps >= 1_000_000) {
+            return String.format(Locale.ROOT, "%.1fM", dps / 1_000_000);
+        }
+        if (dps >= 10_000) {
+            return String.format(Locale.ROOT, "%.0fk", dps / 1_000);
+        }
+        if (dps >= 1_000) {
+            return String.format(Locale.ROOT, "%.1fk", dps / 1_000);
+        }
+        return String.format(Locale.ROOT, "%.0f", dps);
     }
 
-    private static String truncate(Minecraft mc, String text, int maxWidth) {
-        if (text == null || mc.font.width(text) <= maxWidth) return text == null ? "" : text;
-        String ellipsis = "…";
-        int end = text.length();
-        while (end > 0 && mc.font.width(text.substring(0, end) + ellipsis) > maxWidth) end--;
-        return text.substring(0, end) + ellipsis;
+    // ------------------------------------------------------------------ текст
+
+    /** Перенос по словам: см. {@link HudTextWrap}, там же и тесты вёрстки. */
+    static List<String> wrap(Minecraft mc, String text, int maxWidth, int maxLines) {
+        return HudTextWrap.wrap(text, maxWidth, maxLines, value -> mc.font.width(value));
     }
+
+    private static String trim(Minecraft mc, String text, int maxWidth) {
+        return HudTextWrap.trim(text, maxWidth, value -> mc.font.width(value));
+    }
+
+    // ------------------------------------------------------------------ конфиг
 
     private static Path configPath() {
         return FabricLoader.getInstance().getConfigDir().resolve("age_of_epoch/party_hud.properties");
     }
 
+    /** Перечитывает файл, если его изменили руками во время игры. */
+    private static void reloadIfChanged() {
+        try {
+            Path path = configPath();
+            if (!Files.exists(path)) {
+                return;
+            }
+            long modified = Files.getLastModifiedTime(path).toMillis();
+            if (modified != configLoadedAt) {
+                configLoadedAt = modified;
+                load();
+            }
+        } catch (Exception ignored) {
+            // настройки не критичны для игры: молча оставляем прежние
+        }
+    }
+
     private static void load() {
         try {
             Path path = configPath();
-            if (Files.exists(path)) {
-                Properties properties = new Properties();
-                try (var reader = Files.newBufferedReader(path)) { properties.load(reader); }
-                visible = Boolean.parseBoolean(properties.getProperty("visible", "true"));
-                position = Math.floorMod(Integer.parseInt(properties.getProperty("position", "0")), 4);
+            if (!Files.exists(path)) {
+                return;
             }
-        } catch (Exception ignored) { }
+            Properties properties = new Properties();
+            try (var reader = Files.newBufferedReader(path)) {
+                properties.load(reader);
+            }
+            visible = Boolean.parseBoolean(properties.getProperty("visible", "true"));
+            position = Math.floorMod(Integer.parseInt(properties.getProperty("position", "0")), 4);
+            width = clampWidth(Integer.parseInt(properties.getProperty("width", "154")));
+            showTeam = Boolean.parseBoolean(properties.getProperty("show_team", "true"));
+            showDaily = Boolean.parseBoolean(properties.getProperty("show_daily", "true"));
+            showWeekly = Boolean.parseBoolean(properties.getProperty("show_weekly", "true"));
+            showCombat = Boolean.parseBoolean(properties.getProperty("show_combat", "true"));
+        } catch (Exception ignored) {
+            // битый файл настроек не должен ломать HUD
+        }
+    }
+
+    private static int clampWidth(int value) {
+        return Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, value));
     }
 
     private static void save() {
-        if (System.currentTimeMillis() - lastSave < 100) return;
+        if (System.currentTimeMillis() - lastSave < 100) {
+            return;
+        }
         lastSave = System.currentTimeMillis();
         try {
             Path path = configPath();
@@ -155,7 +304,17 @@ public final class PartyHudOverlay extends AbstractGui {
             Properties properties = new Properties();
             properties.setProperty("visible", Boolean.toString(visible));
             properties.setProperty("position", Integer.toString(position));
-            try (var writer = Files.newBufferedWriter(path)) { properties.store(writer, "Age of Epoch party HUD"); }
-        } catch (IOException ignored) { }
+            properties.setProperty("width", Integer.toString(width));
+            properties.setProperty("show_team", Boolean.toString(showTeam));
+            properties.setProperty("show_daily", Boolean.toString(showDaily));
+            properties.setProperty("show_weekly", Boolean.toString(showWeekly));
+            properties.setProperty("show_combat", Boolean.toString(showCombat));
+            try (var writer = Files.newBufferedWriter(path)) {
+                properties.store(writer, "Age of Epoch party HUD: visible, position (0..3), width (132..220), show_team/show_daily/show_weekly/show_combat");
+            }
+            configLoadedAt = Files.getLastModifiedTime(path).toMillis();
+        } catch (IOException ignored) {
+            // нет прав на запись — живём с настройками в памяти
+        }
     }
 }
