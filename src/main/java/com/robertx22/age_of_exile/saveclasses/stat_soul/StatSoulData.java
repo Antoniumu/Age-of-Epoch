@@ -78,6 +78,21 @@ public class StatSoulData implements ISalvagable, IRarity, ISettableLevelTier {
     }
 
     public void insertAsUnidentifiedOn(ItemStack stack, @Nullable net.minecraft.world.entity.player.Player player) {
+
+        // Предмет уже носит «бесдушную основу»: душа накладывается поверх неё,
+        // сохраняя базовые статы, заточки и крафтовые статы самого предмета.
+        GearItemData soulless = Gear.Load(stack);
+        if (soulless != null && soulless.isSoulless()) {
+            GearItemData soulData = gear != null ? gear : createGearData(stack, player);
+            if (soulData != null) {
+                SoullessGear.applySoul(soulData, soulless);
+                StackNBT.getOrCreate(stack)
+                    .remove(StatSoulItem.TAG);
+                Gear.Save(stack, soulData);
+                return;
+            }
+        }
+
         if (gear != null) {
             Gear.Save(stack, gear);
         } else {
@@ -159,7 +174,11 @@ public class StatSoulData implements ISalvagable, IRarity, ISettableLevelTier {
             return false;
         }
 
-        if (Gear.has(stack)) {
+        GearItemData existing = Gear.Load(stack);
+
+        // Обычный гир душу уже не примет, но «бесдушная основа» — примет:
+        // именно на неё и накладывается настоящая душа.
+        if (existing != null && !existing.isSoulless()) {
             return false;
         }
 

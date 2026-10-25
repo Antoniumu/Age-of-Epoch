@@ -112,14 +112,14 @@ public class BaseStatsData implements IRerollable, IStatsContainer, IGearPartToo
                 int i = 0;
                 for (StatModifier mod : gear.GetBaseGearType()
                     .baseStats()) {
-                    local.add(mod.ToExactStat(perc.get(i), gear.getILVL()));
+                    local.add(applyQuality(mod.ToExactStat(perc.get(i), gear.getILVL()), gear));
                     i++;
                 }
             } else {
                 int n = 0;
                 for (StatModifier mod : gear.uniqueStats.getUnique(gear)
                     .base_stats) {
-                    local.add(mod.ToExactStat(perc.get(n), gear.getILVL()));
+                    local.add(applyQuality(mod.ToExactStat(perc.get(n), gear.getILVL()), gear));
                     n++;
                 }
             }
@@ -129,6 +129,17 @@ public class BaseStatsData implements IRerollable, IStatsContainer, IGearPartToo
         }
 
         return local;
+    }
+
+    /**
+     * «Сила основы» ({@code gear.bq}): у бесдушной основы базовые статы ослаблены
+     * до 12–45 %, у обычного предмета множитель 1 и ничего не меняется.
+     */
+    private static ExactStatData applyQuality(ExactStatData stat, GearItemData gear) {
+        if (gear.bq > 0F && gear.bq < 1F) {
+            stat.multiplyBy(gear.bq);
+        }
+        return stat;
     }
 
     @Override
