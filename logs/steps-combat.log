@@ -1,0 +1,56 @@
+[20:06:22] DISPLAY=:99, сценарий combat.txt
+[20:06:22] жду окно: дисплей :99, X-сокеты: :100, :99
+[20:06:32] дисплей клиента из /proc/4718/environ: :101 (был :99)
+[20:06:32] XAUTHORITY клиента: /tmp/xvfb-run.1sEIvo/Xauthority
+[20:06:44] окно 2097203 на :101: Minecraft* 26.3 | WINDOW=2097203 X=0 Y=152 WIDTH=1280 HEIGHT=720 SCREEN=0 | Map State: IsViewable
+[20:06:48] в логе найдено: [20:06:47] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/items.png-atlas
+[20:06:56] снимок 00-main-menu (окно 2097203, 716 КБ)
+[20:06:56] курсор 640,296
+[20:06:57] клик 640,296 (экран 640,448, кнопка 1)
+[20:07:02] снимок 01-world-list (окно 2097203, 383 КБ)
+[20:07:02] курсор 640,124
+[20:07:02] клик 640,124 (экран 640,276, кнопка 1)
+[20:07:03] курсор 483,637
+[20:07:03] клик 483,637 (экран 483,789, кнопка 1)
+[20:07:49] снимок 03-in-world (окно 2097203, 556 КБ)
+[20:07:49] курсор 797,637
+[20:07:49] клик 797,637 (экран 797,789, кнопка 1)
+[20:07:52] курсор 480,688
+[20:07:53] клик 480,688 (экран 480,840, кнопка 1)
+[20:08:38] снимок 03b-in-world-created (окно 2097203, 556 КБ)
+[20:08:38] создан файл-триггер run/aoe-devtest.flag
+[20:08:40] снимок 04-combat-hud (окно 2097203, 549 КБ)
+[20:08:41] в логе найдено: [20:08:39] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST summary checks=40 failed=0
+[20:08:50] снимок 05-after-fight (окно 2097203, 558 КБ)
+[20:08:50] клавиша E
+[20:08:51] курсор 497,490
+[20:08:53] снимок 09-inventory-soulless-decheap (окно 2097203, 264 КБ)
+[20:08:53] курсор 534,490
+[20:08:55] снимок 10-inventory-soulless-neserite (окно 2097203, 261 КБ)
+[20:08:55] курсор 571,490
+[20:08:56] снимок 11-inventory-souled (окно 2097203, 259 КБ)
+[20:08:56] курсор 608,490
+[20:08:58] снимок 12-inventory-soul (окно 2097203, 265 КБ)
+[20:08:58] клавиша E
+[20:08:59] удержание F7 400 мс (фокус: 2097203)
+[20:09:01] снимок 13-hud-hidden (окно 2097203, 570 КБ)
+[20:09:02] удержание F7 400 мс (фокус: 2097203)
+[20:09:04] снимок 14-hud-shown (окно 2097203, 550 КБ)
+[20:09:04] удержание F8 400 мс (фокус: 2097203)
+[20:09:06] снимок 15-hud-position (окно 2097203, 555 КБ)
+[20:09:07] jstack[combat]: pid 4718, 418 строк -> jstack-combat.txt
+[20:09:07] render thread:
+    "Render thread" #3 [4719] prio=5 os_prio=0 cpu=24130.49ms elapsed=156.29s tid=0x00007efec0030790 nid=4719 runnable  [0x00007efec61fd000]
+    java.lang.Thread.State: RUNNABLE
+    at java.lang.invoke.LambdaForm$MH/0x000000000c5e8c00.invoke(java.base@25.0.4.1/LambdaForm$MH)
+    at java.lang.invoke.LambdaForm$MH/0x000000000c292800.invokeExact_MT(java.base@25.0.4.1/LambdaForm$MH)
+    at jdk.internal.foreign.abi.DowncallStub/0x000000000c28dc00.invoke(java.base@25.0.4.1/Unknown Source)
+    at java.lang.invoke.LambdaForm$DMH/0x000000000c290000.invokeStatic(java.base@25.0.4.1/LambdaForm$DMH)
+    at java.lang.invoke.LambdaForm$MH/0x000000000c5e8800.invoke(java.base@25.0.4.1/LambdaForm$MH)
+    at java.lang.invoke.LambdaForm$MH/0x000000000c292000.invokeExact_MT(java.base@25.0.4.1/LambdaForm$MH)
+    at org.lwjgl.system.JNIBindingsImpl/0x000000000b2d0000.callPJPV(Unknown Source)
+    at org.lwjgl.system.JNI.callPJPV(JNI.java:2541)
+    at org.lwjgl.vulkan.VK10.nvkDestroyBufferView(VK10.java:2027)
+    at org.lwjgl.vulkan.VK10.vkDestroyBufferView(VK10.java:2032)
+[20:09:07] конец сценария combat
+[20:09:07] итог: снимков 13, ошибок 0
