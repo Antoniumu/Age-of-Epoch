@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Small helpers shared by the Age of Epoch JEI categories.
  */
-final class DeiLayout {
+final class JeiLayout {
 
     private JeiLayout() {
     }
