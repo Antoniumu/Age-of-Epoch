@@ -101,7 +101,7 @@ jobs:
 
       - name: Check Modrinth publishing configuration
         id: modrinth-config
-        if: github.event_name == 'push' && github.ref == 'refs/heads/arena/ad7c45b3-age-of-epoch'
+        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/arena/ad7c45b3-age-of-epoch'
         shell: bash
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
@@ -115,7 +115,7 @@ jobs:
           fi
 
       - name: Publish alpha build to Modrinth
-        if: github.event_name == 'push' && github.ref == 'refs/heads/arena/ad7c45b3-age-of-epoch' && steps.modrinth-config.outputs.enabled == 'true'
+        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/arena/ad7c45b3-age-of-epoch' && steps.modrinth-config.outputs.enabled == 'true'
         uses: Kira-NT/mc-publish@v3.3.2
         with:
           modrinth-id: ${{ vars.MODRINTH_PROJECT_ID }}

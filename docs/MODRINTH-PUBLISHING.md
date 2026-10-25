@@ -1,6 +1,6 @@
 # Автопубликация на Modrinth
 
-Workflow `.github/workflows/branch-release.yml` публикует alpha-сборку на Modrinth после успешной сборки push в ветку `arena/ad7c45b3-age-of-epoch`. Pull request и ручной запуск workflow ничего на Modrinth не загружают.
+Workflow `.github/workflows/branch-release.yml` публикует alpha-сборку на Modrinth после успешной сборки push в ветку `arena/ad7c45b3-age-of-epoch`. После настройки секретов можно также вручную запустить workflow (`workflow_dispatch`) на этой ветке, например чтобы опубликовать текущий коммит без нового push. Pull request ничего на Modrinth не загружает.
 
 ## Однократная настройка репозитория
 
