@@ -499,6 +499,21 @@ wait 1500
 move 640 650
 wait 300
 shot 31d-chest-uses-tab4
+click 662 66
+wait 1500
+move 640 650
+wait 300
+shot 31e-chest-uses-tab5
+click 710 66
+wait 1500
+move 640 650
+wait 300
+shot 31f-chest-uses-tab6
+click 758 66
+wait 1500
+move 640 650
+wait 300
+shot 31g-chest-uses-tab7
 key Escape
 wait 1500
 

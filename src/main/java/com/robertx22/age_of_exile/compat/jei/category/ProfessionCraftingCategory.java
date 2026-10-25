@@ -34,7 +34,7 @@ public class ProfessionCraftingCategory extends AbstractRecipeCategory<Professio
             Component.translatable("mmorpg.jei.category.prof_craft"),
             guiHelper.createDrawableItemStack(new ItemStack(CraftToolItems.ARMOR.get())),
             170,
-            220
+            252
         );
     }
 
@@ -59,7 +59,7 @@ public class ProfessionCraftingCategory extends AbstractRecipeCategory<Professio
     @Override
     public void createRecipeExtras(IRecipeExtrasBuilder builder, ProfessionCraftRecipe recipe, IFocusGroup focuses) {
         builder.addRecipeArrowWidget().setPosition(66, 3);
-        JeiLayout.addLines(builder, recipe.lines(), 1, 50, 168, 166);
+        JeiLayout.addLines(builder, recipe.lines(), 1, 50, 168, 198);
     }
 
     @Override
