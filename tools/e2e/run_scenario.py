@@ -49,6 +49,9 @@ class Runner:
         # дисплей, который поднимает run-in-xvfb.sh: его нужно найти перебором
         # сокетов /tmp/.X11-unix и проверкой, есть ли там окно Minecraft.
         self.display = os.environ.get("DISPLAY")
+        # Xvfb, который поднимает Loom'овский xvfb-run, закрыт cookie-файлом:
+        # без XAUTHORITY другие процессы получают 'unable to open display'.
+        self.xauthority = os.environ.get("XAUTHORITY")
         self.outdir = outdir
         os.makedirs(outdir, exist_ok=True)
         self.journal = open(os.path.join(outdir, "steps.log"), "w", encoding="utf-8")
@@ -69,6 +72,8 @@ class Runner:
         target = display or self.display
         if target:
             env["DISPLAY"] = target
+        if self.xauthority:
+            env["XAUTHORITY"] = self.xauthority
         return env
 
     def run(self, cmd, timeout=60, display=None):
@@ -155,15 +160,20 @@ class Runner:
                 blob = handle.read()
         except OSError:
             return ""
+        found = ""
         for pair in blob.split(b"\0"):
             if pair.startswith(b"DISPLAY="):
-                value = pair.decode("utf-8", "replace").split("=", 1)[1]
-                if value and value != self.display:
+                found = pair.decode("utf-8", "replace").split("=", 1)[1]
+                if found and found != self.display:
                     self.note("дисплей клиента из /proc/%s/environ: %s (был %s)"
-                              % (pid, value, self.display))
-                    self.display = value
-                return value
-        return ""
+                              % (pid, found, self.display))
+                self.display = found or self.display
+            elif pair.startswith(b"XAUTHORITY="):
+                auth = pair.decode("utf-8", "replace").split("=", 1)[1]
+                if auth and auth != self.xauthority:
+                    self.xauthority = auth
+                    self.note("XAUTHORITY клиента: %s" % auth)
+        return found
 
     def discover_display(self):
         """
