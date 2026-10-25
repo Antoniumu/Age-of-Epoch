@@ -30,6 +30,9 @@ if [ -f /usr/share/vulkan/icd.d/lvp_icd.x86_64.json ]; then
     export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/lvp_icd.x86_64.json
 fi
 export SDL_VIDEODRIVER="${SDL_VIDEODRIVER:-x11}"
+# На раннере нет звуковой карты: null-драйвер OpenAL даёт клиенту «включённый»
+# звук, и он доходит до меню без ветки «Error starting SoundSystem».
+export ALSOFT_DRIVERS=null
 
 echo "=== Xvfb ${width}x${height} на :${display_num} ==="
 Xvfb ":${display_num}" -screen 0 "${width}x${height}x24" -nolisten tcp > run/e2e/xvfb.log 2>&1 &
@@ -40,6 +43,18 @@ for _ in $(seq 1 20); do
     sleep 1
 done
 head -8 run/e2e/xdpyinfo.txt 2>/dev/null || true
+
+# Оконный менеджер нужен не для красоты: без WM окно SDL не маппится
+# нормально, его не находит xdotool, и снимок корня остаётся пустым.
+if command -v openbox >/dev/null 2>&1; then
+    openbox > run/e2e/openbox.log 2>&1 &
+    wm_pid=$!
+    sleep 1
+    echo "openbox запущен"
+else
+    wm_pid=""
+    echo "openbox не установлен — окно может не найтись"
+fi
 
 # Диагностика графики: без неё непонятно, какой бэкенд доступен клиенту.
 {
@@ -75,6 +90,7 @@ cleanup() {
     pkill -TERM -f 'net.minecraft.client.main.Main' 2>/dev/null || true
     sleep 3
     pkill -KILL -f 'net.fabricmc.devlaunchinjector' 2>/dev/null || true
+    [ -n "${wm_pid:-}" ] && kill -KILL "$wm_pid" 2>/dev/null || true
     kill -KILL "$xvfb_pid" 2>/dev/null || true
 }
 gradle_pid=""
@@ -99,6 +115,9 @@ if [ -d run/crash-reports ] && [ -n "$(ls -A run/crash-reports 2>/dev/null)" ]; 
     done
     scenario_status=1
 fi
+
+echo "=== окна на дисплее (xwininfo) ==="
+xwininfo -root -tree 2>&1 | head -30 || true
 
 echo "=== хвост лога клиента ==="
 tail -n 40 run/logs/latest.log 2>/dev/null || echo "(лога нет)"

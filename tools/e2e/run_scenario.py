@@ -22,6 +22,7 @@
     wait 1500                   пауза, мс
     wait_window Minecraft 90000 ждать окно по подстроке заголовка, мс
     wait_log 120000 <regex>     ждать строку в run/logs/latest.log
+    windows                     вывести список окон (диагностика)
     log текст                   записать в журнал
 
 Запуск:
@@ -71,19 +72,28 @@ class Runner:
 
     # ------------------------------------------------------------------ окно
 
+    def list_windows(self):
+        """Диагностика: все окна с именем и геометрией (без WM их легко не найти)."""
+        code, out = self.run(["xwininfo", "-root", "-tree"])
+        lines = [line.strip() for line in out.splitlines() if '"' in line or "xwininfo" in line]
+        if lines:
+            self.note("окна на дисплее:\n    " + "\n    ".join(lines[:15]))
+        return lines
+
     def find_window(self):
-        code, out = self.run(["xdotool", "search", "--onlyvisible", "--name", "Minecraft"])
-        ids = [line.strip() for line in out.splitlines() if line.strip().isdigit()]
-        if not ids:
-            # запасной путь: единственное видимое окно на дисплее
-            code, out = self.run(["xdotool", "search", "--onlyvisible", "--name", "."])
+        # Без оконного менеджера окно SDL не попадает под --onlyvisible, поэтому
+        # ищем без фильтра, сначала по классу, потом по имени.
+        for args in (["--class", "Minecraft"], ["--class", "minecraft"],
+                     ["--name", "Minecraft"], ["--name", "Age of Epoch"]):
+            code, out = self.run(["xdotool", "search"] + args)
             ids = [line.strip() for line in out.splitlines() if line.strip().isdigit()]
-        if ids:
-            self.window = ids[-1]
-            code, name = self.run(["xdotool", "getwindowname", self.window])
-            code, geo = self.run(["xdotool", "getwindowgeometry", "--shell", self.window])
-            self.note("окно %s: %s (%s)" % (self.window, name.strip(), geo.strip().replace("\n", " ")))
-            return True
+            if ids:
+                self.window = ids[-1]
+                code, name = self.run(["xdotool", "getwindowname", self.window])
+                code, geo = self.run(["xdotool", "getwindowgeometry", "--shell", self.window])
+                self.note("окно %s (%s): %s | %s" % (
+                    self.window, " ".join(args), name.strip(), geo.strip().replace("\n", " ")))
+                return True
         return False
 
     def focus(self):
@@ -96,12 +106,11 @@ class Runner:
     def wait_window(self, pattern, timeout_ms):
         deadline = time.time() + timeout_ms / 1000.0
         while time.time() < deadline:
-            code, out = self.run(["xdotool", "search", "--onlyvisible", "--name", pattern])
-            if any(line.strip().isdigit() for line in out.splitlines()):
-                self.find_window()
+            if self.find_window():
                 return True
             time.sleep(2)
         self.fail("окно '%s' не появилось за %d мс" % (pattern, timeout_ms))
+        self.list_windows()
         return False
 
     def wait_log(self, pattern, timeout_ms):
@@ -126,6 +135,15 @@ class Runner:
     def shot(self, name):
         path = os.path.join(self.outdir, name + ".png")
         self.focus()
+        # Сначала снимаем само окно клиента (без WM координаты и границы корня
+        # могут не совпадать с окном), при неудаче — весь корень дисплея.
+        out = ""
+        if self.window:
+            code, out = self.run(["import", "-window", self.window, "-silent", path], timeout=120)
+            if code == 0 and os.path.exists(path) and os.path.getsize(path) > 5000:
+                self.shots.append(name)
+                self.note("снимок %s (окно %s, %d КБ)" % (name, self.window, os.path.getsize(path) // 1024))
+                return True
         code, out = self.run(["import", "-window", "root", "-silent", path], timeout=120)
         if code != 0 or not os.path.exists(path) or os.path.getsize(path) < 1000:
             # запасной путь: xwd + convert
@@ -211,6 +229,8 @@ class Runner:
                         self.fail("wait_log требует: <таймаут_мс> <regex>")
                     else:
                         self.wait_log(rest[len(args[0]):].strip(), int(args[0]))
+                elif command == "windows":
+                    self.list_windows()
                 elif command == "log":
                     self.note(rest)
                 else:

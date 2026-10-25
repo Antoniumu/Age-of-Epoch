@@ -5,13 +5,17 @@
 # Формат команд описан в tools/e2e/run_scenario.py.
 
 wait_window Minecraft 300000
-wait_log 300000 Sound engine started
-wait 5000
+# Маркер готовности: звук на раннере отключён (null-драйвер), а строка
+# "Sound engine started" зависит от аудиоустройства. Поэтому ждём атласы —
+# они грузятся уже после создания окна и GPU-контекста.
+wait_log 300000 Created: .*atlas/items
+windows
+wait 8000
 shot 00-main-menu
 
 # Главное меню: «Одиночная игра» — первая кнопка сверху.
 # Координаты считаются от размера окна из run/options.txt (1280x720, guiScale 2).
-click 640 268
+click 640 296
 wait 3000
 shot 01-world-list
 

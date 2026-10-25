@@ -50,7 +50,7 @@ jobs:
         run: |
           sudo apt-get update -q
           sudo apt-get install -y -q --no-install-recommends \
-            xvfb x11-utils xdotool imagemagick x11-apps \
+            xvfb x11-utils xdotool imagemagick x11-apps openbox \
             libgl1 libglu1-mesa libgl1-mesa-dri mesa-utils \
             mesa-vulkan-drivers vulkan-tools \
             libxi6 libxcursor1 libxrandr2 libxinerama1 libxxf86vm1 \
