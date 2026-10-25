@@ -1,0 +1,124 @@
+name: Compile check
+
+# Зачем отдельный пайплайн компиляции, если есть «Branch build»:
+#   * build собирает весь мод с тестами (десятки минут) и падает «где-то» —
+#     по нему неудобно ловить ошибку компиляции в цикле правок;
+#   * здесь только compileJava, а ошибки не остаются в логе GitHub, а
+#     публикуются комментарием в PR — их видно с первого экрана, без выкачивания
+#     артефактов.
+#
+# То есть это быстрый цикл «поправил Java → увидел error: строка в PR».
+
+on:
+  pull_request:
+    paths:
+      - 'src/**/*.java'
+      - 'build.gradle'
+      - 'gradle.properties'
+      - '.github/workflows/compile-check.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: compile-check-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx4G'
+
+jobs:
+  compile:
+    name: compileJava
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-build-env
+        with:
+          cache-read-only: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork }}
+
+      - name: Компиляция
+        id: compile
+        continue-on-error: true
+        shell: bash
+        run: |
+          set +e
+          ./gradlew --no-daemon --stacktrace compileJava > compile.log 2>&1
+          status=$?
+          set -e
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          grep -E "error:|error;|\.java:[0-9]+: error" compile.log | head -60 || true
+          tail -n 30 compile.log
+          {
+            echo "### compileJava: статус $status"
+            echo '```text'
+            grep -E "error:|\.java:[0-9]+: error" compile.log | head -30 || echo "ошибок в логе нет"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+
+      - name: Ошибки компиляции — комментарием в PR
+        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork != true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          STATUS: ${{ steps.compile.outputs.status }}
+        run: |
+          md="$(mktemp)"
+          {
+            echo '<!-- aoe-compile -->'
+            if [ "${STATUS:-1}" = "0" ]; then
+              echo "## Компиляция: успешно ✅"
+              echo
+              echo '`./gradlew compileJava` прошёл без ошибок.'
+            else
+              echo "## Компиляция: ошибка ❌ (статус ${STATUS:-?})"
+              echo
+              echo '```text'
+              grep -E "error:|error;|\.java:[0-9]+: error" compile.log 2>/dev/null | head -60 \
+                || echo "строк error: в логе нет — смотри хвост ниже"
+              echo '```'
+              echo
+              echo '<details><summary>хвост лога</summary>'
+              echo
+              echo '```text'
+              tail -n 40 compile.log 2>/dev/null || echo "лога нет"
+              echo '```'
+              echo
+              echo '</details>'
+            fi
+          } > "$md"
+          # Комментарий переиспользуется по скрытому маркеру: не плодим по одному
+          # на каждый пуш.
+          existing="$(gh api "repos/${REPO}/issues/${PR}/comments" --paginate \
+            --jq '.[] | select(.body | contains("<!-- aoe-compile -->")) | .id' | head -1)"
+          if [ -n "$existing" ]; then
+            gh api -X PATCH "repos/${REPO}/issues/comments/${existing}" -F "body=@${md}" > /dev/null
+            echo "комментарий обновлён"
+          else
+            gh api -X POST "repos/${REPO}/issues/${PR}/comments" -F "body=@${md}" > /dev/null
+            echo "комментарий создан"
+          fi
+
+      - name: Лог компиляции в артефакты
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: compile-log
+          path: compile.log
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Вердикт
+        if: always()
+        run: |
+          if [ "${{ steps.compile.outputs.status }}" != "0" ]; then
+            echo "::error::compileJava упал — подробности в комментарии PR"
+            exit 1
+          fi
+          echo "compileJava прошёл"
