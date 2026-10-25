@@ -14,6 +14,7 @@
 | `tools/ci/static-checks.sh` | Проверки без JDK — те же, что в CI, запускаются локально |
 | `tools/ci/check-jar.sh` | Проверяет, что jar пригоден для установки в `mods/` |
 | `tools/ci/smoke-client.sh` | Запускает `runClient` под xvfb и ждёт главное меню |
+| `tools/ci/pr-report.sh` | Обновляет «липкий» комментарий с итогами прогона в PR |
 | `tools/ci/requirements.txt` | Закреплённые версии `tree-sitter` для проверки синтаксиса |
 | `.github/dependabot.yml` | Раз в месяц PR-ы на новые версии GitHub Actions |
 
@@ -25,7 +26,7 @@
 | `wrapper` | ~10 сек | Подмену `gradle/wrapper/gradle-wrapper.jar` (сверка с официальной контрольной суммой) |
 | `build` | ~10–20 мин | Настоящую компиляцию на JDK 25 (`./gradlew build`), затем `tools/ci/check-jar.sh`: `fabric.mod.json`, подставленная версия, mixin-конфиги, наличие `assets/`, `data/`, классов |
 | `client-boot` | ~10–20 мин | Падения инициализации порта: миксины, регистрация экранов и меню, worldgen, загрузка датапака. Ждёт в `run/logs/latest.log` маркер главного меню; падение = красный job |
-| `ci-ok` | 5 сек | Сводит всё в одну галочку — её удобно сделать обязательной в branch protection |
+| `ci-ok` | 5 сек | Сводит всё в одну галочку — её удобно сделать обязательной в branch protection. В PR дополнительно обновляет **один** комментарий с итогами (размер jar, за сколько секунд клиент дошёл до меню), см. `tools/ci/pr-report.sh` |
 
 `client-boot` в pull request-ах помечен как **не блокирующий** (`continue-on-error`):
 порт ещё не доведён, и первый запуск в игре может быть красным. На `main`,

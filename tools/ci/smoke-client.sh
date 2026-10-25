@@ -62,6 +62,19 @@ echo "----- последние строки $log -----"
 tail -n 60 "$log" 2>/dev/null || echo "(лога нет)"
 echo "---------------------------------"
 
+# Машиночитаемый итог: его забирает job client-boot, чтобы показать результат
+# в комментарии к PR (см. tools/ci/pr-report.sh).
+marker_line="$(grep -E "$markers" "$log" 2>/dev/null | head -1 | cut -c1-180)"
+crash_files="$(ls -1 "$crash_dir" 2>/dev/null | tr '\n' ' ')"
+{
+    echo "ready=$ready"
+    echo "elapsed=$elapsed"
+    echo "marker=${marker_line:-—}"
+    echo "crashes=${crash_files:-нет}"
+    echo "log_lines=$(wc -l < "$log" 2>/dev/null || echo 0)"
+} > run/smoke-result.txt
+tail -n 12 "$log" 2>/dev/null > run/smoke-tail.txt || true
+
 status=0
 if [ -n "$(ls -A "$crash_dir" 2>/dev/null)" ]; then
     echo

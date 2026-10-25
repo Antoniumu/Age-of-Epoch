@@ -26,6 +26,7 @@ concurrency:
 
 permissions:
   contents: read
+  pull-requests: write   # сводный комментарий с итогами (tools/ci/pr-report.sh)
 
 env:
   GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx4G'
@@ -75,6 +76,9 @@ jobs:
     needs: [static]
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    outputs:
+      jar: ${{ steps.facts.outputs.jar }}
+      size: ${{ steps.facts.outputs.size }}
     steps:
       - uses: actions/checkout@v7
 
@@ -87,6 +91,14 @@ jobs:
 
       - name: Проверить содержимое jar
         run: bash tools/ci/check-jar.sh build/libs
+
+      - name: Факты о сборке
+        id: facts
+        run: |
+          jar="$(ls -1 build/libs/*.jar | grep -v -- '-sources' | grep -v -- '-dev' | head -1)"
+          bytes="$(wc -c < "$jar")"
+          echo "jar=$(basename "$jar")" >> "$GITHUB_OUTPUT"
+          echo "size=$((bytes / 1024 / 1024)) МБ" >> "$GITHUB_OUTPUT"
 
       - name: Сводка в job summary
         if: always()
@@ -137,6 +149,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     continue-on-error: ${{ github.event_name == 'pull_request' }}
+    outputs:
+      ready: ${{ steps.facts.outputs.ready }}
+      elapsed: ${{ steps.facts.outputs.elapsed }}
+      marker: ${{ steps.facts.outputs.marker }}
+      crashes: ${{ steps.facts.outputs.crashes }}
     steps:
       - uses: actions/checkout@v7
 
@@ -156,6 +173,19 @@ jobs:
         run: bash tools/ci/smoke-client.sh
         env:
           SMOKE_TIMEOUT: '1500'
+
+      - name: Факты о запуске
+        id: facts
+        if: always()
+        run: |
+          f=run/smoke-result.txt
+          get() { [ -f "$f" ] && sed -nE "s/^$1=//p" "$f" | head -1 || true; }
+          echo "ready=$(get ready)"       >> "$GITHUB_OUTPUT"
+          echo "elapsed=$(get elapsed)"   >> "$GITHUB_OUTPUT"
+          echo "crashes=$(get crashes)"   >> "$GITHUB_OUTPUT"
+          # маркер содержит двоеточия и пробелы — экранировать не нужно, GITHUB_OUTPUT
+          # принимает произвольный текст в одной строке
+          echo "marker=$(get marker)"     >> "$GITHUB_OUTPUT"
 
       - name: Логи клиента
         if: always()
@@ -178,6 +208,8 @@ jobs:
     needs: [static, wrapper, build, client-boot]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v7
+
       - name: Свести результаты
         run: |
           echo "static=${{ needs.static.result }}"
@@ -209,3 +241,57 @@ jobs:
           esac
 
           exit "$failed"
+
+      - name: Комментарий с итогами в PR
+        if: always() && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          STATIC: ${{ needs.static.result }}
+          WRAPPER: ${{ needs.wrapper.result }}
+          BUILD: ${{ needs.build.result }}
+          BOOT: ${{ needs.client-boot.result }}
+          JAR: ${{ needs.build.outputs.jar }}
+          JAR_SIZE: ${{ needs.build.outputs.size }}
+          BOOT_READY: ${{ needs.client-boot.outputs.ready }}
+          BOOT_ELAPSED: ${{ needs.client-boot.outputs.elapsed }}
+          BOOT_MARKER: ${{ needs.client-boot.outputs.marker }}
+          BOOT_CRASHES: ${{ needs.client-boot.outputs.crashes }}
+        run: |
+          icon() {
+            case "$1" in
+              success) echo "✅" ;;
+              skipped) echo "⏭️" ;;
+              cancelled) echo "⚪" ;;
+              *) echo "❌" ;;
+            esac
+          }
+          md="$(mktemp)"
+          {
+            echo "## Итоги CI"
+            echo
+            echo "| Проверка | Результат |"
+            echo "|---|---|"
+            echo "| Статические проверки (синтаксис, инварианты, баланс) | $(icon "$STATIC") \`$STATIC\` |"
+            echo "| Gradle wrapper | $(icon "$WRAPPER") \`$WRAPPER\` |"
+            if [ "$BUILD" = "success" ] && [ -n "$JAR" ]; then
+              echo "| Сборка на JDK 25 | $(icon "$BUILD") \`$JAR\`, $JAR_SIZE |"
+            else
+              echo "| Сборка на JDK 25 | $(icon "$BUILD") \`$BUILD\` |"
+            fi
+            if [ "$BOOT" = "success" ] && [ "$BOOT_READY" = "1" ]; then
+              echo "| Запуск клиента (xvfb) | $(icon "$BOOT") главное меню за ${BOOT_ELAPSED}s: \`${BOOT_MARKER}\` |"
+            elif [ "$BOOT" = "failure" ] || [ "$BOOT_READY" = "0" ]; then
+              echo "| Запуск клиента (xvfb) | $(icon "$BOOT") не дошёл до меню за ${BOOT_ELAPSED:-?}s, crash-report: $BOOT_CRASHES |"
+            else
+              echo "| Запуск клиента (xvfb) | $(icon "$BOOT") \`$BOOT\` |"
+            fi
+            echo
+            echo "Скачать jar: \`gh run download ${{ github.run_id }} --name Age-of-Epoch-jar\`"
+            echo "В логах: [прогон]($RUN_URL) · подробности — \`docs/CI.md\`"
+            echo
+            echo "<sub>Комментарий обновляется при каждом прогоне.</sub>"
+          } > "$md"
+          bash tools/ci/pr-report.sh "$md"
