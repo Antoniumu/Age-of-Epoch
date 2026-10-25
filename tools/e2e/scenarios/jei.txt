@@ -47,9 +47,12 @@ wait 5000
 shot 04-jei-overlay
 
 # --- Stat Soul: U показывает наложение души на основы --------------------
+# Внимание: варианты душ в JEI называются "<Редкость> <Слот> Soul"
+# (например "Common Helmet Soul"), слова "Stat" в их именах нет, поэтому
+# запрос "stat soul" даёт 0 результатов. Ищем душу конкретного слота.
 click 1090 692
 wait 500
-type stat soul
+type helmet soul
 wait 2500
 shot 05-search-stat-soul
 click 640 520
