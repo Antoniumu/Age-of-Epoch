@@ -204,7 +204,7 @@ public final class SoullessProbe {
 
     private static boolean plainNameMatches(ItemStack stack, GearItemData data) {
         try {
-            List<Component> name = data.GetDisplayName(stack);
+            List<net.minecraft.network.chat.MutableComponent> name = data.GetDisplayName(stack);
             if (name == null || name.isEmpty()) {
                 return false;
             }
