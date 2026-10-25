@@ -32,7 +32,7 @@ public class RunewordCategory extends AbstractRecipeCategory<RunewordRecipe> {
             Component.translatable("mmorpg.jei.category.runewords"),
             guiHelper.createDrawableItemStack(new ItemStack(SlashItems.RUNEWORD_STATION.get())),
             170,
-            112
+            140
         );
     }
 
@@ -50,7 +50,7 @@ public class RunewordCategory extends AbstractRecipeCategory<RunewordRecipe> {
     @Override
     public void createRecipeExtras(IRecipeExtrasBuilder builder, RunewordRecipe recipe, IFocusGroup focuses) {
         builder.addRecipeArrowWidget().setPosition(66, 42);
-        JeiLayout.addLines(builder, recipe.lines(), 1, 62, 168, 46);
+        JeiLayout.addLines(builder, recipe.lines(), 1, 62, 168, 74);
     }
 
     @Override

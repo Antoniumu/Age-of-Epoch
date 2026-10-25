@@ -31,7 +31,7 @@ public class CurrencyCategory extends AbstractRecipeCategory<CurrencyRecipe> {
             Component.translatable("mmorpg.jei.category.currency"),
             guiHelper.createDrawableItemStack(new ItemStack(CurrencyItems.ORB_OF_TRANSMUTATION.get())),
             170,
-            132
+            158
         );
     }
 
@@ -48,7 +48,7 @@ public class CurrencyCategory extends AbstractRecipeCategory<CurrencyRecipe> {
     public void createRecipeExtras(IRecipeExtrasBuilder builder, CurrencyRecipe recipe, IFocusGroup focuses) {
         builder.addRecipePlusSignWidget().setPosition(26, 3);
         builder.addRecipeArrowWidget().setPosition(76, 3);
-        JeiLayout.addLines(builder, recipe.lines(), 1, 26, 168, 102);
+        JeiLayout.addLines(builder, recipe.lines(), 1, 26, 168, 128);
     }
 
     @Override

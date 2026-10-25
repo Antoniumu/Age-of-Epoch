@@ -29,7 +29,7 @@ public class SalvageCategory extends AbstractRecipeCategory<SalvageRecipe> {
             Component.translatable("mmorpg.jei.category.salvage"),
             guiHelper.createDrawableItemStack(new ItemStack(SlashItems.SALVAGE_HAMMER.get())),
             170,
-            104
+            132
         );
     }
 
@@ -45,7 +45,7 @@ public class SalvageCategory extends AbstractRecipeCategory<SalvageRecipe> {
     @Override
     public void createRecipeExtras(IRecipeExtrasBuilder builder, SalvageRecipe recipe, IFocusGroup focuses) {
         builder.addRecipeArrowWidget().setPosition(26, 3);
-        JeiLayout.addLines(builder, recipe.lines(), 1, 26, 168, 74);
+        JeiLayout.addLines(builder, recipe.lines(), 1, 26, 168, 102);
     }
 
     @Override

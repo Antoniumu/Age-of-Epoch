@@ -72,11 +72,16 @@ wait 1500
 move 640 650
 wait 300
 shot 07b-stat-soul-uses-tab2
-click 540 72
+click 566 72
 wait 1500
 move 640 650
 wait 300
 shot 07c-stat-soul-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 07d-stat-soul-uses-tab4
 key Escape
 wait 1500
 
@@ -100,11 +105,16 @@ wait 1500
 move 640 650
 wait 300
 shot 09b-identify-tome-uses-tab2
-click 540 72
+click 566 72
 wait 1500
 move 640 650
 wait 300
 shot 09c-identify-tome-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 09d-identify-tome-uses-tab4
 key Escape
 wait 1500
 
@@ -128,11 +138,31 @@ wait 1500
 move 640 650
 wait 300
 shot 11b-iron-chestplate-uses-tab2
-click 540 72
+click 566 72
 wait 1500
 move 640 650
 wait 300
 shot 11c-iron-chestplate-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 11d-iron-chestplate-uses-tab4
+click 813 28
+wait 1200
+move 640 650
+wait 300
+shot 11e-iron-chestplate-uses-tabpage2
+click 469 84
+wait 1500
+move 640 650
+wait 300
+shot 11f-iron-chestplate-uses-tabp2-first
+click 521 84
+wait 1500
+move 640 650
+wait 300
+shot 11g-iron-chestplate-uses-tabp2-second
 key Escape
 wait 1500
 
@@ -156,11 +186,16 @@ wait 1500
 move 640 650
 wait 300
 shot 13b-cracked-Ruby-uses-tab2
-click 540 72
+click 566 72
 wait 1500
 move 640 650
 wait 300
 shot 13c-cracked-Ruby-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 13d-cracked-Ruby-uses-tab4
 key Escape
 wait 1500
 
@@ -184,11 +219,16 @@ wait 1500
 move 640 650
 wait 300
 shot 15b-orb-uses-tab2
-click 540 72
+click 566 72
 wait 1500
 move 640 650
 wait 300
 shot 15c-orb-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 15d-orb-uses-tab4
 key Escape
 wait 1500
 
@@ -212,11 +252,16 @@ wait 1500
 move 640 650
 wait 300
 shot 17b-salvage-hammer-uses-tab2
-click 540 72
+click 566 72
 wait 1500
 move 640 650
 wait 300
 shot 17c-salvage-hammer-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 17d-salvage-hammer-uses-tab4
 key Escape
 wait 1500
 
@@ -240,11 +285,16 @@ wait 1500
 move 640 650
 wait 300
 shot 19b-runeword-station-uses-tab2
-click 540 72
+click 566 72
 wait 1500
 move 640 650
 wait 300
 shot 19c-runeword-station-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 19d-runeword-station-uses-tab4
 key Escape
 wait 1500
 
@@ -268,11 +318,16 @@ wait 1500
 move 640 650
 wait 300
 shot 21b-armorer-tool-uses-tab2
-click 540 72
+click 566 72
 wait 1500
 move 640 650
 wait 300
 shot 21c-armorer-tool-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 21d-armorer-tool-uses-tab4
 key Escape
 wait 1500
 
@@ -296,11 +351,16 @@ wait 1500
 move 640 650
 wait 300
 shot 23b-rarity-essence-uses-tab2
-click 540 72
+click 566 72
 wait 1500
 move 640 650
 wait 300
 shot 23c-rarity-essence-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 23d-rarity-essence-uses-tab4
 key Escape
 wait 1500
 
@@ -324,11 +384,16 @@ wait 1500
 move 640 650
 wait 300
 shot 25b-gem-loot-crate-uses-tab2
-click 540 72
+click 566 72
 wait 1500
 move 640 650
 wait 300
 shot 25c-gem-loot-crate-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 25d-gem-loot-crate-uses-tab4
 key Escape
 wait 1500
 
@@ -352,11 +417,16 @@ wait 1500
 move 640 650
 wait 300
 shot 27b-backpack-uses-tab2
-click 540 72
+click 566 72
 wait 1500
 move 640 650
 wait 300
 shot 27c-backpack-uses-tab3
+click 614 72
+wait 1500
+move 640 650
+wait 300
+shot 27d-backpack-uses-tab4
 key Escape
 wait 1500
 

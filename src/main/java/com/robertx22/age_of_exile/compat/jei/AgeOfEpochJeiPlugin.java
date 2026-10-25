@@ -79,7 +79,7 @@ public class AgeOfEpochJeiPlugin implements IModPlugin {
                 DisplayCategory.STAT_SOUL,
                 "mmorpg.jei.category.stat_soul",
                 icon(new ItemStack(SlashItems.STAT_SOUL.get())),
-                124,
+                142,
                 false
             ),
             new DisplayCategory(
@@ -87,7 +87,7 @@ public class AgeOfEpochJeiPlugin implements IModPlugin {
                 DisplayCategory.SOUL_IDENTIFY,
                 "mmorpg.jei.category.soul_identify",
                 icon(new ItemStack(SlashItems.IDENTIFY_TOME.get())),
-                118,
+                136,
                 false
             ),
             new DisplayCategory(
@@ -95,7 +95,7 @@ public class AgeOfEpochJeiPlugin implements IModPlugin {
                 DisplayCategory.GEM_SOCKETING,
                 "mmorpg.jei.category.gem_socketing",
                 gemIcon(),
-                132,
+                150,
                 false
             ),
             new DisplayCategory(
@@ -103,7 +103,7 @@ public class AgeOfEpochJeiPlugin implements IModPlugin {
                 DisplayCategory.RARITY_UPGRADE,
                 "mmorpg.jei.category.rarity_upgrade",
                 icon(new ItemStack(SlashItems.RARITY_UPGRADE.get())),
-                124,
+                142,
                 false
             ),
             new DisplayCategory(
@@ -111,7 +111,7 @@ public class AgeOfEpochJeiPlugin implements IModPlugin {
                 DisplayCategory.REPAIR,
                 "mmorpg.jei.category.repair",
                 icon(JeiStacks.dust(JeiStacks.sampleTier(), 1)),
-                118,
+                136,
                 false
             ),
             new DisplayCategory(
@@ -119,7 +119,7 @@ public class AgeOfEpochJeiPlugin implements IModPlugin {
                 DisplayCategory.BACKPACK_UPGRADE,
                 "mmorpg.jei.category.backpack_upgrade",
                 icon(new ItemStack(SlashItems.BACKPACK.get())),
-                118,
+                136,
                 false
             ),
             new DisplayCategory(
@@ -127,7 +127,7 @@ public class AgeOfEpochJeiPlugin implements IModPlugin {
                 DisplayCategory.CRATE_OPENING,
                 "mmorpg.jei.category.crate_opening",
                 icon(new ItemStack(SlashItems.LOOT_CRATE.get())),
-                132,
+                150,
                 true
             ),
             new DisplayCategory(
@@ -135,7 +135,7 @@ public class AgeOfEpochJeiPlugin implements IModPlugin {
                 DisplayCategory.UNIQUE_GEAR,
                 "mmorpg.jei.category.unique_gear",
                 icon(new ItemStack(SlashItems.STAT_SOUL.get())),
-                124,
+                142,
                 false
             ),
             new DisplayCategory(
@@ -143,7 +143,7 @@ public class AgeOfEpochJeiPlugin implements IModPlugin {
                 DisplayCategory.ITEM_ACTIONS,
                 "mmorpg.jei.category.item_actions",
                 icon(new ItemStack(SlashItems.FULL_FAVOR.get())),
-                118,
+                136,
                 false
             ),
             new DisplayCategory(
@@ -151,7 +151,7 @@ public class AgeOfEpochJeiPlugin implements IModPlugin {
                 DisplayCategory.WORLD_SOURCES,
                 "mmorpg.jei.category.world_sources",
                 icon(new ItemStack(Items.CHEST)),
-                132,
+                150,
                 true
             )
         );
