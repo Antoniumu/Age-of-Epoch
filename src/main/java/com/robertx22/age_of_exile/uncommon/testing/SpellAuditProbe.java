@@ -1575,6 +1575,36 @@ public final class SpellAuditProbe {
             }
         }
 
+        /** Короткая сводка того, что реально произошло: для подписи в видео. */
+        private String evidenceSummary() {
+            List<String> parts = new ArrayList<>();
+            if (current.hits > 0) {
+                parts.add("урон " + fmt(current.damageDealt) + " (" + current.hits + " поп.)");
+            }
+            if (current.healsApplied > 0) {
+                parts.add("лечение +" + fmt(current.healed));
+            }
+            if (current.manaApplied > 0) {
+                parts.add("мана +" + fmt(current.manaGained));
+            }
+            if (current.shieldGained > 0.5F) {
+                parts.add("щит +" + fmt(current.shieldGained));
+            }
+            if (!current.effects.isEmpty()) {
+                parts.add("эффекты: " + String.join(", ", current.effects));
+            }
+            if (current.moved > 0.3F) {
+                parts.add("перемещение " + fmt(current.moved) + " бл.");
+            }
+            if (current.itemsGained > 0) {
+                parts.add("предметы +" + current.itemsGained);
+            }
+            if (parts.isEmpty()) {
+                parts.add(current.spawned > 0 ? "создано сущностей: " + current.spawned : "сработало");
+            }
+            return String.join(" · ", parts);
+        }
+
         private String metricsLine() {
             StringBuilder text = new StringBuilder();
             text.append("урон: ").append(fmt(current.damageDealt)).append(" · попаданий: ").append(current.hits);
@@ -1659,7 +1689,9 @@ public final class SpellAuditProbe {
             }
 
             SpellAuditState.setPhase("ИТОГ");
-            SpellAuditState.setVerdict(current.pass ? "PASS"
+            // В подписи к видео — не только «PASS», но и чем именно это
+            // подтверждено: так ролик годится и разработчику, и игроку.
+            SpellAuditState.setVerdict(current.pass ? "PASS · " + evidenceSummary()
                 : "FAIL: " + String.join("; ", current.problems));
 
             results.add(current);
@@ -1734,6 +1766,11 @@ public final class SpellAuditProbe {
             }
         }
 
+        /** «×N» — сколько раз действие реально сработало (если больше одного). */
+        private static String countSuffix(int times) {
+            return times > 1 ? " (×" + times + ")" : "";
+        }
+
         private String markdown() {
             StringBuilder md = new StringBuilder();
             long passed = results.stream().filter(r -> r.pass).count();
@@ -1744,15 +1781,16 @@ public final class SpellAuditProbe {
             md.append("Каждое заклинание применялось тем же путём, что и с хотбара "
                 + "(`setToCast` → тик каста → `Spell.cast`), по манекенам впереди игрока. "
                 + "Если урон не прошёл, делался второй заход с кольцом манекенов вокруг игрока.\n\n");
-            md.append("| школа | заклинание | итог | урон | попаданий | лечение | эффекты | партиклы | проблемы |\n");
-            md.append("|---|---|---|---|---|---|---|---|---|\n");
+            md.append("| школа | заклинание | итог | урон | попаданий | лечение | мана | эффекты | партиклы | проблемы |\n");
+            md.append("|---|---|---|---|---|---|---|---|---|---|\n");
             for (SpellResult result : results) {
                 md.append("| ").append(escape(result.school))
                     .append(" | `").append(escape(result.id)).append("`")
                     .append(" | ").append(result.verdict())
                     .append(" | ").append(fmt(result.damageDealt))
                     .append(" | ").append(result.hits)
-                    .append(" | ").append(fmt(result.healed))
+                    .append(" | ").append(fmt(result.healed)).append(countSuffix(result.healsApplied))
+                    .append(" | ").append(fmt(result.manaGained)).append(countSuffix(result.manaApplied))
                     .append(" | ").append(result.effects.isEmpty() ? "—" : escape(String.join(", ", result.effects)))
                     .append(" | ").append(result.particles ? "да" : "нет")
                     .append(" | ").append(result.problems.isEmpty() ? "—" : escape(String.join("; ", result.problems)))
