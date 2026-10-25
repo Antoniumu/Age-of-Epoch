@@ -60,7 +60,6 @@ jobs:
         id: run
         env:
           CLIENT_TIMEOUT: '1500'
-          JAVA_HOME: ${{ env.JAVA_HOME }}
         run: |
           scenario="tools/e2e/scenarios/${{ inputs.scenario || 'boot' }}.txt"
           echo "сценарий: $scenario"
