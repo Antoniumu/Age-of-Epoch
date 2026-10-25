@@ -18,6 +18,7 @@ import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
 import com.robertx22.age_of_exile.saveclasses.spells.SpellCastingData;
 import com.robertx22.age_of_exile.saveclasses.unit.ResourceType;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import com.robertx22.age_of_exile.mixin_methods.OnItemStoppedUsingCastImbuedSpell;
 import com.robertx22.age_of_exile.vanilla_mc.packets.spells.TellClientToCastSpellPacket;
 import com.robertx22.library_of_exile.main.Packets;
 import net.fabricmc.loader.api.FabricLoader;
@@ -151,14 +152,42 @@ public final class SpellAuditProbe {
      * тем, как снять здоровье. Нужен, чтобы различать две разные поломки:
      * «заклинание не нашло цели» и «урон посчитался, но замер его не увидел».
      */
-    public static void noteDamageEvent(float amount) {
+    public static void noteDamageEvent(LivingEntity target, float vanillaAmount) {
         Runner runner = active;
-        if (runner == null || runner.current == null) {
+        if (runner == null || runner.current == null || target == null) {
             return;
         }
-        if (amount > 0F) {
-            runner.current.damageEvents++;
-            runner.current.damageEventsTotal += amount;
+        if (vanillaAmount <= 0F) {
+            return;
+        }
+        runner.current.damageEvents++;
+        runner.current.damageEventsTotal += vanillaAmount;
+
+        // Урон считаем по событию, а не по падению полоски здоровья манекена:
+        // здоровье ванильной сущности мод периодически пересчитывает из своих
+        // единиц, и такие пересчёты выглядели как урон от умения (у проклятий и
+        // тотемов «урон» был у всех подряд, в том числе у лечебных).
+        if (runner.dummies.contains(target.getUUID())) {
+            float real = runner.toRealDamage(target, vanillaAmount);
+            if (real > 0.01F) {
+                runner.current.damageDealt += real;
+                runner.current.hits++;
+            }
+        }
+    }
+
+    /**
+     * Действие лечения реально сработало: видно и «до/после» здоровья цели.
+     * Считать лечение по прибавке здоровья игрока нельзя — у него есть своя
+     * регенерация, которая перекрывает небольшую лечебную ауру (тотем).
+     */
+    public static void noteHealApplied(LivingEntity target, float before, float after) {
+        Runner runner = active;
+        if (runner == null || runner.current == null || target == null) {
+            return;
+        }
+        if (after > before + 0.01F || before >= target.getMaxHealth() - 0.01F) {
+            runner.current.healsApplied++;
         }
     }
 
@@ -327,6 +356,10 @@ public final class SpellAuditProbe {
         float moved;
         int spawned;
         int damageEvents;
+        /** Сколько раз падала полоска здоровья манекенов (справочно). */
+        int hpDrops;
+        /** Сколько раз реально сработало лечение (цель стала здоровее). */
+        int healsApplied;
         float damageEventsTotal;
         final List<String> problems = new ArrayList<>();
         final List<String> notes = new ArrayList<>();
@@ -1222,6 +1255,13 @@ public final class SpellAuditProbe {
             } catch (Throwable error) {
                 current.problem("каст упал с ошибкой: " + error);
             }
+            // Умения-выстрелы (лук) при касте не срабатывают сразу: каст только
+            // «заряжает» следующий выстрел, а сами стрелы и урон появляются,
+            // когда игрок отпускает тетиву. Раньше прогон этого не делал — и все
+            // такие умения выглядели сломанными («нет попаданий»), хотя урон
+            // наносится на выстреле. Здесь прогон стреляет ровно тем же путём,
+            // каким это делает игра при отпускании лука.
+            fireImbuedShot(player);
             try {
                 // Клиенту — та же команда, что мод шлёт для отрисовки чужого каста.
                 Packets.sendToClient(player, new TellClientToCastSpellPacket(player, spell));
@@ -1243,6 +1283,32 @@ public final class SpellAuditProbe {
                 + " cast_ticks=" + current.castTicks + " server_cast=" + current.serverCast);
         }
 
+        /** Выстрел заряженным умением: тот же путь, что при отпускании тетивы. */
+        private void fireImbuedShot(ServerPlayer player) {
+            try {
+                if (Load.spells(player)
+                    .getCastingData().imbued_spell_stacks <= 0) {
+                    return;
+                }
+                current.note("умение накладывается на выстрел из лука — прогон стреляет");
+                loadBow(player);
+                OnItemStoppedUsingCastImbuedSpell.onStoppedUsing(
+                    new ItemStack(net.minecraft.world.item.Items.BOW), player, 10);
+                writeLog(TAG + " imbued_shot spell=" + current.id);
+            } catch (Throwable error) {
+                current.note("не удалось выстрелить заряженным умением: " + error);
+            }
+        }
+
+        /** Кладёт лук в руку: требования оружия у стрелковых умений — лук. */
+        private void loadBow(ServerPlayer player) {
+            try {
+                player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,
+                    new ItemStack(net.minecraft.world.item.Items.BOW));
+            } catch (Throwable ignored) {
+            }
+        }
+
         /** @return true — наблюдение закончено */
         private boolean observe(ServerPlayer player, ServerLevel level) {
             for (Map.Entry<UUID, Float> entry : lastHealth.entrySet()) {
@@ -1253,8 +1319,10 @@ public final class SpellAuditProbe {
                 float now = living.getHealth();
                 float before = entry.getValue();
                 if (now < before - 0.0001F) {
-                    current.damageDealt += toRealDamage(living, before - now);
-                    current.hits++;
+                    // Падение полоски — только справочная цифра: мод сам
+                    // пересчитывает ванильное здоровье из своих единиц, и такие
+                    // пересчёты нельзя путать с уроном заклинания.
+                    current.hpDrops++;
                 }
                 entry.setValue(now);
             }
@@ -1502,7 +1570,7 @@ public final class SpellAuditProbe {
                 } catch (Throwable ignored) {
                 }
             }
-            if (current.heal && current.healed <= EFFECT_NOISE) {
+            if (current.heal && current.healsApplied == 0 && current.healed <= EFFECT_NOISE) {
                 current.problem("лечение не сработало");
             }
             if (current.mana && current.manaGained <= EFFECT_NOISE) {

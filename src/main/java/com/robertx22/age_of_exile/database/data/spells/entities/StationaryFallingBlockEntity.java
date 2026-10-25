@@ -36,7 +36,10 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
         acc.setBlockState(block);
         acc.setDestroyedOnLanding(false);
         this.entityData.set(BLOCK, BuiltInRegistries.BLOCK.getKey(block.getBlock()).toString());
-        this.blocksBuilding = true;
+        // Блок заклинания — декорация, а не препятствие: solid-блок на месте
+        // тотема/зоны душил тех, кто в нём стоит (мобы и питомцы получали урон
+        // каждым тиком, а в аудите это выглядело как урон самого умения).
+        this.blocksBuilding = false;
         this.setPos(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
         this.setDeltaMovement(Vec3.ZERO);
         this.xo = pos.getX() + 0.5D;
