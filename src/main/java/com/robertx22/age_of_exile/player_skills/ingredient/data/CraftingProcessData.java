@@ -15,6 +15,7 @@ import com.robertx22.age_of_exile.saveclasses.gearitem.gear_parts.CraftStatData;
 import com.robertx22.age_of_exile.saveclasses.gearitem.gear_parts.CraftedStatsData;
 import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
 import com.robertx22.age_of_exile.saveclasses.player_skills.PlayerSkillEnum;
+import com.robertx22.age_of_exile.saveclasses.stat_soul.SoullessGear;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.interfaces.data_items.IRarity;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.ClientOnly;
@@ -137,14 +138,13 @@ public class CraftingProcessData {
 
         if (skill.isGearCraftingProf()) {
 
-            GearRarity min = getMinRarity();
-            GearRarity max = getMaxRarity();
-
             tip.add(Component.literal(""));
-            tip.add(Component.literal("Мин. редкость: ").append(min.locName()
-                .withStyle(min.textFormatting())));
-            tip.add(Component.literal("Макс. редкость: ").append(max.locName()
-                .withStyle(max.textFormatting())));
+            tip.add(Component.literal("Результат: бесдушная основа (обычный предмет)")
+                .withStyle(ChatFormatting.GRAY));
+            tip.add(Component.literal("Сила основы: " + SoullessGear.basePercent(craftCostFactor()) + "% от базовых статов")
+                .withStyle(ChatFormatting.DARK_GRAY));
+            tip.add(Component.literal("Редкость, аффиксы и имя даёт наложенная душа")
+                .withStyle(ChatFormatting.DARK_GRAY));
 
         }
 
@@ -315,8 +315,6 @@ public class CraftingProcessData {
     }
 
     public GearItemData craftGear(ItemStack stack, Player player) {
-        GearItemData data = new GearItemData();
-
         GearSlot slot = GearSlot.getSlotOf(stack.getItem());
         if (slot == null) {
             return null;
@@ -329,24 +327,20 @@ public class CraftingProcessData {
             return null;
         }
 
-        GearRarity rar = RandomUtils.weightedRandom(getPossibleRarities());
-
-        data.rarity = rar.GUID();
         int tier = getAverageTier();
         int lvl = LevelUtils.tierToLevel(tier);
 
-        data.lvl = lvl;
-        data.gear_type = baseGearType.GUID();
-
-        data.baseStats.RerollFully(data);
-        data.imp.RerollFully(data);
+        // Крафт всегда даёт «бесдушную основу» common-редкости: редкость, случайные аффиксы
+        // и имя предмета приносит только настоящая душа. Чем дороже крафт (больше и выше
+        // тир ингредиентов, лучше множитель), тем выше базовые статы этой основы.
+        GearItemData data = SoullessGear.create(baseGearType, lvl, craftCostFactor());
 
         List<ExactStatData> stats = getResultingStats();
 
         data.cr = new CraftedStatsData();
 
-        while (stats.size() > rar.affixes) {
-            // don't allow more stats than rarity allows
+        while (stats.size() > CRAFTED_STATS_CAP) {
+            // don't allow more stats than a soulless base can hold
             stats.remove(RandomUtils.RandomRange(0, stats.size() - 1));
         }
 
@@ -358,9 +352,24 @@ public class CraftingProcessData {
             }
         });
 
-        data.up.regenerate(data.getRarity());
-
         return data; // todo
+    }
+
+    /** Сколько статов из ингредиентов помещается в бесдушную основу. */
+    public static final int CRAFTED_STATS_CAP = 3;
+
+    /**
+     * «Дороговизна» крафта: количество ингредиентов, их средний тир и множитель
+     * характеристик (штраф за повторы). 0 — дешёвый крафт, 1 — максимально дорогой.
+     */
+    public float craftCostFactor() {
+        int count = Mth.clamp(getIngredientsCount(), 1, 9);
+        int avgTier = getAverageTier();
+
+        float factor = 0.15F + 0.55F * (count / 9F) + 0.03F * avgTier;
+        factor *= getStatMulti();
+
+        return Mth.clamp(factor, 0F, 1F);
     }
 
     public CraftedConsumableData craftConsumable(Player player) {

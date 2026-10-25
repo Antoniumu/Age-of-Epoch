@@ -50,6 +50,13 @@ public class GearTooltipUtils {
             tip.add(x.withStyle(ChatFormatting.BOLD));
         });
 
+        if (gear.isSoulless()) {
+            tip.add(Component.literal("Бесдушная основа")
+                .withStyle(ChatFormatting.DARK_GRAY));
+            tip.add(Component.literal("Наложите душу, чтобы раскрыть предмет")
+                .withStyle(ChatFormatting.DARK_GRAY));
+        }
+
         if (gear.baseStats != null) {
             tip.addAll(gear.baseStats.GetTooltipString(info, gear));
         }

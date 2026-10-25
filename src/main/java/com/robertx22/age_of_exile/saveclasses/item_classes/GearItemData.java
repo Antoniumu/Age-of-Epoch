@@ -91,6 +91,18 @@ public class GearItemData implements ICommonDataItem<GearRarity> {
     @Store
     public boolean c = false; // corrupted
 
+    /**
+     * «Бесдушная основа»: у предмета есть только слабые базовые статы и common-редкость,
+     * всё остальное (аффиксы, имя, уникат, сокеты) приносит настоящая душа.
+     * См. {@link com.robertx22.age_of_exile.saveclasses.stat_soul.SoullessGear}.
+     */
+    @Store
+    public boolean sl = false;
+
+    public boolean isSoulless() {
+        return sl;
+    }
+
     public void upgradeToHigherRarity() {
 
         GearRarity old = this.getRarity();
@@ -293,6 +305,14 @@ public class GearItemData implements ICommonDataItem<GearRarity> {
     public List<MutableComponent> GetDisplayName(ItemStack stack) {
 
         try {
+            if (this.isSoulless()) {
+                // Бесдушная основа не имеет ни редкости, ни имени: это просто предмет.
+                MutableComponent plain = stack.getHoverName()
+                    .copy()
+                    .withStyle(ChatFormatting.GRAY);
+                return TooltipUtils.cutIfTooLong(plain, ChatFormatting.GRAY);
+            }
+
             ChatFormatting format = this.getRarity()
                 .textFormatting();
 

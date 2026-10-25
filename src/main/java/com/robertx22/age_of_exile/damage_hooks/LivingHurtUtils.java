@@ -7,6 +7,7 @@ import com.robertx22.age_of_exile.database.data.gear_slots.GearSlot;
 import com.robertx22.age_of_exile.database.data.gear_types.bases.SlotFamily;
 import com.robertx22.age_of_exile.database.data.stats.types.generated.AttackDamage;
 import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
+import com.robertx22.age_of_exile.saveclasses.stat_soul.SoullessGear;
 import com.robertx22.age_of_exile.uncommon.effectdatas.DamageEvent;
 import com.robertx22.age_of_exile.uncommon.effectdatas.EventBuilder;
 import com.robertx22.age_of_exile.uncommon.enumclasses.AttackType;
@@ -93,6 +94,14 @@ public class LivingHurtUtils {
                         ? data.weapon
                         : data.getAttackerEntity().getMainHandItem();
                     GearSlot slot = held.isEmpty() ? null : GearSlot.getSlotOf(held.getItem());
+                    if (slot == null || slot.fam != SlotFamily.Weapon) {
+                        // Предмет без бесдушной основы и без души — безделушка: урона нет.
+                        // «Уники по умолчанию» (булава, трезубец) и кулаки работают как раньше.
+                        if (SoullessGear.isWeaponLike(held) && !SoullessGear.isDefaultUnique(held)) {
+                            data.setCanceled(true);
+                        }
+                        return;
+                    }
                     if (slot != null && slot.fam == SlotFamily.Weapon) {
                         WeaponTypes weptype = switch (slot.GUID()) {
                             case "axe" -> WeaponTypes.axe;
