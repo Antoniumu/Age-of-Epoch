@@ -230,6 +230,8 @@ public final class TpaManager {
         send(player, "/tpaccept [игрок] и /tpdeny [игрок] — принять или отклонить", ChatFormatting.GRAY);
         send(player, "/tpa trust <игрок> — включить автопринятие; /tpa untrust <игрок> — выключить", ChatFormatting.GRAY);
         send(player, "/tpa trusted — список; /tpacancel — отменить свой запрос", ChatFormatting.GRAY);
+        // Без прав оператора ванильный /tp сам ведёт в /tpa — со всеми теми же лимитами.
+        send(player, "/tp <игрок> и /tp <x> <y> <z> без прав оператора работают как /tpa", ChatFormatting.GRAY);
         return true;
     }
 
@@ -407,7 +409,8 @@ public final class TpaManager {
         return player.getGameProfile().name();
     }
 
-    private static void send(ServerPlayer player, String text, ChatFormatting color) {
+    /** Сообщение в стиле аддона; используется и мостом ванильного /tp в /tpa. */
+    public static void send(ServerPlayer player, String text, ChatFormatting color) {
         if (player == null) {
             return;
         }
