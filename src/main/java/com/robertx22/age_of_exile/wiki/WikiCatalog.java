@@ -5,6 +5,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -27,6 +29,8 @@ import java.util.TreeMap;
  * страница-объяснение — игра никогда не падает из-за вики.
  */
 public final class WikiCatalog {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger("AgeOfEpoch-Wiki");
 
     public static final String HOME_ID = "index";
     private static final String PREFIX = "wiki_pages/";
@@ -65,15 +69,20 @@ public final class WikiCatalog {
                 try {
                     String text = readAll(entry.getValue());
                     next.put(pageId, WikiMarkdown.parse(pageId, text));
-                } catch (Throwable ignored) {
-                    // одна битая страница не должна губить весь каталог
+                } catch (Throwable error) {
+                    // одна битая страница не должна губить весь каталог, но и
+                    // пропадать молча она не должна: иначе страница исчезает из
+                    // списка, и причину не найти ни в игре, ни в логах.
+                    LOGGER.warn("Страница вики {} не прочитана и пропущена: {}", pageId, error.toString());
                 }
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable error) {
             // каталог останется пустым — ниже подставим объяснение
+            LOGGER.error("Каталог вики не читается из ресурсов мода: {}", error.toString());
         }
 
         if (next.isEmpty()) {
+            LOGGER.error("Страницы вики не найдены в assets/mmorpg/wiki_pages — показана страница-заглушка");
             WikiMarkdown.Page fallback = WikiMarkdown.parse(HOME_ID,
                 "---\ntitle: Вики Эпохи\ncategory: home\n---\n# Вики Эпохи\n\n" +
                     "Страницы вики не нашлись в ресурсах мода (`assets/mmorpg/wiki_pages`). " +
@@ -95,6 +104,7 @@ public final class WikiCatalog {
             }
         });
         loaded = true;
+        LOGGER.info("Вики: загружено страниц — {}", next.size());
     }
 
     private static int categoryRank(WikiMarkdown.Page page) {

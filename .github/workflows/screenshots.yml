@@ -1,0 +1,126 @@
+name: Screenshots
+
+# Поднимает настоящий dev-клиент мода в Xvfb, прогоняет сценарий (клики,
+# клавиши) и публикует скриншоты в ветку `ci-screenshots`, чтобы результат
+# было видно прямо в GitHub: ветка → README.md с галереей, плюс комментарий в PR.
+#
+# Это самый дешёвый способ ответить на вопрос «мод вообще запускается и рисует?»
+# без человека за компьютером. Сценарий — обычный текстовый файл в
+# tools/e2e/scenarios/, поэтому шаги правятся без пересборки.
+
+on:
+  workflow_dispatch:
+    inputs:
+      scenario:
+        description: 'Сценарий из tools/e2e/scenarios (имя файла без .txt)'
+        required: false
+        default: 'boot'
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: screenshots-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write        # публикация ветки ci-screenshots
+  pull-requests: write   # комментарий с картинками
+
+env:
+  GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx4G'
+  BRANCH: ci-screenshots
+
+jobs:
+  screenshots:
+    name: Client screenshots (xvfb)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-build-env
+        with:
+          cache-read-only: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork }}
+
+      - name: Пакеты для headless-клиента и снятия экрана
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends \
+            xvfb x11-utils xdotool imagemagick x11-apps \
+            libgl1 libglu1-mesa libgl1-mesa-dri \
+            libxi6 libxcursor1 libxrandr2 libxinerama1 libxxf86vm1 \
+            libopenal1 libpulse0
+
+      - name: Клиент + сценарий + скриншоты
+        id: run
+        env:
+          CLIENT_TIMEOUT: '1500'
+        run: |
+          scenario="tools/e2e/scenarios/${{ inputs.scenario || 'boot' }}.txt"
+          echo "сценарий: $scenario"
+          bash tools/e2e/run-in-xvfb.sh "$scenario" run/e2e/shots || echo "step_status=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Опубликовать снимки в ветку ${{ env.BRANCH }}
+        if: always() && github.event.pull_request.head.repo.fork != true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          bash tools/e2e/publish-shots.sh run/e2e/shots \
+            "Сценарий \`${{ inputs.scenario || 'boot' }}\`, клиент под Xvfb, ветка \`${{ github.head_ref || github.ref_name }}\`" || {
+            echo "::warning::Не удалось опубликовать снимки (нет прав или снимков не было)";
+          }
+
+      - name: Комментарий с картинками в PR
+        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork != true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          shots="$(cat run/e2e/shots/index.txt 2>/dev/null || true)"
+          if [ -z "$shots" ]; then
+            echo "::warning::Снимков нет — комментарий не публикую"
+            exit 0
+          fi
+          md="$(mktemp)"
+          {
+            echo "## Скриншоты dev-клиента"
+            echo
+            echo "Прогон: [${GITHUB_RUN_ID}](${GITHUB_SERVER_URL}/${REPO}/actions/runs/${GITHUB_RUN_ID}) · журнал шагов: [steps.log](https://github.com/${REPO}/blob/${BRANCH}/steps.log)"
+            echo
+            for name in $shots; do
+              echo "**${name}**"
+              echo
+              echo "[![${name}](https://raw.githubusercontent.com/${REPO}/${BRANCH}/shots/${name}.png)](https://raw.githubusercontent.com/${REPO}/${BRANCH}/shots/${name}.png)"
+              echo
+            done
+            echo "Если картинки не отображаются — открой [ветку \`${BRANCH}\`](https://github.com/${REPO}/tree/${BRANCH}) — там галерея в README.md."
+            echo
+            echo "> Пошаговый журнал (какой клик/клавиша, что нашлось в логе): [steps.log](https://github.com/${REPO}/blob/${BRANCH}/steps.log)"
+          } > "$md"
+
+          existing="$(gh api "repos/${REPO}/issues/${PR}/comments" --paginate --jq '.[] | select(.body | contains("<!-- aoe-screens -->")) | .id' | head -1)"
+          { echo '<!-- aoe-screens -->'; cat "$md"; } > "$md.body"
+          if [ -n "$existing" ]; then
+            gh api -X PATCH "repos/${REPO}/issues/comments/${existing}" -F "body=@${md}.body" > /dev/null
+            echo "Комментарий обновлён"
+          else
+            gh api -X POST "repos/${REPO}/issues/${PR}/comments" -F "body=@${md}.body" > /dev/null
+            echo "Комментарий создан"
+          fi
+
+      - name: Артефакт со снимками и логами
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: client-screenshots
+          path: |
+            run/e2e/shots/**
+            run/logs/latest.log
+            run/e2e/gradle.log
+            run/crash-reports/**
+          if-no-files-found: warn
+          retention-days: 14
