@@ -62,7 +62,9 @@ log_mark
 touch run/aoe-devtest.flag
 # Бой закончен — панель должна показывать «AOE / БОЙ» с DPS (окно 6 с после
 # последнего удара).
-wait_log_new 60000 AOETEST dps_avg_hit
+# ВАЖНО: строка зонда называется «AOETEST dps hits=...» (dps_avg_hit — старый
+# формат, по нему wait падал по таймауту и кадры HP снимались после прогона).
+wait_log_new 60000 AOETEST dps hits=
 wait 200
 shot 04-combat-hud
 
