@@ -12,12 +12,12 @@ shot 00-world
 log_mark
 write run/airship-e2e.flag summon
 wait_log_new 90000 AIRSHIPTEST PASS summon
-wait 4000
+wait 12000
 shot 01-airship-exterior
 log_mark
 write run/airship-e2e.flag board
 wait_log_new 30000 AIRSHIPTEST PASS board
-wait 2500
+wait 6000
 shot 02-on-deck
 log_mark
 write run/airship-e2e.flag lift

@@ -23,8 +23,14 @@ public final class AirshipProbe {
             Files.delete(FLAG);
             AirshipData d=AirshipService.data(p);
             ServerLevel level=(ServerLevel)p.level();
+            System.out.println("AIRSHIPTEST SNAP action="+action+" anchor="+d.x+","+d.y+","+d.z+" player="+p.position()+" eye="+level.getBlockState(net.minecraft.core.BlockPos.containing(p.getEyePosition())));
+            for(Entity actor:level.getEntitiesOfClass(Entity.class,p.getBoundingBox().inflate(150),e->e.entityTags().contains(AirshipService.TAG)))
+                System.out.println("AIRSHIPTEST CREW "+actor.getId()+" "+actor.entityTags()+" pos="+actor.position()+" alive="+actor.isAlive());
             if(action.equals("summon")) {
                 AirshipService.summon(p,true);
+                for(Entity actor:level.getEntitiesOfClass(Entity.class,p.getBoundingBox().inflate(150),e->e.entityTags().contains(AirshipService.TAG)))
+                    System.out.println("AIRSHIPTEST SPAWN "+actor.getId()+" pos="+actor.position());
+                System.out.println("AIRSHIPTEST BUILD anchor="+d.x+","+d.y+","+d.z+" deck="+level.getBlockState(new net.minecraft.core.BlockPos(d.x,d.y,d.z+4)));
                 if(!d.summoned) throw new IllegalStateException("No clear mooring");
                 p.teleportTo(level,d.x+30.5,d.y+12,d.z+31.5,Set.of(),135,12,false);
                 // Spectator gives a stable exterior shot without falling; restored before interactions.
