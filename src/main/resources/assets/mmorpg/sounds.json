@@ -1,35 +1,138 @@
 {
-    "freeze": {
-        "category": "hostile",
-        "sounds": [{"name": "mmorpg:freeze", "stream": true}]
-    },
-    "dash": {
-        "category": "hostile",
-        "sounds": [{"name": "mmorpg:dash", "stream": true}]
-    },
-    "fireball": {
-        "category": "hostile",
-        "sounds": [{"name": "mmorpg:fireball", "stream": true}]
-    },
-    "stone_crack": {
-        "category": "hostile",
-        "sounds": [{"name": "mmorpg:stone_crack", "stream": true}]
-    },
-    "buff": {
-        "category": "hostile",
-        "sounds": [{"name": "mmorpg:buff", "stream": true}]
-    },
-	"fire": {
-        "category": "hostile",
-        "sounds": [{"name": "mmorpg:fire", "stream": true}]
-    },	
-	"burn": {
-        "category": "hostile",
-        "sounds": [{"name": "mmorpg:burn", "stream": true}]
-    },
-    "splash": {
-        "category": "hostile",
-        "sounds": [{"name": "mmorpg:splash", "stream": true}]
-    }
-
+  "freeze": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "mmorpg:freeze",
+        "stream": true
+      }
+    ]
+  },
+  "dash": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "mmorpg:dash",
+        "stream": true
+      }
+    ]
+  },
+  "fireball": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "mmorpg:fireball",
+        "stream": true
+      }
+    ]
+  },
+  "stone_crack": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "mmorpg:stone_crack",
+        "stream": true
+      }
+    ]
+  },
+  "buff": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "mmorpg:buff",
+        "stream": true
+      }
+    ]
+  },
+  "fire": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "mmorpg:fire",
+        "stream": true
+      }
+    ]
+  },
+  "burn": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "mmorpg:burn",
+        "stream": true
+      }
+    ]
+  },
+  "splash": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "mmorpg:splash",
+        "stream": true
+      }
+    ]
+  },
+  "airship.captain_welcome": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/captain_welcome",
+        "stream": true
+      }
+    ]
+  },
+  "airship.captain_choice": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/captain_choice",
+        "stream": true
+      }
+    ]
+  },
+  "airship.captain_intro_b": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/captain_intro_b",
+        "stream": true
+      }
+    ]
+  },
+  "airship.captain_finale": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/captain_finale",
+        "stream": true
+      }
+    ]
+  },
+  "airship.captain_echoes": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/captain_echoes",
+        "stream": true
+      }
+    ]
+  },
+  "airship.captain_return": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/captain_return",
+        "stream": true
+      }
+    ]
+  },
+  "airship.captain_intro_a": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/captain_intro_a",
+        "stream": true
+      }
+    ]
+  },
+  "airship.captain_idle": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/captain_idle",
+        "stream": true
+      }
+    ]
+  }
 }

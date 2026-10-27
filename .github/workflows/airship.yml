@@ -45,9 +45,9 @@ jobs:
           E2E_FAIL_FAST: 1
         run: |
           bash tools/e2e/run-in-xvfb.sh tools/e2e/scenarios/winged.txt run/e2e/airship
-          test -f run/e2e/airship/07-campaign-complete.png
+          test -f run/e2e/airship/22-campaign-complete.png
           ! grep -q 'AIRSHIPTEST FAIL' run/logs/latest.log
-          for stage in winged board lift lift-check far-reject dialogue accepted mara quartermaster complete; do
+          for stage in winged board lift lift-check far-reject dialogue accepted mara quartermaster stale gate truth favor-claim-captain iron-quartermaster seed-dungeon; do
             grep -q "AIRSHIPTEST PASS $stage" run/logs/latest.log
           done
       - name: Publish actual screenshots on the same working branch

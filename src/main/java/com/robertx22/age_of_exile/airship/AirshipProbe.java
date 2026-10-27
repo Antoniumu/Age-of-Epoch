@@ -36,6 +36,16 @@ public final class AirshipProbe {
                 p.teleportTo(level,d.x+(d.layout.equals("winged_sailor")?78.5:30.5),d.y+32,d.z+(d.layout.equals("winged_sailor")?85.5:31.5),Set.of(),135,12,false);
                 // Spectator gives a stable exterior shot without falling; restored before interactions.
                 p.setGameMode(net.minecraft.world.level.GameType.SPECTATOR);
+            } else if(action.startsWith("seed-")) {
+                var book=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p).questBook;
+                switch(action) {
+                    case "seed-chests"->{ for(int i=0;i<3;i++) com.robertx22.age_of_exile.questbook.QuestBookService.onChestLooted(p); }
+                    case "seed-kills"->book.mobKills+=10;
+                    case "seed-dungeon"->com.robertx22.age_of_exile.questbook.QuestBookService.onStandardDungeonCompleted(p);
+                    default->throw new IllegalArgumentException(action);
+                }
+                com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p).syncToClient(p);
+                System.out.println("AIRSHIPTEST SYNTHETIC RPG counters/hook: "+action);
             } else if(action.equals("accepted")) {
                 if(d.stage!=1) throw new IllegalStateException("UI button did not accept quest");
             } else if(action.equals("lift-check")) {
@@ -49,7 +59,7 @@ public final class AirshipProbe {
                 d.liftReadyAtMillis=0; // Only the dev probe skips the player's five-second exit grace period.
                 // AirshipService.tick performs the same lift as for real players.
             } else {
-                String npc=action.equals("mara")?"mara":action.equals("quartermaster")?"quartermaster":"captain";
+                String npc=action.endsWith("mara")?"mara":action.endsWith("quartermaster")?"quartermaster":action.startsWith("report") || action.equals("gate")?AirshipStory.actor(d.stage):"captain";
                 Entity e=level.getEntitiesOfClass(Entity.class,
                     new AABB(d.x-100,d.y-100,d.z-100,d.x+100,d.y+100,d.z+100),
                     candidate->AirshipService.npcId(candidate).equals(npc)).stream().findFirst().orElseThrow();
@@ -64,7 +74,7 @@ public final class AirshipProbe {
                     double tx=e.getX(),tz=e.getZ()+2.5;float yaw=180;
                     if(d.layout.equals("winged_sailor")) {
                         boolean found=false;
-                        for(int[] offset:new int[][]{{0,2},{2,0},{-2,0},{0,-2},{0,1},{1,0},{-1,0},{0,-1}}) {
+                        for(int[] offset:new int[][]{{0,3},{3,0},{-3,0},{0,-3},{0,2},{2,0},{-2,0},{0,-2},{0,1},{1,0},{-1,0},{0,-1}}) {
                             var feet=e.blockPosition().offset(offset[0],0,offset[1]);
                             if(level.getBlockState(feet).isAir() && level.getBlockState(feet.above()).isAir() && level.getBlockState(feet.below()).isSolid()) {
                                 tx=feet.getX()+0.5;tz=feet.getZ()+0.5;
@@ -73,8 +83,36 @@ public final class AirshipProbe {
                         }
                         if(!found) throw new IllegalStateException("No accessible neighbour for "+npc);
                     }
-                    p.teleportTo(level,tx,e.getY(),tz,Set.of(),yaw,0,false);
-                    if(action.equals("accept") || action.equals("mara") || action.equals("quartermaster") || action.equals("complete")) {
+                    p.teleportTo(level,tx,e.getY(),tz,Set.of(),yaw,action.startsWith("photo-")?12:0,false);
+                    p.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+                    if(action.startsWith("photo-")) {
+                        e.setYRot(yaw+180);
+                        if(e instanceof net.minecraft.world.entity.LivingEntity living) living.setYHeadRot(yaw+180);
+                    } else if(action.equals("gate") || action.equals("stale")) {
+                        int before=d.stage,trust=d.captainTrust+d.maraTrust+d.bramTrust;
+                        AirshipService.accept(p,e.getId(),action.equals("stale")?before-1:before,0);
+                        if(d.stage!=before || trust!=d.captainTrust+d.maraTrust+d.bramTrust) throw new IllegalStateException("Gate/replay was bypassed");
+                    } else if(action.equals("favor-captain") || action.equals("favor-claim-captain")) {
+                        int before=d.captainTrust;AirshipService.accept(p,e.getId(),d.stage,2);
+                        if(action.equals("favor-claim-captain")) {
+                            if(d.captainTrust!=before+15) throw new IllegalStateException("Captain favor was not rewarded");
+                            AirshipService.accept(p,e.getId(),d.stage,2);
+                            if(d.captainTrust!=before+15) throw new IllegalStateException("Favor replay rewarded twice");
+                        } else if((d.favorAccepted&1)==0) throw new IllegalStateException("Favor not accepted");
+                    } else if(action.equals("iron-quartermaster")) {
+                        p.getInventory().add(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_INGOT,16));
+                        int before=countIron(p),trust=d.bramTrust;
+                        AirshipService.accept(p,e.getId(),d.stage,2);AirshipService.accept(p,e.getId(),d.stage,2);
+                        if(countIron(p)!=before-16 || d.bramTrust!=trust+15) throw new IllegalStateException("Iron favor was not atomically consumed/rewarded");
+                        AirshipService.accept(p,e.getId(),d.stage,2);
+                        if(countIron(p)!=before-16 || d.bramTrust!=trust+15) throw new IllegalStateException("Iron favor replay was rewarded");
+                    } else if(action.startsWith("report") || action.equals("truth")) {
+                        int before=d.stage;
+                        AirshipService.accept(p,e.getId(),before,action.equals("truth")?1:0);
+                        if(d.stage!=before+1) throw new IllegalStateException("Campaign did not advance from "+before);
+                        if(action.equals("truth") && d.storyDecision!=1) throw new IllegalStateException("Choice was not saved");
+                        if(d.stage==11 && (d.captainTrust<20 || d.maraTrust<20 || d.bramTrust<20)) throw new IllegalStateException("Independent trust rewards missing");
+                    } else if(action.equals("accept") || action.equals("mara") || action.equals("quartermaster") || action.equals("complete")) {
                         AirshipService.accept(p,e.getId());
                         int expected=switch(action) { case "accept"->1; case "mara"->2; case "quartermaster"->3; default->4; };
                         if(d.stage!=expected) throw new IllegalStateException("Wrong stage "+d.stage);
@@ -86,5 +124,8 @@ public final class AirshipProbe {
             System.out.println("AIRSHIPTEST FAIL "+e);
             e.printStackTrace();
         }
+    }
+    private static int countIron(ServerPlayer p) {
+        int count=0;for(int i=0;i<p.getInventory().getContainerSize();i++) if(p.getInventory().getItem(i).is(net.minecraft.world.item.Items.IRON_INGOT)) count+=p.getInventory().getItem(i).getCount();return count;
     }
 }

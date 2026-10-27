@@ -23,7 +23,7 @@ import net.minecraft.world.phys.AABB;
 import java.util.ArrayList;
 import java.util.Map;
 
-/** Server-only world operations. No client-supplied quest stage, reward, position or NPC name. */
+/** Server-only world operations. Client stage is only an optimistic lock; all progress and rewards are server-authoritative. */
 public final class AirshipService {
     public static final String TAG = "aoe_airship_npc";
     private static final Map<BlockPos, Block> BLUEPRINT = AirshipBlueprint.blocks();
@@ -51,20 +51,37 @@ public final class AirshipService {
             npcId(e).isEmpty() ? InteractionResult.PASS : InteractionResult.FAIL);
     }
     public static void open(ServerPlayer p, Entity e) {
-        if (e.level() != p.level() || !e.isAlive() || p.distanceToSqr(e) > 36 || npcId(e).isEmpty()) return;
+        if (p.isSpectator() || e.level() != p.level() || !e.isAlive() || p.distanceToSqr(e) > 36 || npcId(e).isEmpty()) return;
         sync(p);
         Packets.sendToClient(p, new AirshipDialoguePacket(e.getId(), npcId(e), AirshipCrew.texture(npcId(e))));
     }
-    public static void accept(ServerPlayer p, int entityId) {
-        Entity e = p.level().getEntity(entityId);
-        if (p.isSpectator() || e == null || !e.isAlive() || p.distanceToSqr(e) > 36 || npcId(e).isEmpty() || !p.hasLineOfSight(e)) return;
-        AirshipData d = data(p);
-        int next = AirshipStory.advance(npcId(e), d.stage);
-        if (next == d.stage) return;
-        d.giverSkin = AirshipCrew.texture(AirshipStory.owner(next));
-        d.stage = next; // no repeatable item reward; packet replay cannot advance another NPC's step
+    public static void accept(ServerPlayer p,int entityId) { accept(p,entityId,data(p).stage,0); }
+    public static void accept(ServerPlayer p,int entityId,int expectedStage,int choice) {
+        Entity e=p.level().getEntity(entityId);
+        if(p.isSpectator() || e==null || !e.isAlive() || p.distanceToSqr(e)>36 || npcId(e).isEmpty() || !p.hasLineOfSight(e)) return;
+        AirshipData d=data(p);String npc=npcId(e);var book=Load.playerRPGData(p).questBook;
+        if(expectedStage!=d.stage) return; // Reject replayed/stale UI packets.
+        if(choice==2) {
+            int iron=0;
+            for(int i=0;i<p.getInventory().getContainerSize();i++) if(p.getInventory().getItem(i).is(Items.IRON_INGOT)) iron+=p.getInventory().getItem(i).getCount();
+            if(AirshipCampaign.takeFavor(d,book,npc)) tell(p,"Личное поручение: "+AirshipStory.favor(npc));
+            else if(AirshipCampaign.finishFavor(d,book,npc,iron)) {
+                if(npc.equals("quartermaster")) {
+                    int left=16;
+                    for(int i=0;i<p.getInventory().getContainerSize() && left>0;i++) {
+                        var stack=p.getInventory().getItem(i);
+                        if(stack.is(Items.IRON_INGOT)) { int n=Math.min(left,stack.getCount());stack.shrink(n);left-=n; }
+                    }
+                    p.getInventory().setChanged();
+                }
+                tell(p,"Доверие: "+AirshipStory.name(npc)+" +15. "+AirshipStory.reputationLabel(d.trust(npc)));
+            } else tell(p,(d.favorCompleted&AirshipCampaign.bit(npc))!=0?"Ты уже помог этому члену экипажа.":AirshipStory.favor(npc));
+            sync(p);return;
+        }
+        if(!AirshipCampaign.advance(d,book,npc,expectedStage,choice)) { tell(p,AirshipStory.objective(d.stage));sync(p);return; }
+        d.giverSkin=AirshipCrew.texture(AirshipStory.owner(d.stage));
         sync(p);
-        p.sendSystemMessage(Component.literal("§6Последний Рассвет §8» §f" + AirshipStory.objective(next)));
+        p.sendSystemMessage(Component.literal("§6Последний Рассвет §8» §f"+AirshipStory.objective(d.stage)));
     }
     public static int summon(ServerPlayer p, boolean free) {
         if (!Level.OVERWORLD.equals(p.level().dimension())) return tell(p, "Корабль можно призвать только в обычном мире.");

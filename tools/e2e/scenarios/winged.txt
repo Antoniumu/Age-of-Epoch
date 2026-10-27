@@ -1,4 +1,4 @@
-# Fresh CI profile, same 1280x720 world creation path as wiki.txt.
+# Real Minecraft UI and world. Counter seeding is explicitly synthetic, not a claimed dungeon playthrough.
 wait_window Minecraft 420000
 wait_log 300000 Created: .*atlas/items
 wait 8000
@@ -31,38 +31,173 @@ log_mark
 write run/airship-e2e.flag far-reject
 wait_log_new 30000 AIRSHIPTEST PASS far-reject
 log_mark
+write run/airship-e2e.flag photo-captain
+wait_log_new 30000 AIRSHIPTEST PASS photo-captain
+wait 2500
+key F1
+wait 1000
+shot 04-captain-skin
+key F1
+log_mark
 write run/airship-e2e.flag dialogue
 wait_log_new 30000 AIRSHIPTEST PASS dialogue
-wait 2500
-shot 04-captain-dialogue
-# Click the real accept button (GUI scale 2), rather than advancing via probe.
-click 640 482
+wait 3000
+move 25 450
+shot 05-captain-subtitle-head-left
+move 1230 650
 wait 1000
+shot 06-captain-subtitle-head-right
+# Let actual audio clips finish: choices must appear after both clips, not via a fake delay.
+wait 24500
+shot 07-captain-transcript
+# Click the actual bottom-strip accept button, GUI scale 2, 1280x720.
+click 640 532
+wait 1200
 log_mark
 write run/airship-e2e.flag accepted
 wait_log_new 30000 AIRSHIPTEST PASS accepted
-wait 1500
 hold h 500
-wait 2000
-move 1210 30
-shot 05-H-quest-captain
+wait 1800
+shot 08-H-quest-captain
+key Escape
+log_mark
+write run/airship-e2e.flag favor-captain
+wait_log_new 30000 AIRSHIPTEST PASS favor-captain
+log_mark
+write run/airship-e2e.flag photo-mara
+wait_log_new 30000 AIRSHIPTEST PASS photo-mara
+wait 1500
+key F1
+wait 800
+shot 09-mara-skin
+key F1
+log_mark
+write run/airship-e2e.flag talk-mara
+wait_log_new 30000 AIRSHIPTEST PASS talk-mara
+wait 1500
+key space
+wait 500
+shot 10-mara-dialogue
 key Escape
 log_mark
 write run/airship-e2e.flag mara
 wait_log_new 30000 AIRSHIPTEST PASS mara
-wait 1500
 hold h 500
-wait 2000
-move 1000 110
-shot 06-H-quest-mara
+wait 1800
+shot 11-H-quest-mara
+key Escape
+log_mark
+write run/airship-e2e.flag photo-quartermaster
+wait_log_new 30000 AIRSHIPTEST PASS photo-quartermaster
+wait 1500
+key F1
+wait 800
+shot 12-bram-skin
+key F1
+log_mark
+write run/airship-e2e.flag talk-quartermaster
+wait_log_new 30000 AIRSHIPTEST PASS talk-quartermaster
+wait 1000
+key space
+wait 500
+shot 13-bram-dialogue
 key Escape
 log_mark
 write run/airship-e2e.flag quartermaster
 wait_log_new 30000 AIRSHIPTEST PASS quartermaster
 log_mark
-write run/airship-e2e.flag complete
-wait_log_new 30000 AIRSHIPTEST PASS complete
+write run/airship-e2e.flag dialogue
+wait_log_new 30000 AIRSHIPTEST PASS dialogue
+wait 1800
+shot 14-captain-welcome
+key space
+wait 500
+key 1
+wait 1000
+# Stage 4 = chapter 1 complete; the next two chapters remain locked behind new RPG progress.
+log_mark
+write run/airship-e2e.flag stale
+wait_log_new 30000 AIRSHIPTEST PASS stale
+log_mark
+write run/airship-e2e.flag dialogue
+wait_log_new 30000 AIRSHIPTEST PASS dialogue
+wait 1600
+shot 15-chapter-two-voice
+key space
+key 1
+wait 1000
+log_mark
+write run/airship-e2e.flag gate
+wait_log_new 30000 AIRSHIPTEST PASS gate
+log_mark
+write run/airship-e2e.flag talk-mara
+wait_log_new 30000 AIRSHIPTEST PASS talk-mara
+wait 1000
+key space
+wait 500
+shot 16-chests-locked
+key Escape
+log_mark
+write run/airship-e2e.flag seed-chests
+wait_log_new 30000 AIRSHIPTEST PASS seed-chests
+log_mark
+write run/airship-e2e.flag report
+wait_log_new 30000 AIRSHIPTEST PASS report
+log_mark
+write run/airship-e2e.flag seed-kills
+wait_log_new 30000 AIRSHIPTEST PASS seed-kills
+log_mark
+write run/airship-e2e.flag report
+wait_log_new 30000 AIRSHIPTEST PASS report
+log_mark
+write run/airship-e2e.flag favor-claim-captain
+wait_log_new 30000 AIRSHIPTEST PASS favor-claim-captain
+log_mark
+write run/airship-e2e.flag dialogue
+wait_log_new 30000 AIRSHIPTEST PASS dialogue
 wait 1500
+key space
+wait 500
+shot 17-story-choice
+key Escape
+log_mark
+write run/airship-e2e.flag truth
+wait_log_new 30000 AIRSHIPTEST PASS truth
+log_mark
+write run/airship-e2e.flag talk-mara
+wait_log_new 30000 AIRSHIPTEST PASS talk-mara
+wait 1000
+key space
+wait 500
+shot 18-chapter-three
+key 1
+wait 1000
+log_mark
+write run/airship-e2e.flag iron-quartermaster
+wait_log_new 30000 AIRSHIPTEST PASS iron-quartermaster
+log_mark
+write run/airship-e2e.flag seed-dungeon
+wait_log_new 30000 AIRSHIPTEST PASS seed-dungeon
+log_mark
+write run/airship-e2e.flag report
+wait_log_new 30000 AIRSHIPTEST PASS report
+log_mark
+write run/airship-e2e.flag dialogue
+wait_log_new 30000 AIRSHIPTEST PASS dialogue
+wait 1500
+shot 19-captain-return
+key space
+key 1
+wait 1200
+log_mark
+write run/airship-e2e.flag dialogue
+wait_log_new 30000 AIRSHIPTEST PASS dialogue
+wait 1800
+shot 20-finale-voice
+key space
+wait 500
+shot 21-finale-transcript
+key Escape
 hold h 500
-wait 2000
-shot 07-campaign-complete
+wait 1800
+shot 22-campaign-complete

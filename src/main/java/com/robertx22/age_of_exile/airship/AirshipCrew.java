@@ -10,11 +10,7 @@ import java.nio.file.Path;
 public final class AirshipCrew {
     private AirshipCrew() {}
     public static String texture(String id) {
-        String fallback=switch(id) {
-            case "mara" -> "minecraft:entity/player/slim/alex";
-            case "quartermaster" -> "minecraft:entity/player/wide/efe";
-            default -> "minecraft:entity/player/wide/steve";
-        };
+        String fallback="mmorpg:entity/airship/"+(AirshipStory.index(id)>=0?id:"captain");
         Path file=FabricLoader.getInstance().getConfigDir().resolve("mmorpg/airship-crew.json");
         if(!Files.isRegularFile(file)) return fallback;
         try {
@@ -25,5 +21,5 @@ public final class AirshipCrew {
         }
         return fallback;
     }
-    public static String model(String id) { return id.equals("mara")?"slim":"wide"; }
+    public static String model(String id) { return "wide"; }
 }
