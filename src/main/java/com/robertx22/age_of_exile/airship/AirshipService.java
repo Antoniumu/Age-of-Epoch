@@ -131,7 +131,7 @@ public final class AirshipService {
             mob.setSilent(true);
             if(mob instanceof Mob ai) ai.setPersistenceRequired();
             mob.setCustomName(Component.literal(AirshipStory.name(AirshipStory.IDS[i])));
-            mob.setCustomNameVisible(true);
+            mob.setCustomNameVisible(false);
             mob.addTag(TAG);
             mob.addTag("aoe_npc_"+AirshipStory.IDS[i]);
             crew.add(mob);

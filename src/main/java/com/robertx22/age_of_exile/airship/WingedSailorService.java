@@ -72,7 +72,7 @@ public final class WingedSailorService {
             int[] local=CREW[i];
             actor.snapTo(ox+local[0]+0.5,base+local[1],oz+local[2]+0.5,180F,0F);
             actor.setCustomName(Component.literal(AirshipStory.name(AirshipStory.IDS[i])));
-            actor.setCustomNameVisible(true);actor.setSilent(true);
+            actor.setCustomNameVisible(false);actor.setSilent(true);
             actor.addTag(AirshipService.TAG);actor.addTag("aoe_npc_"+AirshipStory.IDS[i]);
             crew.add(actor);
         }

@@ -22,7 +22,7 @@ public class AirshipDialogueScreen extends BaseScreen {
     private SimpleSoundInstance playing;
     private int cueIndex;
     private long cueStarted;
-    private boolean fullText,started,heardActive,previousHideGui;
+    private boolean fullText,started,heardActive;
     private int panelX,panelY,panelW;
     public AirshipDialogueScreen(int entityId,String npc,String texture) { super(560,170);this.entityId=entityId;this.npc=npc;this.texture=texture; }
     @Override public boolean isPauseScreen() { return false; }
@@ -30,7 +30,7 @@ public class AirshipDialogueScreen extends BaseScreen {
         super.init();
         panelW=Math.min(560,width-16);panelX=(width-panelW)/2;panelY=height-(fullText?196:94)-8;
         if(!started && mc.player!=null) {
-            started=true;previousHideGui=mc.options.hideGui;mc.options.hideGui=true;storyStage=Load.playerRPGData(mc.player).airship.stage;
+            started=true;storyStage=Load.playerRPGData(mc.player).airship.stage;
             transcript=AirshipStory.dialogue(npc,storyStage);
             if(AirshipStory.target(storyStage)>0 && AirshipStory.actor(storyStage).equals(npc)
                 && !AirshipCampaign.ready(Load.playerRPGData(mc.player).airship,Load.playerRPGData(mc.player).questBook))
@@ -94,7 +94,7 @@ public class AirshipDialogueScreen extends BaseScreen {
         return super.keyPressed(key,scan,modifiers);
     }
     @Override public void onClose() { stopVoice();mc.gui.setScreen(null); }
-    @Override public void removed() { stopVoice();if(started) mc.options.hideGui=previousHideGui;super.removed(); }
+    @Override public void removed() { stopVoice();super.removed(); }
     @Override public void render(PoseStack pose,int mx,int my,float partial) {
         int x=panelX,y=panelY,w=panelW,h=fullText?196:94;
         AbstractGui.fill(pose,x,y,x+w,y+h,0xCF101316);

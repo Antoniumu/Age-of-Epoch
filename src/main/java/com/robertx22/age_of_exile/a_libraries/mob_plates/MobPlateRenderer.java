@@ -84,7 +84,7 @@ public final class MobPlateRenderer {
         }
 
         Minecraft mc = Minecraft.getInstance();
-        if (mc.level == null || mc.player == null || mc.options.hideGui) {
+        if (mc.level == null || mc.player == null || mc.gui.screen() instanceof com.robertx22.age_of_exile.airship.AirshipDialogueScreen) {
             return;
         }
 
@@ -123,7 +123,7 @@ public final class MobPlateRenderer {
             if (!(raw instanceof LivingEntity entity)) {
                 continue;
             }
-            if (entity.entityTags().contains(com.robertx22.age_of_exile.airship.AirshipService.TAG)) continue;
+            if (net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString().equals("minecraft:mannequin")) continue;
             if (entity == mc.player || entity instanceof ArmorStand || entity.isInvisible() || !entity.isAlive()) {
                 continue;
             }

@@ -58,8 +58,8 @@ jobs:
           RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           mkdir -p docs/airship/proof-images
-          find docs/airship/proof-images -maxdepth 1 -name '*.png' -delete
           if compgen -G 'run/e2e/airship/*.png' >/dev/null; then
+            find docs/airship/proof-images -maxdepth 1 -name '*.png' -delete
             cp run/e2e/airship/*.png docs/airship/proof-images/
           fi
           {
