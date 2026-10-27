@@ -124,6 +124,7 @@ wait_log_new 30000 AIRSHIPTEST PASS dialogue
 wait 1600
 shot 15-chapter-two-voice
 key space
+wait 500
 key 1
 wait 1000
 log_mark
@@ -187,6 +188,7 @@ wait_log_new 30000 AIRSHIPTEST PASS dialogue
 wait 1500
 shot 19-captain-return
 key space
+wait 500
 key 1
 wait 1200
 log_mark
@@ -201,3 +203,8 @@ key Escape
 hold h 500
 wait 1800
 shot 22-campaign-complete
+
+key Escape
+log_mark
+write run/airship-e2e.flag finished
+wait_log_new 30000 AIRSHIPTEST PASS finished

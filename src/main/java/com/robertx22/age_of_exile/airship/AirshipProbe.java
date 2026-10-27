@@ -36,6 +36,16 @@ public final class AirshipProbe {
                 p.teleportTo(level,d.x+(d.layout.equals("winged_sailor")?78.5:30.5),d.y+32,d.z+(d.layout.equals("winged_sailor")?85.5:31.5),Set.of(),135,12,false);
                 // Spectator gives a stable exterior shot without falling; restored before interactions.
                 p.setGameMode(net.minecraft.world.level.GameType.SPECTATOR);
+            } else if(action.equals("finished")) {
+                if(d.stage!=11 || d.storyDecision!=1 || d.favorCompleted!=5 || d.captainTrust<20 || d.maraTrust<20 || d.bramTrust<20)
+                    throw new IllegalStateException("Final campaign state/rewards wrong: stage="+d.stage+" favors="+d.favorCompleted);
+                var original=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p);
+                var restored=new com.robertx22.age_of_exile.capability.player.RPGPlayerData(p);
+                restored.loadFromNBT(original.saveToNBT());
+                var r=restored.airship;
+                if(r.stage!=d.stage || r.captainTrust!=d.captainTrust || r.maraTrust!=d.maraTrust || r.bramTrust!=d.bramTrust || r.favorCompleted!=d.favorCompleted || r.favorAccepted!=d.favorAccepted || r.storyDecision!=d.storyDecision || !r.giverSkin.equals(d.giverSkin) || r.baselineDungeons!=d.baselineDungeons)
+                    throw new IllegalStateException("Actual RPGPlayerData NBT roundtrip lost campaign state");
+                System.out.println("AIRSHIPTEST NBT roundtrip stage="+r.stage+" trust="+r.captainTrust+","+r.maraTrust+","+r.bramTrust+" favors="+r.favorCompleted+" decision="+r.storyDecision);
             } else if(action.startsWith("seed-")) {
                 var book=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p).questBook;
                 switch(action) {

@@ -22,7 +22,7 @@ public class AirshipDialogueScreen extends BaseScreen {
     private SimpleSoundInstance playing;
     private int cueIndex;
     private long cueStarted;
-    private boolean fullText,started,heardActive;
+    private boolean fullText,started,heardActive,previousHideGui;
     private int panelX,panelY,panelW;
     public AirshipDialogueScreen(int entityId,String npc,String texture) { super(560,170);this.entityId=entityId;this.npc=npc;this.texture=texture; }
     @Override public boolean isPauseScreen() { return false; }
@@ -30,7 +30,7 @@ public class AirshipDialogueScreen extends BaseScreen {
         super.init();
         panelW=Math.min(560,width-16);panelX=(width-panelW)/2;panelY=height-(fullText?196:94)-8;
         if(!started && mc.player!=null) {
-            started=true;storyStage=Load.playerRPGData(mc.player).airship.stage;
+            started=true;previousHideGui=mc.options.hideGui;mc.options.hideGui=true;storyStage=Load.playerRPGData(mc.player).airship.stage;
             transcript=AirshipStory.dialogue(npc,storyStage);
             if(AirshipStory.target(storyStage)>0 && AirshipStory.actor(storyStage).equals(npc)
                 && !AirshipCampaign.ready(Load.playerRPGData(mc.player).airship,Load.playerRPGData(mc.player).questBook))
@@ -46,7 +46,7 @@ public class AirshipDialogueScreen extends BaseScreen {
         if(cueIndex>=cues.size()) return;
         var sound=SoundEvent.createVariableRangeEvent(Identifier.fromNamespaceAndPath("mmorpg","airship."+cues.get(cueIndex).sound()));
         playing=SimpleSoundInstance.forUI(sound,1F,1F);
-        mc.getSoundManager().play(playing);
+        mc.getSoundManager().play(playing);proof("START "+cues.get(cueIndex).sound());
     }
     @Override public void tick() {
         super.tick();
@@ -54,12 +54,16 @@ public class AirshipDialogueScreen extends BaseScreen {
         long elapsed=(System.nanoTime()-cueStarted)/1_000_000;
         if(cues.isEmpty()) { if(elapsed>Math.clamp(transcript.length()*22,2200,9500)) reveal();return; }
         boolean active=playing!=null && mc.getSoundManager().isActive(playing);
+        if(active && !heardActive) proof("ACTIVE "+cues.get(cueIndex).sound());
         heardActive|=active;
         // Advance on the sound engine's actual completion, with a timed fallback for missing/muted devices.
         if((heardActive && !active && elapsed>250) || elapsed>cues.get(cueIndex).durationMillis()+3000L) {
-            cueIndex++;
+            proof("END "+cues.get(cueIndex).sound()+" elapsed="+elapsed+" activeSeen="+heardActive);cueIndex++;
             if(cueIndex>=cues.size()) reveal();else startCue();
         }
+    }
+    private static void proof(String message) {
+        if(net.fabricmc.loader.api.FabricLoader.getInstance().isDevelopmentEnvironment()) System.out.println("AIRSHIPVOICE "+message);
     }
     private void reveal() { stopVoice();fullText=true;init(); }
     private void send(int choice) { Packets.sendToServer(new AirshipAcceptPacket(entityId,storyStage,choice));onClose(); }
@@ -79,6 +83,9 @@ public class AirshipDialogueScreen extends BaseScreen {
         }
         addButton(new Choice(x,y,w,"До встречи.  [Esc]",b->onClose()));
     }
+    @Override public boolean keyPressed(net.minecraft.client.input.KeyEvent event) {
+        return keyPressed(event.key(),0,0) || super.keyPressed(event);
+    }
     @Override public boolean keyPressed(int key,int scan,int modifiers) {
         if(key==32) { if(!fullText) reveal();return true; }
         if(key==82 && npc.equals("captain")) { fullText=false;cueIndex=0;init();startCue();return true; }
@@ -87,7 +94,7 @@ public class AirshipDialogueScreen extends BaseScreen {
         return super.keyPressed(key,scan,modifiers);
     }
     @Override public void onClose() { stopVoice();mc.gui.setScreen(null); }
-    @Override public void removed() { stopVoice();super.removed(); }
+    @Override public void removed() { stopVoice();if(started) mc.options.hideGui=previousHideGui;super.removed(); }
     @Override public void render(PoseStack pose,int mx,int my,float partial) {
         int x=panelX,y=panelY,w=panelW,h=fullText?196:94;
         AbstractGui.fill(pose,x,y,x+w,y+h,0xCF101316);

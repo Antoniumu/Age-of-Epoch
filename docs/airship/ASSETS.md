@@ -1,11 +1,20 @@
 # Crew and Winged Sailor asset ledger
 
 The published `airship-preview-34095a2` JAR is immutable and still contains villager placeholders.
-The subsequent working code uses vanilla mannequins and resource-pack skin IDs, no account lookup.
-Built-in Steve / Alex / Efe are temporary fallback skins; NOT the selected final crew art.
-The face and hat in the quest card use the same configured skin as the NPC. The head subtly
-turns/shifts toward the cursor, not independently moving pupils. This is a 2D skin-UV view, not
-full 3D head rendering.
+The current working code uses vanilla mannequins with **three original 64×64 skins**:
+`assets/mmorpg/textures/entity/airship/{captain,mara,quartermaster}.png`.
+They are authored replacements, **not the selected PlanetMinecraft downloads**.
+Source: deterministic pixel-art generator `tools/airship/draw_crew_skins.py`.
+Captain: grey beard, navy coat, brass cap; Mara: auburn hair, teal explorer coat,
+scarf and satchel; Bram: ochre workwear, leather apron, brass goggles. All use wide arms.
+No Steve / Alex / Efe defaults remain in new unconfigured crews. Existing per-server
+resource overrides are still respected. The GUI projects real rotating cube faces
+and a separate enlarged outer layer, using exactly the NPC texture.
+
+Captain audio: eight newly generated Russian spoken-word clips using the user's
+previously selected mature voice. Mara and Bram have **no generated voice**.
+The OGG files are mono 48 kHz Vorbis; measured durations are in `audio/captain-durations.json`.
+Audition MP3s in `audio/` are historical references, not the in-game sound resources.
 
 ## Selected community skin candidates (not bundled)
 
@@ -31,7 +40,8 @@ python tools/airship/install_skins.py --game-dir /path/to/.minecraft \
 Enable the resulting resource pack on each client, and copy the generated
 `config/mmorpg/airship-crew.json` to the server. Summon a new crew after configuring it.
 Existing villagers are not automatically replaced; back up the world before testing.
-Mara uses slim arms, other roles wide arms. Missing config uses vanilla skins.
+The current built-in crew uses wide arms. Missing config uses the original bundled skins.
+A slim community skin needs a matching model override before it can be used faithfully.
 
 ## Winged Sailor
 
@@ -43,14 +53,14 @@ Mara uses slim arms, other roles wide arms. Missing config uses vanilla skins.
 - Page includes captain's office, navigation room, storage, garden, reception and mess hall.
 
 The inspected schematic endpoint returned the project page to the page-fetch tool, not a binary
-schematic. The actual schematic/NBT has NOT been imported or measured. Do not claim that the
-procedural ship is Winged Sailor, or guess walkable NPC coordinates from screenshots.
+schematic. That earlier download blocker was subsequently resolved by the user upload described below.
+The procedural `/airship summon` ship remains separate from the imported `/airship winged` ship.
 
 The author's replies permit specific users' private-server use with attribution. Those replies
 are not an explicit license to redistribute the build inside a public mod JAR. Before bundling,
 obtain appropriate permission, including the credited derivative part if necessary.
 
-Intended placements, pending the actual file and collision checks: captain in the office,
+Original intended placements (subsequently measured below): captain in the office,
 Mara in navigation, Bram at storage/reception. Actual numeric positions must be chosen after
 import and checked for floor, headroom, access to the lift and interaction reach.
 

@@ -47,7 +47,9 @@ jobs:
           bash tools/e2e/run-in-xvfb.sh tools/e2e/scenarios/winged.txt run/e2e/airship
           test -f run/e2e/airship/22-campaign-complete.png
           ! grep -q 'AIRSHIPTEST FAIL' run/logs/latest.log
-          for stage in winged board lift lift-check far-reject dialogue accepted mara quartermaster stale gate truth favor-claim-captain iron-quartermaster seed-dungeon; do
+          grep -q 'AIRSHIPVOICE ACTIVE captain_intro_a' run/logs/latest.log
+          grep -q 'AIRSHIPVOICE ACTIVE captain_intro_b' run/logs/latest.log
+          for stage in winged board lift lift-check far-reject dialogue accepted mara quartermaster stale gate truth favor-claim-captain iron-quartermaster seed-dungeon finished; do
             grep -q "AIRSHIPTEST PASS $stage" run/logs/latest.log
           done
       - name: Publish actual screenshots on the same working branch
@@ -63,7 +65,7 @@ jobs:
           {
             echo "Run: $RUN_URL"
             echo "Source: $GITHUB_SHA"
-            grep 'AIRSHIPTEST' run/logs/latest.log 2>/dev/null || true
+            grep -E 'AIRSHIPTEST|AIRSHIPVOICE' run/logs/latest.log 2>/dev/null || true
             tail -100 run/logs/latest.log 2>/dev/null || true
             tail -60 compile.log 2>/dev/null || true
           } > docs/airship/ci-proof.txt

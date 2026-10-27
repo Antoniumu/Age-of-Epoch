@@ -51,14 +51,14 @@ public final class AirshipService {
             npcId(e).isEmpty() ? InteractionResult.PASS : InteractionResult.FAIL);
     }
     public static void open(ServerPlayer p, Entity e) {
-        if (p.isSpectator() || e.level() != p.level() || !e.isAlive() || p.distanceToSqr(e) > 36 || npcId(e).isEmpty()) return;
+        if (!p.isAlive() || p.isSpectator() || e.level() != p.level() || !e.isAlive() || p.distanceToSqr(e) > 36 || npcId(e).isEmpty()) return;
         sync(p);
         Packets.sendToClient(p, new AirshipDialoguePacket(e.getId(), npcId(e), AirshipCrew.texture(npcId(e))));
     }
     public static void accept(ServerPlayer p,int entityId) { accept(p,entityId,data(p).stage,0); }
     public static void accept(ServerPlayer p,int entityId,int expectedStage,int choice) {
         Entity e=p.level().getEntity(entityId);
-        if(p.isSpectator() || e==null || !e.isAlive() || p.distanceToSqr(e)>36 || npcId(e).isEmpty() || !p.hasLineOfSight(e)) return;
+        if(!p.isAlive() || p.isSpectator() || e==null || !e.isAlive() || p.distanceToSqr(e)>36 || npcId(e).isEmpty() || !p.hasLineOfSight(e)) return;
         AirshipData d=data(p);String npc=npcId(e);var book=Load.playerRPGData(p).questBook;
         if(expectedStage!=d.stage) return; // Reject replayed/stale UI packets.
         if(choice==2) {

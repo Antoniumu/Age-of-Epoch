@@ -17,7 +17,7 @@ public final class AirshipCrew {
             var json=JsonParser.parseString(Files.readString(file)).getAsJsonObject();
             if(json.has(id)) return Identifier.parse(json.get(id).getAsString()).toString();
         } catch(Exception e) {
-            System.err.println("Invalid airship-crew.json; using vanilla skin: "+e.getMessage());
+            System.err.println("Invalid airship-crew.json; using original bundled skin: "+e.getMessage());
         }
         return fallback;
     }
