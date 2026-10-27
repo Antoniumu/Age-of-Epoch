@@ -12,7 +12,8 @@ import net.minecraft.network.chat.Component;
 public class AirshipDialogueScreen extends BaseScreen {
     private final int entityId;
     private final String npc;
-    public AirshipDialogueScreen(int entityId,String npc) { super(350,204); this.entityId=entityId; this.npc=npc; }
+    private final String texture;
+    public AirshipDialogueScreen(int entityId,String npc,String texture) { super(350,204); this.entityId=entityId; this.npc=npc; this.texture=texture; }
     private int stage() { return mc.player==null?0:Load.playerRPGData(mc.player).airship.stage; }
     @Override public boolean isPauseScreen() { return false; }
     @Override protected void init() {
@@ -27,11 +28,11 @@ public class AirshipDialogueScreen extends BaseScreen {
     @Override public void render(PoseStack pose,int mx,int my,float partial) {
         int x=guiLeft,y=guiTop;
         AbstractGui.fill(pose,x-2,y-2,x+352,y+206,0xD00A1219);
-        AbstractGui.fill(pose,x,y,x+350,y+204,0xED16242E);
-        AbstractGui.fill(pose,x,y,x+350,y+2,0xFFD1AE66);
-        AbstractGui.fill(pose,x,y+202,x+350,y+204,0xFF80643A);
-        AirshipPortrait.draw(pose,x+14,y+15,52,npc,mx,my);
-        text(pose,"ПОСЛЕДНИЙ РАССВЕТ",x+78,y+15,0xD1AE66);
+        AbstractGui.fill(pose,x,y,x+350,y+204,0xE01A1A1A);
+        AbstractGui.fill(pose,x,y,x+350,y+2,0xFF888888);
+        AbstractGui.fill(pose,x,y+202,x+350,y+204,0xFF555555);
+        AirshipPortrait.draw(pose,x+14,y+15,52,texture,mx,my);
+        text(pose,"ПОСЛЕДНИЙ РАССВЕТ",x+78,y+15,0xDDDDDD);
         text(pose,AirshipStory.name(npc),x+78,y+30,0xF0E6D4);
         text(pose,"Команда дирижабля • Глава I",x+78,y+45,0x8AA8B5);
         AbstractGui.fill(pose,x+14,y+78,x+336,y+79,0xFF58605A);
@@ -47,8 +48,8 @@ public class AirshipDialogueScreen extends BaseScreen {
             super(x,y,w,20,Component.literal(label),press);
         }
         @Override public void renderButton(PoseStack p,int mx,int my,float delta) {
-            AbstractGui.fill(p,x,y,x+width,y+height,isHovered()?0xFF36515A:0xFF21353F);
-            AbstractGui.fill(p,x,y,x+2,y+height,0xFFD1AE66);
+            AbstractGui.fill(p,x,y,x+width,y+height,isHovered()?0xFF505050:0xFF303030);
+            AbstractGui.fill(p,x,y,x+2,y+height,0xFF888888);
             AbstractGui.drawShadow(net.minecraft.client.Minecraft.getInstance().font,p,getMessage(),x+10,y+6,0xF0E6D4);
         }
     }

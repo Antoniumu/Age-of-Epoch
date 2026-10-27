@@ -51,6 +51,8 @@ public final class AirshipProbe {
                 Entity e=level.getEntitiesOfClass(Entity.class,
                     new AABB(d.x-12,d.y-4,d.z-22,d.x+12,d.y+26,d.z+22),
                     candidate->AirshipService.npcId(candidate).equals(npc)).stream().findFirst().orElseThrow();
+                if(!net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()).toString().equals("minecraft:mannequin"))
+                    throw new IllegalStateException("Crew is not player-shaped");
                 if(action.equals("far-reject")) {
                     int before=d.stage;
                     p.teleportTo(level,d.x+0.5,d.y+1,d.z+12.5,Set.of(),180,0,false);

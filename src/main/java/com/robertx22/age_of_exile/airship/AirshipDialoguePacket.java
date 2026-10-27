@@ -8,11 +8,12 @@ import net.minecraft.resources.Identifier;
 public class AirshipDialoguePacket extends MyPacket<AirshipDialoguePacket> {
     private int entityId;
     private String npc = "captain";
+    private String texture = "minecraft:entity/player/wide/steve";
     public AirshipDialoguePacket() {}
-    public AirshipDialoguePacket(int entityId,String npc) { this.entityId=entityId; this.npc=npc; }
+    public AirshipDialoguePacket(int entityId,String npc,String texture) { this.entityId=entityId; this.npc=npc; this.texture=texture; }
     @Override public Identifier getIdentifier() { return Identifier.fromNamespaceAndPath("mmorpg","airship_dialogue"); }
-    @Override public void loadFromData(FriendlyByteBuf b) { entityId=b.readVarInt(); npc=b.readUtf(32); }
-    @Override public void saveToData(FriendlyByteBuf b) { b.writeVarInt(entityId); b.writeUtf(npc,32); }
-    @Override public void onReceived(ExilePacketContext c) { AirshipClient.open(entityId,npc); }
+    @Override public void loadFromData(FriendlyByteBuf b) { entityId=b.readVarInt(); npc=b.readUtf(32); texture=b.readUtf(256); }
+    @Override public void saveToData(FriendlyByteBuf b) { b.writeVarInt(entityId); b.writeUtf(npc,32); b.writeUtf(texture,256); }
+    @Override public void onReceived(ExilePacketContext c) { AirshipClient.open(entityId,npc,texture); }
     @Override public MyPacket<AirshipDialoguePacket> newInstance() { return new AirshipDialoguePacket(); }
 }

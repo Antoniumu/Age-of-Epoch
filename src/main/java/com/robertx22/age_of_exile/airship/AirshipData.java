@@ -13,4 +13,5 @@ public class AirshipData {
     @Store public int groundY = 0;
     // 0: not accepted; 1: meet Mara; 2: meet quartermaster; 3: report; 4: complete.
     @Store public int stage = 0;
+    @Store public String giverSkin = "minecraft:entity/player/wide/steve";
 }

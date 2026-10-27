@@ -53,7 +53,7 @@ public final class AirshipService {
     public static void open(ServerPlayer p, Entity e) {
         if (e.level() != p.level() || !e.isAlive() || p.distanceToSqr(e) > 36 || npcId(e).isEmpty()) return;
         sync(p);
-        Packets.sendToClient(p, new AirshipDialoguePacket(e.getId(), npcId(e)));
+        Packets.sendToClient(p, new AirshipDialoguePacket(e.getId(), npcId(e), AirshipCrew.texture(npcId(e))));
     }
     public static void accept(ServerPlayer p, int entityId) {
         Entity e = p.level().getEntity(entityId);
@@ -61,6 +61,7 @@ public final class AirshipService {
         AirshipData d = data(p);
         int next = AirshipStory.advance(npcId(e), d.stage);
         if (next == d.stage) return;
+        d.giverSkin = AirshipCrew.texture(AirshipStory.owner(next));
         d.stage = next; // no repeatable item reward; packet replay cannot advance another NPC's step
         sync(p);
         p.sendSystemMessage(Component.literal("§6Последний Рассвет §8» §f" + AirshipStory.objective(next)));
@@ -106,12 +107,12 @@ public final class AirshipService {
         ArrayList<Entity> crew = new ArrayList<>();
         int[][] spots={{0,-12},{-3,-2},{3,7}};
         for (int i=0;i<AirshipStory.IDS.length;i++) {
-            Entity created=net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("villager")).create(level, EntitySpawnReason.COMMAND);
-            if (!(created instanceof Mob mob)) return tell(p, "Не удалось создать команду. Валюта не списана.");
+            Entity created=net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("mannequin")).create(level, EntitySpawnReason.COMMAND);
+            if (!(created instanceof net.minecraft.world.entity.LivingEntity mob)) return tell(p, "Не удалось создать команду. Валюта не списана.");
             mob.snapTo(origin.getX()+spots[i][0]+0.5,origin.getY()+1,origin.getZ()+spots[i][1]+0.5,0F,0F);
-            mob.setNoAi(true);
+            if(mob instanceof Mob ai) ai.setNoAi(true);
             mob.setSilent(true);
-            mob.setPersistenceRequired();
+            if(mob instanceof Mob ai) ai.setPersistenceRequired();
             mob.setCustomName(Component.literal(AirshipStory.name(AirshipStory.IDS[i])));
             mob.setCustomNameVisible(true);
             mob.addTag(TAG);
@@ -120,7 +121,10 @@ public final class AirshipService {
         }
         // Creation occurs on the server thread after the complete clearance pass.
         for (var entry : BLUEPRINT.entrySet()) level.setBlock(origin.offset(entry.getKey()),entry.getValue().defaultBlockState(),3);
-        for (Entity e : crew) level.addFreshEntity(e);
+        for (Entity e : crew) {
+            level.addFreshEntity(e);
+            configureSkin(level,e);
+        }
         if (!free) {
             int remaining=COST;
             for (int i=0;i<p.getInventory().getContainerSize() && remaining>0;i++) {
@@ -133,6 +137,14 @@ public final class AirshipService {
         sync(p);
         level.sendParticles(ParticleTypes.PORTAL,d.x,d.y+8,d.z,300,8,6,16,0.3);
         return tell(p,"«Последний Рассвет» на якоре. Световой подъёмник: X="+d.x+", Z="+(d.z+4)+". Для спуска: /airship descend.");
+    }
+    private static void configureSkin(ServerLevel level,Entity entity) {
+        String id=npcId(entity);
+        // Vanilla command owns profile decoding; strings are validated resource IDs, never arbitrary commands.
+        String command="data merge entity "+entity.getUUID()+" {immovable:true,hide_description:true,profile:{texture:\""
+            +AirshipCrew.texture(id)+"\",model:\""+AirshipCrew.model(id)+"\"}}";
+        level.getServer().getCommands().performPrefixedCommand(
+            level.getServer().createCommandSourceStack().withLevel(level).withSuppressedOutput(),command);
     }
     private static String clearanceFailure(ServerLevel level, BlockPos o, int ground) {
         if (o.getY()+25 >= level.getMaxY()) return "build height";

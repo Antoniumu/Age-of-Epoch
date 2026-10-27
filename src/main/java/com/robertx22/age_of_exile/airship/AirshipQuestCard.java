@@ -14,9 +14,9 @@ public final class AirshipQuestCard {
         AirshipData d=Load.playerRPGData(mc.player).airship;
         if(d.stage==0) return;
         int w=Math.min(230,screenWidth-12),x=screenWidth-w-6,y=6;
-        AbstractGui.fill(pose,x,y,x+w,y+73,0xEF15232C);
-        AbstractGui.fill(pose,x,y,x+w,y+1,0xFFD1AE66);
-        AirshipPortrait.draw(pose,x+7,y+9,38,AirshipStory.owner(d.stage),mx,my);
+        AbstractGui.fill(pose,x,y,x+w,y+73,0xDF1A1A1A);
+        AbstractGui.fill(pose,x,y,x+w,y+1,0xFF888888);
+        AirshipPortrait.draw(pose,x+7,y+9,38,d.giverSkin,mx,my);
         AbstractGui.drawShadow(mc.font,pose,d.stage==4?"§aПринят на борт":"§6Нить Рассвета",x+53,y+8,0xFFFFFF);
         AbstractGui.drawShadow(mc.font,pose,AirshipStory.owner(d.stage).equals("mara")?"Мара":"Капитан",x+53,y+21,0xB8C6CA);
         int lineY=y+35;
