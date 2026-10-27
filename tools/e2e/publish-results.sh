@@ -116,7 +116,7 @@ echo "  + logs/aoetest.log ($(wc -l < logs/aoetest.log 2>/dev/null || echo 0) с
         echo
     done
     if [ -s logs/aoetest.log ]; then
-        echo "## Боевые замеры (DPS / лечение)"
+        echo "## Боевые замеры (DPS / лечение / экипировка)"
         echo
         echo '```'
         cat logs/aoetest.log

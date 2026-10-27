@@ -4,13 +4,25 @@ import com.robertx22.age_of_exile.capability.PlayerDamageChart;
 import com.robertx22.age_of_exile.capability.player.data.TeamData;
 import com.robertx22.age_of_exile.capability.entity.EntityData;
 import com.robertx22.age_of_exile.combat.CombatPartyTracker;
+import com.robertx22.age_of_exile.aoe_data.database.base_gear_types.BaseGearTypes;
+import com.robertx22.age_of_exile.database.data.affixes.Affix;
+import com.robertx22.age_of_exile.database.data.stats.types.resources.health.Health;
+import com.robertx22.age_of_exile.database.registry.ExileDB;
+import com.robertx22.age_of_exile.event_hooks.my_events.CollectGearEvent;
+import com.robertx22.age_of_exile.event_hooks.my_events.OnEntityTick;
+import com.robertx22.age_of_exile.loot.blueprints.GearBlueprint;
+import com.robertx22.age_of_exile.saveclasses.gearitem.gear_parts.AffixData;
+import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
+import com.robertx22.age_of_exile.saveclasses.unit.GearData;
 import com.robertx22.age_of_exile.saveclasses.unit.ResourceType;
+import com.robertx22.age_of_exile.uncommon.datasaving.Gear;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.effectdatas.DamageEvent;
 import com.robertx22.age_of_exile.uncommon.effectdatas.EventBuilder;
 import com.robertx22.age_of_exile.uncommon.enumclasses.AttackType;
 import com.robertx22.age_of_exile.uncommon.enumclasses.PlayStyle;
 import com.robertx22.age_of_exile.uncommon.enumclasses.WeaponTypes;
+import com.robertx22.age_of_exile.uncommon.interfaces.data_items.IRarity;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -20,8 +32,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +65,11 @@ import java.util.Locale;
  * игры лежит флаг-файл {@code aoe-devtest.flag} (его кладёт CI-сценарий
  * {@code tools/e2e/scenarios/combat.txt}). Результат печатается в лог строками
  * {@code AOETEST ...} и дописывается в {@code aoe-devtest.txt}.
+ *
+ * <p>Прогоны: {@code dps} — урон, {@code heal} — лечение/мана, {@code gear} —
+ * обновление макс. HP от экипировки (регрессия на «броня не поднимает HP до
+ * перезахода»), {@code team} — название команды, {@code soulless} — бесдушные
+ * основы, {@code all} — всё сразу.</p>
  */
 public final class CombatProbe {
 
@@ -72,7 +92,7 @@ public final class CombatProbe {
 
     // ------------------------------------------------------------------ запуск
 
-    /** Ставит прогон в очередь: {@code what} = dps | heal | all. */
+    /** Ставит прогон в очередь: {@code what} = dps | heal | gear | team | soulless | all. */
     public static void request(String what) {
         if (active != null) {
             LOGGER.info("{} пропуск: прогон уже идёт", TAG);
@@ -156,10 +176,20 @@ public final class CombatProbe {
         private float healExpected;
         private float manaMax;
 
+        private int gearStage;
+        private int gearWait;
+        private float gearMaxBefore;
+        private ItemStack gearChest = ItemStack.EMPTY;
+        private ItemStack gearChestSaved = ItemStack.EMPTY;
+        private boolean gearEquipOk;
+        private boolean gearUnequipOk;
+        private boolean gearInplaceOk;
+
         private int settle;
         private boolean dpsReported;
         private boolean healReported;
         private boolean teamReported;
+        private boolean gearReported;
         private boolean soullessReported;
 
         Runner(String what) {
@@ -168,6 +198,14 @@ public final class CombatProbe {
 
         /** @return true, когда прогон полностью завершён */
         boolean step(ServerPlayer player) {
+            // Строки пишем сразу (на следующий тик после замера), а не одним
+            // батчем в конце: иначе CI-сценарий видит строку gear_equip только
+            // после всего прогона, когда броня уже снята, и кадр HUD с выросшим
+            // максимумом здоровья не попадает в окно её ношения.
+            if (!lines.isEmpty()) {
+                write(List.copyOf(lines));
+                lines.clear();
+            }
             if (what.equals("dps") || what.equals("all")) {
                 if (!dpsReported) {
                     dpsStep(player);
@@ -195,6 +233,12 @@ public final class CombatProbe {
                     checks = counters[0];
                     failed = counters[1];
                     soullessReported = true;
+                    return false;
+                }
+            }
+            if (what.equals("gear") || what.equals("all")) {
+                if (!gearReported) {
+                    gearStep(player);
                     return false;
                 }
             }
@@ -437,6 +481,244 @@ public final class CombatProbe {
             checks += report.checks;
             failed += report.failed;
             teamReported = true;
+        }
+
+        // ---- экипировка и максимальное HP
+
+        /**
+         * Регрессия на баг «броня со статами не поднимает макс. HP до перезахода».
+         *
+         * <p>Проверяем три наблюдаемых игроком инварианта, и все — через штатный
+         * путь {@code checkGearChanged} → пересчёт статов, без
+         * {@code setEquipsChanged}/{@code forceRecalculateStats} извне (иначе тест
+         * сам замаскирует баг):</p>
+         * <ol>
+         *   <li>надели броню со статом здоровья — макс. HP вырос в течение пары
+         *       тиков, а не после перезахода;</li>
+         *   <li>сняли — макс. HP вернулся к исходному;</li>
+         *   <li>прокрутили УЖЕ надетый предмет (NBT меняется на той же
+         *       ItemStack-ссылке) — статы тоже пересчитались. Именно этот случай
+         *       терялся при сравнении экипировки по ссылкам.</li>
+         * </ol>
+         *
+         * <p>После проверки «надели» броня держится надетой ~8 секунд —
+         * CI-сценарий успевает снять скриншот HUD с выросшим максимумом.</p>
+         */
+        private void gearStep(ServerPlayer player) {
+            EntityData data = Load.Unit(player);
+
+            if (gearStage == 0) {
+                gearMaxBefore = maxRealHealth(data);
+                gearChestSaved = player.getItemBySlot(EquipmentSlot.CHEST).copy();
+                gearChest = createHealthChest(player);
+                if (gearChest.isEmpty()) {
+                    lines.add(TAG + " gear fatal=could_not_create_gear");
+                    failed++;
+                    checks++;
+                    gearReported = true;
+                    return;
+                }
+                player.setItemSlot(EquipmentSlot.CHEST, gearChest);
+                gearStage = 1;
+                gearWait = 0;
+                return;
+            }
+            if (gearStage == 1) {
+                // Даём штатному checkGearChanged (следующий тик) пересчитать статы.
+                if (++gearWait < 3) {
+                    return;
+                }
+                float raised = maxRealHealth(data);
+                gearEquipOk = raised > gearMaxBefore + 0.01F;
+                Report report = new Report("gear_equip");
+                report.put("max_before", fmt(gearMaxBefore));
+                report.put("max_after", fmt(raised));
+                report.check("equip_raises_max", gearEquipOk);
+                lines.add(report.line());
+                checks += report.checks;
+                failed += report.failed;
+                gearStage = 2;
+                gearWait = 0;
+                return;
+            }
+            if (gearStage == 2) {
+                // Держим броню надетой ~8 с: широкое окно для скриншота HUD
+                // с выросшим максимумом здоровья (CI-сценарий tools/e2e).
+                if (++gearWait < 160) {
+                    return;
+                }
+                player.setItemSlot(EquipmentSlot.CHEST, gearChestSaved.isEmpty() ? ItemStack.EMPTY : gearChestSaved.copy());
+                gearStage = 3;
+                gearWait = 0;
+                return;
+            }
+            if (gearStage == 3) {
+                if (++gearWait < 3) {
+                    return;
+                }
+                float back = maxRealHealth(data);
+                gearUnequipOk = Math.abs(back - gearMaxBefore) < Math.max(0.5F, gearMaxBefore * 0.02F);
+                Report report = new Report("gear_unequip");
+                report.put("max_before", fmt(gearMaxBefore));
+                report.put("max_after", fmt(back));
+                report.check("unequip_restores_max", gearUnequipOk);
+                lines.add(report.line());
+                checks += report.checks;
+                failed += report.failed;
+                gearStage = 4;
+                gearWait = 0;
+                return;
+            }
+            if (gearStage == 4) {
+                player.setItemSlot(EquipmentSlot.CHEST, gearChest.copy());
+                gearStage = 5;
+                gearWait = 0;
+                return;
+            }
+            if (gearStage == 5) {
+                if (++gearWait < 3) {
+                    return;
+                }
+                gearMaxBefore = maxRealHealth(data);
+                // Прокрутка уже надетого предмета: NBT меняется на той же ссылке.
+                ItemStack worn = player.getItemBySlot(EquipmentSlot.CHEST);
+                GearItemData gearData = Gear.Load(worn);
+                if (gearData == null || gearData.affixes.pre.isEmpty()) {
+                    lines.add(TAG + " gear fatal=worn_item_lost_stats");
+                    failed++;
+                    checks++;
+                    gearReported = true;
+                    return;
+                }
+                // Обнуляем ВСЕ аффиксы: в списке до virile может лежать случайный
+                // префикс от randomize — достаточно ли было бы нулевого первого.
+                gearData.affixes.pre.forEach(a -> a.perc = 0);
+                gearData.affixes.suf.forEach(a -> a.perc = 0);
+                Gear.Save(worn, gearData);
+                gearStage = 6;
+                gearWait = 0;
+                return;
+            }
+            if (gearStage == 6) {
+                if (++gearWait < 3) {
+                    return;
+                }
+                float after = maxRealHealth(data);
+                gearInplaceOk = after < gearMaxBefore - 0.01F;
+                Report report = new Report("gear_inplace");
+                report.put("max_before", fmt(gearMaxBefore));
+                report.put("max_after", fmt(after));
+                report.check("inplace_reroll_updates_max", gearInplaceOk);
+                lines.add(report.line());
+                checks += report.checks;
+                failed += report.failed;
+                player.setItemSlot(EquipmentSlot.CHEST, gearChestSaved.isEmpty() ? ItemStack.EMPTY : gearChestSaved.copy());
+                if (gearEquipOk && gearUnequipOk && gearInplaceOk) {
+                    gearReported = true;
+                } else {
+                    // Строгие проверки провалились — локализуем разрыв цепочки
+                    // «экипировка → пересчёт статов» рантайм-проверками.
+                    gearStage = 7;
+                    gearWait = 0;
+                }
+                return;
+            }
+            if (gearStage == 7) {
+                // Диагностика (только при провале): те же статы теми же путями.
+                // 1) надеть заново и дернуть штатный триггер ВРУЧНУЮ;
+                // 2) если он не помог — forceRecalculateStats (чистый пересчёт);
+                // 3) параллельно: пережил ли нагрудник NBT-кругооборот и видит ли
+                //    сбор экипировки его стат здоровья.
+                float base = maxRealHealth(data);
+                player.setItemSlot(EquipmentSlot.CHEST, gearChest.copy());
+
+                ItemStack worn = player.getItemBySlot(EquipmentSlot.CHEST);
+                GearItemData wornData = worn == null ? null : Gear.Load(worn);
+                boolean wornHealth = wornData != null && wornData.GetAllStats()
+                    .stream()
+                    .anyMatch(s -> Health.GUID.equals(s.getStatId()));
+
+                List<GearData> collected = new ArrayList<>();
+                new CollectGearEvent.CollectedGearStacks(player, collected, null);
+                boolean collectHealth = collected.stream()
+                    .anyMatch(x -> x.gear != null && x.gear.GetAllStats()
+                        .stream()
+                        .anyMatch(s -> Health.GUID.equals(s.getStatId())));
+
+                OnEntityTick.checkGearChanged(player); // штатный триггер, но зовём сами
+                float afterManual = maxRealHealth(data);
+
+                data.forceRecalculateStats();
+                float afterForce = maxRealHealth(data);
+
+                Report report = new Report("gear_diag");
+                report.put("base", fmt(base));
+                report.put("after_manual", fmt(afterManual));
+                report.put("after_force", fmt(afterForce));
+                report.put("collect_n", collected.size());
+                report.check("chest_keeps_health", wornHealth);
+                report.check("collect_sees_health", collectHealth);
+                report.check("manual_trigger_works", afterManual > base + 0.01F);
+                report.check("forced_recalc_works", afterForce > base + 0.01F);
+                lines.add(report.line());
+                checks += report.checks;
+                failed += report.failed;
+
+                player.setItemSlot(EquipmentSlot.CHEST, gearChestSaved.isEmpty() ? ItemStack.EMPTY : gearChestSaved.copy());
+                gearReported = true;
+            }
+        }
+
+        /** Нагрудник с гарантированным статом здоровья (аффикс «virile», +% HP). */
+        private ItemStack createHealthChest(ServerPlayer player) {
+            try {
+                int lvl = Math.max(1, Load.Unit(player).getLevel());
+                GearBlueprint bp = new GearBlueprint(lvl, 0);
+                bp.item = Items.DIAMOND_CHESTPLATE;
+                // Уровень предмета фиксируем: LevelPart по умолчанию роллит ±3
+                // уровня, предмет может оказаться «выше игрока» — тогда
+                // isUsableBy его отвергает и тест ложно падает (раньше он был
+                // зелёным только при удачном ролле).
+                bp.level.LevelRange = false;
+                // GUID базовых типов короткий («chest», «boots», …) — не путать
+                // с slotHint-ами вида «plate_chest» из SimulationManager.
+                var type = ExileDB.GearTypes().get(BaseGearTypes.CHEST.GUID());
+                if (type == null) {
+                    LOGGER.warn("{} нет базового типа нагрудника в реестре", TAG);
+                    return ItemStack.EMPTY;
+                }
+                bp.gearItemSlot.set(type);
+                if (ExileDB.GearRarities().isRegistered(IRarity.COMMON_ID)) {
+                    bp.rarity.set(ExileDB.GearRarities().get(IRarity.COMMON_ID));
+                }
+                ItemStack stack = bp.createStack();
+                GearItemData gearData = Gear.Load(stack);
+                if (gearData == null) {
+                    LOGGER.warn("{} сгенерированный нагрудник не распознан как GearItemData", TAG);
+                    return ItemStack.EMPTY;
+                }
+                AffixData hp = new AffixData(Affix.Type.prefix);
+                hp.affix = "virile"; // +4-8% здоровья
+                hp.perc = 100;
+                gearData.affixes.pre.add(hp);
+                Gear.Save(stack, gearData);
+
+                boolean hasHealth = gearData.GetAllStats()
+                    .stream()
+                    .anyMatch(s -> Health.GUID.equals(s.getStatId()));
+                if (!hasHealth) {
+                    LOGGER.warn("{} у нагрудника нет стата здоровья после аффикса virile", TAG);
+                    return ItemStack.EMPTY;
+                }
+                return stack;
+            } catch (Exception e) {
+                LOGGER.warn("{} не удалось создать тестовую броню: {}", TAG, e.toString());
+                return ItemStack.EMPTY;
+            }
+        }
+
+        private static String fmt(float v) {
+            return String.format(Locale.ROOT, "%.1f", v);
         }
     }
 

@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import static net.minecraft.commands.Commands.literal;
 
 /**
- * {@code /aoe devtest <dps|heal|all>} — замеры боевых чисел в живом мире.
+ * {@code /aoe devtest <dps|heal|gear|all>} — замеры боевых чисел в живом мире.
  *
  * <p>Зонд работает по тикам (см. {@link CombatProbe}), поэтому команда только
  * ставит прогон в очередь, а результат появляется в логе строками
@@ -30,6 +30,7 @@ public final class DevTestCommand {
                 .executes(ctx -> run(ctx.getSource().getPlayerOrException(), "all"))
                 .then(literal("dps").executes(ctx -> run(ctx.getSource().getPlayerOrException(), "dps")))
                 .then(literal("heal").executes(ctx -> run(ctx.getSource().getPlayerOrException(), "heal")))
+                .then(literal("gear").executes(ctx -> run(ctx.getSource().getPlayerOrException(), "gear")))
                 .then(literal("all").executes(ctx -> run(ctx.getSource().getPlayerOrException(), "all"))))
             .then(literal("spellaudit")
                 .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))

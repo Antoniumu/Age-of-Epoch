@@ -23,6 +23,8 @@
     wait 1500                   пауза, мс
     wait_window Minecraft 90000 ждать окно по подстроке заголовка, мс
     wait_log 120000 <regex>     ждать строку в run/logs/latest.log
+    log_mark                    отметить позицию в логе
+    wait_log_new 120000 <regex> ждать строку в логе ПОСЛЕ log_mark (новый прогон)
     windows                     вывести список окон (диагностика)
     jstack [метка]              сохранить стек клиентского JVM
     wmctrl                      список окон через WM
@@ -85,6 +87,7 @@ class Runner:
         self.shots = []
         self.failures = 0
         self.window = None
+        self.log_mark_pos = 0
 
     # ------------------------------------------------------------------ утилиты
 
@@ -313,6 +316,45 @@ class Runner:
         self.fail("файл %s не появился за %d мс" % (rel_path, timeout_ms))
         return False
 
+    def log_mark(self):
+        """Отметка в логе: wait_log_new ищет только в строках ПОСЛЕ неё.
+
+        Нужна, чтобы дождаться именно СЛЕДУЮЩЕГО прогона зонда: обычный
+        wait_log находит строки первого прогона и возвращается мгновенно,
+        из-за чего снимок выпадает не в тот момент игры.
+        """
+        try:
+            self.log_mark_pos = os.path.getsize(LOG) if os.path.exists(LOG) else 0
+        except OSError:
+            self.log_mark_pos = 0
+        self.note("отметка в логе: байт %d" % self.log_mark_pos)
+
+    def wait_log_new(self, pattern, timeout_ms):
+        """Как wait_log, но ищет только в строках, дописанных после log_mark."""
+        deadline = time.time() + timeout_ms / 1000.0
+        rx = re.compile(pattern)
+        while time.time() < deadline:
+            if os.path.exists(LOG):
+                try:
+                    with open(LOG, "r", encoding="utf-8", errors="replace") as handle:
+                        handle.seek(self.log_mark_pos)
+                        text = handle.read()
+                    # Недописанная последняя строка — не матчим, дождёмся конца.
+                    lines = text.splitlines()
+                    if text and not text.endswith("\n"):
+                        lines = lines[:-1]
+                    for line in lines:
+                        if rx.search(line):
+                            self.note("в логе найдено (новое): " + line.strip()[:160])
+                            return True
+                except OSError:
+                    pass
+            # 0.3 с: строки зонда пишутся сразу после замера, окно ношения брони
+            # ~8 с — мелкий шаг опроса нужен, чтобы кадр HUD успел в него попасть.
+            time.sleep(0.3)
+        self.fail("в логе нет нового /%s/ за %d мс" % (pattern, timeout_ms))
+        return False
+
     # ------------------------------------------------------------------ снимок
 
     def shot(self, name):
@@ -459,6 +501,15 @@ class Runner:
                         self.fail("wait_log требует: <таймаут_мс> <regex>")
                     else:
                         self.wait_log(rest[len(args[0]):].strip(), int(args[0]))
+                elif command == "log_mark":
+                    self.log_mark()
+                elif command == "wait_log_new":
+                    # Как wait_log, но только строки после log_mark: ждём именно
+                    # следующий прогон зонда, а не строки прошлого.
+                    if len(args) < 2:
+                        self.fail("wait_log_new требует: <таймаут_мс> <regex>")
+                    else:
+                        self.wait_log_new(rest[len(args[0]):].strip(), int(args[0]))
                 elif command == "windows":
                     self.list_windows()
                 elif command == "jstack":
