@@ -1,0 +1,18 @@
+AOETEST dps hits=10 requested=400.0 recorded=320.0 elapsed_ms=498 dps_chart=642.6 dps_hud=640.0 fight_active=true check_damage_landed=true check_damage_matches=true check_fight_detected=true check_dps_ratio=true
+AOETEST heal max=20.0 before=5.0 after_full=20.0 check_heal_positive=true check_heal_reaches_max=true check_never_above_max=true
+AOETEST heal_partial before=5.0 after=15.0 max=20.0 check_partial_increases=true check_partial_below_max=true
+AOETEST mana max=40.0 after_spend=0.0 after_restore=40.0 check_spend_works=true check_restore_capped=true
+AOETEST team raw=ScТихий___авангард shown=Тихий_авангард long_len=24 max_len=24 check_name_kept=true check_no_format_codes=true check_name_trimmed=true
+AOETEST soulless cheap_rank=1 rich_rank=5 cheap_bq=0.12 rich_bq=0.45 cheap_pct=12 rich_pct=45 check_cheap_created=true check_rich_created=true check_rank_order=true check_cheap_is_common=true check_no_affixes=true normal_perc=418 check_quality_set=true check_rolls_not_crippled=true check_plain_name=true
+AOETEST soulless_scaling lvl=20 cheap_value=2.0 rich_value=7.1 ratio=3.49 normal_value=17.4 check_below_normal=true check_rich_higher_in_numbers=true check_difference_visible=true
+AOETEST soulless_soul lvl_after_low_soul=20 value_after_low_soul=1.8 check_low_soul_keeps_level=true check_low_soul_keeps_stats=true rarity_after=rare affixes_after=2 type_kept=true check_inserted=true check_no_longer_soulless=true check_rarity_from_soul=true check_got_affixes=true check_base_stats_kept=true check_same_item_type=true check_soul_tag_removed=true check_name_changed=true
+AOETEST soulless_guards check_trident_untouched=true check_non_gear_untouched=true check_weapon_like_sword=true check_weapon_like_apple_false=true
+AOETEST soulless_demo slots=0,1,2,3 check_hotbar_filled=true
+AOETEST gear_equip max_before=30.0 max_after=32.4 check_equip_raises_max=true
+AOETEST gear_unequip max_before=30.0 max_after=30.0 check_unequip_restores_max=true
+AOETEST gear_inplace max_before=32.4 max_after=30.0 check_inplace_reroll_updates_max=true
+AOETEST summary checks=43 failed=0
+AOETEST dps hits=10 requested=400.0 recorded=336.32 elapsed_ms=549 dps_chart=612.6 dps_hud=672.6 fight_active=true check_damage_landed=true check_damage_matches=true check_fight_detected=true check_dps_ratio=true
+AOETEST soulless cheap_rank=1 rich_rank=5 cheap_bq=0.12 rich_bq=0.45 cheap_pct=12 rich_pct=45 check_cheap_created=true check_rich_created=true check_rank_order=true check_cheap_is_common=true check_no_affixes=true normal_perc=426 check_quality_set=true check_rolls_not_crippled=true check_plain_name=true
+AOETEST soulless_scaling lvl=20 cheap_value=1.8 rich_value=7.0 ratio=3.91 normal_value=14.0 check_below_normal=true check_rich_higher_in_numbers=true check_difference_visible=true
+AOETEST soulless_soul lvl_after_low_soul=20 value_after_low_soul=2.0 check_low_soul_keeps_level=true check_low_soul_keeps_stats=true rarity_after=rare affixes_after=2 type_kept=true check_inserted=true check_no_longer_soulless=true check_rarity_from_soul=true check_got_affixes=true check_base_stats_kept=true check_same_item_type=true check_soul_tag_removed=true check_name_changed=true
