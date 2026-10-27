@@ -30,7 +30,21 @@ public final class WingedSailorService {
         if(template==null) return tell(p,"Не найдена структура Winged Sailor.");
         var size=template.getSize();
         if(size.getX()!=117 || size.getY()!=100 || size.getZ()!=89) return tell(p,"Неверный размер структуры; размещение отменено.");
-        int ox=p.blockPosition().getX()-LIFT.getX(),oz=p.blockPosition().getZ()-LIFT.getZ();
+        // Select a dry, head-clear landing near the player before choosing the ship origin.
+        BlockPos landing=null;
+        for(int radius=0;radius<=8 && landing==null;radius++) for(int dx=-radius;dx<=radius && landing==null;dx++)
+            for(int dz=-radius;dz<=radius;dz++) {
+                int x=p.blockPosition().getX()+dx,z=p.blockPosition().getZ()+dz;
+                if(!level.hasChunkAt(new BlockPos(x,p.blockPosition().getY(),z))) continue;
+                int y=level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z);
+                BlockPos feet=new BlockPos(x,y,z);
+                if(level.getBlockState(feet).isAir() && level.getBlockState(feet.above()).isAir() &&
+                    level.getBlockState(feet.below()).isSolid() && level.getFluidState(feet.below()).isEmpty()) {
+                    landing=feet;break;
+                }
+            }
+        if(landing==null) return tell(p,"Не найдена сухая свободная площадка для спуска рядом с тобой.");
+        int ox=landing.getX()-LIFT.getX(),oz=landing.getZ()-LIFT.getZ();
         int top=Integer.MIN_VALUE;
         for(int x=-3;x<size.getX()+3;x++) for(int z=-3;z<size.getZ()+3;z++) {
             BlockPos column=new BlockPos(ox+x,p.blockPosition().getY(),oz+z);
@@ -46,7 +60,7 @@ public final class WingedSailorService {
         AABB box=new AABB(ox-3,base-3,oz-3,ox+size.getX()+3,base+size.getY()+3,oz+size.getZ()+3);
         if(!level.getEntitiesOfClass(Entity.class,box,e->true).isEmpty()) return tell(p,"В небе есть сущности; размещение отменено.");
         BlockPos lift=origin.offset(LIFT);
-        int ground=level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,lift.getX(),lift.getZ());
+        int ground=landing.getY();
         BlockPos floor=new BlockPos(lift.getX(),ground-1,lift.getZ());
         if(!level.getBlockState(floor).isSolid() || !level.getFluidState(floor).isEmpty())
             return tell(p,"Под подъёмником нет безопасной сухой площадки. Отойди от воды или дерева.");

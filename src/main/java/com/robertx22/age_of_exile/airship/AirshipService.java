@@ -169,6 +169,7 @@ public final class AirshipService {
         if (!level.getBlockState(feet).isAir() || !level.getBlockState(feet.above()).isAir() ||
             !level.getBlockState(feet.below()).isSolid() || !level.getFluidState(feet.below()).isEmpty())
             return tell(p,"Площадка под кораблём занята или небезопасна. Спуск отменён.");
+        d.liftReadyAtMillis=System.currentTimeMillis()+5000;
         p.teleportTo(level,d.x+0.5,d.groundY,d.z+4.5,java.util.Set.of(),p.getYRot(),p.getXRot(),false);
         return 1;
     }
@@ -179,6 +180,7 @@ public final class AirshipService {
         ServerLevel level=(ServerLevel)p.level();
         if (dx*dx+dz*dz<96*96 && Math.abs(p.getY()-d.groundY)<8)
             level.sendParticles(ParticleTypes.END_ROD,d.x+0.5,d.groundY+0.2,d.z+4.5,8,0.7,0.1,0.7,0.03);
+        if (System.currentTimeMillis()<d.liftReadyAtMillis) return;
         if (dx*dx+dz*dz>2.25 || p.getY()<d.groundY-1 || p.getY()>d.y-3 || p.isSpectator() || p.isPassenger()) return;
         BlockPos target=new BlockPos(d.x,d.y+1,d.z+4);
         if (!level.getBlockState(target).isAir() || !level.getBlockState(target.above()).isAir() || !level.getBlockState(target.below()).isSolid()) return;

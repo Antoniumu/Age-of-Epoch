@@ -6,6 +6,7 @@ import info.loenwind.autosave.annotations.Store;
 /** Character-owned mooring and campaign state; saved and synced with RPGPlayerData. */
 @Storable
 public class AirshipData {
+    @Store public long liftReadyAtMillis = 0;
     @Store public String layout = "prototype";
     @Store public boolean summoned = false;
     @Store public int x = 0;

@@ -45,6 +45,8 @@ public final class AirshipProbe {
                 p.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
             } else if(action.equals("lift")) {
                 AirshipService.descend(p);
+                if(Math.abs(p.getY()-d.groundY)>0.1) throw new IllegalStateException("Descent failed before lift test");
+                d.liftReadyAtMillis=0; // Only the dev probe skips the player's five-second exit grace period.
                 // AirshipService.tick performs the same lift as for real players.
             } else {
                 String npc=action.equals("mara")?"mara":action.equals("quartermaster")?"quartermaster":"captain";
