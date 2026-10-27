@@ -1,0 +1,60 @@
+Run: https://github.com/Antoniumu/Age-of-Epoch/actions/runs/40587464482
+Source: 620f6a5bf1845ee3e36d8d5f2adb9f2b951b21de
+[21:33:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS summon stage=0
+[21:33:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS board stage=0
+[21:34:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift stage=0
+[21:34:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift-check stage=0
+[21:34:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST FAIL java.util.NoSuchElementException: No value present
+[21:34:34] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST FAIL java.util.NoSuchElementException: No value present
+[21:35:08] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST FAIL java.lang.IllegalStateException: UI button did not accept quest
+[21:35:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST FAIL java.util.NoSuchElementException: No value present
+[21:36:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST FAIL java.util.NoSuchElementException: No value present
+[21:36:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST FAIL java.util.NoSuchElementException: No value present
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by net.rubygrapefruit.platform.internal.NativeLibraryLoader in an unnamed module (file:/home/runner/.gradle/wrapper/dists/gradle-9.7.1-bin/1w1c7tv4s851m17nbqdsro2tv/gradle-9.7.1/lib/native-platform-0.22-milestone-29.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.7.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :
+Fabric Loom: 1.18.4
+
+> Task :checkMinecraftClasspath
+Minecraft on compile classpath: minecraft-merged-80b2a6d18e-26.3.jar (36.18377590179443359375 MB)
+
+> Task :compileJava
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+
+> Task :processResources
+> Task :classes
+> Task :processIncludeJars
+> Task :jar
+> Task :sourcesJar
+> Task :assemble
+> Task :compileTestJava
+> Task :processTestResources NO-SOURCE
+> Task :testClasses
+
+> Task :test
+Тестов выполнено: 34
+
+> Task :validateAccessWidener NO-SOURCE
+> Task :check
+> Task :build
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793136693483.json
+
+[Incubating] Problems report is available at: file:///home/runner/work/Age-of-Epoch/Age-of-Epoch/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.7.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 38s
+8 actionable tasks: 8 executed
