@@ -49,6 +49,7 @@ shot 05-captain-subtitle-head-left
 move 1230 650
 wait 1000
 shot 06-captain-subtitle-head-right
+hold r 300
 # Let actual audio clips finish: choices must appear after both clips, not via a fake delay.
 wait 24500
 shot 07-captain-transcript

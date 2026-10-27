@@ -1,6 +1,7 @@
 package com.robertx22.age_of_exile.airship;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.robertx22.age_of_exile.gui.bases.BaseScreen;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.forge_compat.client.AbstractGui;
@@ -88,11 +89,16 @@ public class AirshipDialogueScreen extends BaseScreen {
     }
     @Override public boolean keyPressed(int key,int scan,int modifiers) {
         proof("KEY compatible="+key+" fullText="+fullText);
-        if(key==32) { if(!fullText) reveal();return true; }
-        if(key==82 && npc.equals("captain")) { fullText=false;cueIndex=0;init();startCue();return true; }
-        if(fullText && key==49 && AirshipStory.advance(npc,storyStage)!=storyStage) { send(storyStage==7?1:0);return true; }
-        if(fullText && key==50 && storyStage==7) { send(0);return true; }
+        if(key==InputConstants.KEY_SPACE) { if(!fullText) reveal();return true; }
+        if(key==InputConstants.KEY_R && npc.equals("captain")) { fullText=false;cueIndex=0;init();startCue();return true; }
+        if(fullText && key==InputConstants.KEY_1 && AirshipStory.advance(npc,storyStage)!=storyStage) { send(storyStage==7?1:0);return true; }
+        if(fullText && key==InputConstants.KEY_2 && storyStage==7) { send(0);return true; }
+        if(key==InputConstants.KEY_ESCAPE) { onClose();return true; }
         return super.keyPressed(key,scan,modifiers);
+    }
+    @Override public boolean mouseClicked(double x,double y,int button) {
+        if(!fullText && button==0 && x>=panelX && x<panelX+panelW && y>=panelY && y<height-8) { reveal();return true; }
+        return super.mouseClicked(x,y,button);
     }
     @Override public void onClose() { stopVoice();mc.gui.setScreen(null); }
     @Override public void removed() { stopVoice();super.removed(); }

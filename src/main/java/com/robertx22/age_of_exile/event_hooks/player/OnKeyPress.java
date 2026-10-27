@@ -41,6 +41,8 @@ public class OnKeyPress {
             Packets.sendToServer(new PartyHudRequestPacket());
         }
 
+        if (mc.gui.screen() instanceof com.robertx22.age_of_exile.airship.AirshipDialogueScreen) return;
+
         if (ChatUtils.wasChatOpenRecently()) {
             return;
         }
