@@ -36,14 +36,6 @@ public enum ParticleMotion {
             return p.subtract(c);
         }
     },
-    InwardMotion {
-        @Override
-        public Vec3 getMotion(Vec3 particlePos, SpellCtx ctx) {
-            Vec3 center = new Vec3(ctx.vecPos.x, 0, ctx.vecPos.z);
-            Vec3 particle = new Vec3(particlePos.x, 0, particlePos.z);
-            return center.subtract(particle);
-        }
-    },
     None {
         @Override
         public Vec3 getMotion(Vec3 particlePos, SpellCtx ctx) {

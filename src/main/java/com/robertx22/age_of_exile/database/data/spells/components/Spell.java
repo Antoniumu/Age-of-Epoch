@@ -8,6 +8,7 @@ import com.robertx22.age_of_exile.database.data.exile_effects.ExileEffect;
 import com.robertx22.age_of_exile.database.data.gear_slots.GearSlot;
 import com.robertx22.age_of_exile.database.data.spells.SpellCastType;
 import com.robertx22.age_of_exile.database.data.spells.SpellTag;
+import com.robertx22.age_of_exile.database.data.spells.visuals.DivineSpellVisuals;
 import com.robertx22.age_of_exile.database.data.spells.map_fields.MapField;
 import com.robertx22.age_of_exile.database.data.spells.spell_classes.SpellCtx;
 import com.robertx22.age_of_exile.database.data.spells.spell_classes.bases.SpellCastContext;
@@ -28,6 +29,8 @@ import com.robertx22.age_of_exile.uncommon.interfaces.IAutoLocDesc;
 import com.robertx22.age_of_exile.uncommon.interfaces.IAutoLocName;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.MapManager;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.TooltipUtils;
+import com.robertx22.age_of_exile.vanilla_mc.packets.spells.DivineSpellVisualPacket;
+import com.robertx22.library_of_exile.main.Packets;
 import com.robertx22.library_of_exile.registry.ExileRegistryType;
 import com.robertx22.library_of_exile.registry.IAutoGson;
 import com.robertx22.library_of_exile.registry.IGUID;
@@ -202,6 +205,15 @@ public final class Spell implements IGUID, IAutoGson<Spell>, JsonExileRegistry<S
             ctx.spellsCap.getCastingData()
                 .imbueSpell(this, config.imbues);
         } else {
+            if (!caster.level().isClientSide() && DivineSpellVisuals.hasVisual(GUID())) {
+                // The server's instant-cast path can finish before the client receives
+                // casting state, so particle-only cast effects need an explicit cue.
+                try {
+                    Packets.sendToTracking(new DivineSpellVisualPacket(caster, GUID()), caster);
+                } catch (Exception ignored) {
+                    // A visual packet must never prevent the gameplay cast from executing.
+                }
+            }
             attached.onCast(SpellCtx.onCast(caster, ctx.calcData));
         }
     }
