@@ -12,6 +12,8 @@
 2. Иконку `textures/gui/spells/icons/<id>.png` — иначе в дереве школы и на
    хотбаре пустой квадрат.
 3. Партиклы — заклинание без визуального отклика не понять, сработало ли оно.
+   Партиклы цепочки действий считаются наравне с собственными клиентскими
+   визуалами (`database/data/spells/visuals/*.java`, `case "<id>" ->`).
 4. Звук — второй канал обратной связи.
 5. Функциональный эффект — урон / лечение / наложение эффекта / движение /
    щит / предмет / смена кулдаунов. Заклинание без ничего из этого «не работает».
@@ -35,6 +37,11 @@ SPELLS_JAVA = os.path.join(ROOT, "src/main/java/com/robertx22/age_of_exile/aoe_d
 SCHOOLS_JAVA = os.path.join(
     ROOT, "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spell_schools/SpellSchoolsAdder.java")
 TEXTURES = os.path.join(ROOT, "src/main/resources/assets/mmorpg/textures/gui/spells")
+# Клиентские визуалы заклинаний: часть умений (Divine-школа) не описывает
+# партиклы в цепочке действий, а рисует собственный эффект на клиенте по
+# пакету о касте. Для аудита это тот же канал обратной связи, что и партиклы.
+VISUALS_JAVA = os.path.join(
+    ROOT, "src/main/java/com/robertx22/age_of_exile/database/data/spells/visuals")
 REGISTRY_LIST = os.path.join(
     ROOT, "src/main/resources/assets/mmorpg/modpack_dev_helper/spells.txt")
 
@@ -479,8 +486,28 @@ def registry_ids():
     return {l for l in lines if l and l not in skip}
 
 
+def client_visual_ids():
+    """Id заклинаний, у которых есть собственная отрисовка на клиенте.
+
+    Такой визуал играет по пакету о касте (см. `DivineSpellVisuals.play`), а в
+    цепочке действий партиклов нет — поэтому проверка «нет партиклов» должна
+    видеть обе реализации одинаково.
+    """
+    ids = set()
+    if not os.path.isdir(VISUALS_JAVA):
+        return ids
+    for name in sorted(os.listdir(VISUALS_JAVA)):
+        if not name.endswith(".java"):
+            continue
+        text = strip_comments(read(os.path.join(VISUALS_JAVA, name)))
+        # `case "healing_aura" ->` — ветка, которая действительно рисует эффект.
+        ids.update(re.findall(r'case\s+"([^"]+)"\s*->', text))
+    return ids
+
+
 def audit():
     spells, unresolved = collect_spells()
+    client_visuals = client_visual_ids()
     schools = collect_schools()
     registry = registry_ids()
 
@@ -506,6 +533,10 @@ def audit():
             "problems": [],
             "warnings": [],
         }
+        if spell_id in client_visuals and channels["particles"] == 0:
+            # Собственный клиентский визуал вместо партиклов в цепочке действий.
+            channels = dict(channels)
+            channels["particles"] = 1
         functional = [k for k in FUNCTIONAL if channels[k] > 0]
         if not functional:
             row["problems"].append("ничего не делает (нет урона/лечения/эффекта/движения)")

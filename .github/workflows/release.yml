@@ -62,8 +62,24 @@ jobs:
           TAG: ${{ inputs.tag || github.ref_name }}
         run: |
           # Файлы: основной jar и jar с исходниками (sources удобно класть в IDE).
-          gh release create "$TAG" \
-            build/libs/*.jar \
+          # dev-jar для запуска из IDE игроку не нужен и только путает при
+          # скачивании, поэтому в релиз он не попадает.
+          shopt -s nullglob
+          files=()
+          for jar in build/libs/*.jar; do
+            case "$jar" in
+              *-dev.jar) continue ;;
+            esac
+            files+=("$jar")
+          done
+          if [ ${#files[@]} -eq 0 ]; then
+            echo '::error::В build/libs нет ни одного jar для релиза'
+            exit 1
+          fi
+          printf 'В релиз пойдёт:\n'
+          printf '  %s\n' "${files[@]}"
+
+          gh release create "$TAG" "${files[@]}" \
             --title "Age of Epoch $TAG" \
             --generate-notes \
             --verify-tag
