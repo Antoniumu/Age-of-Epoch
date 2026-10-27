@@ -57,3 +57,5 @@ gradle-local.properties
 # ── Python ───────────────────────────────────────────────────
 __pycache__/
 *.pyc
+.venv/
+.venv-ci/
