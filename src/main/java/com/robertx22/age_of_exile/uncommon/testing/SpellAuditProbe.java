@@ -12,6 +12,7 @@ import com.robertx22.age_of_exile.database.data.spells.spell_classes.CastingWeap
 import com.robertx22.age_of_exile.loot.blueprints.GearBlueprint;
 import com.robertx22.age_of_exile.database.data.spells.spell_classes.bases.SpellCastContext;
 import com.robertx22.age_of_exile.database.data.spells.components.actions.SpellAction;
+import com.robertx22.age_of_exile.database.data.spells.visuals.DivineSpellVisuals;
 import com.robertx22.age_of_exile.database.registry.ExileDB;
 import com.robertx22.age_of_exile.saveclasses.PointData;
 import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
@@ -795,6 +796,14 @@ public final class SpellAuditProbe {
             if (result.description == null || result.description.isBlank()) {
                 result.problem("нет описания (в тултипе пусто)");
             }
+            if (!result.particles && hasClientVisual(spell)) {
+                // Часть умений рисует эффект на клиенте по пакету о касте, а не
+                // партиклами в цепочке действий (см. DivineSpellVisuals). Для
+                // игрока это тот же визуальный отклик, поэтому проба обязана
+                // засчитывать его, иначе корректное умение падает как «мёртвое».
+                result.particles = true;
+                result.note("партиклы: клиентский визуал");
+            }
             if (!result.particles) {
                 result.problem("нет партиклов");
             }
@@ -805,6 +814,20 @@ public final class SpellAuditProbe {
                 && !result.move && !result.item && !result.summon && !result.utility
                 && !result.shield) {
                 result.problem("ничего не делает (нет урона/лечения/эффекта/движения)");
+            }
+        }
+
+        /**
+         * Есть ли у умения клиентская отрисовка каста (пакет вместо партиклов).
+         *
+         * <p>Сервер в этом случае не спавнит ни одной частицы, поэтому поиск
+         * партиклов в мире ничего не находит — визуал целиком на клиенте.
+         */
+        private boolean hasClientVisual(Spell spell) {
+            try {
+                return spell != null && DivineSpellVisuals.hasVisual(spell.GUID());
+            } catch (Throwable error) {
+                return false;
             }
         }
 
