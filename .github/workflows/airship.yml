@@ -41,6 +41,7 @@ jobs:
       - name: Real client, ship, crew, quests and H card
         env:
           RENDER_DISTANCE: 6
+          E2E_FAIL_FAST: 1
         run: |
           bash tools/e2e/run-in-xvfb.sh tools/e2e/scenarios/airship.txt run/e2e/airship
           test -f run/e2e/airship/07-campaign-complete.png

@@ -82,12 +82,17 @@ public final class AirshipService {
         for (int[] offset : new int[][]{{24,0},{-24,0},{0,24},{0,-24}}) {
             int x=p.blockPosition().getX()+offset[0], z=p.blockPosition().getZ()+offset[1];
             BlockPos column = new BlockPos(x, p.blockPosition().getY(), z+4);
-            if (!level.hasChunkAt(column)) continue;
+            if (!level.hasChunkAt(column)) { if(free) System.out.println("AIRSHIPTEST REJECT unloaded center="+column); continue; }
             int floor = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z+4);
             BlockPos landing = new BlockPos(x,floor-1,z+4);
-            if (!level.getBlockState(landing).isSolid() || !level.getFluidState(landing).isEmpty()) continue;
+            if (!level.getBlockState(landing).isSolid() || !level.getFluidState(landing).isEmpty()) {
+                if(free) System.out.println("AIRSHIPTEST REJECT landing="+landing+" block="+level.getBlockState(landing)+" fluid="+level.getFluidState(landing));
+                continue;
+            }
             BlockPos candidate = new BlockPos(x, Math.max(floor+38, p.blockPosition().getY()+30), z);
-            if (clear(level, candidate, floor)) { origin=candidate; ground=floor; break; }
+            String rejection=clearanceFailure(level,candidate,floor);
+            if(rejection==null) { origin=candidate; ground=floor; break; }
+            if(free) System.out.println("AIRSHIPTEST REJECT candidate="+candidate+" reason="+rejection);
         }
         if (origin == null) return tell(p, "Нет свободного места в загруженном небе. Отойди от построек и попробуй ещё раз.");
         ArrayList<Entity> crew = new ArrayList<>();
@@ -121,17 +126,17 @@ public final class AirshipService {
         level.sendParticles(ParticleTypes.PORTAL,d.x,d.y+8,d.z,300,8,6,16,0.3);
         return tell(p,"«Последний Рассвет» на якоре. Световой подъёмник: X="+d.x+", Z="+(d.z+4)+". Для спуска: /airship descend.");
     }
-    private static boolean clear(ServerLevel level, BlockPos o, int ground) {
-        if (o.getY()+25 >= level.getMaxY()) return false;
+    private static String clearanceFailure(ServerLevel level, BlockPos o, int ground) {
+        if (o.getY()+25 >= level.getMaxY()) return "build height";
         for (int x=-11;x<=11;x++) for (int z=-21;z<=21;z++) {
             BlockPos column=o.offset(x,0,z);
-            if (!level.hasChunkAt(column) || !level.getWorldBorder().isWithinBounds(column)) return false;
+            if (!level.hasChunkAt(column) || !level.getWorldBorder().isWithinBounds(column)) return "unloaded or border at "+column;
             // Margin on all sides keeps the hull away from terrain and other ships.
-            for (int y=-5;y<=25;y++) if (!level.getBlockState(column.offset(0,y,0)).isAir()) return false;
+            for (int y=-5;y<=25;y++) if (!level.getBlockState(column.offset(0,y,0)).isAir()) return "occupied hull at "+column.offset(0,y,0);
         }
         for (int y=ground;y<=o.getY();y++) for(int x=-1;x<=1;x++) for(int z=3;z<=5;z++)
-            if (!level.getBlockState(new BlockPos(o.getX()+x,y,o.getZ()+z)).isAir()) return false;
-        return level.getEntitiesOfClass(Entity.class,new AABB(o.getX()-11,o.getY()-5,o.getZ()-21,o.getX()+12,o.getY()+26,o.getZ()+22),e->true).isEmpty();
+            if (!level.getBlockState(new BlockPos(o.getX()+x,y,o.getZ()+z)).isAir()) return "occupied lift at "+new BlockPos(o.getX()+x,y,o.getZ()+z);
+        return level.getEntitiesOfClass(Entity.class,new AABB(o.getX()-11,o.getY()-5,o.getZ()-21,o.getX()+12,o.getY()+26,o.getZ()+22),e->true).isEmpty() ? null : "entity in hull volume";
     }
     public static int descend(ServerPlayer p) {
         AirshipData d=data(p);

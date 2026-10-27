@@ -570,6 +570,10 @@ class Runner:
             except Exception:
                 self.fail("строка %d (%s):\n%s" % (number, line, traceback.format_exc()))
 
+            if self.failures and os.environ.get("E2E_FAIL_FAST") == "1":
+                self.note("Остановка сценария после первой ошибки (E2E_FAIL_FAST)")
+                break
+
         self.note("итог: снимков %d, ошибок %d" % (len(self.shots), self.failures))
         with open(os.path.join(self.outdir, "index.txt"), "w", encoding="utf-8") as handle:
             for name in self.shots:
