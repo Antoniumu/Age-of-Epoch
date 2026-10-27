@@ -294,6 +294,7 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
         super.render(matrix, x, y, ticks);
 
         buttons.forEach(b -> b.renderToolTip(matrix, x, y));
+        com.robertx22.age_of_exile.airship.AirshipQuestCard.render(matrix, width, height, x, y);
 
         int p = Load.playerRPGData(mc.player).statPoints
             .getFreePoints(mc.player);

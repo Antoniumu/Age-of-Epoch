@@ -1,0 +1,45 @@
+name: Airship in-game proof
+on:
+  push:
+    branches: [arena/7bde44a9-age-of-epoch]
+    paths:
+      - 'src/**'
+      - 'tools/e2e/scenarios/airship.txt'
+      - '.github/workflows/airship.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: airship-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  client:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-build-env
+      - name: Compile and unit tests
+        run: ./gradlew build
+      - name: Headless graphics
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends xvfb x11-utils xdotool imagemagick x11-apps openbox wmctrl libgl1 libglu1-mesa libgl1-mesa-dri mesa-utils mesa-vulkan-drivers vulkan-tools libxi6 libxcursor1 libxrandr2 libxinerama1 libxxf86vm1 libopenal1 libpulse0 libegl1 libegl-mesa0
+      - name: Real client, ship, crew, quests and H card
+        run: |
+          bash tools/e2e/run-in-xvfb.sh tools/e2e/scenarios/airship.txt run/e2e/airship
+          test -f run/e2e/airship/07-campaign-complete.png
+          ! grep -q 'AIRSHIPTEST FAIL' run/logs/latest.log
+          for stage in summon board lift far-reject dialogue accept mara quartermaster complete; do
+            grep -q "AIRSHIPTEST PASS $stage" run/logs/latest.log
+          done
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: airship-proof
+          path: |
+            run/e2e/airship/
+            run/logs/
+            run/e2e/gradle.log
+            build/reports/tests/
+            build/libs/*.jar

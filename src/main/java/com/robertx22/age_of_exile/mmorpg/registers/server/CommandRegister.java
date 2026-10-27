@@ -48,6 +48,7 @@ public class CommandRegister {
         TeamCommand.register(dispatcher);
         RollCommand.register(dispatcher);
         TpaCommand.register(dispatcher);
+        com.robertx22.age_of_exile.airship.AirshipCommand.register(dispatcher);
         // Без прав оператора ванильный /tp должен вести в /tpa вместе со всеми его лимитами.
         // Патчим узел /tp уже после того, как ваниль зарегистрировала свои команды.
         TpCommandBridge.install(dispatcher);

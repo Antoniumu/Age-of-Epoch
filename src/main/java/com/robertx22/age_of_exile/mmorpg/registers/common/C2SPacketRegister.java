@@ -35,6 +35,7 @@ public class C2SPacketRegister {
         Packets.registerClientToServerPacket(MMORPG.NETWORK, new GuidesPacket(), i++);
         Packets.registerClientToServerPacket(MMORPG.NETWORK, new QuestBookPacket(), i++);
         Packets.registerClientToServerPacket(MMORPG.NETWORK, new com.robertx22.age_of_exile.vanilla_mc.packets.PartyHudRequestPacket(), i++);
+        Packets.registerClientToServerPacket(MMORPG.NETWORK, new com.robertx22.age_of_exile.airship.AirshipAcceptPacket(), i++);
     }
 
 }
