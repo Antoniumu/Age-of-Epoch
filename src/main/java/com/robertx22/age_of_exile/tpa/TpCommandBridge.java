@@ -167,7 +167,7 @@ public final class TpCommandBridge {
         int result = dispatcher.execute("tpa " + coords, targetSource);
 
         if (result > 0 && target != player) {
-            send(player, "Игроку " + target.getGameProfile().name() + " телепортировано на "
+            TpaManager.send(player, "Игроку " + target.getGameProfile().name() + " телепортировано на "
                     + coords + ". Осталось зарядов: " + TpaManager.chargesLeft(target)
                     + "/" + TpaData.MAX_CHARGES + ".", ChatFormatting.GOLD);
         }
@@ -198,7 +198,7 @@ public final class TpCommandBridge {
             return player;
         }
         if (token.startsWith("@")) {
-            send(player, "Укажите одного игрока: @s, @p или ник игрока.", ChatFormatting.RED);
+            TpaManager.send(player, "Укажите одного игрока: @s, @p или ник игрока.", ChatFormatting.RED);
             return null;
         }
         MinecraftServer server = context.getSource().getServer();
@@ -207,7 +207,7 @@ public final class TpCommandBridge {
                 return candidate;
             }
         }
-        send(player, "Игрока \"" + token + "\" нет на сервере.", ChatFormatting.RED);
+        TpaManager.send(player, "Игрока \"" + token + "\" нет на сервере.", ChatFormatting.RED);
         return null;
     }
 
