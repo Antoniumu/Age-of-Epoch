@@ -17,6 +17,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          exec > >(tee publish.log) 2>&1
           gh run view 40591863608 --json conclusion --jq .conclusion | grep -x success
           gh run download 40591863608 --name airship-proof --dir release-input
           jar=$(find release-input -type f -name 'Age-of-Epoch-*.jar' ! -name '*-sources.jar' ! -name '*-dev.jar' | head -1)
@@ -35,5 +36,14 @@ jobs:
           Internal mod version remains 5.1.0; the preview filename/tag distinguishes this artifact from the older 5.1.0 release. Not marked as latest stable release.
           NOTES
           gh release create airship-preview-34095a2 release-files/Age-of-Epoch-airship-preview.jar release-files/SHA256SUMS.txt \
-            --target 34095a2 --title 'Age of Epoch — Airship hub preview' \
+            --target "$(gh api repos/${{ github.repository }}/commits/34095a2 --jq .sha)" --title 'Age of Epoch — Airship hub preview' \
             --prerelease --latest=false --notes-file release-files/NOTES.md
+
+      - name: Publish failure details
+        if: failure()
+        run: |
+          python3 - <<'PYCODE'
+          from pathlib import Path
+          text=Path('publish.log').read_text() if Path('publish.log').exists() else 'No publication log'
+          print('::error::'+text[-6500:].replace('%','%25').replace('\n','%0A').replace('\r','%0D'))
+          PYCODE
