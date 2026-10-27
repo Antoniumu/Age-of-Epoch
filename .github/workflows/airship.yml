@@ -51,9 +51,9 @@ jobs:
         env:
           RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          mkdir -p docs/airship/screenshots
+          mkdir -p docs/airship/proof-images
           if compgen -G 'run/e2e/airship/*.png' >/dev/null; then
-            cp run/e2e/airship/*.png docs/airship/screenshots/
+            cp run/e2e/airship/*.png docs/airship/proof-images/
           fi
           {
             echo "Run: $RUN_URL"
@@ -63,7 +63,7 @@ jobs:
           } > docs/airship/ci-proof.txt
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/airship/screenshots docs/airship/ci-proof.txt
+          git add docs/airship/proof-images docs/airship/ci-proof.txt
           if ! git diff --cached --quiet; then
             git commit -m "Record actual airship client proof [skip ci]"
             git push origin HEAD:arena/7bde44a9-age-of-epoch

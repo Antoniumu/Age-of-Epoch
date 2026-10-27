@@ -37,6 +37,10 @@ public final class AirshipService {
         return "";
     }
     public static void register() {
+        com.robertx22.library_of_exile.main.ForgeEvents.registerForgeEvent(
+            com.robertx22.forge_compat.event.entity.living.LivingHurtEvent.class, event -> {
+                if (!npcId(event.getEntity()).isEmpty()) { event.setAmount(0); event.setCanceled(true); }
+            });
         UseEntityCallback.EVENT.register((p, world, hand, e, hit) -> {
             if (npcId(e).isEmpty()) return InteractionResult.PASS;
             if (!world.isClientSide() && p instanceof ServerPlayer player && hand == InteractionHand.MAIN_HAND)
@@ -93,7 +97,6 @@ public final class AirshipService {
             if (!(created instanceof Mob mob)) return tell(p, "Не удалось создать команду. Валюта не списана.");
             mob.snapTo(origin.getX()+spots[i][0]+0.5,origin.getY()+1,origin.getZ()+spots[i][1]+0.5,0F,0F);
             mob.setNoAi(true);
-            mob.setInvulnerable(true);
             mob.setSilent(true);
             mob.setPersistenceRequired();
             mob.setCustomName(Component.literal(AirshipStory.name(AirshipStory.IDS[i])));
