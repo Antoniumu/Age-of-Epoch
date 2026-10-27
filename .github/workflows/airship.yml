@@ -8,7 +8,7 @@ on:
       - '.github/workflows/airship.yml'
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 concurrency:
   group: airship-${{ github.ref }}
   cancel-in-progress: true
@@ -46,6 +46,28 @@ jobs:
           for stage in summon board lift lift-check far-reject dialogue accepted mara quartermaster complete; do
             grep -q "AIRSHIPTEST PASS $stage" run/logs/latest.log
           done
+      - name: Publish actual screenshots on the same working branch
+        if: always() && github.ref == 'refs/heads/arena/7bde44a9-age-of-epoch'
+        env:
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          mkdir -p docs/airship/screenshots
+          if compgen -G 'run/e2e/airship/*.png' >/dev/null; then
+            cp run/e2e/airship/*.png docs/airship/screenshots/
+          fi
+          {
+            echo "Run: $RUN_URL"
+            echo "Source: $GITHUB_SHA"
+            grep 'AIRSHIPTEST' run/logs/latest.log 2>/dev/null || true
+            tail -60 compile.log 2>/dev/null || true
+          } > docs/airship/ci-proof.txt
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/airship/screenshots docs/airship/ci-proof.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Record actual airship client proof [skip ci]"
+            git push origin HEAD:arena/7bde44a9-age-of-epoch
+          fi
       - uses: actions/upload-artifact@v7
         if: always()
         with:
