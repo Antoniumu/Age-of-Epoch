@@ -79,7 +79,7 @@ public final class AirshipService {
         BlockPos origin = null;
         int ground = 0;
         // Only already loaded chunks; fail rather than overwrite even one non-air block.
-        for (int[] offset : new int[][]{{24,0},{-24,0},{0,24},{0,-24}}) {
+        for (int[] offset : new int[][]{{24,0},{-24,0},{0,24},{0,-24},{24,24},{-24,24},{24,-24},{-24,-24},{16,0},{-16,0},{0,16},{0,-16}}) {
             int x=p.blockPosition().getX()+offset[0], z=p.blockPosition().getZ()+offset[1];
             BlockPos column = new BlockPos(x, p.blockPosition().getY(), z+4);
             if (!level.hasChunkAt(column)) { if(free) System.out.println("AIRSHIPTEST REJECT unloaded center="+column); continue; }
@@ -89,7 +89,15 @@ public final class AirshipService {
                 if(free) System.out.println("AIRSHIPTEST REJECT landing="+landing+" block="+level.getBlockState(landing)+" fluid="+level.getFluidState(landing));
                 continue;
             }
-            BlockPos candidate = new BlockPos(x, Math.max(floor+38, p.blockPosition().getY()+30), z);
+            // Height must clear the entire ship footprint, not only the lift column.
+            int roof=floor;
+            boolean loaded=true;
+            for(int rx=-11;rx<=11 && loaded;rx++) for(int rz=-21;rz<=21;rz++) {
+                if(!level.hasChunkAt(new BlockPos(x+rx,floor,z+rz))) { loaded=false; break; }
+                roof=Math.max(roof,level.getHeight(Heightmap.Types.MOTION_BLOCKING,x+rx,z+rz));
+            }
+            if(!loaded) { if(free) System.out.println("AIRSHIPTEST REJECT unloaded footprint x="+x+" z="+z); continue; }
+            BlockPos candidate = new BlockPos(x, Math.max(roof+8, Math.max(floor+38, p.blockPosition().getY()+30)), z);
             String rejection=clearanceFailure(level,candidate,floor);
             if(rejection==null) { origin=candidate; ground=floor; break; }
             if(free) System.out.println("AIRSHIPTEST REJECT candidate="+candidate+" reason="+rejection);
@@ -134,7 +142,8 @@ public final class AirshipService {
             // Margin on all sides keeps the hull away from terrain and other ships.
             for (int y=-5;y<=25;y++) if (!level.getBlockState(column.offset(0,y,0)).isAir()) return "occupied hull at "+column.offset(0,y,0);
         }
-        for (int y=ground;y<=o.getY();y++) for(int x=-1;x<=1;x++) for(int z=3;z<=5;z++)
+        // Player is centered in this one-block column (0.6 wide), including headroom.
+        for (int y=ground;y<=o.getY()+2;y++) for(int x=0;x<=0;x++) for(int z=4;z<=4;z++)
             if (!level.getBlockState(new BlockPos(o.getX()+x,y,o.getZ()+z)).isAir()) return "occupied lift at "+new BlockPos(o.getX()+x,y,o.getZ()+z);
         return level.getEntitiesOfClass(Entity.class,new AABB(o.getX()-11,o.getY()-5,o.getZ()-21,o.getX()+12,o.getY()+26,o.getZ()+22),e->true).isEmpty() ? null : "entity in hull volume";
     }
