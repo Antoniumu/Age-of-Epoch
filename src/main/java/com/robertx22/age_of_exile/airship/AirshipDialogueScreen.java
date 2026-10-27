@@ -84,9 +84,10 @@ public class AirshipDialogueScreen extends BaseScreen {
         addButton(new Choice(x,y,w,"До встречи.  [Esc]",b->onClose()));
     }
     @Override public boolean keyPressed(net.minecraft.client.input.KeyEvent event) {
-        return keyPressed(event.key(),0,0) || super.keyPressed(event);
+        proof("KEY native="+event.key());return keyPressed(event.key(),0,0) || super.keyPressed(event);
     }
     @Override public boolean keyPressed(int key,int scan,int modifiers) {
+        proof("KEY compatible="+key+" fullText="+fullText);
         if(key==32) { if(!fullText) reveal();return true; }
         if(key==82 && npc.equals("captain")) { fullText=false;cueIndex=0;init();startCue();return true; }
         if(fullText && key==49 && AirshipStory.advance(npc,storyStage)!=storyStage) { send(storyStage==7?1:0);return true; }

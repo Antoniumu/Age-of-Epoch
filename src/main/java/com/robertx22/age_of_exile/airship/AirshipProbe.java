@@ -60,6 +60,8 @@ public final class AirshipProbe {
                 }
                 com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p).syncToClient(p);
                 System.out.println("AIRSHIPTEST SYNTHETIC RPG counters/hook: "+action);
+            } else if(action.equals("chapter-one")) {
+                if(d.stage!=4) throw new IllegalStateException("Keyboard skip/accept did not finish chapter 1: "+d.stage);
             } else if(action.equals("accepted")) {
                 if(d.stage!=1) throw new IllegalStateException("UI button did not accept quest");
             } else if(action.equals("lift-check")) {

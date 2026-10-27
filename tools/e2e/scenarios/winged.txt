@@ -77,7 +77,7 @@ log_mark
 write run/airship-e2e.flag talk-mara
 wait_log_new 30000 AIRSHIPTEST PASS talk-mara
 wait 1500
-key space
+hold space 500
 wait 500
 shot 10-mara-dialogue
 key Escape
@@ -100,7 +100,7 @@ log_mark
 write run/airship-e2e.flag talk-quartermaster
 wait_log_new 30000 AIRSHIPTEST PASS talk-quartermaster
 wait 1000
-key space
+hold space 500
 wait 500
 shot 13-bram-dialogue
 key Escape
@@ -112,10 +112,13 @@ write run/airship-e2e.flag dialogue
 wait_log_new 30000 AIRSHIPTEST PASS dialogue
 wait 1800
 shot 14-captain-welcome
-key space
+hold space 500
 wait 500
-key 1
+hold 1 500
 wait 1000
+log_mark
+write run/airship-e2e.flag chapter-one
+wait_log_new 30000 AIRSHIPTEST PASS chapter-one
 # Stage 4 = chapter 1 complete; the next two chapters remain locked behind new RPG progress.
 log_mark
 write run/airship-e2e.flag stale
@@ -125,9 +128,9 @@ write run/airship-e2e.flag dialogue
 wait_log_new 30000 AIRSHIPTEST PASS dialogue
 wait 1600
 shot 15-chapter-two-voice
-key space
+hold space 500
 wait 500
-key 1
+hold 1 500
 wait 1000
 log_mark
 write run/airship-e2e.flag gate
@@ -136,7 +139,7 @@ log_mark
 write run/airship-e2e.flag talk-mara
 wait_log_new 30000 AIRSHIPTEST PASS talk-mara
 wait 1000
-key space
+hold space 500
 wait 500
 shot 16-chests-locked
 key Escape
@@ -159,7 +162,7 @@ log_mark
 write run/airship-e2e.flag dialogue
 wait_log_new 30000 AIRSHIPTEST PASS dialogue
 wait 1500
-key space
+hold space 500
 wait 500
 shot 17-story-choice
 key Escape
@@ -170,10 +173,10 @@ log_mark
 write run/airship-e2e.flag talk-mara
 wait_log_new 30000 AIRSHIPTEST PASS talk-mara
 wait 1000
-key space
+hold space 500
 wait 500
 shot 18-chapter-three
-key 1
+hold 1 500
 wait 1000
 log_mark
 write run/airship-e2e.flag iron-quartermaster
@@ -189,16 +192,16 @@ write run/airship-e2e.flag dialogue
 wait_log_new 30000 AIRSHIPTEST PASS dialogue
 wait 1500
 shot 19-captain-return
-key space
+hold space 500
 wait 500
-key 1
+hold 1 500
 wait 1200
 log_mark
 write run/airship-e2e.flag dialogue
 wait_log_new 30000 AIRSHIPTEST PASS dialogue
 wait 1800
 shot 20-finale-voice
-key space
+hold space 500
 wait 500
 shot 21-finale-transcript
 key Escape
