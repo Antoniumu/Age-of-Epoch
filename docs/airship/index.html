@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Последний Рассвет — игровые кадры</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#111615;color:#e9e8df}*{box-sizing:border-box}body{margin:0}header,main,footer{max-width:1200px;margin:auto;padding:32px 24px}header{padding-top:64px}.eyebrow{color:#b6caa9;font-size:12px;letter-spacing:.2em;text-transform:uppercase}h1{font-family:Georgia,serif;font-weight:400;font-size:clamp(36px,6vw,70px);margin:18px 0}p{line-height:1.7;max-width:800px;color:#afb9b3}a{color:#d6bd87}nav{display:flex;gap:8px;flex-wrap:wrap;margin:28px 0 0}button{font:inherit;color:#c9d4c9;border:1px solid #34413a;background:none;border-radius:4px;padding:9px 16px;cursor:pointer}button[aria-pressed=true]{background:#b7c8a9;color:#18231b;border-color:#b7c8a9}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 20px}figure{margin:0;border-top:1px solid #34413a;padding-top:12px}figure a{display:block}img{display:block;width:100%;height:auto;background:#202a23}figcaption{padding:12px 0;font-size:15px;line-height:1.5}small{display:block;color:#83948a;font-size:12px;margin-top:4px}.note{border-left:2px solid #b59861;padding-left:16px}footer{border-top:1px solid #34413a;margin-top:28px;font-size:13px;color:#83948a}@media(max-width:740px){.grid{grid-template-columns:1fr}header,main,footer{padding:24px 16px}header{padding-top:38px}}
+</style>
+<header><div class="eyebrow">Age of Epoch / игровая проверка</div><h1>Последний Рассвет</h1><p>Настоящие кадры из Minecraft, не концепт-арт. Winged Sailor, три оригинальных скина экипажа, кубические головы, нижний диалог и три главы истории. Нажми на кадр, чтобы открыть оригинал 1280 × 720.</p><p><a href="https://github.com/Antoniumu/Age-of-Epoch/actions/runs/40602991250/artifacts/12779129983" target="_blank" rel="noopener">Сборка, логи и тесты (.zip)</a> · <a href="https://github.com/Antoniumu/Age-of-Epoch/actions/runs/40602991250" target="_blank" rel="noopener">CI: 45 тестов и вся цепочка — успешно</a></p><p class="note">Озвучен только капитан. Для проверки длинных целей dev-зонд вызывает RPG-события и добавляет тестовые убийства. Эти кадры показывают работу интерфейса и сюжетных переходов, а не ручное прохождение подземелья.</p><p><audio controls preload="none" src="audio/captain-dialogue-preview.ogg" aria-label="Вступительные реплики капитана"></audio><br><small>Две вступительные реплики капитана · выбранный ранее голос · около 23 секунд</small></p><nav aria-label="Фильтр кадров"><button aria-pressed="true" data-filter="all">Все кадры</button><button aria-pressed="false" data-filter="crew">Экипаж</button><button aria-pressed="false" data-filter="dialogue">Диалоги</button><button aria-pressed="false" data-filter="story">История и задания</button><button aria-pressed="false" data-filter="ship">Корабль</button></nav></header>
+<main><div class="grid" id="shots"></div></main><footer>Постройка Winged Sailor — Chiisai_Khoahri; источник и ограничения использования в <a href="ASSETS.md">ASSETS.md</a>. Авторские скины не являются выбранными ранее загрузками PlanetMinecraft. <a href="CAMPAIGN.md">Описание кампании и управления</a> · <a href="ci-proof.txt">Протокол проверки</a>.</footer>
+<script>
+const shots=[
+['01-airship-exterior','Корабль над миром','ship','Импорт пользовательской схематики Winged Sailor'],
+['04-captain-skin','Капитан «Последнего Рассвета»','crew','Седая борода, тёмный мундир, латунная отделка'],
+['09-mara-skin','Мара · картограф','crew','Оригинальный скин, не ванильная Alex'],
+['12-bram-skin','Брам · квартирмейстер','crew','Рабочая одежда, кожаный фартук и очки'],
+['05-captain-subtitle-head-left','Реплика капитана · взгляд влево','dialogue','Текст связан с текущим аудиоклипом'],
+['06-captain-subtitle-head-right','Кубическая голова · взгляд вправо','dialogue','Видны отдельные грани и внешний слой шапки'],
+['07-captain-transcript','После голоса · полный текст и ответ','dialogue','Первое поручение принято настоящим кликом'],
+['08-H-quest-captain','H · первое поручение','story','Голова автора задания и доверие экипажа'],
+['10-mara-dialogue','Разговор с Марой','dialogue','Без сгенерированной озвучки'],
+['11-H-quest-mara','H · знакомство с Брамом','story','Портрет Мары из её игровой текстуры'],
+['13-bram-dialogue','Разговор с квартирмейстером','dialogue','Личные поручения доступны отдельно от истории'],
+['14-captain-welcome','Добро пожаловать на борт','dialogue','Завершение знакомства с командой'],
+['15-chapter-two-voice','II · Эхо путевого колокола','story','Капитан открывает следующий этап пути'],
+['16-chests-locked','Цель ещё не выполнена','story','Продолжение заблокировано до трёх новых RPG-сундуков'],
+['17-story-choice','Решение на мостике','story','Разные ответы меняют доверие разных членов экипажа'],
+['18-chapter-three','III · Карта завтрашнего дня','story','Следующая цель использует обычные подземелья мода'],
+['19-captain-return','Возвращение к капитану','dialogue','Новая озвученная реплика после отчёта'],
+['20-finale-voice','Голос финала','dialogue','Финальная озвученная реплика капитана'],
+['21-finale-transcript','Эпилог первого перехода','story','Основная сюжетная цепочка завершается'],
+['22-campaign-complete','H · итог трёх глав','story','Независимое доверие капитана, Мары и Брама'],
+['02-on-deck','Палуба и световой подъёмник','ship','Настоящая геометрия постройки'],
+['03-lift-arrival','Прибытие после спуска','ship','Лифт проверяется с реальной нижней площадки'],
+['00-world','Начало тестового мира','ship','Новый профиль без старых скинов и причала']];
+const root=document.querySelector('#shots');
+for(const [file,title,category,description] of shots){const fig=document.createElement('figure');fig.dataset.category=category;const a=document.createElement('a');a.href=`proof-images/${file}.png`;a.target='_blank';a.rel='noopener';const image=document.createElement('img');image.src=a.href;image.alt=title;image.loading='lazy';image.width=1280;image.height=720;a.append(image);const caption=document.createElement('figcaption');caption.textContent=title;const detail=document.createElement('small');detail.textContent=description;caption.append(detail);fig.append(a,caption);root.append(fig)}
+for(const button of document.querySelectorAll('button[data-filter]'))button.addEventListener('click',()=>{for(const b of document.querySelectorAll('button[data-filter]'))b.setAttribute('aria-pressed',String(b===button));for(const fig of root.children)fig.hidden=button.dataset.filter!=='all'&&fig.dataset.category!==button.dataset.filter});
+</script></html>
