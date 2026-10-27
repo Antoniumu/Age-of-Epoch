@@ -1,156 +1,157 @@
-Run: https://github.com/Antoniumu/Age-of-Epoch/actions/runs/40593547771
-Source: 83bd3d2c5a7719cc1305626dc4754ddf62bb0d3b
-[22:19:08] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=summon anchor=0,0,0 player=(5.5, 68.0, -8.5) eye=Block{minecraft:air}
-[22:19:08] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SPAWN 235 pos=(29.5, 105.0, -20.5)
-[22:19:08] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SPAWN 236 pos=(26.5, 105.0, -10.5)
-[22:19:08] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SPAWN 237 pos=(32.5, 105.0, -1.5)
-[22:19:08] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST BUILD anchor=29,104,-9 deck=Block{minecraft:sea_lantern}
-[22:19:08] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS summon stage=0
-[22:19:20] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=board anchor=29,104,-9 player=(59.5, 116.0, 22.5) eye=Block{minecraft:air}
-[22:19:20] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 235 [aoe_npc_captain, aoe_airship_npc] pos=(29.5, 105.0, -20.5) alive=true
-[22:19:20] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 236 [aoe_npc_mara, aoe_airship_npc] pos=(26.5, 105.0, -10.5) alive=true
-[22:19:20] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 237 [aoe_npc_quartermaster, aoe_airship_npc] pos=(32.5, 105.0, -1.5) alive=true
-[22:19:20] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS board stage=0
-[22:19:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=lift anchor=29,104,-9 player=(29.5, 105.0, -4.5) eye=Block{minecraft:air}
-[22:19:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 235 [aoe_npc_captain, aoe_airship_npc] pos=(29.5, 105.0, -20.5) alive=true
-[22:19:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 236 [aoe_npc_mara, aoe_airship_npc] pos=(26.5, 105.0, -10.5) alive=true
-[22:19:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 237 [aoe_npc_quartermaster, aoe_airship_npc] pos=(32.5, 105.0, -1.5) alive=true
-[22:19:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift stage=0
-[22:19:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=lift-check anchor=29,104,-9 player=(29.5, 105.0, -4.5) eye=Block{minecraft:air}
-[22:19:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 235 [aoe_npc_captain, aoe_airship_npc] pos=(29.5, 105.0, -20.5) alive=true
-[22:19:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 236 [aoe_npc_mara, aoe_airship_npc] pos=(26.5, 105.0, -10.5) alive=true
-[22:19:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 237 [aoe_npc_quartermaster, aoe_airship_npc] pos=(32.5, 105.0, -1.5) alive=true
-[22:19:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift-check stage=0
-[22:19:32] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=far-reject anchor=29,104,-9 player=(29.5, 105.0, -4.5) eye=Block{minecraft:air}
-[22:19:32] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 235 [aoe_npc_captain, aoe_airship_npc] pos=(29.5, 105.0, -20.5) alive=true
-[22:19:32] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 236 [aoe_npc_mara, aoe_airship_npc] pos=(26.5, 105.0, -10.5) alive=true
-[22:19:32] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 237 [aoe_npc_quartermaster, aoe_airship_npc] pos=(32.5, 105.0, -1.5) alive=true
-[22:19:32] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS far-reject stage=0
-[22:19:32] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=dialogue anchor=29,104,-9 player=(29.5, 105.0, 3.5) eye=Block{minecraft:air}
-[22:19:32] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 235 [aoe_npc_captain, aoe_airship_npc] pos=(29.5, 105.0, -20.5) alive=true
-[22:19:32] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 236 [aoe_npc_mara, aoe_airship_npc] pos=(26.5, 105.0, -10.5) alive=true
-[22:19:32] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 237 [aoe_npc_quartermaster, aoe_airship_npc] pos=(32.5, 105.0, -1.5) alive=true
-[22:19:32] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS dialogue stage=0
-[22:19:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=accepted anchor=29,104,-9 player=(29.5, 105.0, -18.0) eye=Block{minecraft:air}
-[22:19:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 235 [aoe_npc_captain, aoe_airship_npc] pos=(29.5, 105.0, -20.5) alive=true
-[22:19:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 236 [aoe_npc_mara, aoe_airship_npc] pos=(26.5, 105.0, -10.5) alive=true
-[22:19:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 237 [aoe_npc_quartermaster, aoe_airship_npc] pos=(32.5, 105.0, -1.5) alive=true
-[22:19:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS accepted stage=1
-[22:19:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=mara anchor=29,104,-9 player=(29.5, 105.0, -18.0) eye=Block{minecraft:air}
-[22:19:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 235 [aoe_npc_captain, aoe_airship_npc] pos=(29.5, 105.0, -20.5) alive=true
-[22:19:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 236 [aoe_npc_mara, aoe_airship_npc] pos=(26.5, 105.0, -10.5) alive=true
-[22:19:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 237 [aoe_npc_quartermaster, aoe_airship_npc] pos=(32.5, 105.0, -1.5) alive=true
-[22:19:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS mara stage=2
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=quartermaster anchor=29,104,-9 player=(26.5, 105.0, -7.5855714516076) eye=Block{minecraft:air}
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 235 [aoe_npc_captain, aoe_airship_npc] pos=(29.5, 105.0, -20.5) alive=true
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 236 [aoe_npc_mara, aoe_airship_npc] pos=(26.5, 105.0, -10.5) alive=true
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 237 [aoe_npc_quartermaster, aoe_airship_npc] pos=(32.5, 105.0, -1.5) alive=true
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS quartermaster stage=3
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=complete anchor=29,104,-9 player=(32.5, 105.0, 1.400688752539224) eye=Block{minecraft:air}
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 235 [aoe_npc_captain, aoe_airship_npc] pos=(29.5, 105.0, -20.5) alive=true
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 236 [aoe_npc_mara, aoe_airship_npc] pos=(26.5, 105.0, -10.5) alive=true
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 237 [aoe_npc_quartermaster, aoe_airship_npc] pos=(32.5, 105.0, -1.5) alive=true
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS complete stage=4
-[22:19:33] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:33] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:33] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:34] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:34] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:34] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:34] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:35] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:35] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:35] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:35] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:36] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:36] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:36] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Screen.mouseClicked: screen=AirshipDialogueScreen x=320.0 y=241.0 btn=1 doubleClick=false buttons=2
-[22:19:36] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/114 class=AirshipAcceptPacket bytes=2
-[22:19:36] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Handled by button[0]=Choice at (159,231 322x20)
-[22:19:36] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/114 class=AirshipAcceptPacket bytes=2
-[22:19:36] [Render thread/INFO] (Minecraft) [System] [CHAT] §6Последний Рассвет §8» §fНайди Мару у картографического стола и поговори с ней.
-[22:19:36] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:36] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:37] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:37] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=accepted anchor=29,104,-9 player=(29.5, 105.0, -18.0) eye=Block{minecraft:air}
-[22:19:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 235 [aoe_npc_captain, aoe_airship_npc] pos=(29.5, 105.0, -20.5) alive=true
-[22:19:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 236 [aoe_npc_mara, aoe_airship_npc] pos=(26.5, 105.0, -10.5) alive=true
-[22:19:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 237 [aoe_npc_quartermaster, aoe_airship_npc] pos=(32.5, 105.0, -1.5) alive=true
-[22:19:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS accepted stage=1
-[22:19:37] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:37] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:38] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:38] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:38] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:38] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:39] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:39] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:40] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:40] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:40] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:40] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:41] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:41] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:41] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:41] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:42] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:42] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=mara anchor=29,104,-9 player=(29.5, 105.0, -18.0) eye=Block{minecraft:air}
-[22:19:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 235 [aoe_npc_captain, aoe_airship_npc] pos=(29.5, 105.0, -20.5) alive=true
-[22:19:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 236 [aoe_npc_mara, aoe_airship_npc] pos=(26.5, 105.0, -10.5) alive=true
-[22:19:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 237 [aoe_npc_quartermaster, aoe_airship_npc] pos=(32.5, 105.0, -1.5) alive=true
-[22:19:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS mara stage=2
-[22:19:42] [Render thread/INFO] (Minecraft) [System] [CHAT] §6Последний Рассвет §8» §fПоговори с Брамом в кормовой части корабля.
-[22:19:42] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:42] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:43] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:43] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:43] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:43] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:44] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:44] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:45] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:45] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:45] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:45] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:46] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:46] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:46] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:46] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=quartermaster anchor=29,104,-9 player=(26.5, 105.0, -7.5855714516076) eye=Block{minecraft:air}
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 235 [aoe_npc_captain, aoe_airship_npc] pos=(29.5, 105.0, -20.5) alive=true
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 236 [aoe_npc_mara, aoe_airship_npc] pos=(26.5, 105.0, -10.5) alive=true
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 237 [aoe_npc_quartermaster, aoe_airship_npc] pos=(32.5, 105.0, -1.5) alive=true
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS quartermaster stage=3
-[22:19:47] [Render thread/INFO] (Minecraft) [System] [CHAT] §6Последний Рассвет §8» §fВернись к капитану и доложи о готовности.
-[22:19:47] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=complete anchor=29,104,-9 player=(32.5, 105.0, 1.400688752539224) eye=Block{minecraft:air}
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 235 [aoe_npc_captain, aoe_airship_npc] pos=(29.5, 105.0, -20.5) alive=true
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 236 [aoe_npc_mara, aoe_airship_npc] pos=(26.5, 105.0, -10.5) alive=true
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 237 [aoe_npc_quartermaster, aoe_airship_npc] pos=(32.5, 105.0, -1.5) alive=true
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS complete stage=4
-[22:19:47] [Render thread/INFO] (Minecraft) [System] [CHAT] §6Последний Рассвет §8» §fПервое поручение выполнено. Ты принят на борт.
-[22:19:47] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:47] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:48] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:48] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:48] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:48] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:49] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:49] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:50] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:50] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:50] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:50] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:51] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:51] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:51] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:51] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:52] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:52] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:19:52] [Server thread/INFO] (Minecraft) Stopping server
+Run: https://github.com/Antoniumu/Age-of-Epoch/actions/runs/40594302095
+Source: 0a32889532f9290d285f019eae75a6e14acc7622
+[22:24:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=winged anchor=0,0,0 player=(-4.5, 66.0, -2.5) eye=Block{minecraft:vine}[east=false,north=false,south=false,up=false,west=true]
+[22:25:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST WINGED placed origin=BlockPos{x=-62, y=111, z=-41} size=Vec3i{x=117, y=100, z=89} crew=3
+[22:25:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SPAWN 405 pos=(-2.5, 167.0, 9.5)
+[22:25:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SPAWN 404 pos=(-3.5, 174.0, 26.5)
+[22:25:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SPAWN 406 pos=(-5.5, 162.0, 20.5)
+[22:25:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST BUILD anchor=-5,161,-7 deck=Block{minecraft:spruce_planks}
+[22:25:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS winged stage=0
+[22:25:12] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=board anchor=-5,161,-7 player=(73.5, 193.0, 78.5) eye=Block{minecraft:air}
+[22:25:12] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 405 [aoe_npc_mara, aoe_airship_npc] pos=(-2.5, 167.0, 9.5) alive=true
+[22:25:12] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 404 [aoe_npc_captain, aoe_airship_npc] pos=(-3.5, 174.0, 26.5) alive=true
+[22:25:12] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 406 [aoe_npc_quartermaster, aoe_airship_npc] pos=(-5.5, 162.0, 20.5) alive=true
+[22:25:12] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS board stage=0
+[22:25:19] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=lift anchor=-5,161,-7 player=(-4.5, 162.0, -2.5) eye=Block{minecraft:air}
+[22:25:19] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 405 [aoe_npc_mara, aoe_airship_npc] pos=(-2.5, 167.0, 9.5) alive=true
+[22:25:19] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 404 [aoe_npc_captain, aoe_airship_npc] pos=(-3.5, 174.0, 26.5) alive=true
+[22:25:19] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 406 [aoe_npc_quartermaster, aoe_airship_npc] pos=(-5.5, 162.0, 20.5) alive=true
+[22:25:19] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift stage=0
+[22:25:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=lift-check anchor=-5,161,-7 player=(-4.5, 162.0, -2.5) eye=Block{minecraft:air}
+[22:25:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 405 [aoe_npc_mara, aoe_airship_npc] pos=(-2.5, 167.0, 9.5) alive=true
+[22:25:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 404 [aoe_npc_captain, aoe_airship_npc] pos=(-3.5, 174.0, 26.5) alive=true
+[22:25:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 406 [aoe_npc_quartermaster, aoe_airship_npc] pos=(-5.5, 162.0, 20.5) alive=true
+[22:25:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift-check stage=0
+[22:25:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=far-reject anchor=-5,161,-7 player=(-4.5, 162.0, -2.5) eye=Block{minecraft:air}
+[22:25:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 405 [aoe_npc_mara, aoe_airship_npc] pos=(-2.5, 167.0, 9.5) alive=true
+[22:25:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 404 [aoe_npc_captain, aoe_airship_npc] pos=(-3.5, 174.0, 26.5) alive=true
+[22:25:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 406 [aoe_npc_quartermaster, aoe_airship_npc] pos=(-5.5, 162.0, 20.5) alive=true
+[22:25:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS far-reject stage=0
+[22:25:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=dialogue anchor=-5,161,-7 player=(-4.5, 162.0, 5.5) eye=Block{minecraft:air}
+[22:25:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 405 [aoe_npc_mara, aoe_airship_npc] pos=(-2.5, 167.0, 9.5) alive=true
+[22:25:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 404 [aoe_npc_captain, aoe_airship_npc] pos=(-3.5, 174.0, 26.5) alive=true
+[22:25:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 406 [aoe_npc_quartermaster, aoe_airship_npc] pos=(-5.5, 162.0, 20.5) alive=true
+[22:25:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS dialogue stage=0
+[22:25:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=accepted anchor=-5,161,-7 player=(-3.5, 174.0, 28.5) eye=Block{minecraft:air}
+[22:25:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 405 [aoe_npc_mara, aoe_airship_npc] pos=(-2.5, 167.0, 9.5) alive=true
+[22:25:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 404 [aoe_npc_captain, aoe_airship_npc] pos=(-3.5, 174.0, 26.5) alive=true
+[22:25:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 406 [aoe_npc_quartermaster, aoe_airship_npc] pos=(-5.5, 162.0, 20.5) alive=true
+[22:25:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS accepted stage=1
+[22:25:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=mara anchor=-5,161,-7 player=(-3.5, 174.0, 28.5) eye=Block{minecraft:air}
+[22:25:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 405 [aoe_npc_mara, aoe_airship_npc] pos=(-2.5, 167.0, 9.5) alive=true
+[22:25:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 404 [aoe_npc_captain, aoe_airship_npc] pos=(-3.5, 174.0, 26.5) alive=true
+[22:25:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 406 [aoe_npc_quartermaster, aoe_airship_npc] pos=(-5.5, 162.0, 20.5) alive=true
+[22:25:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS mara stage=2
+[22:25:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=quartermaster anchor=-5,161,-7 player=(-4.5, 167.0, 9.5) eye=Block{minecraft:air}
+[22:25:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 405 [aoe_npc_mara, aoe_airship_npc] pos=(-2.5, 167.0, 9.5) alive=true
+[22:25:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 404 [aoe_npc_captain, aoe_airship_npc] pos=(-3.5, 174.0, 26.5) alive=true
+[22:25:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 406 [aoe_npc_quartermaster, aoe_airship_npc] pos=(-5.5, 162.0, 20.5) alive=true
+[22:25:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS quartermaster stage=3
+[22:25:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=complete anchor=-5,161,-7 player=(-7.5, 162.0, 20.5) eye=Block{minecraft:air}
+[22:25:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 405 [aoe_npc_mara, aoe_airship_npc] pos=(-2.5, 167.0, 9.5) alive=true
+[22:25:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 404 [aoe_npc_captain, aoe_airship_npc] pos=(-3.5, 174.0, 26.5) alive=true
+[22:25:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 406 [aoe_npc_quartermaster, aoe_airship_npc] pos=(-5.5, 162.0, 20.5) alive=true
+[22:25:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS complete stage=4
+[22:25:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS dialogue stage=0
+[22:25:25] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:25] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:25] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:25] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:25] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:25] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:26] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:26] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:26] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:26] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:27] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:27] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:27] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Screen.mouseClicked: screen=AirshipDialogueScreen x=320.0 y=241.0 btn=1 doubleClick=false buttons=2
+[22:25:27] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/114 class=AirshipAcceptPacket bytes=2
+[22:25:27] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Handled by button[0]=Choice at (159,231 322x20)
+[22:25:27] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/114 class=AirshipAcceptPacket bytes=2
+[22:25:27] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:27] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:27] [Render thread/INFO] (Minecraft) [System] [CHAT] §6Последний Рассвет §8» §fНайди Мару у картографического стола и поговори с ней.
+[22:25:28] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:28] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:28] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:28] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=accepted anchor=-5,161,-7 player=(-3.5, 174.0, 28.5) eye=Block{minecraft:air}
+[22:25:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 405 [aoe_npc_mara, aoe_airship_npc] pos=(-2.5, 167.0, 9.5) alive=true
+[22:25:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 404 [aoe_npc_captain, aoe_airship_npc] pos=(-3.5, 174.0, 26.5) alive=true
+[22:25:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 406 [aoe_npc_quartermaster, aoe_airship_npc] pos=(-5.5, 162.0, 20.5) alive=true
+[22:25:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS accepted stage=1
+[22:25:29] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:29] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:29] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:29] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:30] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:30] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:31] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:31] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:31] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:31] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:32] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:32] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:32] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:32] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:33] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:33] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=mara anchor=-5,161,-7 player=(-3.5, 174.0, 28.5) eye=Block{minecraft:air}
+[22:25:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 405 [aoe_npc_mara, aoe_airship_npc] pos=(-2.5, 167.0, 9.5) alive=true
+[22:25:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 404 [aoe_npc_captain, aoe_airship_npc] pos=(-3.5, 174.0, 26.5) alive=true
+[22:25:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 406 [aoe_npc_quartermaster, aoe_airship_npc] pos=(-5.5, 162.0, 20.5) alive=true
+[22:25:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS mara stage=2
+[22:25:33] [Render thread/INFO] (Minecraft) [System] [CHAT] §6Последний Рассвет §8» §fПоговори с Брамом в кормовой части корабля.
+[22:25:33] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:33] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:34] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:34] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:34] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:34] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:35] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:35] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:36] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:36] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:36] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:36] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:37] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:37] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:37] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:37] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:38] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:38] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=quartermaster anchor=-5,161,-7 player=(-4.5, 167.0, 9.5) eye=Block{minecraft:air}
+[22:25:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 405 [aoe_npc_mara, aoe_airship_npc] pos=(-2.5, 167.0, 9.5) alive=true
+[22:25:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 404 [aoe_npc_captain, aoe_airship_npc] pos=(-3.5, 174.0, 26.5) alive=true
+[22:25:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 406 [aoe_npc_quartermaster, aoe_airship_npc] pos=(-5.5, 162.0, 20.5) alive=true
+[22:25:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS quartermaster stage=3
+[22:25:38] [Render thread/INFO] (Minecraft) [System] [CHAT] §6Последний Рассвет §8» §fВернись к капитану и доложи о готовности.
+[22:25:38] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:38] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=complete anchor=-5,161,-7 player=(-7.5, 162.0, 20.5) eye=Block{minecraft:air}
+[22:25:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 405 [aoe_npc_mara, aoe_airship_npc] pos=(-2.5, 167.0, 9.5) alive=true
+[22:25:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 404 [aoe_npc_captain, aoe_airship_npc] pos=(-3.5, 174.0, 26.5) alive=true
+[22:25:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 406 [aoe_npc_quartermaster, aoe_airship_npc] pos=(-5.5, 162.0, 20.5) alive=true
+[22:25:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS complete stage=4
+[22:25:39] [Render thread/INFO] (Minecraft) [System] [CHAT] §6Последний Рассвет §8» §fПервое поручение выполнено. Ты принят на борт.
+[22:25:39] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:39] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:39] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:39] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:40] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:40] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:40] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:40] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:41] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:41] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:42] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:42] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:42] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:42] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:43] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:43] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:25:43] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
 WARNING: A restricted method in java.lang.System has been called
 WARNING: java.lang.System::load has been called by net.rubygrapefruit.platform.internal.NativeLibraryLoader in an unnamed module (file:/home/runner/.gradle/wrapper/dists/gradle-9.7.1-bin/1w1c7tv4s851m17nbqdsro2tv/gradle-9.7.1/lib/native-platform-0.22-milestone-29.jar)
 WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
@@ -187,7 +188,7 @@ Note: Recompile with -Xlint:unchecked for details.
 > Task :validateAccessWidener NO-SOURCE
 > Task :check
 > Task :build
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793139413235.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793139762033.json
 
 [Incubating] Problems report is available at: file:///home/runner/work/Age-of-Epoch/Age-of-Epoch/build/reports/problems/problems-report.html
 
@@ -197,5 +198,5 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/9.7.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD SUCCESSFUL in 33s
+BUILD SUCCESSFUL in 34s
 8 actionable tasks: 8 executed
