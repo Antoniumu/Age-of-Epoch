@@ -9,6 +9,9 @@ import net.minecraft.world.level.block.Blocks;
 /** Original procedural build, no third-party schematic/license dependency. Deck at y=0. */
 public final class AirshipBlueprint {
     private AirshipBlueprint() {}
+    private static Block block(String id) {
+        return net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.withDefaultNamespace(id));
+    }
     public static Map<BlockPos, Block> blocks() {
         Map<BlockPos, Block> b = new LinkedHashMap<>();
         // Tapered keel, walkable deck and railings, 13 x 33 blocks.
@@ -29,7 +32,7 @@ public final class AirshipBlueprint {
             for (int y = 8; y <= 22; y++) {
                 double d = x*x/64.0 + (y-15)*(y-15)/49.0 + z*z/324.0;
                 if (d <= 1 && d >= 0.73) b.put(new BlockPos(x, y, z),
-                    z % 6 == 0 ? Blocks.YELLOW_WOOL : (x < 0 ? Blocks.CYAN_WOOL : Blocks.BLUE_WOOL));
+                    z % 6 == 0 ? block("yellow_wool") : (x < 0 ? block("cyan_wool") : block("blue_wool")));
             }
         for (int z : new int[]{-10, 0, 10}) for (int x : new int[]{-5, 5}) {
             for (int y = 2; y <= 10; y++) b.put(new BlockPos(x, y, z), Blocks.OAK_FENCE);

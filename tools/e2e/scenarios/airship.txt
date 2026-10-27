@@ -23,6 +23,9 @@ log_mark
 write run/airship-e2e.flag lift
 wait_log_new 30000 AIRSHIPTEST PASS lift
 wait 4000
+log_mark
+write run/airship-e2e.flag lift-check
+wait_log_new 30000 AIRSHIPTEST PASS lift-check
 shot 03-lift-arrival
 log_mark
 write run/airship-e2e.flag far-reject
@@ -32,10 +35,12 @@ write run/airship-e2e.flag dialogue
 wait_log_new 30000 AIRSHIPTEST PASS dialogue
 wait 2500
 shot 04-captain-dialogue
-key Escape
+# Click the real accept button (GUI scale 2), rather than advancing via probe.
+click 640 482
+wait 1000
 log_mark
-write run/airship-e2e.flag accept
-wait_log_new 30000 AIRSHIPTEST PASS accept
+write run/airship-e2e.flag accepted
+wait_log_new 30000 AIRSHIPTEST PASS accepted
 wait 1500
 hold h 500
 wait 2000

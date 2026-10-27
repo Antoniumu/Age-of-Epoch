@@ -29,6 +29,10 @@ public final class AirshipProbe {
                 p.teleportTo(level,d.x+30.5,d.y+12,d.z+31.5,Set.of(),135,12,false);
                 // Spectator gives a stable exterior shot without falling; restored before interactions.
                 p.setGameMode(net.minecraft.world.level.GameType.SPECTATOR);
+            } else if(action.equals("accepted")) {
+                if(d.stage!=1) throw new IllegalStateException("UI button did not accept quest");
+            } else if(action.equals("lift-check")) {
+                if(Math.abs(p.getY()-d.y-1)>0.1) throw new IllegalStateException("Lift did not arrive on deck");
             } else if(action.equals("board")) {
                 p.teleportTo(level,d.x+0.5,d.y+1,d.z+4.5,Set.of(),180,0,false);
                 p.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);

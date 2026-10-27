@@ -32,8 +32,8 @@ public final class AirshipService {
     public static AirshipData data(ServerPlayer p) { return Load.playerRPGData(p).airship; }
     private static void sync(ServerPlayer p) { Load.playerRPGData(p).syncToClient(p); }
     public static String npcId(Entity e) {
-        if (!e.getTags().contains(TAG)) return "";
-        for (String id : AirshipStory.IDS) if (e.getTags().contains("aoe_npc_" + id)) return id;
+        if (!e.entityTags().contains(TAG)) return "";
+        for (String id : AirshipStory.IDS) if (e.entityTags().contains("aoe_npc_" + id)) return id;
         return "";
     }
     public static void register() {
@@ -53,7 +53,7 @@ public final class AirshipService {
     }
     public static void accept(ServerPlayer p, int entityId) {
         Entity e = p.level().getEntity(entityId);
-        if (e == null || !e.isAlive() || p.distanceToSqr(e) > 36 || npcId(e).isEmpty()) return;
+        if (p.isSpectator() || e == null || !e.isAlive() || p.distanceToSqr(e) > 36 || npcId(e).isEmpty() || !p.hasLineOfSight(e)) return;
         AirshipData d = data(p);
         int next = AirshipStory.advance(npcId(e), d.stage);
         if (next == d.stage) return;
@@ -80,6 +80,8 @@ public final class AirshipService {
             BlockPos column = new BlockPos(x, p.blockPosition().getY(), z+4);
             if (!level.hasChunkAt(column)) continue;
             int floor = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z+4);
+            BlockPos landing = new BlockPos(x,floor-1,z+4);
+            if (!level.getBlockState(landing).isSolid() || !level.getFluidState(landing).isEmpty()) continue;
             BlockPos candidate = new BlockPos(x, Math.max(floor+38, p.blockPosition().getY()+30), z);
             if (clear(level, candidate, floor)) { origin=candidate; ground=floor; break; }
         }
@@ -87,9 +89,9 @@ public final class AirshipService {
         ArrayList<Entity> crew = new ArrayList<>();
         int[][] spots={{0,-12},{-3,-2},{3,7}};
         for (int i=0;i<AirshipStory.IDS.length;i++) {
-            Entity created=EntityType.VILLAGER.create(level, EntitySpawnReason.COMMAND);
+            Entity created=net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("villager")).create(level, EntitySpawnReason.COMMAND);
             if (!(created instanceof Mob mob)) return tell(p, "Не удалось создать команду. Валюта не списана.");
-            mob.setPos(origin.getX()+spots[i][0]+0.5,origin.getY()+1,origin.getZ()+spots[i][1]+0.5);
+            mob.snapTo(origin.getX()+spots[i][0]+0.5,origin.getY()+1,origin.getZ()+spots[i][1]+0.5,0F,0F);
             mob.setNoAi(true);
             mob.setInvulnerable(true);
             mob.setSilent(true);
@@ -126,7 +128,7 @@ public final class AirshipService {
         }
         for (int y=ground;y<=o.getY();y++) for(int x=-1;x<=1;x++) for(int z=3;z<=5;z++)
             if (!level.getBlockState(new BlockPos(o.getX()+x,y,o.getZ()+z)).isAir()) return false;
-        return level.getEntitiesOfClass(Entity.class,new AABB(o.offset(-11,-5,-21),o.offset(12,26,22)),e->true).isEmpty();
+        return level.getEntitiesOfClass(Entity.class,new AABB(o.getX()-11,o.getY()-5,o.getZ()-21,o.getX()+12,o.getY()+26,o.getZ()+22),e->true).isEmpty();
     }
     public static int descend(ServerPlayer p) {
         AirshipData d=data(p);
