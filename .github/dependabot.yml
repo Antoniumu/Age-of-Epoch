@@ -1,0 +1,15 @@
+# Dependabot следит только за GitHub Actions: он присылает PR, когда у
+# checkout/setup-java/gradle-actions выходит новая мажорная версия.
+# Зависимости Gradle (Loom, Fabric API, Minecraft) он не трогает намеренно —
+# их обновляет человек, потому что версии Minecraft/Loom связаны жёстко.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: '/'
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: 'ci'
+    labels:
+      - ci
+    open-pull-requests-limit: 5

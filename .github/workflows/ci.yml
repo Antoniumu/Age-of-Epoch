@@ -1,0 +1,297 @@
+name: CI
+
+# Что здесь есть:
+#   static      — синтаксис 1591 файла (tree-sitter) + инварианты из LAUNCH-READINESS.md,
+#                 контент/вики и модель баланса. Без JDK, ~1 минута.
+#   wrapper     — контрольная сумма gradle-wrapper.jar (защита от подмены).
+#   build       — настоящая сборка на JDK 25 (Temurin) + проверка содержимого jar.
+#                 Публикует jar как артефакт, его можно скачать и поставить в mods/.
+#   client-boot — запуск dev-клиента под xvfb до главного меню (smoke-тест порта).
+#   ci-ok       — единая галочка для branch protection.
+#
+# Пропустить прогон для пустого коммита: добавь в сообщение коммита [skip ci].
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # Раз в неделю: ловит протухшие URL зависимостей и «сборка сломалась сама».
+    - cron: '0 4 * * 1'
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write   # сводный комментарий с итогами (tools/ci/pr-report.sh)
+
+env:
+  GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx4G'
+  PYTHONUNBUFFERED: '1'
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # 1. Быстрые проверки, которым не нужен JDK 25.
+  # ---------------------------------------------------------------------------
+  static:
+    name: Static checks (syntax + invariants + balance)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: tools/ci/requirements.txt
+
+      - name: Установить зависимости проверок
+        run: python -m pip install --disable-pip-version-check -r tools/ci/requirements.txt
+
+      - name: tools/ci/static-checks.sh
+        run: bash tools/ci/static-checks.sh
+
+  # ---------------------------------------------------------------------------
+  # 2. Gradle wrapper: файл в репозитории должен совпадать с официальным.
+  #    (первый прогон может быть красным после ручной пересборки wrapper-а —
+  #    тогда достаточно выполнить ./gradlew wrapper --gradle-version 9.7.1)
+  # ---------------------------------------------------------------------------
+  wrapper:
+    name: Gradle wrapper validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: gradle/actions/wrapper-validation@v6
+
+  # ---------------------------------------------------------------------------
+  # 3. Настоящая сборка: JDK 25, Loom, jar для установки.
+  # ---------------------------------------------------------------------------
+  build:
+    name: Build mod jar (JDK 25)
+    needs: [static]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    outputs:
+      jar: ${{ steps.facts.outputs.jar }}
+      size: ${{ steps.facts.outputs.size }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-build-env
+        with:
+          cache-read-only: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork }}
+
+      - name: ./gradlew build
+        run: ./gradlew build --stacktrace --no-problems-report
+
+      - name: Проверить содержимое jar
+        run: bash tools/ci/check-jar.sh build/libs
+
+      - name: Факты о сборке
+        id: facts
+        run: |
+          jar="$(ls -1 build/libs/*.jar | grep -v -- '-sources' | grep -v -- '-dev' | head -1)"
+          bytes="$(wc -c < "$jar")"
+          echo "jar=$(basename "$jar")" >> "$GITHUB_OUTPUT"
+          echo "size=$((bytes / 1024 / 1024)) МБ" >> "$GITHUB_OUTPUT"
+
+      - name: Сводка в job summary
+        if: always()
+        run: |
+          {
+            echo "### Сборка"
+            echo
+            if [ -d build/libs ]; then
+              echo '```'
+              ls -lh build/libs/*.jar 2>/dev/null || echo 'jar-ов нет'
+              echo '```'
+            else
+              echo 'Каталог build/libs не создан — сборка не дошла до упаковки.'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Забрать jar
+        if: success()
+        uses: actions/upload-artifact@v7
+        with:
+          name: Age-of-Epoch-jar
+          path: |
+            build/libs/*.jar
+            !build/libs/*-dev.jar
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
+
+      - name: Логи при падении
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: build-logs
+          path: |
+            build/reports/**
+            **/*.log
+          if-no-files-found: ignore
+          retention-days: 7
+
+  # ---------------------------------------------------------------------------
+  # 4. Smoke-тест клиента: мод должен дойти до главного меню, а не упасть на
+  #    инициализации миксинов/реестров. В PR он не блокирующий (порт ещё
+  #    нестабилен), на main и при ручном запуске — блокирующий.
+  # ---------------------------------------------------------------------------
+  client-boot:
+    name: Client boot smoke test (xvfb)
+    needs: [static]
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    continue-on-error: ${{ github.event_name == 'pull_request' }}
+    outputs:
+      ready: ${{ steps.facts.outputs.ready }}
+      elapsed: ${{ steps.facts.outputs.elapsed }}
+      marker: ${{ steps.facts.outputs.marker }}
+      crashes: ${{ steps.facts.outputs.crashes }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-build-env
+        with:
+          cache-read-only: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork }}
+
+      - name: Библиотеки для headless-клиента
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends \
+            xvfb mesa-utils libgl1 libglu1-mesa libgl1-mesa-dri \
+            libxi6 libxcursor1 libxrandr2 libxinerama1 libxxf86vm1 \
+            libopenal1 libpulse0
+
+      - name: runClient до главного меню
+        run: bash tools/ci/smoke-client.sh
+        env:
+          SMOKE_TIMEOUT: '1500'
+
+      - name: Факты о запуске
+        id: facts
+        if: always()
+        run: |
+          f=run/smoke-result.txt
+          get() { [ -f "$f" ] && sed -nE "s/^$1=//p" "$f" | head -1 || true; }
+          echo "ready=$(get ready)"       >> "$GITHUB_OUTPUT"
+          echo "elapsed=$(get elapsed)"   >> "$GITHUB_OUTPUT"
+          echo "crashes=$(get crashes)"   >> "$GITHUB_OUTPUT"
+          # маркер содержит двоеточия и пробелы — экранировать не нужно, GITHUB_OUTPUT
+          # принимает произвольный текст в одной строке
+          echo "marker=$(get marker)"     >> "$GITHUB_OUTPUT"
+
+      - name: Логи клиента
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: client-logs
+          path: |
+            run/logs/**
+            run/crash-reports/**
+            run/smoke-gradle.log
+          if-no-files-found: ignore
+          retention-days: 14
+
+  # ---------------------------------------------------------------------------
+  # 5. Единая проверка для branch protection: «CI / ci-ok».
+  # ---------------------------------------------------------------------------
+  ci-ok:
+    name: ci-ok
+    if: always()
+    needs: [static, wrapper, build, client-boot]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Свести результаты
+        run: |
+          echo "static=${{ needs.static.result }}"
+          echo "wrapper=${{ needs.wrapper.result }}"
+          echo "build=${{ needs.build.result }}"
+          echo "client-boot=${{ needs.client-boot.result }}"
+
+          # client-boot в PR помечен continue-on-error и его падение не должно
+          # красить ci-ok; на остальных событиях он обязателен.
+          failed=0
+          for r in \
+            "static=${{ needs.static.result }}" \
+            "wrapper=${{ needs.wrapper.result }}" \
+            "build=${{ needs.build.result }}"; do
+            case "$r" in
+              *=success|*=skipped) ;;
+              *) echo "::error::Провал: $r"; failed=1 ;;
+            esac
+          done
+
+          case "${{ needs.client-boot.result }}" in
+            success|skipped) ;;
+            *) if [ "${{ github.event_name }}" != "pull_request" ]; then
+                 echo "::error::Клиент не запустился (client-boot: ${{ needs.client-boot.result }})"
+                 failed=1
+               else
+                 echo "::warning::Клиент не запустился, но в PR это не блокирует."
+               fi ;;
+          esac
+
+          exit "$failed"
+
+      - name: Комментарий с итогами в PR
+        if: always() && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          STATIC: ${{ needs.static.result }}
+          WRAPPER: ${{ needs.wrapper.result }}
+          BUILD: ${{ needs.build.result }}
+          BOOT: ${{ needs.client-boot.result }}
+          JAR: ${{ needs.build.outputs.jar }}
+          JAR_SIZE: ${{ needs.build.outputs.size }}
+          BOOT_READY: ${{ needs.client-boot.outputs.ready }}
+          BOOT_ELAPSED: ${{ needs.client-boot.outputs.elapsed }}
+          BOOT_MARKER: ${{ needs.client-boot.outputs.marker }}
+          BOOT_CRASHES: ${{ needs.client-boot.outputs.crashes }}
+        run: |
+          icon() {
+            case "$1" in
+              success) echo "✅" ;;
+              skipped) echo "⏭️" ;;
+              cancelled) echo "⚪" ;;
+              *) echo "❌" ;;
+            esac
+          }
+          md="$(mktemp)"
+          {
+            echo "## Итоги CI"
+            echo
+            echo "| Проверка | Результат |"
+            echo "|---|---|"
+            echo "| Статические проверки (синтаксис, инварианты, баланс) | $(icon "$STATIC") \`$STATIC\` |"
+            echo "| Gradle wrapper | $(icon "$WRAPPER") \`$WRAPPER\` |"
+            if [ "$BUILD" = "success" ] && [ -n "$JAR" ]; then
+              echo "| Сборка на JDK 25 | $(icon "$BUILD") \`$JAR\`, $JAR_SIZE |"
+            else
+              echo "| Сборка на JDK 25 | $(icon "$BUILD") \`$BUILD\` |"
+            fi
+            if [ "$BOOT" = "success" ] && [ "$BOOT_READY" = "1" ]; then
+              echo "| Запуск клиента (xvfb) | $(icon "$BOOT") главное меню за ${BOOT_ELAPSED}s: \`${BOOT_MARKER}\` |"
+            elif [ "$BOOT" = "failure" ] || [ "$BOOT_READY" = "0" ]; then
+              echo "| Запуск клиента (xvfb) | $(icon "$BOOT") не дошёл до меню за ${BOOT_ELAPSED:-?}s, crash-report: $BOOT_CRASHES |"
+            else
+              echo "| Запуск клиента (xvfb) | $(icon "$BOOT") \`$BOOT\` |"
+            fi
+            echo
+            echo "Скачать jar: \`gh run download ${{ github.run_id }} --name Age-of-Epoch-jar\`"
+            echo "В логах: [прогон]($RUN_URL) · подробности — \`docs/CI.md\`"
+            echo
+            echo "<sub>Комментарий обновляется при каждом прогоне.</sub>"
+          } > "$md"
+          bash tools/ci/pr-report.sh "$md"
