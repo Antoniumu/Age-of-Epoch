@@ -25,13 +25,14 @@ public class AirshipDialogueScreen extends BaseScreen {
     private long cueStarted;
     private boolean fullText,started,heardActive;
     private int panelX,panelY,panelW;
+    private net.minecraft.world.entity.player.ChatVisiblity previousChat;
     public AirshipDialogueScreen(int entityId,String npc,String texture) { super(560,170);this.entityId=entityId;this.npc=npc;this.texture=texture; }
     @Override public boolean isPauseScreen() { return false; }
     @Override protected void init() {
         super.init();
         panelW=Math.min(560,width-16);panelX=(width-panelW)/2;panelY=height-(fullText?196:94)-8;
         if(!started && mc.player!=null) {
-            started=true;storyStage=Load.playerRPGData(mc.player).airship.stage;
+            started=true;previousChat=mc.options.chatVisibility().get();mc.options.chatVisibility().set(net.minecraft.world.entity.player.ChatVisiblity.HIDDEN);storyStage=Load.playerRPGData(mc.player).airship.stage;
             transcript=AirshipStory.dialogue(npc,storyStage);
             if(AirshipStory.target(storyStage)>0 && AirshipStory.actor(storyStage).equals(npc)
                 && !AirshipCampaign.ready(Load.playerRPGData(mc.player).airship,Load.playerRPGData(mc.player).questBook))
@@ -91,7 +92,7 @@ public class AirshipDialogueScreen extends BaseScreen {
         proof("KEY compatible="+key+" fullText="+fullText);
         if(key==InputConstants.KEY_SPACE) { if(!fullText) reveal();return true; }
         if(key==InputConstants.KEY_R && npc.equals("captain")) { fullText=false;cueIndex=0;init();startCue();return true; }
-        if(fullText && key==InputConstants.KEY_1 && AirshipStory.advance(npc,storyStage)!=storyStage) { send(storyStage==7?1:0);return true; }
+        if(fullText && key==InputConstants.KEY_1 && AirshipStory.advance(npc,storyStage)!=storyStage && mc.player!=null && AirshipCampaign.ready(Load.playerRPGData(mc.player).airship,Load.playerRPGData(mc.player).questBook)) { send(storyStage==7?1:0);return true; }
         if(fullText && key==InputConstants.KEY_2 && storyStage==7) { send(0);return true; }
         if(key==InputConstants.KEY_ESCAPE) { onClose();return true; }
         return super.keyPressed(key,scan,modifiers);
@@ -101,7 +102,7 @@ public class AirshipDialogueScreen extends BaseScreen {
         return super.mouseClicked(x,y,button);
     }
     @Override public void onClose() { stopVoice();mc.gui.setScreen(null); }
-    @Override public void removed() { stopVoice();super.removed(); }
+    @Override public void removed() { stopVoice();if(previousChat!=null) mc.options.chatVisibility().set(previousChat);super.removed(); }
     @Override public void render(PoseStack pose,int mx,int my,float partial) {
         int x=panelX,y=panelY,w=panelW,h=fullText?196:94;
         AbstractGui.fill(pose,x,y,x+w,y+h,0xCF101316);
