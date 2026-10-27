@@ -31,6 +31,7 @@ public class TestSpells implements ExileRegistryInit {
                 Arrays.asList(SpellTag.projectile, SpellTag.damage))
             .weight(0)
 
+            .manualDesc("Служебное заклинание разработчика: стреляет снарядом, который бьёт по площади Fire уроном.")
             .weaponReq(CastingWeapon.MAGE_WEAPON)
 
             .onCast(PartBuilder.playSound(SoundEvents.BLAZE_SHOOT, 1D, 0.6D))

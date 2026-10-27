@@ -49,6 +49,14 @@ public class ProjectileCastHelper {
     public void cast() {
         Level world = caster.level();
 
+        if (!world.isClientSide()) {
+            // Аудит: если снаряд не появился вовсе, эта строка — единственный
+            // след того, что действие вообще запускалось.
+            com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.diag(
+                "diag_projenter spell=" + (data != null ? data.spell_id : "?")
+                    + " type=" + projectile + " count=" + projectilesAmount);
+        }
+
         float addYaw = 0;
 
         Vec3 posAdd = new Vec3(0, 0, 0);
@@ -86,6 +94,17 @@ public class ProjectileCastHelper {
                 en.setDeltaMovement(0, -1, 0);
             }
             en.setSilent(silent);
+
+            // Диагностика аудита: видно, с каким наклоном/поворотом реально
+            // запущен снаряд и какая у него скорость на первом тике.
+            if (!caster.level().isClientSide()) {
+                com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.diag(
+                    String.format(java.util.Locale.ROOT,
+                        "diag_projshot spell=%s uuid=%s pitch=%.1f yaw=%.1f speed=%.2f start=%.2f/%.2f/%.2f d=%.2f/%.2f/%.2f",
+                        data != null ? data.spell_id : "?", en.getUUID(), pitch, yaw, shootSpeed,
+                        en.getX(), en.getY(), en.getZ(),
+                        en.getDeltaMovement().x, en.getDeltaMovement().y, en.getDeltaMovement().z));
+            }
 
             boolean added = caster.level().addFreshEntity(en);
             com.robertx22.age_of_exile.uncommon.utilityclasses.SpellLogger.logProjectileShot(

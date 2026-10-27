@@ -122,9 +122,14 @@ esac
 gradle_pid=$!
 
 # Клиент качается/компилируется при первом прогоне: ждём появления окна в сценарии.
+# CLIENT_TIMEOUT — жёсткий предел на весь сценарий: если прогон завис на ожидании
+# окна или строки в логе, job не должен висеть до общего таймаута.
 started=$(date +%s)
-python3 tools/e2e/run_scenario.py "$scenario" "$outdir"
+timeout --kill-after=60 "$client_timeout" python3 tools/e2e/run_scenario.py "$scenario" "$outdir"
 scenario_status=$?
+if [ "$scenario_status" -eq 124 ]; then
+    echo "=== сценарий прерван по CLIENT_TIMEOUT=${client_timeout}s ==="
+fi
 finished=$(date +%s)
 echo "=== сценарий занял $((finished - started))s, статус ${scenario_status} ==="
 

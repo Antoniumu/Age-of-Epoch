@@ -27,6 +27,9 @@
     jstack [метка]              сохранить стек клиентского JVM
     wmctrl                      список окон через WM
     touch run/aoe-devtest.flag  создать файл-триггер (перезапуск зонда замеров)
+    write run/x.flag all        создать файл-триггер с содержимым (аудит умений)
+    shell bash script.sh start  выполнить команду оболочки (запись видео и т.п.)
+    wait_file run/spell-audit.md 600000  ждать появления файла, мс
     log текст                   записать в журнал
 
 Запуск:
@@ -39,6 +42,28 @@ import subprocess
 import sys
 import time
 import traceback
+
+_ENV_PATTERN = re.compile(r"\$\{(\w+)(?::-([^}]*))?\}|\$(\w+)")
+
+
+def expand_env(text):
+    """Раскрывает $VAR и ${VAR:-default} так же, как оболочка.
+
+    os.path.expandvars не знает про `${VAR:-default}`, а именно так в сценарии
+    spells.txt задаётся цель прогона (AOE_AUDIT_TARGET). Без своей реализации во
+    флаг-файле осталась бы строка целиком, и аудит молча шёл бы по всем умениям
+    вместо выбранной школы.
+    """
+    def repl(match):
+        name = match.group(1) or match.group(3)
+        default = match.group(2)
+        value = os.environ.get(name, "")
+        if value:
+            return value
+        return default if default is not None else ""
+
+    return _ENV_PATTERN.sub(repl, text)
+
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 LOG = os.path.join(REPO, "run", "logs", "latest.log")
@@ -277,6 +302,17 @@ class Runner:
         self.fail("в логе нет /%s/ за %d мс" % (pattern, timeout_ms))
         return False
 
+    def wait_file(self, rel_path, timeout_ms):
+        path = rel_path if os.path.isabs(rel_path) else os.path.join(REPO, rel_path)
+        deadline = time.time() + timeout_ms / 1000.0
+        while time.time() < deadline:
+            if os.path.exists(path):
+                self.note("появился файл %s" % rel_path)
+                return True
+            time.sleep(2)
+        self.fail("файл %s не появился за %d мс" % (rel_path, timeout_ms))
+        return False
+
     # ------------------------------------------------------------------ снимок
 
     def shot(self, name):
@@ -440,6 +476,42 @@ class Runner:
                     with open(path, "a", encoding="utf-8"):
                         pass
                     self.note("создан файл-триггер " + rest.strip())
+                elif command == "write":
+                    # write <путь> <содержимое>: флаг-файл с параметрами,
+                    # например `write run/aoe-spell-audit.flag all`.
+                    bits = rest.split(None, 1)
+                    if not bits:
+                        self.fail("write требует: <путь> [содержимое]")
+                    else:
+                        path = os.path.join(REPO, bits[0])
+                        os.makedirs(os.path.dirname(path) or REPO, exist_ok=True)
+                        # ${VAR:-default} — чтобы цель прогона задавалась из CI.
+                        content = expand_env(bits[1]) if len(bits) > 1 else ""
+                        with open(path, "w", encoding="utf-8") as handle:
+                            handle.write(content)
+                        self.note("записан файл-триггер %s: %s"
+                                  % (bits[0], bits[1] if len(bits) > 1 else "(пусто)"))
+                elif command == "shell":
+                    # shell <команда>: произвольная команда оболочки в окружении
+                    # клиента (тот же DISPLAY/XAUTHORITY). Нужна для записи видео:
+                    # ffmpeg должен снимать именно тот дисплей, где живёт окно.
+                    if not rest.strip():
+                        self.fail("shell требует команду")
+                    else:
+                        self.focus()
+                        code, out = self.run(["bash", "-lc", rest.strip()], timeout=300,
+                                             display=self.display)
+                        self.note("shell[%s] -> %s\n    %s"
+                                  % (rest.strip()[:80], code,
+                                     (out or "").strip().replace("\n", "\n    ")[:1200]))
+                        if code != 0:
+                            self.fail("команда оболочки вернула %s: %s" % (code, rest.strip()[:120]))
+                elif command == "wait_file":
+                    bits = rest.split()
+                    if len(bits) < 1:
+                        self.fail("wait_file требует: <путь> [таймаут_мс]")
+                    else:
+                        self.wait_file(bits[0], int(bits[1]) if len(bits) > 1 else 600000)
                 elif command == "log":
                     self.note(rest)
                 else:

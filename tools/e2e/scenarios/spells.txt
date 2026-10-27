@@ -1,0 +1,54 @@
+# Сценарий: аудит ВСЕХ умений (все школы + вне школ) с записью видео.
+#
+# Что здесь важно:
+#   * мир создаётся тем же путём, что в combat.txt — координаты проверены CI;
+#   * аудит запускает флаг-файл run/aoe-spell-audit.flag со словом `all`:
+#     SpellAuditProbe сам строит площадку, спавнит манекены, применяет каждое
+#     заклинание и пишет строки AOEAI + маркеры таймлайна для нарезки видео;
+#   * запись видео (ffmpeg/x11grab) стартует ДО флага, чтобы в кадр попало
+#     первое же умение, и останавливается после `AOEAI done`;
+#   * клики/координаты — под окно 1280x720 (run/options.txt, guiScale 2).
+
+wait_window Minecraft 420000
+wait_log 300000 Created: .*atlas/items
+wait 8000
+shot 00-main-menu
+
+# Главное меню → Одиночная игра
+move 640 296
+click 640 296
+wait 4000
+shot 01-world-list
+
+# «Создать новый мир» → экран создания → создать
+move 480 688
+click 480 688
+wait 3000
+shot 02-create-world
+move 480 688
+click 480 688
+wait 45000
+shot 03-in-world
+
+# --- запись видео + прогон всех умений ---------------------------------------
+shell mkdir -p run/e2e
+shell bash tools/e2e/spell-video.sh start
+wait 2000
+write run/aoe-spell-audit.flag ${AOE_AUDIT_TARGET:-all}
+log флаг аудита поставлен, жду AOEAI done
+
+# 74 умения × (каст + наблюдение) ≈ 6-10 минут. Ждём с запасом.
+wait_log 1800000 AOEAI done
+wait 4000
+shot 04-audit-done
+
+# Показать дерево умений мода уже после прогона: видно, что все узлы на месте.
+hold h 600
+wait 2500
+shot 05-character
+hold h 600
+wait 1500
+
+shell bash tools/e2e/spell-video.sh stop
+jstack spells
+log конец сценария spells

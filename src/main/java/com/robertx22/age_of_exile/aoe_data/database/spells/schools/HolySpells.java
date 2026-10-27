@@ -155,7 +155,7 @@ public class HolySpells implements ExileRegistryInit {
         SpellBuilder.of(UNDYING_WILL, SpellConfiguration.Builder.instant(7, 20 * 60)
                     .setScaleManaToPlayer(), "Undying Will",
                 Arrays.asList())
-            .manualDesc("Gives buff to self.")
+            .manualDesc("Undying Will for 10 s: you take far less damage and regenerate health.")
             .attackStyle(PlayStyle.melee)
             .weaponReq(CastingWeapon.ANY_WEAPON)
             .onCast(PartBuilder.playSound(SoundEvents.RAVAGER_ROAR, 1D, 1D))

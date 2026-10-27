@@ -13,6 +13,7 @@ import com.robertx22.age_of_exile.database.data.spells.components.entity_predica
 import com.robertx22.age_of_exile.database.data.spells.components.selectors.TargetSelector;
 import com.robertx22.age_of_exile.database.data.spells.map_fields.MapField;
 import com.robertx22.age_of_exile.database.data.spells.spell_classes.CastingWeapon;
+import com.robertx22.age_of_exile.database.data.spells.components.actions.vanity.ParticleMotion;
 import com.robertx22.age_of_exile.mmorpg.registers.common.SlashBlocks;
 import com.robertx22.age_of_exile.mmorpg.registers.common.SlashEntities;
 import com.robertx22.age_of_exile.mmorpg.registers.common.SlashSounds;
@@ -118,8 +119,11 @@ public class WaterSpells implements ExileRegistryInit {
 
         SpellBuilder.of(ICY_WEAPON, SpellConfiguration.Builder.instant(10, 20 * 30), "Icy Weapon",
                 Arrays.asList())
-            .manualDesc("Gives effect to nearby allies.")
+            .manualDesc("Enchant the weapons of allies within 5 blocks with ice for 10 s: their hits deal extra Water damage.")
             .onCast(PartBuilder.playSound(SoundEvents.ILLUSIONER_CAST_SPELL, 1D, 1D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.ITEM_SNOWBALL, 60D, 3D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.ENCHANT, 50D, 3D))
+            .onCast(PartBuilder.groundEdgeParticles(ParticleTypes.SNOWFLAKE, 40D, 3D, 0.4D, ParticleMotion.Upwards))
             .onCast(PartBuilder.giveExileEffectToAlliesInRadius(5D, BeneficialEffects.ICY_WEAPON.resourcePath, 20 * 10D))
             .build();
 
@@ -177,8 +181,11 @@ public class WaterSpells implements ExileRegistryInit {
 
         SpellBuilder.of(FROST_ARMOR, SpellConfiguration.Builder.instant(15, 120 * 20), "Frost Armor",
                 Arrays.asList())
-            .manualDesc("Give self effect:")
+            .manualDesc("Sheathe yourself in frost for 120 s: armor and Water resistance rise.")
             .onCast(PartBuilder.playSound(SoundEvents.ILLUSIONER_CAST_SPELL, 1D, 1D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.ITEM_SNOWBALL, 70D, 2D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.CLOUD, 40D, 2D))
+            .onCast(PartBuilder.groundEdgeParticles(ParticleTypes.SNOWFLAKE, 40D, 2D, 0.4D, ParticleMotion.Upwards))
             .onCast(PartBuilder.giveSelfExileEffect(BeneficialEffects.FROST_ARMOR, 20 * 120D))
             .build();
 

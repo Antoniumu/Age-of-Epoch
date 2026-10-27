@@ -32,6 +32,10 @@ public class AttachedSpell {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            // Аудит: ошибка внутри части умения иначе видна только в консоли,
+            // а в отчёте остаётся невнятное «эффект не сработал».
+            com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.diag(
+                "diag_spell_error entity=" + entity_name + " error=" + e);
         }
     }
 

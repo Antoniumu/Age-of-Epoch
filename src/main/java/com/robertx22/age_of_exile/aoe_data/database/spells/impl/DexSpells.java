@@ -11,6 +11,7 @@ import com.robertx22.age_of_exile.database.data.spells.components.actions.SpellA
 import com.robertx22.age_of_exile.database.data.spells.components.selectors.TargetSelector;
 import com.robertx22.age_of_exile.database.data.spells.map_fields.MapField;
 import com.robertx22.age_of_exile.database.data.spells.spell_classes.CastingWeapon;
+import com.robertx22.age_of_exile.database.data.spells.components.actions.vanity.ParticleMotion;
 import com.robertx22.age_of_exile.mmorpg.registers.common.SlashEntities;
 import com.robertx22.age_of_exile.mmorpg.registers.common.SlashPotions;
 import com.robertx22.age_of_exile.uncommon.enumclasses.Elements;
@@ -51,6 +52,10 @@ public class DexSpells implements ExileRegistryInit {
                 Arrays.asList())
             .attackStyle(PlayStyle.ranged)
             .manualDesc("Mark your target for death, making them more vulnerable to damage.")
+            .onCast(PartBuilder.playSound(SoundEvents.SOUL_SOIL_HIT, 1D, 1D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.SOUL, 60D, 2D))
+            .onCast(PartBuilder.aoeParticles(ParticleTypes.WITCH, 40D, 2D))
+            .onCast(PartBuilder.groundEdgeParticles(ParticleTypes.SOUL_FIRE_FLAME, 30D, 2D, 0.3D, ParticleMotion.OutwardMotion))
             .onCast(PartBuilder.giveSelfEffect(SlashPotions.KNOCKBACK_RESISTANCE.get(), 20D * 10))
             .onCast(PartBuilder.giveSelfExileEffect(BeneficialEffects.MURDER_INSTINCT, 20D * 10))
             .onCast(PartBuilder.justAction(SpellAction.SUMMON_PROJECTILE.create(Items.AIR, 1D, 2D, SlashEntities.SIMPLE_PROJECTILE.get(), 20D, false)

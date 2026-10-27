@@ -36,7 +36,10 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
         acc.setBlockState(block);
         acc.setDestroyedOnLanding(false);
         this.entityData.set(BLOCK, BuiltInRegistries.BLOCK.getKey(block.getBlock()).toString());
-        this.blocksBuilding = true;
+        // Блок заклинания — декорация, а не препятствие: solid-блок на месте
+        // тотема/зоны душил тех, кто в нём стоит (мобы и питомцы получали урон
+        // каждым тиком, а в аудите это выглядело как урон самого умения).
+        this.blocksBuilding = false;
         this.setPos(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
         this.setDeltaMovement(Vec3.ZERO);
         this.xo = pos.getX() + 0.5D;
@@ -96,6 +99,14 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
 
         this.age++;
 
+        // Диагностика аудита: видно, что «блок» заклинания (тотем, зона, круг)
+        // действительно появился и на каком расстоянии он от кастера. Без этого
+        // «эффект не сработал» одинаково выглядит и для «блок не появился», и для
+        // «блок появился там, где никого нет».
+        if (this.age == 1 || this.age % 20 == 0) {
+            auditDiag();
+        }
+
         if (entityData.get(IS_FALLING)) {
             if (!this.isNoGravity()) {
 
@@ -136,6 +147,22 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
 
         if (this.age > lifespan || this.getY() < this.level().getMinY() - 32) {
             this.remove(Entity.RemovalReason.DISCARDED);
+        }
+    }
+
+    private void auditDiag() {
+        if (this.level().isClientSide()) {
+            return;
+        }
+        try {
+            EntitySavedSpellData data = this.getSpellData();
+            LivingEntity caster = data == null ? null : data.getCaster(this.level());
+            com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.diag(String.format(java.util.Locale.ROOT,
+                "diag_block spell=%s name=%s age=%d pos=%.2f/%.2f/%.2f dist=%.2f",
+                data == null ? "?" : data.spell_id, getScoreboardName(), this.age,
+                this.getX(), this.getY(), this.getZ(),
+                caster == null ? -1D : Math.sqrt(caster.distanceToSqr(this))));
+        } catch (Throwable ignored) {
         }
     }
 

@@ -7,7 +7,7 @@ import com.robertx22.age_of_exile.database.data.spells.spell_classes.SpellCtx;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.ParticleUtils;
 import com.robertx22.library_of_exile.utils.GeometryUtils;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.Registry;
 
@@ -34,7 +34,7 @@ public class ParticleInRadiusAction extends SpellAction {
 
             Shape shape = data.getParticleShape();
 
-            SimpleParticleType particle = data.getParticle();
+            ParticleOptions particle = data.getParticle();
 
             float radius = data.get(RADIUS)
                 .floatValue();

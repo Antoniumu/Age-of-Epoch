@@ -29,6 +29,21 @@ public class ComponentPart {
         return this;
     }
 
+    /**
+     * Дочерние части «на каждую задетую сущность».
+     *
+     * <p>Партиклы и звуки попадания живут именно здесь, поэтому проверки, которые
+     * смотрят «а есть ли у умения эффект», обязаны заглядывать и в них — иначе
+     * заклинание с партиклами только на попадании выглядит как заклинание без
+     * партиклов.
+     */
+    public List<ComponentPart> getPerEntityHit() {
+        if (this.per_entity_hit == null) {
+            return List.of();
+        }
+        return this.per_entity_hit;
+    }
+
     public ComponentPart enemiesInRadius(Double radius) {
         targets.add(TargetSelector.AOE.enemiesInRadius(radius));
         return this;

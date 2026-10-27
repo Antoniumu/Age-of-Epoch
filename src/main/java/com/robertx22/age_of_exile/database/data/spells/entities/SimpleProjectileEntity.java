@@ -65,6 +65,30 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
 
     public Entity ignoreEntity;
 
+    /** Цели, которые этот снаряд уже задел (пробивающие снаряды бьют один раз). */
+    private final java.util.Set<UUID> hitTargets = new java.util.HashSet<>();
+
+    /**
+     * Строка диагностики для аудита заклинаний (пишется только во время прогона и
+     * только на сервере). Нужна, чтобы в отчёте «нет попаданий» можно было
+     * отличить три разные причины: снаряд не тикал, снаряд пролетел мимо,
+     * попадание найдено но урон не пошёл.
+     */
+    private void auditDiag(String what) {
+        if (this.level().isClientSide()) {
+            return;
+        }
+        try {
+            com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.diag(what + " spell="
+                + (spellData == null ? "?" : spellData.spell_id)
+                + " uuid=" + this.getUUID() + " t=" + this.tickCount
+                + String.format(java.util.Locale.ROOT, " pos=%.2f/%.2f/%.2f d=%.2f/%.2f/%.2f",
+                this.getX(), this.getY(), this.getZ(),
+                this.getDeltaMovement().x, this.getDeltaMovement().y, this.getDeltaMovement().z));
+        } catch (Throwable ignored) {
+        }
+    }
+
     boolean collidedAlready = false;
 
     @Override
@@ -235,6 +259,9 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
 
         try {
             super.tick();
+            if (this.tickCount <= 8) {
+                auditDiag("diag_projtick");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             this.scheduleRemoval();
@@ -286,9 +313,19 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
         if (!this.entityData.get(HIT_ALLIES)) {
             if (res != null && getCaster() != null && res.getEntity() instanceof LivingEntity) {
                 if (AllyOrEnemy.allies.is(getCaster(), (LivingEntity) res.getEntity())) {
+                    if (this.tickCount <= 8) {
+                        auditDiag("diag_projally hit=" + res.getEntity()
+                            .getClass()
+                            .getSimpleName());
+                    }
                     return null;
                 }
             }
+        }
+        if (res != null && this.tickCount <= 8) {
+            auditDiag("diag_projhit target=" + res.getEntity()
+                .getClass()
+                .getSimpleName());
         }
         return res;
     }
@@ -334,6 +371,7 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
     protected void onHit(HitResult raytraceResultIn) {
 
         HitResult.Type raytraceresult$type = raytraceResultIn.getType();
+        auditDiag("diag_projonhit type=" + raytraceresult$type);
         if (raytraceresult$type == HitResult.Type.ENTITY) {
             this.onImpact(raytraceResultIn);
             this.playSound(SoundEvents.SHULKER_BULLET_HIT, 1.0F, 1.2F / (this.getRandom().nextFloat() * 0.2F + 0.9F));
@@ -388,8 +426,15 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
             }
 
             if (caster != null) {
-                if (!Load.spells(caster)
-                    .alreadyHit(this, en)) {
+                auditDiag("diag_projimpact uuid=" + this.getUUID() + " target=" + en.getClass()
+                    .getSimpleName() + " already=" + Load.spells(caster)
+                    .alreadyHit(this, en) + " local_hit=" + this.hitTargets.contains(en.getUUID()));
+                // Дедупликация «одна цель — одно попадание» держится в самом
+                // снаряде, а не в карте игрока по UUID снаряда: карта ключуется
+                // UUID снаряда, и если два снаряда почему-то получили одинаковый
+                // UUID, второй молча не наносил урон (умение «не работает», хотя
+                // попадание есть). Свой набор целей от этого не зависит.
+                if (this.hitTargets.add(en.getUUID())) {
                     this.getSpellData()
                         .getSpell()
                         .getAttached()
