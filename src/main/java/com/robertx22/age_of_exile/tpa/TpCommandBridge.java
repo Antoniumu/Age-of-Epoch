@@ -9,6 +9,7 @@ import com.robertx22.age_of_exile.mixin_ducks.CommandNodeAccessor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.function.Predicate;
@@ -90,15 +91,24 @@ public final class TpCommandBridge {
      * "/tp 100 64 -250" -> "/tpa 100 64 -250". Так разбор координат, селекторов
      * и сообщения об ошибках полностью совпадают с самим /tpa.
      */
-    private static int runAsTpa(CommandContext<CommandSourceStack> context, ServerPlayer player) {
+    private static int runAsTpa(CommandContext<CommandSourceStack> context, ServerPlayer player)
+            throws CommandSyntaxException {
         if (dispatcher == null) {
             return 0;
         }
 
         String arguments = argumentsOf(context.getInput());
-        String command = arguments.isEmpty() ? "tpa" : "tpa " + arguments;
 
         try {
+            // "/tp @s 100 64 -250" или "/tp Steve 100 64 -250" — телепортация игрока
+            // (или себя, @s) на метку, т. е. координаты, за один заряд TPA.
+            // Без этой формы селектор цели сломал бы разбор аргументов в самом /tpa.
+            int targeted = teleportTargetToCoordinates(context, player, arguments);
+            if (targeted != -1) {
+                return targeted;
+            }
+
+            String command = arguments.isEmpty() ? "tpa" : "tpa " + arguments;
             return dispatcher.execute(command, context.getSource());
         } catch (CommandSyntaxException e) {
             // Формы ванильного /tp, которых у /tpa нет: /tp <кого> <куда>, /tp <куда> <поворот> и т.п.
@@ -117,6 +127,88 @@ public final class TpCommandBridge {
         int space = input.indexOf(' ');
         return space < 0 ? "" : input.substring(space + 1)
             .trim();
+    }
+
+    /**
+     * "/tp <цель> <x> <y> <z>" — телепортировать игрока на метку (координаты) за
+     * один заряд TPA. Возвращает -1, если аргументы не похожи на эту форму, чтобы
+     * вызывающий продолжил обычную обработку через /tpa ("/tp 100 64 -250" на
+     * себя или "/tp Steve" как запрос).
+     *
+     * <p>Заряд тратит телепортируемый игрок — точно так же, как и при
+     * {@code /tpa <x> <y> <z>}. Операторы не попадают сюда вообще: их /tp
+     * остаётся ванильным.</p>
+     */
+    private static int teleportTargetToCoordinates(CommandContext<CommandSourceStack> context,
+            ServerPlayer player, String arguments) throws CommandSyntaxException {
+        String[] parts = arguments.trim().split("\\s+");
+        if (parts.length != 4) {
+            return -1;
+        }
+        String targetToken = parts[0];
+        if (looksLikeCoordinate(targetToken)) {
+            return -1; // "/tp 100 64 -250" — цели нет, телепортируем себя через /tpa
+        }
+        for (int i = 1; i <= 3; i++) {
+            if (!looksLikeCoordinate(parts[i])) {
+                return -1;
+            }
+        }
+
+        ServerPlayer target = resolveTarget(context, player, targetToken);
+        if (target == null) {
+            return 0; // сообщение об ошибке уже отправлено игроку
+        }
+
+        String coords = parts[1] + " " + parts[2] + " " + parts[3];
+        // Выполняем /tpa <x> <y> <z> уже от имени цели: заряд списывается с цели,
+        // сообщения идут цели, относительные координаты считаются от цели.
+        CommandSourceStack targetSource = context.getSource().withEntity(target);
+        int result = dispatcher.execute("tpa " + coords, targetSource);
+
+        if (result > 0 && target != player) {
+            TpaManager.send(player, "Игроку " + target.getGameProfile().name() + " телепортировано на "
+                    + coords + ". Осталось зарядов: " + TpaManager.chargesLeft(target)
+                    + "/" + TpaData.MAX_CHARGES + ".", ChatFormatting.GOLD);
+        }
+        return result;
+    }
+
+    /** Похоже ли на координату: число, "~" или "^" с относительным смещением. */
+    private static boolean looksLikeCoordinate(String token) {
+        if (token.isEmpty()) {
+            return false;
+        }
+        char first = token.charAt(0);
+        if (first == '~' || first == '^') {
+            return true;
+        }
+        try {
+            Double.parseDouble(token);
+            return true;
+        } catch (NumberFormatException unused) {
+            return false;
+        }
+    }
+
+    /** @s/@p — отправитель команды; иначе ищем онлайн-игрока по нику. */
+    private static ServerPlayer resolveTarget(CommandContext<CommandSourceStack> context,
+            ServerPlayer player, String token) {
+        if ("@s".equals(token) || "@p".equals(token)) {
+            return player;
+        }
+        if (token.startsWith("@")) {
+            TpaManager.send(player, "Укажите одного игрока: @s, @p или ник игрока.", ChatFormatting.RED);
+            return null;
+        }
+        MinecraftServer server = context.getSource().getServer();
+        for (ServerPlayer candidate : server.getPlayerList().getPlayers()) {
+            if (candidate.getGameProfile().name().equalsIgnoreCase(token)) {
+                return candidate;
+            }
+        }
+        TpaManager.send(player, "Игрока \"" + token + "\" нет на сервере.", ChatFormatting.RED);
+        return null;
     }
 
     private static boolean canUse(CommandSourceStack source) {

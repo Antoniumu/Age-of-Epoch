@@ -223,6 +223,11 @@ public final class TpaManager {
         return true;
     }
 
+    /** Оставшиеся у игрока заряды с учётом восстановления по реальному времени. */
+    public static int chargesLeft(ServerPlayer player) {
+        return data(player).getCharges(System.currentTimeMillis());
+    }
+
     public static boolean showHelp(ServerPlayer player) {
         showCharges(player);
         send(player, "/tpa <игрок> — запрос телепортации к игроку", ChatFormatting.GRAY);
