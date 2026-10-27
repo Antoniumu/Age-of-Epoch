@@ -5,6 +5,7 @@ on:
     paths:
       - 'src/**'
       - 'tools/e2e/scenarios/airship.txt'
+      - 'tools/e2e/scenarios/winged.txt'
       - '.github/workflows/airship.yml'
   workflow_dispatch:
 permissions:
@@ -40,13 +41,13 @@ jobs:
           sudo apt-get install -y -q --no-install-recommends xvfb x11-utils xdotool imagemagick x11-apps openbox wmctrl libgl1 libglu1-mesa libgl1-mesa-dri mesa-utils mesa-vulkan-drivers vulkan-tools libxi6 libxcursor1 libxrandr2 libxinerama1 libxxf86vm1 libopenal1 libpulse0 libegl1 libegl-mesa0
       - name: Real client, ship, crew, quests and H card
         env:
-          RENDER_DISTANCE: 6
+          RENDER_DISTANCE: 10
           E2E_FAIL_FAST: 1
         run: |
-          bash tools/e2e/run-in-xvfb.sh tools/e2e/scenarios/airship.txt run/e2e/airship
+          bash tools/e2e/run-in-xvfb.sh tools/e2e/scenarios/winged.txt run/e2e/airship
           test -f run/e2e/airship/07-campaign-complete.png
           ! grep -q 'AIRSHIPTEST FAIL' run/logs/latest.log
-          for stage in summon board lift lift-check far-reject dialogue accepted mara quartermaster complete; do
+          for stage in winged board lift lift-check far-reject dialogue accepted mara quartermaster complete; do
             grep -q "AIRSHIPTEST PASS $stage" run/logs/latest.log
           done
       - name: Publish actual screenshots on the same working branch

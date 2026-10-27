@@ -1,0 +1,68 @@
+# Fresh CI profile, same 1280x720 world creation path as wiki.txt.
+wait_window Minecraft 420000
+wait_log 300000 Created: .*atlas/items
+wait 8000
+click 640 296
+wait 4000
+click 480 688
+wait 3000
+click 480 688
+wait 45000
+shot 00-world
+log_mark
+write run/airship-e2e.flag winged
+wait_log_new 120000 AIRSHIPTEST PASS winged
+wait 12000
+shot 01-airship-exterior
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+wait 6000
+shot 02-on-deck
+log_mark
+write run/airship-e2e.flag lift
+wait_log_new 30000 AIRSHIPTEST PASS lift
+wait 4000
+log_mark
+write run/airship-e2e.flag lift-check
+wait_log_new 30000 AIRSHIPTEST PASS lift-check
+shot 03-lift-arrival
+log_mark
+write run/airship-e2e.flag far-reject
+wait_log_new 30000 AIRSHIPTEST PASS far-reject
+log_mark
+write run/airship-e2e.flag dialogue
+wait_log_new 30000 AIRSHIPTEST PASS dialogue
+wait 2500
+shot 04-captain-dialogue
+# Click the real accept button (GUI scale 2), rather than advancing via probe.
+click 640 482
+wait 1000
+log_mark
+write run/airship-e2e.flag accepted
+wait_log_new 30000 AIRSHIPTEST PASS accepted
+wait 1500
+hold h 500
+wait 2000
+move 1210 30
+shot 05-H-quest-captain
+key Escape
+log_mark
+write run/airship-e2e.flag mara
+wait_log_new 30000 AIRSHIPTEST PASS mara
+wait 1500
+hold h 500
+wait 2000
+move 1000 110
+shot 06-H-quest-mara
+key Escape
+log_mark
+write run/airship-e2e.flag quartermaster
+wait_log_new 30000 AIRSHIPTEST PASS quartermaster
+log_mark
+write run/airship-e2e.flag complete
+wait_log_new 30000 AIRSHIPTEST PASS complete
+wait 1500
+hold h 500
+wait 2000
+shot 07-campaign-complete

@@ -138,7 +138,7 @@ public final class AirshipService {
         level.sendParticles(ParticleTypes.PORTAL,d.x,d.y+8,d.z,300,8,6,16,0.3);
         return tell(p,"«Последний Рассвет» на якоре. Световой подъёмник: X="+d.x+", Z="+(d.z+4)+". Для спуска: /airship descend.");
     }
-    private static void configureSkin(ServerLevel level,Entity entity) {
+    static void configureSkin(ServerLevel level,Entity entity) {
         String id=npcId(entity);
         // Vanilla command owns profile decoding; strings are validated resource IDs, never arbitrary commands.
         String command="data merge entity "+entity.getUUID()+" {immovable:true,hide_description:true,profile:{texture:\""

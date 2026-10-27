@@ -53,3 +53,30 @@ obtain appropriate permission, including the credited derivative part if necessa
 Intended placements, pending the actual file and collision checks: captain in the office,
 Mara in navigation, Bram at storage/reception. Actual numeric positions must be chosen after
 import and checked for floor, headroom, access to the lift and interaction reach.
+
+## User-supplied schematic import (2026-10-27)
+
+The user subsequently uploaded `airshipfix.txt` and explicitly requested renaming it to
+`.schem`. It is preserved byte-for-byte at `import/airshipfix.schem` (SHA-256 in
+`import/manifest.json`). It is a Sponge v2 schematic, 117×100×89, with 20,279 non-air
+blocks and 1,000 used non-air palette states. The download blocker above is resolved
+by that upload; upstream redistribution permission remains unverified.
+
+`tools/airship/convert_schematic.py` produces the vanilla structure
+`data/mmorpg/structure/winged_sailor.nbt`. All 657 source block-entity NBT records
+are omitted (inventories, sign text, custom container data), and no entities are copied.
+Block names, directional properties, slabs and stair shapes are retained. Vanilla's
+structure manager performs the old DataVersion upgrade when loading it.
+
+Operator-only **`/airship winged`** previews the imported ship in a new test world or
+on a character without an existing mooring. It never overwrites the old ship. This
+is deliberately separate from `/airship summon`, and is NOT in the previously
+published `airship-preview-34095a2` jar. Full-volume clearance and loaded-chunk/border/
+build-height checks precede placement. Increase render distance and let chunks load.
+
+Crew feet in schematic-local coordinates are checked against the source palette:
+captain `(58,63,67)`, Mara beside the chart table `(59,56,50)`, Bram on the lower
+furnished deck `(56,51,61)`; lift arrival `(57,51,38)`. Actual floor and headroom are
+checked again in-game after data fixing, before spawning the crew. Room names are
+provisional until visual inspection; these are measured coordinates, not guesses
+from the original web screenshots.

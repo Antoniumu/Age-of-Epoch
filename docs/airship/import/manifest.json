@@ -1,0 +1,37 @@
+{
+  "source": "docs/airship/import/airshipfix.schem",
+  "source_sha256": "432c09c9ad21291374f0a870728f4ff3b967eef38c3bca9599b3df81a108ce97",
+  "dimensions": [
+    117,
+    100,
+    89
+  ],
+  "blocks": 20279,
+  "palette_states": 1000,
+  "crew_feet_local": {
+    "captain": [
+      58,
+      63,
+      67
+    ],
+    "mara": [
+      59,
+      56,
+      50
+    ],
+    "quartermaster": [
+      56,
+      51,
+      61
+    ],
+    "lift": [
+      57,
+      51,
+      38
+    ]
+  },
+  "source_block_entities_stripped": 657,
+  "forbidden_blocks_omitted": {},
+  "source_entities_copied": 0,
+  "note": "All block entity NBT stripped, including inventory and sign text; states retained."
+}

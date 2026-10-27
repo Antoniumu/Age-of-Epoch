@@ -11,6 +11,8 @@ public final class AirshipCommand {
             .executes(c -> AirshipService.summon(c.getSource().getPlayerOrException(),false))
             .then(literal("summon").executes(c -> AirshipService.summon(c.getSource().getPlayerOrException(),false)))
             .then(literal("descend").executes(c -> AirshipService.descend(c.getSource().getPlayerOrException())))
+            .then(literal("winged").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                .executes(c -> WingedSailorService.summon(c.getSource().getPlayerOrException())))
             .then(literal("demo").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .executes(c -> AirshipService.summon(c.getSource().getPlayerOrException(),true))));
     }
