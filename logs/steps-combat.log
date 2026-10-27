@@ -1,0 +1,62 @@
+[13:56:03] DISPLAY=:99, сценарий combat.txt
+[13:56:04] жду окно: дисплей :99, X-сокеты: :100, :99
+[13:56:10] дисплей клиента из /proc/4481/environ: :101 (был :99)
+[13:56:10] XAUTHORITY клиента: /tmp/xvfb-run.NCH1UZ/Xauthority
+[13:56:19] окно 2097203 на :101: Minecraft* 26.3 | WINDOW=2097203 X=0 Y=152 WIDTH=1280 HEIGHT=720 SCREEN=0 | Map State: IsViewable
+[13:56:23] в логе найдено: [13:56:21] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/items.png-atlas
+[13:56:31] снимок 00-main-menu (окно 2097203, 710 КБ)
+[13:56:31] курсор 640,296
+[13:56:31] клик 640,296 (экран 640,448, кнопка 1)
+[13:56:36] снимок 01-world-list (окно 2097203, 383 КБ)
+[13:56:36] курсор 640,124
+[13:56:37] клик 640,124 (экран 640,276, кнопка 1)
+[13:56:38] курсор 483,637
+[13:56:38] клик 483,637 (экран 483,789, кнопка 1)
+[13:57:23] снимок 03-in-world (окно 2097203, 809 КБ)
+[13:57:23] курсор 797,637
+[13:57:24] клик 797,637 (экран 797,789, кнопка 1)
+[13:57:27] курсор 480,688
+[13:57:27] клик 480,688 (экран 480,840, кнопка 1)
+[13:58:12] снимок 03b-in-world-created (окно 2097203, 810 КБ)
+[13:58:12] отметка в логе: байт 6406333
+[13:58:12] создан файл-триггер run/aoe-devtest.flag
+[13:58:13] в логе найдено (новое): [13:58:13] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST dps hits=10 requested=400.0 recorded=336.32 elapsed_ms=546 dps_chart=616.0 dps_hud=672.6 fight_acti
+[13:58:14] снимок 04-combat-hud (окно 2097203, 855 КБ)
+[13:58:14] в логе найдено (новое): [13:58:14] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST gear_equip max_before=30.0 max_after=32.4 check_equip_raises_max=true
+[13:58:17] снимок 05-gear-equip-max-hp (окно 2097203, 786 КБ)
+[13:58:22] в логе найдено (новое): [13:58:22] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST gear_unequip max_before=30.0 max_after=30.0 check_unequip_restores_max=true
+[13:58:24] снимок 06-gear-unequip-max-hp (окно 2097203, 810 КБ)
+[13:58:24] в логе найдено (новое): [13:58:22] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST summary checks=43 failed=0
+[13:58:32] снимок 08-after-fight (окно 2097203, 810 КБ)
+[13:58:32] клавиша E
+[13:58:34] курсор 497,490
+[13:58:36] снимок 09-inventory-soulless-decheap (окно 2097203, 401 КБ)
+[13:58:36] курсор 534,490
+[13:58:37] снимок 10-inventory-soulless-neserite (окно 2097203, 399 КБ)
+[13:58:37] курсор 571,490
+[13:58:39] снимок 11-inventory-souled (окно 2097203, 398 КБ)
+[13:58:39] курсор 608,490
+[13:58:40] снимок 12-inventory-soul (окно 2097203, 420 КБ)
+[13:58:41] клавиша E
+[13:58:42] удержание F7 400 мс (фокус: 2097203)
+[13:58:44] снимок 13-hud-hidden (окно 2097203, 825 КБ)
+[13:58:44] удержание F7 400 мс (фокус: 2097203)
+[13:58:46] снимок 14-hud-shown (окно 2097203, 810 КБ)
+[13:58:47] удержание F8 400 мс (фокус: 2097203)
+[13:58:48] снимок 15-hud-position (окно 2097203, 801 КБ)
+[13:58:49] jstack[combat]: pid 4481, 478 строк -> jstack-combat.txt
+[13:58:49] render thread:
+    "Render thread" #3 [4482] prio=5 os_prio=0 cpu=22549.12ms elapsed=159.37s tid=0x00007f5e20030760 nid=4482 runnable  [0x00007f5e297fc000]
+    java.lang.Thread.State: RUNNABLE
+    at org.apache.logging.log4j.core.appender.rolling.CompositeTriggeringPolicy.isTriggeringEvent(CompositeTriggeringPolicy.java:65)
+    at org.apache.logging.log4j.core.appender.rolling.RollingFileManager.checkRollover(RollingFileManager.java:453)
+    - locked <0x0000000707297920> (a org.apache.logging.log4j.core.appender.rolling.RollingRandomAccessFileManager)
+    at org.apache.logging.log4j.core.appender.RollingRandomAccessFileAppender.append(RollingRandomAccessFileAppender.java:392)
+    at org.apache.logging.log4j.core.config.AppenderControl.tryCallAppender(AppenderControl.java:160)
+    at org.apache.logging.log4j.core.config.AppenderControl.callAppender0(AppenderControl.java:133)
+    at org.apache.logging.log4j.core.config.AppenderControl.callAppenderPreventRecursion(AppenderControl.java:124)
+    at org.apache.logging.log4j.core.config.AppenderControl.callAppender(AppenderControl.java:88)
+    at org.apache.logging.log4j.core.config.LoggerConfig.callAppenders(LoggerConfig.java:807)
+    at org.apache.logging.log4j.core.config.LoggerConfig.processLogEvent(LoggerConfig.java:765)
+[13:58:49] конец сценария combat
+[13:58:49] итог: снимков 15, ошибок 0
