@@ -38,7 +38,7 @@ public class ClientInit implements net.fabricmc.api.ClientModInitializer {
             VanillaHudElements.BOSS_BAR,
             Identifier.fromNamespaceAndPath(SlashRef.MODID, "rpg_hud"),
             (graphics, deltaTracker) -> {
-                if (net.minecraft.client.Minecraft.getInstance().gui.screen() instanceof com.robertx22.age_of_exile.airship.AirshipDialogueScreen) return;
+                if (net.minecraft.client.Minecraft.getInstance().gui.screen() != null && !(net.minecraft.client.Minecraft.getInstance().gui.screen() instanceof net.minecraft.client.gui.screens.ChatScreen)) return;
                 GuiGraphicsExtractor prevG = AbstractGui.currentGraphics();
                 PoseStack prevPose = AbstractGui.currentPose();
                 PoseStack pose = new PoseStack();

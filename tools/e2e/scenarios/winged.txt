@@ -1,5 +1,6 @@
 # Real Minecraft UI and world. Counter seeding is explicitly synthetic, not a claimed dungeon playthrough.
 wait_window Minecraft 420000
+write run/airship-e2e.flag prepare
 wait_log 300000 Created: .*atlas/items
 wait 8000
 click 640 296
@@ -7,6 +8,7 @@ wait 4000
 click 480 688
 wait 3000
 click 480 688
+wait_log_new 60000 AIRSHIPTEST PASS prepare
 wait 45000
 shot 00-world
 log_mark

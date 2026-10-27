@@ -90,5 +90,5 @@ public final class WingedSailorService {
         System.out.println("AIRSHIPTEST WINGED placed origin="+origin+" size="+size+" crew="+crew.size());
         return tell(p,"Winged Sailor на причале. Световой круг: X="+d.x+", Z="+(d.z+4)+". Капитан наверху, Мара у карт, Брам на нижней палубе.");
     }
-    private static int tell(ServerPlayer p,String message) { p.sendSystemMessage(Component.literal(message));return 1; }
+    private static int tell(ServerPlayer p,String message) { System.out.println("AIRSHIPTEST WINGED diagnostic: "+message);p.sendSystemMessage(Component.literal(message));return 1; }
 }

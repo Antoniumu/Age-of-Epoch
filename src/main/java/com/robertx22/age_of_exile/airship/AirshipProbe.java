@@ -23,11 +23,15 @@ public final class AirshipProbe {
             Files.delete(FLAG);
             AirshipData d=AirshipService.data(p);
             ServerLevel level=(ServerLevel)p.level();
-            if(!action.equals("summon") && !action.equals("winged") && !d.summoned) throw new IllegalStateException("Mooring was not persisted");
+            if(!action.equals("prepare") && !action.equals("summon") && !action.equals("winged") && !d.summoned) throw new IllegalStateException("Mooring was not persisted");
             System.out.println("AIRSHIPTEST SNAP action="+action+" anchor="+d.x+","+d.y+","+d.z+" player="+p.position()+" eye="+level.getBlockState(net.minecraft.core.BlockPos.containing(p.getEyePosition())));
             for(Entity actor:level.getEntitiesOfClass(Entity.class,p.getBoundingBox().inflate(150),e->e.entityTags().contains(AirshipService.TAG)))
                 System.out.println("AIRSHIPTEST CREW "+actor.getId()+" "+actor.entityTags()+" pos="+actor.position()+" alive="+actor.isAlive());
-            if(action.equals("summon") || action.equals("winged")) {
+            if(action.equals("prepare")) {
+                p.setGameMode(net.minecraft.world.level.GameType.CREATIVE);
+                p.setHealth(p.getMaxHealth());
+                // Protect the fresh random spawn while waiting for terrain; real quest interactions use survival.
+            } else if(action.equals("summon") || action.equals("winged")) {
                 if(action.equals("winged")) WingedSailorService.summon(p); else AirshipService.summon(p,true);
                 for(Entity actor:level.getEntitiesOfClass(Entity.class,p.getBoundingBox().inflate(150),e->e.entityTags().contains(AirshipService.TAG)))
                     System.out.println("AIRSHIPTEST SPAWN "+actor.getId()+" pos="+actor.position());
