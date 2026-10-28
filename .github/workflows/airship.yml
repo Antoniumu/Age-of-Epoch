@@ -41,7 +41,7 @@ jobs:
           sudo apt-get install -y -q --no-install-recommends xvfb x11-utils xdotool imagemagick x11-apps openbox wmctrl libgl1 libglu1-mesa libgl1-mesa-dri mesa-utils mesa-vulkan-drivers vulkan-tools libxi6 libxcursor1 libxrandr2 libxinerama1 libxxf86vm1 libopenal1 libpulse0 libegl1 libegl-mesa0
       - name: Real client, ship, crew, quests and H card
         env:
-          RENDER_DISTANCE: 16
+          RENDER_DISTANCE: 10
           E2E_FAIL_FAST: 1
         run: |
           bash tools/e2e/run-in-xvfb.sh tools/e2e/scenarios/winged.txt run/e2e/airship
@@ -68,7 +68,7 @@ jobs:
           {
             echo "Run: $RUN_URL"
             echo "Source: $GITHUB_SHA"
-            grep -E 'AIRSHIPTEST|AIRSHIPVOICE' run/logs/latest.log 2>/dev/null || true
+            grep -E 'AIRSHIPTEST|AIRSHIPVOICE|AIRSHIPJUMP' run/logs/latest.log 2>/dev/null || true
             tail -100 run/logs/latest.log 2>/dev/null || true
             tail -60 compile.log 2>/dev/null || true
           } > docs/airship/ci-proof.txt

@@ -70,6 +70,8 @@ public final class AirshipProbe {
             } else if(action.equals("jump-stock") || action.equals("jump-recovery-stock")) {
                 var h=AirshipHub.state(server);
                 if(action.equals("jump-recovery-stock")){h.readyAt=0;d.hubJumpReadyAt=0;AirshipHub.save(server);} // Synthetic clock reset only, not a production cooldown bypass.
+                // Explicit operator chunk tickets in the test world, not hidden production generation.
+                server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),"forceload add "+(d.x-57)+" "+(d.z-34)+" "+(d.x+59)+" "+(d.z+54));
                 oldX=d.x;oldY=d.y;oldZ=d.z;oldRevision=h.revision;jumpStage=d.stage;jumpFavors=d.favorCompleted;oldBlocks=blocks(level,d.x,d.y,d.z);
                 jumpCrew=level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class,new AABB(d.x-60,d.y-52,d.z-36,d.x+62,d.y+52,d.z+57),e->!AirshipService.npcId(e).isEmpty()).stream().map(Entity::getUUID).collect(java.util.stream.Collectors.toSet());
                 if(jumpCrew.size()!=8)throw new IllegalStateException("Expected eight original NPCs");

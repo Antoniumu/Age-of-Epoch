@@ -109,7 +109,7 @@ public final class AirshipJump {
     private static void prepare(ServerLevel l,ServerPlayer p,HubState h,Job j){
         emptyShip(l,h);Site actual=site(p,h);if(!actual.equals(j.site))throw new IllegalStateException("Площадка изменилась. Запроси новое подтверждение.");
         j.source=source(h);j.cells=new ArrayList<>();
-        for(BlockPos pos:BlockPos.betweenClosed(j.source,j.source.offset(116,99,88)))if(!l.getBlockState(pos).isAir())j.cells.add(new Cell(pos.subtract(j.source),l.getBlockState(pos)));
+        for(BlockPos pos:BlockPos.betweenClosed(j.source,j.source.offset(116,99,88)))if(!l.getBlockState(pos).isAir())j.cells.add(new Cell(pos.subtract(j.source).immutable(),l.getBlockState(pos)));
         j.crew=l.getEntitiesOfClass(LivingEntity.class,hull(h.x,h.y,h.z),e->!AirshipService.npcId(e).isEmpty());
         if(j.crew.size()!=8)throw new IllegalStateException("Не найдены все восемь членов экипажа. Сначала /airship refresh.");
         j.snapshot=l.getServer().getStructureTemplateManager().getOrCreate(BACKUP);

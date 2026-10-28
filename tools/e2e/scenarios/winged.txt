@@ -14,7 +14,7 @@ shot 00-world
 log_mark
 write run/airship-e2e.flag ritual-stock
 wait_log_new 30000 AIRSHIPTEST PASS ritual-stock
-hold h 500
+hold h 200
 wait 1000
 shot 29-H-summon-button
 click 1140 688
@@ -76,7 +76,7 @@ wait 1200
 log_mark
 write run/airship-e2e.flag accepted
 wait_log_new 30000 AIRSHIPTEST PASS accepted
-hold h 500
+hold h 200
 wait 1800
 shot 08-H-quest-captain
 key Escape
@@ -102,7 +102,7 @@ key Escape
 log_mark
 write run/airship-e2e.flag mara
 wait_log_new 30000 AIRSHIPTEST PASS mara
-hold h 500
+hold h 200
 wait 1800
 shot 11-H-quest-mara
 key Escape
@@ -223,7 +223,7 @@ hold space 500
 wait 500
 shot 21-finale-transcript
 key Escape
-hold h 500
+hold h 200
 wait 1800
 shot 22-campaign-complete
 
@@ -314,7 +314,7 @@ shot 28-captain-attention
 log_mark
 write run/airship-e2e.flag hub-check
 wait_log_new 30000 AIRSHIPTEST PASS hub-check
-hold h 500
+hold h 200
 wait 800
 click 1140 688
 wait 1200
@@ -334,7 +334,7 @@ log_mark
 write run/airship-e2e.flag jump-stock
 wait_log_new 30000 AIRSHIPTEST PASS jump-stock
 wait 45000
-hold h 500
+hold h 200
 wait 1000
 click 1140 688
 wait_log_new 30000 AIRSHIPJUMP QUOTED
@@ -348,7 +348,7 @@ wait_log_new 120000 AIRSHIPJUMP COMPLETE
 log_mark
 write run/airship-e2e.flag jump-check
 wait_log_new 30000 AIRSHIPTEST PASS jump-check
-hold h 500
+hold h 200
 wait 1000
 click 1140 688
 wait 1500
@@ -369,7 +369,7 @@ wait 1200
 log_mark
 write run/airship-e2e.flag side-ui-check
 wait_log_new 30000 AIRSHIPTEST PASS side-ui-check
-hold h 500
+hold h 200
 wait 1000
 shot 37-H-main-and-side-progress
 key Escape
@@ -381,7 +381,7 @@ log_mark
 write run/airship-e2e.flag jump-recovery-stock
 wait_log_new 30000 AIRSHIPTEST PASS jump-recovery-stock
 wait 45000
-hold h 500
+hold h 200
 wait 1000
 click 1140 688
 wait_log_new 30000 AIRSHIPJUMP QUOTED
