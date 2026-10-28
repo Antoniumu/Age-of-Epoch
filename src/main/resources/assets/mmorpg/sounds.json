@@ -214,5 +214,53 @@
         "stream": true
       }
     ]
+  },
+  "airship.mara_rift": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/mara_rift",
+        "stream": true
+      }
+    ]
+  },
+  "airship.mara_idle": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/mara_idle",
+        "stream": true
+      }
+    ]
+  },
+  "airship.mara_waiting": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/mara_waiting",
+        "stream": true
+      }
+    ]
+  },
+  "airship.bram_idle": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/bram_idle",
+        "stream": true
+      }
+    ]
+  },
+  "airship.bram_waiting": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/bram_waiting",
+        "stream": true
+      }
+    ]
+  },
+  "airship.bram_waiting_anchor": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/bram_waiting_anchor",
+        "stream": true
+      }
+    ]
   }
 }

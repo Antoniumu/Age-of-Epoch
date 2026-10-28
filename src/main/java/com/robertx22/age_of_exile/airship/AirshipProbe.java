@@ -106,16 +106,20 @@ public final class AirshipProbe {
                     double tx=e.getX(),tz=e.getZ()+2.5;float yaw=180;
                     if(d.layout.equals("winged_sailor")) {
                         boolean found=false;
+                        var nearbyCrew=level.getEntitiesOfClass(Entity.class,e.getBoundingBox().inflate(10),candidate->!AirshipService.npcId(candidate).isEmpty());
                         for(int[] offset:new int[][]{{0,3},{3,0},{-3,0},{0,-3},{0,2},{2,0},{-2,0},{0,-2},{0,1},{1,0},{-1,0},{0,-1}}) {
                             var feet=e.blockPosition().offset(offset[0],0,offset[1]);
                             if(level.getBlockState(feet).isAir() && level.getBlockState(feet.above()).isAir() && level.getBlockState(feet.below()).isSolid()) {
+                                if(AirshipStory.index(npc)>=3 && !AirshipCrewPlacement.clearView(level,e,nearbyCrew,feet)) continue;
                                 tx=feet.getX()+0.5;tz=feet.getZ()+0.5;
                                 yaw=(float)Math.toDegrees(Math.atan2(-(e.getX()-tx),e.getZ()-tz));found=true;break;
                             }
                         }
                         if(!found) throw new IllegalStateException("No accessible neighbour for "+npc);
                     }
-                    p.teleportTo(level,tx,e.getY(),tz,Set.of(),yaw,action.startsWith("photo-")?12:0,false);
+                    float cameraPitch=action.startsWith("photo-")?12:0;
+                    if(AirshipStory.index(npc)>=3) cameraPitch=(float)-Math.toDegrees(Math.atan2(e.getBbHeight()*.65-1.62,Math.hypot(e.getX()-tx,e.getZ()-tz)));
+                    p.teleportTo(level,tx,e.getY(),tz,Set.of(),yaw,cameraPitch,false);
                     p.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
                     if(action.startsWith("photo-")) {
                         e.setYRot(yaw+180);

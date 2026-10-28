@@ -36,7 +36,7 @@ public class AirshipDialogueScreen extends BaseScreen {
             transcript=AirshipStory.dialogue(npc,storyStage);
             if(AirshipStory.target(storyStage)>0 && AirshipStory.actor(storyStage).equals(npc)
                 && !AirshipCampaign.ready(Load.playerRPGData(mc.player).airship,Load.playerRPGData(mc.player).questBook))
-                transcript="Мы ещё не готовы отправляться дальше. "+AirshipStory.objective(storyStage)+" Старые находки не считаются: нужен новый след после принятия поручения.";
+                transcript=AirshipCrewVoice.waitingDialogue(npc,storyStage);
             cues=AirshipCrewVoice.cues(npc,storyStage,transcript);
             startCue();
         }

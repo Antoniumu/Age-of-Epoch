@@ -33,10 +33,10 @@ public final class AirshipCrewPlacement {
         var crew=new ArrayList<Entity>(originals);int added=0;
         for(String id:AirshipStory.IDS) {
             if(crew.stream().anyMatch(e->AirshipService.npcId(e).equals(id))) continue;
-            Entity anchor=crew.stream().filter(e->AirshipService.npcId(e).equals(id.equals("oren")||id.equals("selin")?"quartermaster":"mara")).findFirst().orElse(crew.getFirst());
+            Entity anchor=crew.stream().filter(e->AirshipService.npcId(e).equals(id.equals("oren")||id.equals("selin")?"quartermaster":id.equals("lysander")?"captain":"mara")).findFirst().orElse(crew.getFirst());
             LivingEntity actor=create(level,id);if(actor==null) continue;
             boolean placed=false;
-            search:for(int radius=2;radius<=9;radius++) for(int dx=-radius;dx<=radius;dx++) for(int dz=-radius;dz<=radius;dz++) {
+            search:for(int radius=id.equals("tik")?2:id.equals("selin")?5:3;radius<=13;radius++) for(int dx=-radius;dx<=radius;dx++) for(int dz=-radius;dz<=radius;dz++) {
                 if(Math.max(Math.abs(dx),Math.abs(dz))!=radius) continue;
                 BlockPos feet=anchor.blockPosition().offset(dx,0,dz);
                 if(!level.hasChunkAt(feet) || !level.getWorldBorder().isWithinBounds(feet) || !level.getBlockState(feet.below()).isSolid() || !level.getFluidState(feet.below()).isEmpty()) continue;
@@ -45,12 +45,27 @@ public final class AirshipCrewPlacement {
                 if(!clear) continue;
                 actor.snapTo(feet.getX()+.5,feet.getY(),feet.getZ()+.5,anchor.getYRot(),0);
                 if(!level.noCollision(actor,actor.getBoundingBox())) continue;
-                if(crew.stream().anyMatch(e->e.distanceToSqr(actor)<2.56)) continue;
+                if(crew.stream().anyMatch(e->e.distanceToSqr(actor)<(id.equals("tik")?4:9))) continue;
+                boolean reachable=false;
+                for(int[] delta:new int[][]{{0,2},{2,0},{-2,0},{0,-2},{0,3},{3,0},{-3,0},{0,-3}})
+                    if(clearView(level,actor,crew,feet.offset(delta[0],0,delta[1]))) {reachable=true;break;}
+                if(!reachable) continue;
                 level.addFreshEntity(actor);AirshipService.configureSkin(level,actor);crew.add(actor);added++;placed=true;break search;
             }
             if(!placed) System.err.println("No safe crew position for "+id+"; /airship refresh can retry without duplicating actors");
         }
         return added;
+    }
+    /** Real standing room + unobstructed sight, not merely an empty foot block. */
+    public static boolean clearView(ServerLevel level,Entity target,List<? extends Entity> others,BlockPos feet) {
+        if(!level.hasChunkAt(feet) || !level.getBlockState(feet).isAir() || !level.getBlockState(feet.above()).isAir() || !level.getBlockState(feet.below()).isSolid() || !level.getFluidState(feet.below()).isEmpty()) return false;
+        var box=new AABB(feet.getX()+.2,feet.getY(),feet.getZ()+.2,feet.getX()+.8,feet.getY()+1.8,feet.getZ()+.8);
+        if(!level.noCollision(target,box)) return false;
+        var from=new net.minecraft.world.phys.Vec3(feet.getX()+.5,feet.getY()+1.62,feet.getZ()+.5);
+        var to=target.getEyePosition();
+        if(level.clip(new net.minecraft.world.level.ClipContext(from,to,net.minecraft.world.level.ClipContext.Block.COLLIDER,net.minecraft.world.level.ClipContext.Fluid.NONE,target)).getType()!=net.minecraft.world.phys.HitResult.Type.MISS) return false;
+        for(Entity other:others) if(other!=target && (other.getBoundingBox().inflate(.15).intersects(box) || other.getBoundingBox().inflate(.1).clip(from,to).isPresent())) return false;
+        return true;
     }
     public static int refresh(ServerPlayer p) {
         AirshipData d=AirshipService.data(p);
