@@ -37,7 +37,7 @@ public final class AirshipCrewPlacement {
             LivingEntity actor=create(level,id);if(actor==null) continue;
             if(id.equals("lysander")) {
                 var mara=crew.stream().filter(e->AirshipService.npcId(e).equals("mara")).findFirst().orElse(null);
-                if(mara!=null && placeLysander(level,actor,mara,crew)) {
+                if(mara!=null && placeConnected(level,actor,mara,crew,LYSANDER_LAYOUT)) {
                     level.addFreshEntity(actor);AirshipService.configureSkin(level,actor);crew.add(actor);added++;continue;
                 }
                 System.err.println("No connected position for Lysander; /airship refresh can retry");
@@ -90,7 +90,7 @@ public final class AirshipCrewPlacement {
         }
         return seen;
     }
-    private static boolean placeLysander(ServerLevel level,LivingEntity actor,Entity mara,List<? extends Entity> crew){
+    private static boolean placeConnected(ServerLevel level,LivingEntity actor,Entity mara,List<? extends Entity> crew,String tag){
         double oldX=actor.getX(),oldY=actor.getY(),oldZ=actor.getZ();float oldYaw=actor.getYRot(),oldPitch=actor.getXRot();
         var floor=connectedFloor(level,actor,mara,crew);
         for(var feet:floor){
@@ -99,7 +99,7 @@ public final class AirshipCrewPlacement {
             if(!level.noCollision(actor,actor.getBoundingBox())||crew.stream().anyMatch(e->e!=actor&&e.distanceToSqr(actor)<9))continue;
             if(!level.getEntitiesOfClass(Entity.class,actor.getBoundingBox().inflate(.3),e->e!=actor&&e.isAlive()).isEmpty())continue;
             boolean interaction=floor.stream().anyMatch(pos->pos.distSqr(feet)<=9&&pos.distSqr(feet)>=1&&clearView(level,actor,crew,pos));
-            if(interaction){actor.addTag(LYSANDER_LAYOUT);return true;}
+            if(interaction){actor.addTag(tag);return true;}
         }
         actor.snapTo(oldX,oldY,oldZ,oldYaw,oldPitch);return false;
     }
@@ -113,9 +113,33 @@ public final class AirshipCrewPlacement {
         var lys=crew.stream().filter(e->AirshipService.npcId(e).equals("lysander")).toList();
         var mara=crew.stream().filter(e->AirshipService.npcId(e).equals("mara")).toList();
         if(lys.size()!=1||mara.size()!=1||lys.getFirst().entityTags().contains(LYSANDER_LAYOUT))return false;
-        boolean success=placeLysander(level,lys.getFirst(),mara.getFirst(),crew);
+        boolean success=placeConnected(level,lys.getFirst(),mara.getFirst(),crew,LYSANDER_LAYOUT);
         if(success)System.out.println("AIRSHIPTEST LYSANDER relocated uuid="+lys.getFirst().getUUID()+" position="+lys.getFirst().blockPosition());
         return success;
+    }
+    /** Conservatively repair additional original auto-placed crew only when their local floor
+     * is disconnected from their role's established anchor. No world blocks or players move. */
+    public static int repairOtherCrew(ServerPlayer player){
+        var d=AirshipService.data(player);
+        if(!d.summoned||!"winged_sailor".equals(d.layout)||!net.minecraft.world.level.Level.OVERWORLD.equals(player.level().dimension()))return 0;
+        var level=(ServerLevel)player.level();var hub=AirshipHub.state(level.getServer());
+        if(!hub.exists||!"IDLE".equals(hub.phase)||player.distanceToSqr(d.x,d.y,d.z)>100*100)return 0;
+        var crew=level.getEntitiesOfClass(LivingEntity.class,new AABB(d.x-60,d.y-52,d.z-36,d.x+61,d.y+51,d.z+56),e->!AirshipService.npcId(e).isEmpty());
+        int moved=0;
+        for(String id:List.of("oren","selin","veya","tik")){
+            String tag="aoe_crew_access_v1_"+id;
+            var found=crew.stream().filter(e->AirshipService.npcId(e).equals(id)).toList();
+            String anchorId=id.equals("oren")||id.equals("selin")?"quartermaster":"mara";
+            var anchors=crew.stream().filter(e->AirshipService.npcId(e).equals(anchorId)).toList();
+            if(found.size()!=1||anchors.size()!=1)continue;
+            var actor=found.getFirst();var anchor=anchors.getFirst();
+            if(actor.entityTags().contains(tag))continue;
+            if(lysanderConnected(level,actor,anchor,crew)){actor.addTag(tag);continue;}
+            if(placeConnected(level,actor,anchor,crew,tag)){
+                moved++;System.out.println("AIRSHIPTEST CREW ACCESS relocated npc="+id+" uuid="+actor.getUUID()+" pos="+actor.blockPosition());
+            }else System.err.println("AIRSHIPTEST CREW ACCESS deferred npc="+id+"; no safe connected slot");
+        }
+        return moved;
     }
     static boolean lysanderConnected(ServerLevel level,LivingEntity actor,Entity mara,List<? extends Entity> crew){
         var floor=connectedFloor(level,actor,mara,crew);
@@ -142,6 +166,7 @@ public final class AirshipCrewPlacement {
         for(var actor:crew) AirshipService.configureSkin(level,actor);
         int added=complete(level,crew);
         boolean moved=repairLysander(p);
-        p.sendSystemMessage(Component.literal((moved?"Лисандр перенесён к доступному проходу. ":"")+"Экипаж обновлён. Новых членов команды: "+added+". Прогресс истории сохранён."));return 1;
+        int others=repairOtherCrew(p);
+        p.sendSystemMessage(Component.literal((moved?"Лисандр перенесён к доступному проходу. ":"")+(others>0?"Перемещено ещё: "+others+". ":"")+"Экипаж обновлён. Новых членов команды: "+added+". Прогресс истории сохранён."));return 1;
     }
 }

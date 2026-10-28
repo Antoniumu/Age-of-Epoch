@@ -196,6 +196,17 @@ public final class AirshipProbe {
                     if(!AirshipCrewPlacement.repairLysander(p)||!bard.getUUID().equals(uuid)||!AirshipCrewPlacement.lysanderConnected(level,bard,mara,crew))throw new IllegalStateException("Existing Lysander layout migration failed");
                     if(AirshipCrewPlacement.repairLysander(p))throw new IllegalStateException("Lysander layout migration repeated");
                     System.out.println("AIRSHIPTEST PASS lysander-connected-migration uuid="+uuid);
+                    var oldIds=new java.util.HashMap<String,java.util.UUID>();
+                    for(String id:java.util.List.of("oren","selin","veya","tik"))oldIds.put(id,crew.stream().filter(e->AirshipService.npcId(e).equals(id)).findFirst().orElseThrow().getUUID());
+                    AirshipCrewPlacement.repairOtherCrew(p);
+                    for(String id:oldIds.keySet()){
+                        var member=crew.stream().filter(e->AirshipService.npcId(e).equals(id)).findFirst().orElseThrow();
+                        var anchor=crew.stream().filter(e->AirshipService.npcId(e).equals(id.equals("oren")||id.equals("selin")?"quartermaster":"mara")).findFirst().orElseThrow();
+                        if(!member.getUUID().equals(oldIds.get(id)))throw new IllegalStateException("Crew UUID changed: "+id);
+                        boolean connected=AirshipCrewPlacement.lysanderConnected(level,member,anchor,crew);
+                        System.out.println("AIRSHIPTEST CREW ACCESS audit npc="+id+" connected="+connected+" pos="+member.blockPosition());
+                    }
+                    if(AirshipCrewPlacement.repairOtherCrew(p)!=0)throw new IllegalStateException("Crew migration unexpectedly repeated");
                 }
             } else if(action.equals("attention-check")) {
                 var captain=level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class,p.getBoundingBox().inflate(16),e->AirshipService.npcId(e).equals("captain")).stream().findFirst().orElseThrow();
