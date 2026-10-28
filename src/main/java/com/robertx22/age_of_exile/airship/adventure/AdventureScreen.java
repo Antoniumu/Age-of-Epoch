@@ -63,6 +63,7 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
             if(q!=null)y=lines(pose,d.completed.contains(q.id())?(d.facts.contains("memory:"+npc+":confidence")?AdventureEngine.confidence(npc):q.thanks()):q.title()+" • "+AdventureEngine.progress(d,q,AdventureService.inventory(mc.player,q))+"/"+q.target()+" "+q.objective()+". "+q.request(),y,0x80D9D1,bottom);
             else y=lines(pose,"Приветствие и отношения доступны. Полная личная ветка этого персонажа ещё в работе.",y,0xB8CED2,bottom);
         }
+        if(extent>(entity>=0?166:275))AbstractGui.drawShadow(mc.font,pose,"Колесо мыши • продолжение текста",guiLeft+12,guiTop+(entity>=0?166:275),0x90ADA9);
         scroll=Math.min(scroll,Math.max(0,extent-(entity>=0?166:275)));
         super.render(pose,mx,my,delta);
     }

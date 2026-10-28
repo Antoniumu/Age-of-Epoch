@@ -120,12 +120,14 @@ public final class PartyHudOverlay extends AbstractGui {
         List<String> weeklyLines = showWeekly ? wrap(mc, PartyHudState.weekly, textWidth, 2) : List.of();
 
         var airship=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(mc.player).airship;
-        int shipIron=0;for(int slot=0;slot<mc.player.getInventory().getContainerSize();slot++)if(mc.player.getInventory().getItem(slot).is(net.minecraft.world.item.Items.IRON_INGOT))shipIron+=mc.player.getInventory().getItem(slot).getCount();
+        int shipIron=0,shipBread=0;for(int slot=0;slot<mc.player.getInventory().getContainerSize();slot++){var stack=mc.player.getInventory().getItem(slot);if(stack.is(net.minecraft.world.item.Items.IRON_INGOT))shipIron+=stack.getCount();if(stack.is(net.minecraft.world.item.Items.BREAD))shipBread+=stack.getCount();}
         var shipBook=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(mc.player).questBook;
         List<String> shipLines=new java.util.ArrayList<>();
         if(airship.stage>0) {
             shipLines.addAll(wrap(mc,com.robertx22.age_of_exile.airship.AirshipQuestTracker.main(airship,shipBook),textWidth,4));
-            for(String side:com.robertx22.age_of_exile.airship.AirshipQuestTracker.active(airship,shipBook,shipIron))shipLines.addAll(wrap(mc,side,textWidth,2));
+            var activeSides=com.robertx22.age_of_exile.airship.AirshipQuestTracker.active(airship,shipBook,shipIron,shipBread);
+            for(String side:activeSides.stream().limit(3).toList())shipLines.addAll(wrap(mc,side,textWidth,2));
+            if(activeSides.size()>3)shipLines.add("Ещё "+(activeSides.size()-3)+" • H → Приключения");
         }
         int height = 12;                                   // заголовок
         if (!teamLines.isEmpty()) {

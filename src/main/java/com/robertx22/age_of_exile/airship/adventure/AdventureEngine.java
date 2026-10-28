@@ -20,7 +20,7 @@ public final class AdventureEngine {
             if(metric==AdventureCatalog.Metric.FISH && !java.util.Set.of("minecraft:cod","minecraft:salmon","minecraft:pufferfish","minecraft:tropical_fish").contains(subject))continue;
             String unique=q.id()+":"+(metric==AdventureCatalog.Metric.BIOME?subject:eventId);
             if(subject==null||subject.isBlank()||!d.events.add(unique))continue;
-            d.progress.put(q.id(),(int)Math.min(q.target(),(long)d.progress.getOrDefault(q.id(),0)+amount));changed=true;
+            d.progress.put(q.id(),(int)Math.min(q.target(),(long)d.progress.getOrDefault(q.id(),0)+(metric==AdventureCatalog.Metric.FISH?amount:1)));changed=true;
         }
         return changed;
     }

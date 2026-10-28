@@ -15,11 +15,17 @@ public final class AirshipCrew {
         if(!Files.isRegularFile(file)) return fallback;
         try {
             var json=JsonParser.parseString(Files.readString(file)).getAsJsonObject();
-            if(json.has(id)) return Identifier.parse(json.get(id).getAsString()).toString();
+            if(json.has(id)) {var value=json.get(id);return Identifier.parse(value.isJsonObject()?value.getAsJsonObject().get("texture").getAsString():value.getAsString()).toString();}
         } catch(Exception e) {
             System.err.println("Invalid airship-crew.json; using original bundled skin: "+e.getMessage());
         }
         return fallback;
     }
-    public static String model(String id) { return "wide"; }
+    public static String model(String id) {
+        Path file=FabricLoader.getInstance().getConfigDir().resolve("mmorpg/airship-crew.json");
+        if(Files.isRegularFile(file))try{var json=JsonParser.parseString(Files.readString(file)).getAsJsonObject();
+            if(json.has(id)&&json.get(id).isJsonObject()){var value=json.getAsJsonObject(id);if(value.has("model")&&value.get("model").getAsString().equals("slim"))return "slim";}
+        }catch(Exception ignored){/* Invalid override must not make the shared crew unusable. */}
+        return "wide";
+    }
 }
