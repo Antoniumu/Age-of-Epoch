@@ -178,16 +178,20 @@ public class FabricBootstrap {
             MinecraftForge.EVENT_BUS.post(new TickEvent.ServerTickEvent(TickEvent.Phase.END, server));
             // Зонд боевых замеров (/aoe devtest или флаг-файл из CI-сценария).
             com.robertx22.age_of_exile.uncommon.testing.CombatProbe.tick(server);
+            com.robertx22.age_of_exile.airship.AirshipProbe.tick(server);
             // Аудит заклинаний (/aoe spellaudit или флаг-файл из CI-сценария).
             com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.tick(server);
             for (ServerPlayer p : server.getPlayerList().getPlayers()) {
                 MinecraftForge.EVENT_BUS.post(new TickEvent.PlayerTickEvent(TickEvent.Phase.END, p));
+                com.robertx22.age_of_exile.airship.AirshipService.tick(p);
             }
         });
         ServerTickEvents.START_LEVEL_TICK.register(world ->
             MinecraftForge.EVENT_BUS.post(new TickEvent.WorldTickEvent(TickEvent.Phase.START, world)));
         ServerTickEvents.END_LEVEL_TICK.register(world ->
             MinecraftForge.EVENT_BUS.post(new TickEvent.WorldTickEvent(TickEvent.Phase.END, world)));
+
+        com.robertx22.age_of_exile.airship.AirshipService.register();
 
         // ---- interactions ----
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {

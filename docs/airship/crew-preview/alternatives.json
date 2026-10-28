@@ -1,0 +1,93 @@
+[
+  {
+    "id": "captain",
+    "name": "Капитан",
+    "role": "Капитан • морской рабочий костюм",
+    "scale": 1,
+    "skin": "skins/captain.png",
+    "source": "https://github.com/ldtteam/minecolonies/blob/d1573f78af389c66d3d673343e86ff3a32868561/src/main/resources/assets/minecolonies/textures/entity/citizen/default/fishermanmale1_a.png",
+    "original": "originals/fishermanmale1_a.png",
+    "sha256": "57897d45d1c11e6a49392f66df4d0f7027dab1ae129e31537d87d11cf1902c4e",
+    "adaptation": "64×32 legacy UV crop of original 128×64 custom NPC atlas; custom hats/accessories and geometry omitted",
+    "credit": "MineColonies contributors",
+    "license": "GPL-3.0 (repository license; no separate file-level license asserted)"
+  },
+  {
+    "id": "mara",
+    "name": "Мара",
+    "role": "Исследовательница • походное снаряжение",
+    "scale": 1,
+    "skin": "skins/mara.png",
+    "source": "https://github.com/ldtteam/minecolonies/blob/d1573f78af389c66d3d673343e86ff3a32868561/src/main/resources/assets/minecolonies/textures/entity/citizen/default/archeologistfemale1_a.png",
+    "original": "originals/archeologistfemale1_a.png",
+    "sha256": "89b58337d900417f4802d4f85b1a3f3963f0981a11539b8e55641e2a4e39be98",
+    "adaptation": "64×32 legacy UV crop of original 128×64 custom NPC atlas; custom hats/accessories and geometry omitted",
+    "credit": "MineColonies contributors",
+    "license": "GPL-3.0 (repository license; no separate file-level license asserted)"
+  },
+  {
+    "id": "bram",
+    "name": "Брам",
+    "role": "Механик • рабочая одежда",
+    "scale": 1,
+    "skin": "skins/bram.png",
+    "source": "https://github.com/ldtteam/minecolonies/blob/d1573f78af389c66d3d673343e86ff3a32868561/src/main/resources/assets/minecolonies/textures/entity/citizen/default/mechanistmale1_a.png",
+    "original": "originals/mechanistmale1_a.png",
+    "sha256": "83bb00bec484b6605bd0a9a0f63fd41533c97de7064b660a4209917d99635830",
+    "adaptation": "64×32 legacy UV crop of original 128×64 custom NPC atlas; custom hats/accessories and geometry omitted",
+    "credit": "MineColonies contributors",
+    "license": "GPL-3.0 (repository license; no separate file-level license asserted)"
+  },
+  {
+    "id": "oren",
+    "name": "Орен Тихий",
+    "role": "Хранитель якоря • крупный взрослый",
+    "scale": 1.6,
+    "skin": "skins/oren.png",
+    "source": "https://github.com/ldtteam/minecolonies/blob/d1573f78af389c66d3d673343e86ff3a32868561/src/main/resources/assets/minecolonies/textures/entity/citizen/default/forestermale1_a.png",
+    "original": "originals/forestermale1_a.png",
+    "sha256": "f9e77a6cbd3bd16d04c1281f977b8b69ca16288939c6435ad4b12789203036fb",
+    "adaptation": "64×32 legacy UV crop of original 128×64 custom NPC atlas; custom hats/accessories and geometry omitted",
+    "credit": "MineColonies contributors",
+    "license": "GPL-3.0 (repository license; no separate file-level license asserted)"
+  },
+  {
+    "id": "veya",
+    "name": "Вея «Искра»",
+    "role": "Разведчица • дорожный костюм",
+    "scale": 1,
+    "skin": "skins/veya.png",
+    "source": "https://github.com/ldtteam/minecolonies/blob/d1573f78af389c66d3d673343e86ff3a32868561/src/main/resources/assets/minecolonies/textures/entity/citizen/default/archerfemale1_a.png",
+    "original": "originals/archerfemale1_a.png",
+    "sha256": "0ba7fb6b2a0f7b8b76d38d551474acec734d0554f682b1a2032e095de6f4301b",
+    "adaptation": "64×32 legacy UV crop of original 128×64 custom NPC atlas; custom hats/accessories and geometry omitted",
+    "credit": "MineColonies contributors",
+    "license": "GPL-3.0 (repository license; no separate file-level license asserted)"
+  },
+  {
+    "id": "selin",
+    "name": "Селин Валь",
+    "role": "Целительница • тёмное облачение",
+    "scale": 1,
+    "skin": "skins/selin.png",
+    "source": "https://github.com/ldtteam/minecolonies/blob/d1573f78af389c66d3d673343e86ff3a32868561/src/main/resources/assets/minecolonies/textures/entity/citizen/default/healerfemale1_a.png",
+    "original": "originals/healerfemale1_a.png",
+    "sha256": "a8460eefec18bccc7572d5251bfeda6e57734757a9ec58d6ab188900592401c0",
+    "adaptation": "64×32 legacy UV crop of original 128×64 custom NPC atlas; custom hats/accessories and geometry omitted",
+    "credit": "MineColonies contributors",
+    "license": "GPL-3.0 (repository license; no separate file-level license asserted)"
+  },
+  {
+    "id": "lysander",
+    "name": "Лисандр Рэй",
+    "role": "Переговорщик • светлый камзол",
+    "scale": 1,
+    "skin": "skins/lysander.png",
+    "source": "https://github.com/ldtteam/minecolonies/blob/d1573f78af389c66d3d673343e86ff3a32868561/src/main/resources/assets/minecolonies/textures/entity/citizen/default/noblemale1_a.png",
+    "original": "originals/noblemale1_a.png",
+    "sha256": "4ebbd85d6b9b15e8a4622ea0c7d53ed36f17ed1825d122e21ab34098098c6fd6",
+    "adaptation": "64×32 legacy UV crop of original 128×64 custom NPC atlas; custom hats/accessories and geometry omitted",
+    "credit": "MineColonies contributors",
+    "license": "GPL-3.0 (repository license; no separate file-level license asserted)"
+  }
+]

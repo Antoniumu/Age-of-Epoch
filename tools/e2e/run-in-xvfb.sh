@@ -82,7 +82,7 @@ wm_watcher=$!
 mkdir -p run
 cat > run/options.txt <<EOF
 version:4620
-renderDistance:2
+renderDistance:${RENDER_DISTANCE:-2}
 simulationDistance:5
 guiScale:2
 maxFps:60

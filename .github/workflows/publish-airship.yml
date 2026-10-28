@@ -1,0 +1,51 @@
+name: Publish tested airship jar
+on:
+  push:
+    branches: [arena/7bde44a9-age-of-epoch]
+    paths: ['.github/workflows/publish-airship.yml']
+  workflow_dispatch:
+permissions:
+  actions: read
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Download the exact game-tested artifact and publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          exec > >(tee publish.log) 2>&1
+          gh run view 40602991250 --json conclusion --jq .conclusion | grep -x success
+          test "$(gh run view 40602991250 --json headSha --jq .headSha)" = '176482fc8c9a31c644ebe825b6c72e67d1a84f85'
+          gh run download 40602991250 --name airship-proof --dir release-input
+          jar=$(find release-input -type f -name 'Age-of-Epoch-*.jar' ! -name '*-sources.jar' ! -name '*-dev.jar' | head -1)
+          test -n "$jar"
+          bash tools/ci/check-jar.sh "$(dirname "$jar")"
+          mkdir -p release-files
+          cp "$jar" release-files/Age-of-Epoch-airship-preview.jar
+          sha256sum release-files/Age-of-Epoch-airship-preview.jar > release-files/SHA256SUMS.txt
+          cat > release-files/NOTES.md <<'NOTES'
+          # Airship hub — tested preview
+          Exact binary from successful client run https://github.com/Antoniumu/Age-of-Epoch/actions/runs/40602991250 (source 176482f).
+          Minecraft 26.3, Fabric Loader 0.19.5, Java 25. Install on both client and server with Fabric API and Trinkets Updated as required by the mod.
+          Use a NEW TEST WORLD. Operator command /airship winged places the imported Winged Sailor in clear loaded Overworld sky near a dry landing. Enter the light circle to board. Right-click the captain. Space skips to transcript, R replays, 1/2 answer; H shows the quest card. /airship descend returns below the ship.
+          Three chapters, individual crew reputation, one-time personal tasks, bottom subtitle dialogue, rotating cubic portraits, three original crew skins and eight captain voice clips. Mara/Bram voices and the five proposed additional characters are NOT included in this binary.
+          Exact tested source: 176482fc8c9a31c644ebe825b6c72e67d1a84f85. 45 tests passed; real client verified the campaign through stage 11, actual audio activation, quest gates, one-time rewards, iron consumption and RPGPlayerData NBT roundtrip. Long objectives used explicitly synthetic test counters/hooks; no claim of a manual dungeon playthrough. Full process restart persistence not separately tested.
+          Test preview, not a production-server release. No claims integration, ship block protection, relocation or complete structure placement rollback. Back up your world. Old ships and existing NPC skins are not automatically migrated.
+          Winged Sailor build: Chiisai_Khoahri, https://www.planetminecraft.com/project/large-fantasy-airship-the-winged-sailor/ ; credited tail-fin reference Captain_JEK. User-supplied schematic. Upstream blanket public redistribution permission remains unverified; see docs/airship/ASSETS.md in the repository. This preview does not grant any additional rights to third-party assets.
+          Internal mod version remains 5.1.0; the preview filename/tag distinguishes this artifact from the older 5.1.0 release. Not marked as latest stable release.
+          NOTES
+          gh release upload airship-preview-176482f release-files/Age-of-Epoch-airship-preview.jar release-files/SHA256SUMS.txt --clobber
+
+
+      - name: Publish failure details
+        if: failure()
+        run: |
+          python3 - <<'PYCODE'
+          from pathlib import Path
+          text=Path('publish.log').read_text() if Path('publish.log').exists() else 'No publication log'
+          print('::error::'+text[-6500:].replace('%','%25').replace('\n','%0A').replace('\r','%0D'))
+          PYCODE

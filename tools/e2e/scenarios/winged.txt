@@ -1,0 +1,482 @@
+# Real Minecraft UI and world. Counter seeding is explicitly synthetic, not a claimed dungeon playthrough.
+wait_window Minecraft 420000
+write run/airship-e2e.flag prepare
+wait_log 300000 Created: .*atlas/items
+wait 8000
+click 640 296
+wait 4000
+click 480 688
+wait 3000
+click 480 688
+wait_log_new 60000 AIRSHIPTEST PASS prepare
+wait 45000
+shot 00-world
+log_mark
+write run/airship-e2e.flag ritual-stock
+wait_log_new 30000 AIRSHIPTEST PASS ritual-stock
+hold h 200
+wait 1000
+shot 29-H-summon-button
+click 1140 688
+wait 1500
+shot 30-hub-confirmation
+log_mark
+click 640 476
+wait 7000
+shot 31-anchor-charging
+wait_log_new 120000 AIRSHIPHUB COMMISSIONED
+log_mark
+write run/airship-e2e.flag ritual-paid
+wait_log_new 30000 AIRSHIPTEST PASS ritual-paid
+log_mark
+write run/airship-e2e.flag winged
+wait_log_new 120000 AIRSHIPTEST PASS winged
+wait 12000
+shot 01-airship-exterior
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+wait 6000
+shot 02-on-deck
+log_mark
+write run/airship-e2e.flag lift
+wait_log_new 30000 AIRSHIPTEST PASS lift
+wait 4000
+log_mark
+write run/airship-e2e.flag lift-check
+wait_log_new 30000 AIRSHIPTEST PASS lift-check
+shot 03-lift-arrival
+log_mark
+write run/airship-e2e.flag far-reject
+wait_log_new 30000 AIRSHIPTEST PASS far-reject
+log_mark
+write run/airship-e2e.flag photo-captain
+wait_log_new 30000 AIRSHIPTEST PASS photo-captain
+wait 2500
+key F1
+wait 1000
+shot 04-captain-skin
+key F1
+log_mark
+write run/airship-e2e.flag dialogue
+wait_log_new 30000 AIRSHIPTEST PASS dialogue
+wait 3000
+move 25 450
+shot 05-captain-subtitle-head-left
+move 1230 650
+wait 1000
+shot 06-captain-subtitle-head-right
+hold r 300
+# Let actual audio clips finish: choices must appear after both clips, not via a fake delay.
+wait 24500
+shot 07-captain-transcript
+# Click the actual bottom-strip accept button, GUI scale 2, 1280x720.
+click 640 532
+wait 1200
+log_mark
+write run/airship-e2e.flag accepted
+wait_log_new 30000 AIRSHIPTEST PASS accepted
+hold h 200
+wait 1800
+shot 08-H-quest-captain
+key Escape
+log_mark
+write run/airship-e2e.flag favor-captain
+wait_log_new 30000 AIRSHIPTEST PASS favor-captain
+log_mark
+write run/airship-e2e.flag photo-mara
+wait_log_new 30000 AIRSHIPTEST PASS photo-mara
+wait 1500
+key F1
+wait 800
+shot 09-mara-skin
+key F1
+log_mark
+write run/airship-e2e.flag talk-mara
+wait_log_new 30000 AIRSHIPTEST PASS talk-mara
+wait 1500
+hold space 500
+wait 500
+shot 10-mara-dialogue
+key Escape
+log_mark
+write run/airship-e2e.flag mara
+wait_log_new 30000 AIRSHIPTEST PASS mara
+hold h 200
+wait 1800
+shot 11-H-quest-mara
+key Escape
+log_mark
+write run/airship-e2e.flag photo-quartermaster
+wait_log_new 30000 AIRSHIPTEST PASS photo-quartermaster
+wait 1500
+key F1
+wait 800
+shot 12-bram-skin
+key F1
+log_mark
+write run/airship-e2e.flag talk-quartermaster
+wait_log_new 30000 AIRSHIPTEST PASS talk-quartermaster
+wait 1000
+hold space 500
+wait 500
+shot 13-bram-dialogue
+key Escape
+log_mark
+write run/airship-e2e.flag quartermaster
+wait_log_new 30000 AIRSHIPTEST PASS quartermaster
+log_mark
+write run/airship-e2e.flag dialogue
+wait_log_new 30000 AIRSHIPTEST PASS dialogue
+wait 1800
+shot 14-captain-welcome
+hold space 500
+wait 500
+hold 1 500
+wait 1000
+log_mark
+write run/airship-e2e.flag chapter-one
+wait_log_new 30000 AIRSHIPTEST PASS chapter-one
+# Stage 4 = chapter 1 complete; the next two chapters remain locked behind new RPG progress.
+log_mark
+write run/airship-e2e.flag stale
+wait_log_new 30000 AIRSHIPTEST PASS stale
+log_mark
+write run/airship-e2e.flag dialogue
+wait_log_new 30000 AIRSHIPTEST PASS dialogue
+wait 1600
+shot 15-chapter-two-voice
+hold space 500
+wait 500
+hold 1 500
+wait 1000
+log_mark
+write run/airship-e2e.flag gate
+wait_log_new 30000 AIRSHIPTEST PASS gate
+log_mark
+write run/airship-e2e.flag talk-mara
+wait_log_new 30000 AIRSHIPTEST PASS talk-mara
+wait 1000
+hold space 500
+wait 500
+shot 16-chests-locked
+key Escape
+log_mark
+write run/airship-e2e.flag seed-chests
+wait_log_new 30000 AIRSHIPTEST PASS seed-chests
+log_mark
+write run/airship-e2e.flag report
+wait_log_new 30000 AIRSHIPTEST PASS report
+log_mark
+write run/airship-e2e.flag seed-kills
+wait_log_new 30000 AIRSHIPTEST PASS seed-kills
+log_mark
+write run/airship-e2e.flag report
+wait_log_new 30000 AIRSHIPTEST PASS report
+log_mark
+write run/airship-e2e.flag favor-claim-captain
+wait_log_new 30000 AIRSHIPTEST PASS favor-claim-captain
+log_mark
+write run/airship-e2e.flag dialogue
+wait_log_new 30000 AIRSHIPTEST PASS dialogue
+wait 1500
+hold space 500
+wait 500
+shot 17-story-choice
+key Escape
+log_mark
+write run/airship-e2e.flag truth
+wait_log_new 30000 AIRSHIPTEST PASS truth
+log_mark
+write run/airship-e2e.flag talk-mara
+wait_log_new 30000 AIRSHIPTEST PASS talk-mara
+wait 1000
+hold space 500
+wait 500
+shot 18-chapter-three
+hold 1 500
+wait 1000
+log_mark
+write run/airship-e2e.flag iron-quartermaster
+wait_log_new 30000 AIRSHIPTEST PASS iron-quartermaster
+log_mark
+write run/airship-e2e.flag seed-dungeon
+wait_log_new 30000 AIRSHIPTEST PASS seed-dungeon
+log_mark
+write run/airship-e2e.flag report
+wait_log_new 30000 AIRSHIPTEST PASS report
+log_mark
+write run/airship-e2e.flag dialogue
+wait_log_new 30000 AIRSHIPTEST PASS dialogue
+wait 1500
+shot 19-captain-return
+hold space 500
+wait 500
+hold 1 500
+wait 1200
+log_mark
+write run/airship-e2e.flag dialogue
+wait_log_new 30000 AIRSHIPTEST PASS dialogue
+wait 1800
+shot 20-finale-voice
+hold space 500
+wait 500
+shot 21-finale-transcript
+key Escape
+hold h 200
+wait 1800
+shot 22-campaign-complete
+
+key Escape
+log_mark
+write run/airship-e2e.flag finished
+wait_log_new 30000 AIRSHIPTEST PASS finished
+
+# Actual eight-member crew, individual selected voices and safe stationary attention.
+log_mark
+write run/airship-e2e.flag crew-check
+wait_log_new 30000 AIRSHIPTEST PASS crew-check
+
+log_mark
+write run/airship-e2e.flag photo-oren
+wait_log_new 30000 AIRSHIPTEST PASS photo-oren
+wait 1500
+shot 23-oren-model
+log_mark
+write run/airship-e2e.flag talk-oren
+wait_log_new 30000 AIRSHIPTEST PASS talk-oren
+wait 1800
+shot 23-oren-voice
+key Escape
+wait 500
+
+log_mark
+write run/airship-e2e.flag photo-veya
+wait_log_new 30000 AIRSHIPTEST PASS photo-veya
+wait 1500
+shot 24-veya-model
+log_mark
+write run/airship-e2e.flag talk-veya
+wait_log_new 30000 AIRSHIPTEST PASS talk-veya
+wait 1800
+shot 24-veya-voice
+key Escape
+wait 500
+
+log_mark
+write run/airship-e2e.flag photo-selin
+wait_log_new 30000 AIRSHIPTEST PASS photo-selin
+wait 1500
+shot 25-selin-model
+log_mark
+write run/airship-e2e.flag talk-selin
+wait_log_new 30000 AIRSHIPTEST PASS talk-selin
+wait 1800
+shot 25-selin-voice
+key Escape
+wait 500
+
+log_mark
+write run/airship-e2e.flag photo-lysander
+wait_log_new 30000 AIRSHIPTEST PASS photo-lysander
+wait 1500
+shot 26-lysander-model
+log_mark
+write run/airship-e2e.flag talk-lysander
+wait_log_new 30000 AIRSHIPTEST PASS talk-lysander
+wait 1800
+shot 26-lysander-voice
+key Escape
+wait 500
+
+log_mark
+write run/airship-e2e.flag photo-tik
+wait_log_new 30000 AIRSHIPTEST PASS photo-tik
+wait 1500
+shot 27-tik-model
+log_mark
+write run/airship-e2e.flag talk-tik
+wait_log_new 30000 AIRSHIPTEST PASS talk-tik
+wait 1800
+shot 27-tik-voice
+key Escape
+wait 500
+
+log_mark
+write run/airship-e2e.flag attend-captain
+wait_log_new 30000 AIRSHIPTEST PASS attend-captain
+wait 7000
+log_mark
+write run/airship-e2e.flag attention-check
+wait_log_new 30000 AIRSHIPTEST PASS attention-check
+shot 28-captain-attention
+
+log_mark
+write run/airship-e2e.flag hub-check
+wait_log_new 30000 AIRSHIPTEST PASS hub-check
+hold h 200
+wait 800
+click 1140 688
+wait 1200
+shot 32-shared-hub-status
+key Escape
+
+# Spawn-placement denial, attack callback regression and removal of already-present monsters.
+log_mark
+write run/airship-e2e.flag hostile-spawn
+wait_log_new 30000 AIRSHIPTEST PASS hostile-spawn
+wait 1200
+log_mark
+write run/airship-e2e.flag hostile-cleared
+wait_log_new 30000 AIRSHIPTEST PASS hostile-cleared
+# Real H confirmation, 20-second charge, existing geometry + original eight UUIDs.
+log_mark
+write run/airship-e2e.flag jump-stock
+wait_log_new 30000 AIRSHIPTEST PASS jump-stock
+wait 45000
+hold h 200
+wait 1000
+click 1140 688
+wait_log_new 30000 AIRSHIPJUMP QUOTED
+wait 2000
+shot 33-jump-confirmation
+log_mark
+click 640 476
+wait 8000
+shot 34-jump-volume
+wait_log_new 120000 AIRSHIPJUMP COMPLETE
+log_mark
+write run/airship-e2e.flag jump-check
+wait_log_new 30000 AIRSHIPTEST PASS jump-check
+hold h 200
+wait 1000
+click 1140 688
+wait 1500
+shot 35-jump-cooldown
+key Escape
+log_mark
+write run/airship-e2e.flag photo-mara
+wait_log_new 30000 AIRSHIPTEST PASS photo-mara
+log_mark
+write run/airship-e2e.flag talk-mara
+wait_log_new 30000 AIRSHIPTEST PASS talk-mara
+wait 1500
+hold space 500
+wait 500
+shot 36-sidequest-explicit-accept
+click 640 532
+wait 1200
+log_mark
+write run/airship-e2e.flag side-ui-check
+wait_log_new 30000 AIRSHIPTEST PASS side-ui-check
+hold h 200
+wait 1000
+shot 37-H-main-and-side-progress
+key Escape
+wait 1500
+shot 38-world-side-progress
+
+# Interrupt a second real move after its snapshot/journal exists; exercise production rollback.
+log_mark
+write run/airship-e2e.flag jump-recovery-stock
+wait_log_new 30000 AIRSHIPTEST PASS jump-recovery-stock
+wait 45000
+hold h 200
+wait 1000
+click 1140 688
+wait_log_new 30000 AIRSHIPJUMP QUOTED
+wait 1500
+log_mark
+click 640 476
+wait_log_new 120000 AIRSHIPJUMP MOVING
+log_mark
+write run/airship-e2e.flag jump-recovery
+wait_log_new 90000 AIRSHIPTEST PASS jump-recovery
+wait 1500
+shot 39-snapshot-rollback
+
+# New nested state is exercised through the real RPG persistence codec, not JSON alone.
+log_mark
+write run/airship-e2e.flag adventure-check
+wait_log_new 30000 AIRSHIPTEST PASS adventure-check
+log_mark
+write run/airship-e2e.flag photo-captain
+wait_log_new 30000 AIRSHIPTEST PASS photo-captain
+log_mark
+write run/airship-e2e.flag dialogue
+wait_log_new 30000 AIRSHIPTEST PASS dialogue
+wait 1500
+hold space 300
+wait 600
+# New personal-story button, in the existing bottom conversation panel.
+click 1040 332
+wait 1600
+shot 40-personal-story
+click 640 420
+wait 1200
+shot 43-call-witnessed
+click 640 504
+wait 1200
+log_mark
+write run/airship-e2e.flag adventure-choice-check
+wait_log_new 30000 AIRSHIPTEST PASS adventure-choice-check
+shot 44-call-recorded
+log_mark
+click 640 420
+wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_captain_request
+wait 13000
+log_mark
+write run/airship-e2e.flag adventure-fish
+wait_log_new 60000 AIRSHIPTEST PASS adventure-fish
+wait 1200
+log_mark
+click 640 420
+wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_captain_thanks
+wait 1200
+shot 49-personal-captain-voice
+wait 15000
+shot 45-personal-quest-complete
+click 640 420
+wait 1200
+log_mark
+write run/airship-e2e.flag adventure-heart-check
+wait_log_new 30000 AIRSHIPTEST PASS adventure-heart-check
+shot 46-personal-heart-memory
+key Escape
+hold h 200
+wait 1000
+shot 41-adventures-replaces-questbook
+# Seventh native H tab now opens Adventures, not the retired book.
+click 932 501
+wait 1500
+shot 42-adventures-overview
+key Escape
+
+log_mark
+write run/airship-e2e.flag photo-oren
+wait_log_new 30000 AIRSHIPTEST PASS photo-oren
+log_mark
+write run/airship-e2e.flag talk-oren
+wait_log_new 30000 AIRSHIPTEST PASS talk-oren
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+log_mark
+click 640 420
+wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_oren_request
+wait 1200
+shot 50-personal-oren-voice
+wait 14000
+log_mark
+write run/airship-e2e.flag adventure-plant
+wait_log_new 30000 AIRSHIPTEST PASS adventure-plant
+wait 1200
+shot 47-oren-new-roots
+click 640 420
+wait 1200
+click 640 420
+wait 1200
+shot 48-oren-personal-memory
+key Escape
