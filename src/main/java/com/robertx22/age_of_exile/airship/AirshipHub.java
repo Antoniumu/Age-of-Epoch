@@ -71,8 +71,9 @@ public final class AirshipHub {
             var old=new HubState();old.exists=true;old.layout=d.layout;old.x=d.x;old.y=d.y;old.z=d.z;old.groundY=d.groundY;
             if(old.contains(p.blockPosition().getX(),p.blockPosition().getY(),p.blockPosition().getZ())) {
                 var level=(ServerLevel)p.level();var feet=new BlockPos(hub.x,hub.y+1,hub.z+4);
-                if(level.getBlockState(feet).isAir() && level.getBlockState(feet.above()).isAir() && level.getBlockState(feet.below()).isSolid())
-                    p.teleportTo(level,hub.x+.5,hub.y+1,hub.z+4.5,java.util.Set.of(),p.getYRot(),p.getXRot(),false);
+                if(level.getBlockState(feet).isAir() && level.getBlockState(feet.above()).isAir() && level.getBlockState(feet.below()).isSolid()) {
+                    p.teleportTo(level,hub.x+.5,hub.y+1,hub.z+4.5,java.util.Set.of(),p.getYRot(),p.getXRot(),false);p.resetFallDistance();
+                }
             }
         }
         if(hub.exists && hub.phase.equals("IDLE") && hub.mirror(d)) Load.playerRPGData(p).syncToClient(p);
@@ -93,6 +94,6 @@ public final class AirshipHub {
         return level instanceof ServerLevel server && Level.OVERWORLD.equals(level.dimension()) && state(server.getServer()).contains(pos.getX(),pos.getY(),pos.getZ());
     }
     public static void tick(ServerPlayer p) {
-        if(p.tickCount%40==0) attach(p);
+        if(p.tickCount<3 || p.tickCount%40==0) attach(p);
     }
 }
