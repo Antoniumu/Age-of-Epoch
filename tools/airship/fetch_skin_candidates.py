@@ -13,7 +13,7 @@ def get(url):
 manifest=json.loads((ROOT/'manifest.json').read_text())
 report=[];errors=[]
 for row in manifest:
-    candidates=[row['page'].rstrip('/')+'/download/file/'+row['fileId']+'/']
+    candidates=row.get('rawCandidates',[])+[row['page'].rstrip('/')+'/download/file/'+row['fileId']+'/']
     try:
         data,_=get(row['page'])
         source=html.unescape(data.decode(errors='replace')).replace('\\/','/')
