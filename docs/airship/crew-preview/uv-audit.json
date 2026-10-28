@@ -4,61 +4,67 @@
       64,
       64
     ],
-    "baseUV": "classic/wide",
+    "baseUV": "wide",
     "transparentBasePixels": 0,
-    "nearBlackBasePixels": 0
+    "nearBlackBasePixels": 0,
+    "sourceTransparentWideArmSidePixels": 0
   },
   "lysander": {
     "size": [
       64,
       64
     ],
-    "baseUV": "classic/wide",
+    "baseUV": "wide",
     "transparentBasePixels": 0,
-    "nearBlackBasePixels": 0
+    "nearBlackBasePixels": 0,
+    "sourceTransparentWideArmSidePixels": 0
   },
   "mara": {
     "size": [
       64,
       64
     ],
-    "baseUV": "classic/wide",
+    "baseUV": "slim",
     "transparentBasePixels": 0,
-    "nearBlackBasePixels": 89
+    "nearBlackBasePixels": 25,
+    "sourceTransparentWideArmSidePixels": 24
   },
   "oren": {
     "size": [
       64,
       64
     ],
-    "baseUV": "classic/wide",
+    "baseUV": "wide",
     "transparentBasePixels": 0,
-    "nearBlackBasePixels": 38
+    "nearBlackBasePixels": 38,
+    "sourceTransparentWideArmSidePixels": 0
   },
   "quartermaster": {
     "size": [
       64,
       64
     ],
-    "baseUV": "classic/wide",
+    "baseUV": "wide",
     "transparentBasePixels": 0,
-    "nearBlackBasePixels": 22
+    "nearBlackBasePixels": 22,
+    "sourceTransparentWideArmSidePixels": 0
   },
   "selin": {
     "size": [
       64,
       64
     ],
-    "baseUV": "classic/wide",
+    "baseUV": "slim",
     "transparentBasePixels": 0,
-    "nearBlackBasePixels": 122
+    "nearBlackBasePixels": 58,
+    "sourceTransparentWideArmSidePixels": 24
   },
   "tik": {
     "size": [
       64,
       64
     ],
-    "baseUV": "classic/wide",
+    "baseUV": "wide",
     "transparentBasePixels": 0,
     "nearBlackBasePixels": 0
   },
@@ -67,8 +73,9 @@
       64,
       64
     ],
-    "baseUV": "classic/wide",
+    "baseUV": "slim",
     "transparentBasePixels": 0,
-    "nearBlackBasePixels": 60
+    "nearBlackBasePixels": 0,
+    "sourceTransparentWideArmSidePixels": 22
   }
 }

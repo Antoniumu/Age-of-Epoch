@@ -35,6 +35,11 @@ jobs:
               detail=(match[3]+match[4])[:1800].replace('%','%25').replace('\n','%0A').replace('\r','%0D')
               print(f'::error file={match[1]},line={match[2]}::{detail}')
           PYCODE
+      - name: Voice and vanilla skin integrity
+        run: |
+          python3 -m pip install Pillow
+          python3 tools/airship/check_adventure_audio.py
+          python3 tools/airship/audit_crew_uv.py
       - name: Headless graphics
         run: |
           sudo apt-get update -q

@@ -41,7 +41,7 @@ function label(root,text,x){
  const c=document.createElement('canvas');c.width=512;c.height=96;const ctx=c.getContext('2d');ctx.fillStyle='#eadfc8';ctx.font='bold 32px sans-serif';ctx.textAlign='center';ctx.fillText(text,256,50);
  const texture=new T.CanvasTexture(c);const sprite=new T.Sprite(new T.SpriteMaterial({map:texture,depthTest:false,transparent:true}));sprite.scale.set(27,5.1,1);sprite.position.set(x,-5,4);root.add(sprite);
 }
-function avatar(texture,scale){const skin=new SkinObject();skin.map=texture;skin.modelType='default';skin.scale.setScalar(scale);skin.position.y=24*scale;skin.rotation.y=.28;skin.rightArm.rotation.z=.035;skin.leftArm.rotation.z=-.035;skin.head.rotation.y=-.07;return skin;}
+function avatar(texture,scale,model){const skin=new SkinObject();skin.map=texture;skin.modelType=model==='slim'?'slim':'default';skin.scale.setScalar(scale);skin.position.y=24*scale;skin.rotation.y=.28;skin.rightArm.rotation.z=.035;skin.leftArm.rotation.z=-.035;skin.head.rotation.y=-.07;return skin;}
 try{
  const response=await fetch('./alternatives.json');if(!response.ok)throw Error('Нет реестра текстур');const people=await response.json();
  const stage=view(document.querySelector('#stage'),true);
@@ -51,12 +51,12 @@ try{
   const article=document.createElement('article');article.className='card';
   article.innerHTML=`<canvas aria-label="3D-модель: ${p.name}"></canvas><div class="info"><span class="tag">${p.id==='tik'?'СОБСТВЕННЫЙ ЭСКИЗ':p.scale===1.6?'ИНТЕРНЕТ-ТЕКСТУРА / 1,6×':'ИНТЕРНЕТ-ТЕКСТУРА / 1×'}</span><h2>${p.name}</h2><p>${p.role}</p>${p.source?`<a href="${p.source}" target="_blank" rel="noopener">Оригинал и источник ↗</a>`:'Не найденный готовый ассет; отдельная птичья геометрия.'}</div>`;
   document.querySelector('#grid').append(article);const v=view(article.querySelector('canvas'));
-  const m=p.texture?avatar(p.texture,p.scale):bird();v.root.add(m);floor(v.root,0,p.id==='tik'?5:p.scale*9);models.push(m);
+  const m=p.texture?avatar(p.texture,p.scale,p.model):bird();v.root.add(m);floor(v.root,0,p.id==='tik'?5:p.scale*9);models.push(m);
   const x=-109+i*31;
-  const other=p.texture?avatar(p.texture,p.scale):bird();other.position.x=x;stage.root.add(other);floor(stage.root,x,p.id==='tik'?5:p.scale*8);label(stage.root,p.name,x);models.push(other);
+  const other=p.texture?avatar(p.texture,p.scale,p.model):bird();other.position.x=x;stage.root.add(other);floor(stage.root,x,p.id==='tik'?5:p.scale*8);label(stage.root,p.name,x);models.push(other);
  });
- status.textContent='Загружено: 7 настоящих интернет-текстур + 1 собственный эскиз птицы. Все восемь моделей доступны для вращения.';
- window.previewStats={textures:textures.length,characters:all.length,orenScale:loaded.find(p=>p.id==='oren').scale,birdGeometry:'non-humanoid original prototype'};
+ status.textContent='Загружено: 7 адаптаций лицензированных текстур + 1 собственный эскиз птицы. Все восемь моделей доступны для вращения.';
+ window.previewStats={textures:textures.length,characters:all.length,slimModels:loaded.filter(p=>p.model==='slim').length,orenScale:loaded.find(p=>p.id==='oren').scale,birdGeometry:'non-humanoid original prototype'};
  window.previewReady=true;
  document.querySelector('#front').onclick=()=>models.forEach(m=>m.rotation.y=.28);
  document.querySelector('#back').onclick=()=>models.forEach(m=>m.rotation.y=Math.PI+.28);

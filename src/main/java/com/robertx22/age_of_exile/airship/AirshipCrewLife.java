@@ -25,7 +25,9 @@ public final class AirshipCrewLife {
             if(observer.isSpectator()) continue;
             for(LivingEntity npc:level.getEntitiesOfClass(LivingEntity.class,observer.getBoundingBox().inflate(16),e->!AirshipService.npcId(e).isEmpty())) {
                 if(!seen.add(npc.getId())) continue;
-                Attention a=MEMORY.computeIfAbsent(npc,Attention::new);
+                // Re-apply the current profile once on first observation, including actors from old saves.
+                // No respawn, UUID replacement or personal story mutation.
+                Attention a=MEMORY.computeIfAbsent(npc,actor->{AirshipService.configureSkin(level,actor);return new Attention(actor);});
                 ServerPlayer target=level.getEntity(a.target) instanceof ServerPlayer p && eligible(npc,p,12)?p:null;
                 if(target==null || --a.refresh<=0) {
                     // Keep the current listener unless a significantly closer player arrives.

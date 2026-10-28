@@ -21,11 +21,18 @@ public final class AirshipCrew {
         }
         return fallback;
     }
+    public static String bundledModel(String id){
+        return java.util.Set.of("mara","veya","selin").contains(id)?"slim":"wide";
+    }
     public static String model(String id) {
         Path file=FabricLoader.getInstance().getConfigDir().resolve("mmorpg/airship-crew.json");
         if(Files.isRegularFile(file))try{var json=JsonParser.parseString(Files.readString(file)).getAsJsonObject();
-            if(json.has(id)&&json.get(id).isJsonObject()){var value=json.getAsJsonObject(id);if(value.has("model")&&value.get("model").getAsString().equals("slim"))return "slim";}
+            if(json.has(id)){
+                var value=json.get(id);
+                if(value.isJsonObject()&&value.getAsJsonObject().has("model")&&value.getAsJsonObject().get("model").getAsString().equals("slim"))return "slim";
+                return "wide"; // Legacy external texture overrides retain their original wide default.
+            }
         }catch(Exception ignored){/* Invalid override must not make the shared crew unusable. */}
-        return "wide";
+        return bundledModel(id);
     }
 }
