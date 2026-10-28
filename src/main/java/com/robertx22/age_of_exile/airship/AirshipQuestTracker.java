@@ -21,6 +21,6 @@ public final class AirshipQuestTracker {
         return active(d,b,iron,java.util.Map.of("bram.shared_table",bread));
     }
     public static List<String> active(AirshipData d,QuestBookData b,int iron,java.util.Map<String,Integer> inventory){
-        var result=new ArrayList<String>();for(String id:new String[]{"captain","mara","quartermaster"})if((d.favorAccepted&AirshipCampaign.bit(id))!=0 && (d.favorCompleted&AirshipCampaign.bit(id))==0)result.add(side(d,b,id,iron));for(var q:com.robertx22.age_of_exile.airship.adventure.AdventureCatalog.QUESTS)if(d.adventure.accepted.contains(q.id())&&!d.adventure.completed.contains(q.id()))result.add("ПОБОЧНОЕ • "+q.title()+" • "+com.robertx22.age_of_exile.airship.adventure.AdventureEngine.progress(d.adventure,q,inventory.getOrDefault(q.id(),0))+"/"+q.target()+" "+q.objective());return result;
+        var result=new ArrayList<String>(com.robertx22.age_of_exile.airship.adventure.Voyage.activeGoals(d.adventure));for(String id:new String[]{"captain","mara","quartermaster"})if((d.favorAccepted&AirshipCampaign.bit(id))!=0 && (d.favorCompleted&AirshipCampaign.bit(id))==0)result.add(side(d,b,id,iron));for(var q:com.robertx22.age_of_exile.airship.adventure.AdventureCatalog.QUESTS)if(d.adventure.accepted.contains(q.id())&&!d.adventure.completed.contains(q.id()))result.add("ПОБОЧНОЕ • "+q.title()+" • "+com.robertx22.age_of_exile.airship.adventure.AdventureEngine.progress(d.adventure,q,inventory.getOrDefault(q.id(),0))+"/"+q.target()+" "+q.objective());return result;
     }
 }

@@ -72,7 +72,7 @@ public final class Voyage {
             if(action==r.action()+10){
                 d.facts.remove(accepted(r));d.progress.remove(progress(r));
                 d.events.removeIf(s->s.startsWith("voyage."+r.id()+":"));d.facts.removeIf(s->s.startsWith("voyage.observed."+r.id()+":"));
-                return "Этот способ отложен. Слот подготовки свободен; при повторном принятии понадобится новое действие. Отказ не уменьшает отношения.";
+                return "Отложено: "+r.title()+". Слот подготовки свободен; при повторном принятии понадобится новое действие. Отказ не уменьшает отношения.";
             }
             if(action==r.action()){
                 if(d.facts.add(accepted(r)))return r.request();
@@ -86,9 +86,13 @@ public final class Voyage {
         if(finished(d))return "Подготовка завершена • проверено "+completed(d)+" разных способов. Следующая экспедиция ещё не началась.";
         return "Подготовка • "+Math.min(2,completed(d))+"/2 разных способов; активно "+active(d)+"/2. От ненужного поручения можно отказаться у его автора.";
     }
+    public static List<String> activeGoals(AdventureData d){
+        var out=new ArrayList<String>();
+        if(started(d)&&!finished(d))for(var r:ROUTES)if(d.facts.contains(accepted(r))&&!d.facts.contains(done(r)))out.add("ПОДГОТОВКА • "+r.title()+" • "+d.progress.getOrDefault(progress(r),0)+"/1");return out;
+    }
     public static List<String> journal(AdventureData d){
         var out=new ArrayList<String>();if(!started(d))return out;
-        out.add(objective(d));for(var r:ROUTES)if(d.facts.contains(accepted(r)))out.add((d.facts.contains(done(r))?"✓ ":"• ")+r.title()+" • "+d.progress.getOrDefault(progress(r),0)+"/1 • "+r.npc());return out;
+        out.add(objective(d));for(var r:ROUTES)if(d.facts.contains(accepted(r)))out.add((d.facts.contains(done(r))?"✓ ":"• ")+r.title()+" • "+d.progress.getOrDefault(progress(r),0)+"/1 • "+com.robertx22.age_of_exile.airship.AirshipStory.name(r.npc()).split(" • ")[0]);return out;
     }
     public static String voiceText(String key){
         return switch(key){

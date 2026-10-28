@@ -11,9 +11,9 @@ class VoyageTest {
     @Test void activityOnlyCountsAfterExplicitAcceptanceAndNeedsAReport(){
         var d=start();var r=Voyage.ROUTES.getFirst();
         assertFalse(Voyage.record(d,r.metric(),"already_collected_skill","before"));
-        assertEquals(r.request(),Voyage.act(d,r.npc(),r.action()));assertEquals("",Voyage.act(d,r.npc(),r.action()));
+        assertEquals(r.request(),Voyage.act(d,r.npc(),r.action()));assertTrue(Voyage.activeGoals(d).getFirst().contains("0/1"));assertEquals("",Voyage.act(d,r.npc(),r.action()));
         assertTrue(Voyage.record(d,r.metric(),"already_collected_skill","new_event"));
-        assertFalse(Voyage.record(d,r.metric(),"already_collected_skill","new_event"));assertEquals(0,Voyage.completed(d));
+        assertFalse(Voyage.record(d,r.metric(),"already_collected_skill","new_event"));assertEquals(0,Voyage.completed(d));assertTrue(Voyage.activeGoals(d).getFirst().contains("1/1"));
         assertEquals(r.debrief(),Voyage.act(d,r.npc(),r.action()));int heart=AdventureEngine.heart(d,r.npc());
         assertEquals("",Voyage.act(d,r.npc(),r.action()));assertEquals(heart,AdventureEngine.heart(d,r.npc()));
     }
