@@ -68,5 +68,75 @@
     "durationMillis": 15647,
     "voice": "voice-18",
     "batch": 1
+  },
+  "captain_confidence": {
+    "sound": "personal_captain_confidence",
+    "text": "Когда дежурство кончается, я всё ещё считаю шаги на палубе. Бывает, тишина страшнее шторма. Не обещай, что это пройдёт. Просто посиди рядом.",
+    "durationMillis": 13166,
+    "voice": "voice-01",
+    "batch": 2
+  },
+  "mara_confidence": {
+    "sound": "personal_mara_confidence",
+    "text": "Оставлю здесь белое пятно. Раньше дорисовала бы линию, лишь бы не признаться, что не знаю пути. С тобой можно сказать: я пока не знаю.",
+    "durationMillis": 10057,
+    "voice": "voice-03",
+    "batch": 2
+  },
+  "quartermaster_confidence": {
+    "sound": "personal_bram_confidence",
+    "text": "Я оставлю порцию для того, кто не смог прийти. И не буду требовать объяснения. Общий стол — не ещё одна ведомость.",
+    "durationMillis": 9096,
+    "voice": "voice-05",
+    "batch": 2
+  },
+  "oren_confidence": {
+    "sound": "personal_oren_confidence",
+    "text": "Если я попрошу остановиться, ты остановишься? Мне важно знать, что это не будет считаться слабостью. Спасибо. Мне легче так держать якорь.",
+    "durationMillis": 10224,
+    "voice": "voice-08",
+    "batch": 2
+  },
+  "veya_confidence": {
+    "sound": "personal_veya_confidence",
+    "text": "Если однажды я не вернусь к ужину, не говори, что я всегда справляюсь. Лучше позови. Мне трудно просить об этом без шутки.",
+    "durationMillis": 8020,
+    "voice": "voice-10",
+    "batch": 2
+  },
+  "selin_confidence": {
+    "sound": "personal_selin_confidence",
+    "text": "Я умею замечать чужую усталость. Со своей хуже. Если снова скажу, что уже ела, можешь спросить второй раз. Только тихо, не при всех.",
+    "durationMillis": 9247,
+    "voice": "voice-12",
+    "batch": 2
+  },
+  "lysander_confidence": {
+    "sound": "personal_lysander_confidence",
+    "text": "Не каждую твою историю я превращу в песню. Некоторые можно просто сохранить между нами. Ты вправе попросить меня не записывать.",
+    "durationMillis": 9336,
+    "voice": "voice-14",
+    "batch": 2
+  },
+  "tik_confidence": {
+    "sound": "personal_tik_confidence",
+    "text": "Я ещё не отдал ключ. Всё придумываю, как объяснить без признания. Можно, я сначала скажу это тебе? Я потерял ключ. Вот. Уже не так страшно.",
+    "durationMillis": 12826,
+    "voice": "voice-18",
+    "batch": 2
+  },
+  "mara_analysis": {
+    "sound": "personal_mara_analysis",
+    "text": "Первая фраза совпадает с предупреждением капитана. Но это не доказывает, что за бортом живой человек. Отделим то, что слышали, от того, что хотим услышать. Попроси Тика проверить второй источник.",
+    "durationMillis": 11624,
+    "voice": "voice-03",
+    "batch": 2
+  },
+  "captain_confession": {
+    "sound": "personal_captain_confession",
+    "text": "Тридцать лет назад я отвёл резерв якоря к нашему кораблю. Мы вышли. Другой причал остался без перехода. Я не знаю, сколько людей там выжило. И слишком долго выдавал это незнание за право молчать.",
+    "durationMillis": 18155,
+    "voice": "voice-01",
+    "batch": 2
   }
 }

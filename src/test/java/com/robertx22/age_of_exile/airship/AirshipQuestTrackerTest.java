@@ -29,4 +29,13 @@ class AirshipQuestTrackerTest {
         var h=new HubState();h.exists=true;h.x=1;h.y=140;h.z=2;h.jumpPending=true;h.targetX=300;h.targetY=160;h.targetZ=400;
         assertTrue(h.contains(1,140,2));assertTrue(h.contains(300,160,400));assertFalse(h.contains(1000,160,400));h.jumpPending=false;assertFalse(h.contains(300,160,400));
     }
+    @Test void everyDeliveryUsesItsOwnItemCountNotTheBreadCount(){
+        var d=new AirshipData();var b=new QuestBookData();
+        for(String id:java.util.List.of("bram.shared_table","veya.light_at_gangway","selin.her_own_place","lysander.ordinary_names","tik.spare_key"))d.adventure.accepted.add(id);
+        var lines=AirshipQuestTracker.active(d,b,0,java.util.Map.of("bram.shared_table",8,"veya.light_at_gangway",2,"tik.spare_key",1));
+        assertTrue(lines.stream().anyMatch(x->x.contains("Свет у трапа")&&x.contains("2/4")));
+        assertTrue(lines.stream().anyMatch(x->x.contains("Место для лекаря")&&x.contains("0/2")));
+        assertTrue(lines.stream().anyMatch(x->x.contains("Не запасная дружба")&&x.contains("1/1")));
+        assertTrue(AirshipQuestTracker.active(d,b,0,8).stream().anyMatch(x->x.contains("Свет у трапа")&&x.contains("0/4")));
+    }
 }

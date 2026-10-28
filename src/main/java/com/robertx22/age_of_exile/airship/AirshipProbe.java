@@ -14,6 +14,7 @@ import net.minecraft.world.phys.AABB;
 public final class AirshipProbe {
     private static final Path FLAG=Path.of("airship-e2e.flag");
     private AirshipProbe() {}
+    private static int proofPaper,proofCopper;
     private static int ritualEmeralds,ritualIron,jumpEmeralds,jumpPearls,oldX,oldY,oldZ,oldBlocks,jumpStage,jumpFavors;
     private static java.util.Set<java.util.UUID> jumpCrew;
     private static java.util.UUID hostile;
@@ -113,15 +114,29 @@ public final class AirshipProbe {
                 com.robertx22.age_of_exile.airship.AirshipService.sync(p);
             } else if(action.equals("adventure-choice-check")) {
                 if(!d.adventure.facts.contains("call.heard")||!d.adventure.callDecision.equals("record"))throw new IllegalStateException("Native NPC choices did not witness then record call");
-            } else if(action.equals("adventure-fish")) {
+            } else if(action.equals("investigation-stock")) {
+                proofPaper=countItem(p,net.minecraft.world.item.Items.PAPER);
+                p.getInventory().add(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.COPPER_INGOT,4));
+                proofCopper=countItem(p,net.minecraft.world.item.Items.COPPER_INGOT);
+            } else if(action.equals("investigation-device-check")) {
+                if(!d.adventure.facts.contains("evidence.device")||countItem(p,net.minecraft.world.item.Items.COPPER_INGOT)!=proofCopper-4)throw new IllegalStateException("Receiver did not consume exactly four real ingots");
+            } else if(action.equals("investigation-proof")) {
+                var a=d.adventure;
+                if(!a.facts.containsAll(java.util.List.of("evidence.water","evidence.device","evidence.witness","evidence.crosscheck","testimony.captain","truth.shared","truth.review_completed"))||a.facts.contains("promise.return_to_crew"))throw new IllegalStateException("Investigation skipped evidence/promise followup");
+                if(countItem(p,net.minecraft.world.item.Items.PAPER)!=proofPaper+1||countItem(p,net.minecraft.world.item.Items.COPPER_INGOT)!=proofCopper-4)throw new IllegalStateException("Evidence token or copper accounting failed");
+                var original=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p);var restored=new com.robertx22.age_of_exile.capability.player.RPGPlayerData(p);restored.loadFromNBT(original.saveToNBT());
+                var b=restored.airship.adventure;
+                if(!b.facts.equals(a.facts)||!b.progress.equals(a.progress)||!b.lastInvestigationLine.equals(a.lastInvestigationLine)||!b.events.equals(a.events))throw new IllegalStateException("Evidence ledger/promise lost in actual RPG NBT");
+            } else if(action.equals("adventure-fish")||action.equals("investigation-fish")) {
                 p.setGameMode(net.minecraft.world.level.GameType.CREATIVE);p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.FISHING_ROD));
-                for(int attempt=0;attempt<20 && d.adventure.progress.getOrDefault("captain.quiet_water",0)<3;attempt++){
+                String objective=action.equals("investigation-fish")?"investigation.water":"captain.quiet_water";
+                for(int attempt=0;attempt<20 && d.adventure.progress.getOrDefault(objective,0)<3;attempt++){
                     p.getMainHandItem().getItem().use(level,p,net.minecraft.world.InteractionHand.MAIN_HAND);
                     var hook=level.getEntitiesOfClass(net.minecraft.world.entity.projectile.Projectile.class,p.getBoundingBox().inflate(32),e->e.getOwner()==p && net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()).toString().equals("minecraft:fishing_bobber")).stream().findFirst().orElseThrow();
                     var nibble=hook.getClass().getDeclaredField("nibble");nibble.setAccessible(true);nibble.setInt(hook,20); // Synthetic bite timing ONLY; real vanilla rod retrieval and fishing loot hook below.
                     p.getMainHandItem().getItem().use(level,p,net.minecraft.world.InteractionHand.MAIN_HAND);
                 }
-                if(d.adventure.progress.getOrDefault("captain.quiet_water",0)!=3)throw new IllegalStateException("Real rod loot did not reach server fishing objective");
+                if(d.adventure.progress.getOrDefault(objective,0)!=3)throw new IllegalStateException("Real rod loot did not reach server fishing objective");
             } else if(action.equals("adventure-heart-check")) {
                 if(!d.adventure.completed.contains("captain.quiet_water")||!d.adventure.facts.contains("memory:captain:confidence")||d.relationshipValue("captain")<=20||d.relationshipValue("captain")>=100)throw new IllegalStateException("Personal scene did not change gated relationship");
                 var original=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p);var restored=new com.robertx22.age_of_exile.capability.player.RPGPlayerData(p);restored.loadFromNBT(original.saveToNBT());

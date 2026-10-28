@@ -125,7 +125,7 @@ public final class PartyHudOverlay extends AbstractGui {
         List<String> shipLines=new java.util.ArrayList<>();
         if(airship.stage>0) {
             shipLines.addAll(wrap(mc,com.robertx22.age_of_exile.airship.AirshipQuestTracker.main(airship,shipBook),textWidth,4));
-            var activeSides=com.robertx22.age_of_exile.airship.AirshipQuestTracker.active(airship,shipBook,shipIron,shipBread);
+            var activeSides=com.robertx22.age_of_exile.airship.AirshipQuestTracker.active(airship,shipBook,shipIron,com.robertx22.age_of_exile.airship.adventure.AdventureService.inventoryCounts(mc.player));
             for(String side:activeSides.stream().limit(3).toList())shipLines.addAll(wrap(mc,side,textWidth,2));
             if(activeSides.size()>3)shipLines.add("Ещё "+(activeSides.size()-3)+" • H → Приключения");
         }

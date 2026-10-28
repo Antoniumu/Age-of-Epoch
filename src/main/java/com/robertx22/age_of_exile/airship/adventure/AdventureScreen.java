@@ -14,7 +14,7 @@ import net.minecraft.resources.Identifier;
 public class AdventureScreen extends BaseScreen implements INamedScreen {
     private net.minecraft.client.resources.sounds.SimpleSoundInstance playing;
     private AirshipVoiceScript.Cue speaking;private long voiceStarted;private boolean activeSeen;
-    private int pendingAction=-1;private net.minecraft.world.entity.player.ChatVisiblity previousChat;
+    private String beforeLine="",storyLine="";private int pendingAction=-1;private net.minecraft.world.entity.player.ChatVisiblity previousChat;
     private final int entity,stage;private final String npc;private String signature="";private int scroll=0,extent=0;
     public AdventureScreen(){this(-1,"",-1);}
     public AdventureScreen(int entity,String npc,int stage){super(390,310);this.entity=entity;this.npc=npc;this.stage=stage;}
@@ -22,7 +22,7 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
     @Override public Words screenName(){return Words.Adventures;}
     @Override public boolean isPauseScreen(){return false;}
     private AdventureData data(){return Load.playerRPGData(mc.player).airship.adventure;}
-    private void send(int action){pendingAction=action;Packets.sendToServer(new AirshipAcceptPacket(entity,stage,action));}
+    private void send(int action){beforeLine=data().lastInvestigationLine;storyLine="";pendingAction=action;Packets.sendToServer(new AirshipAcceptPacket(entity,stage,action));}
     private void option(String label,int action,int row,boolean active){var b=new Button(guiLeft+10,guiTop+177+row*21,370,19,Component.literal(label),x->send(action));b.active=active&&speaking==null;addButton(b);}
     @Override protected void init(){
         super.init();if(mc.player==null)return;
@@ -40,26 +40,27 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
                 if(!done)option("§b[ЛИЧНОЕ] "+(accepted?"Сдать: ":"Принять: ")+q.title(),accepted?21:20,row++,!accepted||AdventureEngine.progress(d,q,AdventureService.inventory(mc.player,q))>=q.target());
                 else if(!d.facts.contains("memory:"+npc+":confidence"))option("Остаться и поговорить не о работе",22,row++,true);
             }
+            for(var o:Investigation.options(d,npc))option("§6[СЮЖЕТ] "+o.label(),o.action(),row++,o.action()!=31||AdventureService.inventory(mc.player,AdventureCatalog.personal("tik"))>=4);
         }
         addButton(new Button(guiLeft+10,guiTop+287,370,19,Component.literal("Закрыть"),b->onClose()));
         signature=stamp();
     }
-    private String stamp(){if(mc.player==null)return "";var d=data();var q=AdventureCatalog.personal(npc);return d.accepted.toString()+d.completed+d.facts+d.callDecision+d.progress+(q==null?0:AdventureService.inventory(mc.player,q));}
+    private String stamp(){if(mc.player==null)return "";var d=data();var q=AdventureCatalog.personal(npc);return d.accepted.toString()+d.completed+d.facts+d.callDecision+d.lastInvestigationLine+d.progress+(q==null?0:AdventureService.inventory(mc.player,q));}
     @Override public boolean mouseScrolled(double x,double y,double amount){scroll=Math.clamp(scroll-(int)(amount*20),0,Math.max(0,extent-(entity>=0?166:275)));return true;}
     private void stopVoice(){if(playing!=null)mc.getSoundManager().stop(playing);playing=null;speaking=null;}
     private void playConfirmedAction(){
-        var q=AdventureCatalog.personal(npc);if(q==null)return;
-        boolean completed=pendingAction==21;
-        if(pendingAction!=20&&!completed)return;
-        if(completed?!data().completed.contains(q.id()):!data().accepted.contains(q.id()))return;
-        stopVoice();speaking=AdventureVoice.cue(npc,completed);if(speaking==null)return;
+        var cue=AdventureVoice.action(data(),npc,pendingAction);if(cue==null)return;
+        stopVoice();speaking=cue;
         scroll=0;activeSeen=false;voiceStarted=System.nanoTime();
         playing=net.minecraft.client.resources.sounds.SimpleSoundInstance.forUI(net.minecraft.sounds.SoundEvent.createVariableRangeEvent(Identifier.fromNamespaceAndPath("mmorpg","airship."+speaking.sound())),1F,1F);
         mc.getSoundManager().play(playing);
     }
     @Override public void tick(){
         super.tick();
-        if(!signature.equals(stamp())){playConfirmedAction();pendingAction=-1;init();}
+        if(!signature.equals(stamp())){
+            if(pendingAction>=30&&pendingAction<=39&&!data().lastInvestigationLine.equals(beforeLine))storyLine=data().lastInvestigationLine;
+            playConfirmedAction();pendingAction=-1;init();
+        }
         if(playing!=null){
             boolean active=mc.getSoundManager().isActive(playing);long elapsed=(System.nanoTime()-voiceStarted)/1_000_000;
             if(active&&!activeSeen&&net.fabricmc.loader.api.FabricLoader.getInstance().isDevelopmentEnvironment())System.out.println("AIRSHIPVOICE ACTIVE "+speaking.sound());
@@ -83,19 +84,25 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
         if(entity<0){
             y=lines(pose,AirshipQuestTracker.main(legacy,Load.playerRPGData(mc.player).questBook),y,0xE4C897,bottom);
             y=lines(pose,AdventureEngine.callSummary(d),y,0xB8CED2,bottom);
+            y=lines(pose,Investigation.objective(d),y,0xE4C897,bottom);
             for(var q:AdventureCatalog.QUESTS)if(d.accepted.contains(q.id()))y=lines(pose,(d.completed.contains(q.id())?"✓ ":"• ")+q.title()+" • "+AdventureEngine.progress(d,q,AdventureService.inventory(mc.player,q))+"/"+q.target()+" "+q.objective(),y,0x80D9D1,bottom);
             for(String id:AirshipStory.IDS){if(y>=guiTop+12 && y<=bottom){AirshipHeart.draw(pose,guiLeft+12,y,1,legacy.relationshipValue(id));AbstractGui.drawShadow(mc.font,pose,AirshipStory.name(id).split(" • ")[0]+" • "+legacy.relationshipValue(id)+"/100",guiLeft+25,y,0xBCCAC0);}y+=11;extent=Math.max(extent,y+scroll-guiTop);}
         }else{
             y=lines(pose,AdventureEngine.greeting(d,npc),y,0xDCE6DC,bottom);
             y=lines(pose,"Связь: "+legacy.relationshipValue(npc)+"/100. Новые части сердца открываются личными событиями, не повторными поставками.",y,0xA8C5B5,bottom);
-            if(npc.equals("captain")&&speaking==null){
+            if(npc.equals("captain")&&speaking==null&&storyLine.isEmpty()){
                 y=lines(pose,d.facts.contains("call.heard")?"[Сигнал] «Если услышишь знакомый голос — не отвечай». Пауза. «Вы всё ещё ищете дорогу домой?»":"Капитан: У якоря повторяется чужое обращение. Послушаем вместе. Отвечать необязательно.",y,0xE4C897,bottom);
                 y=lines(pose,AdventureEngine.callSummary(d),y,0xB8CED2,bottom);
             }
             var q=AdventureCatalog.personal(npc);
             if(speaking!=null)y=lines(pose,speaking.text(),y,0xF0ECE4,bottom);
+            else if(!storyLine.isEmpty())y=lines(pose,storyLine,y,0x80D9D1,bottom);
             else if(q!=null)y=lines(pose,d.completed.contains(q.id())?(d.facts.contains("memory:"+npc+":confidence")?AdventureEngine.confidence(npc):q.thanks()):q.title()+" • "+AdventureEngine.progress(d,q,AdventureService.inventory(mc.player,q))+"/"+q.target()+" "+q.objective()+". "+q.request(),y,0x80D9D1,bottom);
-            else y=lines(pose,"Приветствие и отношения доступны. Полная личная ветка этого персонажа ещё в работе.",y,0xB8CED2,bottom);
+            if(speaking==null&&Investigation.started(d)){
+                y=lines(pose,Investigation.objective(d),y,0xE4C897,bottom);
+                String reaction=Investigation.reaction(d,npc);if(!reaction.isEmpty())y=lines(pose,reaction,y,0xB8CED2,bottom);
+            }
+            else if(q==null)y=lines(pose,"Приветствие и отношения доступны. Полная личная ветка этого персонажа ещё в работе.",y,0xB8CED2,bottom);
         }
         if(speaking!=null)AbstractGui.drawShadow(mc.font,pose,"ПРОБЕЛ • закончить реплику и показать ответы",guiLeft+12,guiTop+166,0x90ADA9);
         else if(extent>(entity>=0?166:275))AbstractGui.drawShadow(mc.font,pose,"Колесо мыши • продолжение текста",guiLeft+12,guiTop+(entity>=0?166:275),0x90ADA9);

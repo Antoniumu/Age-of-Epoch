@@ -16,7 +16,7 @@ public final class AirshipQuestCard {
         int w=Math.min(230,screenWidth-12),x=screenWidth-w-6,y=6;
         var book=Load.playerRPGData(mc.player).questBook;int iron=0,bread=0;
         for(int i=0;i<mc.player.getInventory().getContainerSize();i++){var stack=mc.player.getInventory().getItem(i);if(stack.is(net.minecraft.world.item.Items.IRON_INGOT))iron+=stack.getCount();if(stack.is(net.minecraft.world.item.Items.BREAD))bread+=stack.getCount();}
-        var sides=new java.util.ArrayList<>(AirshipQuestTracker.active(d,book,iron,bread));if(sides.size()>3){int more=sides.size()-3;sides.subList(3,sides.size()).clear();sides.add("Ещё "+more+" • H → Приключения");}
+        var sides=new java.util.ArrayList<>(AirshipQuestTracker.active(d,book,iron,com.robertx22.age_of_exile.airship.adventure.AdventureService.inventoryCounts(mc.player)));if(sides.size()>3){int more=sides.size()-3;sides.subList(3,sides.size()).clear();sides.add("Ещё "+more+" • H → Приключения");}
         var lines=mc.font.split(Component.literal(AirshipQuestTracker.main(d,book)),w-62);
         int hearts=Math.max(78,35+lines.size()*10+4),bottom=hearts+17+sides.size()*22;
         AbstractGui.fill(pose,x,y,x+w,y+bottom,0xDF1A1A1A);

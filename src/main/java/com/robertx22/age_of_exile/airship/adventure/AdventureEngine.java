@@ -15,7 +15,7 @@ public final class AdventureEngine {
     public static boolean accept(AdventureData d,String id){return AdventureCatalog.find(id)!=null && !d.completed.contains(id) && d.accepted.add(id);}
     public static int progress(AdventureData d,AdventureCatalog.Quest q,int inventory){return Math.clamp(q.metric()==AdventureCatalog.Metric.DELIVERY?inventory:d.progress.getOrDefault(q.id(),0),0,q.target());}
     public static boolean record(AdventureData d,AdventureCatalog.Metric metric,String subject,int amount,String eventId){
-        if(metric==null||metric==AdventureCatalog.Metric.DELIVERY||amount<=0||eventId==null||eventId.isBlank()||eventId.length()>160)return false;
+        if(subject==null||metric==null||metric==AdventureCatalog.Metric.DELIVERY||amount<=0||eventId==null||eventId.isBlank()||eventId.length()>160)return false;
         boolean changed=false;
         for(var q:AdventureCatalog.QUESTS){
             if(q.metric()!=metric||!d.accepted.contains(q.id())||d.completed.contains(q.id())||d.progress.getOrDefault(q.id(),0)>=q.target())continue;

@@ -480,3 +480,118 @@ click 640 420
 wait 1200
 shot 48-oren-personal-memory
 key Escape
+
+# Evidence investigation: native NPC choices, real copper and vanilla rod retrieval.
+log_mark
+write run/airship-e2e.flag photo-mara
+wait_log_new 30000 AIRSHIPTEST PASS photo-mara
+log_mark
+write run/airship-e2e.flag talk-mara
+wait_log_new 30000 AIRSHIPTEST PASS talk-mara
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+log_mark
+click 640 462
+wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_mara_analysis
+wait 1200
+shot 51-investigation-analysis-voice
+hold space 300
+wait 600
+key Escape
+log_mark
+write run/airship-e2e.flag investigation-stock
+wait_log_new 30000 AIRSHIPTEST PASS investigation-stock
+log_mark
+write run/airship-e2e.flag investigation-fish
+wait_log_new 60000 AIRSHIPTEST PASS investigation-fish
+log_mark
+write run/airship-e2e.flag photo-tik
+wait_log_new 30000 AIRSHIPTEST PASS photo-tik
+log_mark
+write run/airship-e2e.flag talk-tik
+wait_log_new 30000 AIRSHIPTEST PASS talk-tik
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+click 640 462
+wait 1200
+log_mark
+write run/airship-e2e.flag investigation-device-check
+wait_log_new 30000 AIRSHIPTEST PASS investigation-device-check
+shot 52-investigation-receiver
+key Escape
+log_mark
+write run/airship-e2e.flag photo-lysander
+wait_log_new 30000 AIRSHIPTEST PASS photo-lysander
+log_mark
+write run/airship-e2e.flag talk-lysander
+wait_log_new 30000 AIRSHIPTEST PASS talk-lysander
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+click 640 462
+wait 1200
+shot 53-investigation-witness
+key Escape
+log_mark
+write run/airship-e2e.flag photo-oren
+wait_log_new 30000 AIRSHIPTEST PASS photo-oren
+log_mark
+write run/airship-e2e.flag talk-oren
+wait_log_new 30000 AIRSHIPTEST PASS talk-oren
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+click 640 420
+wait 1200
+shot 54-investigation-crosscheck
+key Escape
+log_mark
+write run/airship-e2e.flag photo-captain
+wait_log_new 30000 AIRSHIPTEST PASS photo-captain
+log_mark
+write run/airship-e2e.flag talk-captain
+wait_log_new 30000 AIRSHIPTEST PASS talk-captain
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+log_mark
+click 640 420
+wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_captain_confession
+wait 1200
+shot 55-investigation-confession-voice
+hold space 300
+wait 600
+click 640 462
+wait 1200
+shot 56-investigation-promise
+key Escape
+log_mark
+write run/airship-e2e.flag photo-mara
+wait_log_new 30000 AIRSHIPTEST PASS photo-mara
+log_mark
+write run/airship-e2e.flag talk-mara
+wait_log_new 30000 AIRSHIPTEST PASS talk-mara
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+click 640 462
+wait 1200
+log_mark
+write run/airship-e2e.flag investigation-proof
+wait_log_new 30000 AIRSHIPTEST PASS investigation-proof
+shot 57-investigation-promise-kept
+key Escape

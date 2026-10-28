@@ -9,5 +9,5 @@ public class AdventureData {
     @Store public int version=0;
     @Store public HashSet<String> accepted=new HashSet<>(),completed=new HashSet<>(),facts=new HashSet<>(),events=new HashSet<>();
     @Store public HashMap<String,Integer> progress=new HashMap<>(),trust=new HashMap<>(),closeness=new HashMap<>(),respect=new HashMap<>();
-    @Store public String callDecision="";
+    @Store public String callDecision="",lastInvestigationLine="";
 }

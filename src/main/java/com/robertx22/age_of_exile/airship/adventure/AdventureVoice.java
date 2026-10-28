@@ -16,12 +16,23 @@ public final class AdventureVoice {
             return JsonParser.parseReader(new InputStreamReader(stream,StandardCharsets.UTF_8)).getAsJsonObject();
         }catch(Exception e){throw new IllegalStateException("Invalid adventure voice manifest",e);}
     }
-    public static AirshipVoiceScript.Cue cue(String npc,boolean completed){
-        var q=AdventureCatalog.personal(npc);String key=npc+(completed?"_thanks":"_request");
-        if(q==null||!CLIPS.has(key))return null;
+    private static AirshipVoiceScript.Cue exact(String key,String expected){
+        if(!CLIPS.has(key))return null;
         var clip=CLIPS.getAsJsonObject(key);String text=clip.get("text").getAsString();
-        // Fail closed when authored text changes: outdated audio must not contradict the displayed line.
-        if(!text.equals(completed?q.thanks():q.request()))return null;
+        if(!text.equals(expected))return null;
         return new AirshipVoiceScript.Cue(clip.get("sound").getAsString(),text,clip.get("durationMillis").getAsInt());
+    }
+    public static AirshipVoiceScript.Cue cue(String npc,boolean completed){
+        var q=AdventureCatalog.personal(npc);if(q==null)return null;
+        return exact(npc+(completed?"_thanks":"_request"),completed?q.thanks():q.request());
+    }
+    public static AirshipVoiceScript.Cue action(AdventureData d,String npc,int action){
+        var q=AdventureCatalog.personal(npc);
+        if(action==20&&q!=null&&d.accepted.contains(q.id()))return cue(npc,false);
+        if(action==21&&q!=null&&d.completed.contains(q.id()))return cue(npc,true);
+        if(action==22&&d.facts.contains("memory:"+npc+":confidence"))return exact(npc+"_confidence",AdventureEngine.confidence(npc));
+        if(action==30&&npc.equals("mara")&&Investigation.started(d))return exact("mara_analysis",Investigation.ANALYSIS);
+        if(action==34&&npc.equals("captain")&&d.facts.contains("testimony.captain"))return exact("captain_confession",Investigation.CONFESSION);
+        return null;
     }
 }

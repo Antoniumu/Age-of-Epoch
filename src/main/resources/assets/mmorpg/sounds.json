@@ -342,5 +342,85 @@
         "stream": true
       }
     ]
+  },
+  "airship.personal_captain_confidence": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_captain_confidence",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_mara_confidence": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_mara_confidence",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_bram_confidence": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_bram_confidence",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_oren_confidence": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_oren_confidence",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_veya_confidence": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_veya_confidence",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_selin_confidence": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_selin_confidence",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_lysander_confidence": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_lysander_confidence",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_tik_confidence": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_tik_confidence",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_mara_analysis": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_mara_analysis",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_captain_confession": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_captain_confession",
+        "stream": true
+      }
+    ]
   }
 }
