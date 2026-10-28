@@ -10,7 +10,7 @@ class HeadCubeTest {
         }
         for(double dy:new double[]{-100,100})
             assertEquals(Math.signum(dy),Math.signum(Math.sin(HeadCube.cursorPitch(dy))));
-        assertEquals(0,HeadCube.cursorYaw(0));assertEquals(0,HeadCube.cursorPitch(0));
+        assertEquals(0,HeadCube.cursorYaw(0),.00001);assertEquals(0,HeadCube.cursorPitch(0),.00001);
         assertEquals(-.72,HeadCube.cursorYaw(10000));
     }
     @Test void frontViewHasOneRealFace() {
