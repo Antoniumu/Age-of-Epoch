@@ -8,8 +8,8 @@ public final class AirshipCommand {
     private AirshipCommand() {}
     public static void register(CommandDispatcher<CommandSourceStack> d) {
         d.register(literal("airship").requires(Commands.hasPermission(Commands.LEVEL_ALL))
-            .executes(c -> AirshipService.summon(c.getSource().getPlayerOrException(),false))
-            .then(literal("summon").executes(c -> AirshipService.summon(c.getSource().getPlayerOrException(),false)))
+            .executes(c -> {AirshipHubRitual.request(c.getSource().getPlayerOrException(),0,"");return 1;})
+            .then(literal("summon").executes(c -> {AirshipHubRitual.request(c.getSource().getPlayerOrException(),0,"");return 1;}))
             .then(literal("refresh").executes(c -> AirshipCrewPlacement.refresh(c.getSource().getPlayerOrException())))
             .then(literal("descend").executes(c -> AirshipService.descend(c.getSource().getPlayerOrException())))
             .then(literal("winged").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))

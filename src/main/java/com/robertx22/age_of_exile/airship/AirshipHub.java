@@ -1,0 +1,66 @@
+package com.robertx22.age_of_exile.airship;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.robertx22.age_of_exile.uncommon.datasaving.Load;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.LevelResource;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.WeakHashMap;
+
+/** One authoritative hub per save; all file access occurs on the server thread. */
+public final class AirshipHub {
+    private AirshipHub() {}
+    private static final Gson JSON=new GsonBuilder().setPrettyPrinting().create();
+    private static final WeakHashMap<MinecraftServer,HubState> STATES=new WeakHashMap<>();
+    private static Path file(MinecraftServer server) { return server.getWorldPath(LevelResource.ROOT).resolve("data/aoe-airship-hub.json"); }
+    public static HubState state(MinecraftServer server) {
+        return STATES.computeIfAbsent(server,s->{
+            Path path=file(s);if(!Files.exists(path)) return new HubState();
+            try {
+                HubState loaded=JSON.fromJson(Files.readString(path),HubState.class);
+                if(loaded==null || !loaded.valid()) throw new IllegalStateException("Invalid hub schema");
+                if(!loaded.phase.equals("IDLE")) loaded.phase="RECOVERY_REQUIRED";
+                return loaded;
+            } catch(Exception e) {
+                System.err.println("Airship hub save requires operator recovery; preserving original file: "+e);
+                HubState blocked=new HubState();blocked.phase="RECOVERY_REQUIRED";return blocked;
+            }
+        });
+    }
+    private static void save(MinecraftServer server) {
+        try {
+            Path path=file(server);Files.createDirectories(path.getParent());Path temp=path.resolveSibling(path.getFileName()+".tmp");
+            Files.writeString(temp,JSON.toJson(state(server)));
+            Files.move(temp,path,StandardCopyOption.REPLACE_EXISTING,StandardCopyOption.ATOMIC_MOVE);
+        } catch(Exception e) { state(server).phase="RECOVERY_REQUIRED";throw new IllegalStateException("Cannot atomically persist shared airship",e); }
+    }
+    public static boolean attach(ServerPlayer p) {
+        HubState hub=state(((ServerLevel)p.level()).getServer());var d=AirshipService.data(p);
+        if(!hub.exists && hub.phase.equals("IDLE") && d.summoned) commit(p); // Adopt an existing character's mooring, never its story.
+        if(hub.exists && hub.mirror(d)) Load.playerRPGData(p).syncToClient(p);
+        return hub.exists || !hub.phase.equals("IDLE");
+    }
+    public static void begin(ServerPlayer p) {
+        HubState hub=state(((ServerLevel)p.level()).getServer());
+        if(hub.exists || !hub.phase.equals("IDLE")) throw new IllegalStateException("Shared hub already exists or requires recovery");
+        hub.phase="PREPARING";save(((ServerLevel)p.level()).getServer());
+    }
+    public static void commit(ServerPlayer p) {
+        HubState hub=state(((ServerLevel)p.level()).getServer());var d=AirshipService.data(p);
+        hub.exists=true;hub.layout=d.layout;hub.x=d.x;hub.y=d.y;hub.z=d.z;hub.groundY=d.groundY;hub.phase="IDLE";hub.revision++;save(((ServerLevel)p.level()).getServer());
+        for(ServerPlayer other:((ServerLevel)p.level()).getServer().getPlayerList().getPlayers()) if(hub.mirror(AirshipService.data(other))) Load.playerRPGData(other).syncToClient(other);
+    }
+    public static boolean protectedAt(Level level,BlockPos pos) {
+        return level instanceof ServerLevel server && Level.OVERWORLD.equals(level.dimension()) && state(server.getServer()).contains(pos.getX(),pos.getY(),pos.getZ());
+    }
+    public static void tick(ServerPlayer p) {
+        if(p.tickCount%40==0) attach(p);
+    }
+}

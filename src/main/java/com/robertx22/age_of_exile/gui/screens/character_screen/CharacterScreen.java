@@ -162,6 +162,8 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
         this.buttons.clear();
         this.children.clear();
 
+        addButton(new com.robertx22.forge_compat.client.Button(Math.max(6,width-130),Math.max(6,height-26),120,20,
+            Component.literal("Дирижабль"),b->com.robertx22.library_of_exile.main.Packets.sendToServer(new com.robertx22.age_of_exile.airship.AirshipHubRequestPacket(0,""))));
         // CORE STATS
         int xpos = guiLeft + 75;
         int ypos = guiTop + 25;

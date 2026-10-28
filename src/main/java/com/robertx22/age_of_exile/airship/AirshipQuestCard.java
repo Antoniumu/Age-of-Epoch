@@ -23,7 +23,10 @@ public final class AirshipQuestCard {
         for(var line:mc.font.split(Component.literal(AirshipStory.objective(d.stage)),w-62)) {
             AbstractGui.drawShadow(mc.font,pose,line,x+53,lineY,0xEEE5D5); lineY+=10;
         }
-        String trust="Капитан "+d.captainTrust+"  Мара "+d.maraTrust+"  Брам "+d.bramTrust;
-        AbstractGui.drawShadow(mc.font,pose,trust,x+7,y+78,0xA8BDA9);
+        String[] ids={"captain","mara","quartermaster"};
+        for(int i=0;i<ids.length;i++) {
+            AirshipHeart.draw(pose,x+7+i*73,y+78,1,d.trust(ids[i]));
+            AbstractGui.drawShadow(mc.font,pose,new String[]{"Кап.","Мара","Брам"}[i]+" "+d.trust(ids[i]),x+18+i*73,y+78,0xA8BDA9);
+        }
     }
 }

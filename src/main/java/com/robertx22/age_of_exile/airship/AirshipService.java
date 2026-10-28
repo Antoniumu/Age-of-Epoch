@@ -38,6 +38,9 @@ public final class AirshipService {
     }
     public static void register() {
         AirshipCrewLife.register();
+        AirshipProtection.register();
+        AirshipAmbience.register();
+        AirshipHubRitual.register();
         com.robertx22.library_of_exile.main.ForgeEvents.registerForgeEvent(
             com.robertx22.forge_compat.event.entity.living.LivingHurtEvent.class, event -> {
                 if (!npcId(event.getEntity()).isEmpty()) { event.setAmount(0); event.setCanceled(true); }
@@ -86,6 +89,7 @@ public final class AirshipService {
     }
     public static int summon(ServerPlayer p, boolean free) {
         if (!Level.OVERWORLD.equals(p.level().dimension())) return tell(p, "Корабль можно призвать только в обычном мире.");
+        if(AirshipHub.attach(p)) return tell(p,"Общий хаб уже существует или требует восстановления. Координаты доступны в H.");
         AirshipData d = data(p);
         if (d.summoned) return tell(p, "Корабль уже на якоре: " + d.x + ", " + d.y + ", " + d.z + ". Подойди к световому кругу под ним.");
         int funds = 0;
@@ -137,6 +141,7 @@ public final class AirshipService {
             mob.addTag("aoe_npc_"+AirshipStory.IDS[i]);
             crew.add(mob);
         }
+        AirshipHub.begin(p);
         // Creation occurs on the server thread after the complete clearance pass.
         for (var entry : BLUEPRINT.entrySet()) level.setBlock(origin.offset(entry.getKey()),entry.getValue().defaultBlockState(),3);
         for (Entity e : crew) {
@@ -153,6 +158,7 @@ public final class AirshipService {
             p.getInventory().setChanged();
         }
         d.x=origin.getX(); d.y=origin.getY(); d.z=origin.getZ(); d.groundY=ground; d.summoned=true;
+        AirshipHub.commit(p);
         sync(p);
         level.sendParticles(ParticleTypes.PORTAL,d.x,d.y+8,d.z,300,8,6,16,0.3);
         return tell(p,"«Последний Рассвет» на якоре. Световой подъёмник: X="+d.x+", Z="+(d.z+4)+". Для спуска: /airship descend.");
@@ -198,6 +204,7 @@ public final class AirshipService {
         return 1;
     }
     public static void tick(ServerPlayer p) {
+        AirshipHub.tick(p);
         AirshipData d=data(p);
         if (!d.summoned || !Level.OVERWORLD.equals(p.level().dimension()) || p.tickCount%10!=0) return;
         double dx=p.getX()-d.x-0.5, dz=p.getZ()-d.z-4.5;

@@ -14,7 +14,8 @@ import nbtlib as n
 SPOTS={'captain':[58,63,67],'mara':[59,56,50],'quartermaster':[56,51,61],'lift':[57,51,38]}
 AIR={'minecraft:air','minecraft:cave_air','minecraft:void_air','minecraft:structure_void'}
 FORBIDDEN={'minecraft:command_block','minecraft:chain_command_block','minecraft:repeating_command_block',
-           'minecraft:structure_block','minecraft:jigsaw','minecraft:spawner','minecraft:tnt','minecraft:end_portal'}
+           'minecraft:structure_block','minecraft:jigsaw','minecraft:spawner','minecraft:tnt','minecraft:end_portal',
+           'minecraft:player_head','minecraft:player_wall_head'}
 
 def convert(source, output, report):
     src=n.load(source)

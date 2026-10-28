@@ -116,7 +116,8 @@ public class AirshipDialogueScreen extends BaseScreen {
         text(pose,AirshipStory.name(npc),x+83,y+10,0xE4C897);
         if(mc.player!=null) {
             var d=Load.playerRPGData(mc.player).airship;
-            text(pose,"Доверие "+d.trust(npc)+" • "+AirshipStory.reputationLabel(d.trust(npc)),x+83,y+24,0x95A99B);
+            AirshipHeart.draw(pose,x+83,y+24,1,d.trust(npc));
+            text(pose,"Доверие "+d.trust(npc)+" • "+AirshipStory.reputationLabel(d.trust(npc)),x+95,y+24,0x95A99B);
         }
         String subtitle=fullText?transcript:cues.isEmpty()?transcript:cues.get(Math.min(cueIndex,cues.size()-1)).text();
         int yy=y+39;

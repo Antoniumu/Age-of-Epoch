@@ -119,6 +119,8 @@ public final class PartyHudOverlay extends AbstractGui {
         List<String> dailyLines = showDaily ? wrap(mc, PartyHudState.daily, textWidth, 2) : List.of();
         List<String> weeklyLines = showWeekly ? wrap(mc, PartyHudState.weekly, textWidth, 2) : List.of();
 
+        var airship=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(mc.player).airship;
+        List<String> shipLines=airship.stage>0?wrap(mc,com.robertx22.age_of_exile.airship.AirshipStory.objective(airship.stage),textWidth,4):List.of();
         int height = 12;                                   // заголовок
         if (!teamLines.isEmpty()) {
             height += teamLines.size() * 10 + 3;
@@ -129,6 +131,7 @@ public final class PartyHudOverlay extends AbstractGui {
         if (!weeklyLines.isEmpty()) {
             height += 6 + 14 + weeklyLines.size() * 10;
         }
+        if(!shipLines.isEmpty()) height+=32+shipLines.size()*10;
         if (combat && rows > 0) {
             height += 12;                                  // разделитель
             height += 13;                                  // название отряда
@@ -185,6 +188,15 @@ public final class PartyHudOverlay extends AbstractGui {
             cy = ty + 6;
         }
 
+        if(!shipLines.isEmpty()) {
+            drawString(pose,mc.font,"◇  ПОСЛЕДНИЙ РАССВЕТ",x+11,cy+3,GOLD);cy+=16;
+            for(String line:shipLines) { drawString(pose,mc.font,line,x+11,cy,MUTED);cy+=10; }
+            if(com.robertx22.age_of_exile.airship.AirshipStory.target(airship.stage)>0) {
+                int count=com.robertx22.age_of_exile.airship.AirshipCampaign.measured(airship,com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(mc.player).questBook);
+                drawString(pose,mc.font,Math.min(count,com.robertx22.age_of_exile.airship.AirshipStory.target(airship.stage))+" / "+com.robertx22.age_of_exile.airship.AirshipStory.target(airship.stage),x+11,cy,ACCENT);
+            }
+            cy+=16;
+        }
         if (combat && rows > 0) {
             fill(pose, x + 10, cy, x + width - 10, cy + 1, LINE);
             drawString(pose, mc.font, PartyHudState.squadIcon + "  " + PartyHudState.squadName,

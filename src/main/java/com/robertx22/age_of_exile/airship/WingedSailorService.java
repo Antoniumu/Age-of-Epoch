@@ -23,6 +23,7 @@ public final class WingedSailorService {
     private static final int[][] CREW={{58,63,67},{59,56,50},{56,51,61}};
     public static int summon(ServerPlayer p) {
         if(!Level.OVERWORLD.equals(p.level().dimension())) return tell(p,"Winged Sailor доступен только в обычном мире.");
+        if(AirshipHub.attach(p)) return tell(p,"Общий корабль уже существует или ожидает восстановления. Второй корабль не создаётся.");
         AirshipData d=AirshipService.data(p);
         if(d.summoned) return tell(p,"Причал уже занят твоим кораблём. Для проверки большого корабля используй новый тестовый мир/персонажа.");
         ServerLevel level=(ServerLevel)p.level();
@@ -77,6 +78,7 @@ public final class WingedSailorService {
             crew.add(actor);
         }
         var settings=new StructurePlaceSettings();settings.setKnownShape(true);
+        AirshipHub.begin(p);
         if(!template.placeInWorld(level,origin,origin,settings,level.getRandom(),2)) return tell(p,"Ошибка размещения структуры; проверь журнал сервера.");
         // Validate the actual data-fixed structure, not just the original schematic's palette.
         for(LivingEntity actor:crew) {
@@ -87,6 +89,7 @@ public final class WingedSailorService {
         for(LivingEntity actor:crew) { level.addFreshEntity(actor);AirshipService.configureSkin(level,actor); }
         AirshipCrewPlacement.complete(level,crew);
         d.x=lift.getX();d.y=lift.getY()-1;d.z=lift.getZ()-4;d.groundY=ground;d.summoned=true;d.layout="winged_sailor";
+        AirshipHub.commit(p);
         Load.playerRPGData(p).syncToClient(p);
         System.out.println("AIRSHIPTEST WINGED placed origin="+origin+" size="+size+" crew="+crew.size());
         return tell(p,"Winged Sailor на причале. Световой круг: X="+d.x+", Z="+(d.z+4)+". Капитан наверху, Мара у карт, Брам на нижней палубе.");
