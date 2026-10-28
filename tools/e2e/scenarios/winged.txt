@@ -421,6 +421,8 @@ log_mark
 write run/airship-e2e.flag adventure-choice-check
 wait_log_new 30000 AIRSHIPTEST PASS adventure-choice-check
 shot 44-call-recorded
+click 640 420
+wait 1200
 log_mark
 write run/airship-e2e.flag adventure-fish
 wait_log_new 60000 AIRSHIPTEST PASS adventure-fish

@@ -76,8 +76,12 @@ public final class AirshipProbe {
                 jumpCrew=level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class,new AABB(d.x-60,d.y-52,d.z-36,d.x+62,d.y+52,d.z+57),e->!AirshipService.npcId(e).isEmpty()).stream().map(Entity::getUUID).collect(java.util.stream.Collectors.toSet());
                 if(jumpCrew.size()!=8)throw new IllegalStateException("Expected eight original NPCs");
                 p.getInventory().add(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.EMERALD,16));p.getInventory().add(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.ENDER_PEARL,8));jumpEmeralds=countItem(p,net.minecraft.world.item.Items.EMERALD);jumpPearls=countItem(p,net.minecraft.world.item.Items.ENDER_PEARL);
-                p.setGameMode(net.minecraft.world.level.GameType.CREATIVE);p.getAbilities().flying=true;p.onUpdateAbilities();int x=d.x+160,z=d.z+4,y=level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING,x,z)+3;
-                p.teleportTo(level,x+.5,y,z+.5,Set.of(),90,-10,false);
+                p.setGameMode(net.minecraft.world.level.GameType.CREATIVE);p.getAbilities().flying=true;p.onUpdateAbilities();int x=d.x+160,z=d.z+4;
+                int floor=level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING,x,z)+3;
+                for(int dx=-2;dx<=2;dx++)for(int dz=-2;dz<=2;dz++)floor=Math.max(floor,level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING,x+dx,z+dz)+3);
+                // Explicit test landing fixture above the terrain/water, not a production bypass of site validation.
+                for(int dx=-2;dx<=2;dx++)for(int dz=-2;dz<=2;dz++)level.setBlock(new net.minecraft.core.BlockPos(x+dx,floor,z+dz),net.minecraft.world.level.block.Blocks.GRASS_BLOCK.defaultBlockState(),18);
+                p.teleportTo(level,x+.5,floor+1,z+.5,Set.of(),90,-10,false);
             } else if(action.equals("jump-check")) {
                 var h=AirshipHub.state(server);if(!h.phase.equals("IDLE")||h.jumpPending||h.revision!=oldRevision+1||h.x==oldX||d.x!=h.x)throw new IllegalStateException("Jump did not update singleton");
                 if(countItem(p,net.minecraft.world.item.Items.EMERALD)!=jumpEmeralds-16||countItem(p,net.minecraft.world.item.Items.ENDER_PEARL)!=jumpPearls-8)throw new IllegalStateException("Jump payment wrong");
@@ -104,7 +108,8 @@ public final class AirshipProbe {
                 var original=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p);var restored=new com.robertx22.age_of_exile.capability.player.RPGPlayerData(p);restored.loadFromNBT(original.saveToNBT());
                 var a=restored.airship.adventure;
                 if(a.version!=1||!a.callDecision.equals("record")||!a.accepted.contains(engine.id())||a.progress.getOrDefault(engine.id(),0)!=1||!a.facts.contains("call.heard")||!a.events.equals(state.events)||!a.trust.equals(state.trust))throw new IllegalStateException("Adventure NBT lost nested maps/sets/facts");
-                state.callDecision="";state.facts.remove("call.heard");state.facts.remove("call.record"); // Discard synthetic call fixture; following UI must witness/choose for real.
+                state.callDecision="";state.facts.remove("call.heard");state.facts.remove("call.record");
+                state.accepted.remove(engine.id());state.progress.remove(engine.id());state.events.remove(engine.id()+":synthetic-nbt-fixture"); // Discard all synthetic gameplay state after testing persistence.
                 com.robertx22.age_of_exile.airship.AirshipService.sync(p);
             } else if(action.equals("adventure-choice-check")) {
                 if(!d.adventure.facts.contains("call.heard")||!d.adventure.callDecision.equals("record"))throw new IllegalStateException("Native NPC choices did not witness then record call");
