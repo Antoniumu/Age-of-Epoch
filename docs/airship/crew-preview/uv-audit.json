@@ -1,0 +1,74 @@
+{
+  "captain": {
+    "size": [
+      64,
+      64
+    ],
+    "baseUV": "classic/wide",
+    "transparentBasePixels": 0,
+    "nearBlackBasePixels": 0
+  },
+  "lysander": {
+    "size": [
+      64,
+      64
+    ],
+    "baseUV": "classic/wide",
+    "transparentBasePixels": 0,
+    "nearBlackBasePixels": 0
+  },
+  "mara": {
+    "size": [
+      64,
+      64
+    ],
+    "baseUV": "classic/wide",
+    "transparentBasePixels": 0,
+    "nearBlackBasePixels": 89
+  },
+  "oren": {
+    "size": [
+      64,
+      64
+    ],
+    "baseUV": "classic/wide",
+    "transparentBasePixels": 0,
+    "nearBlackBasePixels": 38
+  },
+  "quartermaster": {
+    "size": [
+      64,
+      64
+    ],
+    "baseUV": "classic/wide",
+    "transparentBasePixels": 0,
+    "nearBlackBasePixels": 22
+  },
+  "selin": {
+    "size": [
+      64,
+      64
+    ],
+    "baseUV": "classic/wide",
+    "transparentBasePixels": 0,
+    "nearBlackBasePixels": 122
+  },
+  "tik": {
+    "size": [
+      64,
+      64
+    ],
+    "baseUV": "classic/wide",
+    "transparentBasePixels": 0,
+    "nearBlackBasePixels": 0
+  },
+  "veya": {
+    "size": [
+      64,
+      64
+    ],
+    "baseUV": "classic/wide",
+    "transparentBasePixels": 0,
+    "nearBlackBasePixels": 60
+  }
+}
