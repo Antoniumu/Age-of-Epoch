@@ -139,7 +139,7 @@ jobs:
       - uses: actions/download-artifact@v5
         with:
           name: airship-proof
-          run-id: ${{ inputs.recover_run }}
+          run-id: ${{ env.RUN_ID }}
           github-token: ${{ github.token }}
           path: recovered
       - name: Recover authentic logs and screenshots, not a new gameplay run
