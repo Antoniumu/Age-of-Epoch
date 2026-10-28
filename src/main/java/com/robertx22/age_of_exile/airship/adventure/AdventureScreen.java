@@ -39,7 +39,7 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
         addButton(new Button(guiLeft+10,guiTop+287,370,19,Component.literal("Закрыть"),b->onClose()));
         signature=stamp();
     }
-    private String stamp(){if(mc.player==null)return "";var d=data();return d.accepted.toString()+d.completed+d.facts+d.callDecision+d.progress;}
+    private String stamp(){if(mc.player==null)return "";var d=data();var q=AdventureCatalog.personal(npc);return d.accepted.toString()+d.completed+d.facts+d.callDecision+d.progress+(q==null?0:AdventureService.inventory(mc.player,q));}
     @Override public boolean mouseScrolled(double x,double y,double amount){scroll=Math.clamp(scroll-(int)(amount*20),0,Math.max(0,extent-(entity>=0?166:275)));return true;}
     @Override public void tick(){super.tick();if(!signature.equals(stamp()))init();}
     private int lines(PoseStack pose,String text,int y,int color,int bottom){for(var line:mc.font.split(Component.literal(text),366)){if(y>=guiTop+12 && y<=bottom)AbstractGui.drawShadow(mc.font,pose,line,guiLeft+12,y,color);y+=10;}extent=Math.max(extent,y+scroll-guiTop);return y+5;}

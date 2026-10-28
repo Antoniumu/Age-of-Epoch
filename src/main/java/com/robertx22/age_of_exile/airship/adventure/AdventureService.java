@@ -41,7 +41,7 @@ public final class AdventureService {
         var legacy=AirshipService.data(p);AdventureEngine.migrate(legacy);var d=legacy.adventure;var q=AdventureCatalog.personal(npc);
         if(choice==10 && npc.equals("captain")){
             if(AdventureEngine.witnessCall(d)){
-                p.playNotifySound(net.minecraft.sounds.SoundEvent.createVariableRangeEvent(Identifier.withDefaultNamespace("block.amethyst_block.resonate")),net.minecraft.sounds.SoundSource.AMBIENT,1,.65F);
+                p.connection.send(new net.minecraft.network.protocol.game.ClientboundSoundPacket(net.minecraft.core.Holder.direct(net.minecraft.sounds.SoundEvent.createVariableRangeEvent(Identifier.withDefaultNamespace("block.amethyst_block.resonate"))),net.minecraft.sounds.SoundSource.AMBIENT,p.getX(),p.getY(),p.getZ(),1F,.65F,p.level().getRandom().nextLong()));
                 say(p,"§b[Сигнал за бортом] «Если услышишь знакомый голос — не отвечай». Пауза. Тот же голос: «Вы всё ещё ищете дорогу домой?»");
                 say(p,"Капитан: Первую фразу я говорил тебе. Второй — нет. Решать тебе: промолчать, ответить или попросить Тика записать обращение.");
             }

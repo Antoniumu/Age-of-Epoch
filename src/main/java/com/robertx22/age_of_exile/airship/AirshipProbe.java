@@ -94,6 +94,17 @@ public final class AirshipProbe {
                 if(h.jumpPending||!h.phase.equals("IDLE")||h.revision!=oldRevision||h.x!=oldX||blocks(level,oldX,oldY,oldZ)!=oldBlocks||blocks(level,tx,ty,tz)!=0)throw new IllegalStateException("Rollback changed anchor/duplicated geometry");
                 if(countItem(p,net.minecraft.world.item.Items.EMERALD)!=jumpEmeralds||countItem(p,net.minecraft.world.item.Items.ENDER_PEARL)!=jumpPearls)throw new IllegalStateException("Failed move charged resources");
                 for(var id:jumpCrew){var e=level.getEntity(id);if(e==null||Math.abs(e.getX()-oldX)>70)throw new IllegalStateException("Recovery lost original NPC");}
+            } else if(action.equals("adventure-check")) {
+                var state=d.adventure;com.robertx22.age_of_exile.airship.adventure.AdventureEngine.migrate(d);
+                var engine=com.robertx22.age_of_exile.airship.adventure.AdventureCatalog.personal("captain");
+                com.robertx22.age_of_exile.airship.adventure.AdventureEngine.accept(state,engine.id());
+                com.robertx22.age_of_exile.airship.adventure.AdventureEngine.record(state,com.robertx22.age_of_exile.airship.adventure.AdventureCatalog.Metric.FISH,"minecraft:cod",1,"synthetic-nbt-fixture");
+                com.robertx22.age_of_exile.airship.adventure.AdventureEngine.witnessCall(state);
+                com.robertx22.age_of_exile.airship.adventure.AdventureEngine.chooseCall(state,"record");
+                var original=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p);var restored=new com.robertx22.age_of_exile.capability.player.RPGPlayerData(p);restored.loadFromNBT(original.saveToNBT());
+                var a=restored.airship.adventure;
+                if(a.version!=1||!a.callDecision.equals("record")||!a.accepted.contains(engine.id())||a.progress.getOrDefault(engine.id(),0)!=1||!a.facts.contains("call.heard")||!a.events.equals(state.events)||!a.trust.equals(state.trust))throw new IllegalStateException("Adventure NBT lost nested maps/sets/facts");
+                com.robertx22.age_of_exile.airship.AirshipService.sync(p);
             } else if(action.equals("side-ui-check")) {
                 if((d.favorAccepted&2)==0||(d.favorCompleted&2)!=0)throw new IllegalStateException("Real UI did not explicitly accept Mara side quest");
                 if(!AirshipQuestTracker.active(d,com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p).questBook,0).stream().anyMatch(v->v.contains("0/2 новых сундуков")))throw new IllegalStateException("Missing tracked named progress");

@@ -394,3 +394,30 @@ write run/airship-e2e.flag jump-recovery
 wait_log_new 90000 AIRSHIPTEST PASS jump-recovery
 wait 1500
 shot 39-snapshot-rollback
+
+# New nested state is exercised through the real RPG persistence codec, not JSON alone.
+log_mark
+write run/airship-e2e.flag adventure-check
+wait_log_new 30000 AIRSHIPTEST PASS adventure-check
+log_mark
+write run/airship-e2e.flag photo-captain
+wait_log_new 30000 AIRSHIPTEST PASS photo-captain
+log_mark
+write run/airship-e2e.flag dialogue
+wait_log_new 30000 AIRSHIPTEST PASS dialogue
+wait 1500
+hold space 300
+wait 600
+# New personal-story button, in the existing bottom conversation panel.
+click 1040 332
+wait 1600
+shot 40-personal-story
+key Escape
+hold h 200
+wait 1000
+shot 41-adventures-replaces-questbook
+# Seventh native H tab now opens Adventures, not the retired book.
+click 932 501
+wait 1500
+shot 42-adventures-overview
+key Escape
