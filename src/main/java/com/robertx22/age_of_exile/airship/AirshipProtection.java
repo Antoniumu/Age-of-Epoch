@@ -20,6 +20,7 @@ public final class AirshipProtection {
         });
         UseBlockCallback.EVENT.register((p,world,hand,hit)->{
             if(!AirshipHub.protectedAt(world,hit.getBlockPos()) && !AirshipHub.protectedAt(world,hit.getBlockPos().relative(hit.getDirection()))) return InteractionResult.PASS;
+            if(world instanceof net.minecraft.server.level.ServerLevel sl && !AirshipHub.state(sl.getServer()).phase.equals("IDLE"))return InteractionResult.FAIL;
             var block=world.getBlockState(hit.getBlockPos()).getBlock();
             // Empty-handed doors/trapdoors remain usable; beds, containers, buckets and placed items do not.
             if(p.getItemInHand(hand).isEmpty() && (block instanceof DoorBlock || block instanceof TrapDoorBlock || block==Blocks.CRAFTING_TABLE)) return InteractionResult.PASS;

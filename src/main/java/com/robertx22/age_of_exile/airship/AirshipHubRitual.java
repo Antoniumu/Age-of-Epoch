@@ -29,16 +29,16 @@ public final class AirshipHubRitual {
     private static boolean allowed(ServerPlayer p){return p.isAlive() && !p.isSpectator() && !p.isPassenger() && Level.OVERWORLD.equals(p.level().dimension());}
     public static void request(ServerPlayer p,int action,String nonce){
         MinecraftServer server=((ServerLevel)p.level()).getServer();Room room=ROOMS.computeIfAbsent(server,s->new Room());long now=System.currentTimeMillis();
-        if(action==2){room.offers.computeIfPresent(p.getUUID(),(id,o)->o.nonce.equals(nonce)?null:o);return;}
+        if(action==2){AirshipJump.cancel(p,nonce);room.offers.computeIfPresent(p.getUUID(),(id,o)->o.nonce.equals(nonce)?null:o);return;}
         if(!allowed(p)) {answer(p,"","Нужен живой персонаж в обычном мире, вне транспорта.");return;}
         AirshipHub.attach(p);HubState hub=AirshipHub.state(server);
-        if(hub.exists){answer(p,"","Общий хаб: X="+hub.x+", Y="+hub.y+", Z="+(hub.z+4)+". У каждого персонажа своя история. Второй корабль не создаётся. Перенос существующего хаба пока заблокирован до готовности безопасного восстановления; стоимость прыжка не списывается.");return;}
+        if(hub.exists){AirshipJump.request(p,action,nonce);return;}
         if(!hub.phase.equals("IDLE")){answer(p,"","Незавершённая операция хаба. Нужна проверка оператором; новый призыв заблокирован.");return;}
         if(room.active!=null){answer(p,"","Другой игрок уже заряжает общий якорь. Дождись завершения или отмены.");return;}
         if(action==0){
             long last=room.lastRequest.getOrDefault(p.getUUID(),0L);if(now-last<2000)return;room.lastRequest.put(p.getUUID(),now);
             Offer offer=new Offer(UUID.randomUUID().toString(),now+30_000,p.blockPosition(),hub.revision);room.offers.put(p.getUUID(),offer);
-            answer(p,offer.nonce,"Первое размещение общего Winged Sailor: 32 изумруда и 16 железных слитков. Один корабль на мир. Подтверждение действует 30 секунд. Зарядка — 20 секунд: оставайся в пределах 3 блоков. При отказе площадки оплата не списывается. Перенос существующего хаба пока закрыт.");return;
+            answer(p,offer.nonce,"Первое размещение общего Winged Sailor: 32 изумруда и 16 железных слитков. Один корабль на мир. Подтверждение действует 30 секунд. Зарядка — 20 секунд: оставайся в пределах 3 блоков. При отказе площадки оплата не списывается. После призыва навигатор сможет переносить этот же хаб.");return;
         }
         if(action!=1)return;
         Offer offer=room.offers.remove(p.getUUID());

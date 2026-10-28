@@ -36,7 +36,7 @@ public final class AirshipHub {
             }
         });
     }
-    private static void save(MinecraftServer server) {
+    public static void save(MinecraftServer server) {
         try {
             Path path=file(server);Files.createDirectories(path.getParent());Path temp=path.resolveSibling(path.getFileName()+".tmp");
             Files.writeString(temp,JSON.toJson(state(server)));
@@ -46,7 +46,7 @@ public final class AirshipHub {
     public static boolean attach(ServerPlayer p) {
         HubState hub=state(((ServerLevel)p.level()).getServer());var d=AirshipService.data(p);
         if(hub.phase.equals("IDLE") && d.summoned) {
-            boolean conflict=hub.exists && (d.x!=hub.x || d.y!=hub.y || d.z!=hub.z);
+            boolean conflict=hub.exists && d.hubRevision==0 && !hub.knownOldAnchor(d) && (d.x!=hub.x || d.y!=hub.y || d.z!=hub.z);
             if(!hub.exists) for(ServerPlayer other:((ServerLevel)p.level()).getServer().getPlayerList().getPlayers()) {
                 var old=AirshipService.data(other);if(old.summoned && (old.x!=d.x || old.y!=d.y || old.z!=d.z)) conflict=true;
             }
@@ -56,6 +56,14 @@ public final class AirshipHub {
             }
             if(!hub.exists) commit(p);
         } // Adopt an existing character's mooring, never its story.
+        if(hub.exists && hub.phase.equals("IDLE") && d.summoned && d.hubRevision<hub.revision && (d.x!=hub.x || d.y!=hub.y || d.z!=hub.z) && Level.OVERWORLD.equals(p.level().dimension())) {
+            var old=new HubState();old.exists=true;old.layout=d.layout;old.x=d.x;old.y=d.y;old.z=d.z;old.groundY=d.groundY;
+            if(old.contains(p.blockPosition().getX(),p.blockPosition().getY(),p.blockPosition().getZ())) {
+                var level=(ServerLevel)p.level();var feet=new BlockPos(hub.x,hub.y+1,hub.z+4);
+                if(level.getBlockState(feet).isAir() && level.getBlockState(feet.above()).isAir() && level.getBlockState(feet.below()).isSolid())
+                    p.teleportTo(level,hub.x+.5,hub.y+1,hub.z+4.5,java.util.Set.of(),p.getYRot(),p.getXRot(),false);
+            }
+        }
         if(hub.exists && hub.phase.equals("IDLE") && hub.mirror(d)) Load.playerRPGData(p).syncToClient(p);
         return hub.exists || !hub.phase.equals("IDLE");
     }
@@ -66,6 +74,7 @@ public final class AirshipHub {
     }
     public static void commit(ServerPlayer p) {
         HubState hub=state(((ServerLevel)p.level()).getServer());var d=AirshipService.data(p);
+        if(hub.navigator==null || hub.navigator.isEmpty())hub.navigator=p.getUUID().toString();
         hub.exists=true;hub.layout=d.layout;hub.x=d.x;hub.y=d.y;hub.z=d.z;hub.groundY=d.groundY;hub.phase="IDLE";hub.revision++;save(((ServerLevel)p.level()).getServer());
         for(ServerPlayer other:((ServerLevel)p.level()).getServer().getPlayerList().getPlayers()) if(hub.mirror(AirshipService.data(other))) Load.playerRPGData(other).syncToClient(other);
     }

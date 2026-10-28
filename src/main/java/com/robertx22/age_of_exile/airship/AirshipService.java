@@ -42,6 +42,7 @@ public final class AirshipService {
         AirshipSanctuary.register();
         AirshipAmbience.register();
         AirshipHubRitual.register();
+        AirshipJump.register();
         com.robertx22.library_of_exile.main.ForgeEvents.registerForgeEvent(
             com.robertx22.forge_compat.event.entity.living.LivingHurtEvent.class, event -> {
                 if (!npcId(event.getEntity()).isEmpty()) { event.setAmount(0); event.setCanceled(true); }

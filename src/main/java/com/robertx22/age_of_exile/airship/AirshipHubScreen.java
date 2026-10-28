@@ -12,7 +12,7 @@ public class AirshipHubScreen extends BaseScreen {
     public boolean isPauseScreen(){return false;}
     protected void init(){
         super.init();int x=(width-360)/2,y=(height-208)/2;
-        if(!nonce.isEmpty()) addButton(new Button(x+10,y+152,340,20,Component.literal("Подтвердить: 32 изумруда + 16 железа"),b->{Packets.sendToServer(new AirshipHubRequestPacket(1,nonce));onClose();}));
+        if(!nonce.isEmpty()) addButton(new Button(x+10,y+152,340,20,Component.literal(nonce.startsWith("jump:")?"Прыжок: 16 изумрудов + 8 эндер-жемчужин":"Подтвердить: 32 изумруда + 16 железа"),b->{Packets.sendToServer(new AirshipHubRequestPacket(1,nonce));onClose();}));
         addButton(new Button(x+10,y+178,340,20,Component.literal("Закрыть / отменить"),b->onClose()));
     }
     public void onClose(){Packets.sendToServer(new AirshipHubRequestPacket(2,nonce));mc.gui.setScreen(null);}

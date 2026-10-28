@@ -7,6 +7,7 @@ import info.loenwind.autosave.annotations.Store;
 @Storable
 public class AirshipData {
     @Store public long liftReadyAtMillis = 0;
+    @Store public long hubRevision=0,hubJumpReadyAt=0;
     @Store public String layout = "prototype";
     @Store public boolean summoned = false;
     @Store public int x = 0;
