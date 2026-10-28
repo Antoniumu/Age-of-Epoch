@@ -128,7 +128,10 @@ public final class AirshipProbe {
                 var b=restored.airship.adventure;
                 if(!b.facts.equals(a.facts)||!b.progress.equals(a.progress)||!b.lastInvestigationLine.equals(a.lastInvestigationLine)||!b.events.equals(a.events))throw new IllegalStateException("Evidence ledger/promise lost in actual RPG NBT");
             } else if(action.equals("adventure-fish")||action.equals("investigation-fish")) {
-                p.setGameMode(net.minecraft.world.level.GameType.CREATIVE);p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.FISHING_ROD));
+                var held=p.getMainHandItem().copy(); // Dev rod must not overwrite the copper just stocked into an empty selected slot.
+                p.setGameMode(net.minecraft.world.level.GameType.CREATIVE);
+                try {
+                p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.FISHING_ROD));
                 String objective=action.equals("investigation-fish")?"investigation.water":"captain.quiet_water";
                 for(int attempt=0;attempt<20 && d.adventure.progress.getOrDefault(objective,0)<3;attempt++){
                     p.getMainHandItem().getItem().use(level,p,net.minecraft.world.InteractionHand.MAIN_HAND);
@@ -137,6 +140,8 @@ public final class AirshipProbe {
                     p.getMainHandItem().getItem().use(level,p,net.minecraft.world.InteractionHand.MAIN_HAND);
                 }
                 if(d.adventure.progress.getOrDefault(objective,0)!=3)throw new IllegalStateException("Real rod loot did not reach server fishing objective");
+                } finally {p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,held);}
+                if(action.equals("investigation-fish")&&countItem(p,net.minecraft.world.item.Items.COPPER_INGOT)!=proofCopper)throw new IllegalStateException("Fishing fixture changed receiver stock");
             } else if(action.equals("adventure-heart-check")) {
                 if(!d.adventure.completed.contains("captain.quiet_water")||!d.adventure.facts.contains("memory:captain:confidence")||d.relationshipValue("captain")<=20||d.relationshipValue("captain")>=100)throw new IllegalStateException("Personal scene did not change gated relationship");
                 var original=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p);var restored=new com.robertx22.age_of_exile.capability.player.RPGPlayerData(p);restored.loadFromNBT(original.saveToNBT());
