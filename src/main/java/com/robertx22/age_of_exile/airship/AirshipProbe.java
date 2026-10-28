@@ -188,6 +188,15 @@ public final class AirshipProbe {
                     if(id.equals("tik") && !net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(found.getFirst().getType()).toString().equals("minecraft:parrot")) throw new IllegalStateException("Tik is not a real bird");
                 }
                 if(AirshipCrewPlacement.complete(level,crew)!=0) throw new IllegalStateException("Refresh duplicated crew");
+                if(d.layout.equals("winged_sailor")) {
+                    var bard=crew.stream().filter(e->AirshipService.npcId(e).equals("lysander")).findFirst().orElseThrow();
+                    var mara=crew.stream().filter(e->AirshipService.npcId(e).equals("mara")).findFirst().orElseThrow();
+                    if(!AirshipCrewPlacement.lysanderConnected(level,bard,mara,crew))throw new IllegalStateException("Lysander has no connected interaction position beside Mara");
+                    var uuid=bard.getUUID();bard.removeTag("aoe_lysander_access_v1");
+                    if(!AirshipCrewPlacement.repairLysander(p)||!bard.getUUID().equals(uuid)||!AirshipCrewPlacement.lysanderConnected(level,bard,mara,crew))throw new IllegalStateException("Existing Lysander layout migration failed");
+                    if(AirshipCrewPlacement.repairLysander(p))throw new IllegalStateException("Lysander layout migration repeated");
+                    System.out.println("AIRSHIPTEST PASS lysander-connected-migration uuid="+uuid);
+                }
             } else if(action.equals("attention-check")) {
                 var captain=level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class,p.getBoundingBox().inflate(16),e->AirshipService.npcId(e).equals("captain")).stream().findFirst().orElseThrow();
                 float desired=CrewMotion.yaw(p.getX()-captain.getX(),p.getZ()-captain.getZ());

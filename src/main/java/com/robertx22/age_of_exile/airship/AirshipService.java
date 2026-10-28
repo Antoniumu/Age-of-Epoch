@@ -215,6 +215,7 @@ public final class AirshipService {
         AirshipHub.tick(p);
         com.robertx22.age_of_exile.airship.adventure.AdventureService.tick(p);
         AirshipData d=data(p);
+        if(p.tickCount%200==0 && d.summoned && "winged_sailor".equals(d.layout)) AirshipCrewPlacement.repairLysander(p);
         if (!d.summoned || !Level.OVERWORLD.equals(p.level().dimension()) || p.tickCount%10!=0) return;
         double dx=p.getX()-d.x-0.5, dz=p.getZ()-d.z-4.5;
         ServerLevel level=(ServerLevel)p.level();
