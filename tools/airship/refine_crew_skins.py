@@ -27,7 +27,7 @@ for name,(coat,trim,shirt,trousers,boot,hair,accent) in DESIGNS.items():
     for y in range(16):
         for x in range(32):
             r,g,b,a=im.getpixel((x,y))
-            if a==255 and max(r,g,b)<85:
+            if a==255 and max(r,g,b)<85 and not (8<=x<=15 and 10<=y<=12):
                 im.putpixel((x,y),darken(hair,((x*3+y*5)%4)*4-6))
     d=ImageDraw.Draw(im)
     # Torso full 16x12 side strip plus top/bottom islands. Subtle pixel-scale cloth shading.
