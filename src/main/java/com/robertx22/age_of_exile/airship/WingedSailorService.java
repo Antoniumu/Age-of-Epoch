@@ -85,6 +85,7 @@ public final class WingedSailorService {
                 return tell(p,"Структура поставлена, но место NPC после обновления блоков небезопасно. Команда не создана; проверь мир.");
         }
         for(LivingEntity actor:crew) { level.addFreshEntity(actor);AirshipService.configureSkin(level,actor); }
+        AirshipCrewPlacement.complete(level,crew);
         d.x=lift.getX();d.y=lift.getY()-1;d.z=lift.getZ()-4;d.groundY=ground;d.summoned=true;d.layout="winged_sailor";
         Load.playerRPGData(p).syncToClient(p);
         System.out.println("AIRSHIPTEST WINGED placed origin="+origin+" size="+size+" crew="+crew.size());

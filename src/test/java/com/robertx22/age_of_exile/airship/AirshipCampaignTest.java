@@ -27,11 +27,11 @@ class AirshipCampaignTest {
     }
     @Test void personalFavorsAreIndependentFreshAndOnceOnly() {
         var d=new AirshipData();var b=new QuestBookData();d.stage=1;b.mobKills=100;b.chestsLooted=100;
-        for(String id:AirshipStory.IDS) { assertTrue(AirshipCampaign.takeFavor(d,b,id));assertFalse(AirshipCampaign.takeFavor(d,b,id)); }
+        for(String id:new String[]{"captain","mara","quartermaster"}) { assertTrue(AirshipCampaign.takeFavor(d,b,id));assertFalse(AirshipCampaign.takeFavor(d,b,id)); }
         assertFalse(AirshipCampaign.finishFavor(d,b,"captain",0));assertFalse(AirshipCampaign.finishFavor(d,b,"mara",0));
         b.mobKills+=5;b.chestsLooted+=2;
         assertFalse(AirshipCampaign.finishFavor(d,b,"quartermaster",15));
-        for(String id:AirshipStory.IDS) { assertTrue(AirshipCampaign.finishFavor(d,b,id,16));assertEquals(15,d.trust(id));assertFalse(AirshipCampaign.finishFavor(d,b,id,16)); }
+        for(String id:new String[]{"captain","mara","quartermaster"}) { assertTrue(AirshipCampaign.finishFavor(d,b,id,16));assertEquals(15,d.trust(id));assertFalse(AirshipCampaign.finishFavor(d,b,id,16)); }
         assertEquals(7,d.favorCompleted);assertEquals(0,d.stage-1);
     }
     @Test void choiceChangesCrewReputationWithoutSkippingAStage() {

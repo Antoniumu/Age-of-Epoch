@@ -27,7 +27,7 @@ public final class AirshipCampaign {
         return switch(npc) {case "captain"->b.mobKills-d.favorKills>=5;case "mara"->b.chestsLooted-d.favorChests>=2;case "quartermaster"->iron>=16;default->false;};
     }
     public static boolean takeFavor(AirshipData d,QuestBookData b,String npc) {
-        int bit=bit(npc);if(bit==0 || (d.favorAccepted&bit)!=0 || d.stage<1) return false;
+        int bit=bit(npc);if(!AirshipStory.hasFavor(npc) || bit==0 || (d.favorAccepted&bit)!=0 || d.stage<1) return false;
         d.favorAccepted|=bit;
         if(npc.equals("captain")) d.favorKills=b.mobKills;
         if(npc.equals("mara")) d.favorChests=b.chestsLooted;

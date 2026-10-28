@@ -65,6 +65,7 @@ public class ClientInit implements net.fabricmc.api.ClientModInitializer {
         }
         clientSetupDone = true;
 
+        net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(net.minecraft.world.entity.EntityType.PARROT,com.robertx22.age_of_exile.airship.AirshipTikRenderer::new);
         MobPlateSettings.load();
         ClientSetup.setup();
         KeybindsRegister.register();

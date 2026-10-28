@@ -14,8 +14,8 @@ public final class AirshipPortrait {
         Identifier skin;
         try { var id=Identifier.parse(texture);skin=Identifier.fromNamespaceAndPath(id.getNamespace(),"textures/"+id.getPath()+".png"); }
         catch(Exception e) { skin=Identifier.fromNamespaceAndPath("mmorpg","textures/entity/airship/captain.png"); }
-        double yaw=Math.max(-.72,Math.min(.72,(mouseX-x-size/2.0)/260.0));
-        double pitch=Math.max(-.45,Math.min(.45,(mouseY-y-size/2.0)/300.0));
+        double yaw=HeadCube.cursorYaw(mouseX-x-size/2.0);
+        double pitch=HeadCube.cursorPitch(mouseY-y-size/2.0);
         AbstractGui.bindTexture(skin);
         for(boolean hat:new boolean[]{false,true}) for(var face:HeadCube.visible(yaw,pitch,size*.72,hat)) {
             var a=face.origin();var b=face.right();var c=face.down();

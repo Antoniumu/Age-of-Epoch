@@ -3,13 +3,16 @@ package com.robertx22.age_of_exile.airship;
 /** Three authored chapters. Stable stages preserve the original 0..4 introduction save data. */
 public final class AirshipStory {
     private AirshipStory() {}
-    public static final String[] IDS={"captain","mara","quartermaster"};
+    public static final String[] IDS={"captain","mara","quartermaster","oren","veya","selin","lysander","tik"};
+    public static boolean hasFavor(String id) { int i=index(id);return i>=0 && i<3; }
     public static final int LAST_STAGE=11;
     public enum Goal { NONE, CHESTS, KILLS, DUNGEON, COMPLETE }
     public static int index(String id) { for(int i=0;i<IDS.length;i++) if(IDS[i].equals(id)) return i;return -1; }
     public static String name(String id) { return switch(id) {
         case "captain"->"Капитан • Последний Рассвет";case "mara"->"Мара • Картограф";
-        case "quartermaster"->"Брам • Квартирмейстер";default->"Неизвестный";}; }
+        case "quartermaster"->"Брам • Квартирмейстер";
+        case "oren"->"Орен Тихий • Хранитель якоря";case "veya"->"Вея «Искра» • Разведчица";
+        case "selin"->"Селин Валь • Целительница";case "lysander"->"Лисандр Рэй • Хранитель историй";case "tik"->"Тик • Старший помощник";default->"Неизвестный";}; }
     public static String actor(int stage) { return switch(stage) {
         case 0,3,4,7,10->"captain";case 1,5,8->"mara";case 2,6,9->"quartermaster";default->"";}; }
     public static String owner(int stage) { return switch(stage) {
@@ -43,7 +46,7 @@ public final class AirshipStory {
             case 6->"Десять угроз меньше. Неплохое начало. Убийства и добыча — не цель нашей дороги, но без них корабль не выживет. Я слышал зов вместе с тобой. Расскажи капитану правду. Он должен знать, что мы не одни.";
             case 9->"Ты вернулся из подземелья. Вещи можно потерять, но этот опыт уже твой. Якорь принял твой след. Иди к капитану. Сегодня мы идём не на знакомый голос — на собственный свет.";
             default->"Припасы любят счёт, люди — порядок. Нужно личное поручение? Мне нужны шестнадцать железных слитков. Не для блеска на борту — для ремонта тех мест, о которых пассажиры не спрашивают.";};
-        return "";
+        return AirshipCrewVoice.dialogue(id);
     }
     public static String reputationLabel(int value) { return value>=40?"Свой человек":value>=20?"Надёжный товарищ":value>=10?"Доверие":value>0?"Знакомство":"Чужак"; }
     public static String favor(String id) { return switch(id) {case "captain"->"Победи 5 новых противников для дозора.";case "mara"->"Открой 2 новых RPG-сундука с добычей.";default->"Принеси 16 железных слитков для ремонта.";}; }

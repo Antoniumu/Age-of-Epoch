@@ -134,5 +134,85 @@
         "stream": true
       }
     ]
+  },
+  "airship.mara_intro": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/mara_intro",
+        "stream": true
+      }
+    ]
+  },
+  "airship.mara_echoes": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/mara_echoes",
+        "stream": true
+      }
+    ]
+  },
+  "airship.bram_intro": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/bram_intro",
+        "stream": true
+      }
+    ]
+  },
+  "airship.bram_path": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/bram_path",
+        "stream": true
+      }
+    ]
+  },
+  "airship.bram_anchor": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/bram_anchor",
+        "stream": true
+      }
+    ]
+  },
+  "airship.oren_intro": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/oren_intro",
+        "stream": true
+      }
+    ]
+  },
+  "airship.veya_intro": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/veya_intro",
+        "stream": true
+      }
+    ]
+  },
+  "airship.selin_intro": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/selin_intro",
+        "stream": true
+      }
+    ]
+  },
+  "airship.lysander_intro": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/lysander_intro",
+        "stream": true
+      }
+    ]
+  },
+  "airship.tik_intro": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/tik_intro",
+        "stream": true
+      }
+    ]
   }
 }

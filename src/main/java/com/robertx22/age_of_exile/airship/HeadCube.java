@@ -7,6 +7,9 @@ import java.util.List;
 /** Actual 3D cube geometry, orthographically projected for the GUI. No Minecraft dependency. */
 public final class HeadCube {
     private HeadCube() {}
+    // Front normal points toward -Z: positive yaw looks LEFT on the GUI.
+    public static double cursorYaw(double dx) { return Math.max(-.72,Math.min(.72,-dx/260.0)); }
+    public static double cursorPitch(double dy) { return Math.max(-.45,Math.min(.45,dy/300.0)); }
     public record Vec(double x,double y,double z) {}
     public record Face(Vec origin,Vec right,Vec down,int u,int v,double depth) {}
     private static Vec turn(double x,double y,double z,double yaw,double pitch) {

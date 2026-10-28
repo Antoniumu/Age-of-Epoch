@@ -37,6 +37,7 @@ public final class AirshipService {
         return "";
     }
     public static void register() {
+        AirshipCrewLife.register();
         com.robertx22.library_of_exile.main.ForgeEvents.registerForgeEvent(
             com.robertx22.forge_compat.event.entity.living.LivingHurtEvent.class, event -> {
                 if (!npcId(event.getEntity()).isEmpty()) { event.setAmount(0); event.setCanceled(true); }
@@ -123,7 +124,7 @@ public final class AirshipService {
         if (origin == null) return tell(p, "Нет свободного места в загруженном небе. Отойди от построек и попробуй ещё раз.");
         ArrayList<Entity> crew = new ArrayList<>();
         int[][] spots={{0,-12},{-3,-2},{3,7}};
-        for (int i=0;i<AirshipStory.IDS.length;i++) {
+        for (int i=0;i<spots.length;i++) {
             Entity created=net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("mannequin")).create(level, EntitySpawnReason.COMMAND);
             if (!(created instanceof net.minecraft.world.entity.LivingEntity mob)) return tell(p, "Не удалось создать команду. Валюта не списана.");
             mob.snapTo(origin.getX()+spots[i][0]+0.5,origin.getY()+1,origin.getZ()+spots[i][1]+0.5,0F,0F);
@@ -142,6 +143,7 @@ public final class AirshipService {
             level.addFreshEntity(e);
             configureSkin(level,e);
         }
+        AirshipCrewPlacement.complete(level,crew);
         if (!free) {
             int remaining=COST;
             for (int i=0;i<p.getInventory().getContainerSize() && remaining>0;i++) {
@@ -157,6 +159,11 @@ public final class AirshipService {
     }
     static void configureSkin(ServerLevel level,Entity entity) {
         String id=npcId(entity);
+        if(id.equals("tik")) return; // Dedicated brass-bird renderer; never force a player profile onto a bird.
+        if(entity instanceof net.minecraft.world.entity.LivingEntity living) {
+            var scale=living.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.SCALE);
+            if(scale!=null) scale.setBaseValue(id.equals("oren")?1.6:1);
+        }
         // Vanilla command owns profile decoding; strings are validated resource IDs, never arbitrary commands.
         String command="data merge entity "+entity.getUUID()+" {immovable:true,hide_description:true,profile:{texture:\""
             +AirshipCrew.texture(id)+"\",model:\""+AirshipCrew.model(id)+"\"}}";

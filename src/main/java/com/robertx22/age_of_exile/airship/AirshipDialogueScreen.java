@@ -37,10 +37,16 @@ public class AirshipDialogueScreen extends BaseScreen {
             if(AirshipStory.target(storyStage)>0 && AirshipStory.actor(storyStage).equals(npc)
                 && !AirshipCampaign.ready(Load.playerRPGData(mc.player).airship,Load.playerRPGData(mc.player).questBook))
                 transcript="Мы ещё не готовы отправляться дальше. "+AirshipStory.objective(storyStage)+" Старые находки не считаются: нужен новый след после принятия поручения.";
-            if(npc.equals("captain")) cues=AirshipVoiceScript.cues(storyStage);
+            cues=AirshipCrewVoice.cues(npc,storyStage,transcript);
             startCue();
         }
+        panelY=height-(fullText?196:subtitleHeight())-8;
         if(fullText) buildChoices();
+    }
+    private int subtitleHeight() {
+        int lines=0;
+        for(var c:cues) lines=Math.max(lines,mc.font.split(Component.literal(c.text()),Math.max(80,panelW-96)).size());
+        return Math.max(94,Math.min(186,57+lines*10));
     }
     private void stopVoice() { if(playing!=null) { mc.getSoundManager().stop(playing);playing=null; } }
     private void startCue() {
@@ -72,14 +78,14 @@ public class AirshipDialogueScreen extends BaseScreen {
     private void buildChoices() {
         if(mc.player==null) return;
         var data=Load.playerRPGData(mc.player).airship;var book=Load.playerRPGData(mc.player).questBook;
-        int y=panelY+101,w=panelW-20,x=panelX+10;
+        int y=panelY+(AirshipStory.index(npc)>=3?168:101),w=panelW-20,x=panelX+10;
         if(AirshipStory.advance(npc,storyStage)!=storyStage) {
             String label=storyStage==7?"1 • Рассказать правду всей команде":storyStage==0?"1 • Я помогу. Принять поручение":"1 • Продолжить историю";
             var button=new Choice(x,y,w,label,b->send(storyStage==7?1:0));
             button.active=AirshipCampaign.ready(data,book);addButton(button);y+=21;
             if(storyStage==7) { addButton(new Choice(x,y,w,"2 • Сначала обсудим это только на мостике",b->send(0)));y+=21; }
         }
-        if(data.stage>0 && (data.favorCompleted&AirshipCampaign.bit(npc))==0) {
+        if(AirshipStory.hasFavor(npc) && data.stage>0 && (data.favorCompleted&AirshipCampaign.bit(npc))==0) {
             String label=(data.favorAccepted&AirshipCampaign.bit(npc))==0?"Личное поручение • "+AirshipStory.favor(npc):"Личное поручение • Проверить: "+AirshipStory.favor(npc);
             addButton(new Choice(x,y,w,label,b->send(2)));y+=21;
         }
@@ -91,7 +97,7 @@ public class AirshipDialogueScreen extends BaseScreen {
     @Override public boolean keyPressed(int key,int scan,int modifiers) {
         proof("KEY compatible="+key+" fullText="+fullText);
         if(key==InputConstants.KEY_SPACE) { if(!fullText) reveal();return true; }
-        if(key==InputConstants.KEY_R && npc.equals("captain")) { fullText=false;cueIndex=0;init();startCue();return true; }
+        if(key==InputConstants.KEY_R && !cues.isEmpty()) { fullText=false;cueIndex=0;init();startCue();return true; }
         if(fullText && key==InputConstants.KEY_1 && AirshipStory.advance(npc,storyStage)!=storyStage && mc.player!=null && AirshipCampaign.ready(Load.playerRPGData(mc.player).airship,Load.playerRPGData(mc.player).questBook)) { send(storyStage==7?1:0);return true; }
         if(fullText && key==InputConstants.KEY_2 && storyStage==7) { send(0);return true; }
         if(key==InputConstants.KEY_ESCAPE) { onClose();return true; }
@@ -104,7 +110,7 @@ public class AirshipDialogueScreen extends BaseScreen {
     @Override public void onClose() { stopVoice();mc.gui.setScreen(null); }
     @Override public void removed() { stopVoice();if(previousChat!=null) mc.options.chatVisibility().set(previousChat);super.removed(); }
     @Override public void render(PoseStack pose,int mx,int my,float partial) {
-        int x=panelX,y=panelY,w=panelW,h=fullText?196:94;
+        int x=panelX,y=panelY,w=panelW,h=fullText?196:subtitleHeight();
         AbstractGui.fill(pose,x,y,x+w,y+h,0xCF101316);
         AirshipPortrait.draw(pose,x+8,y+9,65,texture,mx,my);
         text(pose,AirshipStory.name(npc),x+83,y+10,0xE4C897);
@@ -115,10 +121,10 @@ public class AirshipDialogueScreen extends BaseScreen {
         String subtitle=fullText?transcript:cues.isEmpty()?transcript:cues.get(Math.min(cueIndex,cues.size()-1)).text();
         int yy=y+39;
         for(var line:mc.font.split(Component.literal(subtitle),w-96)) {
-            if(yy>y+(fullText?88:76)) break;
+            if(yy>y+(fullText?(AirshipStory.index(npc)>=3?154:88):h-18)) break;
             AbstractGui.drawShadow(mc.font,pose,line,x+83,yy,0xF0ECE4);yy+=10;
         }
-        if(!fullText) text(pose,"ПРОБЕЛ • полный текст и ответы"+(npc.equals("captain")?"   R • повторить":""),x+83,y+82,0x8F999E);
+        if(!fullText) text(pose,"ПРОБЕЛ • полный текст и ответы"+(!cues.isEmpty()?"   R • повторить":""),x+83,y+h-12,0x8F999E);
         else if(mc.player!=null && AirshipStory.target(storyStage)>0) {
             int progress=AirshipCampaign.measured(Load.playerRPGData(mc.player).airship,Load.playerRPGData(mc.player).questBook);
             text(pose,"Проверено сервером: "+Math.min(progress,AirshipStory.target(storyStage))+" / "+AirshipStory.target(storyStage),x+83,y+88,0xA9C9A7);
