@@ -60,10 +60,16 @@ public final class AirshipJump {
             if(AirshipService.npcId(e).isEmpty())throw new IllegalStateException("Перед прыжком всем игрокам и посторонним сущностям нужно покинуть борт. Пассажиры пока не перевозятся.");
     }
     private static Site site(ServerPlayer p,HubState h){
-        var l=level(p);int x=p.blockPosition().getX(),z=p.blockPosition().getZ();
-        int ground=l.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z);
-        var feet=new BlockPos(x,ground,z);
-        if(!l.getBlockState(feet).isAir() || !l.getBlockState(feet.above()).isAir() || !l.getBlockState(feet.below()).isSolid() || !l.getFluidState(feet.below()).isEmpty())throw new IllegalStateException("Нужна сухая безопасная точка под подъёмником.");
+        var l=level(p);BlockPos landing=null;
+        search:for(int radius=0;radius<=24;radius++)for(int dx=-radius;dx<=radius;dx++)for(int dz=-radius;dz<=radius;dz++){
+            if(Math.max(Math.abs(dx),Math.abs(dz))!=radius)continue;
+            int x=p.blockPosition().getX()+dx,z=p.blockPosition().getZ()+dz;
+            if(!l.hasChunkAt(new BlockPos(x,0,z)))continue;
+            int y=l.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z);BlockPos feet=new BlockPos(x,y,z);
+            if(l.getBlockState(feet).isAir() && l.getBlockState(feet.above()).isAir() && l.getBlockState(feet.below()).isSolid() && l.getFluidState(feet.below()).isEmpty()){landing=feet;break search;}
+        }
+        if(landing==null)throw new IllegalStateException("В радиусе 24 блоков нет сухой безопасной площадки для подъёмника.");
+        int x=landing.getX(),z=landing.getZ(),ground=landing.getY();
         int roof=ground;
         for(int dx=-60;dx<=63;dx++)for(int dz=-39;dz<=58;dz++){
             var pos=new BlockPos(x+dx,ground,z-4+dz);
@@ -89,6 +95,7 @@ public final class AirshipJump {
                 if(now-r.requests.getOrDefault(p.getUUID(),0L)<2000)return;r.requests.put(p.getUUID(),now);
                 emptyShip(l,h);Site s=site(p,h);String key="jump:"+UUID.randomUUID();
                 r.quotes.put(p.getUUID(),new Offer(key,now+30_000,h.revision,p.blockPosition(),s));
+                System.out.println("AIRSHIPJUMP QUOTED target="+s);
                 reply(p,key,"ПРЫЖОК ОБЩЕГО ХАБА • 16 изумрудов + 8 эндер-жемчужин. Кулдаун мира 30 минут, личный 10 минут. Зарядка 20 секунд. Борт должен быть пуст, кроме экипажа. Не отходи дальше 3 блоков. Цель: "+s.x+", "+s.y+", "+(s.z+4)+". Сюжеты и UUID экипажа сохраняются.");return;
             }
             Offer o=r.quotes.remove(p.getUUID());
@@ -96,7 +103,7 @@ public final class AirshipJump {
             if(count(p,Items.EMERALD)<16||count(p,Items.ENDER_PEARL)<8)throw new IllegalStateException("Нужны 16 изумрудов и 8 эндер-жемчужин.");
             emptyShip(l,h);Job j=new Job();j.payer=p.getUUID();j.player=p.blockPosition();j.site=o.site;j.start=now;r.job=j;
             for(ServerPlayer other:l.players())other.sendSystemMessage(Component.literal("Последний Рассвет готовит прыжок через 20 секунд. Покиньте борт."));
-        }catch(Exception e){reply(p,"",e.getMessage());}
+        }catch(Exception e){System.out.println("AIRSHIPJUMP REFUSED "+e.getMessage());reply(p,"",e.getMessage());}
     }
     private static void prepare(ServerLevel l,ServerPlayer p,HubState h,Job j){
         emptyShip(l,h);Site actual=site(p,h);if(!actual.equals(j.site))throw new IllegalStateException("Площадка изменилась. Запроси новое подтверждение.");
@@ -121,6 +128,7 @@ public final class AirshipJump {
                 if(l.getGameTime()%4==0){AirshipAmbience.volume(l,h.x,h.y,h.z,l.getGameTime()*.09,2);AirshipAmbience.volume(l,j.site.x,j.site.y,j.site.z,-l.getGameTime()*.09,2);}
                 if(System.currentTimeMillis()-j.start<20_000)return;prepare(l,p,h,j);return;
             }
+            if(l.getGameTime()%4==0){AirshipAmbience.volume(l,h.x,h.y,h.z,l.getGameTime()*.12,2);AirshipAmbience.volume(l,j.site.x,j.site.y,j.site.z,-l.getGameTime()*.12,2);}
             if(j.phase.equals("PLACE")){
                 if(!loaded(l,j.source)||!loaded(l,j.site.origin()))throw new IllegalStateException("Чанки выгружены. Требуется восстановление.");
                 int end=Math.min(j.cursor+512,j.cells.size());
@@ -132,7 +140,7 @@ public final class AirshipJump {
                 double dx=j.site.x-h.x,dy=j.site.y-h.y,dz=j.site.z-h.z;
                 for(LivingEntity npc:j.crew)npc.snapTo(npc.getX()+dx,npc.getY()+dy,npc.getZ()+dz,npc.getYRot(),npc.getXRot());
                 j.phase="CLEAR";j.cursor=0;
-                l.playSound(null,j.site.x,j.site.y,j.site.z,net.minecraft.sounds.SoundEvent.createVariableRangeEvent(Identifier.withDefaultNamespace("entity.ender_dragon.growl")),net.minecraft.sounds.SoundSource.HOSTILE,5,.55F);
+                l.playSound(null,j.site.x,j.site.y,j.site.z,net.minecraft.sounds.SoundEvent.createVariableRangeEvent(Identifier.withDefaultNamespace("entity.ender_dragon.growl")),net.minecraft.sounds.SoundSource.HOSTILE,12,.55F);
                 return;
             }
             int end=Math.min(j.cursor+512,j.cells.size());for(;j.cursor<end;j.cursor++){Cell c=j.cells.get(j.cursor);BlockPos old=j.source.offset(c.local);if(l.getBlockState(old)!=c.state)throw new IllegalStateException("Старый блок изменился при очистке. Требуется восстановление.");l.setBlock(old,Blocks.AIR.defaultBlockState(),2);}

@@ -74,7 +74,7 @@ public final class AirshipProbe {
                 jumpCrew=level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class,new AABB(d.x-60,d.y-52,d.z-36,d.x+62,d.y+52,d.z+57),e->!AirshipService.npcId(e).isEmpty()).stream().map(Entity::getUUID).collect(java.util.stream.Collectors.toSet());
                 if(jumpCrew.size()!=8)throw new IllegalStateException("Expected eight original NPCs");
                 p.getInventory().add(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.EMERALD,16));p.getInventory().add(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.ENDER_PEARL,8));jumpEmeralds=countItem(p,net.minecraft.world.item.Items.EMERALD);jumpPearls=countItem(p,net.minecraft.world.item.Items.ENDER_PEARL);
-                p.setGameMode(net.minecraft.world.level.GameType.CREATIVE);int x=d.x+160,z=d.z+4,y=level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z);
+                p.setGameMode(net.minecraft.world.level.GameType.CREATIVE);p.getAbilities().flying=true;p.onUpdateAbilities();int x=d.x+160,z=d.z+4,y=level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING,x,z)+3;
                 p.teleportTo(level,x+.5,y,z+.5,Set.of(),90,-10,false);
             } else if(action.equals("jump-check")) {
                 var h=AirshipHub.state(server);if(!h.phase.equals("IDLE")||h.jumpPending||h.revision!=oldRevision+1||h.x==oldX||d.x!=h.x)throw new IllegalStateException("Jump did not update singleton");

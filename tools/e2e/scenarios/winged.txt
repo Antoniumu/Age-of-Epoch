@@ -337,6 +337,7 @@ wait 45000
 hold h 500
 wait 1000
 click 1140 688
+wait_log_new 30000 AIRSHIPJUMP QUOTED
 wait 2000
 shot 33-jump-confirmation
 log_mark
@@ -383,6 +384,7 @@ wait 45000
 hold h 500
 wait 1000
 click 1140 688
+wait_log_new 30000 AIRSHIPJUMP QUOTED
 wait 1500
 log_mark
 click 640 476

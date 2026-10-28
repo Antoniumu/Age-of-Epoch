@@ -29,7 +29,8 @@ public final class AirshipProtection {
         AttackEntityCallback.EVENT.register((p,w,hand,e,hit)->
             AirshipHub.protectedAt(w,e.blockPosition()) && (!AirshipService.npcId(e).isEmpty()
                 || e instanceof net.minecraft.world.entity.decoration.ArmorStand
-                || !(e instanceof net.minecraft.world.entity.LivingEntity))?InteractionResult.FAIL:InteractionResult.PASS);
+                || java.util.Set.of("minecraft:item_frame","minecraft:glow_item_frame","minecraft:painting","minecraft:block_display","minecraft:item_display","minecraft:text_display")
+                    .contains(net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()).toString()))?InteractionResult.FAIL:InteractionResult.PASS);
         UseEntityCallback.EVENT.register((p,w,hand,e,hit)->{
             if(!AirshipHub.protectedAt(w,e.blockPosition()) || !AirshipService.npcId(e).isEmpty()) return InteractionResult.PASS;
             return InteractionResult.FAIL;
