@@ -23,6 +23,7 @@ import java.util.*;
 /** Conservative live relocation: same snapshot/NPC UUIDs, bounded writes, empty-ship rule and durable recovery lock. */
 public final class AirshipJump {
     private AirshipJump() {}
+    // UPDATE_CLIENTS | UPDATE_KNOWN_SHAPE: do not mutate adjacent snapshot states while batching.
     private static final Identifier BACKUP=Identifier.fromNamespaceAndPath("mmorpg","airship_jump_backup");
     private record Cell(BlockPos local,BlockState state) {}
     private record Site(int x,int y,int z,int ground) {BlockPos origin(){return new BlockPos(x-57,y-50,z-34);}}
@@ -132,10 +133,10 @@ public final class AirshipJump {
             if(j.phase.equals("PLACE")){
                 if(!loaded(l,j.source)||!loaded(l,j.site.origin()))throw new IllegalStateException("Чанки выгружены. Требуется восстановление.");
                 int end=Math.min(j.cursor+512,j.cells.size());
-                for(;j.cursor<end;j.cursor++){Cell c=j.cells.get(j.cursor);BlockPos target=j.site.origin().offset(c.local);if(!l.getBlockState(target).isAir())throw new IllegalStateException("Новая площадка занята во время переноса.");l.setBlock(target,c.state,2);}
+                for(;j.cursor<end;j.cursor++){Cell c=j.cells.get(j.cursor);BlockPos target=j.site.origin().offset(c.local);if(!l.getBlockState(target).isAir())throw new IllegalStateException("Новая площадка занята во время переноса.");l.setBlock(target,c.state,18);}
                 if(j.cursor<j.cells.size())return;
                 for(Cell c:j.cells)if(l.getBlockState(j.source.offset(c.local))!=c.state)throw new IllegalStateException("Старый корабль изменился. Нужен rollback.");
-                if(!j.snapshot.placeInWorld(l,j.site.origin(),j.site.origin(),new StructurePlaceSettings().setKnownShape(true),l.getRandom(),2))throw new IllegalStateException("Не удалось восстановить данные декора на новом месте.");
+                if(!j.snapshot.placeInWorld(l,j.site.origin(),j.site.origin(),new StructurePlaceSettings().setKnownShape(true),l.getRandom(),18))throw new IllegalStateException("Не удалось восстановить данные декора на новом месте.");
                 for(Entity e:l.getEntitiesOfClass(Entity.class,hull(h.x,h.y,h.z),v->AirshipService.npcId(v).isEmpty()))throw new IllegalStateException("На борт вошёл пассажир; очистка старого места запрещена.");
                 double dx=j.site.x-h.x,dy=j.site.y-h.y,dz=j.site.z-h.z;
                 for(LivingEntity npc:j.crew)npc.snapTo(npc.getX()+dx,npc.getY()+dy,npc.getZ()+dz,npc.getYRot(),npc.getXRot());
@@ -143,7 +144,7 @@ public final class AirshipJump {
                 l.playSound(null,j.site.x,j.site.y,j.site.z,net.minecraft.sounds.SoundEvent.createVariableRangeEvent(Identifier.withDefaultNamespace("entity.ender_dragon.growl")),net.minecraft.sounds.SoundSource.HOSTILE,12,.55F);
                 return;
             }
-            int end=Math.min(j.cursor+512,j.cells.size());for(;j.cursor<end;j.cursor++){Cell c=j.cells.get(j.cursor);BlockPos old=j.source.offset(c.local);if(l.getBlockState(old)!=c.state)throw new IllegalStateException("Старый блок изменился при очистке. Требуется восстановление.");l.setBlock(old,Blocks.AIR.defaultBlockState(),2);}
+            int end=Math.min(j.cursor+512,j.cells.size());for(;j.cursor<end;j.cursor++){Cell c=j.cells.get(j.cursor);BlockPos old=j.source.offset(c.local);if(l.getBlockState(old)!=c.state)throw new IllegalStateException("Старый блок изменился при очистке. Требуется восстановление.");l.removeBlockEntity(old);l.setBlock(old,Blocks.AIR.defaultBlockState(),18);}
             if(j.cursor<j.cells.size())return;
             if(!server.saveEverything(false,true,true))throw new IllegalStateException("Не удалось сохранить чанки после переноса; требуется откат.");
             // A crash after this commit but before inventory save can undercharge, never charge twice.
@@ -177,9 +178,9 @@ public final class AirshipJump {
             AABB targetBox=hull(h.targetX,h.targetY,h.targetZ);
             if(!l.getEntitiesOfClass(Entity.class,hull(h.x,h.y,h.z),e->AirshipService.npcId(e).isEmpty()).isEmpty())throw new IllegalStateException("Покиньте исходный корпус перед восстановлением.");
             if(!l.getEntitiesOfClass(Entity.class,targetBox,e->AirshipService.npcId(e).isEmpty()).isEmpty())throw new IllegalStateException("Все посторонние сущности должны покинуть целевой корпус перед откатом.");
-            if(!snapshot.placeInWorld(l,source(h),source(h),settings,l.getRandom(),2))throw new IllegalStateException("Snapshot не восстановлен.");
+            if(!snapshot.placeInWorld(l,source(h),source(h),settings,l.getRandom(),18))throw new IllegalStateException("Snapshot не восстановлен.");
             for(LivingEntity npc:l.getEntitiesOfClass(LivingEntity.class,targetBox,e->!AirshipService.npcId(e).isEmpty()))npc.snapTo(npc.getX()+h.x-h.targetX,npc.getY()+h.y-h.targetY,npc.getZ()+h.z-h.targetZ,npc.getYRot(),npc.getXRot());
-            for(Cell c:cells)if(!l.getBlockState(target.offset(c.local)).isAir())l.setBlock(target.offset(c.local),Blocks.AIR.defaultBlockState(),2);
+            for(Cell c:cells)if(!l.getBlockState(target.offset(c.local)).isAir()){l.removeBlockEntity(target.offset(c.local));l.setBlock(target.offset(c.local),Blocks.AIR.defaultBlockState(),18);}
             if(!server.saveEverything(false,true,true))throw new IllegalStateException("Не удалось сохранить восстановленные чанки.");
             AirshipHub.finishMove(server,false);p.sendSystemMessage(Component.literal("Исходный корабль восстановлен. Оплата прыжка не взималась."));return 1;
         }catch(Exception e){p.sendSystemMessage(Component.literal("Восстановление остановлено: "+e.getMessage()));return 0;}
