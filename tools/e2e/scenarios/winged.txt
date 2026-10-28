@@ -518,12 +518,13 @@ hold space 300
 wait 600
 click 1040 332
 wait 1200
+shot 52a-investigation-before-device
 click 640 462
 wait 1200
+shot 52-investigation-receiver
 log_mark
 write run/airship-e2e.flag investigation-device-check
 wait_log_new 30000 AIRSHIPTEST PASS investigation-device-check
-shot 52-investigation-receiver
 key Escape
 log_mark
 write run/airship-e2e.flag photo-lysander

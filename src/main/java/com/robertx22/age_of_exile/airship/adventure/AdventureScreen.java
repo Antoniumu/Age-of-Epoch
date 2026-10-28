@@ -14,7 +14,7 @@ import net.minecraft.resources.Identifier;
 public class AdventureScreen extends BaseScreen implements INamedScreen {
     private net.minecraft.client.resources.sounds.SimpleSoundInstance playing;
     private AirshipVoiceScript.Cue speaking;private long voiceStarted;private boolean activeSeen;
-    private String beforeLine="",storyLine="";private int pendingAction=-1;private net.minecraft.world.entity.player.ChatVisiblity previousChat;
+    private String beforeLine="",storyLine="";private int pendingAction=-1,pendingTicks;private net.minecraft.world.entity.player.ChatVisiblity previousChat;
     private final int entity,stage;private final String npc;private String signature="";private int scroll=0,extent=0;
     public AdventureScreen(){this(-1,"",-1);}
     public AdventureScreen(int entity,String npc,int stage){super(390,310);this.entity=entity;this.npc=npc;this.stage=stage;}
@@ -22,7 +22,7 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
     @Override public Words screenName(){return Words.Adventures;}
     @Override public boolean isPauseScreen(){return false;}
     private AdventureData data(){return Load.playerRPGData(mc.player).airship.adventure;}
-    private void send(int action){beforeLine=data().lastInvestigationLine;storyLine="";pendingAction=action;Packets.sendToServer(new AirshipAcceptPacket(entity,stage,action));}
+    private void send(int action){beforeLine=data().lastInvestigationLine;storyLine="";pendingAction=action;pendingTicks=0;Packets.sendToServer(new AirshipAcceptPacket(entity,stage,action));}
     private void option(String label,int action,int row,boolean active){var b=new Button(guiLeft+10,guiTop+177+row*21,370,19,Component.literal(label),x->send(action));b.active=active&&speaking==null;addButton(b);}
     @Override protected void init(){
         super.init();if(mc.player==null)return;
@@ -44,10 +44,20 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
         }
         addButton(new Button(guiLeft+10,guiTop+287,370,19,Component.literal("Закрыть"),b->onClose()));
         signature=stamp();
+        if(net.fabricmc.loader.api.FabricLoader.getInstance().isDevelopmentEnvironment())System.out.println("AIRSHIPTEST UI npc="+npc+" rows="+row+" copper="+AdventureService.inventory(mc.player,AdventureCatalog.personal("tik"))+" options="+Investigation.options(d,npc));
     }
     private String stamp(){if(mc.player==null)return "";var d=data();var q=AdventureCatalog.personal(npc);return d.accepted.toString()+d.completed+d.facts+d.callDecision+d.lastInvestigationLine+d.progress+(q==null?0:AdventureService.inventory(mc.player,q));}
     @Override public boolean mouseScrolled(double x,double y,double amount){scroll=Math.clamp(scroll-(int)(amount*20),0,Math.max(0,extent-(entity>=0?166:275)));return true;}
     private void stopVoice(){if(playing!=null)mc.getSoundManager().stop(playing);playing=null;speaking=null;}
+    private boolean confirmed(){
+        var d=data();var q=AdventureCatalog.personal(npc);
+        return switch(pendingAction){
+            case 20->q!=null&&d.accepted.contains(q.id());
+            case 21->q!=null&&d.completed.contains(q.id());
+            case 22->d.facts.contains("memory:"+npc+":confidence");
+            default->pendingAction>=30&&pendingAction<=39&&!d.lastInvestigationLine.equals(beforeLine);
+        };
+    }
     private void playConfirmedAction(){
         var cue=AdventureVoice.action(data(),npc,pendingAction);if(cue==null)return;
         stopVoice();speaking=cue;
@@ -58,9 +68,13 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
     @Override public void tick(){
         super.tick();
         if(!signature.equals(stamp())){
-            if(pendingAction>=30&&pendingAction<=39&&!data().lastInvestigationLine.equals(beforeLine))storyLine=data().lastInvestigationLine;
-            playConfirmedAction();pendingAction=-1;init();
+            if(confirmed()){
+                if(pendingAction>=30&&pendingAction<=39)storyLine=data().lastInvestigationLine;
+                playConfirmedAction();pendingAction=-1;
+            }
+            init();
         }
+        if(pendingAction>=0&&++pendingTicks>100)pendingAction=-1;
         if(playing!=null){
             boolean active=mc.getSoundManager().isActive(playing);long elapsed=(System.nanoTime()-voiceStarted)/1_000_000;
             if(active&&!activeSeen&&net.fabricmc.loader.api.FabricLoader.getInstance().isDevelopmentEnvironment())System.out.println("AIRSHIPVOICE ACTIVE "+speaking.sound());
@@ -86,6 +100,7 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
             y=lines(pose,AdventureEngine.callSummary(d),y,0xB8CED2,bottom);
             y=lines(pose,Investigation.objective(d),y,0xE4C897,bottom);
             for(var q:AdventureCatalog.QUESTS)if(d.accepted.contains(q.id()))y=lines(pose,(d.completed.contains(q.id())?"✓ ":"• ")+q.title()+" • "+AdventureEngine.progress(d,q,AdventureService.inventory(mc.player,q))+"/"+q.target()+" "+q.objective(),y,0x80D9D1,bottom);
+            for(String entry:Investigation.journal(d))y=lines(pose,entry,y,0xB8CED2,bottom);
             for(String id:AirshipStory.IDS){if(y>=guiTop+12 && y<=bottom){AirshipHeart.draw(pose,guiLeft+12,y,1,legacy.relationshipValue(id));AbstractGui.drawShadow(mc.font,pose,AirshipStory.name(id).split(" • ")[0]+" • "+legacy.relationshipValue(id)+"/100",guiLeft+25,y,0xBCCAC0);}y+=11;extent=Math.max(extent,y+scroll-guiTop);}
         }else{
             y=lines(pose,AdventureEngine.greeting(d,npc),y,0xDCE6DC,bottom);

@@ -82,6 +82,16 @@ public final class Investigation {
             default->{return "";}
         }
     }
+    public static List<String> journal(AdventureData d){
+        var entries=new ArrayList<String>();
+        if(started(d))entries.add("УЛИКИ • Предупреждение совпало дословно; это ещё не доказывает присутствие человека.");
+        if(d.facts.contains("evidence.water"))entries.add("Маршрутная метка • два причала, одна линия резерва. Не список погибших.");
+        if(d.facts.contains("evidence.device"))entries.add("Приёмник • "+switch(d.callDecision){case "answer"->"второй канал повторил твой ответ, личность источника неизвестна.";case "silence"->"пауза первого слоя неизменна; поведение второго пока не установлено.";default->"разделены повтор предупреждения и другой несущий сигнал.";});
+        if(d.facts.contains("evidence.witness"))entries.add("Лисандр • видел позднее оставленные на причале имена. Не видел судьбу ожидавших.");
+        if(d.facts.contains("evidence.crosscheck"))entries.add("Орен • обнаружен ручной перевод резерва; механизм не объясняет намерений человека.");
+        if(d.facts.contains("testimony.captain"))entries.add("Показания капитана • "+CONFESSION);
+        return entries;
+    }
     public static String objective(AdventureData d){
         if(!d.facts.contains("call.heard"))return "Голос за бортом • послушай сигнал с капитаном";
         if(d.callDecision.isEmpty())return "Голос за бортом • реши, отвечать ли на обращение";

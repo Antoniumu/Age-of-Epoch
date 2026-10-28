@@ -63,7 +63,7 @@ public final class AirshipCrewPlacement {
         if(!level.noCollision(target,box)) return false;
         var from=new net.minecraft.world.phys.Vec3(feet.getX()+.5,feet.getY()+1.62,feet.getZ()+.5);
         var to=target.getEyePosition();
-        if(level.clip(new net.minecraft.world.level.ClipContext(from,to,net.minecraft.world.level.ClipContext.Block.COLLIDER,net.minecraft.world.level.ClipContext.Fluid.NONE,target)).getType()!=net.minecraft.world.phys.HitResult.Type.MISS) return false;
+        if(level.clip(new net.minecraft.world.level.ClipContext(from,to,net.minecraft.world.level.ClipContext.Block.VISUAL,net.minecraft.world.level.ClipContext.Fluid.NONE,target)).getType()!=net.minecraft.world.phys.HitResult.Type.MISS) return false;
         for(Entity other:others) if(other!=target && (other.getBoundingBox().inflate(.15).intersects(box) || other.getBoundingBox().inflate(.1).clip(from,to).isPresent())) return false;
         return true;
     }

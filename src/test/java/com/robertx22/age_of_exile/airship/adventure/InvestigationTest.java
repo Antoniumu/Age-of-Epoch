@@ -22,7 +22,7 @@ class InvestigationTest {
     }
     @Test void noSpoilersBeforeCallOrEvidenceAndNoCrossNpcAction(){
         var d=new AdventureData();
-        assertTrue(Investigation.options(d,"captain").isEmpty());assertEquals("",Investigation.act(d,"captain",34,99));
+        assertTrue(Investigation.options(d,"captain").isEmpty());assertTrue(Investigation.journal(d).isEmpty());assertEquals("",Investigation.act(d,"captain",34,99));
         assertEquals("",Investigation.fish(d,"minecraft:cod",3,"cast"));
         d=start("record");assertEquals("",Investigation.act(d,"captain",30,99));assertEquals("",Investigation.act(d,"captain",35,99));
         assertEquals("",Investigation.act(d,"mara",30,99));
@@ -30,7 +30,7 @@ class InvestigationTest {
     @Test void everyResponseHasDifferentEvidenceAndAllCanContinue(){
         for(String choice:java.util.List.of("answer","silence","record")){
             var d=proof(choice);assertTrue(d.facts.contains("evidence.trace."+choice));
-            assertEquals(3,Investigation.options(d,"captain").size());
+            assertEquals(3,Investigation.options(d,"captain").size());assertTrue(Investigation.journal(d).stream().anyMatch(s->s.contains(Investigation.CONFESSION)));
         }
     }
     @Test void publicTruthHasDistinctReactionsAndCannotBeFarmed(){

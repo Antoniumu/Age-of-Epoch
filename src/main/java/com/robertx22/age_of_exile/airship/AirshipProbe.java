@@ -119,7 +119,7 @@ public final class AirshipProbe {
                 p.getInventory().add(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.COPPER_INGOT,4));
                 proofCopper=countItem(p,net.minecraft.world.item.Items.COPPER_INGOT);
             } else if(action.equals("investigation-device-check")) {
-                if(!d.adventure.facts.contains("evidence.device")||countItem(p,net.minecraft.world.item.Items.COPPER_INGOT)!=proofCopper-4)throw new IllegalStateException("Receiver did not consume exactly four real ingots");
+                if(!d.adventure.facts.contains("evidence.device")||countItem(p,net.minecraft.world.item.Items.COPPER_INGOT)!=proofCopper-4)throw new IllegalStateException("Receiver: initialCopper="+proofCopper+" currentCopper="+countItem(p,net.minecraft.world.item.Items.COPPER_INGOT)+" device="+d.adventure.facts.contains("evidence.device")+" facts="+d.adventure.facts);
             } else if(action.equals("investigation-proof")) {
                 var a=d.adventure;
                 if(!a.facts.containsAll(java.util.List.of("evidence.water","evidence.device","evidence.witness","evidence.crosscheck","testimony.captain","truth.shared","truth.review_completed"))||a.facts.contains("promise.return_to_crew"))throw new IllegalStateException("Investigation skipped evidence/promise followup");
