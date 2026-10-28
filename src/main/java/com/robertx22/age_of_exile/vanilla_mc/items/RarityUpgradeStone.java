@@ -114,6 +114,12 @@ public class RarityUpgradeStone extends Item implements ICurrencyItemEffect, IGU
 
             if (context.isGear()) {
                 GearItemData gear = Gear.Load(copy);
+                // Редкость бесдушной основы задаёт душа, а не камень: иначе основу
+                // можно было бы «прокачать» до эпика с аффиксами и обойти правило
+                // «у основы только базовые статы и common».
+                if (gear == null || gear.isSoulless()) {
+                    return new ResultItem(ItemStack.EMPTY, ModifyResult.NONE);
+                }
                 gear.upgradeToHigherRarity();
                 Gear.Save(copy, gear);
             }

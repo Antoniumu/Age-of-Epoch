@@ -1,6 +1,7 @@
 package com.robertx22.age_of_exile.saveclasses.stat_soul;
 
 import com.robertx22.age_of_exile.database.data.gear_slots.GearSlot;
+import com.robertx22.age_of_exile.database.data.gear_types.bases.BaseGearType;
 import com.robertx22.age_of_exile.database.data.rarities.GearRarity;
 import com.robertx22.age_of_exile.database.data.unique_items.UniqueGear;
 import com.robertx22.age_of_exile.database.registry.ExileDB;
@@ -79,8 +80,17 @@ public class StatSoulData implements ISalvagable, IRarity, ISettableLevelTier {
 
     public void insertAsUnidentifiedOn(ItemStack stack, @Nullable net.minecraft.world.entity.player.Player player) {
 
-        // Предмет уже носит «бесдушную основу»: душа накладывается поверх неё,
-        // сохраняя базовые статы, заточки и крафтовые статы самого предмета.
+        // Любой предмет сначала получает бесдушную основу: душа накладывается поверх
+        // основы, сохраняя тип, роллы, заточки и крафтовые статы самого предмета.
+        // Без этого душа на «пустышке» подменяла бы предмет случайным типом из души.
+        if (SoullessGear.needsBase(stack)) {
+            if (player != null) {
+                SoullessGear.ensure(stack, player);
+            } else {
+                SoullessGear.ensure(stack, LevelUtils.tierToLevel(Math.max(0, tier)));
+            }
+        }
+
         GearItemData soulless = Gear.Load(stack);
         if (soulless != null && soulless.isSoulless()) {
             GearItemData soulData = gear != null ? gear : createGearData(stack, player);
@@ -176,31 +186,51 @@ public class StatSoulData implements ISalvagable, IRarity, ISettableLevelTier {
 
         GearItemData existing = Gear.Load(stack);
 
+        // Цельная основа (булава/трезубец/элитры) — весь предмет целиком, души
+        // для неё не существует, поэтому душа в неё не вставляется.
+        if (existing != null && existing.isWholeItemBase()) {
+            return false;
+        }
+
         // Обычный гир душу уже не примет, но «бесдушная основа» — примет:
-        // именно на неё и накладывается настоящая душа.
-        if (existing != null && !existing.isSoulless()) {
+        // именно на неё и накладывается настоящая душа. Битые/чужие данные
+        // (например, вещь из старого мира) душу не блокируют — перед вставкой
+        // сервер всё равно выдаст предмету основу.
+        if (existing != null && existing.isValidItem() && !existing.isSoulless()) {
+            return false;
+        }
+
+        // Слот предмета определяем тем же путём, что и выдачу основы: так душу
+        // принимает и модовое оружие без слота AoE (копьё, кинжал, молот).
+        String targetSlot = SoullessGear.slotIdFor(stack);
+        if (targetSlot == null) {
             return false;
         }
 
         if (this.gear != null) {
-            return GearSlot.isItemOfThisSlot(gear.GetBaseGearType()
-                .getGearSlot(), stack.getItem());
-        }
-
-        if (this.canBeOnAnySlot()) {
-            GearSlot slot = GearSlot.getSlotOf(stack.getItem());
-            if (slot != null && !slot.GUID()
-                .isEmpty()) {
-                return true;
-            } else {
+            try {
+                BaseGearType type = gear.GetBaseGearType();
+                if (type == null) {
+                    return false;
+                }
+                GearSlot gearSlot = type.getGearSlot();
+                return targetSlot.equals(gearSlot.GUID())
+                    || GearSlot.isItemOfThisSlot(gearSlot, stack.getItem());
+            } catch (Exception e) {
                 return false;
             }
         }
 
-        Boolean can = GearSlot.isItemOfThisSlot(ExileDB.GearSlots()
-            .get(slot), stack.getItem());
+        if (this.canBeOnAnySlot()) {
+            return true;
+        }
 
-        return can;
+        // Сравнение слотов по id — для модовых вещей без слота AoE; старая проверка
+        // по классу предмета остаётся, чтобы посох и жезл (один класс StaffWeapon)
+        // по-прежнему принимали души друг друга.
+        return targetSlot.equals(slot)
+            || GearSlot.isItemOfThisSlot(ExileDB.GearSlots()
+            .get(slot), stack.getItem());
     }
 
     @Override

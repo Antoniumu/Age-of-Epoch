@@ -2,6 +2,7 @@ package com.robertx22.age_of_exile.loot;
 
 import com.robertx22.age_of_exile.database.data.rarities.GearRarity;
 import com.robertx22.age_of_exile.loot.generators.*;
+import com.robertx22.age_of_exile.saveclasses.stat_soul.SoullessGear;
 import com.robertx22.age_of_exile.uncommon.datasaving.Gear;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.ItemUtils;
 import com.robertx22.library_of_exile.utils.RandomUtils;
@@ -84,6 +85,11 @@ public class MasterLootGen {
 
             // Кодекс: запоминаем собранные уникаты (и с мобов, и из сундуков).
             trackCodex(info, items);
+
+            // Любая вещь, попадающая в мир, обязана иметь хотя бы бесдушную основу.
+            // Дроп душ и прочие не-гир предметы проверка пропускает.
+            int lootLvl = Math.max(1, info.level);
+            items.forEach(x -> SoullessGear.ensure(x, lootLvl));
 
             items.forEach(x -> {
                 ItemUtils.tryAnnounceItem(x, info.player);

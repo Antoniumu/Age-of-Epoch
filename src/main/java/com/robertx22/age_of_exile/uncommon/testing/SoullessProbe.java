@@ -35,6 +35,7 @@ public final class SoullessProbe {
     public static final int SLOT_BASE_RICH = 1;
     public static final int SLOT_SOULED = 2;
     public static final int SLOT_SOUL = 3;
+    public static final int SLOT_WHOLE = 4;
 
     /**
      * Прогоняет все проверки за один серверный тик.
@@ -183,24 +184,109 @@ public final class SoullessProbe {
         soulReport.check("same_item_type", typeBefore.equals(typeAfter));
         soulReport.check("soul_tag_removed", soulConsumed);
         soulReport.check("name_changed", souledData != null && !plainNameMatches(souled, souledData));
+        // Душа завершает предмет: слабость основы (12–45 %) снимается.
+        soulReport.check("soul_restores_full_base", souledData != null
+            && Math.abs(souledData.bq - 1F) < 0.001F);
         out.add(soulReport.line());
         counters[0] += soulReport.checks;
         counters[1] += soulReport.failed;
 
-        // ---- 3. «Уники по умолчанию» и не-гир не трогаем ----
+        // ---- 3. «Цельные» основы: булава/трезубец/элитры — весь предмет и есть основа ----
         ItemStack trident = new ItemStack(Items.TRIDENT);
-        boolean tridentTouched = SoullessGear.ensure(trident, player);
+        boolean tridentMade = SoullessGear.ensure(trident, player);
+        GearItemData tridentData = Gear.Load(trident);
+
+        ItemStack elytra = new ItemStack(Items.ELYTRA);
+        boolean elytraMade = SoullessGear.ensure(elytra, player);
+        GearItemData elytraData = Gear.Load(elytra);
+
+        float bestNormalBq = Math.max(cheapData == null ? 0F : cheapData.bq,
+            richData == null ? 0F : richData.bq);
+
+        Report whole = new Report("soulless_whole");
+        whole.put("trident_slot", SoullessGear.slotIdFor(trident));
+        whole.put("elytra_slot", SoullessGear.slotIdFor(elytra));
+        whole.put("trident_bq", tridentData == null ? -1F : tridentData.bq);
+        whole.put("elytra_bq", elytraData == null ? -1F : elytraData.bq);
+        whole.put("best_normal_bq", bestNormalBq);
+        whole.check("trident_created", tridentMade && tridentData != null && tridentData.isSoulless());
+        whole.check("trident_whole_item", tridentData != null && tridentData.isWholeItemBase());
+        whole.check("trident_stronger_than_normal", tridentData != null && tridentData.bq > bestNormalBq);
+        whole.check("trident_weaker_than_soul", tridentData != null && tridentData.bq < 1F);
+        whole.check("elytra_created", elytraMade && elytraData != null && elytraData.isSoulless());
+        whole.check("elytra_whole_item", elytraData != null && elytraData.isWholeItemBase());
+        whole.check("elytra_stronger_than_normal", elytraData != null && elytraData.bq > bestNormalBq);
+        whole.check("whole_is_weaker_than_soul", elytraData != null && elytraData.bq < 1F);
+        out.add(whole.line());
+        counters[0] += whole.checks;
+        counters[1] += whole.failed;
+
+        // ---- 3b. «Пустышка» без основы не работает; не-гир не трогаем ----
         ItemStack apple = new ItemStack(Items.APPLE);
         boolean appleTouched = SoullessGear.ensure(apple, player);
 
+        ItemStack bareWeapon = new ItemStack(Items.DIAMOND_SWORD);
+        ItemStack basedWeapon = new ItemStack(Items.DIAMOND_SWORD);
+        SoullessGear.ensure(basedWeapon, player);
+
         Report guards = new Report("soulless_guards");
-        guards.check("trident_untouched", !tridentTouched && !Gear.has(trident));
         guards.check("non_gear_untouched", !appleTouched && !Gear.has(apple));
+        guards.check("bare_weapon_needs_base", SoullessGear.needsBase(bareWeapon));
+        guards.check("bare_weapon_unusable", SoullessGear.isUnusableWeapon(bareWeapon));
+        guards.check("based_weapon_usable", !SoullessGear.isUnusableWeapon(basedWeapon)
+            && SoullessGear.hasBase(basedWeapon));
+        guards.check("whole_item_fallback_usable", !SoullessGear.isUnusableWeapon(new ItemStack(Items.TRIDENT)));
         guards.check("weapon_like_sword", SoullessGear.isWeaponLike(new ItemStack(Items.IRON_SWORD)));
         guards.check("weapon_like_apple_false", !SoullessGear.isWeaponLike(apple));
+        guards.check("slot_for_vanilla_sword", "sword".equals(SoullessGear.slotIdFor(new ItemStack(Items.IRON_SWORD))));
+        guards.check("slot_for_apple_null", SoullessGear.slotIdFor(apple) == null);
+
+        // «Мёртвый» предмет (данные есть, базового типа нет) обязан быть бесполезен:
+        // никаких статов и никакого урона. Это страховка правила «ничего без основы».
+        ItemStack deadStack = new ItemStack(Items.IRON_SWORD);
+        GearItemData deadData = new GearItemData();
+        deadData.gear_type = "does_not_exist";
+        deadData.lvl = 10;
+        deadData.sl = true;
+        Gear.Save(deadStack, deadData);
+        GearItemData deadLoaded = Gear.Load(deadStack);
+        com.robertx22.age_of_exile.capability.entity.EntityData playerData =
+            com.robertx22.age_of_exile.uncommon.datasaving.Load.Unit(player);
+
+        guards.check("dead_item_detected", deadLoaded != null && deadLoaded.isDeadItem());
+        guards.check("dead_item_no_stats", deadLoaded != null && deadLoaded.GetAllStats()
+            .isEmpty());
+        guards.check("dead_item_unusable", playerData != null && !playerData.canUseWeapon(deadLoaded));
+        guards.check("soulless_base_usable", playerData != null && cheapData != null
+            && playerData.canUseWeapon(cheapData));
+        guards.check("whole_base_usable", playerData != null && tridentData != null
+            && playerData.canUseWeapon(tridentData));
         out.add(guards.line());
         counters[0] += guards.checks;
         counters[1] += guards.failed;
+
+        // ---- 3c. Повторная выдача не дублируется, битые данные чинятся ----
+        float tridentBefore = tridentData == null ? -1F : tridentData.bq;
+        boolean secondEnsure = SoullessGear.ensure(trident, player);
+        GearItemData tridentAfter = Gear.Load(trident);
+
+        ItemStack broken = new ItemStack(Items.IRON_SWORD);
+        GearItemData brokenData = new GearItemData();
+        brokenData.gear_type = "does_not_exist";
+        brokenData.lvl = 20;
+        Gear.Save(broken, brokenData);
+        boolean repaired = SoullessGear.ensure(broken, player);
+        GearItemData fixed = repaired ? Gear.Load(broken) : null;
+
+        Report repeat = new Report("soulless_repair");
+        repeat.check("ensure_idempotent", !secondEnsure);
+        repeat.check("data_kept", tridentAfter != null
+            && Math.abs(tridentAfter.bq - tridentBefore) < 0.001F);
+        repeat.check("broken_repaired", repaired && fixed != null && fixed.hasBase() && fixed.isSoulless());
+        repeat.check("repaired_keeps_level", fixed != null && fixed.lvl >= 20);
+        out.add(repeat.line());
+        counters[0] += repeat.checks;
+        counters[1] += repeat.failed;
 
         // ---- 4. Демо-предметы в хотбар: их снимает сценарий ----
         // Берём предметы 20 уровня: на 1 уровне базовые числа округляются до «1»
@@ -220,13 +306,18 @@ public final class SoullessProbe {
             give(player, SLOT_BASE_RICH, demoRich);
             give(player, SLOT_SOULED, demoSouled);
             give(player, SLOT_SOUL, soulStack.copy());
+            give(player, SLOT_WHOLE, trident.copy());
         } catch (Exception ignored) {
         }
 
         Report demo = new Report("soulless_demo");
-        demo.put("slots", SLOT_BASE_CHEAP + "," + SLOT_BASE_RICH + "," + SLOT_SOULED + "," + SLOT_SOUL);
+        demo.put("slots", SLOT_BASE_CHEAP + "," + SLOT_BASE_RICH + "," + SLOT_SOULED + ","
+            + SLOT_SOUL + "," + SLOT_WHOLE);
         demo.check("hotbar_filled", !player.getInventory()
             .getItem(SLOT_SOULED)
+            .isEmpty());
+        demo.check("whole_item_shown", !player.getInventory()
+            .getItem(SLOT_WHOLE)
             .isEmpty());
         out.add(demo.line());
         counters[0] += demo.checks;

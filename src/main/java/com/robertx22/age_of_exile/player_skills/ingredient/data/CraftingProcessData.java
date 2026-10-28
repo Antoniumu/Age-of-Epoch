@@ -1,7 +1,6 @@
 package com.robertx22.age_of_exile.player_skills.ingredient.data;
 
 import com.robertx22.age_of_exile.database.data.StatModifier;
-import com.robertx22.age_of_exile.database.data.gear_slots.GearSlot;
 import com.robertx22.age_of_exile.database.data.gear_types.bases.BaseGearType;
 import com.robertx22.age_of_exile.database.data.ingredient.SlashIngredient;
 import com.robertx22.age_of_exile.database.data.rarities.GearRarity;
@@ -315,20 +314,20 @@ public class CraftingProcessData {
     }
 
     public GearItemData craftGear(ItemStack stack, Player player) {
-        GearSlot slot = GearSlot.getSlotOf(stack.getItem());
-        if (slot == null) {
-            return null;
-        }
-
-        BaseGearType baseGearType = ExileDB.GearTypes()
-            .getFilterWrapped(x -> x.gear_slot.equals(slot.GUID()))
-            .random();
-        if (baseGearType == null) {
+        // Слот определяем тем же путём, что и выдача основы у дропа: крафт тоже
+        // обязан давать бесдушную основу, в том числе для модового оружия без слота AoE.
+        String slotId = SoullessGear.slotIdFor(stack);
+        if (slotId == null) {
             return null;
         }
 
         int tier = getAverageTier();
         int lvl = LevelUtils.tierToLevel(tier);
+
+        BaseGearType baseGearType = SoullessGear.pickType(slotId, lvl);
+        if (baseGearType == null) {
+            return null;
+        }
 
         // Крафт всегда даёт «бесдушную основу» common-редкости: редкость, случайные аффиксы
         // и имя предмета приносит только настоящая душа. Чем дороже крафт (больше и выше
@@ -352,7 +351,8 @@ public class CraftingProcessData {
             }
         });
 
-        return data; // todo
+        data.item_id = SoullessGear.itemId(stack);
+        return data;
     }
 
     /** Сколько статов из ингредиентов помещается в бесдушную основу. */

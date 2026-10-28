@@ -1150,11 +1150,12 @@ public final class JeiRecipes {
             ));
 
             GearRarity common = ExileDB.GearRarities().get(IRarity.COMMON_ID);
-            ItemStack staff = JeiStacks.gearForSlot(GearSlots.STAFF);
-            ItemStack soul = common == null ? ItemStack.EMPTY
-                : JeiStacks.soul(GearSlots.STAFF, common, 0, null, false, false);
+            // Мешок даёт один готовый предмет: бесдушная основа + случайная душа.
+            ItemStack staff = common == null ? ItemStack.EMPTY
+                : JeiStacks.gearSample(JeiStacks.gearForSlot(GearSlots.STAFF),
+                GearSlots.STAFF, common, 0);
             ItemStack bag = new ItemStack(SlashItems.NEWBIE_GEAR_BAG.get());
-            if (!staff.isEmpty() && !soul.isEmpty()) {
+            if (!staff.isEmpty()) {
                 List<Component> lines = new ArrayList<>();
                 lines.add(tr("mmorpg.jei.newbie.open"));
                 lines.add(tr("mmorpg.jei.newbie.contents"));
@@ -1162,7 +1163,7 @@ public final class JeiRecipes {
                     "item_action/newbie_bag",
                     List.of(slot(bag)),
                     List.of(),
-                    List.of(slot(staff), slot(soul)),
+                    List.of(slot(staff)),
                     lines
                 ));
             }
