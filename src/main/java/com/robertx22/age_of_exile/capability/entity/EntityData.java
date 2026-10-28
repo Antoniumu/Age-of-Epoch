@@ -487,8 +487,19 @@ public class EntityData implements ICommonPlayerCap, INeededForClient {
         return Gear.Load(entity.getMainHandItem());
     }
 
+    /**
+     * Можно ли бить этим оружием. Оружие без действующей бесдушной основы —
+     * «пустышка»: им нельзя нанести урон (правило «ничего не существует без основы»).
+     * «Цельные» предметы (булава, трезубец) работают всегда — их сила в них самих.
+     */
     public boolean canUseWeapon(GearItemData weaponData) {
-        return weaponData != null;
+        if (weaponData == null) {
+            return false;
+        }
+        if (weaponData.isWholeItemBase()) {
+            return true;
+        }
+        return !weaponData.isDeadItem();
     }
 
     public void onLogin(Player player) {

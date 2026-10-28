@@ -3,17 +3,8 @@ package com.robertx22.age_of_exile.damage_hooks;
 import com.robertx22.age_of_exile.a_libraries.trinkets.MyTrinketUtils;
 import com.robertx22.age_of_exile.damage_hooks.util.AttackInformation;
 import com.robertx22.age_of_exile.damage_hooks.util.DmgSourceUtils;
-import com.robertx22.age_of_exile.database.data.gear_slots.GearSlot;
-import com.robertx22.age_of_exile.database.data.gear_types.bases.SlotFamily;
-import com.robertx22.age_of_exile.database.data.stats.types.generated.AttackDamage;
 import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
 import com.robertx22.age_of_exile.saveclasses.stat_soul.SoullessGear;
-import com.robertx22.age_of_exile.uncommon.effectdatas.DamageEvent;
-import com.robertx22.age_of_exile.uncommon.effectdatas.EventBuilder;
-import com.robertx22.age_of_exile.uncommon.enumclasses.AttackType;
-import com.robertx22.age_of_exile.uncommon.enumclasses.Elements;
-import com.robertx22.age_of_exile.uncommon.enumclasses.PlayStyle;
-import com.robertx22.age_of_exile.uncommon.enumclasses.WeaponTypes;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.OnScreenMessageUtils;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -93,42 +84,17 @@ public class LivingHurtUtils {
                     ItemStack held = data.weapon != null && !data.weapon.isEmpty()
                         ? data.weapon
                         : data.getAttackerEntity().getMainHandItem();
-                    GearSlot slot = held.isEmpty() ? null : GearSlot.getSlotOf(held.getItem());
-                    if (slot == null || slot.fam != SlotFamily.Weapon) {
-                        // Предмет без бесдушной основы и без души — безделушка: урона нет.
-                        // «Уники по умолчанию» (булава, трезубец) и кулаки работают как раньше.
-                        if (SoullessGear.isWeaponLike(held) && !SoullessGear.isDefaultUnique(held)) {
-                            data.setCanceled(true);
-                        }
-                        return;
+
+                    if (held.isEmpty()) {
+                        return; // кулаки работают как раньше
                     }
-                    if (slot != null && slot.fam == SlotFamily.Weapon) {
-                        WeaponTypes weptype = switch (slot.GUID()) {
-                            case "axe" -> WeaponTypes.axe;
-                            case "bow" -> WeaponTypes.bow;
-                            case "crossbow" -> WeaponTypes.crossbow;
-                            case "staff" -> WeaponTypes.staff;
-                            case "scepter", "wand" -> WeaponTypes.scepter;
-                            default -> WeaponTypes.sword;
-                        };
-                        PlayStyle style = switch (weptype) {
-                            case bow, crossbow -> PlayStyle.ranged;
-                            case staff, scepter -> PlayStyle.magic;
-                            default -> PlayStyle.melee;
-                        };
-                        int baseAtkDmg = (int) data.getAttackerEntityData()
-                            .getUnit()
-                            .getCalculatedStat(new AttackDamage(Elements.Physical))
-                            .getValue();
-                        int num = Math.max(1, baseAtkDmg + Math.round(data.getAmount()));
-                        DamageEvent dmg = EventBuilder.ofDamage(data, data.getAttackerEntity(), data.getTargetEntity(), num)
-                            .setupDamage(AttackType.attack, weptype, style)
-                            .setIsBasicAttack()
-                            .build();
-                        dmg.Activate();
-                        if (!held.isEmpty() && data.getAttackerEntity() instanceof Player p) {
-                            held.hurtAndBreak(1, p, EquipmentSlot.MAINHAND);
-                        }
+
+                    // Нет бесдушной основы и нет души — предмет не работает: урона нет.
+                    // Сервер выдаёт основу при подборе и в периодической проверке
+                    // инвентаря, поэтому сюда попадают только вещи, которым основу
+                    // выдать не удалось (например, предмет из чужого мода без слота).
+                    if (SoullessGear.isUnusableWeapon(held)) {
+                        data.setCanceled(true);
                     }
                     return;
                 }
@@ -143,6 +109,9 @@ public class LivingHurtUtils {
                         .canUseWeapon(weapondata)) {
                         data.getAttackerEntityData()
                             .attackWithWeapon(data);
+                    } else {
+                        // Данные предмета есть, но основы у него нет: урона тоже нет.
+                        data.setCanceled(true);
                     }
 
                 } else {

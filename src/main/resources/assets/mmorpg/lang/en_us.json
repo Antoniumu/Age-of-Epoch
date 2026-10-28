@@ -571,7 +571,7 @@
   "mmorpg.jei.identify.still_soul": "It stays a soul: drag it onto a matching empty base to create the gear.",
   "mmorpg.jei.identify.use": "Right-click an Identify Tome. It identifies unidentified souls, using 1 tome per soul.",
   "mmorpg.jei.info.rune_unused": "This rune is not used in any runeword.",
-  "mmorpg.jei.newbie.contents": "Default contents: a plain iron staff and a level 1 common staff soul.",
+  "mmorpg.jei.newbie.contents": "Default contents: a ready staff with a random staff soul (random rarity).",
   "mmorpg.jei.newbie.open": "Right-click to open the starter gear bag.",
   "mmorpg.jei.producer.no_salvage": "The created soul cannot be salvaged.",
   "mmorpg.jei.producer.tier": "The soul is created at your level with a random starting rarity.",

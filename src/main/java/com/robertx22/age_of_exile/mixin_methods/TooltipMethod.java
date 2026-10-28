@@ -191,6 +191,16 @@ public class TooltipMethod {
                 if (slot != null) {
                     tooltip.add(TooltipUtils.gearSlot(slot));
                 }
+
+                // «Пустышка»: у вещи нет ни бесдушной основы, ни души, поэтому она
+                // не работает. Сервер выдаёт основу при подборе и в периодической
+                // проверке инвентаря — это предупреждение для короткого окна.
+                if (com.robertx22.age_of_exile.saveclasses.stat_soul.SoullessGear.needsBase(stack)) {
+                    tooltip.add(Component.literal("Нет бесдушной основы — предмет не работает")
+                        .withStyle(ChatFormatting.DARK_GRAY));
+                    tooltip.add(Component.literal("Подберите предмет: сервер выдаст основу")
+                        .withStyle(ChatFormatting.DARK_GRAY));
+                }
             }
 
             if (addCurrencyTooltip) {

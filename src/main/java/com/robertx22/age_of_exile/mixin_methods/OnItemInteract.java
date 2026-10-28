@@ -107,6 +107,11 @@ public class OnItemInteract {
                 LocReqContext ctx = new LocReqContext(player, stack.copy(), cursor);
                 if (ctx.effect.canItemBeModified(ctx)) {
                     ItemStack result = ctx.effect.modifyItem(ctx).stack;
+                    // Пустой результат = валюта отказалась (например, камень редкости
+                    // на бесдушной основе). Предмет не трогаем и валюту не тратим.
+                    if (result.isEmpty()) {
+                        return;
+                    }
                     if (stack.getCount() == 1) {
                         slot.set(result.copy());
                     } else {

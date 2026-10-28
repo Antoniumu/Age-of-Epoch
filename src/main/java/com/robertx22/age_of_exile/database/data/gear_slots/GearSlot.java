@@ -149,8 +149,13 @@ public class GearSlot implements JsonExileRegistry<GearSlot>, IAutoGson<GearSlot
                         || itemPath.contains("necklace")
                         || MyTrinketUtils.isTrinketOfSlot(item, "necklace");
                 } else if (id.equals(GearSlots.RING)) {
+                    // Не contains("ring"): иначе обычная нитка (minecraft:string) считалась бы
+                    // кольцом и получала бесдушную основу.
                     bool = item instanceof com.robertx22.age_of_exile.vanilla_mc.items.gearitems.baubles.ItemRing
-                        || itemPath.contains("ring")
+                        || itemPath.equals("ring")
+                        || itemPath.endsWith("_ring")
+                        || itemPath.startsWith("ring_")
+                        || itemPath.contains("_ring_")
                         || MyTrinketUtils.isTrinketOfSlot(item, "ring");
                 }
             }

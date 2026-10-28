@@ -4,6 +4,7 @@ import com.robertx22.age_of_exile.player_skills.ingredient.data.CraftedConsumabl
 import com.robertx22.age_of_exile.player_skills.ingredient.data.CraftingProcessData;
 import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
 import com.robertx22.age_of_exile.saveclasses.player_skills.PlayerSkillEnum;
+import com.robertx22.age_of_exile.saveclasses.stat_soul.SoullessGear;
 import com.robertx22.age_of_exile.saveclasses.stat_soul.StatSoulData;
 import com.robertx22.age_of_exile.saveclasses.stat_soul.StatSoulItem;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
@@ -37,9 +38,19 @@ public class GearSoulOnInvTick {
             boolean changed = false;
             for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
                 ItemStack stack = player.getInventory().getItem(i);
+                if (stack.isEmpty()) {
+                    continue;
+                }
                 ItemStack replacement = process(player, stack, refunds);
                 if (replacement != null) {
                     player.getInventory().setItem(i, replacement);
+                    changed = true;
+                    continue;
+                }
+                // Серверная проверка: у любой вещи в инвентаре (включая броню и офхенд)
+                // обязана быть хотя бы бесдушная основа. Так «пустышек» не остаётся
+                // даже в старых сохранениях и у вещей из чужих модов.
+                if (SoullessGear.ensure(stack, player)) {
                     changed = true;
                 }
             }

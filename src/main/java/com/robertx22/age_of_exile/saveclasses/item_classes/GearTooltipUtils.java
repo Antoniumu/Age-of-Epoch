@@ -30,6 +30,13 @@ public class GearTooltipUtils {
 
         List<Component> tip = tooltip;
 
+        // «Пустышка»: основы нет, значит и статов нет — только предупреждение.
+        if (gear.isDeadItem()) {
+            tip.add(Component.literal("Нет бесдушной основы: предмет не работает")
+                .withStyle(ChatFormatting.RED));
+            return;
+        }
+
         if (gear.GetBaseGearType() == null) {
             return;
         }
@@ -51,10 +58,17 @@ public class GearTooltipUtils {
         });
 
         if (gear.isSoulless()) {
-            tip.add(Component.literal("Бесдушная основа")
-                .withStyle(ChatFormatting.DARK_GRAY));
-            tip.add(Component.literal("Наложите душу, чтобы раскрыть предмет")
-                .withStyle(ChatFormatting.DARK_GRAY));
+            if (gear.isWholeItemBase()) {
+                tip.add(Component.literal("Цельная основа: " + gear.getBasePercent() + "% силы")
+                    .withStyle(ChatFormatting.DARK_GRAY));
+                tip.add(Component.literal("Души для этого предмета нет — вся сила в самой основе")
+                    .withStyle(ChatFormatting.DARK_GRAY));
+            } else {
+                tip.add(Component.literal("Бесдушная основа: " + gear.getBasePercent() + "% силы")
+                    .withStyle(ChatFormatting.DARK_GRAY));
+                tip.add(Component.literal("Наложите душу, чтобы раскрыть предмет")
+                    .withStyle(ChatFormatting.DARK_GRAY));
+            }
         }
 
         if (gear.baseStats != null) {

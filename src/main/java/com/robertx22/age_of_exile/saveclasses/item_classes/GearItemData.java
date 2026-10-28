@@ -100,16 +100,76 @@ public class GearItemData implements ICommonDataItem<GearRarity> {
     public boolean sl = false;
 
     /**
+     * «Цельная основа»: у предмета нет души вообще (булава, трезубец, элитры),
+     * поэтому его бесдушная основа — это весь предмет. Такая основа сильнее
+     * обычной (см. {@code SoullessGear.WHOLE_ITEM_BASE_PERCENT}), но всё равно
+     * слабее предмета с душой.
+     */
+    @Store
+    public boolean wi = false;
+
+    /**
      * Множитель базовых статов (1 — обычный предмет). У бесдушной основы это
-     * «сила основы»: 0.12 у дешёвого предмета … 0.45 у самого дорогого.
-     * Хранится отдельно от роллов {@code baseStats.perc}, потому что perc лишь
-     * выбирает значение внутри диапазона min..max, а не масштабирует его.
+     * «сила основы»: 0.12 у дешёвого предмета … 0.45 у самого дорогого
+     * (0.70 у «цельной» основы). Хранится отдельно от роллов {@code baseStats.perc},
+     * потому что perc лишь выбирает значение внутри диапазона min..max,
+     * а не масштабирует его.
      */
     @Store
     public float bq = 1F;
 
     public boolean isSoulless() {
         return sl;
+    }
+
+    /** Основа без души, но вся сила предмета в нём самом (булава/трезубец/элитры). */
+    public boolean isWholeItemBase() {
+        return wi;
+    }
+
+    /**
+     * Есть ли у предмета действующие данные (зарегистрированный базовый тип).
+     * Без этого предмет — «пустышка»: урона и статов он не даёт, и сервер обязан
+     * выдать ему бесдушную основу.
+     */
+    public boolean hasBase() {
+        try {
+            return isValidItem();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * «Пустышка» — у предмета нет действующей основы: ни базового типа, ни данных.
+     * Такой предмет обязан быть бесполезным (без статов и без урона), иначе он
+     * обходил бы правило «ничего не существует без бесдушной основы».
+     *
+     * <p>Пока реестр базовых типов пуст (клиент до синхронизации датапаков),
+     * предмет пустышкой не считается — иначе статы мигали бы нулями при входе.
+     */
+    public boolean isDeadItem() {
+        if (isWholeItemBase()) {
+            return false; // сила «цельного» предмета в нём самом
+        }
+        if (gear_type == null || gear_type.isEmpty()) {
+            return true;
+        }
+        try {
+            if (ExileDB.GearTypes()
+                .isEmpty()) {
+                return false;
+            }
+            return !ExileDB.GearTypes()
+                .isRegistered(gear_type);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /** Сила основы в процентах — для тултипа. */
+    public int getBasePercent() {
+        return Math.round(Math.max(0F, bq) * 100F);
     }
 
     public void upgradeToHigherRarity() {
@@ -470,6 +530,11 @@ public class GearItemData implements ICommonDataItem<GearRarity> {
     }
 
     public List<ExactStatData> GetAllStats() {
+
+        // Предмет без действующей бесдушной основы — «пустышка»: статов он не даёт.
+        if (isDeadItem()) {
+            return new ArrayList<>();
+        }
 
         List<ExactStatData> list = new ArrayList<>();
         for (IStatsContainer x : GetAllStatContainers()) {

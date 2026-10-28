@@ -133,10 +133,11 @@ public class BaseStatsData implements IRerollable, IStatsContainer, IGearPartToo
 
     /**
      * «Сила основы» ({@code gear.bq}): у бесдушной основы базовые статы ослаблены
-     * до 12–45 %, у обычного предмета множитель 1 и ничего не меняется.
+     * до 12–45 % (у «цельной» основы — 70 %), у обычного предмета множитель 1
+     * и ничего не меняется.
      */
     private static ExactStatData applyQuality(ExactStatData stat, GearItemData gear) {
-        if (gear.bq > 0F && gear.bq < 1F) {
+        if (gear.bq > 0F && Math.abs(gear.bq - 1F) > 0.0001F) {
             stat.multiplyBy(gear.bq);
         }
         return stat;
