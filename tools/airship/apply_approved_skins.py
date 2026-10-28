@@ -26,7 +26,7 @@ for item in json.loads((preview/'alternatives.json').read_text()):
 from PIL import ImageDraw
 skin=Image.new('RGBA',(64,64));d=ImageDraw.Draw(skin)
 for r in [(0,0,32,16),(0,16,64,32),(16,48,48,64)]:d.rectangle((r[0],r[1],r[2]-1,r[3]-1),fill='#b98a45')
-d.rectangle((8,8,15,15),fill='#b98a45');d.rectangle((9,10,10,11),fill='#ffb354');d.rectangle((13,10,14,11),fill='#ffb354');d.rectangle((11,12,12,14),fill='#e7bd6b');skin.save(out/'tik.png')
+d.rectangle((8,8,15,15),fill='#b98a45');d.rectangle((9,10,10,11),fill='#ffb354');d.rectangle((13,10,14,11),fill='#ffb354');d.rectangle((11,12,12,14),fill='#e7bd6b');d.line((10,8,13,8),fill='#69a69a');skin.save(out/'tik.png')
 legal=root/'src/main/resources/META-INF/airship-crew';legal.mkdir(parents=True,exist_ok=True)
 shutil.copy(preview/'LICENSE-MineColonies.txt',legal/'LICENSE-MineColonies.txt')
 shutil.copy(preview/'alternatives.json',legal/'sources.json')
@@ -36,3 +36,8 @@ shutil.copy(preview/'alternatives.json',legal/'sources.json')
 subprocess.run([sys.executable,str(root/'tools/airship/refine_captain_skin.py')],check=True)
 with (legal/'NOTICE.txt').open('a') as notice:
     notice.write('Revision 2: Captain navy/grey officer repaint (refine_captain_skin.py); Mara, Veya and Selin retain source 3px arms with correct slim left-arm UV conversion. Earlier wide conversion exposed transparent source pixels as black stripes. Original GPL attribution remains applicable.\n')
+
+# Keep each crew member's authored repaint when regenerating from pinned originals.
+subprocess.run([sys.executable,str(root/'tools/airship/refine_crew_skins.py')],check=True)
+with (legal/'NOTICE.txt').open('a') as notice:
+    notice.write('Revision 3: individual outfits, hair accents, accessories and back details for Mara, Bram, Oren, Veya, Selin and Lysander; deterministic refine_crew_skins.py repaint based on the attributed MineColonies adaptations. Original sources and GPL notice retained.\nRevision 3: Tik brass bird gets verdigris chest ornament and crest, custom authored geometry; not a third-party skin.\n')

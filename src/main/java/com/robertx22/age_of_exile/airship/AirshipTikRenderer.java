@@ -36,15 +36,16 @@ public final class AirshipTikRenderer extends ParrotRenderer {
     @Override public void submit(ParrotRenderState state,PoseStack pose,SubmitNodeCollector out,CameraRenderState camera) {
         Pose p=poses.get(state);
         if(p==null) { super.submit(state,pose,out,camera);return; }
-        int brass=0xFFB98A45,gold=0xFFE7BD6B,dark=0xFF344E50,eye=0xFFFFB354;
+        int brass=0xFFB98A45,gold=0xFFE7BD6B,dark=0xFF344E50,eye=0xFFFFB354,verdigris=0xFF69A69A;
         pose.pushPose();pose.mulPose(new Matrix4f().rotationY((float)Math.toRadians(-p.body)));
-        box(out,pose,4.2F,4.5F,3.7F,0,4.5F,0,brass);box(out,pose,3.5F,2.4F,.4F,0,4.8F,2.05F,dark);
+        box(out,pose,4.2F,4.5F,3.7F,0,4.5F,0,brass);box(out,pose,3.5F,2.4F,.4F,0,4.8F,2.05F,dark);box(out,pose,1.1F,1.1F,.2F,0,4.9F,2.3F,verdigris);
         pose.pushPose();pose.translate(0,8.1/16,.6/16);
         pose.mulPose(new Matrix4f().rotationY((float)Math.toRadians(-CrewMotion.wrap(p.head-p.body))).rotateX((float)Math.toRadians(p.pitch)));
         box(out,pose,4.6F,3.7F,4.2F,0,0,0,brass);
         box(out,pose,.7F,.9F,.35F,-1.2F,.4F,2.25F,eye);box(out,pose,.7F,.9F,.35F,1.2F,.4F,2.25F,eye);
         box(out,pose,1.2F,1.1F,1.6F,0,-.4F,2.4F,gold);
         for(int s:new int[]{-1,1}) box(out,pose,.45F,.7F,.4F,s*1.2F,2.2F,-.5F,gold);
+        box(out,pose,.55F,1.2F,.55F,0,2.4F,-.6F,verdigris);
         pose.popPose();
         for(int s:new int[]{-1,1}) {
             box(out,pose,.55F,1.9F,.55F,s*1.15F,1.6F,.1F,dark);box(out,pose,1.3F,.4F,2,s*1.15F,.6F,.7F,gold);

@@ -1,0 +1,52 @@
+{
+  "bram_stock": {
+    "voice": "voice-05",
+    "durationMillis": 11448,
+    "status": "preview_only"
+  },
+  "captain_course": {
+    "voice": "voice-01",
+    "durationMillis": 14759,
+    "status": "preview_only"
+  },
+  "captain_pause": {
+    "voice": "voice-01",
+    "durationMillis": 11180,
+    "status": "preview_only"
+  },
+  "lysander_names": {
+    "voice": "voice-14",
+    "durationMillis": 10536,
+    "status": "preview_only"
+  },
+  "mara_chart": {
+    "voice": "voice-03",
+    "durationMillis": 8725,
+    "status": "preview_only"
+  },
+  "mara_check": {
+    "voice": "voice-03",
+    "durationMillis": 8438,
+    "status": "preview_only"
+  },
+  "oren_anchor": {
+    "voice": "voice-08",
+    "durationMillis": 10296,
+    "status": "preview_only"
+  },
+  "selin_care": {
+    "voice": "voice-12",
+    "durationMillis": 10658,
+    "status": "preview_only"
+  },
+  "tik_signal": {
+    "voice": "voice-18",
+    "durationMillis": 11598,
+    "status": "preview_only"
+  },
+  "veya_return": {
+    "voice": "voice-10",
+    "durationMillis": 9953,
+    "status": "preview_only"
+  }
+}

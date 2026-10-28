@@ -22,10 +22,11 @@ function bird(){
  const g=new T.Group();
  const brass=new T.MeshStandardMaterial({color:0xb98a45,metalness:.75,roughness:.35});
  const dark=new T.MeshStandardMaterial({color:0x344e50,metalness:.65,roughness:.5});
+ const verdigris=new T.MeshStandardMaterial({color:0x69a69a,metalness:.45,roughness:.5});
  const gold=new T.MeshStandardMaterial({color:0xe7bd6b,metalness:.75,roughness:.28});
  const eye=new T.MeshStandardMaterial({color:0xffb354,emissive:0xff9b21,emissiveIntensity:1.8});
  function box(w,h,d,x,y,z,m=brass,parent=g){const a=new T.Mesh(new T.BoxGeometry(w,h,d),m);a.position.set(x,y,z);parent.add(a);return a;}
- box(4.2,4.5,3.7,0,4.5,0);box(4.6,3.7,4.2,0,8.1,.6);box(3.5,2.4,.4,0,4.8,2.05,dark);
+ box(4.2,4.5,3.7,0,4.5,0);box(4.6,3.7,4.2,0,8.1,.6);box(3.5,2.4,.4,0,4.8,2.05,dark);box(1.1,1.1,.2,0,4.9,2.3,verdigris);box(.55,1.2,.55,0,10.5,0,verdigris);
  box(.7,.9,.35,-1.2,8.5,2.85,eye);box(.7,.9,.35,1.2,8.5,2.85,eye);
  const beak=box(1.2,1.1,1.6,0,7.7,3,gold);beak.rotation.x=-.2;
  for(const s of [-1,1]){

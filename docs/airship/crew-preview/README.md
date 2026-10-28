@@ -20,7 +20,7 @@ Oren is proportionally scaled 1.6 in all axes, with his feet on the same baselin
 
 ## Attribution and license
 
-Seven originals: MineColonies contributors, https://github.com/ldtteam/minecolonies, pinned revision in `alternatives.json`. Repository license copied verbatim to `LICENSE-MineColonies.txt`; no separate per-file artist permission asserted. Original sources retained under `originals/`; modified image derivatives under `skins/`. Changes: standard legacy-UV crop only, no repainting. Preserve these attribution/license/source records when distributing these derivatives. This does not grant rights to any external PlanetMinecraft candidate.
+Seven originals: MineColonies contributors, https://github.com/ldtteam/minecolonies, pinned revision in `alternatives.json`. Repository license copied verbatim to `LICENSE-MineColonies.txt`; no separate per-file artist permission asserted. Original sources retained under `originals/`; modified image derivatives under `skins/`. Changes: standard legacy-UV crop and subsequent locally authored repaints as described below. Preserve these attribution/license/source records when distributing these derivatives. This does not grant rights to any external PlanetMinecraft candidate.
 
 Renderer libraries: skinview3d 3.4.2, skinview-utils, Three.js, MIT notices under `vendor/`.
 
@@ -34,3 +34,9 @@ From `tools/airship/crew-preview`: `npm ci && npm run build`. To verify screensh
 `tools/airship/apply_approved_skins.py` теперь читает закреплённые оригиналы, раздельно переносит 3px грани рук Мары/Веи/Селин и вызывает `refine_captain_skin.py`. Просмотрщик и игровые ресурсы используют одинаковые 64×64 PNG и одинаковый выбор wide/slim. `audit_crew_uv.py` проверяет именно грани выбранной модели; прозрачные исходные пиксели на месте wide-краёв доказывают причину прежних чёрных полос этих трёх скинов. Это не обещание устранить любые другие артефакты освещения.
 
 Капитан перерисован локально поверх GPL-атрибутированной основы; это не новый скачанный PMC-скин. Старый голос сохранён. Источники и лицензия не удалены. Геометрия остаётся ванильным манекеном.
+
+## Индивидуальные образы всей команды (ревизия 3)
+
+Шесть прежних адаптаций MineColonies дополнительно перерисованы: Мара — бирюзовая картографическая форма; Брам — фартук механика; Орен — светлые волосы, борода и шарф; Вея — рыжие волосы и лиловый костюм; Селин — серо-голубой наряд со светлым знаком; Лисандр — бордовый китель и шнуровка. Капитан остаётся в ранее переработанном синем кителе. Тик остаётся авторской механической птицей, но получил бирюзовый акцент на груди и хохолке. Это **локальные производные работы**, а не новые скачанные авторские скины; лицензионные исходники, указание авторов и скрипт сохранены.
+
+`apply_approved_skins.py` восстанавливает исходные атласы, применяет независимые wide/slim UV и затем вызывает `refine_crew_skins.py`. Все игровые текстуры и модели предпросмотра используют одинаковые файлы. Новые реплики не меняют выбранные голоса. Старые NPC используют те же resource ID, модель, UUID и профиль; внешние overrides в конфиге намеренно остаются под контролем владельца.

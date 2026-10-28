@@ -26,7 +26,7 @@
     ],
     "baseUV": "slim",
     "transparentBasePixels": 0,
-    "nearBlackBasePixels": 25,
+    "nearBlackBasePixels": 0,
     "sourceTransparentWideArmSidePixels": 24
   },
   "oren": {
@@ -36,7 +36,7 @@
     ],
     "baseUV": "wide",
     "transparentBasePixels": 0,
-    "nearBlackBasePixels": 38,
+    "nearBlackBasePixels": 4,
     "sourceTransparentWideArmSidePixels": 0
   },
   "quartermaster": {
@@ -46,7 +46,7 @@
     ],
     "baseUV": "wide",
     "transparentBasePixels": 0,
-    "nearBlackBasePixels": 22,
+    "nearBlackBasePixels": 0,
     "sourceTransparentWideArmSidePixels": 0
   },
   "selin": {
@@ -56,7 +56,7 @@
     ],
     "baseUV": "slim",
     "transparentBasePixels": 0,
-    "nearBlackBasePixels": 58,
+    "nearBlackBasePixels": 32,
     "sourceTransparentWideArmSidePixels": 24
   },
   "tik": {
