@@ -38,9 +38,8 @@ jobs:
           Winged Sailor build: Chiisai_Khoahri, https://www.planetminecraft.com/project/large-fantasy-airship-the-winged-sailor/ ; credited tail-fin reference Captain_JEK. User-supplied schematic. Upstream blanket public redistribution permission remains unverified; see docs/airship/ASSETS.md in the repository. This preview does not grant any additional rights to third-party assets.
           Internal mod version remains 5.1.0; the preview filename/tag distinguishes this artifact from the older 5.1.0 release. Not marked as latest stable release.
           NOTES
-          gh release create airship-preview-176482f release-files/Age-of-Epoch-airship-preview.jar release-files/SHA256SUMS.txt \
-            --target "$(gh api repos/${{ github.repository }}/commits/176482fc8c9a31c644ebe825b6c72e67d1a84f85 --jq .sha)" --title 'Age of Epoch — Last Dawn campaign preview' \
-            --prerelease --latest=false --notes-file release-files/NOTES.md
+          gh release upload airship-preview-176482f release-files/Age-of-Epoch-airship-preview.jar release-files/SHA256SUMS.txt --clobber
+
 
       - name: Publish failure details
         if: failure()
