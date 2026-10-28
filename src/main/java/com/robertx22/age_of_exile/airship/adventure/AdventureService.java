@@ -47,7 +47,7 @@ public final class AdventureService {
             if(!evidence.isEmpty()){
                 var token=new ItemStack(net.minecraft.world.item.Items.PAPER);
                 token.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME,Component.literal("Промокшая маршрутная метка"));
-                if(!p.addItem(token))p.drop(token,false);
+                if(!p.addItem(token))p.drop(token,false,net.minecraft.util.Prediction.SERVER_ONLY);
                 say(p,evidence);
             }
             if(before!=state.progress.getOrDefault("investigation.water",0))AirshipService.sync(p);}

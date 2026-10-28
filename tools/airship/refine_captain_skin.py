@@ -41,6 +41,9 @@ for x,y in ((0,20),(16,52)):
     d.rectangle((x,y+8,x+15,y+11),fill=boot)
     d.line((x+4,y,x+4,y+7),fill='#8b8c80')
     d.line((x+4,y+8,x+7,y+8),fill='#616971')
+# The underside of hands/boots is a separate UV face, not part of the side strip.
+for box in ((48,16,51,19),(40,48,43,51)):d.rectangle(box,fill=skin)
+for box in ((8,16,11,19),(24,48,27,51)):d.rectangle(box,fill=boot)
 im.save(path)
 # Portrait and web viewer reference the exact same texture as the real mannequin.
 im.save(root/'docs/airship/crew-preview/skins/captain.png')
