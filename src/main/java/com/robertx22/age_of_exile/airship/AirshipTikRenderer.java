@@ -25,7 +25,8 @@ public final class AirshipTikRenderer extends ParrotRenderer {
     public AirshipTikRenderer(EntityRendererProvider.Context context) { super(context); }
     @Override public void extractRenderState(Parrot bird,ParrotRenderState state,float partial) {
         super.extractRenderState(bird,state,partial);
-        if(AirshipService.npcId(bird).equals("tik")) poses.put(state,new Pose(bird.getYRot(partial),bird.getYHeadRot(),bird.getXRot(partial),bird.tickCount+partial));
+        // Scoreboard tags are server-only; custom names use vanilla synchronized entity data.
+        if(bird.getCustomName()!=null && bird.getCustomName().getString().equals(AirshipStory.name("tik"))) poses.put(state,new Pose(bird.getYRot(partial),bird.getYHeadRot(),bird.getXRot(partial),bird.tickCount+partial));
         else poses.remove(state);
     }
     private static void box(SubmitNodeCollector out,PoseStack pose,float w,float h,float d,float x,float y,float z,int color) {
