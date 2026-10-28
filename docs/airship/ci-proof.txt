@@ -1,2 +1,1048 @@
-Run: https://github.com/Antoniumu/Age-of-Epoch/actions/runs/40733746873
-Source: 016f5cdb28c003001cb79d3942b8d16bd95aec24
+Recovered authentic artifact from: https://github.com/Antoniumu/Age-of-Epoch/actions/runs/40731399447
+Source: c6778116221836cc60fe6d9d2d3f3b47d7b45444
+Source compile, integrity and real-client steps: PASS (checked via GitHub API). Publication recovery is not another gameplay execution.
+[17:03:12] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=prepare anchor=0,0,0 player=(4.5, 133.0, -3.5) eye=Block{minecraft:air}
+[17:03:12] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS prepare stage=0
+[17:03:58] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=ritual-stock anchor=0,0,0 player=(4.5, 133.0, -3.5) eye=Block{minecraft:air}
+[17:03:58] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS ritual-stock stage=0
+[17:04:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST WINGED placed origin=BlockPos{x=-54, y=153, z=-42} size=Vec3i{x=117, y=100, z=89} crew=3
+[17:04:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST WINGED diagnostic: Winged Sailor на причале. Световой круг: X=3, Z=-4. Капитан наверху, Мара у карт, Брам на нижней палубе.
+[17:04:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=ritual-paid anchor=3,203,-8 player=(3.5, 204.0, -3.5) eye=Block{minecraft:air}
+[17:04:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:04:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:04:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:04:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:04:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:04:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:04:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:04:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:04:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS ritual-paid stage=0
+[17:04:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=winged anchor=3,203,-8 player=(3.5, 204.0, -3.5) eye=Block{minecraft:air}
+[17:04:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:04:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:04:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:04:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:04:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:04:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:04:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:04:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:04:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST WINGED diagnostic: Общий корабль уже существует или ожидает восстановления. Второй корабль не создаётся.
+[17:04:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SPAWN 444 pos=(-0.5, 204.0, 18.5)
+[17:04:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SPAWN 446 pos=(3.5, 204.0, 14.5)
+[17:04:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SPAWN 442 pos=(5.5, 209.0, 8.5)
+[17:04:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SPAWN 445 pos=(2.5, 209.0, 5.5)
+[17:04:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SPAWN 448 pos=(3.5, 209.0, 8.5)
+[17:04:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SPAWN 443 pos=(2.5, 204.0, 19.5)
+[17:04:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SPAWN 441 pos=(4.5, 216.0, 25.5)
+[17:04:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SPAWN 447 pos=(1.5, 216.0, 28.5)
+[17:04:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST BUILD anchor=3,203,-8 deck=Block{minecraft:spruce_planks}
+[17:04:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS winged stage=0
+[17:04:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=board anchor=3,203,-8 player=(81.5, 235.0, 77.5) eye=Block{minecraft:air}
+[17:04:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:04:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:04:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:04:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:04:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:04:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:04:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:04:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:04:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS board stage=0
+[17:04:45] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=lift anchor=3,203,-8 player=(3.5, 204.0, -3.5) eye=Block{minecraft:air}
+[17:04:45] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:04:45] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:04:45] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:04:45] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:04:45] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:04:45] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:04:45] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:04:45] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:04:45] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift stage=0
+[17:04:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=lift-check anchor=3,203,-8 player=(3.5, 204.0, -3.5) eye=Block{minecraft:air}
+[17:04:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:04:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:04:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:04:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:04:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:04:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:04:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:04:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:04:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift-check stage=0
+[17:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=far-reject anchor=3,203,-8 player=(3.5, 204.0, -3.5) eye=Block{minecraft:air}
+[17:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=0 expected=0 current=0 npc=captain distance=586.0 los=false
+[17:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS far-reject stage=0
+[17:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=photo-captain anchor=3,203,-8 player=(3.5, 204.0, 4.5) eye=Block{minecraft:air}
+[17:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-captain stage=0
+[17:04:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=dialogue anchor=3,203,-8 player=(4.5, 216.0, 28.5) eye=Block{minecraft:air}
+[17:04:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:04:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:04:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:04:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:04:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:04:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:04:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:04:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:04:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS dialogue stage=0
+[17:04:55] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START captain_intro_a
+[17:04:55] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE captain_intro_a
+[17:05:00] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=21
+[17:05:00] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=21 fullText=false
+[17:05:00] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START captain_intro_a
+[17:05:00] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE captain_intro_a
+[17:05:12] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE END captain_intro_a elapsed=11761 activeSeen=true
+[17:05:12] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START captain_intro_b
+[17:05:12] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE captain_intro_b
+[17:05:23] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE END captain_intro_b elapsed=11577 activeSeen=true
+[17:05:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=0 expected=0 current=0 npc=captain distance=9.0 los=true
+[17:05:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=accepted anchor=3,203,-8 player=(4.5, 216.0, 28.5) eye=Block{minecraft:air}
+[17:05:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:05:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:05:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:05:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:05:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:05:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:05:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:05:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:05:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS accepted stage=1
+[17:05:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=favor-captain anchor=3,203,-8 player=(4.5, 216.0, 28.5) eye=Block{minecraft:air}
+[17:05:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:05:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:05:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:05:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:05:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:05:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:05:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:05:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:05:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=2 expected=1 current=1 npc=captain distance=9.0 los=true
+[17:05:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS favor-captain stage=1
+[17:05:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=photo-mara anchor=3,203,-8 player=(4.5, 216.0, 28.5) eye=Block{minecraft:air}
+[17:05:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:05:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:05:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:05:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:05:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:05:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:05:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:05:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:05:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-mara stage=1
+[17:05:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=talk-mara anchor=3,203,-8 player=(5.5, 209.0, 5.5) eye=Block{minecraft:air}
+[17:05:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:05:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:05:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:05:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:05:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:05:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:05:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:05:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:05:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS talk-mara stage=1
+[17:05:33] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START mara_intro
+[17:05:33] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE mara_intro
+[17:05:35] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
+[17:05:35] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
+[17:05:36] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=41
+[17:05:36] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=41 fullText=true
+[17:05:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=mara anchor=3,203,-8 player=(5.5, 209.0, 5.5) eye=Block{minecraft:air}
+[17:05:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:05:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:05:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:05:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:05:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:05:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:05:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:05:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:05:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=0 expected=1 current=1 npc=mara distance=9.0 los=true
+[17:05:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS mara stage=2
+[17:05:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=photo-quartermaster anchor=3,203,-8 player=(5.5, 209.0, 5.5) eye=Block{minecraft:air}
+[17:05:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:05:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:05:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:05:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:05:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:05:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:05:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:05:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:05:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-quartermaster stage=2
+[17:05:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=talk-quartermaster anchor=3,203,-8 player=(2.5, 204.0, 16.5) eye=Block{minecraft:air}
+[17:05:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:05:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:05:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:05:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:05:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:05:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:05:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:05:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:05:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS talk-quartermaster stage=2
+[17:05:43] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START bram_intro
+[17:05:43] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE bram_intro
+[17:05:44] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
+[17:05:44] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
+[17:05:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=quartermaster anchor=3,203,-8 player=(2.5, 204.0, 16.5) eye=Block{minecraft:air}
+[17:05:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:05:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:05:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:05:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:05:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:05:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:05:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:05:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:05:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=0 expected=2 current=2 npc=quartermaster distance=9.0 los=true
+[17:05:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS quartermaster stage=3
+[17:05:46] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=41
+[17:05:46] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=41 fullText=true
+[17:05:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=dialogue anchor=3,203,-8 player=(2.5, 204.0, 16.5) eye=Block{minecraft:air}
+[17:05:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:05:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:05:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:05:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:05:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:05:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:05:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:05:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:05:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS dialogue stage=3
+[17:05:46] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START captain_welcome
+[17:05:46] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE captain_welcome
+[17:05:48] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
+[17:05:48] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
+[17:05:50] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=30
+[17:05:50] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=30 fullText=true
+[17:05:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=0 expected=3 current=3 npc=captain distance=9.0 los=true
+[17:05:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=chapter-one anchor=3,203,-8 player=(4.5, 216.0, 28.5) eye=Block{minecraft:air}
+[17:05:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:05:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:05:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:05:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:05:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:05:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:05:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:05:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:05:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS chapter-one stage=4
+[17:05:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=stale anchor=3,203,-8 player=(4.5, 216.0, 28.5) eye=Block{minecraft:air}
+[17:05:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:05:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:05:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:05:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:05:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:05:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:05:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:05:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:05:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=0 expected=3 current=4 npc=captain distance=9.0 los=true
+[17:05:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS stale stage=4
+[17:05:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=dialogue anchor=3,203,-8 player=(4.5, 216.0, 28.5) eye=Block{minecraft:air}
+[17:05:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:05:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:05:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:05:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:05:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:05:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:05:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:05:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:05:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS dialogue stage=4
+[17:05:52] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START captain_echoes
+[17:05:52] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE captain_echoes
+[17:05:54] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
+[17:05:54] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
+[17:05:55] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=30
+[17:05:55] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=30 fullText=true
+[17:05:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=0 expected=4 current=4 npc=captain distance=9.0 los=true
+[17:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=gate anchor=3,203,-8 player=(4.5, 216.0, 28.5) eye=Block{minecraft:air}
+[17:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=0 expected=5 current=5 npc=mara distance=9.0 los=true
+[17:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS gate stage=5
+[17:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=talk-mara anchor=3,203,-8 player=(5.5, 209.0, 5.5) eye=Block{minecraft:air}
+[17:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS talk-mara stage=5
+[17:05:57] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START mara_waiting
+[17:05:57] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE mara_waiting
+[17:05:58] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
+[17:05:58] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=seed-chests anchor=3,203,-8 player=(5.5, 209.0, 5.5) eye=Block{minecraft:air}
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SYNTHETIC RPG counters/hook: seed-chests
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS seed-chests stage=5
+[17:06:00] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=41
+[17:06:00] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=41 fullText=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=report anchor=3,203,-8 player=(5.5, 209.0, 5.5) eye=Block{minecraft:air}
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=0 expected=5 current=5 npc=mara distance=9.0 los=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS report stage=6
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=seed-kills anchor=3,203,-8 player=(5.5, 209.0, 5.5) eye=Block{minecraft:air}
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SYNTHETIC RPG counters/hook: seed-kills
+[17:06:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS seed-kills stage=6
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=report anchor=3,203,-8 player=(5.5, 209.0, 5.5) eye=Block{minecraft:air}
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=0 expected=6 current=6 npc=quartermaster distance=9.0 los=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS report stage=7
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=favor-claim-captain anchor=3,203,-8 player=(2.5, 204.0, 16.5) eye=Block{minecraft:air}
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=2 expected=7 current=7 npc=captain distance=9.0 los=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=2 expected=7 current=7 npc=captain distance=9.0 los=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS favor-claim-captain stage=7
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=dialogue anchor=3,203,-8 player=(4.5, 216.0, 28.5) eye=Block{minecraft:air}
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS dialogue stage=7
+[17:06:01] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START captain_choice
+[17:06:01] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE captain_choice
+[17:06:03] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
+[17:06:03] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
+[17:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=truth anchor=3,203,-8 player=(4.5, 216.0, 28.5) eye=Block{minecraft:air}
+[17:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=1 expected=7 current=7 npc=captain distance=9.0 los=true
+[17:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS truth stage=8
+[17:06:05] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=41
+[17:06:05] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=41 fullText=true
+[17:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=talk-mara anchor=3,203,-8 player=(4.5, 216.0, 28.5) eye=Block{minecraft:air}
+[17:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS talk-mara stage=8
+[17:06:05] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START mara_rift
+[17:06:05] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE mara_rift
+[17:06:06] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
+[17:06:06] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
+[17:06:08] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=30
+[17:06:08] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=30 fullText=true
+[17:06:08] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=0 expected=8 current=8 npc=mara distance=9.0 los=true
+[17:06:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=iron-quartermaster anchor=3,203,-8 player=(5.5, 209.0, 5.5) eye=Block{minecraft:air}
+[17:06:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=2 expected=9 current=9 npc=quartermaster distance=9.0 los=true
+[17:06:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=2 expected=9 current=9 npc=quartermaster distance=9.0 los=true
+[17:06:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=2 expected=9 current=9 npc=quartermaster distance=9.0 los=true
+[17:06:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS iron-quartermaster stage=9
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=seed-dungeon anchor=3,203,-8 player=(2.5, 204.0, 16.5) eye=Block{minecraft:air}
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SYNTHETIC RPG counters/hook: seed-dungeon
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS seed-dungeon stage=9
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=report anchor=3,203,-8 player=(2.5, 204.0, 16.5) eye=Block{minecraft:air}
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=0 expected=9 current=9 npc=quartermaster distance=9.0 los=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS report stage=10
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=dialogue anchor=3,203,-8 player=(2.5, 204.0, 16.5) eye=Block{minecraft:air}
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS dialogue stage=10
+[17:06:10] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START captain_return
+[17:06:10] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE captain_return
+[17:06:13] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
+[17:06:13] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
+[17:06:14] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=30
+[17:06:14] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=30 fullText=true
+[17:06:14] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=0 expected=10 current=10 npc=captain distance=9.0 los=true
+[17:06:15] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=dialogue anchor=3,203,-8 player=(4.5, 216.0, 28.5) eye=Block{minecraft:air}
+[17:06:15] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:15] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:15] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:15] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:15] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:15] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:15] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:15] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:15] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS dialogue stage=11
+[17:06:15] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START captain_finale
+[17:06:15] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE captain_finale
+[17:06:18] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
+[17:06:18] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
+[17:06:20] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=41
+[17:06:20] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=41 fullText=true
+[17:06:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=finished anchor=3,203,-8 player=(4.5, 216.0, 28.5) eye=Block{minecraft:air}
+[17:06:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST NBT roundtrip stage=11 trust=35,24,39 favors=5 decision=1
+[17:06:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS finished stage=11
+[17:06:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=crew-check anchor=3,203,-8 player=(4.5, 216.0, 28.5) eye=Block{minecraft:air}
+[17:06:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-check stage=11
+[17:06:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=photo-oren anchor=3,203,-8 player=(4.5, 216.0, 28.5) eye=Block{minecraft:air}
+[17:06:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-oren stage=11
+[17:06:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=talk-oren anchor=3,203,-8 player=(2.5, 204.0, 18.5) eye=Block{minecraft:air}
+[17:06:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS talk-oren stage=11
+[17:06:25] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START oren_intro
+[17:06:25] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE oren_intro
+[17:06:27] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=41
+[17:06:27] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=41 fullText=false
+[17:06:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=photo-veya anchor=3,203,-8 player=(2.5, 204.0, 18.5) eye=Block{minecraft:air}
+[17:06:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-veya stage=11
+[17:06:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=talk-veya anchor=3,203,-8 player=(5.5, 209.0, 5.5) eye=Block{minecraft:air}
+[17:06:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS talk-veya stage=11
+[17:06:30] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START veya_intro
+[17:06:30] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE veya_intro
+[17:06:33] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=41
+[17:06:33] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=41 fullText=false
+[17:06:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=photo-selin anchor=3,203,-8 player=(5.5, 209.0, 5.5) eye=Block{minecraft:air}
+[17:06:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-selin stage=11
+[17:06:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=talk-selin anchor=3,203,-8 player=(3.5, 204.0, 17.5) eye=Block{minecraft:air}
+[17:06:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS talk-selin stage=11
+[17:06:36] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START selin_intro
+[17:06:36] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE selin_intro
+[17:06:39] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=41
+[17:06:39] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=41 fullText=false
+[17:06:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=photo-lysander anchor=3,203,-8 player=(3.5, 204.0, 17.5) eye=Block{minecraft:air}
+[17:06:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-lysander stage=11
+[17:06:41] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=talk-lysander anchor=3,203,-8 player=(1.5, 216.0, 31.5) eye=Block{minecraft:air}
+[17:06:41] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:41] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:41] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:41] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:41] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:41] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:41] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:41] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:41] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS talk-lysander stage=11
+[17:06:41] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START lysander_intro
+[17:06:41] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE lysander_intro
+[17:06:44] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=41
+[17:06:44] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=41 fullText=false
+[17:06:44] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=photo-tik anchor=3,203,-8 player=(1.5, 216.0, 31.5) eye=Block{minecraft:air}
+[17:06:44] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:44] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:44] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:44] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:44] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:44] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:44] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:44] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:44] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-tik stage=11
+[17:06:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=talk-tik anchor=3,203,-8 player=(3.5, 209.0, 5.5) eye=Block{minecraft:air}
+[17:06:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS talk-tik stage=11
+[17:06:47] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START tik_intro
+[17:06:47] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE tik_intro
+[17:06:49] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=41
+[17:06:49] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=41 fullText=false
+[17:06:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=attend-captain anchor=3,203,-8 player=(3.5, 209.0, 5.5) eye=Block{minecraft:air}
+[17:06:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS attend-captain stage=11
+[17:06:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=attention-check anchor=3,203,-8 player=(4.5, 216.0, 28.5) eye=Block{minecraft:air}
+[17:06:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ATTENTION head=-360.0 body=-360.0 desired=-0.0
+[17:06:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS attention-check stage=11
+[17:06:58] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=hub-check anchor=3,203,-8 player=(4.5, 216.0, 28.5) eye=Block{minecraft:air}
+[17:06:58] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:06:58] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:06:58] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:06:58] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:06:58] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:06:58] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:06:58] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:06:58] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:06:58] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST WINGED diagnostic: Общий корабль уже существует или ожидает восстановления. Второй корабль не создаётся.
+[17:06:58] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS hub-check stage=11
+[17:07:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=hostile-spawn anchor=3,203,-8 player=(4.5, 216.0, 28.5) eye=Block{minecraft:air}
+[17:07:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:07:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:07:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:07:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:07:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:07:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:07:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:07:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:07:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS hostile-spawn stage=11
+[17:07:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=hostile-cleared anchor=3,203,-8 player=(4.5, 216.0, 28.5) eye=Block{minecraft:air}
+[17:07:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:07:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:07:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:07:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:07:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:07:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:07:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:07:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:07:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS hostile-cleared stage=11
+[17:07:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=jump-stock anchor=3,203,-8 player=(4.5, 216.0, 28.5) eye=Block{minecraft:air}
+[17:07:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(-0.5, 204.0, 18.5) alive=true
+[17:07:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(3.5, 204.0, 14.5) alive=true
+[17:07:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 209.0, 8.5) alive=true
+[17:07:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(2.5, 209.0, 5.5) alive=true
+[17:07:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(3.5, 209.0, 8.5) alive=true
+[17:07:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 204.0, 19.5) alive=true
+[17:07:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(4.5, 216.0, 25.5) alive=true
+[17:07:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(1.5, 216.0, 28.5) alive=true
+[17:07:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS jump-stock stage=11
+[17:07:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPJUMP QUOTED target=Site[x=163, y=185, z=-8, ground=74]
+[17:08:13] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPJUMP MOVING snapshot=20231
+[17:08:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPJUMP COMPLETE revision=2 blocks=20231
+[17:08:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=jump-check anchor=163,185,-8 player=(163.5, 186.0, -3.5) eye=Block{minecraft:air}
+[17:08:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:08:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:08:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:08:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:08:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:08:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:08:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:08:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:08:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST JUMP blocks=20231 originalUUIDs=[5af3fc37-7b79-4097-b1f1-e0cafd2694d2, 1d90d000-11e0-46e4-a269-c2e0fde3aca8, c8943695-9627-495b-bb51-a494b4e44ee5, fecf0dd3-e9b9-4c4d-b75a-6519b831cfa1, e069e345-b2e0-4d24-990e-adeb05768c46, 8cb3494f-3c71-4be4-a0ff-391dc7274721, 17fdcdb6-c02f-4a39-aef7-df4f892ff037, a7ebb3df-f2d9-43c0-8c03-bd762c2bc30c] from=3,203,-8 to=163,185,-8
+[17:08:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS jump-check stage=11
+[17:08:21] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=photo-mara anchor=163,185,-8 player=(163.5, 186.0, -3.5) eye=Block{minecraft:air}
+[17:08:21] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:08:21] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:08:21] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:08:21] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:08:21] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:08:21] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:08:21] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:08:21] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:08:21] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-mara stage=11
+[17:08:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=talk-mara anchor=163,185,-8 player=(165.5, 191.0, 5.5) eye=Block{minecraft:air}
+[17:08:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:08:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:08:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:08:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:08:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:08:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:08:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:08:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:08:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS talk-mara stage=11
+[17:08:22] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START mara_idle
+[17:08:22] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE mara_idle
+[17:08:24] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
+[17:08:24] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
+[17:08:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=2 expected=11 current=11 npc=mara distance=9.0 los=true
+[17:08:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=side-ui-check anchor=163,185,-8 player=(165.5, 191.0, 5.5) eye=Block{minecraft:air}
+[17:08:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:08:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:08:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:08:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:08:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:08:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:08:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:08:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:08:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS side-ui-check stage=11
+[17:08:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=jump-recovery-stock anchor=163,185,-8 player=(165.5, 191.0, 5.5) eye=Block{minecraft:air}
+[17:08:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:08:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:08:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:08:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:08:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:08:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:08:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:08:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:08:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS jump-recovery-stock stage=11
+[17:09:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPJUMP QUOTED target=Site[x=323, y=150, z=-8, ground=78]
+[17:09:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPJUMP MOVING snapshot=20231
+[17:09:40] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=jump-recovery anchor=163,185,-8 player=(323.5, 78.0, -3.5) eye=Block{minecraft:air}
+[17:09:41] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS jump-recovery stage=11
+[17:09:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=adventure-check anchor=163,185,-8 player=(323.5, 78.0, -3.5) eye=Block{minecraft:air}
+[17:09:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS adventure-check stage=11
+[17:09:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=photo-captain anchor=163,185,-8 player=(323.5, 78.0, -3.5) eye=Block{minecraft:air}
+[17:09:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-captain stage=11
+[17:09:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=dialogue anchor=163,185,-8 player=(164.5, 198.0, 28.5) eye=Block{minecraft:air}
+[17:09:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:09:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:09:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:09:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:09:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:09:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:09:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:09:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:09:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS dialogue stage=11
+[17:09:44] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START captain_finale
+[17:09:44] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE captain_finale
+[17:09:45] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
+[17:09:45] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
+[17:09:46] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=captain rows=2 copper=0 options=[]
+[17:09:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=10 expected=11 current=11 npc=captain distance=9.0 los=true
+[17:09:49] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=captain rows=4 copper=0 options=[]
+[17:09:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=13 expected=11 current=11 npc=captain distance=9.0 los=true
+[17:09:51] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=captain rows=1 copper=0 options=[]
+[17:09:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=adventure-choice-check anchor=163,185,-8 player=(164.5, 198.0, 28.5) eye=Block{minecraft:air}
+[17:09:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:09:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:09:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:09:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:09:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:09:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:09:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:09:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:09:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS adventure-choice-check stage=11
+[17:09:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=20 expected=11 current=11 npc=captain distance=9.0 los=true
+[17:09:53] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=captain rows=1 copper=0 options=[]
+[17:09:53] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE personal_captain_request
+[17:10:04] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=captain rows=1 copper=0 options=[]
+[17:10:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=adventure-fish anchor=163,185,-8 player=(164.5, 198.0, 28.5) eye=Block{minecraft:air}
+[17:10:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:10:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:10:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:10:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:10:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:10:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:10:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:10:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:10:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS adventure-fish stage=11
+[17:10:06] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=captain rows=1 copper=0 options=[]
+[17:10:08] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=21 expected=11 current=11 npc=captain distance=9.0 los=true
+[17:10:08] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=captain rows=1 copper=0 options=[]
+[17:10:08] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE personal_captain_thanks
+[17:10:21] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=captain rows=1 copper=0 options=[]
+[17:10:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=22 expected=11 current=11 npc=captain distance=9.0 los=true
+[17:10:25] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=captain rows=0 copper=0 options=[]
+[17:10:25] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE personal_captain_confidence
+[17:10:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=adventure-heart-check anchor=163,185,-8 player=(164.5, 198.0, 28.5) eye=Block{minecraft:air}
+[17:10:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:10:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:10:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:10:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:10:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:10:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:10:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:10:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:10:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS adventure-heart-check stage=11
+[17:10:29] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc= rows=0 copper=0 options=[]
+[17:10:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=photo-oren anchor=163,185,-8 player=(164.5, 198.0, 28.5) eye=Block{minecraft:air}
+[17:10:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:10:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:10:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:10:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:10:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:10:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:10:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:10:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:10:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-oren stage=11
+[17:10:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=talk-oren anchor=163,185,-8 player=(162.5, 186.0, 18.5) eye=Block{minecraft:air}
+[17:10:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:10:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:10:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:10:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:10:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:10:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:10:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:10:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:10:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS talk-oren stage=11
+[17:10:31] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START oren_intro
+[17:10:31] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE oren_intro
+[17:10:33] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
+[17:10:33] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
+[17:10:34] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=oren rows=1 copper=0 options=[]
+[17:10:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=20 expected=11 current=11 npc=oren distance=9.0 los=true
+[17:10:36] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=oren rows=1 copper=0 options=[]
+[17:10:36] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE personal_oren_request
+[17:10:47] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=oren rows=1 copper=0 options=[]
+[17:10:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=adventure-plant anchor=163,185,-8 player=(162.5, 186.0, 18.5) eye=Block{minecraft:air}
+[17:10:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:10:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:10:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:10:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:10:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:10:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:10:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:10:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:10:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS adventure-plant stage=11
+[17:10:51] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=oren rows=1 copper=0 options=[]
+[17:10:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=21 expected=11 current=11 npc=oren distance=9.0 los=true
+[17:10:53] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=oren rows=1 copper=0 options=[]
+[17:10:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=22 expected=11 current=11 npc=oren distance=9.0 los=true
+[17:10:55] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=oren rows=0 copper=0 options=[]
+[17:10:55] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE personal_oren_confidence
+[17:10:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=photo-mara anchor=163,185,-8 player=(162.5, 186.0, 18.5) eye=Block{minecraft:air}
+[17:10:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:10:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:10:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:10:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:10:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:10:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:10:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:10:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:10:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-mara stage=11
+[17:10:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=talk-mara anchor=163,185,-8 player=(165.5, 191.0, 5.5) eye=Block{minecraft:air}
+[17:10:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:10:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:10:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:10:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:10:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:10:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:10:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:10:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:10:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS talk-mara stage=11
+[17:10:57] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START mara_idle
+[17:10:57] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE mara_idle
+[17:10:58] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
+[17:10:58] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
+[17:11:00] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=mara rows=2 copper=0 options=[Option[action=30, label=Сопоставить услышанное предупреждение]]
+[17:11:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=30 expected=11 current=11 npc=mara distance=9.0 los=true
+[17:11:01] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=mara rows=1 copper=0 options=[]
+[17:11:01] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE personal_mara_analysis
+[17:11:03] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=mara rows=1 copper=0 options=[]
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=investigation-stock anchor=163,185,-8 player=(165.5, 191.0, 5.5) eye=Block{minecraft:air}
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS investigation-stock stage=11
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=investigation-fish anchor=163,185,-8 player=(165.5, 191.0, 5.5) eye=Block{minecraft:air}
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS investigation-fish stage=11
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=photo-tik anchor=163,185,-8 player=(165.5, 191.0, 5.5) eye=Block{minecraft:air}
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:11:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-tik stage=11
+[17:11:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=talk-tik anchor=163,185,-8 player=(163.5, 191.0, 5.5) eye=Block{minecraft:air}
+[17:11:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:11:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:11:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:11:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:11:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:11:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:11:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:11:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:11:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS talk-tik stage=11
+[17:11:05] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START tik_intro
+[17:11:05] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE tik_intro
+[17:11:06] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
+[17:11:06] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
+[17:11:07] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=tik rows=2 copper=4 options=[Option[action=31, label=Восстановить приёмник • 4 медных слитка]]
+[17:11:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=31 expected=11 current=11 npc=tik distance=9.0 los=true
+[17:11:09] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=tik rows=1 copper=0 options=[]
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=investigation-device-check anchor=163,185,-8 player=(163.5, 191.0, 5.5) eye=Block{minecraft:air}
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS investigation-device-check stage=11
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=photo-lysander anchor=163,185,-8 player=(163.5, 191.0, 5.5) eye=Block{minecraft:air}
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-lysander stage=11
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=talk-lysander anchor=163,185,-8 player=(161.5, 198.0, 31.5) eye=Block{minecraft:air}
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:11:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS talk-lysander stage=11
+[17:11:12] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START lysander_intro
+[17:11:12] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE lysander_intro
+[17:11:13] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
+[17:11:13] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
+[17:11:14] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=lysander rows=2 copper=0 options=[Option[action=32, label=Спросить, что он видел у старого причала]]
+[17:11:16] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=32 expected=11 current=11 npc=lysander distance=9.0 los=true
+[17:11:16] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=lysander rows=1 copper=0 options=[]
+[17:11:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=photo-oren anchor=163,185,-8 player=(161.5, 198.0, 31.5) eye=Block{minecraft:air}
+[17:11:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:11:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:11:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:11:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:11:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:11:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:11:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:11:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:11:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-oren stage=11
+[17:11:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=talk-oren anchor=163,185,-8 player=(162.5, 186.0, 18.5) eye=Block{minecraft:air}
+[17:11:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:11:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:11:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:11:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:11:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:11:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:11:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:11:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:11:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS talk-oren stage=11
+[17:11:18] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START oren_intro
+[17:11:18] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE oren_intro
+[17:11:19] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
+[17:11:19] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
+[17:11:20] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=oren rows=1 copper=0 options=[Option[action=33, label=Сверить три свидетельства с якорем]]
+[17:11:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=33 expected=11 current=11 npc=oren distance=9.0 los=true
+[17:11:22] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=oren rows=0 copper=0 options=[]
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=photo-captain anchor=163,185,-8 player=(162.5, 186.0, 18.5) eye=Block{minecraft:air}
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-captain stage=11
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=talk-captain anchor=163,185,-8 player=(164.5, 198.0, 28.5) eye=Block{minecraft:air}
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:11:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS talk-captain stage=11
+[17:11:24] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START captain_finale
+[17:11:24] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE captain_finale
+[17:11:25] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
+[17:11:25] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
+[17:11:27] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=captain rows=1 copper=0 options=[Option[action=34, label=Спросить о цене первого спасения]]
+[17:11:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=34 expected=11 current=11 npc=captain distance=9.0 los=true
+[17:11:28] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=captain rows=3 copper=0 options=[Option[action=35, label=Открыть проверенные сведения экипажу], Option[action=36, label=Сначала техническая проверка; затем общий разговор], Option[action=37, label=Попросить Лисандра подготовить общий разговор]]
+[17:11:28] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE personal_captain_confession
+[17:11:30] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=captain rows=3 copper=0 options=[Option[action=35, label=Открыть проверенные сведения экипажу], Option[action=36, label=Сначала техническая проверка; затем общий разговор], Option[action=37, label=Попросить Лисандра подготовить общий разговор]]
+[17:11:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=36 expected=11 current=11 npc=captain distance=9.0 los=true
+[17:11:31] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=captain rows=0 copper=0 options=[]
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=photo-mara anchor=163,185,-8 player=(164.5, 198.0, 28.5) eye=Block{minecraft:air}
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-mara stage=11
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=talk-mara anchor=163,185,-8 player=(165.5, 191.0, 5.5) eye=Block{minecraft:air}
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:11:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS talk-mara stage=11
+[17:11:33] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START mara_idle
+[17:11:33] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE mara_idle
+[17:11:35] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
+[17:11:35] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
+[17:11:36] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=mara rows=2 copper=0 options=[Option[action=38, label=Закончить проверку и выполнить обещание рассказать]]
+[17:11:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST ACTION choice=38 expected=11 current=11 npc=mara distance=9.0 los=true
+[17:11:38] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST UI npc=mara rows=1 copper=0 options=[]
+[17:11:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=investigation-proof anchor=163,185,-8 player=(165.5, 191.0, 5.5) eye=Block{minecraft:air}
+[17:11:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 444 [aoe_npc_oren, aoe_airship_npc] pos=(159.5, 186.0, 18.5) alive=true
+[17:11:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 446 [aoe_npc_selin, aoe_airship_npc] pos=(163.5, 186.0, 14.5) alive=true
+[17:11:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_npc_mara, aoe_airship_npc] pos=(165.5, 191.0, 8.5) alive=true
+[17:11:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 445 [aoe_npc_veya, aoe_airship_npc] pos=(162.5, 191.0, 5.5) alive=true
+[17:11:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 448 [aoe_npc_tik, aoe_airship_npc] pos=(163.5, 191.0, 8.5) alive=true
+[17:11:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_npc_quartermaster, aoe_airship_npc] pos=(162.5, 186.0, 19.5) alive=true
+[17:11:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_captain, aoe_airship_npc] pos=(164.5, 198.0, 25.5) alive=true
+[17:11:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 447 [aoe_npc_lysander, aoe_airship_npc] pos=(161.5, 198.0, 28.5) alive=true
+[17:11:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS investigation-proof stage=11
+Original publication failure:
+client	Publish actual screenshots on the same working branch	2026-10-28T17:11:43.1836471Z ^[[36;1m  git pull --rebase origin arena/7bde44a9-age-of-epoch^[[0m
+client	Publish actual screenshots on the same working branch	2026-10-28T17:11:44.7942361Z error: could not apply 07a78ea... Record actual airship client proof [skip ci]
+client	Publish actual screenshots on the same working branch	2026-10-28T17:11:44.7945044Z hint: "git add/rm <conflicted_files>", then run "git rebase --continue".
+client	Publish actual screenshots on the same working branch	2026-10-28T17:11:44.7946207Z hint: You can instead skip this commit: run "git rebase --skip".
+client	Publish actual screenshots on the same working branch	2026-10-28T17:11:44.7947429Z hint: To abort and get back to the state before "git rebase", run "git rebase --abort".
+client	Publish actual screenshots on the same working branch	2026-10-28T17:11:44.7973270Z ##[error]Process completed with exit code 1.
