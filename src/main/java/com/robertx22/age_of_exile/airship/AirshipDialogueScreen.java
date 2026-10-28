@@ -80,14 +80,20 @@ public class AirshipDialogueScreen extends BaseScreen {
         var data=Load.playerRPGData(mc.player).airship;var book=Load.playerRPGData(mc.player).questBook;
         int y=panelY+(AirshipStory.index(npc)>=3?168:101),w=panelW-20,x=panelX+10;
         if(AirshipStory.advance(npc,storyStage)!=storyStage) {
-            String label=storyStage==7?"1 • Рассказать правду всей команде":storyStage==0?"1 • Я помогу. Принять поручение":"1 • Продолжить историю";
+            String label=storyStage==7?"1 • Рассказать правду всей команде":storyStage==0?"1 • [СЮЖЕТ] Принять поручение":AirshipStory.target(storyStage+1)>0?"1 • [СЮЖЕТ] Принять следующее задание":"1 • [СЮЖЕТ] Продолжить / сдать задание";
             var button=new Choice(x,y,w,label,b->send(storyStage==7?1:0));
             button.active=AirshipCampaign.ready(data,book);addButton(button);y+=21;
             if(storyStage==7) { addButton(new Choice(x,y,w,"2 • Сначала обсудим это только на мостике",b->send(0)));y+=21; }
         }
         if(AirshipStory.hasFavor(npc) && data.stage>0 && (data.favorCompleted&AirshipCampaign.bit(npc))==0) {
-            String label=(data.favorAccepted&AirshipCampaign.bit(npc))==0?"Личное поручение • "+AirshipStory.favor(npc):"Личное поручение • Проверить: "+AirshipStory.favor(npc);
-            addButton(new Choice(x,y,w,label,b->send(2)));y+=21;
+            int iron=0;for(int i=0;i<mc.player.getInventory().getContainerSize();i++)if(mc.player.getInventory().getItem(i).is(net.minecraft.world.item.Items.IRON_INGOT))iron+=mc.player.getInventory().getItem(i).getCount();
+            boolean accepted=(data.favorAccepted&AirshipCampaign.bit(npc))!=0;
+            boolean ready=AirshipCampaign.favorReady(data,book,npc,iron);
+            String label=!accepted?"[ПОБОЧНОЕ] Принять: "+AirshipStory.favor(npc):(ready?"[ПОБОЧНОЕ] Сдать • ":"[ПОБОЧНОЕ] В работе • ")+AirshipQuestTracker.sideProgress(data,book,npc,iron)+"/"+AirshipQuestTracker.sideTarget(npc);
+            // Progress is visible without repeatedly sending a 'check' action.
+            if(accepted && !ready) { var progress=new Choice(x,y,w,label,b->{});progress.active=false;addButton(progress); }
+            else addButton(new Choice(x,y,w,label,b->send(2)));
+            y+=21;
         }
         addButton(new Choice(x,y,w,"До встречи.  [Esc]",b->onClose()));
     }

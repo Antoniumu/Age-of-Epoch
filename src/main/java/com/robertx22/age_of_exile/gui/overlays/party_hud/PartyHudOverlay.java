@@ -120,7 +120,13 @@ public final class PartyHudOverlay extends AbstractGui {
         List<String> weeklyLines = showWeekly ? wrap(mc, PartyHudState.weekly, textWidth, 2) : List.of();
 
         var airship=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(mc.player).airship;
-        List<String> shipLines=airship.stage>0?wrap(mc,com.robertx22.age_of_exile.airship.AirshipStory.objective(airship.stage),textWidth,4):List.of();
+        int shipIron=0;for(int slot=0;slot<mc.player.getInventory().getContainerSize();slot++)if(mc.player.getInventory().getItem(slot).is(net.minecraft.world.item.Items.IRON_INGOT))shipIron+=mc.player.getInventory().getItem(slot).getCount();
+        var shipBook=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(mc.player).questBook;
+        List<String> shipLines=new java.util.ArrayList<>();
+        if(airship.stage>0) {
+            shipLines.addAll(wrap(mc,com.robertx22.age_of_exile.airship.AirshipQuestTracker.main(airship,shipBook),textWidth,4));
+            for(String side:com.robertx22.age_of_exile.airship.AirshipQuestTracker.active(airship,shipBook,shipIron))shipLines.addAll(wrap(mc,side,textWidth,2));
+        }
         int height = 12;                                   // заголовок
         if (!teamLines.isEmpty()) {
             height += teamLines.size() * 10 + 3;

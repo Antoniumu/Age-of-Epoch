@@ -25,7 +25,10 @@ public final class AirshipProtection {
             if(p.getItemInHand(hand).isEmpty() && (block instanceof DoorBlock || block instanceof TrapDoorBlock || block==Blocks.CRAFTING_TABLE)) return InteractionResult.PASS;
             if(p instanceof net.minecraft.server.level.ServerPlayer sp) sp.sendSystemMessage(Component.literal("Декор и хранилища общего хаба защищены."));return InteractionResult.FAIL;
         });
-        AttackEntityCallback.EVENT.register((p,w,hand,e,hit)->AirshipHub.protectedAt(w,e.blockPosition())?InteractionResult.FAIL:InteractionResult.PASS);
+        AttackEntityCallback.EVENT.register((p,w,hand,e,hit)->
+            AirshipHub.protectedAt(w,e.blockPosition()) && (!AirshipService.npcId(e).isEmpty()
+                || e instanceof net.minecraft.world.entity.decoration.ArmorStand
+                || !(e instanceof net.minecraft.world.entity.LivingEntity))?InteractionResult.FAIL:InteractionResult.PASS);
         UseEntityCallback.EVENT.register((p,w,hand,e,hit)->{
             if(!AirshipHub.protectedAt(w,e.blockPosition()) || !AirshipService.npcId(e).isEmpty()) return InteractionResult.PASS;
             return InteractionResult.FAIL;

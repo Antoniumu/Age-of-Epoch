@@ -39,6 +39,7 @@ public final class AirshipService {
     public static void register() {
         AirshipCrewLife.register();
         AirshipProtection.register();
+        AirshipSanctuary.register();
         AirshipAmbience.register();
         AirshipHubRitual.register();
         com.robertx22.library_of_exile.main.ForgeEvents.registerForgeEvent(
