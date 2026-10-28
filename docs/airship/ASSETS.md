@@ -112,3 +112,11 @@ furnished deck `(56,51,61)`; lift arrival `(57,51,38)`. Actual floor and headroo
 checked again in-game after data fixing, before spawning the crew. Room names are
 provisional until visual inspection; these are measured coordinates, not guesses
 from the original web screenshots.
+
+## Headless derived template update (2026-10-28)
+
+The original user schematic remains byte-identical. The converter now excludes 46 player_head
+and 2 player_wall_head blocks whose profile NBT was not retained. The current derived template
+contains 20,231 blocks and 987 used palette states. Current conversion records:
+`import/manifest.json` and `import/conversion.json`. Earlier counts above describe the original
+conversion. Existing placed ships are not retroactively edited by merely replacing the template.

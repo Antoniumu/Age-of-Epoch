@@ -6,8 +6,8 @@
     100,
     89
   ],
-  "blocks": 20279,
-  "palette_states": 1000,
+  "blocks": 20231,
+  "palette_states": 987,
   "crew_feet_local": {
     "captain": [
       58,
@@ -31,7 +31,10 @@
     ]
   },
   "source_block_entities_stripped": 657,
-  "forbidden_blocks_omitted": {},
+  "forbidden_blocks_omitted": {
+    "minecraft:player_head": 46,
+    "minecraft:player_wall_head": 2
+  },
   "source_entities_copied": 0,
   "note": "All block entity NBT stripped, including inventory and sign text; states retained."
 }
