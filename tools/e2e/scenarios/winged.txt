@@ -412,6 +412,28 @@ wait 600
 click 1040 332
 wait 1600
 shot 40-personal-story
+click 640 420
+wait 1200
+shot 43-call-witnessed
+click 640 504
+wait 1200
+log_mark
+write run/airship-e2e.flag adventure-choice-check
+wait_log_new 30000 AIRSHIPTEST PASS adventure-choice-check
+shot 44-call-recorded
+log_mark
+write run/airship-e2e.flag adventure-fish
+wait_log_new 60000 AIRSHIPTEST PASS adventure-fish
+wait 1200
+click 640 420
+wait 1200
+shot 45-personal-quest-complete
+click 640 420
+wait 1200
+log_mark
+write run/airship-e2e.flag adventure-heart-check
+wait_log_new 30000 AIRSHIPTEST PASS adventure-heart-check
+shot 46-personal-heart-memory
 key Escape
 hold h 200
 wait 1000
@@ -420,4 +442,29 @@ shot 41-adventures-replaces-questbook
 click 932 501
 wait 1500
 shot 42-adventures-overview
+key Escape
+
+log_mark
+write run/airship-e2e.flag photo-oren
+wait_log_new 30000 AIRSHIPTEST PASS photo-oren
+log_mark
+write run/airship-e2e.flag talk-oren
+wait_log_new 30000 AIRSHIPTEST PASS talk-oren
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+click 640 420
+wait 1200
+log_mark
+write run/airship-e2e.flag adventure-plant
+wait_log_new 30000 AIRSHIPTEST PASS adventure-plant
+wait 1200
+shot 47-oren-new-roots
+click 640 420
+wait 1200
+click 640 420
+wait 1200
+shot 48-oren-personal-memory
 key Escape

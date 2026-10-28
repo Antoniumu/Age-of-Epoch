@@ -52,7 +52,7 @@ jobs:
           for voice in mara_intro bram_intro oren_intro veya_intro selin_intro lysander_intro tik_intro; do
             grep -q "AIRSHIPVOICE ACTIVE $voice" run/logs/latest.log
           done
-          for stage in adventure-check hostile-spawn hostile-cleared jump-check jump-recovery side-ui-check ritual-paid hub-check crew-check attention-check winged board lift lift-check far-reject dialogue accepted mara quartermaster stale gate truth favor-claim-captain iron-quartermaster seed-dungeon finished; do
+          for stage in adventure-fish adventure-plant adventure-choice-check adventure-heart-check adventure-check hostile-spawn hostile-cleared jump-check jump-recovery side-ui-check ritual-paid hub-check crew-check attention-check winged board lift lift-check far-reject dialogue accepted mara quartermaster stale gate truth favor-claim-captain iron-quartermaster seed-dungeon finished; do
             grep -q "AIRSHIPTEST PASS $stage" run/logs/latest.log
           done
       - name: Publish actual screenshots on the same working branch

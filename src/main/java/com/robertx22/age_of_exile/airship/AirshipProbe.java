@@ -104,7 +104,33 @@ public final class AirshipProbe {
                 var original=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p);var restored=new com.robertx22.age_of_exile.capability.player.RPGPlayerData(p);restored.loadFromNBT(original.saveToNBT());
                 var a=restored.airship.adventure;
                 if(a.version!=1||!a.callDecision.equals("record")||!a.accepted.contains(engine.id())||a.progress.getOrDefault(engine.id(),0)!=1||!a.facts.contains("call.heard")||!a.events.equals(state.events)||!a.trust.equals(state.trust))throw new IllegalStateException("Adventure NBT lost nested maps/sets/facts");
+                state.callDecision="";state.facts.remove("call.heard");state.facts.remove("call.record"); // Discard synthetic call fixture; following UI must witness/choose for real.
                 com.robertx22.age_of_exile.airship.AirshipService.sync(p);
+            } else if(action.equals("adventure-choice-check")) {
+                if(!d.adventure.facts.contains("call.heard")||!d.adventure.callDecision.equals("record"))throw new IllegalStateException("Native NPC choices did not witness then record call");
+            } else if(action.equals("adventure-fish")) {
+                p.setGameMode(net.minecraft.world.level.GameType.CREATIVE);p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.FISHING_ROD));
+                for(int attempt=0;attempt<20 && d.adventure.progress.getOrDefault("captain.quiet_water",0)<3;attempt++){
+                    p.getMainHandItem().getItem().use(level,p,net.minecraft.world.InteractionHand.MAIN_HAND);
+                    var hook=level.getEntitiesOfClass(net.minecraft.world.entity.projectile.Projectile.class,p.getBoundingBox().inflate(32),e->e.getOwner()==p && net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()).toString().equals("minecraft:fishing_bobber")).stream().findFirst().orElseThrow();
+                    var nibble=hook.getClass().getDeclaredField("nibble");nibble.setAccessible(true);nibble.setInt(hook,20); // Synthetic bite timing ONLY; real vanilla rod retrieval and fishing loot hook below.
+                    p.getMainHandItem().getItem().use(level,p,net.minecraft.world.InteractionHand.MAIN_HAND);
+                }
+                if(d.adventure.progress.getOrDefault("captain.quiet_water",0)!=3)throw new IllegalStateException("Real rod loot did not reach server fishing objective");
+            } else if(action.equals("adventure-heart-check")) {
+                if(!d.adventure.completed.contains("captain.quiet_water")||!d.adventure.facts.contains("memory:captain:confidence")||d.relationshipValue("captain")<=20||d.relationshipValue("captain")>=100)throw new IllegalStateException("Personal scene did not change gated relationship");
+                var original=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p);var restored=new com.robertx22.age_of_exile.capability.player.RPGPlayerData(p);restored.loadFromNBT(original.saveToNBT());
+                if(restored.airship.relationshipValue("captain")!=d.relationshipValue("captain")||!restored.airship.adventure.completed.equals(d.adventure.completed))throw new IllegalStateException("Relationship memory lost on NBT save");
+            } else if(action.equals("adventure-plant")) {
+                if(!d.adventure.accepted.contains("oren.new_roots"))throw new IllegalStateException("Plant quest must first be accepted via native NPC UI");
+                int x=d.x+85,z=d.z,y=level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING,x,z)+3;
+                for(int i=0;i<4;i++){
+                    var floor=new net.minecraft.core.BlockPos(x+i*2,y,z);level.setBlock(floor,net.minecraft.world.level.block.Blocks.GRASS_BLOCK.defaultBlockState(),18);level.setBlock(floor.above(),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),18);
+                    var stack=new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.OAK_SAPLING);p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,stack);
+                    var hit=new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(floor).add(0,.5,0),net.minecraft.core.Direction.UP,floor,false);
+                    ((net.minecraft.world.item.BlockItem)stack.getItem()).place(new net.minecraft.world.item.context.BlockPlaceContext(p,net.minecraft.world.InteractionHand.MAIN_HAND,stack,hit));
+                }
+                if(d.adventure.progress.getOrDefault("oren.new_roots",0)!=4)throw new IllegalStateException("Real BlockItem placement did not credit four unique saplings");
             } else if(action.equals("side-ui-check")) {
                 if((d.favorAccepted&2)==0||(d.favorCompleted&2)!=0)throw new IllegalStateException("Real UI did not explicitly accept Mara side quest");
                 if(!AirshipQuestTracker.active(d,com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p).questBook,0).stream().anyMatch(v->v.contains("0/2 новых сундуков")))throw new IllegalStateException("Missing tracked named progress");

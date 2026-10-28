@@ -129,6 +129,10 @@ public class AirshipDialogueScreen extends BaseScreen {
             AirshipHeart.draw(pose,x+83,y+24,1,d.relationshipValue(npc));
             text(pose,"Доверие "+d.relationshipValue(npc)+" • "+AirshipStory.reputationLabel(d.relationshipValue(npc)),x+95,y+24,0x95A99B);
         }
+        if(fullText && mc.player!=null){
+            AbstractGui.fill(pose,x,y-15,x+w,y-1,0xB0101316);
+            text(pose,com.robertx22.age_of_exile.airship.adventure.AdventureEngine.greeting(Load.playerRPGData(mc.player).airship.adventure,npc),x+8,y-12,0xAFCDB8);
+        }
         String subtitle=fullText?transcript:cues.isEmpty()?transcript:cues.get(Math.min(cueIndex,cues.size()-1)).text();
         int yy=y+39;
         for(var line:mc.font.split(Component.literal(subtitle),w-96)) {
