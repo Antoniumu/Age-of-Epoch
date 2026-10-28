@@ -1,384 +1,56 @@
-Run: https://github.com/Antoniumu/Age-of-Epoch/actions/runs/40602991250
-Source: 176482fc8c9a31c644ebe825b6c72e67d1a84f85
-[23:35:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=prepare anchor=0,0,0 player=(197.5, 57.0, -196.5) eye=Block{minecraft:air}
-[23:35:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS prepare stage=0
-[23:36:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=winged anchor=0,0,0 player=(197.5, 57.0, -196.5) eye=Block{minecraft:air}
-[23:36:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST WINGED placed origin=BlockPos{x=140, y=91, z=-237} size=Vec3i{x=117, y=100, z=89} crew=3
-[23:36:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST WINGED diagnostic: Winged Sailor на причале. Световой круг: X=197, Z=-199. Капитан наверху, Мара у карт, Брам на нижней палубе.
-[23:36:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SPAWN 385 pos=(199.5, 147.0, -186.5)
-[23:36:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SPAWN 386 pos=(196.5, 142.0, -175.5)
-[23:36:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SPAWN 384 pos=(198.5, 154.0, -169.5)
-[23:36:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST BUILD anchor=197,141,-203 deck=Block{minecraft:spruce_planks}
-[23:36:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS winged stage=0
-[23:36:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=board anchor=197,141,-203 player=(275.5, 173.0, -117.5) eye=Block{minecraft:air}
-[23:36:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:36:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:36:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:36:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS board stage=0
-[23:36:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=lift anchor=197,141,-203 player=(197.5, 142.0, -198.5) eye=Block{minecraft:air}
-[23:36:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:36:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:36:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:36:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift stage=0
-[23:36:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=lift-check anchor=197,141,-203 player=(197.5, 142.0, -198.5) eye=Block{minecraft:air}
-[23:36:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:36:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:36:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:36:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift-check stage=0
-[23:36:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=far-reject anchor=197,141,-203 player=(197.5, 142.0, -198.5) eye=Block{minecraft:air}
-[23:36:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:36:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:36:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:36:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS far-reject stage=0
-[23:36:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=photo-captain anchor=197,141,-203 player=(197.5, 142.0, -190.5) eye=Block{minecraft:air}
-[23:36:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:36:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:36:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:36:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-captain stage=0
-[23:36:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=dialogue anchor=197,141,-203 player=(198.5, 154.0, -166.5) eye=Block{minecraft:air}
-[23:36:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:36:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:36:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:36:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS dialogue stage=0
-[23:36:52] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START captain_intro_a
-[23:36:52] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE captain_intro_a
-[23:36:57] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=21
-[23:36:57] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=21 fullText=false
-[23:36:57] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START captain_intro_a
-[23:36:57] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE captain_intro_a
-[23:37:09] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE END captain_intro_a elapsed=11841 activeSeen=true
-[23:37:09] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START captain_intro_b
-[23:37:09] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE captain_intro_b
-[23:37:20] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE END captain_intro_b elapsed=11555 activeSeen=true
-[23:37:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=accepted anchor=197,141,-203 player=(198.5, 154.0, -166.5) eye=Block{minecraft:air}
-[23:37:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:37:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:37:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:37:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS accepted stage=1
-[23:37:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=favor-captain anchor=197,141,-203 player=(198.5, 154.0, -166.5) eye=Block{minecraft:air}
-[23:37:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:37:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:37:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:37:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS favor-captain stage=1
-[23:37:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=photo-mara anchor=197,141,-203 player=(198.5, 154.0, -166.5) eye=Block{minecraft:air}
-[23:37:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:37:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:37:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:37:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-mara stage=1
-[23:37:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=talk-mara anchor=197,141,-203 player=(199.5, 147.0, -189.5) eye=Block{minecraft:air}
-[23:37:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:37:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:37:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:37:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS talk-mara stage=1
-[23:37:32] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
-[23:37:32] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
-[23:37:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=mara anchor=197,141,-203 player=(199.5, 147.0, -189.5) eye=Block{minecraft:air}
-[23:37:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:37:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:37:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:37:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS mara stage=2
-[23:37:33] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=41
-[23:37:33] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=41 fullText=true
-[23:37:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=photo-quartermaster anchor=197,141,-203 player=(199.5, 147.0, -189.5) eye=Block{minecraft:air}
-[23:37:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:37:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:37:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:37:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-quartermaster stage=2
-[23:37:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=talk-quartermaster anchor=197,141,-203 player=(196.5, 142.0, -178.5) eye=Block{minecraft:air}
-[23:37:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:37:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:37:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:37:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS talk-quartermaster stage=2
-[23:37:40] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
-[23:37:40] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
-[23:37:42] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=41
-[23:37:42] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=41 fullText=true
-[23:37:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=quartermaster anchor=197,141,-203 player=(196.5, 142.0, -178.5) eye=Block{minecraft:air}
-[23:37:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:37:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:37:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:37:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS quartermaster stage=3
-[23:37:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=dialogue anchor=197,141,-203 player=(196.5, 142.0, -178.5) eye=Block{minecraft:air}
-[23:37:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:37:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:37:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:37:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS dialogue stage=3
-[23:37:42] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START captain_welcome
-[23:37:42] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE captain_welcome
-[23:37:45] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
-[23:37:45] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
-[23:37:46] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=30
-[23:37:46] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=30 fullText=true
-[23:37:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=chapter-one anchor=197,141,-203 player=(198.5, 154.0, -166.5) eye=Block{minecraft:air}
-[23:37:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:37:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:37:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:37:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS chapter-one stage=4
-[23:37:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=stale anchor=197,141,-203 player=(198.5, 154.0, -166.5) eye=Block{minecraft:air}
-[23:37:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:37:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:37:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:37:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS stale stage=4
-[23:37:48] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=dialogue anchor=197,141,-203 player=(198.5, 154.0, -166.5) eye=Block{minecraft:air}
-[23:37:48] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:37:48] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:37:48] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:37:48] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS dialogue stage=4
-[23:37:48] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START captain_echoes
-[23:37:48] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE captain_echoes
-[23:37:50] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
-[23:37:50] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
-[23:37:51] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=30
-[23:37:51] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=30 fullText=true
-[23:37:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=gate anchor=197,141,-203 player=(198.5, 154.0, -166.5) eye=Block{minecraft:air}
-[23:37:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:37:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:37:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:37:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS gate stage=5
-[23:37:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=talk-mara anchor=197,141,-203 player=(199.5, 147.0, -189.5) eye=Block{minecraft:air}
-[23:37:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:37:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:37:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:37:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS talk-mara stage=5
-[23:37:54] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
-[23:37:54] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
-[23:37:56] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=41
-[23:37:56] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=41 fullText=true
-[23:37:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=seed-chests anchor=197,141,-203 player=(199.5, 147.0, -189.5) eye=Block{minecraft:air}
-[23:37:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:37:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:37:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:37:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SYNTHETIC RPG counters/hook: seed-chests
-[23:37:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS seed-chests stage=5
-[23:37:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=report anchor=197,141,-203 player=(199.5, 147.0, -189.5) eye=Block{minecraft:air}
-[23:37:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:37:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:37:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:37:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS report stage=6
-[23:37:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=seed-kills anchor=197,141,-203 player=(199.5, 147.0, -189.5) eye=Block{minecraft:air}
-[23:37:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:37:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:37:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:37:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SYNTHETIC RPG counters/hook: seed-kills
-[23:37:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS seed-kills stage=6
-[23:37:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=report anchor=197,141,-203 player=(199.5, 147.0, -189.5) eye=Block{minecraft:air}
-[23:37:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:37:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:37:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:37:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS report stage=7
-[23:37:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=favor-claim-captain anchor=197,141,-203 player=(196.5, 142.0, -178.5) eye=Block{minecraft:air}
-[23:37:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:37:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:37:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:37:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS favor-claim-captain stage=7
-[23:37:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=dialogue anchor=197,141,-203 player=(198.5, 154.0, -166.5) eye=Block{minecraft:air}
-[23:37:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:37:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:37:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:37:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS dialogue stage=7
-[23:37:57] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START captain_choice
-[23:37:57] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE captain_choice
-[23:37:59] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
-[23:37:59] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
-[23:38:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=truth anchor=197,141,-203 player=(198.5, 154.0, -166.5) eye=Block{minecraft:air}
-[23:38:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:38:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:38:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:38:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS truth stage=8
-[23:38:00] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=41
-[23:38:00] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=41 fullText=true
-[23:38:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=talk-mara anchor=197,141,-203 player=(198.5, 154.0, -166.5) eye=Block{minecraft:air}
-[23:38:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:38:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:38:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:38:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS talk-mara stage=8
-[23:38:02] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
-[23:38:02] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
-[23:38:03] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=30
-[23:38:03] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=30 fullText=true
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=iron-quartermaster anchor=197,141,-203 player=(199.5, 147.0, -189.5) eye=Block{minecraft:air}
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS iron-quartermaster stage=9
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=seed-dungeon anchor=197,141,-203 player=(196.5, 142.0, -178.5) eye=Block{minecraft:air}
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SYNTHETIC RPG counters/hook: seed-dungeon
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS seed-dungeon stage=9
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=report anchor=197,141,-203 player=(196.5, 142.0, -178.5) eye=Block{minecraft:air}
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS report stage=10
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=dialogue anchor=197,141,-203 player=(196.5, 142.0, -178.5) eye=Block{minecraft:air}
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS dialogue stage=10
-[23:38:06] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START captain_return
-[23:38:06] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE captain_return
-[23:38:08] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
-[23:38:08] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
-[23:38:09] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=30
-[23:38:09] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=30 fullText=true
-[23:38:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=dialogue anchor=197,141,-203 player=(198.5, 154.0, -166.5) eye=Block{minecraft:air}
-[23:38:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:38:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:38:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:38:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS dialogue stage=11
-[23:38:11] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START captain_finale
-[23:38:11] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE captain_finale
-[23:38:13] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
-[23:38:13] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
-[23:38:15] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=41
-[23:38:15] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=41 fullText=true
-[23:38:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=finished anchor=197,141,-203 player=(198.5, 154.0, -166.5) eye=Block{minecraft:air}
-[23:38:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:38:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:38:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:38:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST NBT roundtrip stage=11 trust=35,24,39 favors=5 decision=1
-[23:38:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS finished stage=11
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS iron-quartermaster stage=9
-[23:38:05] [Render thread/INFO] (Minecraft) [System] [CHAT] Личное поручение: Принеси 16 железных слитков для ремонта.
-[23:38:05] [Render thread/INFO] (Minecraft) [System] [CHAT] Доверие: Брам • Квартирмейстер +15. Надёжный товарищ
-[23:38:05] [Render thread/INFO] (Minecraft) [System] [CHAT] Ты уже помог этому члену экипажа.
-[23:38:05] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=seed-dungeon anchor=197,141,-203 player=(196.5, 142.0, -178.5) eye=Block{minecraft:air}
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SYNTHETIC RPG counters/hook: seed-dungeon
-[23:38:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS seed-dungeon stage=9
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=report anchor=197,141,-203 player=(196.5, 142.0, -178.5) eye=Block{minecraft:air}
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS report stage=10
-[23:38:06] [Render thread/INFO] (Minecraft) [System] [CHAT] §6Последний Рассвет §8» §fВернись к капитану. Путевой колокол снова звучит.
-[23:38:06] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=dialogue anchor=197,141,-203 player=(196.5, 142.0, -178.5) eye=Block{minecraft:air}
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS dialogue stage=10
-[23:38:06] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START captain_return
-[23:38:06] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE captain_return
-[23:38:06] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:06] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:07] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:07] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:07] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:07] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:08] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:08] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:08] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
-[23:38:08] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
-[23:38:08] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:08] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:09] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:09] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:09] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=30
-[23:38:09] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=30 fullText=true
-[23:38:09] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/114 class=AirshipAcceptPacket bytes=4
-[23:38:09] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/114 class=AirshipAcceptPacket bytes=4
-[23:38:09] [Render thread/INFO] (Minecraft) [System] [CHAT] §6Последний Рассвет §8» §fИстория первого перехода завершена. Помоги экипажу заслужить общее завтра.
-[23:38:09] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:09] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:10] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:10] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:10] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:10] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:11] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:11] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=dialogue anchor=197,141,-203 player=(198.5, 154.0, -166.5) eye=Block{minecraft:air}
-[23:38:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:38:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:38:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:38:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS dialogue stage=11
-[23:38:11] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START captain_finale
-[23:38:11] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE captain_finale
-[23:38:11] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:11] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:12] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:12] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:12] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:12] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:13] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:13] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:13] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:13] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:13] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=44
-[23:38:13] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=44 fullText=false
-[23:38:14] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:14] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:14] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:14] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:15] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:15] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:15] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=41
-[23:38:15] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=41 fullText=true
-[23:38:16] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:16] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:16] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:16] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:17] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:17] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:17] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:17] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=finished anchor=197,141,-203 player=(198.5, 154.0, -166.5) eye=Block{minecraft:air}
-[23:38:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 385 [aoe_npc_mara, aoe_airship_npc] pos=(199.5, 147.0, -186.5) alive=true
-[23:38:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 386 [aoe_npc_quartermaster, aoe_airship_npc] pos=(196.5, 142.0, -175.5) alive=true
-[23:38:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 384 [aoe_npc_captain, aoe_airship_npc] pos=(198.5, 154.0, -169.5) alive=true
-[23:38:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST NBT roundtrip stage=11 trust=35,24,39 favors=5 decision=1
-[23:38:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS finished stage=11
-[23:38:18] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[23:38:18] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-WARNING: A restricted method in java.lang.System has been called
-WARNING: java.lang.System::load has been called by net.rubygrapefruit.platform.internal.NativeLibraryLoader in an unnamed module (file:/home/runner/.gradle/wrapper/dists/gradle-9.7.1-bin/1w1c7tv4s851m17nbqdsro2tv/gradle-9.7.1/lib/native-platform-0.22-milestone-29.jar)
-WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
-WARNING: Restricted methods will be blocked in a future release unless native access is enabled
-
-To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.7.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
-Daemon will be stopped at the end of the build 
-
-> Configure project :
-Fabric Loom: 1.18.4
-
-> Task :checkMinecraftClasspath
-Minecraft on compile classpath: minecraft-merged-80b2a6d18e-26.3.jar (36.18377590179443359375 MB)
-
-> Task :compileJava
+Run: https://github.com/Antoniumu/Age-of-Epoch/actions/runs/40665753547
+Source: 65756b9e3eb8fd55c753d41bd5661a01a2436adc
+  location: variable actor of type LivingEntity
 Note: Some input files use or override a deprecated API.
 Note: Recompile with -Xlint:deprecation for details.
 Note: Some input files use unchecked or unsafe operations.
 Note: Recompile with -Xlint:unchecked for details.
+5 errors
 
-> Task :processResources
-> Task :classes
-> Task :processIncludeJars
-> Task :jar
-> Task :sourcesJar
-> Task :assemble
-> Task :compileTestJava
-> Task :processTestResources NO-SOURCE
-> Task :testClasses
-
-> Task :test
-Тестов выполнено: 45
-
-> Task :validateAccessWidener NO-SOURCE
-> Task :check
-> Task :build
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793144062416.json
+> Task :compileJava FAILED
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793180299736.json
 
 [Incubating] Problems report is available at: file:///home/runner/work/Age-of-Epoch/Age-of-Epoch/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':compileJava' (registered by plugin class 'org.gradle.api.plugins.JavaBasePlugin').
+> Compilation failed; see the compiler output below.
+  Note: Recompile with -Xlint:deprecation for details.
+  /home/runner/work/Age-of-Epoch/Age-of-Epoch/src/main/java/com/robertx22/age_of_exile/airship/AirshipTikRenderer.java:11: error: cannot find symbol
+  import net.minecraft.world.entity.animal.Parrot;
+                                          ^
+    symbol:   class Parrot
+    location: package net.minecraft.world.entity.animal
+  /home/runner/work/Age-of-Epoch/Age-of-Epoch/src/main/java/com/robertx22/age_of_exile/airship/AirshipTikRenderer.java:21: error: cannot find symbol
+      @Override public void extractRenderState(Parrot bird,ParrotRenderState state,float partial) {
+                                               ^
+    symbol:   class Parrot
+    location: class AirshipTikRenderer
+  /home/runner/work/Age-of-Epoch/Age-of-Epoch/src/main/java/com/robertx22/age_of_exile/mmorpg/init/ClientInit.java:68: error: cannot find symbol
+          net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(net.minecraft.world.entity.EntityType.PARROT,com.robertx22.age_of_exile.airship.AirshipTikRenderer::new);
+                                                                                                                           ^
+    symbol:   variable PARROT
+    location: class EntityType
+  /home/runner/work/Age-of-Epoch/Age-of-Epoch/src/main/java/com/robertx22/age_of_exile/airship/AirshipCrewPlacement.java:20: error: cannot find symbol
+          var type=id.equals("tik")?EntityType.PARROT:net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("mannequin"));
+                                              ^
+    symbol:   variable PARROT
+    location: class EntityType
+  Note: Recompile with -Xlint:unchecked for details.
+  Note: Some input files use or override a deprecated API.
+  Note: Some input files use unchecked or unsafe operations.
+  /home/runner/work/Age-of-Epoch/Age-of-Epoch/src/main/java/com/robertx22/age_of_exile/airship/AirshipCrewPlacement.java:24: error: cannot find symbol
+          actor.setSilent(true);actor.setInvulnerable(true);
+                                     ^
+    symbol:   method setInvulnerable(boolean)
+    location: variable actor of type LivingEntity
+  5 errors
+
+* Try:
+> Check your code and dependencies to fix the compilation error(s)
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
 
 Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
 
@@ -386,5 +58,5 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/9.7.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD SUCCESSFUL in 25s
-8 actionable tasks: 8 executed
+BUILD FAILED in 25s
+2 actionable tasks: 2 executed
