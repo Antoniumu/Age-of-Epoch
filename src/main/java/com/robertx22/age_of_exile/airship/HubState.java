@@ -15,6 +15,11 @@ public final class HubState {
     public boolean knownOldAnchor(AirshipData d){return history!=null && history.stream().anyMatch(a->a.x==d.x && a.y==d.y && a.z==d.z);}
 
     public boolean valid() {
+        if(history==null || history.size()>2048 || history.stream().anyMatch(a->a==null || Math.abs((long)a.x)>=30_000_000 || Math.abs((long)a.z)>=30_000_000 || a.y< -64 || a.y>512))return false;
+        if(jumpPending && (!exists || !"winged_sailor".equals(layout) || jumpId==null || jumpId.isBlank() || "IDLE".equals(phase)
+            || Math.abs((long)targetX)>=30_000_000 || Math.abs((long)targetZ)>=30_000_000 || targetY< -64 || targetY>512
+            || Math.hypot((double)targetX-x,(double)targetZ-z)<128))return false;
+        if("MOVING".equals(phase) && !jumpPending)return false;
         return schemaVersion==1 && phase!=null && (phase.equals("IDLE") || phase.equals("PREPARING") || phase.equals("MOVING") || phase.equals("RECOVERY_REQUIRED"))
             && layout!=null && (layout.equals("winged_sailor") || layout.equals("prototype")) && Math.abs((long)x)<30_000_000 && Math.abs((long)z)<30_000_000 && y>=-64 && y<=512;
     }

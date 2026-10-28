@@ -14,7 +14,12 @@ import net.minecraft.world.phys.AABB;
 public final class AirshipProbe {
     private static final Path FLAG=Path.of("airship-e2e.flag");
     private AirshipProbe() {}
-    private static int ritualEmeralds,ritualIron;
+    private static int ritualEmeralds,ritualIron,jumpEmeralds,jumpPearls,oldX,oldY,oldZ,oldBlocks,jumpStage,jumpFavors;
+    private static java.util.Set<java.util.UUID> jumpCrew;
+    private static java.util.UUID hostile;
+    private static long oldRevision;
+    private static int blocks(ServerLevel l,int x,int y,int z){int n=0;for(var pos:net.minecraft.core.BlockPos.betweenClosed(new net.minecraft.core.BlockPos(x-57,y-50,z-34),new net.minecraft.core.BlockPos(x+59,y+49,z+54)))if(!l.getBlockState(pos).isAir())n++;return n;}
+
     public static void tick(MinecraftServer server) {
         if(server.getPlayerList().getPlayers().isEmpty() || !Files.exists(FLAG)) return;
         try {
@@ -54,6 +59,33 @@ public final class AirshipProbe {
                 long revision=hub.revision;int stage=d.stage;WingedSailorService.summon(p);
                 if(hub.revision!=revision || d.stage!=stage) throw new IllegalStateException("Duplicate summon changed hub/story");
                 if(!AirshipHub.protectedAt(level,new net.minecraft.core.BlockPos(d.x,d.y,d.z+4))) throw new IllegalStateException("Lift not protected");
+            } else if(action.equals("hostile-spawn")) {
+                @SuppressWarnings("unchecked") var type=(net.minecraft.world.entity.EntityType<net.minecraft.world.entity.Mob>)net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("zombie"));
+                var feet=new net.minecraft.core.BlockPos(d.x,d.y+1,d.z+4);
+                if(net.minecraft.world.entity.SpawnPlacements.checkSpawnRules(type,level,net.minecraft.world.entity.EntitySpawnReason.NATURAL,feet,level.getRandom()))throw new IllegalStateException("Natural spawning allowed in hub");
+                var mob=type.create(level,net.minecraft.world.entity.EntitySpawnReason.COMMAND);mob.snapTo(d.x+.5,d.y+1,d.z+4.5,0,0);level.addFreshEntity(mob);hostile=mob.getUUID();
+                if(net.fabricmc.fabric.api.event.player.AttackEntityCallback.EVENT.invoker().interact(p,level,net.minecraft.world.InteractionHand.MAIN_HAND,mob,null)==net.minecraft.world.InteractionResult.FAIL)throw new IllegalStateException("Hostile still invulnerable to attack callback");
+            } else if(action.equals("hostile-cleared")) {
+                if(level.getEntity(hostile)!=null)throw new IllegalStateException("Sanctuary did not remove hostile");
+            } else if(action.equals("jump-stock")) {
+                var h=AirshipHub.state(server);oldX=d.x;oldY=d.y;oldZ=d.z;oldRevision=h.revision;jumpStage=d.stage;jumpFavors=d.favorCompleted;oldBlocks=blocks(level,d.x,d.y,d.z);
+                jumpCrew=level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class,new AABB(d.x-60,d.y-52,d.z-36,d.x+62,d.y+52,d.z+57),e->!AirshipService.npcId(e).isEmpty()).stream().map(Entity::getUUID).collect(java.util.stream.Collectors.toSet());
+                if(jumpCrew.size()!=8)throw new IllegalStateException("Expected eight original NPCs");
+                p.getInventory().add(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.EMERALD,16));p.getInventory().add(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.ENDER_PEARL,8));jumpEmeralds=countItem(p,net.minecraft.world.item.Items.EMERALD);jumpPearls=countItem(p,net.minecraft.world.item.Items.ENDER_PEARL);
+                p.setGameMode(net.minecraft.world.level.GameType.CREATIVE);int x=d.x+160,z=d.z+4,y=level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z);
+                p.teleportTo(level,x+.5,y,z+.5,Set.of(),90,-10,false);
+            } else if(action.equals("jump-check")) {
+                var h=AirshipHub.state(server);if(!h.phase.equals("IDLE")||h.jumpPending||h.revision!=oldRevision+1||h.x==oldX||d.x!=h.x)throw new IllegalStateException("Jump did not update singleton");
+                if(countItem(p,net.minecraft.world.item.Items.EMERALD)!=jumpEmeralds-16||countItem(p,net.minecraft.world.item.Items.ENDER_PEARL)!=jumpPearls-8)throw new IllegalStateException("Jump payment wrong");
+                if(d.stage!=jumpStage||d.favorCompleted!=jumpFavors||h.readyAt<=System.currentTimeMillis())throw new IllegalStateException("Story/cooldown lost during jump");
+                if(blocks(level,oldX,oldY,oldZ)!=0||blocks(level,d.x,d.y,d.z)!=oldBlocks)throw new IllegalStateException("Blocks duplicated or lost");
+                for(java.util.UUID id:jumpCrew){Entity npc=level.getEntity(id);if(npc==null||!npc.isAlive()||Math.abs(npc.getX()-d.x)>70)throw new IllegalStateException("Original crew UUID lost or left behind");}
+                var restored=new com.google.gson.Gson().fromJson(Files.readString(server.getWorldPath(net.minecraft.world.level.storage.LevelResource.ROOT).resolve("data/aoe-airship-hub.json")),HubState.class);
+                if(!restored.valid()||restored.x!=d.x||restored.revision!=h.revision)throw new IllegalStateException("Relocation not durable");
+                System.out.println("AIRSHIPTEST JUMP blocks="+oldBlocks+" originalUUIDs="+jumpCrew+" from="+oldX+","+oldY+","+oldZ+" to="+d.x+","+d.y+","+d.z);
+            } else if(action.equals("side-ui-check")) {
+                if((d.favorAccepted&2)==0||(d.favorCompleted&2)!=0)throw new IllegalStateException("Real UI did not explicitly accept Mara side quest");
+                if(!AirshipQuestTracker.active(d,com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p).questBook,0).stream().anyMatch(v->v.contains("0/2 новых сундуков")))throw new IllegalStateException("Missing tracked named progress");
             } else if(action.equals("crew-check")) {
                 var crew=level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class,new AABB(d.x-100,d.y-100,d.z-100,d.x+100,d.y+100,d.z+100),e->!AirshipService.npcId(e).isEmpty());
                 for(String id:AirshipStory.IDS) {

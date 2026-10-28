@@ -80,16 +80,19 @@ public class AirshipDialogueScreen extends BaseScreen {
         var data=Load.playerRPGData(mc.player).airship;var book=Load.playerRPGData(mc.player).questBook;
         int y=panelY+(AirshipStory.index(npc)>=3?168:101),w=panelW-20,x=panelX+10;
         if(AirshipStory.advance(npc,storyStage)!=storyStage) {
-            String label=storyStage==7?"1 • Рассказать правду всей команде":storyStage==0?"1 • [СЮЖЕТ] Принять поручение":AirshipStory.target(storyStage+1)>0?"1 • [СЮЖЕТ] Принять следующее задание":"1 • [СЮЖЕТ] Продолжить / сдать задание";
+            String label=storyStage==7?"1 • Рассказать правду всей команде":storyStage==0?"1 • §6[СЮЖЕТ]§r Принять поручение":AirshipStory.target(storyStage+1)>0?"1 • §6[СЮЖЕТ]§r Принять следующее задание":"1 • §6[СЮЖЕТ]§r Продолжить / сдать задание";
             var button=new Choice(x,y,w,label,b->send(storyStage==7?1:0));
             button.active=AirshipCampaign.ready(data,book);addButton(button);y+=21;
             if(storyStage==7) { addButton(new Choice(x,y,w,"2 • Сначала обсудим это только на мостике",b->send(0)));y+=21; }
+        }
+        if(AirshipStory.hasFavor(npc) && data.stage>0 && (data.favorCompleted&AirshipCampaign.bit(npc))!=0){
+            var done=new Choice(x,y,w,"§b[ПОБОЧНОЕ] §aВыполнено • "+AirshipQuestTracker.sideTarget(npc)+"/"+AirshipQuestTracker.sideTarget(npc)+" • "+AirshipStory.favor(npc),b->{});done.active=false;addButton(done);y+=21;
         }
         if(AirshipStory.hasFavor(npc) && data.stage>0 && (data.favorCompleted&AirshipCampaign.bit(npc))==0) {
             int iron=0;for(int i=0;i<mc.player.getInventory().getContainerSize();i++)if(mc.player.getInventory().getItem(i).is(net.minecraft.world.item.Items.IRON_INGOT))iron+=mc.player.getInventory().getItem(i).getCount();
             boolean accepted=(data.favorAccepted&AirshipCampaign.bit(npc))!=0;
             boolean ready=AirshipCampaign.favorReady(data,book,npc,iron);
-            String label=!accepted?"[ПОБОЧНОЕ] Принять: "+AirshipStory.favor(npc):(ready?"[ПОБОЧНОЕ] Сдать • ":"[ПОБОЧНОЕ] В работе • ")+AirshipQuestTracker.sideProgress(data,book,npc,iron)+"/"+AirshipQuestTracker.sideTarget(npc);
+            String label=!accepted?"§b[ПОБОЧНОЕ]§r Принять: "+AirshipStory.favor(npc):(ready?"§b[ПОБОЧНОЕ]§r Сдать • ":"§b[ПОБОЧНОЕ]§r В работе • ")+AirshipQuestTracker.sideProgress(data,book,npc,iron)+"/"+AirshipQuestTracker.sideTarget(npc);
             // Progress is visible without repeatedly sending a 'check' action.
             if(accepted && !ready) { var progress=new Choice(x,y,w,label,b->{});progress.active=false;addButton(progress); }
             else addButton(new Choice(x,y,w,label,b->send(2)));
@@ -134,7 +137,7 @@ public class AirshipDialogueScreen extends BaseScreen {
         if(!fullText) text(pose,"ПРОБЕЛ • полный текст и ответы"+(!cues.isEmpty()?"   R • повторить":""),x+83,y+h-12,0x8F999E);
         else if(mc.player!=null && AirshipStory.target(storyStage)>0) {
             int progress=AirshipCampaign.measured(Load.playerRPGData(mc.player).airship,Load.playerRPGData(mc.player).questBook);
-            text(pose,"Проверено сервером: "+Math.min(progress,AirshipStory.target(storyStage))+" / "+AirshipStory.target(storyStage),x+83,y+88,0xA9C9A7);
+            text(pose,"§6СЮЖЕТ • Проверено сервером: "+Math.min(progress,AirshipStory.target(storyStage))+" / "+AirshipStory.target(storyStage),x+83,y+88,0xA9C9A7);
         }
         super.render(pose,mx,my,partial);
     }

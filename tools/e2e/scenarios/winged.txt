@@ -320,3 +320,57 @@ click 1140 688
 wait 1200
 shot 32-shared-hub-status
 key Escape
+
+# Spawn-placement denial, attack callback regression and removal of already-present monsters.
+log_mark
+write run/airship-e2e.flag hostile-spawn
+wait_log_new 30000 AIRSHIPTEST PASS hostile-spawn
+wait 1200
+log_mark
+write run/airship-e2e.flag hostile-cleared
+wait_log_new 30000 AIRSHIPTEST PASS hostile-cleared
+# Real H confirmation, 20-second charge, existing geometry + original eight UUIDs.
+log_mark
+write run/airship-e2e.flag jump-stock
+wait_log_new 30000 AIRSHIPTEST PASS jump-stock
+wait 45000
+hold h 500
+wait 1000
+click 1140 688
+wait 2000
+shot 33-jump-confirmation
+log_mark
+click 640 476
+wait 8000
+shot 34-jump-volume
+wait_log_new 120000 AIRSHIPJUMP COMPLETE
+log_mark
+write run/airship-e2e.flag jump-check
+wait_log_new 30000 AIRSHIPTEST PASS jump-check
+hold h 500
+wait 1000
+click 1140 688
+wait 1500
+shot 35-jump-cooldown
+key Escape
+log_mark
+write run/airship-e2e.flag photo-mara
+wait_log_new 30000 AIRSHIPTEST PASS photo-mara
+log_mark
+write run/airship-e2e.flag talk-mara
+wait_log_new 30000 AIRSHIPTEST PASS talk-mara
+wait 1500
+hold space 500
+wait 500
+shot 36-sidequest-explicit-accept
+click 640 532
+wait 1200
+log_mark
+write run/airship-e2e.flag side-ui-check
+wait_log_new 30000 AIRSHIPTEST PASS side-ui-check
+hold h 500
+wait 1000
+shot 37-H-main-and-side-progress
+key Escape
+wait 1500
+shot 38-world-side-progress

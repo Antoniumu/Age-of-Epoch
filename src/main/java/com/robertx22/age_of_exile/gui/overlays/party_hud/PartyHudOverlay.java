@@ -196,11 +196,8 @@ public final class PartyHudOverlay extends AbstractGui {
 
         if(!shipLines.isEmpty()) {
             drawString(pose,mc.font,"◇  ПОСЛЕДНИЙ РАССВЕТ",x+11,cy+3,GOLD);cy+=16;
-            for(String line:shipLines) { drawString(pose,mc.font,line,x+11,cy,MUTED);cy+=10; }
-            if(com.robertx22.age_of_exile.airship.AirshipStory.target(airship.stage)>0) {
-                int count=com.robertx22.age_of_exile.airship.AirshipCampaign.measured(airship,com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(mc.player).questBook);
-                drawString(pose,mc.font,Math.min(count,com.robertx22.age_of_exile.airship.AirshipStory.target(airship.stage))+" / "+com.robertx22.age_of_exile.airship.AirshipStory.target(airship.stage),x+11,cy,ACCENT);
-            }
+            boolean sideSection=false;
+            for(String line:shipLines) {sideSection|=line.startsWith("ПОБОЧНОЕ");drawString(pose,mc.font,line,x+11,cy,sideSection?0x80D9D1:0xE4C897);cy+=10;}
             cy+=16;
         }
         if (combat && rows > 0) {

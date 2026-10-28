@@ -41,7 +41,7 @@ jobs:
           sudo apt-get install -y -q --no-install-recommends xvfb x11-utils xdotool imagemagick x11-apps openbox wmctrl libgl1 libglu1-mesa libgl1-mesa-dri mesa-utils mesa-vulkan-drivers vulkan-tools libxi6 libxcursor1 libxrandr2 libxinerama1 libxxf86vm1 libopenal1 libpulse0 libegl1 libegl-mesa0
       - name: Real client, ship, crew, quests and H card
         env:
-          RENDER_DISTANCE: 10
+          RENDER_DISTANCE: 16
           E2E_FAIL_FAST: 1
         run: |
           bash tools/e2e/run-in-xvfb.sh tools/e2e/scenarios/winged.txt run/e2e/airship
@@ -52,7 +52,7 @@ jobs:
           for voice in mara_intro bram_intro oren_intro veya_intro selin_intro lysander_intro tik_intro; do
             grep -q "AIRSHIPVOICE ACTIVE $voice" run/logs/latest.log
           done
-          for stage in ritual-paid hub-check crew-check attention-check winged board lift lift-check far-reject dialogue accepted mara quartermaster stale gate truth favor-claim-captain iron-quartermaster seed-dungeon finished; do
+          for stage in hostile-spawn hostile-cleared jump-check side-ui-check ritual-paid hub-check crew-check attention-check winged board lift lift-check far-reject dialogue accepted mara quartermaster stale gate truth favor-claim-captain iron-quartermaster seed-dungeon finished; do
             grep -q "AIRSHIPTEST PASS $stage" run/logs/latest.log
           done
       - name: Publish actual screenshots on the same working branch

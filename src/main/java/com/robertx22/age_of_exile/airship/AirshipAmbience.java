@@ -17,7 +17,8 @@ public final class AirshipAmbience {
             double px=x+Math.cos(a)*12*(1-u*.45),py=y-5+u*42,pz=z+Math.sin(a)*12*(1-u*.45);
             if(i%4<2){px=x+Math.cos(a)*50;py=y+8+Math.sin(a*2+time)*5;pz=z+10+Math.sin(a)*35;}
             if(i%4==2){px=x+Math.cos(a)*37;py=y+30+Math.sin(a)*18;pz=z+10+Math.sin(a)*25;}
-            level.sendParticles(i%3==0?ParticleTypes.PORTAL:ParticleTypes.END_ROD,px,py,pz,1,.12,.12,.12,.008*intensity);
+            var packet=new net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket(i%3==0?ParticleTypes.PORTAL:ParticleTypes.END_ROD,true,true,px,py,pz,.12F,.12F,.12F,(float)(.008*intensity),1);
+            for(var viewer:level.players())if(viewer.distanceToSqr(x,y,z)<200*200)viewer.connection.send(packet);
         }
     }
 }

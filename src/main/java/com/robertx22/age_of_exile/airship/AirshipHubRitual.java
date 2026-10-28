@@ -54,6 +54,7 @@ public final class AirshipHubRitual {
         Charge c=room.active;if(c==null)return;ServerPlayer p=server.getPlayerList().getPlayer(c.player);
         if(p==null || !allowed(p) || p.blockPosition().distSqr(c.position)>9 || AirshipHub.state(server).exists){room.active=null;if(p!=null)p.sendSystemMessage(Component.literal("Ритуал отменён. Оплата не списана."));return;}
         ServerLevel level=(ServerLevel)p.level();double progress=Math.min(1,(now-c.start)/20_000.0);
+        if(level.getGameTime()%4==0)AirshipAmbience.volume(level,c.position.getX()+.5,c.position.getY()+8,c.position.getZ()+.5,now*.00015,2);
         if(level.getGameTime()%4==0)for(int i=0;i<16;i++){
             double a=i*Math.PI*2/16+progress*18,r=2+progress*2;
             level.sendParticles(i%3==0?ParticleTypes.PORTAL:ParticleTypes.END_ROD,c.position.getX()+.5+Math.cos(a)*r,c.position.getY()+.15+Math.sin(a*2+progress*20)*.15,c.position.getZ()+.5+Math.sin(a)*r,1,0,.05,0,.01);

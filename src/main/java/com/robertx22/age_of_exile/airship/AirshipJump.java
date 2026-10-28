@@ -104,7 +104,7 @@ public final class AirshipJump {
         j.crew=l.getEntitiesOfClass(LivingEntity.class,hull(h.x,h.y,h.z),e->!AirshipService.npcId(e).isEmpty());
         if(j.crew.size()!=8)throw new IllegalStateException("Не найдены все восемь членов экипажа. Сначала /airship refresh.");
         j.snapshot=l.getServer().getStructureTemplateManager().getOrCreate(BACKUP);
-        j.snapshot.fillFromWorld(l,j.source,new BlockPos(117,100,89),false,Blocks.AIR);
+        j.snapshot.fillFromWorld(l,j.source,new BlockPos(117,100,89),false,List.of(Blocks.AIR));
         if(!l.getServer().getStructureTemplateManager().save(BACKUP))throw new IllegalStateException("Не удалось сохранить резервную структуру.");
         h.jumpPending=true;h.jumpId=UUID.randomUUID().toString();h.targetX=j.site.x;h.targetY=j.site.y;h.targetZ=j.site.z;h.targetGround=j.site.ground;h.phase="MOVING";AirshipHub.save(l.getServer());
         j.phase="PLACE";j.cursor=0;
@@ -135,6 +135,7 @@ public final class AirshipJump {
             }
             int end=Math.min(j.cursor+512,j.cells.size());for(;j.cursor<end;j.cursor++){Cell c=j.cells.get(j.cursor);BlockPos old=j.source.offset(c.local);if(l.getBlockState(old)!=c.state)throw new IllegalStateException("Старый блок изменился при очистке. Требуется восстановление.");l.setBlock(old,Blocks.AIR.defaultBlockState(),2);}
             if(j.cursor<j.cells.size())return;
+            if(!server.saveEverything(false,true,true))throw new IllegalStateException("Не удалось сохранить чанки после переноса; требуется откат.");
             h.history.add(new HubState.Anchor(h.x,h.y,h.z));h.x=j.site.x;h.y=j.site.y;h.z=j.site.z;h.groundY=j.site.ground;h.revision++;h.readyAt=System.currentTimeMillis()+1_800_000;
             // Save the authoritative new location before payment; a crash cannot cause a second charge.
             h.jumpPending=false;h.phase="IDLE";AirshipHub.save(server);
@@ -151,6 +152,7 @@ public final class AirshipJump {
         var l=level(p);var server=l.getServer();HubState h=AirshipHub.state(server);
         if(!h.jumpPending){p.sendSystemMessage(Component.literal("Нет журнала незавершённого прыжка."));return 0;}
         try{
+            Room room=ROOMS.get(server);if(room!=null)room.job=null;h.phase="RECOVERY_REQUIRED";AirshipHub.save(server);
             var snapshot=server.getStructureTemplateManager().get(BACKUP).orElseThrow();var settings=new StructurePlaceSettings().setKnownShape(true);BlockPos target=new BlockPos(h.targetX-57,h.targetY-50,h.targetZ-34);
             if(!loaded(l,source(h))||!loaded(l,target))throw new IllegalStateException("Загрузите оба причала перед восстановлением.");
             var cells=new ArrayList<Cell>();
@@ -161,6 +163,7 @@ public final class AirshipJump {
             if(!snapshot.placeInWorld(l,source(h),source(h),settings,l.getRandom(),2))throw new IllegalStateException("Snapshot не восстановлен.");
             for(LivingEntity npc:l.getEntitiesOfClass(LivingEntity.class,targetBox,e->!AirshipService.npcId(e).isEmpty()))npc.snapTo(npc.getX()+h.x-h.targetX,npc.getY()+h.y-h.targetY,npc.getZ()+h.z-h.targetZ,npc.getYRot(),npc.getXRot());
             for(Cell c:cells)if(!l.getBlockState(target.offset(c.local)).isAir())l.setBlock(target.offset(c.local),Blocks.AIR.defaultBlockState(),2);
+            if(!server.saveEverything(false,true,true))throw new IllegalStateException("Не удалось сохранить восстановленные чанки.");
             h.jumpPending=false;h.phase="IDLE";AirshipHub.save(server);p.sendSystemMessage(Component.literal("Исходный корабль восстановлен. Оплата прыжка не взималась."));return 1;
         }catch(Exception e){p.sendSystemMessage(Component.literal("Восстановление остановлено: "+e.getMessage()));return 0;}
     }
