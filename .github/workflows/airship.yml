@@ -82,6 +82,7 @@ jobs:
           git add docs/airship/proof-images docs/airship/ci-proof.txt
           if ! git diff --cached --quiet; then
             git commit -m "Record actual airship client proof [skip ci]"
+            git pull --rebase origin arena/7bde44a9-age-of-epoch
             git push origin HEAD:arena/7bde44a9-age-of-epoch
           fi
       - uses: actions/upload-artifact@v7
