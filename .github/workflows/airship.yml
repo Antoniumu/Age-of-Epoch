@@ -69,10 +69,12 @@ jobs:
             grep -q "AIRSHIPTEST PASS $stage" run/logs/latest.log
           done
       - name: Publish actual screenshots on the same working branch
-        if: always() && github.ref == 'refs/heads/arena/7bde44a9-age-of-epoch'
+        if: always() && !cancelled() && github.ref == 'refs/heads/arena/7bde44a9-age-of-epoch'
         env:
           RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
+          # Update the base before generating the proof commit; rebasing two replacements of ci-proof conflicts.
+          git pull --rebase --autostash origin arena/7bde44a9-age-of-epoch
           mkdir -p docs/airship/proof-images
           if compgen -G 'run/e2e/airship/*.png' >/dev/null; then
             find docs/airship/proof-images -maxdepth 1 -name '*.png' -delete
@@ -90,7 +92,6 @@ jobs:
           git add docs/airship/proof-images docs/airship/ci-proof.txt
           if ! git diff --cached --quiet; then
             git commit -m "Record actual airship client proof [skip ci]"
-            git pull --rebase --autostash origin arena/7bde44a9-age-of-epoch
             git push origin HEAD:arena/7bde44a9-age-of-epoch
           fi
       - uses: actions/upload-artifact@v7
@@ -153,6 +154,7 @@ jobs:
           for voice in personal_captain_request personal_captain_thanks personal_captain_confidence personal_oren_request personal_oren_confidence personal_mara_analysis personal_captain_confession; do
             grep -q "AIRSHIPVOICE ACTIVE $voice" recovered/run/logs/latest.log
           done
+          git pull --rebase --autostash origin arena/7bde44a9-age-of-epoch
           mkdir -p docs/airship/proof-images
           find docs/airship/proof-images -maxdepth 1 -name '*.png' -delete
           cp recovered/run/e2e/airship/*.png docs/airship/proof-images/
@@ -168,5 +170,4 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add docs/airship/proof-images docs/airship/ci-proof.txt
           git commit -m 'Recover actual successful in-game execution proof from original artifact [skip ci]'
-          git pull --rebase --autostash origin arena/7bde44a9-age-of-epoch
           git push origin HEAD:arena/7bde44a9-age-of-epoch

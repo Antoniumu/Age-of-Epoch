@@ -27,3 +27,10 @@ Renderer libraries: skinview3d 3.4.2, skinview-utils, Three.js, MIT notices unde
 ## Reproduction
 
 From `tools/airship/crew-preview`: `npm ci && npm run build`. To verify screenshots, install Chromium with `npx playwright-core install --with-deps chromium` then `npm test`. The test serves the preview on loopback for its own browser only; the user-facing preview server binds to 0.0.0.0. Browser tests are run by `.github/workflows/crew-model-preview.yml`; generated proofs only become evidence after that run succeeds.
+
+
+## Исправление 3px UV и новый капитан
+
+`tools/airship/apply_approved_skins.py` теперь читает закреплённые оригиналы, раздельно переносит 3px грани рук Мары/Веи/Селин и вызывает `refine_captain_skin.py`. Просмотрщик и игровые ресурсы используют одинаковые 64×64 PNG и одинаковый выбор wide/slim. `audit_crew_uv.py` проверяет именно грани выбранной модели; прозрачные исходные пиксели на месте wide-краёв доказывают причину прежних чёрных полос этих трёх скинов. Это не обещание устранить любые другие артефакты освещения.
+
+Капитан перерисован локально поверх GPL-атрибутированной основы; это не новый скачанный PMC-скин. Старый голос сохранён. Источники и лицензия не удалены. Геометрия остаётся ванильным манекеном.
