@@ -1,8 +1,14 @@
-# Crew model casting — NOT installed in Minecraft
+# Crew model casting — approved and applied to working source
 
 Serve this folder over HTTP. `index.html` renders actual textured 3D player models and a separate non-humanoid bird. All assets are local; no browser requests go to external texture hosts.
 
-## Honest scope
+The user approved this casting on 2026-10-28. These seven adaptations are now bundled in the
+working mod source; Tik has a dedicated in-game brass-bird renderer and Oren scale is 1.6.
+See the main airship README for tested revisions and migration. This HTML remains the separate
+casting preview; its historical on-page disclaimer describes its state before application.
+The old published `airship-preview-176482f` JAR is unchanged.
+
+## Original casting scope
 
 The seven initial PlanetMinecraft candidates in `manifest.json` could not be downloaded: both catalogue and CDN returned HTTP 403, recorded in `fetch-report.txt`. They are **not** what this preview displays.
 

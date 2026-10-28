@@ -1,20 +1,42 @@
 # Crew and Winged Sailor asset ledger
 
 The published `airship-preview-34095a2` JAR is immutable and still contains villager placeholders.
-The current working code uses vanilla mannequins with **three original 64×64 skins**:
-`assets/mmorpg/textures/entity/airship/{captain,mara,quartermaster}.png`.
-They are authored replacements, **not the selected PlanetMinecraft downloads**.
-Source: deterministic pixel-art generator `tools/airship/draw_crew_skins.py`.
-Captain: grey beard, navy coat, brass cap; Mara: auburn hair, teal explorer coat,
-scarf and satchel; Bram: ochre workwear, leather apron, brass goggles. All use wide arms.
-No Steve / Alex / Efe defaults remain in new unconfigured crews. Existing per-server
-resource overrides are still respected. The GUI projects real rotating cube faces
-and a separate enlarged outer layer, using exactly the NPC texture.
+## Approved crew assets applied (2026-10-28)
 
-Captain audio: eight newly generated Russian spoken-word clips using the user's
-previously selected mature voice. Mara and Bram have **no generated voice**.
-The OGG files are mono 48 kHz Vorbis; measured durations are in `audio/captain-durations.json`.
-Audition MP3s in `audio/` are historical references, not the in-game sound resources.
+The seven MineColonies alternatives shown in `crew-preview/` were approved by the user and
+are now applied to the seven humanoid NPCs. Captain, Mara, Bram, Oren, Veya, Selin, Lysander
+use the exact approved crop, with legacy left limbs mirrored into a standard 64×64 atlas.
+All use wide arms. Oren's native scale attribute is 1.6 on all axes.
+
+- Original atlases: `crew-preview/originals/`.
+- Pinned sources, author/project credit and hashes: `crew-preview/alternatives.json`.
+- Reproduction: `tools/airship/apply_approved_skins.py` (Pillow).
+- Source project: MineColonies contributors, GPL-3.0 repository license. Full license,
+  attribution and pinned source records are also bundled at `META-INF/airship-crew/`.
+- Custom MineColonies hats/equipment/geometry are not included; this is the approved
+  standard player-model adaptation, not a faithful copy of their custom NPC model.
+- Tik is an original procedural brass bird, not an online humanoid skin. A tagged native
+  parrot supplies the server-side body/hitbox; its synchronized name selects a separate
+  client bird mesh. Ordinary parrots retain vanilla rendering. His portrait is an original
+  brass-head atlas. The source geometry is in `AirshipTikRenderer.java`.
+
+Earlier original generated skins can still be reproduced with `draw_crew_skins.py`, but are
+no longer the default assets. Existing resource/config overrides remain respected.
+The blocked PlanetMinecraft candidates below are **not** included.
+
+## Applied audio
+
+Captain: eight retained clips, voice-01. Crew: sixteen newly generated and integrated mono
+Vorbis clips, 285.24 seconds total: Mara voice-03, Bram voice-05, Oren voice-08,
+Veya voice-10, Selin voice-12, Lysander voice-14, Tik voice-18. The rejected Bram voice-04
+recordings are not registered or committed. Runtime cue text, measured durations and selected
+voice IDs: `assets/mmorpg/airship/crew-voice.json`. Captain durations remain in
+`audio/captain-durations.json`.
+
+All current `AirshipStory.dialogue` branches now have audio, including Mara/Bram idle and
+not-ready responses. This does not mean every unrelated UI notification, favor result or
+future quest is voiced. Captions bind to actual clip playback/completion, not guessed word
+alignment. Long introductions grow the bottom strip only as needed to avoid cutting off text.
 
 ## Selected community skin candidates (not bundled)
 
@@ -40,7 +62,7 @@ python tools/airship/install_skins.py --game-dir /path/to/.minecraft \
 Enable the resulting resource pack on each client, and copy the generated
 `config/mmorpg/airship-crew.json` to the server. Summon a new crew after configuring it.
 Existing villagers are not automatically replaced; back up the world before testing.
-The current built-in crew uses wide arms. Missing config uses the original bundled skins.
+The current built-in crew uses wide arms. Missing config uses the approved bundled adaptations.
 A slim community skin needs a matching model override before it can be used faithfully.
 
 ## Winged Sailor
