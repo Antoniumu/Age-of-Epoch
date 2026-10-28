@@ -30,7 +30,8 @@ public final class HubState {
             px>=x-12 && px<=x+12 && py>=y-6 && py<=y+26 && pz>=z-22 && pz<=z+22;
         boolean lift=px>=x-1 && px<=x+1 && pz>=z+3 && pz<=z+5 && py>=groundY-1 && py<=y+3;
         boolean pending=jumpPending && px>=targetX-59 && px<=targetX+61 && py>=targetY-52 && py<=targetY+51 && pz>=targetZ-36 && pz<=targetZ+56;
-        return hull || lift || pending;
+        boolean pendingLift=jumpPending && px>=targetX-1 && px<=targetX+1 && pz>=targetZ+3 && pz<=targetZ+5 && py>=targetGround-1 && py<=targetY+3;
+        return hull || lift || pending || pendingLift;
     }
     public boolean mirror(AirshipData d) {
         if(!exists) return false;

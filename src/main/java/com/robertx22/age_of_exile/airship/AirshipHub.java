@@ -43,6 +43,17 @@ public final class AirshipHub {
             Files.move(temp,path,StandardCopyOption.REPLACE_EXISTING,StandardCopyOption.ATOMIC_MOVE);
         } catch(Exception e) { state(server).phase="RECOVERY_REQUIRED";throw new IllegalStateException("Cannot atomically persist shared airship",e); }
     }
+    /** Publish committed geometry only after its atomic journal write succeeds. */
+    public static void finishMove(MinecraftServer server,boolean jumped){
+        HubState old=state(server),next=JSON.fromJson(JSON.toJson(old),HubState.class);
+        if(jumped){
+            next.history.add(new HubState.Anchor(old.x,old.y,old.z));if(next.history.size()>2048)next.history.removeFirst();
+            next.x=old.targetX;next.y=old.targetY;next.z=old.targetZ;next.groundY=old.targetGround;
+            next.revision++;next.readyAt=System.currentTimeMillis()+1_800_000;
+        }
+        next.jumpPending=false;next.phase="IDLE";STATES.put(server,next);
+        try{save(server);}catch(RuntimeException e){old.phase="RECOVERY_REQUIRED";STATES.put(server,old);throw e;}
+    }
     public static boolean attach(ServerPlayer p) {
         HubState hub=state(((ServerLevel)p.level()).getServer());var d=AirshipService.data(p);
         if(hub.phase.equals("IDLE") && d.summoned) {

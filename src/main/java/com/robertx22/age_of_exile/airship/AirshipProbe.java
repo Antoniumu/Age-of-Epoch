@@ -67,8 +67,10 @@ public final class AirshipProbe {
                 if(net.fabricmc.fabric.api.event.player.AttackEntityCallback.EVENT.invoker().interact(p,level,net.minecraft.world.InteractionHand.MAIN_HAND,mob,null)==net.minecraft.world.InteractionResult.FAIL)throw new IllegalStateException("Hostile still invulnerable to attack callback");
             } else if(action.equals("hostile-cleared")) {
                 if(level.getEntity(hostile)!=null)throw new IllegalStateException("Sanctuary did not remove hostile");
-            } else if(action.equals("jump-stock")) {
-                var h=AirshipHub.state(server);oldX=d.x;oldY=d.y;oldZ=d.z;oldRevision=h.revision;jumpStage=d.stage;jumpFavors=d.favorCompleted;oldBlocks=blocks(level,d.x,d.y,d.z);
+            } else if(action.equals("jump-stock") || action.equals("jump-recovery-stock")) {
+                var h=AirshipHub.state(server);
+                if(action.equals("jump-recovery-stock")){h.readyAt=0;d.hubJumpReadyAt=0;AirshipHub.save(server);} // Synthetic clock reset only, not a production cooldown bypass.
+                oldX=d.x;oldY=d.y;oldZ=d.z;oldRevision=h.revision;jumpStage=d.stage;jumpFavors=d.favorCompleted;oldBlocks=blocks(level,d.x,d.y,d.z);
                 jumpCrew=level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class,new AABB(d.x-60,d.y-52,d.z-36,d.x+62,d.y+52,d.z+57),e->!AirshipService.npcId(e).isEmpty()).stream().map(Entity::getUUID).collect(java.util.stream.Collectors.toSet());
                 if(jumpCrew.size()!=8)throw new IllegalStateException("Expected eight original NPCs");
                 p.getInventory().add(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.EMERALD,16));p.getInventory().add(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.ENDER_PEARL,8));jumpEmeralds=countItem(p,net.minecraft.world.item.Items.EMERALD);jumpPearls=countItem(p,net.minecraft.world.item.Items.ENDER_PEARL);
@@ -83,6 +85,13 @@ public final class AirshipProbe {
                 var restored=new com.google.gson.Gson().fromJson(Files.readString(server.getWorldPath(net.minecraft.world.level.storage.LevelResource.ROOT).resolve("data/aoe-airship-hub.json")),HubState.class);
                 if(!restored.valid()||restored.x!=d.x||restored.revision!=h.revision)throw new IllegalStateException("Relocation not durable");
                 System.out.println("AIRSHIPTEST JUMP blocks="+oldBlocks+" originalUUIDs="+jumpCrew+" from="+oldX+","+oldY+","+oldZ+" to="+d.x+","+d.y+","+d.z);
+            } else if(action.equals("jump-recovery")) {
+                var pending=AirshipHub.state(server);int tx=pending.targetX,ty=pending.targetY,tz=pending.targetZ;
+                AirshipJump.interruptForProbe(server);if(AirshipJump.recover(p)!=1)throw new IllegalStateException("Snapshot rollback failed");
+                var h=AirshipHub.state(server);
+                if(h.jumpPending||!h.phase.equals("IDLE")||h.revision!=oldRevision||h.x!=oldX||blocks(level,oldX,oldY,oldZ)!=oldBlocks||blocks(level,tx,ty,tz)!=0)throw new IllegalStateException("Rollback changed anchor/duplicated geometry");
+                if(countItem(p,net.minecraft.world.item.Items.EMERALD)!=jumpEmeralds||countItem(p,net.minecraft.world.item.Items.ENDER_PEARL)!=jumpPearls)throw new IllegalStateException("Failed move charged resources");
+                for(var id:jumpCrew){var e=level.getEntity(id);if(e==null||Math.abs(e.getX()-oldX)>70)throw new IllegalStateException("Recovery lost original NPC");}
             } else if(action.equals("side-ui-check")) {
                 if((d.favorAccepted&2)==0||(d.favorCompleted&2)!=0)throw new IllegalStateException("Real UI did not explicitly accept Mara side quest");
                 if(!AirshipQuestTracker.active(d,com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p).questBook,0).stream().anyMatch(v->v.contains("0/2 новых сундуков")))throw new IllegalStateException("Missing tracked named progress");
