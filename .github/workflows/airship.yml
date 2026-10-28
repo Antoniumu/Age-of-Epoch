@@ -49,7 +49,10 @@ jobs:
           ! grep -q 'AIRSHIPTEST FAIL' run/logs/latest.log
           grep -q 'AIRSHIPVOICE ACTIVE captain_intro_a' run/logs/latest.log
           grep -q 'AIRSHIPVOICE ACTIVE captain_intro_b' run/logs/latest.log
-          for stage in winged board lift lift-check far-reject dialogue accepted mara quartermaster stale gate truth favor-claim-captain iron-quartermaster seed-dungeon finished; do
+          for voice in mara_intro bram_intro oren_intro veya_intro selin_intro lysander_intro tik_intro; do
+            grep -q "AIRSHIPVOICE ACTIVE $voice" run/logs/latest.log
+          done
+          for stage in crew-check attention-check winged board lift lift-check far-reject dialogue accepted mara quartermaster stale gate truth favor-claim-captain iron-quartermaster seed-dungeon finished; do
             grep -q "AIRSHIPTEST PASS $stage" run/logs/latest.log
           done
       - name: Publish actual screenshots on the same working branch

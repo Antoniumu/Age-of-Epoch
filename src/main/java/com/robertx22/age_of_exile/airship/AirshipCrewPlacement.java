@@ -17,11 +17,11 @@ import java.util.List;
 public final class AirshipCrewPlacement {
     private AirshipCrewPlacement() {}
     public static LivingEntity create(ServerLevel level,String id) {
-        var type=id.equals("tik")?EntityType.PARROT:net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("mannequin"));
+        var type=net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getValue(net.minecraft.resources.Identifier.withDefaultNamespace(id.equals("tik")?"parrot":"mannequin"));
         Entity e=type.create(level,EntitySpawnReason.COMMAND);
         if(!(e instanceof LivingEntity actor)) return null;
         if(actor instanceof Mob mob) { mob.setNoAi(true);mob.setPersistenceRequired(); }
-        actor.setSilent(true);actor.setInvulnerable(true);
+        actor.setSilent(true);
         actor.setCustomName(Component.literal(AirshipStory.name(id)));actor.setCustomNameVisible(false);
         actor.addTag(AirshipService.TAG);actor.addTag("aoe_npc_"+id);
         var scale=actor.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.SCALE);

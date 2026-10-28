@@ -40,6 +40,20 @@ public final class AirshipProbe {
                 p.teleportTo(level,d.x+(d.layout.equals("winged_sailor")?78.5:30.5),d.y+32,d.z+(d.layout.equals("winged_sailor")?85.5:31.5),Set.of(),135,12,false);
                 // Spectator gives a stable exterior shot without falling; restored before interactions.
                 p.setGameMode(net.minecraft.world.level.GameType.SPECTATOR);
+            } else if(action.equals("crew-check")) {
+                var crew=level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class,new AABB(d.x-100,d.y-100,d.z-100,d.x+100,d.y+100,d.z+100),e->!AirshipService.npcId(e).isEmpty());
+                for(String id:AirshipStory.IDS) {
+                    var found=crew.stream().filter(e->AirshipService.npcId(e).equals(id)).toList();
+                    if(found.size()!=1) throw new IllegalStateException("Expected one "+id+", got "+found.size());
+                    if(id.equals("oren") && Math.abs(found.getFirst().getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.SCALE).getBaseValue()-1.6)>.001) throw new IllegalStateException("Oren scale lost");
+                    if(id.equals("tik") && !net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(found.getFirst().getType()).toString().equals("minecraft:parrot")) throw new IllegalStateException("Tik is not a real bird");
+                }
+                if(AirshipCrewPlacement.complete(level,crew)!=0) throw new IllegalStateException("Refresh duplicated crew");
+            } else if(action.equals("attention-check")) {
+                var captain=level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class,p.getBoundingBox().inflate(16),e->AirshipService.npcId(e).equals("captain")).stream().findFirst().orElseThrow();
+                float desired=CrewMotion.yaw(p.getX()-captain.getX(),p.getZ()-captain.getZ());
+                if(Math.abs(CrewMotion.wrap(captain.getYHeadRot()-desired))>12 || Math.abs(CrewMotion.wrap(captain.getYRot()-desired))>15) throw new IllegalStateException("NPC did not turn toward player");
+                System.out.println("AIRSHIPTEST ATTENTION head="+captain.getYHeadRot()+" body="+captain.getYRot()+" desired="+desired);
             } else if(action.equals("finished")) {
                 if(d.stage!=11 || d.storyDecision!=1 || d.favorCompleted!=5 || d.captainTrust<20 || d.maraTrust<20 || d.bramTrust<20)
                     throw new IllegalStateException("Final campaign state/rewards wrong: stage="+d.stage+" favors="+d.favorCompleted);
@@ -76,10 +90,12 @@ public final class AirshipProbe {
                 // AirshipService.tick performs the same lift as for real players.
             } else {
                 String npc=action.endsWith("mara")?"mara":action.endsWith("quartermaster")?"quartermaster":action.startsWith("report") || action.equals("gate")?AirshipStory.actor(d.stage):"captain";
+                for(String candidate:AirshipStory.IDS) if(action.endsWith("-"+candidate)) { npc=candidate;break; }
+                final String selected=npc;
                 Entity e=level.getEntitiesOfClass(Entity.class,
                     new AABB(d.x-100,d.y-100,d.z-100,d.x+100,d.y+100,d.z+100),
-                    candidate->AirshipService.npcId(candidate).equals(npc)).stream().findFirst().orElseThrow();
-                if(!net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()).toString().equals("minecraft:mannequin"))
+                    candidate->AirshipService.npcId(candidate).equals(selected)).stream().findFirst().orElseThrow();
+                if(!npc.equals("tik") && !net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()).toString().equals("minecraft:mannequin"))
                     throw new IllegalStateException("Crew is not player-shaped");
                 if(action.equals("far-reject")) {
                     int before=d.stage;
@@ -104,6 +120,8 @@ public final class AirshipProbe {
                     if(action.startsWith("photo-")) {
                         e.setYRot(yaw+180);
                         if(e instanceof net.minecraft.world.entity.LivingEntity living) living.setYHeadRot(yaw+180);
+                    } else if(action.startsWith("attend-")) {
+                        e.setYRot(yaw);if(e instanceof net.minecraft.world.entity.LivingEntity living) living.setYHeadRot(yaw);
                     } else if(action.equals("gate") || action.equals("stale")) {
                         int before=d.stage,trust=d.captainTrust+d.maraTrust+d.bramTrust;
                         AirshipService.accept(p,e.getId(),action.equals("stale")?before-1:before,0);

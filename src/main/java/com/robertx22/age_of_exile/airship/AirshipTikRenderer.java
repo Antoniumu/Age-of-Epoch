@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.ParrotRenderer;
 import net.minecraft.client.renderer.entity.state.ParrotRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.world.entity.animal.Parrot;
+import net.minecraft.world.entity.animal.parrot.Parrot;
 import net.minecraft.world.phys.AABB;
 import org.joml.Matrix4f;
 import java.util.WeakHashMap;
@@ -17,6 +17,11 @@ import java.util.WeakHashMap;
 public final class AirshipTikRenderer extends ParrotRenderer {
     private record Pose(float body,float head,float pitch,float time) {}
     private final WeakHashMap<ParrotRenderState,Pose> poses=new WeakHashMap<>();
+    @SuppressWarnings("unchecked")
+    public static void register() {
+        var type=(net.minecraft.world.entity.EntityType<Parrot>)(net.minecraft.world.entity.EntityType<?>)net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("parrot"));
+        net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(type,AirshipTikRenderer::new);
+    }
     public AirshipTikRenderer(EntityRendererProvider.Context context) { super(context); }
     @Override public void extractRenderState(Parrot bird,ParrotRenderState state,float partial) {
         super.extractRenderState(bird,state,partial);

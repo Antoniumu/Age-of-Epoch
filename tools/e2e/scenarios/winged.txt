@@ -214,3 +214,82 @@ key Escape
 log_mark
 write run/airship-e2e.flag finished
 wait_log_new 30000 AIRSHIPTEST PASS finished
+
+# Actual eight-member crew, individual selected voices and safe stationary attention.
+log_mark
+write run/airship-e2e.flag crew-check
+wait_log_new 30000 AIRSHIPTEST PASS crew-check
+
+log_mark
+write run/airship-e2e.flag photo-oren
+wait_log_new 30000 AIRSHIPTEST PASS photo-oren
+wait 1500
+shot 23-oren-model
+log_mark
+write run/airship-e2e.flag talk-oren
+wait_log_new 30000 AIRSHIPTEST PASS talk-oren
+wait 1800
+shot 23-oren-voice
+key Escape
+wait 500
+
+log_mark
+write run/airship-e2e.flag photo-veya
+wait_log_new 30000 AIRSHIPTEST PASS photo-veya
+wait 1500
+shot 24-veya-model
+log_mark
+write run/airship-e2e.flag talk-veya
+wait_log_new 30000 AIRSHIPTEST PASS talk-veya
+wait 1800
+shot 24-veya-voice
+key Escape
+wait 500
+
+log_mark
+write run/airship-e2e.flag photo-selin
+wait_log_new 30000 AIRSHIPTEST PASS photo-selin
+wait 1500
+shot 25-selin-model
+log_mark
+write run/airship-e2e.flag talk-selin
+wait_log_new 30000 AIRSHIPTEST PASS talk-selin
+wait 1800
+shot 25-selin-voice
+key Escape
+wait 500
+
+log_mark
+write run/airship-e2e.flag photo-lysander
+wait_log_new 30000 AIRSHIPTEST PASS photo-lysander
+wait 1500
+shot 26-lysander-model
+log_mark
+write run/airship-e2e.flag talk-lysander
+wait_log_new 30000 AIRSHIPTEST PASS talk-lysander
+wait 1800
+shot 26-lysander-voice
+key Escape
+wait 500
+
+log_mark
+write run/airship-e2e.flag photo-tik
+wait_log_new 30000 AIRSHIPTEST PASS photo-tik
+wait 1500
+shot 27-tik-model
+log_mark
+write run/airship-e2e.flag talk-tik
+wait_log_new 30000 AIRSHIPTEST PASS talk-tik
+wait 1800
+shot 27-tik-voice
+key Escape
+wait 500
+
+log_mark
+write run/airship-e2e.flag attend-captain
+wait_log_new 30000 AIRSHIPTEST PASS attend-captain
+wait 7000
+log_mark
+write run/airship-e2e.flag attention-check
+wait_log_new 30000 AIRSHIPTEST PASS attention-check
+shot 28-captain-attention
