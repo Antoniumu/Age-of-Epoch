@@ -16,6 +16,7 @@ on:
         type: string
 permissions:
   contents: write
+  actions: read
 concurrency:
   group: airship-${{ github.ref }}
   cancel-in-progress: true
