@@ -1,55 +1,55 @@
-Run: https://github.com/Antoniumu/Age-of-Epoch/actions/runs/40665753547
-Source: 65756b9e3eb8fd55c753d41bd5661a01a2436adc
-  location: variable actor of type LivingEntity
+Run: https://github.com/Antoniumu/Age-of-Epoch/actions/runs/40665947640
+Source: 4993bf03ed17dba3943f1b331d09f1d08db98a15
+Daemon will be stopped at the end of the build 
+
+> Configure project :
+Fabric Loom: 1.18.4
+
+> Task :checkMinecraftClasspath
+Minecraft on compile classpath: minecraft-merged-80b2a6d18e-26.3.jar (36.18377590179443359375 MB)
+
+> Task :compileJava
 Note: Some input files use or override a deprecated API.
 Note: Recompile with -Xlint:deprecation for details.
 Note: Some input files use unchecked or unsafe operations.
 Note: Recompile with -Xlint:unchecked for details.
-5 errors
 
-> Task :compileJava FAILED
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793180299736.json
+> Task :processResources
+> Task :classes
+> Task :processIncludeJars
+> Task :jar
+> Task :sourcesJar
+> Task :assemble
+> Task :compileTestJava
+> Task :processTestResources NO-SOURCE
+> Task :testClasses
+
+> Task :test
+
+HeadCubeTest > gazeFollowsCursorNotTheOppositeDirection() FAILED
+    org.opentest4j.AssertionFailedError: expected: <0.0> but was: <-0.0>
+        at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+        at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+        at app//org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:70)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:65)
+        at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:889)
+        at app//com.robertx22.age_of_exile.airship.HeadCubeTest.gazeFollowsCursorNotTheOppositeDirection(HeadCubeTest.java:13)
+
+52 tests completed, 1 failed
+
+> Task :test FAILED
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1793180392581.json
 
 [Incubating] Problems report is available at: file:///home/runner/work/Age-of-Epoch/Age-of-Epoch/build/reports/problems/problems-report.html
 
 FAILURE: Build failed with an exception.
 
 * What went wrong:
-Execution failed for task ':compileJava' (registered by plugin class 'org.gradle.api.plugins.JavaBasePlugin').
-> Compilation failed; see the compiler output below.
-  Note: Recompile with -Xlint:deprecation for details.
-  /home/runner/work/Age-of-Epoch/Age-of-Epoch/src/main/java/com/robertx22/age_of_exile/airship/AirshipTikRenderer.java:11: error: cannot find symbol
-  import net.minecraft.world.entity.animal.Parrot;
-                                          ^
-    symbol:   class Parrot
-    location: package net.minecraft.world.entity.animal
-  /home/runner/work/Age-of-Epoch/Age-of-Epoch/src/main/java/com/robertx22/age_of_exile/airship/AirshipTikRenderer.java:21: error: cannot find symbol
-      @Override public void extractRenderState(Parrot bird,ParrotRenderState state,float partial) {
-                                               ^
-    symbol:   class Parrot
-    location: class AirshipTikRenderer
-  /home/runner/work/Age-of-Epoch/Age-of-Epoch/src/main/java/com/robertx22/age_of_exile/mmorpg/init/ClientInit.java:68: error: cannot find symbol
-          net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(net.minecraft.world.entity.EntityType.PARROT,com.robertx22.age_of_exile.airship.AirshipTikRenderer::new);
-                                                                                                                           ^
-    symbol:   variable PARROT
-    location: class EntityType
-  /home/runner/work/Age-of-Epoch/Age-of-Epoch/src/main/java/com/robertx22/age_of_exile/airship/AirshipCrewPlacement.java:20: error: cannot find symbol
-          var type=id.equals("tik")?EntityType.PARROT:net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("mannequin"));
-                                              ^
-    symbol:   variable PARROT
-    location: class EntityType
-  Note: Recompile with -Xlint:unchecked for details.
-  Note: Some input files use or override a deprecated API.
-  Note: Some input files use unchecked or unsafe operations.
-  /home/runner/work/Age-of-Epoch/Age-of-Epoch/src/main/java/com/robertx22/age_of_exile/airship/AirshipCrewPlacement.java:24: error: cannot find symbol
-          actor.setSilent(true);actor.setInvulnerable(true);
-                                     ^
-    symbol:   method setInvulnerable(boolean)
-    location: variable actor of type LivingEntity
-  5 errors
+Execution failed for task ':test'.
+> There were failing tests. See the report at: file:///home/runner/work/Age-of-Epoch/Age-of-Epoch/build/reports/tests/test/index.html
 
 * Try:
-> Check your code and dependencies to fix the compilation error(s)
 > Run with --scan to get full insights from a Build Scan (powered by Develocity).
 
 Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
@@ -58,5 +58,5 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/9.7.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD FAILED in 25s
-2 actionable tasks: 2 executed
+BUILD FAILED in 34s
+8 actionable tasks: 8 executed
