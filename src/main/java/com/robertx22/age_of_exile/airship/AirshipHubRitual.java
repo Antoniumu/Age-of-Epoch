@@ -63,6 +63,7 @@ public final class AirshipHubRitual {
         try{
             WingedSailorService.summon(p);
             if(AirshipHub.state(server).exists){
+                System.out.println("AIRSHIPHUB COMMISSIONED payer="+p.getUUID());
                 take(p,Items.EMERALD,32);take(p,Items.IRON_INGOT,16);p.getInventory().setChanged();
                 var d=AirshipService.data(p);
                 level.playSound(null,d.x,d.y+4,d.z,

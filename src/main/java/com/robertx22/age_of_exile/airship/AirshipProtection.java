@@ -16,14 +16,14 @@ public final class AirshipProtection {
     public static void register() {
         PlayerBlockBreakEvents.BEFORE.register((world,p,pos,state,be)->{
             if(!AirshipHub.protectedAt(world,pos)) return true;
-            p.displayClientMessage(Component.literal("Общий корабль защищён: блоки нельзя ломать."),true);return false;
+            if(p instanceof net.minecraft.server.level.ServerPlayer sp) sp.sendSystemMessage(Component.literal("Общий корабль защищён: блоки нельзя ломать."));return false;
         });
         UseBlockCallback.EVENT.register((p,world,hand,hit)->{
             if(!AirshipHub.protectedAt(world,hit.getBlockPos()) && !AirshipHub.protectedAt(world,hit.getBlockPos().relative(hit.getDirection()))) return InteractionResult.PASS;
             var block=world.getBlockState(hit.getBlockPos()).getBlock();
             // Empty-handed doors/trapdoors remain usable; beds, containers, buckets and placed items do not.
             if(p.getItemInHand(hand).isEmpty() && (block instanceof DoorBlock || block instanceof TrapDoorBlock || block==Blocks.CRAFTING_TABLE)) return InteractionResult.PASS;
-            p.displayClientMessage(Component.literal("Декор и хранилища общего хаба защищены."),true);return InteractionResult.FAIL;
+            if(p instanceof net.minecraft.server.level.ServerPlayer sp) sp.sendSystemMessage(Component.literal("Декор и хранилища общего хаба защищены."));return InteractionResult.FAIL;
         });
         AttackEntityCallback.EVENT.register((p,w,hand,e,hit)->AirshipHub.protectedAt(w,e.blockPosition())?InteractionResult.FAIL:InteractionResult.PASS);
         UseEntityCallback.EVENT.register((p,w,hand,e,hit)->{

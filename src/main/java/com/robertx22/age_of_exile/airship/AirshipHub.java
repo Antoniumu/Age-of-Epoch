@@ -24,7 +24,9 @@ public final class AirshipHub {
         return STATES.computeIfAbsent(server,s->{
             Path path=file(s);if(!Files.exists(path)) return new HubState();
             try {
-                HubState loaded=JSON.fromJson(Files.readString(path),HubState.class);
+                var object=com.google.gson.JsonParser.parseString(Files.readString(path)).getAsJsonObject();
+                if(!object.has("schemaVersion") || !object.has("exists") || !object.has("phase")) throw new IllegalStateException("Incomplete hub save");
+                HubState loaded=JSON.fromJson(object,HubState.class);
                 if(loaded==null || !loaded.valid()) throw new IllegalStateException("Invalid hub schema");
                 if(!loaded.phase.equals("IDLE")) loaded.phase="RECOVERY_REQUIRED";
                 return loaded;
@@ -43,8 +45,18 @@ public final class AirshipHub {
     }
     public static boolean attach(ServerPlayer p) {
         HubState hub=state(((ServerLevel)p.level()).getServer());var d=AirshipService.data(p);
-        if(!hub.exists && hub.phase.equals("IDLE") && d.summoned) commit(p); // Adopt an existing character's mooring, never its story.
-        if(hub.exists && hub.mirror(d)) Load.playerRPGData(p).syncToClient(p);
+        if(hub.phase.equals("IDLE") && d.summoned) {
+            boolean conflict=hub.exists && (d.x!=hub.x || d.y!=hub.y || d.z!=hub.z);
+            if(!hub.exists) for(ServerPlayer other:((ServerLevel)p.level()).getServer().getPlayerList().getPlayers()) {
+                var old=AirshipService.data(other);if(old.summoned && (old.x!=d.x || old.y!=d.y || old.z!=d.z)) conflict=true;
+            }
+            if(conflict) {
+                hub.phase="RECOVERY_REQUIRED";save(((ServerLevel)p.level()).getServer());
+                p.sendSystemMessage(net.minecraft.network.chat.Component.literal("Найдено несколько старых причалов. Нужен выбор общего хаба оператором; корабли не удалены."));return true;
+            }
+            if(!hub.exists) commit(p);
+        } // Adopt an existing character's mooring, never its story.
+        if(hub.exists && hub.phase.equals("IDLE") && hub.mirror(d)) Load.playerRPGData(p).syncToClient(p);
         return hub.exists || !hub.phase.equals("IDLE");
     }
     public static void begin(ServerPlayer p) {

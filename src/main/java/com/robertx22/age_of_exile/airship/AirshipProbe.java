@@ -14,6 +14,7 @@ import net.minecraft.world.phys.AABB;
 public final class AirshipProbe {
     private static final Path FLAG=Path.of("airship-e2e.flag");
     private AirshipProbe() {}
+    private static int ritualEmeralds,ritualIron;
     public static void tick(MinecraftServer server) {
         if(server.getPlayerList().getPlayers().isEmpty() || !Files.exists(FLAG)) return;
         try {
@@ -23,7 +24,7 @@ public final class AirshipProbe {
             Files.delete(FLAG);
             AirshipData d=AirshipService.data(p);
             ServerLevel level=(ServerLevel)p.level();
-            if(!action.equals("prepare") && !action.equals("summon") && !action.equals("winged") && !d.summoned) throw new IllegalStateException("Mooring was not persisted");
+            if(!action.equals("prepare") && !action.equals("summon") && !action.equals("winged") && !action.equals("ritual-stock") && !d.summoned) throw new IllegalStateException("Mooring was not persisted");
             System.out.println("AIRSHIPTEST SNAP action="+action+" anchor="+d.x+","+d.y+","+d.z+" player="+p.position()+" eye="+level.getBlockState(net.minecraft.core.BlockPos.containing(p.getEyePosition())));
             for(Entity actor:level.getEntitiesOfClass(Entity.class,p.getBoundingBox().inflate(150),e->e.entityTags().contains(AirshipService.TAG)))
                 System.out.println("AIRSHIPTEST CREW "+actor.getId()+" "+actor.entityTags()+" pos="+actor.position()+" alive="+actor.isAlive());
@@ -40,6 +41,19 @@ public final class AirshipProbe {
                 p.teleportTo(level,d.x+(d.layout.equals("winged_sailor")?78.5:30.5),d.y+32,d.z+(d.layout.equals("winged_sailor")?85.5:31.5),Set.of(),135,12,false);
                 // Spectator gives a stable exterior shot without falling; restored before interactions.
                 p.setGameMode(net.minecraft.world.level.GameType.SPECTATOR);
+            } else if(action.equals("ritual-stock")) {
+                p.getInventory().add(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.EMERALD,32));
+                p.getInventory().add(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_INGOT,16));
+                ritualEmeralds=countItem(p,net.minecraft.world.item.Items.EMERALD);ritualIron=countIron(p);
+            } else if(action.equals("ritual-paid")) {
+                if(!AirshipHub.state(server).exists || countItem(p,net.minecraft.world.item.Items.EMERALD)!=ritualEmeralds-32 || countIron(p)!=ritualIron-16) throw new IllegalStateException("Ritual payment/state mismatch");
+            } else if(action.equals("hub-check")) {
+                var hub=AirshipHub.state(server);if(!hub.exists || !hub.phase.equals("IDLE") || hub.x!=d.x || hub.y!=d.y || hub.z!=d.z) throw new IllegalStateException("Not attached to singleton");
+                var restored=new com.google.gson.Gson().fromJson(Files.readString(server.getWorldPath(net.minecraft.world.level.storage.LevelResource.ROOT).resolve("data/aoe-airship-hub.json")),HubState.class);
+                if(!restored.valid() || !restored.exists || restored.revision!=hub.revision || restored.x!=hub.x) throw new IllegalStateException("Shared hub disk state lost");
+                long revision=hub.revision;int stage=d.stage;WingedSailorService.summon(p);
+                if(hub.revision!=revision || d.stage!=stage) throw new IllegalStateException("Duplicate summon changed hub/story");
+                if(!AirshipHub.protectedAt(level,new net.minecraft.core.BlockPos(d.x,d.y,d.z+4))) throw new IllegalStateException("Lift not protected");
             } else if(action.equals("crew-check")) {
                 var crew=level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class,new AABB(d.x-100,d.y-100,d.z-100,d.x+100,d.y+100,d.z+100),e->!AirshipService.npcId(e).isEmpty());
                 for(String id:AirshipStory.IDS) {
@@ -163,6 +177,7 @@ public final class AirshipProbe {
             e.printStackTrace();
         }
     }
+    private static int countItem(ServerPlayer p,net.minecraft.world.item.Item item) { int count=0;for(int i=0;i<p.getInventory().getContainerSize();i++)if(p.getInventory().getItem(i).is(item))count+=p.getInventory().getItem(i).getCount();return count; }
     private static int countIron(ServerPlayer p) {
         int count=0;for(int i=0;i<p.getInventory().getContainerSize();i++) if(p.getInventory().getItem(i).is(net.minecraft.world.item.Items.IRON_INGOT)) count+=p.getInventory().getItem(i).getCount();return count;
     }

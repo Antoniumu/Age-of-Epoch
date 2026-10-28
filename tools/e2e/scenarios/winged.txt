@@ -12,6 +12,23 @@ wait_log_new 60000 AIRSHIPTEST PASS prepare
 wait 45000
 shot 00-world
 log_mark
+write run/airship-e2e.flag ritual-stock
+wait_log_new 30000 AIRSHIPTEST PASS ritual-stock
+hold h 500
+wait 1000
+shot 29-H-summon-button
+click 1140 688
+wait 1500
+shot 30-hub-confirmation
+log_mark
+click 640 476
+wait 7000
+shot 31-anchor-charging
+wait_log_new 120000 AIRSHIPHUB COMMISSIONED
+log_mark
+write run/airship-e2e.flag ritual-paid
+wait_log_new 30000 AIRSHIPTEST PASS ritual-paid
+log_mark
 write run/airship-e2e.flag winged
 wait_log_new 120000 AIRSHIPTEST PASS winged
 wait 12000
@@ -293,3 +310,13 @@ log_mark
 write run/airship-e2e.flag attention-check
 wait_log_new 30000 AIRSHIPTEST PASS attention-check
 shot 28-captain-attention
+
+log_mark
+write run/airship-e2e.flag hub-check
+wait_log_new 30000 AIRSHIPTEST PASS hub-check
+hold h 500
+wait 800
+click 1140 688
+wait 1200
+shot 32-shared-hub-status
+key Escape
