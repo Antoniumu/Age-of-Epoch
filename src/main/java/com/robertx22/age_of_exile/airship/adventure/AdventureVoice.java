@@ -27,6 +27,8 @@ public final class AdventureVoice {
         return exact(npc+(completed?"_thanks":"_request"),completed?q.thanks():q.request());
     }
     public static AirshipVoiceScript.Cue action(AdventureData d,String npc,int action){
+        String councilKey=Council.voiceKey(d,npc,action);
+        if(!councilKey.isEmpty())return exact(councilKey,Council.voiceText(councilKey));
         String key=Voyage.voiceKey(d,npc,action);
         if(!key.isEmpty())return exact(key,Voyage.voiceText(key));
         var q=AdventureCatalog.personal(npc);

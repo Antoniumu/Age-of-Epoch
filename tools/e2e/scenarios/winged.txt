@@ -711,3 +711,122 @@ shot 62-voyage-map-limits
 hold space 300
 wait 600
 key Escape
+
+# Council: real NPC UI, choice of map, real vanilla fishing loot (synthetic bite timing).
+log_mark
+write run/airship-e2e.flag photo-captain
+wait_log_new 30000 AIRSHIPTEST PASS photo-captain
+log_mark
+write run/airship-e2e.flag talk-captain
+wait_log_new 30000 AIRSHIPTEST PASS talk-captain
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+log_mark
+click 640 420
+wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_captain_council
+wait 1200
+shot 63-council-open
+hold space 300
+wait 600
+key Escape
+log_mark
+write run/airship-e2e.flag photo-mara
+wait_log_new 30000 AIRSHIPTEST PASS photo-mara
+log_mark
+write run/airship-e2e.flag talk-mara
+wait_log_new 30000 AIRSHIPTEST PASS talk-mara
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+log_mark
+click 640 462
+wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_mara_council
+wait 1200
+shot 64-council-mara
+hold space 300
+wait 600
+key Escape
+log_mark
+write run/airship-e2e.flag photo-tik
+wait_log_new 30000 AIRSHIPTEST PASS photo-tik
+log_mark
+write run/airship-e2e.flag talk-tik
+wait_log_new 30000 AIRSHIPTEST PASS talk-tik
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+log_mark
+click 640 462
+wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_tik_council
+wait 1200
+shot 65-council-tik
+hold space 300
+wait 600
+key Escape
+log_mark
+write run/airship-e2e.flag photo-captain
+wait_log_new 30000 AIRSHIPTEST PASS photo-captain
+log_mark
+write run/airship-e2e.flag talk-captain
+wait_log_new 30000 AIRSHIPTEST PASS talk-captain
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+shot 66-council-three-choices
+click 640 420
+wait 1200
+shot 67-council-map-promise
+key Escape
+log_mark
+write run/airship-e2e.flag council-fish
+wait_log_new 60000 AIRSHIPTEST PASS council-fish
+log_mark
+write run/airship-e2e.flag photo-mara
+wait_log_new 30000 AIRSHIPTEST PASS photo-mara
+log_mark
+write run/airship-e2e.flag talk-mara
+wait_log_new 30000 AIRSHIPTEST PASS talk-mara
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+log_mark
+click 640 462
+wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_mara_followup
+wait 1200
+shot 68-council-map-followup
+hold space 300
+wait 600
+key Escape
+log_mark
+write run/airship-e2e.flag photo-captain
+wait_log_new 30000 AIRSHIPTEST PASS photo-captain
+log_mark
+write run/airship-e2e.flag talk-captain
+wait_log_new 30000 AIRSHIPTEST PASS talk-captain
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+log_mark
+click 640 420
+wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_captain_close
+wait 1200
+shot 69-council-promise-kept
+hold space 300
+wait 600
+key Escape
+log_mark
+write run/airship-e2e.flag council-proof
+wait_log_new 30000 AIRSHIPTEST PASS council-proof

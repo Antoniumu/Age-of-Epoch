@@ -22,6 +22,9 @@ public final class AdventureService {
     public static java.util.Map<String,Integer> inventoryCounts(net.minecraft.world.entity.player.Player p){
         var counts=new java.util.HashMap<String,Integer>();for(var q:AdventureCatalog.QUESTS)if(q.metric()==AdventureCatalog.Metric.DELIVERY)counts.put(q.id(),inventory(p,q));return counts;
     }
+    public static int itemCount(net.minecraft.world.entity.player.Player p,Item item){
+        int total=0;for(int i=0;i<p.getInventory().getContainerSize();i++){var stack=p.getInventory().getItem(i);if(stack.is(item))total+=stack.getCount();}return total;
+    }
     private static void consume(ServerPlayer p,Item item,int amount){
         for(int i=0;i<p.getInventory().getContainerSize()&&amount>0;i++){var s=p.getInventory().getItem(i);if(s.is(item)){int n=Math.min(amount,s.getCount());s.shrink(n);amount-=n;}}p.getInventory().setChanged();
     }
@@ -44,10 +47,12 @@ public final class AdventureService {
     }
     public static void fishing(LootContext context,List<ItemStack> results){
         var entity=context.getOptional(LootContextParams.THIS_ENTITY);
-        if(!(entity instanceof Projectile hook)||!BuiltInRegistries.ENTITY_TYPE.getKey(hook.getType()).toString().equals("minecraft:fishing_bobber")||!(hook.getOwner() instanceof ServerPlayer p))return;
+        if(!(entity instanceof Projectile hook)||!BuiltInRegistries.ENTITY_TYPE.getKey(hook.getType()).toString().equals("minecraft:fishing_bobber")||!(hook.getOwner() instanceof ServerPlayer p)||!p.isAlive()||p.isSpectator())return;
         for(int i=0;i<results.size();i++){var stack=results.get(i);String item=BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
             event(p,AdventureCatalog.Metric.FISH,item,stack.getCount(),hook.getUUID()+":"+i);
-            var state=AirshipService.data(p).adventure;int before=state.progress.getOrDefault("investigation.water",0);
+            var state=AirshipService.data(p).adventure;
+            if(Council.fish(state,item,stack.getCount(),hook.getUUID()+":"+i))AirshipService.sync(p);
+            int before=state.progress.getOrDefault("investigation.water",0);
             String evidence=Investigation.fish(state,item,stack.getCount(),hook.getUUID()+":"+i);
             if(!evidence.isEmpty()){
                 var token=new ItemStack(net.minecraft.world.item.Items.PAPER);
@@ -59,7 +64,16 @@ public final class AdventureService {
     }
     public static void action(ServerPlayer p,String npc,int choice){
         var legacy=AirshipService.data(p);AdventureEngine.migrate(legacy);var d=legacy.adventure;var q=AdventureCatalog.personal(npc);
-        if(choice>=40&&choice<=55){
+        if(choice>=60&&choice<=74){
+            var copper=net.minecraft.world.item.Items.COPPER_INGOT;var bread=net.minecraft.world.item.Items.BREAD;
+            String plan=Council.choice(d);
+            String line=Council.act(d,npc,choice,itemCount(p,copper),itemCount(p,bread));
+            if(!line.isEmpty()){
+                if(choice==73&&plan.equals("signal"))consume(p,copper,2);
+                if(choice==73&&plan.equals("aid"))consume(p,bread,4);
+                d.lastInvestigationLine=line;say(p,line);
+            }
+        }else if(choice>=40&&choice<=55){
             String line=Voyage.act(d,npc,choice);
             if(!line.isEmpty()){d.lastInvestigationLine=line;say(p,line);}
         }else if(choice>=30&&choice<=39){

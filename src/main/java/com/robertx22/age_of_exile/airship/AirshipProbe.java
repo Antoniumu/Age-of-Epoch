@@ -147,19 +147,25 @@ public final class AirshipProbe {
                 var original=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p);var restored=new com.robertx22.age_of_exile.capability.player.RPGPlayerData(p);restored.loadFromNBT(original.saveToNBT());
                 var b=restored.airship.adventure;
                 if(!b.facts.equals(a.facts)||!b.progress.equals(a.progress)||!b.lastInvestigationLine.equals(a.lastInvestigationLine)||!b.events.equals(a.events))throw new IllegalStateException("Evidence ledger/promise lost in actual RPG NBT");
-            } else if(action.equals("adventure-fish")||action.equals("investigation-fish")) {
+            } else if(action.equals("council-proof")) {
+                var a=d.adventure;
+                if(!a.facts.containsAll(java.util.List.of("council.started","council.heard.mara","council.heard.tik","council.choice.map","council.fulfilled","council.closed"))||a.facts.contains("council.promise.pending")||a.progress.getOrDefault("council.fish",0)!=1)throw new IllegalStateException("Council omitted a chosen commitment or its followup");
+                var original=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p);var restored=new com.robertx22.age_of_exile.capability.player.RPGPlayerData(p);restored.loadFromNBT(original.saveToNBT());
+                if(!restored.airship.adventure.facts.equals(a.facts)||!restored.airship.adventure.progress.equals(a.progress)||!restored.airship.adventure.events.equals(a.events))throw new IllegalStateException("Council facts lost on RPG NBT roundtrip");
+            } else if(action.equals("adventure-fish")||action.equals("investigation-fish")||action.equals("council-fish")) {
                 var held=p.getMainHandItem().copy(); // Dev rod must not overwrite the copper just stocked into an empty selected slot.
                 p.setGameMode(net.minecraft.world.level.GameType.CREATIVE);
                 try {
                 p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.FISHING_ROD));
-                String objective=action.equals("investigation-fish")?"investigation.water":"captain.quiet_water";
-                for(int attempt=0;attempt<20 && d.adventure.progress.getOrDefault(objective,0)<3;attempt++){
+                String objective=action.equals("investigation-fish")?"investigation.water":action.equals("council-fish")?"council.fish":"captain.quiet_water";
+                int target=action.equals("council-fish")?1:3;
+                for(int attempt=0;attempt<20 && d.adventure.progress.getOrDefault(objective,0)<target;attempt++){
                     p.getMainHandItem().getItem().use(level,p,net.minecraft.world.InteractionHand.MAIN_HAND);
                     var hook=level.getEntitiesOfClass(net.minecraft.world.entity.projectile.Projectile.class,p.getBoundingBox().inflate(32),e->e.getOwner()==p && net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()).toString().equals("minecraft:fishing_bobber")).stream().findFirst().orElseThrow();
                     var nibble=hook.getClass().getDeclaredField("nibble");nibble.setAccessible(true);nibble.setInt(hook,20); // Synthetic bite timing ONLY; real vanilla rod retrieval and fishing loot hook below.
                     p.getMainHandItem().getItem().use(level,p,net.minecraft.world.InteractionHand.MAIN_HAND);
                 }
-                if(d.adventure.progress.getOrDefault(objective,0)!=3)throw new IllegalStateException("Real rod loot did not reach server fishing objective");
+                if(d.adventure.progress.getOrDefault(objective,0)!=target)throw new IllegalStateException("Real rod loot did not reach server fishing objective");
                 } finally {p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,held);}
                 if(action.equals("investigation-fish")&&countItem(p,net.minecraft.world.item.Items.COPPER_INGOT)!=proofCopper)throw new IllegalStateException("Fishing fixture changed receiver stock");
             } else if(action.equals("adventure-heart-check")) {

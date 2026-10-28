@@ -502,5 +502,85 @@
         "stream": true
       }
     ]
+  },
+  "airship.personal_captain_council": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_captain_council",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_captain_close": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_captain_close",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_mara_followup": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_mara_followup",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_mara_council": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_mara_council",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_tik_council": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_tik_council",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_bram_council": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_bram_council",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_oren_council": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_oren_council",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_veya_council": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_veya_council",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_selin_council": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_selin_council",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_lysander_council": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_lysander_council",
+        "stream": true
+      }
+    ]
   }
 }

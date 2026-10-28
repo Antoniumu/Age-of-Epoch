@@ -42,12 +42,13 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
             }
             for(var o:Investigation.options(d,npc))option("§6[СЮЖЕТ] "+o.label(),o.action(),row++,o.action()!=31||AdventureService.inventory(mc.player,AdventureCatalog.personal("tik"))>=4);
             for(var o:Voyage.options(d,npc))option("§6[ПОДГОТОВКА] "+o.label(),o.action(),row++,o.enabled());
+            for(var o:Council.options(d,npc,AdventureService.itemCount(mc.player,net.minecraft.world.item.Items.COPPER_INGOT),AdventureService.itemCount(mc.player,net.minecraft.world.item.Items.BREAD)))option("§6[СОВЕТ] "+o.label(),o.action(),row++,o.enabled());
         }
         addButton(new Button(guiLeft+10,guiTop+287,370,19,Component.literal("Закрыть"),b->onClose()));
         signature=stamp();
         if(net.fabricmc.loader.api.FabricLoader.getInstance().isDevelopmentEnvironment())System.out.println("AIRSHIPTEST UI npc="+npc+" rows="+row+" copper="+AdventureService.inventory(mc.player,AdventureCatalog.personal("tik"))+" options="+Investigation.options(d,npc));
     }
-    private String stamp(){if(mc.player==null)return "";var d=data();var q=AdventureCatalog.personal(npc);return d.accepted.toString()+d.completed+d.facts+d.callDecision+d.lastInvestigationLine+d.progress+(q==null?0:AdventureService.inventory(mc.player,q));}
+    private String stamp(){if(mc.player==null)return "";var d=data();var q=AdventureCatalog.personal(npc);return d.accepted.toString()+d.completed+d.facts+d.callDecision+d.lastInvestigationLine+d.progress+(q==null?0:AdventureService.inventory(mc.player,q))+AdventureService.itemCount(mc.player,net.minecraft.world.item.Items.COPPER_INGOT)+":"+AdventureService.itemCount(mc.player,net.minecraft.world.item.Items.BREAD);}
     @Override public boolean mouseScrolled(double x,double y,double amount){scroll=Math.clamp(scroll-(int)(amount*20),0,Math.max(0,extent-(entity>=0?166:275)));return true;}
     private void stopVoice(){if(playing!=null)mc.getSoundManager().stop(playing);playing=null;speaking=null;}
     private boolean confirmed(){
@@ -56,7 +57,7 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
             case 20->q!=null&&d.accepted.contains(q.id());
             case 21->q!=null&&d.completed.contains(q.id());
             case 22->d.facts.contains("memory:"+npc+":confidence");
-            default->pendingAction>=30&&pendingAction<=55&&!d.lastInvestigationLine.equals(beforeLine);
+            default->((pendingAction>=30&&pendingAction<=55)||(pendingAction>=60&&pendingAction<=74))&&!d.lastInvestigationLine.equals(beforeLine);
         };
     }
     private void playConfirmedAction(){
@@ -70,7 +71,7 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
         super.tick();
         if(!signature.equals(stamp())){
             if(confirmed()){
-                if(pendingAction>=30&&pendingAction<=55)storyLine=data().lastInvestigationLine;
+                if(((pendingAction>=30&&pendingAction<=55)||(pendingAction>=60&&pendingAction<=74)))storyLine=data().lastInvestigationLine;
                 playConfirmedAction();pendingAction=-1;
             }
             init();
@@ -101,6 +102,7 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
             y=lines(pose,AdventureEngine.callSummary(d),y,0xB8CED2,bottom);
             y=lines(pose,Investigation.objective(d),y,0xE4C897,bottom);
             for(var q:AdventureCatalog.QUESTS)if(d.accepted.contains(q.id()))y=lines(pose,(d.completed.contains(q.id())?"✓ ":"• ")+q.title()+" • "+AdventureEngine.progress(d,q,AdventureService.inventory(mc.player,q))+"/"+q.target()+" "+q.objective(),y,0x80D9D1,bottom);
+            for(String entry:Council.journal(d))y=lines(pose,entry,y,0xE4C897,bottom);
             for(String entry:Voyage.journal(d))y=lines(pose,entry,y,0xE4C897,bottom);
             for(String entry:Investigation.journal(d))y=lines(pose,entry,y,0xB8CED2,bottom);
             for(String id:AirshipStory.IDS){if(y>=guiTop+12 && y<=bottom){AirshipHeart.draw(pose,guiLeft+12,y,1,legacy.relationshipValue(id));AbstractGui.drawShadow(mc.font,pose,AirshipStory.name(id).split(" • ")[0]+" • "+legacy.relationshipValue(id)+"/100",guiLeft+25,y,0xBCCAC0);}y+=11;extent=Math.max(extent,y+scroll-guiTop);}
@@ -115,7 +117,8 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
             if(speaking!=null)y=lines(pose,speaking.text(),y,0xF0ECE4,bottom);
             else if(!storyLine.isEmpty())y=lines(pose,storyLine,y,0x80D9D1,bottom);
             else if(q!=null)y=lines(pose,d.completed.contains(q.id())?(d.facts.contains("memory:"+npc+":confidence")?AdventureEngine.confidence(npc):q.thanks()):q.title()+" • "+AdventureEngine.progress(d,q,AdventureService.inventory(mc.player,q))+"/"+q.target()+" "+q.objective()+". "+q.request(),y,0x80D9D1,bottom);
-            if(speaking==null&&Voyage.started(d))y=lines(pose,Voyage.objective(d),y,0xE4C897,bottom);
+            if(speaking==null&&Council.started(d))y=lines(pose,Council.objective(d),y,0xE4C897,bottom);
+            else if(speaking==null&&Voyage.started(d))y=lines(pose,Voyage.objective(d),y,0xE4C897,bottom);
             if(speaking==null&&Investigation.started(d)){
                 y=lines(pose,Investigation.objective(d),y,0xE4C897,bottom);
                 String reaction=Investigation.reaction(d,npc);if(!reaction.isEmpty())y=lines(pose,reaction,y,0xB8CED2,bottom);
