@@ -288,6 +288,31 @@ public final class SoullessProbe {
         counters[0] += repeat.checks;
         counters[1] += repeat.failed;
 
+        // ---- 3d. Стартовый мешок: ровно один готовый посох (а не «посох + душа») ----
+        // Баг был в том, что мешок выдавал отдельный «голый» посох и отдельно роллил
+        // душу/предмет, и из-за доли дропа готовыми предметами новичок получал два посоха.
+        ItemStack starter = com.robertx22.age_of_exile.vanilla_mc.items.misc.ItemNewbieGearBag
+            .createStarterGear(com.robertx22.age_of_exile.aoe_data.database.gear_slots.GearSlots.STAFF);
+        GearItemData starterData = starter.isEmpty() ? null : Gear.Load(starter);
+        boolean starterIsSoul = starterData != null
+            && com.robertx22.age_of_exile.uncommon.datasaving.StackSaving.STAT_SOULS.has(starter);
+
+        Report bag = new Report("soulless_starter");
+        bag.put("slot", starter.isEmpty() ? "" : SoullessGear.slotIdFor(starter));
+        bag.put("items", starter.getCount());
+        bag.check("starter_not_empty", !starter.isEmpty());
+        // Предмет — именно посох (а не случайный меч из души).
+        bag.check("starter_is_staff", "staff".equals(SoullessGear.slotIdFor(starter)));
+        // Душа уже вложена в предмет, отдельной душей мешок ничего не выдаёт.
+        bag.check("starter_soul_inside", starterData != null && !starterData.isSoulless());
+        bag.check("starter_not_soul_item", !starterIsSoul);
+        bag.check("starter_has_base", starterData != null && starterData.hasBase());
+        bag.check("starter_full_stats", starterData != null && Math.abs(starterData.bq - 1F) < 0.001F);
+        bag.check("starter_unsalvageable", starterData != null && !starterData.can_sal);
+        out.add(bag.line());
+        counters[0] += bag.checks;
+        counters[1] += bag.failed;
+
         // ---- 4. Демо-предметы в хотбар: их снимает сценарий ----
         // Берём предметы 20 уровня: на 1 уровне базовые числа округляются до «1»
         // и разницу между 12 % и 45 % в тултипе не видно.
