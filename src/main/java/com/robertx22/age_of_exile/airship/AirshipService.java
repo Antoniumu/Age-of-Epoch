@@ -68,12 +68,14 @@ public final class AirshipService {
         if(!p.isAlive() || p.isSpectator() || e==null || !e.isAlive() || p.distanceToSqr(e)>36 || npcId(e).isEmpty() || !p.hasLineOfSight(e)) return;
         AirshipData d=data(p);String npc=npcId(e);var book=Load.playerRPGData(p).questBook;
         if(expectedStage!=d.stage) return; // Reject replayed/stale UI packets.
+        com.robertx22.age_of_exile.airship.adventure.AdventureEngine.migrate(d);
         if(choice>=10 && choice<=22){com.robertx22.age_of_exile.airship.adventure.AdventureService.action(p,npc,choice);return;}
         if(choice==2) {
             int iron=0;
             for(int i=0;i<p.getInventory().getContainerSize();i++) if(p.getInventory().getItem(i).is(Items.IRON_INGOT)) iron+=p.getInventory().getItem(i).getCount();
             if(AirshipCampaign.takeFavor(d,book,npc)) tell(p,"Личное поручение: "+AirshipStory.favor(npc));
             else if(AirshipCampaign.finishFavor(d,book,npc,iron)) {
+                com.robertx22.age_of_exile.airship.adventure.AdventureEngine.bond(d.adventure,npc,"legacy.favor",8,3,8);
                 if(npc.equals("quartermaster")) {
                     int left=16;
                     for(int i=0;i<p.getInventory().getContainerSize() && left>0;i++) {
@@ -87,6 +89,7 @@ public final class AirshipService {
             sync(p);return;
         }
         if(!AirshipCampaign.advance(d,book,npc,expectedStage,choice)) { tell(p,AirshipStory.objective(d.stage));sync(p);return; }
+        com.robertx22.age_of_exile.airship.adventure.AdventureEngine.bond(d.adventure,npc,"legacy.stage."+expectedStage,3,1,3);
         d.giverSkin=AirshipCrew.texture(AirshipStory.owner(d.stage));
         sync(p);
         p.sendSystemMessage(Component.literal("§6Последний Рассвет §8» §f"+AirshipStory.objective(d.stage)));

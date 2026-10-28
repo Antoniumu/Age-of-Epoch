@@ -7,6 +7,8 @@ public final class AdventureEngine {
     public static void migrate(AirshipData legacy){
         AdventureData d=legacy.adventure;if(d.version>0)return;
         for(String id:AirshipStory.IDS){d.trust.put(id,Math.min(20,legacy.trust(id)));d.respect.put(id,Math.min(20,legacy.trust(id)));}
+        for(int stage=0;stage<Math.min(11,legacy.stage);stage++)d.facts.add("memory:"+AirshipStory.actor(stage)+":legacy.stage."+stage);
+        for(String id:AirshipStory.IDS)if((legacy.favorCompleted & (1<<AirshipStory.index(id)))!=0)d.facts.add("memory:"+id+":legacy.favor");
         if(legacy.stage==11)d.facts.add("legacy.introduction_complete");
         d.version=1; // Never touch old stage, choice, balances or favor baselines.
     }
