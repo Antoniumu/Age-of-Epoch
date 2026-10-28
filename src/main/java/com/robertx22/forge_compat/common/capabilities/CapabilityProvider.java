@@ -7,7 +7,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 
 import java.util.Map;
-import java.util.WeakHashMap;
 
 /**
  * Runtime store for capability instances, attached lazily on first access
@@ -15,8 +14,8 @@ import java.util.WeakHashMap;
  */
 public class CapabilityProvider {
 
-    private static final Map<Object, Map<String, ICapabilityProvider>> STORE = new WeakHashMap<>();
-    private static final Map<Object, Map<Capability<?>, LazyOptional<?>>> RESOLVED_CACHE = new WeakHashMap<>();
+    private static final WeakIdentityMap<Map<String, ICapabilityProvider>> STORE = new WeakIdentityMap<>();
+    private static final WeakIdentityMap<Map<Capability<?>, LazyOptional<?>>> RESOLVED_CACHE = new WeakIdentityMap<>();
 
     private static Map<String, ICapabilityProvider> getOrAttach(Object owner) {
         Map<String, ICapabilityProvider> map = STORE.get(owner);

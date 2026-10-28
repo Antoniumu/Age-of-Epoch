@@ -62,6 +62,9 @@ public class MobBarScreen extends AbstractGui {
             }
 
             Entity looked = LookUtils.getEntityLookedAt(mc.player);
+            if (looked != null && net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(looked.getType()).toString().equals("minecraft:mannequin")) {
+                currentTarget = null; return; // Crew and decorative mannequins are not combat targets.
+            }
             if (looked instanceof LivingEntity le && !(le instanceof ArmorStand) && le != mc.player && le.isAlive()) {
                 currentTarget = le;
                 lastSeenTimeMs = System.currentTimeMillis();

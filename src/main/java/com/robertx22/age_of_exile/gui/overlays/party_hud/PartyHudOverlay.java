@@ -119,6 +119,16 @@ public final class PartyHudOverlay extends AbstractGui {
         List<String> dailyLines = showDaily ? wrap(mc, PartyHudState.daily, textWidth, 2) : List.of();
         List<String> weeklyLines = showWeekly ? wrap(mc, PartyHudState.weekly, textWidth, 2) : List.of();
 
+        var airship=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(mc.player).airship;
+        int shipIron=0,shipBread=0;for(int slot=0;slot<mc.player.getInventory().getContainerSize();slot++){var stack=mc.player.getInventory().getItem(slot);if(stack.is(net.minecraft.world.item.Items.IRON_INGOT))shipIron+=stack.getCount();if(stack.is(net.minecraft.world.item.Items.BREAD))shipBread+=stack.getCount();}
+        var shipBook=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(mc.player).questBook;
+        List<String> shipLines=new java.util.ArrayList<>();
+        if(airship.stage>0) {
+            shipLines.addAll(wrap(mc,com.robertx22.age_of_exile.airship.AirshipQuestTracker.main(airship,shipBook),textWidth,4));
+            var activeSides=com.robertx22.age_of_exile.airship.AirshipQuestTracker.active(airship,shipBook,shipIron,com.robertx22.age_of_exile.airship.adventure.AdventureService.inventoryCounts(mc.player));
+            for(String side:activeSides.stream().limit(3).toList())shipLines.addAll(wrap(mc,side,textWidth,2));
+            if(activeSides.size()>3)shipLines.add("Ещё "+(activeSides.size()-3)+" • H → Приключения");
+        }
         int height = 12;                                   // заголовок
         if (!teamLines.isEmpty()) {
             height += teamLines.size() * 10 + 3;
@@ -129,6 +139,7 @@ public final class PartyHudOverlay extends AbstractGui {
         if (!weeklyLines.isEmpty()) {
             height += 6 + 14 + weeklyLines.size() * 10;
         }
+        if(!shipLines.isEmpty()) height+=32+shipLines.size()*10;
         if (combat && rows > 0) {
             height += 12;                                  // разделитель
             height += 13;                                  // название отряда
@@ -185,6 +196,12 @@ public final class PartyHudOverlay extends AbstractGui {
             cy = ty + 6;
         }
 
+        if(!shipLines.isEmpty()) {
+            drawString(pose,mc.font,"◇  ПОСЛЕДНИЙ РАССВЕТ",x+11,cy+3,GOLD);cy+=16;
+            boolean sideSection=false;
+            for(String line:shipLines) {sideSection|=line.startsWith("ПОБОЧНОЕ");drawString(pose,mc.font,line,x+11,cy,sideSection?0x80D9D1:0xE4C897);cy+=10;}
+            cy+=16;
+        }
         if (combat && rows > 0) {
             fill(pose, x + 10, cy, x + width - 10, cy + 1, LINE);
             drawString(pose, mc.font, PartyHudState.squadIcon + "  " + PartyHudState.squadName,

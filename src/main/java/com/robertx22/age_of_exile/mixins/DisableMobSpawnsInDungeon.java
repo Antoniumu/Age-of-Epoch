@@ -20,6 +20,11 @@ public class DisableMobSpawnsInDungeon {
 
     @Inject(method = "checkSpawnRules", at = @At(value = "HEAD"), cancellable = true)
     private static <T extends Entity> void disableCanSpawn(EntityType<T> type, ServerLevelAccessor serverWorldAccess, EntitySpawnReason spawnReason, BlockPos pos, RandomSource random, CallbackInfoReturnable<Boolean> ci) {
+        if (serverWorldAccess instanceof ServerLevel hubLevel
+            && com.robertx22.age_of_exile.airship.AirshipHub.protectedAt(hubLevel,pos)
+            && (spawnReason==EntitySpawnReason.NATURAL || spawnReason==EntitySpawnReason.CHUNK_GENERATION)) {
+            ci.setReturnValue(false);return;
+        }
         if (WorldUtils.isMapWorldClass(serverWorldAccess) || WorldUtils.isSimulationWorld(serverWorldAccess)) {
             if (spawnReason == EntitySpawnReason.NATURAL) {
                 ci.setReturnValue(false);

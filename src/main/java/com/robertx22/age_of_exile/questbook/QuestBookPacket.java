@@ -63,8 +63,8 @@ public class QuestBookPacket extends MyPacket<QuestBookPacket> {
         }
         switch (action) {
             case REFRESH -> QuestBookService.refresh(player);
-            case TOGGLE_PLATINUM -> QuestBookService.togglePlatinum(player);
-            case CLAIM_MANUAL_TASK -> QuestBookService.claimManualTask(player, taskId);
+            case TOGGLE_PLATINUM -> { /* Retired UI: retain packet ordinal, reject mutations from old clients. */ }
+            case CLAIM_MANUAL_TASK -> { /* Manual checkboxes are no longer gameplay progression. */ }
         }
     }
 

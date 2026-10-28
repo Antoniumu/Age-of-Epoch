@@ -86,6 +86,7 @@ public class RPGPlayerData implements ICommonPlayerCap {
     public ProfessionsData professions = new ProfessionsData();
     public ScalingPlayerDiffData scalingDifficulty = new ScalingPlayerDiffData();
     public QuestBookData questBook = new QuestBookData();
+    public com.robertx22.age_of_exile.airship.AirshipData airship = new com.robertx22.age_of_exile.airship.AirshipData();
     public TpaData tpa = new TpaData();
 
     /**
@@ -127,6 +128,7 @@ public class RPGPlayerData implements ICommonPlayerCap {
         LoadSave.Save(professions, nbt, PROFESSIONS);
         LoadSave.Save(scalingDifficulty, nbt, DIFF);
         LoadSave.Save(questBook, nbt, QUEST_BOOK);
+        LoadSave.Save(airship, nbt, "airship_campaign");
         nbt.put(TPA_DATA, tpa.saveToNBT());
         nbt.putString(ACTIVE_GUIDE, active_guide == null ? "" : active_guide);
 
@@ -145,6 +147,9 @@ public class RPGPlayerData implements ICommonPlayerCap {
         this.professions = loadOrBlank(ProfessionsData.class, new ProfessionsData(), nbt, PROFESSIONS, new ProfessionsData());
         this.scalingDifficulty = loadOrBlank(ScalingPlayerDiffData.class, new ScalingPlayerDiffData(), nbt, DIFF, new ScalingPlayerDiffData());
         this.questBook = loadOrBlank(QuestBookData.class, new QuestBookData(), nbt, QUEST_BOOK, new QuestBookData());
+        this.airship = loadOrBlank(com.robertx22.age_of_exile.airship.AirshipData.class,
+            new com.robertx22.age_of_exile.airship.AirshipData(), nbt, "airship_campaign",
+            new com.robertx22.age_of_exile.airship.AirshipData());
         this.tpa = new TpaData();
         this.tpa.loadFromNBT(nbt.getCompoundOrEmpty(TPA_DATA));
         this.active_guide = nbt.getStringOr(ACTIVE_GUIDE, "");

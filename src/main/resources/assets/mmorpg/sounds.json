@@ -1,35 +1,506 @@
 {
-    "freeze": {
-        "category": "hostile",
-        "sounds": [{"name": "mmorpg:freeze", "stream": true}]
-    },
-    "dash": {
-        "category": "hostile",
-        "sounds": [{"name": "mmorpg:dash", "stream": true}]
-    },
-    "fireball": {
-        "category": "hostile",
-        "sounds": [{"name": "mmorpg:fireball", "stream": true}]
-    },
-    "stone_crack": {
-        "category": "hostile",
-        "sounds": [{"name": "mmorpg:stone_crack", "stream": true}]
-    },
-    "buff": {
-        "category": "hostile",
-        "sounds": [{"name": "mmorpg:buff", "stream": true}]
-    },
-	"fire": {
-        "category": "hostile",
-        "sounds": [{"name": "mmorpg:fire", "stream": true}]
-    },	
-	"burn": {
-        "category": "hostile",
-        "sounds": [{"name": "mmorpg:burn", "stream": true}]
-    },
-    "splash": {
-        "category": "hostile",
-        "sounds": [{"name": "mmorpg:splash", "stream": true}]
-    }
-
+  "freeze": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "mmorpg:freeze",
+        "stream": true
+      }
+    ]
+  },
+  "dash": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "mmorpg:dash",
+        "stream": true
+      }
+    ]
+  },
+  "fireball": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "mmorpg:fireball",
+        "stream": true
+      }
+    ]
+  },
+  "stone_crack": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "mmorpg:stone_crack",
+        "stream": true
+      }
+    ]
+  },
+  "buff": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "mmorpg:buff",
+        "stream": true
+      }
+    ]
+  },
+  "fire": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "mmorpg:fire",
+        "stream": true
+      }
+    ]
+  },
+  "burn": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "mmorpg:burn",
+        "stream": true
+      }
+    ]
+  },
+  "splash": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "mmorpg:splash",
+        "stream": true
+      }
+    ]
+  },
+  "airship.captain_welcome": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/captain_welcome",
+        "stream": true
+      }
+    ]
+  },
+  "airship.captain_choice": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/captain_choice",
+        "stream": true
+      }
+    ]
+  },
+  "airship.captain_intro_b": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/captain_intro_b",
+        "stream": true
+      }
+    ]
+  },
+  "airship.captain_finale": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/captain_finale",
+        "stream": true
+      }
+    ]
+  },
+  "airship.captain_echoes": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/captain_echoes",
+        "stream": true
+      }
+    ]
+  },
+  "airship.captain_return": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/captain_return",
+        "stream": true
+      }
+    ]
+  },
+  "airship.captain_intro_a": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/captain_intro_a",
+        "stream": true
+      }
+    ]
+  },
+  "airship.captain_idle": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/captain_idle",
+        "stream": true
+      }
+    ]
+  },
+  "airship.mara_intro": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/mara_intro",
+        "stream": true
+      }
+    ]
+  },
+  "airship.mara_echoes": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/mara_echoes",
+        "stream": true
+      }
+    ]
+  },
+  "airship.bram_intro": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/bram_intro",
+        "stream": true
+      }
+    ]
+  },
+  "airship.bram_path": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/bram_path",
+        "stream": true
+      }
+    ]
+  },
+  "airship.bram_anchor": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/bram_anchor",
+        "stream": true
+      }
+    ]
+  },
+  "airship.oren_intro": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/oren_intro",
+        "stream": true
+      }
+    ]
+  },
+  "airship.veya_intro": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/veya_intro",
+        "stream": true
+      }
+    ]
+  },
+  "airship.selin_intro": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/selin_intro",
+        "stream": true
+      }
+    ]
+  },
+  "airship.lysander_intro": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/lysander_intro",
+        "stream": true
+      }
+    ]
+  },
+  "airship.tik_intro": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/tik_intro",
+        "stream": true
+      }
+    ]
+  },
+  "airship.mara_rift": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/mara_rift",
+        "stream": true
+      }
+    ]
+  },
+  "airship.mara_idle": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/mara_idle",
+        "stream": true
+      }
+    ]
+  },
+  "airship.mara_waiting": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/mara_waiting",
+        "stream": true
+      }
+    ]
+  },
+  "airship.bram_idle": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/bram_idle",
+        "stream": true
+      }
+    ]
+  },
+  "airship.bram_waiting": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/bram_waiting",
+        "stream": true
+      }
+    ]
+  },
+  "airship.bram_waiting_anchor": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/bram_waiting_anchor",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_captain_request": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_captain_request",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_captain_thanks": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_captain_thanks",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_mara_request": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_mara_request",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_mara_thanks": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_mara_thanks",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_bram_request": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_bram_request",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_oren_request": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_oren_request",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_veya_request": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_veya_request",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_selin_request": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_selin_request",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_lysander_request": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_lysander_request",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_tik_request": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_tik_request",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_captain_confidence": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_captain_confidence",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_mara_confidence": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_mara_confidence",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_bram_confidence": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_bram_confidence",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_oren_confidence": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_oren_confidence",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_veya_confidence": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_veya_confidence",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_selin_confidence": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_selin_confidence",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_lysander_confidence": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_lysander_confidence",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_tik_confidence": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_tik_confidence",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_mara_analysis": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_mara_analysis",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_captain_confession": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_captain_confession",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_captain_voyage_start": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_captain_voyage_start",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_captain_voyage_finish": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_captain_voyage_finish",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_mara_voyage_outro": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_mara_voyage_outro",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_bram_voyage_brief": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_bram_voyage_brief",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_lysander_voyage_brief": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_lysander_voyage_brief",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_mara_voyage_route": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_mara_voyage_route",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_tik_voyage_route": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_tik_voyage_route",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_veya_voyage_route": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_veya_voyage_route",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_selin_voyage_route": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_selin_voyage_route",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_oren_voyage_route": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_oren_voyage_route",
+        "stream": true
+      }
+    ]
+  }
 }

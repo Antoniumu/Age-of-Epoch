@@ -84,7 +84,7 @@ public final class MobPlateRenderer {
         }
 
         Minecraft mc = Minecraft.getInstance();
-        if (mc.level == null || mc.player == null) {
+        if (mc.level == null || mc.player == null || mc.gui.screen() instanceof com.robertx22.age_of_exile.airship.AirshipDialogueScreen) {
             return;
         }
 
@@ -123,6 +123,10 @@ public final class MobPlateRenderer {
             if (!(raw instanceof LivingEntity entity)) {
                 continue;
             }
+            if (net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString().equals("minecraft:mannequin")) continue;
+            // Tik is a dialogue NPC, not a combat mob. His name is synchronized; scoreboard tags are not.
+            if (entity.getCustomName()!=null && entity.getCustomName().getString().equals(com.robertx22.age_of_exile.airship.AirshipStory.name("tik"))
+                && net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString().equals("minecraft:parrot")) continue;
             if (entity == mc.player || entity instanceof ArmorStand || entity.isInvisible() || !entity.isAlive()) {
                 continue;
             }

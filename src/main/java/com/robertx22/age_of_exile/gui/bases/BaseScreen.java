@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.robertx22.forge_compat.client.RenderSystem;
 import com.robertx22.age_of_exile.event_hooks.player.OnKeyPress;
 import com.robertx22.age_of_exile.mmorpg.registers.client.KeybindsRegister;
-import com.robertx22.age_of_exile.questbook.QuestBookScreen;
+
 import net.minecraft.client.Minecraft;
 import com.robertx22.forge_compat.client.Screen;
 import com.robertx22.forge_compat.client.Button;
@@ -42,11 +42,6 @@ public class BaseScreen extends Screen {
         if (KeybindsRegister.HUB_SCREEN_KEY.matches(com.mojang.blaze3d.platform.InputConstants.Type.KEYBOARD.getOrCreate(keyCode))) {
             Minecraft.getInstance().gui
                 .setScreen(null);
-            OnKeyPress.cooldown = 5;
-            return false;
-        }
-        if (KeybindsRegister.QUESTBOOK_KEY.matches(com.mojang.blaze3d.platform.InputConstants.Type.KEYBOARD.getOrCreate(keyCode))) {
-            Minecraft.getInstance().gui.setScreen(this instanceof QuestBookScreen ? null : new QuestBookScreen());
             OnKeyPress.cooldown = 5;
             return false;
         }

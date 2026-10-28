@@ -1,0 +1,173 @@
+name: Airship in-game proof
+on:
+  push:
+    branches: [arena/7bde44a9-age-of-epoch]
+    paths:
+      - 'src/**'
+      - 'tools/e2e/scenarios/airship.txt'
+      - 'tools/e2e/scenarios/winged.txt'
+      - '.github/workflows/airship.yml'
+  workflow_dispatch:
+    inputs:
+      recover_run:
+        description: 'Recover publication only from a run whose compile and real-client steps passed'
+        required: false
+        default: ''
+        type: string
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: airship-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  client:
+    if: ${{ !contains(github.event.head_commit.message, '[recover-proof:') && (github.event_name != 'workflow_dispatch' || inputs.recover_run == '') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-build-env
+      - name: Compile and unit tests
+        run: |
+          set -o pipefail
+          ./gradlew build 2>&1 | tee compile.log
+      - name: Compiler diagnostics
+        if: failure()
+        run: |
+          python3 - <<'PYCODE'
+          import re
+          from pathlib import Path
+          text=Path('compile.log').read_text() if Path('compile.log').exists() else ''
+          for match in re.finditer(r'([^\n]+\.java):(\d+): error:([^\n]+)([\s\S]*?)(?=\n[^\n]+\.java:\d+: error:|\n\d+ errors?|\Z)',text):
+              detail=(match[3]+match[4])[:1800].replace('%','%25').replace('\n','%0A').replace('\r','%0D')
+              print(f'::error file={match[1]},line={match[2]}::{detail}')
+          PYCODE
+      - name: Voice and vanilla skin integrity
+        run: |
+          python3 -m pip install Pillow
+          python3 tools/airship/check_adventure_audio.py
+          python3 tools/airship/audit_crew_uv.py
+      - name: Headless graphics
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends xvfb x11-utils xdotool imagemagick x11-apps openbox wmctrl libgl1 libglu1-mesa libgl1-mesa-dri mesa-utils mesa-vulkan-drivers vulkan-tools libxi6 libxcursor1 libxrandr2 libxinerama1 libxxf86vm1 libopenal1 libpulse0 libegl1 libegl-mesa0
+      - name: Real client, ship, crew, quests and H card
+        env:
+          RENDER_DISTANCE: 10
+          E2E_FAIL_FAST: 1
+        run: |
+          bash tools/e2e/run-in-xvfb.sh tools/e2e/scenarios/winged.txt run/e2e/airship
+          test -f run/e2e/airship/22-campaign-complete.png
+          ! grep -q 'AIRSHIPTEST FAIL' run/logs/latest.log
+          grep -q 'AIRSHIPVOICE ACTIVE captain_intro_a' run/logs/latest.log
+          grep -q 'AIRSHIPVOICE ACTIVE captain_intro_b' run/logs/latest.log
+          for voice in mara_intro bram_intro oren_intro veya_intro selin_intro lysander_intro tik_intro personal_captain_request personal_captain_thanks personal_oren_request personal_captain_confidence personal_oren_confidence personal_mara_analysis personal_captain_confession personal_captain_voyage_start personal_mara_voyage_route personal_veya_voyage_route personal_captain_voyage_finish personal_mara_voyage_outro; do
+            grep -q "AIRSHIPVOICE ACTIVE $voice" run/logs/latest.log
+          done
+          for stage in voyage-proof voyage-unaccepted voyage-profession voyage-dungeon investigation-proof investigation-device-check investigation-fish adventure-fish adventure-plant adventure-choice-check adventure-heart-check adventure-check hostile-spawn hostile-cleared jump-check jump-recovery side-ui-check ritual-paid hub-check crew-check attention-check winged board lift lift-check far-reject dialogue accepted mara quartermaster stale gate truth favor-claim-captain iron-quartermaster seed-dungeon finished; do
+            grep -q "AIRSHIPTEST PASS $stage" run/logs/latest.log
+          done
+      - name: Publish actual screenshots on the same working branch
+        if: always() && !cancelled() && github.ref == 'refs/heads/arena/7bde44a9-age-of-epoch'
+        env:
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          # Update the base before generating the proof commit; rebasing two replacements of ci-proof conflicts.
+          git pull --rebase --autostash origin arena/7bde44a9-age-of-epoch
+          mkdir -p docs/airship/proof-images
+          if compgen -G 'run/e2e/airship/*.png' >/dev/null; then
+            find docs/airship/proof-images -maxdepth 1 -name '*.png' -delete
+            cp run/e2e/airship/*.png docs/airship/proof-images/
+          fi
+          {
+            echo "Run: $RUN_URL"
+            echo "Source: $GITHUB_SHA"
+            grep -E 'AIRSHIPTEST|AIRSHIPVOICE|AIRSHIPJUMP' run/logs/latest.log 2>/dev/null || true
+            tail -100 run/logs/latest.log 2>/dev/null || true
+            tail -60 compile.log 2>/dev/null || true
+          } > docs/airship/ci-proof.txt
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/airship/proof-images docs/airship/ci-proof.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Record actual airship client proof [skip ci]"
+            git push origin HEAD:arena/7bde44a9-age-of-epoch
+          fi
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: airship-proof
+          path: |
+            run/e2e/airship/
+            run/logs/
+            run/e2e/gradle.log
+            build/reports/tests/
+            build/libs/*.jar
+
+  recover-proof:
+    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.recover_run != '') || contains(github.event.head_commit.message, '[recover-proof:') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RUN_ID: ${{ inputs.recover_run }}
+      RECOVERY_MESSAGE: ${{ github.event.head_commit.message }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: arena/7bde44a9-age-of-epoch
+          fetch-depth: 0
+      - name: Verify source run actually passed compile, integrity and real client
+        run: |
+          if [ -z "$RUN_ID" ]; then
+            RUN_ID=$(python3 -c 'import os,re; print(re.search(r"\[recover-proof:(\d+)\]",os.environ["RECOVERY_MESSAGE"])[1])')
+            echo "RUN_ID=$RUN_ID" >> "$GITHUB_ENV"
+          fi
+          [[ "$RUN_ID" =~ ^[0-9]+$ ]]
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID" > /tmp/source-run.json
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID/jobs?per_page=100" > /tmp/source-jobs.json
+          python3 - <<'PYCODE'
+          import json
+          run=json.load(open('/tmp/source-run.json'))
+          assert run['head_branch']=='arena/7bde44a9-age-of-epoch'
+          jobs=json.load(open('/tmp/source-jobs.json'))['jobs']
+          client=next(j for j in jobs if j['name']=='client')
+          steps={s['name']:s['conclusion'] for s in client['steps']}
+          for name in ['Compile and unit tests','Voice and vanilla skin integrity','Real client, ship, crew, quests and H card']:
+              assert steps.get(name)=='success',(name,steps)
+          print('Verified actual source execution:',run['head_sha'])
+          PYCODE
+      - uses: actions/download-artifact@v5
+        with:
+          name: airship-proof
+          run-id: ${{ env.RUN_ID }}
+          github-token: ${{ github.token }}
+          path: recovered
+      - name: Recover authentic logs and screenshots, not a new gameplay run
+        run: |
+          test -f recovered/run/e2e/airship/57-investigation-promise-kept.png
+          ! grep -q 'AIRSHIPTEST FAIL' recovered/run/logs/latest.log
+          for stage in investigation-proof investigation-device-check investigation-fish adventure-fish adventure-plant adventure-heart-check jump-check jump-recovery; do
+            grep -q "AIRSHIPTEST PASS $stage" recovered/run/logs/latest.log
+          done
+          for voice in personal_captain_request personal_captain_thanks personal_captain_confidence personal_oren_request personal_oren_confidence personal_mara_analysis personal_captain_confession; do
+            grep -q "AIRSHIPVOICE ACTIVE $voice" recovered/run/logs/latest.log
+          done
+          git pull --rebase --autostash origin arena/7bde44a9-age-of-epoch
+          mkdir -p docs/airship/proof-images
+          find docs/airship/proof-images -maxdepth 1 -name '*.png' -delete
+          cp recovered/run/e2e/airship/*.png docs/airship/proof-images/
+          {
+            echo "Recovered authentic artifact from: https://github.com/$GITHUB_REPOSITORY/actions/runs/$RUN_ID"
+            python3 -c 'import json; print("Source: "+json.load(open("/tmp/source-run.json"))["head_sha"])'
+            echo 'Source compile, integrity and real-client steps: PASS (checked via GitHub API). Publication recovery is not another gameplay execution.'
+            grep -E 'AIRSHIPTEST|AIRSHIPVOICE|AIRSHIPJUMP' recovered/run/logs/latest.log
+            echo 'Original publication failure:'
+            gh run view "$RUN_ID" --log-failed | grep -E 'error:|fatal:|cannot|unstaged|Aborting|rebase|Permission|Process completed' || true
+          } > docs/airship/ci-proof.txt
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/airship/proof-images docs/airship/ci-proof.txt
+          git commit -m 'Recover actual successful in-game execution proof from original artifact [skip ci]'
+          git push origin HEAD:arena/7bde44a9-age-of-epoch
