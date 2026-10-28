@@ -30,8 +30,8 @@ public final class AirshipQuestCard {
         }
         String[] ids={"captain","mara","quartermaster"};
         for(int i=0;i<ids.length;i++) {
-            AirshipHeart.draw(pose,x+7+i*73,y+hearts,1,d.trust(ids[i]));
-            AbstractGui.drawShadow(mc.font,pose,new String[]{"Кап.","Мара","Брам"}[i]+" "+d.trust(ids[i]),x+18+i*73,y+hearts,0xA8BDA9);
+            AirshipHeart.draw(pose,x+7+i*73,y+hearts,1,d.relationshipValue(ids[i]));
+            AbstractGui.drawShadow(mc.font,pose,new String[]{"Кап.","Мара","Брам"}[i]+" "+d.relationshipValue(ids[i]),x+18+i*73,y+hearts,0xA8BDA9);
         }
         int sideY=y+hearts+15;
         for(String side:sides){int n=0;for(var line:mc.font.split(Component.literal(side),w-14)){if(n++>=2)break;AbstractGui.drawShadow(mc.font,pose,line,x+7,sideY,0x80D9D1);sideY+=10;}sideY+=2;}

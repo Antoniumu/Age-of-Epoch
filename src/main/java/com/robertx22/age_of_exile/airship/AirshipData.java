@@ -6,6 +6,8 @@ import info.loenwind.autosave.annotations.Store;
 /** Character-owned mooring and campaign state; saved and synced with RPGPlayerData. */
 @Storable
 public class AirshipData {
+    @Store public com.robertx22.age_of_exile.airship.adventure.AdventureData adventure = new com.robertx22.age_of_exile.airship.adventure.AdventureData();
+    public int relationshipValue(String id){return adventure.version==0?Math.min(25,trust(id)):com.robertx22.age_of_exile.airship.adventure.AdventureEngine.heart(adventure,id);}
     @Store public long liftReadyAtMillis = 0;
     @Store public long hubRevision=0,hubJumpReadyAt=0;
     @Store public String layout = "prototype";

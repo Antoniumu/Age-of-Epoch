@@ -78,6 +78,7 @@ public class AirshipDialogueScreen extends BaseScreen {
     private void buildChoices() {
         if(mc.player==null) return;
         var data=Load.playerRPGData(mc.player).airship;var book=Load.playerRPGData(mc.player).questBook;
+        addButton(new Choice(panelX+panelW-134,panelY+5,124,"Личная история",b->{onClose();mc.gui.setScreen(new com.robertx22.age_of_exile.airship.adventure.AdventureScreen(entityId,npc,storyStage));}));
         int y=panelY+(AirshipStory.index(npc)>=3?168:101),w=panelW-20,x=panelX+10;
         if(AirshipStory.advance(npc,storyStage)!=storyStage) {
             String label=storyStage==7?"1 • Рассказать правду всей команде":storyStage==0?"1 • §6[СЮЖЕТ]§r Принять поручение":AirshipStory.target(storyStage+1)>0?"1 • §6[СЮЖЕТ]§r Принять следующее задание":"1 • §6[СЮЖЕТ]§r Продолжить / сдать задание";
@@ -125,8 +126,8 @@ public class AirshipDialogueScreen extends BaseScreen {
         text(pose,AirshipStory.name(npc),x+83,y+10,0xE4C897);
         if(mc.player!=null) {
             var d=Load.playerRPGData(mc.player).airship;
-            AirshipHeart.draw(pose,x+83,y+24,1,d.trust(npc));
-            text(pose,"Доверие "+d.trust(npc)+" • "+AirshipStory.reputationLabel(d.trust(npc)),x+95,y+24,0x95A99B);
+            AirshipHeart.draw(pose,x+83,y+24,1,d.relationshipValue(npc));
+            text(pose,"Доверие "+d.relationshipValue(npc)+" • "+AirshipStory.reputationLabel(d.relationshipValue(npc)),x+95,y+24,0x95A99B);
         }
         String subtitle=fullText?transcript:cues.isEmpty()?transcript:cues.get(Math.min(cueIndex,cues.size()-1)).text();
         int yy=y+39;

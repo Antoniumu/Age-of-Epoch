@@ -18,6 +18,7 @@ public class LootTableMixin {
     public void hookLoot(LootContext context, CallbackInfoReturnable<List<ItemStack>> ci) {
         try {
             AddSpawnerExtraLootMethod.hookLoot(context, ci);
+            com.robertx22.age_of_exile.airship.adventure.AdventureService.fishing(context,ci.getReturnValue());
         } catch (Exception e) {
             e.printStackTrace();
         }

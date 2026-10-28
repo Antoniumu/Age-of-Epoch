@@ -30,7 +30,7 @@ public final class AirshipService {
     public static final int COST = 8;
     private AirshipService() {}
     public static AirshipData data(ServerPlayer p) { return Load.playerRPGData(p).airship; }
-    private static void sync(ServerPlayer p) { Load.playerRPGData(p).syncToClient(p); }
+    public static void sync(ServerPlayer p) { Load.playerRPGData(p).syncToClient(p); }
     public static String npcId(Entity e) {
         if (!e.entityTags().contains(TAG)) return "";
         for (String id : AirshipStory.IDS) if (e.entityTags().contains("aoe_npc_" + id)) return id;
@@ -58,6 +58,7 @@ public final class AirshipService {
     }
     public static void open(ServerPlayer p, Entity e) {
         if (!p.isAlive() || p.isSpectator() || e.level() != p.level() || !e.isAlive() || p.distanceToSqr(e) > 36 || npcId(e).isEmpty()) return;
+        com.robertx22.age_of_exile.airship.adventure.AdventureEngine.migrate(data(p));
         sync(p);
         Packets.sendToClient(p, new AirshipDialoguePacket(e.getId(), npcId(e), AirshipCrew.texture(npcId(e))));
     }
@@ -67,6 +68,7 @@ public final class AirshipService {
         if(!p.isAlive() || p.isSpectator() || e==null || !e.isAlive() || p.distanceToSqr(e)>36 || npcId(e).isEmpty() || !p.hasLineOfSight(e)) return;
         AirshipData d=data(p);String npc=npcId(e);var book=Load.playerRPGData(p).questBook;
         if(expectedStage!=d.stage) return; // Reject replayed/stale UI packets.
+        if(choice>=10 && choice<=22){com.robertx22.age_of_exile.airship.adventure.AdventureService.action(p,npc,choice);return;}
         if(choice==2) {
             int iron=0;
             for(int i=0;i<p.getInventory().getContainerSize();i++) if(p.getInventory().getItem(i).is(Items.IRON_INGOT)) iron+=p.getInventory().getItem(i).getCount();
@@ -207,6 +209,7 @@ public final class AirshipService {
     }
     public static void tick(ServerPlayer p) {
         AirshipHub.tick(p);
+        com.robertx22.age_of_exile.airship.adventure.AdventureService.tick(p);
         AirshipData d=data(p);
         if (!d.summoned || !Level.OVERWORLD.equals(p.level().dimension()) || p.tickCount%10!=0) return;
         double dx=p.getX()-d.x-0.5, dz=p.getZ()-d.z-4.5;

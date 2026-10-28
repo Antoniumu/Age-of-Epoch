@@ -33,7 +33,7 @@ import com.robertx22.age_of_exile.gui.buttons.ScalingDifficultyButton;
 import com.robertx22.age_of_exile.guides.GuideAdvisor;
 import com.robertx22.age_of_exile.guides.GuideDefinition;
 import com.robertx22.age_of_exile.guides.GuidesScreen;
-import com.robertx22.age_of_exile.questbook.QuestBookScreen;
+
 import com.robertx22.age_of_exile.gui.screens.player_skills.ProfessionsScreen;
 import com.robertx22.age_of_exile.gui.screens.skill_tree.TalentsScreen;
 import com.robertx22.age_of_exile.gui.screens.spell.SpellScreen;
@@ -250,7 +250,7 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
             screens.add(new ModWikiScreen());
             screens.add(new com.robertx22.age_of_exile.simulation.SimulationScreen());
             screens.add(new GuidesScreen());
-            screens.add(new QuestBookScreen());
+            screens.add(new com.robertx22.age_of_exile.airship.adventure.AdventureScreen());
 
             int x = guiLeft + sizeX - 1;
             // Семь вкладок помещаются по высоте панели.
