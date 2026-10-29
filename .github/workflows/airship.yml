@@ -284,7 +284,13 @@ jobs:
           } > docs/airship/crew-walk-proof.txt
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/airship/crew-walk-proof.txt
+          mkdir -p docs/airship/crew-walk-images
+          for name in crew-walk-before crew-walk-during crew-walk-after crew-walk-blocked; do
+            if test -f "run/e2e/crew-walk/$name.png"; then
+              cp "run/e2e/crew-walk/$name.png" docs/airship/crew-walk-images/
+            fi
+          done
+          git add docs/airship/crew-walk-proof.txt docs/airship/crew-walk-images
           if ! git diff --cached --quiet; then
             git commit -m 'Record dev crew walk experiment [skip ci]'
             git push origin HEAD:arena/7bde44a9-age-of-epoch
