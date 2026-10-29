@@ -1,85 +1,467 @@
-Run: https://github.com/Antoniumu/Age-of-Epoch/actions/runs/40885965528
-Source: bc72f6e4741bfc9bb2efc336a8885417ab46683d
+Run: https://github.com/Antoniumu/Age-of-Epoch/actions/runs/40886803524
+Source: 71949c721fc742301545e2c49e59480238e0a874
 Experiment only: one candidate per NPC, 35-second budget; inspect CLIENT_OPEN and click screenshots individually. No global optimality claim.
-[13:54:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS prepare stage=0
-[13:55:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS ritual-stock stage=0
-[13:56:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST WINGED diagnostic: «Последний Рассвет» на стоянке. Встань в световой круг на земле, чтобы подняться: X=0, Z=-4. Капитан ждёт наверху; поговори с ним.
-[13:56:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS ritual-paid stage=0
-[13:56:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST WINGED diagnostic: Общий корабль уже существует или ожидает восстановления. Второй корабль не создаётся.
-[13:56:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS winged stage=0
-[13:56:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS board stage=0
-[13:56:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift stage=0
-[13:56:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift-check stage=0
-[13:56:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE PLAYER x=0.5 y=182.0 z=-3.5 alive=true spectator=false
-[13:56:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE NPC=veya x=-0.5 y=187.0 z=5.5 distance_sq=107.0 los=false server_open_range=false
-[13:56:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE NPC=quartermaster x=-0.5 y=182.0 z=19.5 distance_sq=530.0 los=true server_open_range=false
-[13:56:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE NPC=oren x=-3.5 y=182.0 z=18.5 distance_sq=500.0 los=false server_open_range=false
-[13:56:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE NPC=mara x=2.5 y=187.0 z=8.5 distance_sq=173.0 los=false server_open_range=false
-[13:56:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE NPC=selin x=0.5 y=182.0 z=14.5 distance_sq=324.0 los=true server_open_range=false
-[13:56:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE NPC=lysander x=2.5 y=187.0 z=4.5 distance_sq=93.0 los=false server_open_range=false
-[13:56:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE NPC=tik x=0.5 y=187.0 z=8.5 distance_sq=169.0 los=false server_open_range=false
-[13:56:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE NPC=captain x=1.5 y=194.0 z=25.5 distance_sq=986.0 los=false server_open_range=false
-[13:56:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-observe stage=0
-[13:56:29] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS board stage=0
-[13:56:29] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST FAIL java.lang.ClassNotFoundException: baritone.api.BaritoneAPI
+[14:00:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS prepare stage=0
+[14:00:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS ritual-stock stage=0
+[14:01:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST WINGED diagnostic: «Последний Рассвет» на стоянке. Встань в световой круг на земле, чтобы подняться: X=56, Z=-505. Капитан ждёт наверху; поговори с ним.
+[14:01:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS ritual-paid stage=0
+[14:01:19] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST WINGED diagnostic: Общий корабль уже существует или ожидает восстановления. Второй корабль не создаётся.
+[14:01:19] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS winged stage=0
+[14:01:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS board stage=0
+[14:01:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift stage=0
+[14:01:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift-check stage=0
+[14:01:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE PLAYER x=56.5 y=189.0 z=-504.5 alive=true spectator=false
+[14:01:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE NPC=lysander x=58.5 y=194.0 z=-496.5 distance_sq=93.0 los=false server_open_range=false
+[14:01:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE NPC=quartermaster x=55.5 y=189.0 z=-481.5 distance_sq=530.0 los=true server_open_range=false
+[14:01:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE NPC=oren x=52.5 y=189.0 z=-482.5 distance_sq=500.0 los=false server_open_range=false
+[14:01:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE NPC=selin x=56.5 y=189.0 z=-486.5 distance_sq=324.0 los=true server_open_range=false
+[14:01:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE NPC=mara x=58.5 y=194.0 z=-492.5 distance_sq=173.0 los=false server_open_range=false
+[14:01:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE NPC=veya x=55.5 y=194.0 z=-495.5 distance_sq=107.0 los=false server_open_range=false
+[14:01:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE NPC=tik x=56.5 y=194.0 z=-492.5 distance_sq=169.0 los=false server_open_range=false
+[14:01:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE NPC=captain x=57.5 y=201.0 z=-475.5 distance_sq=986.0 los=false server_open_range=false
+[14:01:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-observe stage=0
+[14:01:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS board stage=0
+[14:01:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE BARITONE safety_verified=true
+[14:01:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE TARGET npc=captain candidate=true goal=BlockPos{x=56, y=201, z=-477} start=(56.5, 189.0, -504.5)
+[14:01:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-target-captain stage=0
+[14:01:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=3 x=56.5 y=189.0 z=-504.5 ground=true
+[14:01:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=83 x=55.73796744787214 y=189.0 z=-505.19827316338706 ground=true
+[14:01:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=87 x=54.9316000639567 y=189.0 z=-505.4401123507403 ground=true
+[14:01:48] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=95 x=53.755066102904784 y=189.0 z=-504.67702785886326 ground=true
+[14:01:48] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=99 x=53.531073373162656 y=189.0 z=-503.87188618366395 ground=true
+[14:01:48] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=107 x=52.37241244601098 y=189.0 z=-502.3596442194814 ground=true
+[14:01:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=111 x=51.914991294540556 y=189.0 z=-501.90168170399323 ground=true
+[14:01:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=115 x=51.55350989373288 y=189.0 z=-500.9184162678395 ground=true
+[14:01:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=123 x=51.49616798366903 y=189.0 z=-499.19960683330993 ground=true
+[14:01:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=127 x=51.35567164371555 y=189.0 z=-498.59662990244055 ground=true
+[14:01:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=131 x=50.86178897604593 y=189.0 z=-497.9067974842849 ground=true
+[14:01:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=135 x=50.54641777108816 y=189.0 z=-496.900214389196 ground=true
+[14:01:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=143 x=49.68416223926139 y=189.0 z=-495.6972641367335 ground=true
+[14:01:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=151 x=48.73184944427315 y=189.0 z=-494.55804398733824 ground=true
+[14:01:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=155 x=48.51446157436864 y=189.0 z=-493.51710415532597 ground=true
+[14:01:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=159 x=48.49057273034103 y=189.0 z=-492.87177572959575 ground=true
+[14:01:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=163 x=48.49906246222042 y=189.0 z=-491.79307172733456 ground=true
+[14:01:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=167 x=48.50326745087393 y=189.0 z=-490.92972918522094 ground=true
+[14:01:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=175 x=48.50323595016304 y=189.0 z=-489.202973096595 ground=true
+[14:01:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=179 x=48.5018586063452 y=189.0 z=-488.33961747376514 ground=true
+[14:01:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=183 x=48.50376835253659 y=189.0 z=-487.6920837043027 ground=true
+[14:01:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=187 x=48.49986860698213 y=189.41999998688698 z=-486.61289473443867 ground=false
+[14:01:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=191 x=48.49770138367814 y=190.24918707874468 z=-486.0222837187797 ground=false
+[14:01:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=195 x=48.496288688556795 y=190.5 z=-485.0851675128751 ground=false
+[14:01:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=199 x=48.49718456100586 y=191.0 z=-484.44895931938305 ground=false
+[14:01:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=203 x=48.50437432575758 y=192.41999998688698 z=-483.35200752009115 ground=false
+[14:01:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=207 x=48.5050544184613 y=193.24918707874468 z=-482.7599503572369 ground=false
+[14:01:54] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=215 x=48.49942888544855 y=194.50133597911216 z=-481.9867740149477 ground=false
+[14:01:54] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=223 x=48.49872495681118 y=194.0 z=-480.82396461327755 ground=true
+[14:01:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=231 x=49.50054219209191 y=194.0 z=-479.46609222360405 ground=true
+[14:01:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=235 x=50.11712137496297 y=194.0 z=-478.86239289129514 ground=true
+[14:01:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=239 x=51.110429755611214 y=194.0 z=-478.5306580528294 ground=true
+[14:01:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=247 x=52.83066055754087 y=194.0 z=-478.49332050573275 ground=true
+[14:01:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=captain ticks=251 x=53.26376996304656 y=194.0 z=-478.4992156329948 ground=true
+[14:02:21] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE RESULT npc=captain candidate=true arrived=false on_ground=true los=false server_open_range=false elapsed_ticks=765 pos=(53.30226177785657, 194.0, -478.4997395517644) scope=candidate_only_no_click
+[14:02:21] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE CLICK_PREP npc=captain ready=false same_position_camera_assist=true
+[14:02:21] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-result-captain stage=0
+[14:02:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS board stage=0
+[14:02:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE BARITONE safety_verified=true
+[14:02:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE TARGET npc=mara candidate=true goal=BlockPos{x=57, y=194, z=-494} start=(56.5, 189.0, -504.5)
+[14:02:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-target-mara stage=0
+[14:02:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=2 x=56.5 y=189.0 z=-504.5 ground=true
+[14:02:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=38 x=55.143831801491466 y=189.0 z=-505.39979787536606 ground=true
+[14:02:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=42 x=54.37479370999377 y=189.0 z=-505.23815150287334 ground=true
+[14:02:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=46 x=53.755401411582945 y=189.0 z=-504.68378281764075 ground=true
+[14:02:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=50 x=53.5265957640146 y=189.0 z=-503.88051162506656 ground=true
+[14:02:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=58 x=52.5180839045058 y=189.0 z=-502.52477416191334 ground=true
+[14:02:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=62 x=51.91081143411385 y=189.0 z=-501.9116782386601 ground=true
+[14:02:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=70 x=51.50097643024923 y=189.0 z=-500.2846745266063 ground=true
+[14:02:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=74 x=51.49136259446519 y=189.0 z=-499.63823956928735 ground=true
+[14:02:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=78 x=51.35606219494551 y=189.0 z=-498.60336034824223 ground=true
+[14:02:26] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=82 x=50.863036835285264 y=189.0 z=-497.9130574665999 ground=true
+[14:02:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=90 x=50.368265595108056 y=189.0 z=-496.52934335305594 ground=true
+[14:02:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=94 x=49.69400847015945 y=189.0 z=-495.70039889822925 ground=true
+[14:02:27] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=102 x=48.73756759748741 y=189.0 z=-494.5657092590155 ground=true
+[14:02:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=106 x=48.53349902417867 y=189.0 z=-493.74053792065996 ground=true
+[14:02:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=110 x=48.49351311752287 y=189.0 z=-492.66599116775154 ground=true
+[14:02:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=114 x=48.49797401476579 y=189.0 z=-491.8028498802371 ground=true
+[14:02:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=122 x=48.50435939584861 y=189.0 z=-490.29192194433284 ground=true
+[14:02:29] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=126 x=48.49998056378894 y=189.0 z=-489.21270732294863 ground=true
+[14:02:29] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=130 x=48.49963362741991 y=189.0 z=-488.56517579817375 ground=true
+[14:02:29] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=134 x=48.50256843158037 y=189.0 z=-487.48599606837786 ground=true
+[14:02:29] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=138 x=48.504583839265266 y=189.0 z=-486.8384579760599 ground=true
+[14:02:29] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=142 x=48.50657444845437 y=190.1661092609382 z=-486.1892241956409 ground=false
+[14:02:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=146 x=48.50520678940208 y=190.0 z=-485.3532317518138 ground=true
+[14:02:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=150 x=48.50401236452148 y=191.0 z=-484.45859939443767 ground=false
+[14:02:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=154 x=48.50147373100155 y=192.0 z=-483.578231044417 ground=true
+[14:02:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=158 x=48.499868962380745 y=193.00133597911216 z=-483.0787097309725 ground=false
+[14:02:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=162 x=48.500130390761726 y=193.17675927506423 z=-482.4386816183606 ground=false
+[14:02:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=166 x=48.50073008734126 y=194.2531999805212 z=-482.08172087068573 ground=false
+[14:02:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=170 x=48.50184375455122 y=194.75220334025371 z=-481.63935653797733 ground=false
+[14:02:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=178 x=48.773638209642066 y=194.0 z=-480.25192660100987 ground=true
+[14:02:31] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=182 x=49.34691333543837 y=194.0 z=-479.61718010906424 ground=true
+[14:02:32] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=186 x=50.1218961649154 y=194.0 z=-478.86753796320613 ground=true
+[14:02:32] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=194 x=51.7583450089848 y=194.0 z=-478.4901536960032 ground=true
+[14:02:32] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=198 x=52.383821044393834 y=194.0 z=-478.5519962784458 ground=true
+[14:02:32] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=202 x=53.05943881590227 y=194.0 z=-479.0427632001503 ground=true
+[14:02:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=206 x=54.04399098537546 y=194.0 z=-479.4209498073194 ground=true
+[14:02:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=214 x=55.671704656480564 y=194.0 z=-479.7665444984426 ground=true
+[14:02:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=218 x=56.162181317328674 y=194.0 z=-480.17575915867775 ground=true
+[14:02:34] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=226 x=57.54316549393015 y=194.0 z=-481.538875514848 ground=true
+[14:02:34] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=230 x=58.00027622473155 y=194.0 z=-481.9975178232544 ground=true
+[14:02:34] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=234 x=58.60604471825334 y=194.0 z=-482.6127561403927 ground=true
+[14:02:34] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=238 x=59.37125511378564 y=194.0 z=-483.3738226171155 ground=true
+[14:02:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=246 x=60.59437822903785 y=194.0 z=-484.59271822635634 ground=true
+[14:02:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=250 x=61.05170753094591 y=194.0 z=-485.0511584868869 ground=true
+[14:02:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=258 x=61.49056053875043 y=194.0 z=-486.67306069833404 ground=true
+[14:02:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=262 x=61.505714868726244 y=194.0 z=-487.53503739869575 ground=true
+[14:02:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=266 x=61.504718954881604 y=194.0 z=-488.39832539639644 ground=true
+[14:02:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=270 x=61.35264856536626 y=194.0 z=-489.4298875538529 ground=true
+[14:02:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=274 x=60.98516772818412 y=194.0 z=-489.9470138932481 ground=true
+[14:02:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=278 x=60.26418054296928 y=194.0 z=-490.7451427464444 ground=true
+[14:02:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=282 x=59.783719577052445 y=194.0 z=-491.1633726818296 ground=true
+[14:02:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=286 x=58.97940651759958 y=194.0 z=-491.42715196008146 ground=true
+[14:02:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=294 x=57.66476793948747 y=194.0 z=-492.42171127182456 ground=true
+[14:02:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=mara ticks=298 x=57.506099919328946 y=194.0 z=-493.1414471426647 ground=true
+[14:03:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE RESULT npc=mara candidate=true arrived=true on_ground=true los=true server_open_range=true elapsed_ticks=764 pos=(57.48610748350741, 194.0, -493.27490328124964) scope=candidate_only_no_click
+[14:03:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE CLICK_PREP npc=mara ready=true same_position_camera_assist=true
+[14:03:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-result-mara stage=0
+[14:03:02] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE CLIENT_OPEN npc=mara
+[14:03:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS board stage=0
+[14:03:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE BARITONE safety_verified=true
+[14:03:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE TARGET npc=quartermaster candidate=true goal=BlockPos{x=54, y=189, z=-483} start=(56.5, 189.0, -504.5)
+[14:03:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=0 x=56.5 y=189.0 z=-504.5 ground=true
+[14:03:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-target-quartermaster stage=0
+[14:03:08] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=36 x=57.3429258375263 y=189.0 z=-503.35002791054836 ground=true
+[14:03:08] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=40 x=57.486896914880134 y=189.0625 z=-502.51077232475603 ground=true
+[14:03:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=44 x=57.50599455781976 y=189.0625 z=-501.649762908042 ground=true
+[14:03:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=52 x=57.50600027701054 y=189.0625 z=-499.923263925969 ground=true
+[14:03:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=60 x=57.50203920486262 y=189.0625 z=-498.4123423532863 ground=true
+[14:03:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=64 x=57.502046211694754 y=189.0625 z=-497.3331005162537 ground=true
+[14:03:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=68 x=57.503600991599555 y=189.0625 z=-496.6855616670296 ground=true
+[14:03:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=72 x=57.50082103111903 y=189.0625 z=-495.8221624735991 ground=true
+[14:03:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=76 x=57.495101974575704 y=189.0625 z=-494.74297839902533 ground=true
+[14:03:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=80 x=57.4966758884692 y=189.0625 z=-493.8795934850448 ground=true
+[14:03:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=88 x=57.50509261381509 y=189.0625 z=-492.3687028983236 ground=true
+[14:03:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=92 x=57.497382109114454 y=189.0625 z=-491.50536872889217 ground=true
+[14:03:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=96 x=57.50052928155784 y=189.0625 z=-490.4261570474059 ground=true
+[14:03:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=100 x=57.450942602868516 y=189.0625 z=-489.7952702747406 ground=true
+[14:03:12] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=104 x=56.868789420103894 y=189.0625 z=-488.91885885069803 ground=true
+[14:03:12] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=112 x=56.498898193430996 y=189.0625 z=-487.27147765853454 ground=true
+[14:03:12] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=116 x=56.492375350729866 y=189.0625 z=-486.5484667465998 ground=true
+[14:03:12] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=120 x=56.49311245595882 y=189.0 z=-485.91579158275437 ground=true
+[14:03:13] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=124 x=56.49698728813569 y=189.0 z=-484.9457101657165 ground=true
+[14:03:13] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=128 x=55.983803429912854 y=189.0 z=-484.03492202428 ground=true
+[14:03:13] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=132 x=55.5551257946991 y=189.0 z=-483.5533848150193 ground=true
+[14:03:13] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=quartermaster ticks=136 x=54.947041410580006 y=189.0 z=-482.9414971581396 ground=true
+[14:03:45] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE RESULT npc=quartermaster candidate=true arrived=true on_ground=true los=true server_open_range=true elapsed_ticks=764 pos=(54.76637640269668, 189.0, -482.7604597565356) scope=candidate_only_no_click
+[14:03:45] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE CLICK_PREP npc=quartermaster ready=true same_position_camera_assist=true
+[14:03:45] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-result-quartermaster stage=0
+[14:03:46] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE CLIENT_OPEN npc=quartermaster
+[14:03:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS board stage=0
+[14:03:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE BARITONE safety_verified=true
+[14:03:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE TARGET npc=oren candidate=true goal=BlockPos{x=53, y=189, z=-483} start=(56.5, 189.0, -504.5)
+[14:03:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-target-oren stage=0
+[14:03:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=1 x=56.5 y=189.0 z=-504.5 ground=true
+[14:03:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=37 x=57.34286333506117 y=189.0 z=-503.35051526774123 ground=true
+[14:03:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=41 x=57.4997303741257 y=189.0625 z=-502.2962498548732 ground=true
+[14:03:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=45 x=57.505089874577685 y=189.0625 z=-501.43425008155697 ground=true
+[14:03:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=49 x=57.500987303903514 y=189.0625 z=-500.5710050801958 ground=true
+[14:03:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=53 x=57.50091893027478 y=189.0625 z=-499.92347913380104 ground=true
+[14:03:54] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=57 x=57.50149671496838 y=189.0625 z=-498.84424314377316 ground=true
+[14:03:54] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=65 x=57.498867758160145 y=189.0625 z=-497.33331080886865 ground=true
+[14:03:54] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=69 x=57.49886103974421 y=189.0625 z=-496.254092961453 ground=true
+[14:03:54] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=73 x=57.505102784445896 y=189.0625 z=-495.39072605132134 ground=true
+[14:03:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=77 x=57.5037992441797 y=189.0625 z=-494.74320470618983 ground=true
+[14:03:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=81 x=57.5008512784736 y=189.0625 z=-493.8798349264023 ground=true
+[14:03:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=85 x=57.49772720545315 y=189.0625 z=-492.8006069026504 ground=true
+[14:03:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=93 x=57.50402449516215 y=189.0625 z=-491.2896954681818 ground=true
+[14:03:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=97 x=57.50526135986301 y=189.0625 z=-490.21045893152785 ground=true
+[14:03:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=101 x=57.36002635254287 y=189.0625 z=-489.60565800478497 ground=true
+[14:03:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=105 x=56.770127525294804 y=189.0625 z=-488.7273800381745 ground=true
+[14:03:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=109 x=56.54946635299596 y=189.0625 z=-487.9074189733231 ground=true
+[14:03:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=117 x=56.485537246841076 y=189.0625 z=-486.54123397428214 ground=true
+[14:03:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=121 x=56.32869843781358 y=189.0 z=-485.43758402352154 ground=true
+[14:03:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=125 x=55.94385429098265 y=189.0625 z=-484.90572379261886 ground=true
+[14:03:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=133 x=55.24954583554349 y=189.0 z=-483.3675404391257 ground=true
+[14:03:58] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=137 x=54.48750001192093 y=189.0 z=-482.6674644505007 ground=true
+[14:03:58] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=oren ticks=141 x=53.865522744302844 y=189.0 z=-482.50266136289474 ground=true
+[14:04:29] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE RESULT npc=oren candidate=true arrived=true on_ground=true los=true server_open_range=true elapsed_ticks=764 pos=(53.63608005116369, 189.0, -482.4772701147741) scope=candidate_only_no_click
+[14:04:29] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE CLICK_PREP npc=oren ready=true same_position_camera_assist=true
+[14:04:29] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-result-oren stage=0
+[14:04:31] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE CLIENT_OPEN npc=oren
+[14:04:34] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS board stage=0
+[14:04:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE BARITONE safety_verified=true
+[14:04:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE TARGET npc=veya candidate=true goal=BlockPos{x=54, y=194, z=-497} start=(56.5, 189.0, -504.5)
+[14:04:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=0 x=56.5 y=189.0 z=-504.5 ground=true
+[14:04:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-target-veya stage=0
+[14:04:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=36 x=55.35010033011964 y=189.0 z=-505.3412914040355 ground=true
+[14:04:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=40 x=54.55374561826807 y=189.0 z=-505.3311981964339 ground=true
+[14:04:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=44 x=54.0320582760819 y=189.0 z=-504.98562715619875 ground=true
+[14:04:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=48 x=53.55982403332034 y=189.0 z=-504.0866743113138 ground=true
+[14:04:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=52 x=53.341541820612655 y=189.0 z=-503.50088294833387 ground=true
+[14:04:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=56 x=52.81162083441755 y=189.0 z=-502.8327428119562 ground=true
+[14:04:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=64 x=51.72148678094134 y=189.0 z=-501.53136822841793 ground=true
+[14:04:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=68 x=51.52505240737055 y=189.0 z=-500.70334738976237 ground=true
+[14:04:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=72 x=51.489287706838255 y=189.0 z=-499.84415201419677 ground=true
+[14:04:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=76 x=51.49467683626555 y=189.0 z=-498.9812069455601 ground=true
+[14:04:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=80 x=50.98809495972479 y=189.0 z=-498.075459301341 ground=true
+[14:04:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=84 x=50.68358644119537 y=189.0 z=-497.5236768499082 ground=true
+[14:04:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=88 x=50.35910709112174 y=189.0 z=-496.5251392790821 ground=true
+[14:04:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=92 x=49.83458978579705 y=189.0 z=-495.85144118877577 ground=true
+[14:04:40] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=100 x=48.73907681850584 y=189.0 z=-494.551436245374 ground=true
+[14:04:40] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=104 x=48.5665325883522 y=189.0 z=-493.93693153628203 ground=true
+[14:04:40] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=108 x=48.49214341266658 y=189.0 z=-492.86644930665886 ground=true
+[14:04:40] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=116 x=48.50106217834548 y=189.0 z=-491.3560823502003 ground=true
+[14:04:41] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=120 x=48.50723090619047 y=189.0 z=-490.4926994633091 ground=true
+[14:04:41] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=124 x=48.49802706418953 y=189.0 z=-489.413482802798 ground=true
+[14:04:41] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=128 x=48.495519260000044 y=189.0 z=-488.76592286496196 ground=true
+[14:04:41] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=132 x=48.50120623395443 y=189.0 z=-487.68670539862046 ground=true
+[14:04:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=140 x=48.50328532671778 y=190.1661092609382 z=-486.1740872232563 ground=false
+[14:04:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=144 x=48.502405809294274 y=190.02442408821366 z=-485.5143444372648 ground=true
+[14:04:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=148 x=48.50174694000333 y=190.5 z=-484.9190017975733 ground=false
+[14:04:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=152 x=48.50082535113041 y=191.5 z=-483.99869535468355 ground=false
+[14:04:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=156 x=48.50377718430335 y=192.7531999805212 z=-483.208624019688 ground=false
+[14:04:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=160 x=48.50372582536387 y=193.25220334025371 z=-482.5914360891094 ground=false
+[14:04:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=168 x=48.50576736312188 y=194.75220334025371 z=-481.63937578090514 ground=false
+[14:04:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=176 x=48.65996339879477 y=194.0 z=-480.4275661679476 ground=true
+[14:04:44] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=180 x=49.195572509491164 y=194.0 z=-479.7659501251992 ground=true
+[14:04:44] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=188 x=50.49304780294114 y=194.0 z=-478.67355471037973 ground=true
+[14:04:44] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=192 x=51.3262384538599 y=194.0 z=-478.5055521249525 ground=true
+[14:04:44] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=196 x=52.18636504521244 y=194.0 z=-478.4832686465305 ground=true
+[14:04:45] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=204 x=53.83477582895709 y=194.0 z=-479.3553649216794 ground=true
+[14:04:45] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=208 x=54.46616923101847 y=194.0 z=-479.4701640705204 ground=true
+[14:04:45] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=212 x=55.30896523058898 y=194.0 z=-479.55965174921744 ground=true
+[14:04:45] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=216 x=56.003549831359926 y=194.0 z=-480.0299209036469 ground=true
+[14:04:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=224 x=57.235055229772414 y=194.0 z=-481.23455774945114 ground=true
+[14:04:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=232 x=58.606618301100184 y=194.0 z=-482.6101541164618 ground=true
+[14:04:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=236 x=59.21254165867349 y=194.0 z=-483.22526431912615 ground=true
+[14:04:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=244 x=60.438449344421514 y=194.0 z=-484.4413297509828 ground=true
+[14:04:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=248 x=61.05049503095161 y=194.0 z=-485.05028943360037 ground=true
+[14:04:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=256 x=61.486517937455936 y=194.0 z=-486.6729756102971 ground=true
+[14:04:48] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=260 x=61.498994542242784 y=194.0 z=-487.5350079450254 ground=true
+[14:04:48] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=264 x=61.50016601817205 y=194.0 z=-488.1824415882902 ground=true
+[14:04:48] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=268 x=61.44433057962954 y=194.0 z=-489.2434045458859 ground=true
+[14:04:48] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=276 x=60.41438368159039 y=194.0 z=-490.58785423698157 ground=true
+[14:04:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=280 x=59.9570651490966 y=194.0 z=-491.04574952521386 ground=true
+[14:04:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=288 x=58.254095793576475 y=194.0 z=-491.859629408511 ground=true
+[14:04:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=292 x=57.757667171119586 y=194.0 z=-492.2424026676843 ground=true
+[14:04:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=296 x=57.49964650057771 y=194.0 z=-493.23715091640037 ground=true
+[14:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=300 x=57.48272321315443 y=194.0 z=-494.0961752123949 ground=true
+[14:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=308 x=56.66177289557087 y=194.0 z=-495.2748482349066 ground=true
+[14:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=312 x=55.750105605439614 y=194.0 z=-495.5554354730928 ground=true
+[14:04:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=316 x=55.15406997775578 y=194.0 z=-496.13026178141087 ground=true
+[14:04:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=veya ticks=320 x=54.81787931350225 y=194.0 z=-496.3960707988325 ground=true
+[14:05:13] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE RESULT npc=veya candidate=true arrived=true on_ground=true los=true server_open_range=true elapsed_ticks=764 pos=(54.755689800338686, 194.0, -496.44524091313247) scope=candidate_only_no_click
+[14:05:13] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE CLICK_PREP npc=veya ready=true same_position_camera_assist=true
+[14:05:13] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-result-veya stage=0
+[14:05:15] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE CLIENT_OPEN npc=veya
+[14:05:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS board stage=0
+[14:05:19] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE BARITONE safety_verified=true
+[14:05:19] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE TARGET npc=selin candidate=true goal=BlockPos{x=56, y=189, z=-486} start=(56.5, 189.0, -504.5)
+[14:05:19] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-target-selin stage=0
+[14:05:19] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=selin ticks=3 x=56.5 y=189.0 z=-504.5 ground=true
+[14:05:20] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=selin ticks=35 x=57.192947381511495 y=189.0 z=-503.73668000712547 ground=true
+[14:05:21] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=selin ticks=39 x=57.44021059416007 y=189.0625 z=-502.9332351074765 ground=true
+[14:05:21] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=selin ticks=47 x=57.50301450736981 y=189.0625 z=-500.99925957743926 ground=true
+[14:05:21] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=selin ticks=55 x=57.5025965718517 y=189.0625 z=-499.48839238366975 ground=true
+[14:05:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=selin ticks=59 x=57.504462030932544 y=189.0625 z=-498.4091393251683 ground=true
+[14:05:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=selin ticks=63 x=57.50295313174522 y=189.0625 z=-497.7616327690639 ground=true
+[14:05:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=selin ticks=67 x=57.49806102599898 y=189.0625 z=-496.68245872440076 ground=true
+[14:05:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=selin ticks=75 x=57.49781073759356 y=189.0625 z=-494.9557130618572 ground=true
+[14:05:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=selin ticks=83 x=57.496772836627976 y=189.0625 z=-493.4447721041206 ground=true
+[14:05:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=selin ticks=87 x=57.49439881813223 y=189.0625 z=-492.36552613590743 ground=true
+[14:05:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=selin ticks=91 x=57.49766406073521 y=189.0625 z=-491.5021534677264 ground=true
+[14:05:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=selin ticks=95 x=57.50136982819597 y=189.0625 z=-490.85463758677105 ground=true
+[14:05:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=selin ticks=99 x=57.44471150309731 y=189.0625 z=-489.792484683686 ground=true
+[14:05:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=selin ticks=103 x=56.99582056040458 y=189.0625 z=-489.08270031386536 ground=true
+[14:05:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=selin ticks=107 x=56.6899818783496 y=189.0625 z=-488.5312533608544 ground=true
+[14:05:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=selin ticks=111 x=56.50789272773581 y=189.0625 z=-487.48008182231564 ground=true
+[14:05:24] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=selin ticks=115 x=56.494273909325955 y=189.0625 z=-486.87117704697465 ground=true
+[14:05:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=selin ticks=123 x=56.48460881830216 y=189.0 z=-485.5593105000402 ground=true
+[14:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE RESULT npc=selin candidate=true arrived=true on_ground=true los=true server_open_range=true elapsed_ticks=763 pos=(56.48444399152464, 189.0, -485.53112147588337) scope=candidate_only_no_click
+[14:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE CLICK_PREP npc=selin ready=true same_position_camera_assist=true
+[14:05:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-result-selin stage=0
+[14:05:59] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE CLIENT_OPEN npc=selin
+[14:06:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS board stage=0
+[14:06:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE BARITONE safety_verified=true
+[14:06:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE TARGET npc=lysander candidate=true goal=BlockPos{x=57, y=194, z=-496} start=(56.5, 189.0, -504.5)
+[14:06:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=0 x=56.5 y=189.0 z=-504.5 ground=true
+[14:06:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-target-lysander stage=0
+[14:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=36 x=55.54740250104852 y=189.0 z=-505.27413691501306 ground=true
+[14:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=40 x=54.73719546867053 y=189.0 z=-505.41017910986875 ground=true
+[14:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=44 x=53.869654980200394 y=189.0 z=-504.850447518011 ground=true
+[14:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=52 x=53.218418916087245 y=189.0 z=-503.3279050909091 ground=true
+[14:06:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=56 x=52.659686450507635 y=189.0 z=-502.6780449479818 ground=true
+[14:06:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=64 x=51.6451316091468 y=189.0 z=-501.33699559890204 ground=true
+[14:06:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=68 x=51.50522580350728 y=189.0 z=-500.49501735857024 ground=true
+[14:06:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=72 x=51.48920523349284 y=189.0 z=-499.63384521981067 ground=true
+[14:06:07] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=76 x=51.44460805885097 y=189.0 z=-498.7882983716083 ground=true
+[14:06:07] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=84 x=50.69540888456235 y=189.0 z=-497.52679334660417 ground=true
+[14:06:07] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=88 x=50.4712283238808 y=189.0 z=-496.7098921944808 ground=true
+[14:06:07] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=92 x=49.977228165960945 y=189.0 z=-496.0210192527602 ground=true
+[14:06:08] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=96 x=49.3882146830386 y=189.0 z=-495.392783438929 ground=true
+[14:06:08] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=100 x=48.82107704273253 y=189.0 z=-494.75608861050284 ground=true
+[14:06:08] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=104 x=48.56793729270977 y=189.0 z=-493.9492392108487 ground=true
+[14:06:08] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=108 x=48.49405932699211 y=189.0 z=-492.87820230277623 ground=true
+[14:06:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=116 x=48.50253747396684 y=189.0 z=-491.151903576837 ground=true
+[14:06:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=120 x=48.50578545338833 y=189.0 z=-490.2885510772173 ground=true
+[14:06:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=124 x=48.50220250704295 y=189.0 z=-489.64101251296404 ground=true
+[14:06:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=128 x=48.50201909077399 y=189.0 z=-488.56174483692564 ground=true
+[14:06:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=132 x=48.500031929702374 y=189.0 z=-487.9141888021576 ground=true
+[14:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=136 x=48.5017480517613 y=189.0 z=-486.8349445837342 ground=true
+[14:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=140 x=48.498733060755946 y=190.00133597911216 z=-486.3369665153844 ground=false
+[14:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=144 x=48.49604714321268 y=190.17675927506423 z=-485.69813667709366 ground=false
+[14:06:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=148 x=48.495938870636465 y=191.0 z=-484.6864597367953 ground=false
+[14:06:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=156 x=48.50789833956685 y=193.00133597911216 z=-483.0753089899903 ground=false
+[14:06:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=160 x=48.50759090976436 y=193.25220334025371 z=-482.6032088290331 ground=false
+[14:06:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=168 x=48.504070851213754 y=194.74918707874468 z=-481.7646072912884 ground=false
+[14:06:12] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=176 x=48.6539380806138 y=194.0 z=-480.4266003545473 ground=true
+[14:06:12] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=180 x=49.34748272852446 y=194.0 z=-479.61854180629695 ground=true
+[14:06:12] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=188 x=50.69835468388374 y=194.0 z=-478.6208934553387 ground=true
+[14:06:12] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=192 x=51.54311240202795 y=194.0 z=-478.49831971443706 ground=true
+[14:06:13] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=196 x=52.38344379119114 y=194.0 z=-478.55202189208273 ground=true
+[14:06:13] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=204 x=53.63378514113248 y=194.0 z=-479.3013907594056 ground=true
+[14:06:13] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=208 x=54.6850973869282 y=194.0 z=-479.48928559937025 ground=true
+[14:06:13] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=212 x=55.49970827987796 y=194.0 z=-479.65678816151257 ground=true
+[14:06:14] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=216 x=56.010517036445044 y=194.0 z=-480.0329687926236 ground=true
+[14:06:14] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=224 x=57.39854381699819 y=194.0 z=-481.38635161748005 ground=true
+[14:06:14] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=228 x=58.00668931497157 y=194.0 z=-481.9991915566495 ground=true
+[14:06:14] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=232 x=58.46157525778269 y=194.0 z=-482.46007861138975 ground=true
+[14:06:15] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=236 x=59.069457389545015 y=194.0 z=-483.0731975165378 ground=true
+[14:06:15] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=244 x=60.286800718506505 y=194.0 z=-484.2978401319256 ground=true
+[14:06:15] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=252 x=61.323586541210936 y=194.0 z=-485.62200661882616 ground=true
+[14:06:16] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=256 x=61.48831099053747 y=194.0 z=-486.6764158239563 ground=true
+[14:06:16] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=260 x=61.50453682643468 y=194.0 z=-487.5384557977548 ground=true
+[14:06:16] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=264 x=61.503406812888166 y=194.0 z=-488.1858728172703 ground=true
+[14:06:16] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=268 x=61.447076010297266 y=194.0 z=-489.2485586853924 ground=true
+[14:06:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=276 x=60.41345017808292 y=194.0 z=-490.58843489185386 ground=true
+[14:06:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=280 x=59.95950540170441 y=194.0 z=-491.0496980767924 ground=true
+[14:06:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=284 x=58.97683703477293 y=194.0 z=-491.4210894643559 ground=true
+[14:06:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=292 x=57.66227497688223 y=194.0 z=-492.4166236973552 ground=true
+[14:06:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=296 x=57.49955999223363 y=194.0 z=-493.2343652602172 ground=true
+[14:06:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=304 x=57.49256160249047 y=194.0 z=-494.95612737301633 ground=true
+[14:06:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=lysander ticks=308 x=57.49910605829339 y=194.0 z=-495.38919483269785 ground=true
+[14:06:41] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE RESULT npc=lysander candidate=true arrived=true on_ground=true los=true server_open_range=true elapsed_ticks=763 pos=(57.4996876849623, 194.0, -495.42768291964865) scope=candidate_only_no_click
+[14:06:41] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE CLICK_PREP npc=lysander ready=true same_position_camera_assist=true
+[14:06:41] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-result-lysander stage=0
+[14:06:43] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE CLIENT_OPEN npc=lysander
+[14:06:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS board stage=0
+[14:06:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE BARITONE safety_verified=true
+[14:06:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE TARGET npc=tik candidate=true goal=BlockPos{x=55, y=194, z=-492} start=(56.5, 189.0, -504.5)
+[14:06:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=0 x=56.5 y=189.0 z=-504.5 ground=true
+[14:06:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-target-tik stage=0
+[14:06:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=36 x=55.54717080188074 y=189.0 z=-505.27661431154803 ground=true
+[14:06:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=40 x=54.73817156727349 y=189.0 z=-505.4083489267651 ground=true
+[14:06:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=44 x=54.035388583634784 y=189.0 z=-504.9825691669356 ground=true
+[14:06:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=48 x=53.60991277269594 y=189.0 z=-504.2890880079211 ground=true
+[14:06:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=52 x=53.4525703440492 y=189.0 z=-503.679094851787 ground=true
+[14:06:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=56 x=52.96318094804594 y=189.0 z=-502.98881403379164 ground=true
+[14:06:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=64 x=51.72000799802772 y=189.0 z=-501.5338394723815 ground=true
+[14:06:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=68 x=51.527555768810025 y=189.0 z=-500.70525633221246 ground=true
+[14:06:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=72 x=51.48992153167503 y=189.0 z=-499.84621616641823 ground=true
+[14:06:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=76 x=51.49206474673384 y=189.0 z=-498.9832525997174 ground=true
+[14:06:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=84 x=50.689372682386065 y=189.0 z=-497.5194919449705 ground=true
+[14:06:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=88 x=50.462990205749016 y=189.0 z=-496.70358085114503 ground=true
+[14:06:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=96 x=49.53507168564239 y=189.0 z=-495.5362382306162 ground=true
+[14:06:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=100 x=48.924910362043754 y=189.0 z=-494.926072049818 ground=true
+[14:06:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=108 x=48.49250998585034 y=189.0 z=-493.0872861326127 ground=true
+[14:06:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=112 x=48.49055670201061 y=189.0 z=-492.4404269270759 ground=true
+[14:06:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=116 x=48.49714543197661 y=189.0 z=-491.36132578179183 ground=true
+[14:06:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=120 x=48.500728938806 y=189.0 z=-490.71379410993114 ground=true
+[14:06:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=124 x=48.50337703027593 y=189.0 z=-489.85041030467386 ground=true
+[14:06:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=128 x=48.491784866768555 y=189.0 z=-488.7712052673257 ground=true
+[14:06:54] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=136 x=48.500084732252134 y=189.0 z=-487.0445644926151 ground=true
+[14:06:54] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=140 x=48.50190878877962 y=189.7531999805212 z=-486.4754176799262 ground=false
+[14:06:54] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=144 x=48.50327827453348 y=190.25220334025371 z=-485.8595436302063 ground=false
+[14:06:54] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=148 x=48.50187591732799 y=190.5 z=-484.9244038966067 ground=false
+[14:06:54] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=152 x=48.50296380646993 y=191.5 z=-484.0041055129397 ground=false
+[14:06:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=156 x=48.50246990327406 y=192.7531999805212 z=-483.2140619282051 ground=false
+[14:06:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=160 x=48.502138993399825 y=193.25220334025371 z=-482.5968774301007 ground=false
+[14:06:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=168 x=48.50191715740078 y=194.74918707874468 z=-481.7646018512711 ground=false
+[14:06:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=176 x=48.6589183231095 y=194.0 z=-480.4283671157387 ground=true
+[14:06:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=180 x=49.20282684522288 y=194.0 z=-479.7743339998872 ground=true
+[14:06:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=188 x=50.3015372371838 y=194.0 z=-478.75780275753965 ground=true
+[14:06:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=192 x=51.11474009088423 y=194.0 z=-478.5309918593725 ground=true
+[14:06:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=200 x=52.734882128106605 y=194.0 z=-478.7659646802356 ground=true
+[14:06:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=204 x=53.6324794818033 y=194.0 z=-479.3001965784381 ground=true
+[14:06:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=208 x=54.25634866393745 y=194.0 z=-479.4492751152566 ground=true
+[14:06:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=212 x=55.31240140818381 y=194.0 z=-479.56418352297294 ground=true
+[14:06:58] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=216 x=56.01109359463421 y=194.0 z=-480.0300856005499 ground=true
+[14:06:58] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=224 x=57.24537052692262 y=194.0 z=-481.2318566898928 ground=true
+[14:06:58] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=232 x=58.308078545272735 y=194.0 z=-482.3057664098656 ground=true
+[14:06:59] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=240 x=59.5250141073419 y=194.0 z=-483.5308139185716 ground=true
+[14:06:59] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=244 x=60.13626268199962 y=194.0 z=-484.14060076592637 ground=true
+[14:06:59] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=252 x=61.24792481308921 y=194.0 z=-485.42523984676143 ground=true
+[14:07:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=256 x=61.45479012931177 y=194.0 z=-486.2505463079037 ground=true
+[14:07:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=260 x=61.50100157939509 y=194.0 z=-487.1092585292766 ground=true
+[14:07:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=264 x=61.4992919127874 y=194.0 z=-488.1880310685326 ground=true
+[14:07:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=272 x=61.11612837610334 y=194.0 z=-489.78693893640514 ground=true
+[14:07:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=276 x=60.705080699558124 y=194.0 z=-490.28077855881634 ground=true
+[14:07:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=280 x=59.94974932223427 y=194.0 z=-491.0496789741683 ground=true
+[14:07:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=288 x=58.32726434025717 y=194.0 z=-491.48898210254805 ground=true
+[14:07:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=292 x=57.68102330572804 y=194.0 z=-491.50234932214136 ground=true
+[14:07:02] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=296 x=56.60206572114842 y=194.0 z=-491.5010181383867 ground=true
+[14:07:02] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE STEP npc=tik ticks=300 x=55.836670360458434 y=194.0 z=-491.5022553530437 ground=true
+[14:07:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE RESULT npc=tik candidate=true arrived=true on_ground=true los=true server_open_range=true elapsed_ticks=764 pos=(55.698688697781584, 194.0, -491.5027522296284) scope=candidate_only_no_click
+[14:07:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE CLICK_PREP npc=tik ready=true same_position_camera_assist=true
+[14:07:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-result-tik stage=0
+[14:07:27] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE CLIENT_OPEN npc=tik
 --- runner tail ---
-[13:56:44] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:44] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:45] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:45] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:45] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:45] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:46] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:46] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:46] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:46] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:47] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:47] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:47] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:47] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:48] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:48] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:48] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:48] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:49] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:49] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:49] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:49] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:50] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:50] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:50] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:50] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:51] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:51] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:51] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:51] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:52] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:52] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:52] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:52] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:53] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:53] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:53] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:53] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:54] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:54] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:54] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:54] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:55] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:55] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:55] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:55] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:56] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:56] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:56] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:56] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:57] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:57] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:57] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:57] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:58] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:58] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:58] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:58] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:59] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[13:56:59] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:21] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:21] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:21] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:22] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:22] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:22] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:22] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:23] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:23] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:23] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:23] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:24] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:24] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:24] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:24] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:24] [Render thread/INFO] (Minecraft) [CHAT] [Baritone] > stop
+[14:07:24] [Render thread/INFO] (Minecraft) [CHAT] [Baritone] ok canceled
+[14:07:25] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:25] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=route-result-tik anchor=56,188,-509 player=(55.698688697781584, 194.0, -491.5027522296284) eye=Block{minecraft:air}
+[14:07:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 217 [aoe_lysander_access_v1, aoe_npc_lysander, aoe_airship_npc] pos=(58.5, 194.0, -496.5) alive=true
+[14:07:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 213 [aoe_npc_quartermaster, aoe_airship_npc] pos=(55.5, 189.0, -481.5) alive=true
+[14:07:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 214 [aoe_npc_oren, aoe_crew_access_v1_oren, aoe_airship_npc] pos=(52.5, 189.0, -482.5) alive=true
+[14:07:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 216 [aoe_npc_selin, aoe_airship_npc, aoe_crew_access_v1_selin] pos=(56.5, 189.0, -486.5) alive=true
+[14:07:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 212 [aoe_npc_mara, aoe_airship_npc] pos=(58.5, 194.0, -492.5) alive=true
+[14:07:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 215 [aoe_crew_access_v1_veya, aoe_npc_veya, aoe_airship_npc] pos=(55.5, 194.0, -495.5) alive=true
+[14:07:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 218 [aoe_crew_access_v1_tik, aoe_npc_tik, aoe_airship_npc] pos=(56.5, 194.0, -492.5) alive=true
+[14:07:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 211 [aoe_npc_captain, aoe_airship_npc] pos=(57.5, 201.0, -475.5) alive=true
+[14:07:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE RESULT npc=tik candidate=true arrived=true on_ground=true los=true server_open_range=true elapsed_ticks=764 pos=(55.698688697781584, 194.0, -491.5027522296284) scope=candidate_only_no_click
+[14:07:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE CLICK_PREP npc=tik ready=true same_position_camera_assist=true
+[14:07:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-result-tik stage=0
+[14:07:25] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:25] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:26] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:26] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:26] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:26] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:27] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:27] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:27] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE START tik_intro
+[14:07:27] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPROUTE CLIENT_OPEN npc=tik
+[14:07:27] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE ACTIVE tik_intro
+[14:07:27] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:27] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:28] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:28] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:28] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:28] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:29] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:29] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:29] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:29] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:29] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY native=41
+[14:07:29] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPVOICE KEY compatible=41 fullText=false
+[14:07:30] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:30] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:30] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:30] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:31] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[14:07:31] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
