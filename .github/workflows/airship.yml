@@ -190,8 +190,8 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p run/mods run/baritone
-          gh release download v1.20.0 --repo cabaletta/baritone --pattern baritone-standalone-fabric-1.20.0.jar --dir run/mods
-          echo '63d78d9f6cd2e66983b5b4e0d6c79f5c52a9d3321b0fcd2117f5856ce7276dc7  run/mods/baritone-standalone-fabric-1.20.0.jar' | sha256sum -c -
+          gh release download v1.20.0 --repo cabaletta/baritone --pattern baritone-api-fabric-1.20.0.jar --dir run/mods
+          echo '49adfc063cfbfd0b6f08e9d814359807baa2d1768c0d39d6c5968268547cbca6  run/mods/baritone-api-fabric-1.20.0.jar' | sha256sum -c -
           cat > run/baritone/settings.txt <<'SETTINGS'
           allowBreak false
           allowPlace false
