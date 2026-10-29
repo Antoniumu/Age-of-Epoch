@@ -211,3 +211,157 @@ write run/airship-e2e.flag route-result-tik
 wait_log_new 30000 AIRSHIPTEST PASS route-result-tik
 baritone_click
 shot route-tik
+
+# Additional independent candidate trials for the captain. Each begins at the lift.
+
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-captain@1
+wait_log_new 30000 AIRSHIPTEST PASS route-target-captain@1
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-result-captain
+baritone_click
+shot captain-candidate-1
+
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-captain@2
+wait_log_new 30000 AIRSHIPTEST PASS route-target-captain@2
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-result-captain
+baritone_click
+shot captain-candidate-2
+
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-captain@3
+wait_log_new 30000 AIRSHIPTEST PASS route-target-captain@3
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-result-captain
+baritone_click
+shot captain-candidate-3
+
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-captain@4
+wait_log_new 30000 AIRSHIPTEST PASS route-target-captain@4
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-result-captain
+baritone_click
+shot captain-candidate-4
+
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-captain@5
+wait_log_new 30000 AIRSHIPTEST PASS route-target-captain@5
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-result-captain
+baritone_click
+shot captain-candidate-5
+
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-captain@6
+wait_log_new 30000 AIRSHIPTEST PASS route-target-captain@6
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-result-captain
+baritone_click
+shot captain-candidate-6
+
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-captain@7
+wait_log_new 30000 AIRSHIPTEST PASS route-target-captain@7
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-result-captain
+baritone_click
+shot captain-candidate-7
+
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-captain@8
+wait_log_new 30000 AIRSHIPTEST PASS route-target-captain@8
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-result-captain
+baritone_click
+shot captain-candidate-8

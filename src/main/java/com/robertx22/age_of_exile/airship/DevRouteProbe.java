@@ -40,19 +40,27 @@ final class DevRouteProbe {
     }
     static void target(ServerLevel level,ServerPlayer p,AirshipData d,String id) throws Exception {
         checkBaritoneSafety();
+        int candidateIndex=0;
+        int separator=id.indexOf('@');
+        if(separator>=0){
+            candidateIndex=Integer.parseInt(id.substring(separator+1));
+            if(candidateIndex<0||candidateIndex>31)throw new IllegalArgumentException("Candidate index out of range");
+            id=id.substring(0,separator);
+        }
         if(AirshipStory.index(id)<0)throw new IllegalArgumentException("Unknown NPC");
-        var actors=crew(level,d);var matches=actors.stream().filter(e->AirshipService.npcId(e).equals(id)).toList();
+        final String targetId=id;
+        var actors=crew(level,d);var matches=actors.stream().filter(e->AirshipService.npcId(e).equals(targetId)).toList();
         if(matches.size()!=1)throw new IllegalStateException("Expected exactly one NPC: "+id);
-        var target=matches.getFirst();BlockPos choice=null;
+        var target=matches.getFirst();BlockPos choice=null;int found=0;
         outer:for(int radius=1;radius<=3;radius++)for(int dx=-radius;dx<=radius;dx++)for(int dz=-radius;dz<=radius;dz++){
             if(Math.max(Math.abs(dx),Math.abs(dz))!=radius)continue;
             var candidate=target.blockPosition().offset(dx,0,dz);
-            if(AirshipCrewPlacement.clearView(level,target,actors,candidate)){choice=candidate;break outer;}
+            if(AirshipCrewPlacement.clearView(level,target,actors,candidate) && found++==candidateIndex){choice=candidate;break outer;}
         }
         goal=choice;last=null;npc=id;player=p.getUUID();started=level.getGameTime();
-        if(goal==null){Files.writeString(TARGET,JSON.toJson(Map.of("npc",id,"candidate",false)));System.out.println("AIRSHIPROUTE TARGET npc="+id+" candidate=false");return;}
+        if(goal==null){Files.writeString(TARGET,JSON.toJson(Map.of("npc",id,"candidate",false)));System.out.println("AIRSHIPROUTE TARGET npc="+id+" candidate_index="+candidateIndex+" candidate=false");return;}
         Files.writeString(TARGET,JSON.toJson(Map.of("npc",id,"candidate",true,"x",goal.getX(),"y",goal.getY(),"z",goal.getZ())));
-        System.out.println("AIRSHIPROUTE TARGET npc="+id+" candidate=true goal="+goal+" start="+p.position());
+        System.out.println("AIRSHIPROUTE TARGET npc="+id+" candidate_index="+candidateIndex+" candidate=true goal="+goal+" start="+p.position());
         trace(level,p);
     }
     static void trace(ServerLevel level,ServerPlayer p){
