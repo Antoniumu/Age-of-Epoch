@@ -15,7 +15,9 @@ import net.minecraft.world.phys.AABB;
 final class DevRouteProbe {
     private static final Path TARGET=Path.of("airship-route-target.json");
     private static final Gson JSON=new Gson();
-    private static BlockPos goal,last;
+    private static BlockPos goal,last,returnOrigin;
+    private static String returnNpc="";
+    private static java.util.UUID returnPlayer;
     private static String npc="";
     private static java.util.UUID player;
     private static long started;
@@ -58,6 +60,7 @@ final class DevRouteProbe {
             if(AirshipCrewPlacement.clearView(level,target,actors,candidate) && found++==candidateIndex){choice=candidate;break outer;}
         }
         goal=choice;last=null;npc=id;player=p.getUUID();started=level.getGameTime();
+        returnOrigin=p.blockPosition();returnNpc=id;returnPlayer=p.getUUID();
         if(goal==null){Files.writeString(TARGET,JSON.toJson(Map.of("npc",id,"candidate",false)));System.out.println("AIRSHIPROUTE TARGET npc="+id+" candidate_index="+candidateIndex+" candidate=false");return;}
         Files.writeString(TARGET,JSON.toJson(Map.of("npc",id,"candidate",true,"x",goal.getX(),"y",goal.getY(),"z",goal.getZ())));
         System.out.println("AIRSHIPROUTE TARGET npc="+id+" candidate_index="+candidateIndex+" candidate=true goal="+goal+" start="+p.position());
@@ -67,6 +70,20 @@ final class DevRouteProbe {
         if(goal==null||!p.getUUID().equals(player)||level.getGameTime()%4!=0)return;
         var now=p.blockPosition();if(now.equals(last))return;last=now;
         System.out.println("AIRSHIPROUTE STEP npc="+npc+" ticks="+(level.getGameTime()-started)+" x="+p.getX()+" y="+p.getY()+" z="+p.getZ()+" ground="+p.onGround());
+    }
+    /** Return begins at the actual outbound endpoint; there is no reset or teleport. */
+    static void returnStart(ServerLevel level,ServerPlayer p,String id) throws Exception {
+        checkBaritoneSafety();
+        if(returnOrigin==null||!id.equals(returnNpc)||!p.getUUID().equals(returnPlayer))throw new IllegalStateException("No matching outbound attempt");
+        goal=returnOrigin;last=null;npc=id+"-return";player=p.getUUID();started=level.getGameTime();
+        Files.writeString(TARGET,JSON.toJson(Map.of("npc",npc,"candidate",true,"x",goal.getX(),"y",goal.getY(),"z",goal.getZ())));
+        System.out.println("AIRSHIPROUTE RETURN_START npc="+id+" goal="+goal+" start="+p.position());
+    }
+    static void returnResult(ServerLevel level,ServerPlayer p,String id){
+        if(goal==null||!npc.equals(id+"-return")||!p.getUUID().equals(player))throw new IllegalStateException("No matching return attempt");
+        boolean arrived=p.isAlive()&&!p.isSpectator()&&p.onGround()&&Math.abs(p.getX()-(goal.getX()+.5))<=1&&Math.abs(p.getZ()-(goal.getZ()+.5))<=1&&Math.abs(p.getY()-goal.getY())<.6;
+        System.out.println("AIRSHIPROUTE RETURN_RESULT npc="+id+" arrived="+arrived+" ground="+p.onGround()+" elapsed_ticks="+(level.getGameTime()-started)+" pos="+p.position());
+        goal=null;player=null;npc="";returnOrigin=null;returnPlayer=null;returnNpc="";
     }
     static void result(ServerLevel level,ServerPlayer p,AirshipData d,String id) throws Exception {
         if(!id.equals(npc)||!p.getUUID().equals(player))throw new IllegalStateException("No matching route attempt");

@@ -215,6 +215,7 @@ jobs:
           grep -q 'AIRSHIPROUTE BARITONE safety_verified=true' run/logs/latest.log
           for npc in captain mara quartermaster oren veya selin lysander tik; do
             grep -q "AIRSHIPROUTE RESULT npc=$npc " run/logs/latest.log
+            grep -q "AIRSHIPROUTE RETURN_RESULT npc=$npc " run/logs/latest.log
           done
           test "$(grep -c 'AIRSHIPROUTE RESULT npc=captain ' run/logs/latest.log)" -ge 10
       - name: Publish diagnostic log without claiming reachability

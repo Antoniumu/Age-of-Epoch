@@ -70,6 +70,20 @@ log_mark
 write run/airship-e2e.flag route-result-captain
 wait_log_new 30000 AIRSHIPTEST PASS route-result-captain
 baritone_click
+# Attempt a real return from the endpoint without a fixture reset.
+log_mark
+write run/airship-e2e.flag route-return-start-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-return-start-captain
+baritone_goal
+wait 30000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-return-result-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-return-result-captain
 shot route-captain
 
 # mara: one conservative candidate, 35 s budget. Failure does not imply no route exists.
@@ -90,6 +104,20 @@ log_mark
 write run/airship-e2e.flag route-result-mara
 wait_log_new 30000 AIRSHIPTEST PASS route-result-mara
 baritone_click
+# Attempt a real return from the endpoint without a fixture reset.
+log_mark
+write run/airship-e2e.flag route-return-start-mara
+wait_log_new 30000 AIRSHIPTEST PASS route-return-start-mara
+baritone_goal
+wait 30000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-return-result-mara
+wait_log_new 30000 AIRSHIPTEST PASS route-return-result-mara
 shot route-mara
 
 # quartermaster: one conservative candidate, 35 s budget. Failure does not imply no route exists.
@@ -110,6 +138,20 @@ log_mark
 write run/airship-e2e.flag route-result-quartermaster
 wait_log_new 30000 AIRSHIPTEST PASS route-result-quartermaster
 baritone_click
+# Attempt a real return from the endpoint without a fixture reset.
+log_mark
+write run/airship-e2e.flag route-return-start-quartermaster
+wait_log_new 30000 AIRSHIPTEST PASS route-return-start-quartermaster
+baritone_goal
+wait 30000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-return-result-quartermaster
+wait_log_new 30000 AIRSHIPTEST PASS route-return-result-quartermaster
 shot route-quartermaster
 
 # oren: one conservative candidate, 35 s budget. Failure does not imply no route exists.
@@ -130,6 +172,20 @@ log_mark
 write run/airship-e2e.flag route-result-oren
 wait_log_new 30000 AIRSHIPTEST PASS route-result-oren
 baritone_click
+# Attempt a real return from the endpoint without a fixture reset.
+log_mark
+write run/airship-e2e.flag route-return-start-oren
+wait_log_new 30000 AIRSHIPTEST PASS route-return-start-oren
+baritone_goal
+wait 30000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-return-result-oren
+wait_log_new 30000 AIRSHIPTEST PASS route-return-result-oren
 shot route-oren
 
 # veya: one conservative candidate, 35 s budget. Failure does not imply no route exists.
@@ -150,6 +206,20 @@ log_mark
 write run/airship-e2e.flag route-result-veya
 wait_log_new 30000 AIRSHIPTEST PASS route-result-veya
 baritone_click
+# Attempt a real return from the endpoint without a fixture reset.
+log_mark
+write run/airship-e2e.flag route-return-start-veya
+wait_log_new 30000 AIRSHIPTEST PASS route-return-start-veya
+baritone_goal
+wait 30000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-return-result-veya
+wait_log_new 30000 AIRSHIPTEST PASS route-return-result-veya
 shot route-veya
 
 # selin: one conservative candidate, 35 s budget. Failure does not imply no route exists.
@@ -170,6 +240,20 @@ log_mark
 write run/airship-e2e.flag route-result-selin
 wait_log_new 30000 AIRSHIPTEST PASS route-result-selin
 baritone_click
+# Attempt a real return from the endpoint without a fixture reset.
+log_mark
+write run/airship-e2e.flag route-return-start-selin
+wait_log_new 30000 AIRSHIPTEST PASS route-return-start-selin
+baritone_goal
+wait 30000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-return-result-selin
+wait_log_new 30000 AIRSHIPTEST PASS route-return-result-selin
 shot route-selin
 
 # lysander: one conservative candidate, 35 s budget. Failure does not imply no route exists.
@@ -190,6 +274,20 @@ log_mark
 write run/airship-e2e.flag route-result-lysander
 wait_log_new 30000 AIRSHIPTEST PASS route-result-lysander
 baritone_click
+# Attempt a real return from the endpoint without a fixture reset.
+log_mark
+write run/airship-e2e.flag route-return-start-lysander
+wait_log_new 30000 AIRSHIPTEST PASS route-return-start-lysander
+baritone_goal
+wait 30000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-return-result-lysander
+wait_log_new 30000 AIRSHIPTEST PASS route-return-result-lysander
 shot route-lysander
 
 # tik: one conservative candidate, 35 s budget. Failure does not imply no route exists.
@@ -210,6 +308,20 @@ log_mark
 write run/airship-e2e.flag route-result-tik
 wait_log_new 30000 AIRSHIPTEST PASS route-result-tik
 baritone_click
+# Attempt a real return from the endpoint without a fixture reset.
+log_mark
+write run/airship-e2e.flag route-return-start-tik
+wait_log_new 30000 AIRSHIPTEST PASS route-return-start-tik
+baritone_goal
+wait 30000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-return-result-tik
+wait_log_new 30000 AIRSHIPTEST PASS route-return-result-tik
 shot route-tik
 
 # Additional independent candidate trials for the captain. Each begins at the lift.

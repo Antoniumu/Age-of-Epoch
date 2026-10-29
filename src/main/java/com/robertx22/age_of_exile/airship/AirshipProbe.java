@@ -255,6 +255,10 @@ public final class AirshipProbe {
                 DevCrewWalk.checkBlocked(level);
             } else if(action.equals("crew-walk-check")) {
                 DevCrewWalk.check(level);
+            } else if(action.startsWith("route-return-start-")) {
+                DevRouteProbe.returnStart(level,p,action.substring("route-return-start-".length()));
+            } else if(action.startsWith("route-return-result-")) {
+                DevRouteProbe.returnResult(level,p,action.substring("route-return-result-".length()));
             } else if(action.startsWith("route-target-")) {
                 DevRouteProbe.target(level,p,d,action.substring("route-target-".length()));
             } else if(action.startsWith("route-result-")) {

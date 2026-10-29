@@ -11,7 +11,8 @@ import net.minecraft.world.phys.AABB;
 
 /** Explicit dev-only experiment. It is not registered as production crew behaviour. */
 final class DevCrewWalk {
-    private static UUID actorId;
+    private static volatile UUID actorId;
+    static UUID observedActor(){return actorId;}
     private static List<CrewRoutePlanner.Cell> path=List.of();
     private static int next,steps;
     private static double originX,originY,originZ,maxDisplacement;

@@ -66,6 +66,7 @@ public class ClientInit implements net.fabricmc.api.ClientModInitializer {
         clientSetupDone = true;
 
         com.robertx22.age_of_exile.airship.AirshipTikRenderer.register();
+        com.robertx22.age_of_exile.airship.AirshipClient.registerDevTelemetry();
         MobPlateSettings.load();
         ClientSetup.setup();
         KeybindsRegister.register();
