@@ -238,6 +238,9 @@ wait_log_new 30000 AIRSHIPTEST PASS finished
 log_mark
 write run/airship-e2e.flag crew-check
 wait_log_new 30000 AIRSHIPTEST PASS crew-check
+log_mark
+write run/airship-e2e.flag crew-floor-audit
+wait_log_new 30000 AIRSHIPTEST PASS crew-floor-audit
 
 log_mark
 write run/airship-e2e.flag photo-oren

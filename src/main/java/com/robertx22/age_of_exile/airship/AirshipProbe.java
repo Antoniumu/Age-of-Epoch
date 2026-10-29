@@ -225,6 +225,11 @@ public final class AirshipProbe {
             } else if(action.equals("side-ui-check")) {
                 if((d.favorAccepted&2)==0||(d.favorCompleted&2)!=0)throw new IllegalStateException("Real UI did not explicitly accept Mara side quest");
                 if(!AirshipQuestTracker.active(d,com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p).questBook,0).stream().anyMatch(v->v.contains("0/2 новых сундуков")))throw new IllegalStateException("Missing tracked named progress");
+            } else if(action.equals("crew-floor-audit")) {
+                // Observation only. Flat plank connectivity is a lower bound, not a complete route.
+                var crew=level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class,new AABB(d.x-60,d.y-52,d.z-36,d.x+61,d.y+51,d.z+56),e->!AirshipService.npcId(e).isEmpty());
+                if(crew.size()!=AirshipStory.IDS.length)throw new IllegalStateException("Expected all eight crew for floor audit");
+                CrewFloorAudit.log(level,p,new net.minecraft.core.BlockPos(d.x,d.y+1,d.z+4),crew);
             } else if(action.equals("crew-check")) {
                 var crew=level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class,new AABB(d.x-100,d.y-100,d.z-100,d.x+100,d.y+100,d.z+100),e->!AirshipService.npcId(e).isEmpty());
                 for(String id:AirshipStory.IDS) {

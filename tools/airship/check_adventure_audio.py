@@ -31,4 +31,9 @@ assert {v['clipKey'] for v in manifest.values()}=={k for k,v in clips.items() if
 for filename,item in manifest.items():
     assert all(clips[item['clipKey']][field]==item[field] for field in ('sound','text','durationMillis','voice'))
     assert (root/'docs/airship/audio/rewrite-05'/f'{filename}.mp3').stat().st_size>1000
+rewrite=json.loads((root/'docs/airship/audio/rewrite-06/manifest.json').read_text())
+assert len(rewrite)==10
+for key,item in rewrite.items():
+    assert all(clips[key][field]==item[field] for field in ('sound','text','durationMillis','voice'))
+    assert (root/'docs/airship/audio/rewrite-06'/f'{key}.mp3').stat().st_size>1000
 print('PASS: 60 clips in six integrated batches of ten, 8 original voices, exact authored texts, registered OGG assets')
