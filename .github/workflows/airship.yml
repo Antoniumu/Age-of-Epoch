@@ -18,11 +18,11 @@ permissions:
   contents: write
   actions: read
 concurrency:
-  group: ${{ inputs.recover_run == 'baritone' && 'baritone-audit' || 'airship' }}-${{ github.ref }}
+  group: ${{ (inputs.recover_run == 'baritone' || contains(github.event.head_commit.message, '[baritone-audit]')) && 'baritone-audit' || 'airship' }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   client:
-    if: ${{ !contains(github.event.head_commit.message, '[recover-proof:') && (github.event_name != 'workflow_dispatch' || inputs.recover_run == '') }}
+    if: ${{ !contains(github.event.head_commit.message, '[baritone-audit]') && !contains(github.event.head_commit.message, '[recover-proof:') && (github.event_name != 'workflow_dispatch' || inputs.recover_run == '') }}
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
@@ -176,7 +176,7 @@ jobs:
           git push origin HEAD:arena/7bde44a9-age-of-epoch
 
   baritone-audit:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.recover_run == 'baritone' }}
+    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.recover_run == 'baritone') || contains(github.event.head_commit.message, '[baritone-audit]') }}
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
