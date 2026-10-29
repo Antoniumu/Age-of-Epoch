@@ -213,6 +213,7 @@ jobs:
           bash tools/e2e/run-in-xvfb.sh tools/e2e/scenarios/baritone-routes.txt run/e2e/baritone
           ! grep -q 'AIRSHIPTEST FAIL' run/logs/latest.log
           grep -q 'AIRSHIPROUTE BARITONE safety_verified=true' run/logs/latest.log
+          grep -q 'AIRSHIPROUTE CLIENT_OPEN npc=captain' run/logs/latest.log
           for npc in captain mara quartermaster oren veya selin lysander tik; do
             grep -q "AIRSHIPROUTE RESULT npc=$npc " run/logs/latest.log
             grep -q "AIRSHIPROUTE RETURN_RESULT npc=$npc " run/logs/latest.log
