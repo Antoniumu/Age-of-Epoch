@@ -5,7 +5,7 @@
 что игроки реально делали, где проводили время, от чего умирали, чем пользовались и когда
 заходили.
 
-Всё живёт в `config/age_of_epoch/`:
+Всё живёт в `<папка мира>/age_of_epoch/` (для одиночной игры — `saves/<имя мира>/age_of_epoch/`):
 
 | Что | Файл | Кто пишет |
 |---|---|---|
@@ -202,7 +202,7 @@ jq -r 'select(.type=="gear") | .extra' telemetry/*.jsonl | sed 's/|.*//' | sort 
 
 ```python
 import pandas as pd, glob
-df = pd.concat(pd.read_json(f, lines=True) for f in glob.glob("config/age_of_epoch/telemetry/*.jsonl"))
+df = pd.concat(pd.read_json(f, lines=True) for f in glob.glob("saves/<имя мира>/age_of_epoch/telemetry/*.jsonl"))
 kills = df[df.type == "kill"].groupby(["player", "subject"]).size().sort_values(ascending=False)
 biomes = df[df.type.isin(["kill", "loot"])].groupby("biome").size().sort_values(ascending=False)
 ```

@@ -343,7 +343,7 @@ GameMaster: цель недели — 420 / 6000 убийств (7%)
 все признаки, а целевая переменная считается из `login`/`logout` и активных дней.
 
 `GameMaster.exportCsv()` (`/aoe gm export`) выгружает
-`config/age_of_epoch/gamemaster_export.csv`:
+`<папка мира>/age_of_epoch/gamemaster_export.csv`:
 
 ```
 uuid, name, level, playtime_hours, sessions, avg_session_minutes, streak_days,

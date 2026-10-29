@@ -16,7 +16,7 @@ python3 tools/balance/season_sim.py       # сколько целей реаль
 > (`docs/QUESTBOOK.md`) — это кампания от 1 до 100 %, она не сбрасывается по дням.
 > Всё «ежедневное» живёт в одном месте — `gamemaster/Retention.java` +
 > `gamemaster/GameMaster.java`, и настраивается через `GameMasterConfig`
-> (`config/age_of_epoch/gamemaster.json`) или команды `/aoe gm retention …`.
+> (`<папка мира>/age_of_epoch/gamemaster.json`) или команды `/aoe gm retention …`.
 
 ---
 
@@ -361,7 +361,7 @@ GameMaster: С возвращением! Опыт ×1.25 на 2 ч. Гарант
 | Вызовы и начисление | `.../gamemaster/GameMaster.java` (`onJoin`, `onKill`, `onChestOpened`, `onCrafted`, `checkLevel`) |
 | Хранение прогресса | `.../gamemaster/PlayerProgress.java` (поля `session_goal_*`, `streak_days`, `last_daily_hint`) |
 | Настройки | `.../gamemaster/GameMasterConfig.java` (префикс `retention_`, `social_`, `codex_`) |
-| Файл настроек на сервере | `config/age_of_epoch/gamemaster.json` |
+| Файл настроек на сервере | `<папка мира>/age_of_epoch/gamemaster.json` |
 | Команды | `.../gamemaster/GameMasterCommand.java` |
 
 Все значения зажимаются в разумные пределы в `GameMasterConfig.sanitize()` — сломать
