@@ -24,4 +24,16 @@ class CrewMomentsTest {
         var d=new AdventureData();assertFalse(CrewMoments.available(d,"unknown"));
         assertEquals("",CrewMoments.choose(d,"unknown",0));assertTrue(d.facts.isEmpty());
     }
+    @Test void recordedMomentsRequireMatchingSpeakerChoiceAndConfirmedLine(){
+        for(String npc:new String[]{"oren","tik"})for(int choice=0;choice<2;choice++){
+            var d=new AdventureData();d.completed.add(AdventureCatalog.personal(npc).id());d.facts.add("memory:"+npc+":confidence");
+            assertNull(AdventureVoice.action(d,npc,90+choice));
+            d.lastInvestigationLine=CrewMoments.choose(d,npc,choice);
+            assertNotNull(AdventureVoice.action(d,npc,90+choice));
+            assertEquals(d.lastInvestigationLine,AdventureVoice.action(d,npc,90+choice).text());
+            assertNull(AdventureVoice.action(d,npc,91-choice));
+            assertNull(AdventureVoice.action(d,npc.equals("oren")?"tik":"oren",90+choice));
+            d.lastInvestigationLine="different";assertNull(AdventureVoice.action(d,npc,90+choice));
+        }
+    }
 }

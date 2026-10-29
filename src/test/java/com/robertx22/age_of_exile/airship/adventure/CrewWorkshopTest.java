@@ -37,7 +37,7 @@ class CrewWorkshopTest {
         }
     }
     @Test void clipsArePlayedOnlyForExpectedSpeakerAndExactConfirmedLine(){
-        for(int action:new int[]{92,93,94,97}){
+        for(int action:new int[]{92,93,94,95,97,98}){
             var d=new AdventureData();d.lastInvestigationLine=CrewWorkshop.voiceText(action);
             String npc=action==92||action==97?"oren":"tik";
             assertEquals(d.lastInvestigationLine,AdventureVoice.action(d,npc,action).text());

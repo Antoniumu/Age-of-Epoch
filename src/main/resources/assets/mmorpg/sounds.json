@@ -742,5 +742,53 @@
         "stream": true
       }
     ]
+  },
+  "airship.personal_tik_workshop_private": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_tik_workshop_private",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_tik_workshop_finish": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_tik_workshop_finish",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_oren_moment_bird": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_oren_moment_bird",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_oren_moment_ship": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_oren_moment_ship",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_tik_moment_key": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_tik_moment_key",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_tik_moment_gear": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_tik_moment_gear",
+        "stream": true
+      }
+    ]
   }
 }

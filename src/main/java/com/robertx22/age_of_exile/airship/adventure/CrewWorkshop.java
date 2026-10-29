@@ -11,6 +11,8 @@ public final class CrewWorkshop {
     public static final String TIK_KEY="Ключ? Я немного погнул защёлку, когда искал его. Орен ещё не знает. Я скажу ему сам, только сначала соберусь с мыслями. Не надо говорить за меня.";
     public static final String TIK_FIGURE="Фигурку для меня? Вот это да. Слушай, я ещё защёлку погнул, пока искал ключ. Хочу сам сказать об этом Орену. Только дай мне немного времени.";
     public static final String OREN_REPLY="Понятно. Не буду торопить Тика. Пусть подойдёт, когда будет готов, а там вместе посмотрим на защёлку. Спасибо, что предупредил.";
+    public static final String TIK_PRIVATE="Спасибо. Я сам поговорю с Ореном, когда буду готов. Только не рассказывай пока про защёлку, ладно?";
+    public static final String TIK_FINISH="Спасибо, что спросил меня сначала. Я поговорю с Ореном сам. И про фигурку потом тоже спрошу.";
     public record Option(int action,String label) {}
     private static boolean spoke(AdventureData d){return d.facts.contains(KEY)||d.facts.contains(FIGURE);}
     public static boolean eligible(AdventureData d){
@@ -33,11 +35,11 @@ public final class CrewWorkshop {
             case 93->{d.facts.add(KEY);yield TIK_KEY;}
             case 94->{d.facts.add(FIGURE);yield TIK_FIGURE;}
             case 95->{d.facts.add(PRIVATE);d.facts.add(DONE);AdventureEngine.bond(d,"tik","workshop.private",3,5,3);
-                yield "Тик: Спасибо. Я сам поговорю с Ореном, когда буду готов. Только не рассказывай пока про защёлку, ладно?";}
+                yield TIK_PRIVATE;}
             case 96->{d.facts.add(CONSENT);yield "Тик: Можешь сказать ему про защёлку и что я сам подойду. Остальное я объясню сам.";}
             case 97->{d.facts.add(OREN);yield OREN_REPLY;}
             case 98->{d.facts.add(DONE);AdventureEngine.bond(d,"oren","workshop",3,5,3);AdventureEngine.bond(d,"tik","workshop",3,5,3);
-                yield "Тик: Спасибо, что спросил меня сначала. Я поговорю с Ореном сам. И про фигурку потом тоже спрошу.";}
+                yield TIK_FINISH;}
             default->"";
         };
     }
@@ -51,6 +53,6 @@ public final class CrewWorkshop {
         if(!d.facts.contains(OREN))return "Орен и Тик • передай Орену только то, на что Тик согласился.";
         return "Орен и Тик • расскажи Тику об ответе Орена.";
     }
-    public static String voiceKey(int action){return switch(action){case 92->"oren_workshop_start";case 93->"tik_workshop_key";case 94->"tik_workshop_figure";case 97->"oren_workshop_reply";default->"";};}
-    public static String voiceText(int action){return switch(action){case 92->OREN_START;case 93->TIK_KEY;case 94->TIK_FIGURE;case 97->OREN_REPLY;default->"";};}
+    public static String voiceKey(int action){return switch(action){case 92->"oren_workshop_start";case 93->"tik_workshop_key";case 94->"tik_workshop_figure";case 97->"oren_workshop_reply";case 95->"tik_workshop_private";case 98->"tik_workshop_finish";default->"";};}
+    public static String voiceText(int action){return switch(action){case 92->OREN_START;case 93->TIK_KEY;case 94->TIK_FIGURE;case 97->OREN_REPLY;case 95->TIK_PRIVATE;case 98->TIK_FINISH;default->"";};}
 }

@@ -29,6 +29,8 @@ public final class AdventureVoice {
     public static AirshipVoiceScript.Cue action(AdventureData d,String npc,int action){
         String workshopKey=CrewWorkshop.voiceKey(action);
         if(!workshopKey.isEmpty() && workshopKey.startsWith(npc+"_") && CrewWorkshop.voiceText(action).equals(d.lastInvestigationLine)) return exact(workshopKey,d.lastInvestigationLine);
+        String momentKey=CrewMoments.voiceKey(d,npc,action);
+        if(!momentKey.isEmpty())return exact(momentKey,d.lastInvestigationLine);
         String reconKey=Recon.voiceKey(d,npc,action);
         if(!reconKey.isEmpty())return exact(reconKey,Recon.voiceText(reconKey));
         String councilKey=Council.voiceKey(d,npc,action);

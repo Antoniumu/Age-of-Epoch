@@ -1029,6 +1029,7 @@ wait 1200
 log_mark
 click 640 462
 wait_log_new 10000 AIRSHIPTEST ACTION choice=98
+wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_tik_workshop_finish
 wait 1000
 shot 80-workshop-outcome
 key Escape
@@ -1074,8 +1075,9 @@ wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_tik_workshop_key
 hold space 300
 wait 600
 log_mark
-click 640 483
+click 640 490
 wait_log_new 10000 AIRSHIPTEST ACTION choice=95
+wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_tik_workshop_private
 wait 1000
 shot 81-workshop-private
 key Escape
