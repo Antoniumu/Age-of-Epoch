@@ -830,3 +830,104 @@ key Escape
 log_mark
 write run/airship-e2e.flag council-proof
 wait_log_new 30000 AIRSHIPTEST PASS council-proof
+
+# Real NPC interactions and server biome observations; travel uses explicit test-only teleports.
+log_mark
+write run/airship-e2e.flag photo-captain
+wait_log_new 30000 AIRSHIPTEST PASS photo-captain
+log_mark
+write run/airship-e2e.flag talk-captain
+wait_log_new 30000 AIRSHIPTEST PASS talk-captain
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+log_mark
+click 640 420
+wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_captain_recon_start
+wait 1200
+shot 70-recon-brief
+hold space 300
+wait 600
+key Escape
+log_mark
+write run/airship-e2e.flag photo-veya
+wait_log_new 30000 AIRSHIPTEST PASS photo-veya
+log_mark
+write run/airship-e2e.flag talk-veya
+wait_log_new 30000 AIRSHIPTEST PASS talk-veya
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+log_mark
+click 640 462
+wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_veya_recon_start
+wait 1200
+shot 71-recon-accepted
+hold space 300
+wait 600
+key Escape
+log_mark
+write run/airship-e2e.flag recon-biome-one
+wait_log_new 120000 AIRSHIPTEST PASS recon-biome-one
+wait 3000
+shot 72-recon-first-biome
+log_mark
+write run/airship-e2e.flag recon-check-one
+wait_log_new 30000 AIRSHIPTEST PASS recon-check-one
+log_mark
+write run/airship-e2e.flag recon-biome-two
+wait_log_new 120000 AIRSHIPTEST PASS recon-biome-two
+wait 3000
+shot 73-recon-second-biome
+log_mark
+write run/airship-e2e.flag recon-check-two
+wait_log_new 30000 AIRSHIPTEST PASS recon-check-two
+log_mark
+write run/airship-e2e.flag recon-return
+wait_log_new 30000 AIRSHIPTEST PASS recon-return
+wait 6000
+log_mark
+write run/airship-e2e.flag photo-veya
+wait_log_new 30000 AIRSHIPTEST PASS photo-veya
+log_mark
+write run/airship-e2e.flag talk-veya
+wait_log_new 30000 AIRSHIPTEST PASS talk-veya
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+log_mark
+click 640 462
+wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_veya_recon_finish
+wait 1200
+shot 74-recon-reported
+hold space 300
+wait 600
+key Escape
+log_mark
+write run/airship-e2e.flag photo-captain
+wait_log_new 30000 AIRSHIPTEST PASS photo-captain
+log_mark
+write run/airship-e2e.flag talk-captain
+wait_log_new 30000 AIRSHIPTEST PASS talk-captain
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+log_mark
+click 640 420
+wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_captain_recon_finish
+wait 1200
+shot 75-recon-completed
+hold space 300
+wait 600
+key Escape
+log_mark
+write run/airship-e2e.flag recon-proof
+wait_log_new 30000 AIRSHIPTEST PASS recon-proof

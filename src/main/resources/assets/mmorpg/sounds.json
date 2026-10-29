@@ -582,5 +582,85 @@
         "stream": true
       }
     ]
+  },
+  "airship.personal_captain_recon_start": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_captain_recon_start",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_captain_recon_finish": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_captain_recon_finish",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_veya_recon_start": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_veya_recon_start",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_veya_recon_finish": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_veya_recon_finish",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_mara_recon": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_mara_recon",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_bram_recon": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_bram_recon",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_oren_recon": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_oren_recon",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_selin_recon": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_selin_recon",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_lysander_recon": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_lysander_recon",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_tik_recon": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_tik_recon",
+        "stream": true
+      }
+    ]
   }
 }

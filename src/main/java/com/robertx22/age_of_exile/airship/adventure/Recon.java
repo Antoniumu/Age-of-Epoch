@@ -1,0 +1,84 @@
+package com.robertx22.age_of_exile.airship.adventure;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/** A personal field survey, not a fabricated harbour or a move of the shared world hub. */
+public final class Recon {
+    private Recon() {}
+    public record Option(int action,String label,boolean enabled) {}
+    public record Brief(String npc,int action,String text) {}
+    public static final String CAPTAIN_START="Мы знаем, с чего решили начать, но корабль пока остаётся здесь. Сначала выслушай Вею и выйди на разведку. Записывай то, что увидишь сам, а не то, что хочется найти за горизонтом.";
+    public static final String CAPTAIN_FINISH="Два наблюдения записаны, и ты вернулся. Теперь у нас есть начало маршрута, а не доказательство, что впереди безопасная гавань. Спасибо, что оставил на карте место для неизвестного.";
+    public static final String VEYA_START="Запиши два разных биома обычного мира достаточно далеко от корабля. Не нужно сражаться ради отчёта. Отмечай только новые наблюдения после нашего разговора и возвращайся, когда будешь готов.";
+    public static final String VEYA_FINISH="Ты принёс два разных наблюдения и вернулся целым. Я отмечу их без выдуманных поселений и героев. Если карта не обещает безопасного пути, она всё равно помогает нам спрашивать точнее.";
+    public static final List<Brief> BRIEFS=List.of(
+        new Brief("mara",84,"Записывай название местности, а не догадки о тех, кто мог там жить. Даже два наблюдения лучше красивой карты без источников. Я сохраню их рядом с нашим предыдущим решением."),
+        new Brief("quartermaster",85,"Возьми еды с запасом и вернись, если путь станет слишком трудным. Разведка нужна нам для решений, а не для того, чтобы доказать, сколько опасностей ты выдержишь."),
+        new Brief("oren",86,"Я буду ждать у якоря. Если задумаешь вернуться раньше, возвращайся. Мне важно знать, что у тебя есть обратная дорога, а не только цель впереди."),
+        new Brief("selin",87,"Ты не обязан приносить хорошую новость. Если место опасно или тебе пришлось уйти, это тоже полезное наблюдение. Расскажи правду, а мы уже решим, чем помочь."),
+        new Brief("lysander",88,"Я оставлю место в журнале для твоих слов, не для своей красивой версии. Если не захочешь, чтобы я записывал что-то личное, просто скажи. Я пойму."),
+        new Brief("tik",89,"Я проверил приёмник, но не стану делать вид, будто он уже нашёл источник. Если услышишь что-то необычное, запомни время и место. И не отвечай только потому, что голос знакомый.")
+    );
+    public static boolean started(AdventureData d){return d.facts.contains("recon.started");}
+    public static boolean accepted(AdventureData d){return d.facts.contains("recon.accepted");}
+    public static boolean reported(AdventureData d){return d.facts.contains("recon.reported");}
+    public static boolean finished(AdventureData d){return d.facts.contains("recon.finished");}
+    public static int count(AdventureData d){return (int)Math.min(2,d.facts.stream().filter(x->x.startsWith("recon.biome:")).count());}
+    public static List<Option> options(AdventureData d,String npc){
+        var out=new ArrayList<Option>();if(!Council.finished(d)||finished(d))return out;
+        if(!started(d)){if(npc.equals("captain"))out.add(new Option(80,"Обсудить разведку после совета",true));return out;}
+        if(npc.equals("veya")&&!reported(d)){
+            if(!accepted(d))out.add(new Option(81,"Принять разведку двух разных биомов",true));
+            else out.add(new Option(82,"Доложить Вее • "+count(d)+"/2",count(d)>=2));
+        }
+        if(npc.equals("captain")&&reported(d))out.add(new Option(83,"Подвести итог разведки",true));
+        for(var b:BRIEFS)if(npc.equals(b.npc())&&!d.facts.contains("recon.brief."+npc))out.add(new Option(b.action(),"Спросить о предстоящей разведке",true));
+        return out;
+    }
+    /** The adapter supplies server-observed dimension and distance; no client progress packets. */
+    public static boolean observe(AdventureData d,String biome,boolean overworld,boolean hubIdle,double distanceSquared){
+        if(!accepted(d)||reported(d)||!overworld||!hubIdle||!Double.isFinite(distanceSquared)||distanceSquared<128*128||biome==null||biome.length()>160||!biome.matches("[a-z0-9_.-]+:[a-z0-9_./-]+")||count(d)>=2)return false;
+        return d.facts.add("recon.biome:"+biome);
+    }
+    public static String act(AdventureData d,String npc,int action){
+        if(options(d,npc).stream().noneMatch(o->o.action()==action&&o.enabled()))return "";
+        if(action==80){d.facts.add("recon.started");return CAPTAIN_START;}
+        if(action==81){d.facts.add("recon.accepted");return VEYA_START;}
+        if(action==82){d.facts.add("recon.reported");AdventureEngine.bond(d,"veya","recon.return",8,5,8);return VEYA_FINISH;}
+        if(action==83){d.facts.add("recon.finished");AdventureEngine.bond(d,"captain","recon.report",4,2,6);return CAPTAIN_FINISH;}
+        for(var b:BRIEFS)if(b.action()==action){d.facts.add("recon.brief."+npc);return b.text();}
+        return "";
+    }
+    public static String context(AdventureData d){
+        return switch(Council.choice(d)){
+            case "map"->"На совете ты выбрал сверку карты; рыба проверена Марой. Теперь названия реальных биомов дополнят карту, но не докажут судьбу ожидавших.";
+            case "signal"->"На совете ты выбрал проверку сигнала; Тик подготовил приёмник. Наблюдения помогут уточнять местность, но источник голоса ещё неизвестен.";
+            case "aid"->"На совете ты выбрал запас помощи; Селин подготовила хлеб. Наблюдения помогут искать путь, но не подтверждают, что выжившие найдены.";
+            default->"Разведка начинается только после завершённого совета.";
+        };
+    }
+    public static String objective(AdventureData d){
+        if(!started(d))return "После совета обсуди разведку с капитаном.";
+        if(finished(d))return "Разведка завершена • два наблюдения записаны. Экспедиция к гавани ещё не началась.";
+        if(reported(d))return "Разведка • отчёт передан Вее; подведи итог у капитана.";
+        if(!accepted(d))return "Разведка • поговори с Веей и явно прими поручение.";
+        return "Разведка • "+count(d)+"/2 разных биомов обычного мира в 128+ блоках от корабля; затем вернись к Вее.";
+    }
+    public static List<String> journal(AdventureData d){
+        var out=new ArrayList<String>();if(!started(d))return out;out.add(objective(d));out.add(context(d));
+        d.facts.stream().filter(x->x.startsWith("recon.biome:")).sorted().forEach(x->out.add("Наблюдение • "+x.substring("recon.biome:".length())));
+        return out;
+    }
+    public static String voiceKey(AdventureData d,String npc,int action){
+        if(action==80&&npc.equals("captain")&&started(d))return "captain_recon_start";
+        if(action==81&&npc.equals("veya")&&accepted(d))return "veya_recon_start";
+        if(action==82&&npc.equals("veya")&&reported(d))return "veya_recon_finish";
+        if(action==83&&npc.equals("captain")&&finished(d))return "captain_recon_finish";
+        for(var b:BRIEFS)if(b.npc().equals(npc)&&b.action()==action&&d.facts.contains("recon.brief."+npc))return npc+"_recon";
+        return "";
+    }
+    public static String voiceText(String key){
+        return switch(key){case "captain_recon_start"->CAPTAIN_START;case "captain_recon_finish"->CAPTAIN_FINISH;case "veya_recon_start"->VEYA_START;case "veya_recon_finish"->VEYA_FINISH;default->BRIEFS.stream().filter(b->(b.npc()+"_recon").equals(key)).map(Brief::text).findFirst().orElse("");};
+    }
+}

@@ -38,7 +38,14 @@ public final class AdventureService {
         if(migrated)AirshipService.sync(p);
         if(p.isSpectator()||!p.isAlive())return;
         String biome=p.level().getBiome(p.blockPosition()).unwrapKey().map(k->k.identifier().toString()).orElse("");
-        if(AdventureEngine.record(legacy.adventure,AdventureCatalog.Metric.BIOME,biome,1,biome))AirshipService.sync(p);
+        boolean dirty=AdventureEngine.record(legacy.adventure,AdventureCatalog.Metric.BIOME,biome,1,biome);
+        boolean overworld=p.level().dimension().equals(net.minecraft.world.level.Level.OVERWORLD);
+        if(overworld&&Recon.accepted(legacy.adventure)&&!Recon.reported(legacy.adventure)){
+            var hub=AirshipHub.state(((net.minecraft.server.level.ServerLevel)p.level()).getServer());
+            double dx=p.getX()-hub.x,dz=p.getZ()-hub.z;
+            dirty|=Recon.observe(legacy.adventure,biome,true,hub.exists&&hub.phase.equals("IDLE"),dx*dx+dz*dz);
+        }
+        if(dirty)AirshipService.sync(p);
     }
     public static void event(ServerPlayer p,AdventureCatalog.Metric metric,String subject,int amount,String key){
         if(!p.isAlive()||p.isSpectator())return;
@@ -64,7 +71,10 @@ public final class AdventureService {
     }
     public static void action(ServerPlayer p,String npc,int choice){
         var legacy=AirshipService.data(p);AdventureEngine.migrate(legacy);var d=legacy.adventure;var q=AdventureCatalog.personal(npc);
-        if(choice>=60&&choice<=74){
+        if(choice>=80&&choice<=89){
+            String line=Recon.act(d,npc,choice);
+            if(!line.isEmpty()){d.lastInvestigationLine=line;say(p,line);}
+        }else if(choice>=60&&choice<=74){
             var copper=net.minecraft.world.item.Items.COPPER_INGOT;var bread=net.minecraft.world.item.Items.BREAD;
             String plan=Council.choice(d);
             String line=Council.act(d,npc,choice,itemCount(p,copper),itemCount(p,bread));

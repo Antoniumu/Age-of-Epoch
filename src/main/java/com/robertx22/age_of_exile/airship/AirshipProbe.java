@@ -147,6 +147,25 @@ public final class AirshipProbe {
                 var original=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p);var restored=new com.robertx22.age_of_exile.capability.player.RPGPlayerData(p);restored.loadFromNBT(original.saveToNBT());
                 var b=restored.airship.adventure;
                 if(!b.facts.equals(a.facts)||!b.progress.equals(a.progress)||!b.lastInvestigationLine.equals(a.lastInvestigationLine)||!b.events.equals(a.events))throw new IllegalStateException("Evidence ledger/promise lost in actual RPG NBT");
+            } else if(action.equals("recon-biome-one")||action.equals("recon-biome-two")) {
+                int want=action.equals("recon-biome-one")?0:1;
+                if(!com.robertx22.age_of_exile.airship.adventure.Recon.accepted(d.adventure)||com.robertx22.age_of_exile.airship.adventure.Recon.count(d.adventure)!=want)throw new IllegalStateException("Recon must be accepted and previous observation received");
+                // Test-only travel: teleport to genuine generated terrain, never inject progress or biome IDs.
+                var spot=findReconSpot(level,d,want);
+                if(spot==null)throw new IllegalStateException("No two accessible naturally generated biomes near the hub");
+                p.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+                p.teleportTo(level,spot.getX()+.5,spot.getY(),spot.getZ()+.5,Set.of(),0,0,false);p.resetFallDistance();
+                System.out.println("AIRSHIPTEST RECON TELEPORT world="+spot+" biome="+level.getBiome(spot).unwrapKey().map(k->k.identifier().toString()).orElse("?"));
+            } else if(action.equals("recon-check-one")||action.equals("recon-check-two")) {
+                int want=action.equals("recon-check-one")?1:2;
+                if(com.robertx22.age_of_exile.airship.adventure.Recon.count(d.adventure)!=want)throw new IllegalStateException("Server biome observation count is not "+want);
+            } else if(action.equals("recon-return")) {
+                p.teleportTo(level,d.x+.5,d.y+1,d.z+4.5,Set.of(),0,0,false);p.resetFallDistance();
+            } else if(action.equals("recon-proof")) {
+                var a=d.adventure;
+                if(!a.facts.containsAll(java.util.List.of("council.choice.map","recon.started","recon.accepted","recon.reported","recon.finished"))||com.robertx22.age_of_exile.airship.adventure.Recon.count(a)!=2)throw new IllegalStateException("Recon did not preserve plan and two observations");
+                var original=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p);var restored=new com.robertx22.age_of_exile.capability.player.RPGPlayerData(p);restored.loadFromNBT(original.saveToNBT());
+                if(!restored.airship.adventure.facts.equals(a.facts)||!restored.airship.adventure.progress.equals(a.progress))throw new IllegalStateException("Recon observations lost on RPG NBT roundtrip");
             } else if(action.equals("council-proof")) {
                 var a=d.adventure;
                 if(!a.facts.containsAll(java.util.List.of("council.started","council.heard.mara","council.heard.tik","council.choice.map","council.fulfilled","council.closed"))||a.facts.contains("council.promise.pending")||a.progress.getOrDefault("council.fish",0)!=1)throw new IllegalStateException("Council omitted a chosen commitment or its followup");
@@ -327,6 +346,17 @@ public final class AirshipProbe {
             System.out.println("AIRSHIPTEST FAIL "+e);
             e.printStackTrace();
         }
+    }
+    private static net.minecraft.core.BlockPos findReconSpot(ServerLevel level,AirshipData d,int want) {
+        for(int radius:new int[]{160,256,384,512,768})for(int i=0;i<16;i++){
+            double angle=2*Math.PI*i/16;int x=d.x+(int)Math.round(radius*Math.cos(angle)),z=d.z+(int)Math.round(radius*Math.sin(angle));
+            int y=level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z);
+            var feet=new net.minecraft.core.BlockPos(x,y,z);
+            if(!level.getBlockState(feet).isAir()||!level.getBlockState(feet.above()).isAir()||!level.getBlockState(feet.below()).isSolid()||!level.getFluidState(feet.below()).isEmpty())continue;
+            String biome=level.getBiome(feet).unwrapKey().map(k->k.identifier().toString()).orElse("");
+            if(!biome.isEmpty()&&!d.adventure.facts.contains("recon.biome:"+biome))return feet;
+        }
+        return null;
     }
     private static int countItem(ServerPlayer p,net.minecraft.world.item.Item item) { int count=0;for(int i=0;i<p.getInventory().getContainerSize();i++)if(p.getInventory().getItem(i).is(item))count+=p.getInventory().getItem(i).getCount();return count; }
     private static int countIron(ServerPlayer p) {

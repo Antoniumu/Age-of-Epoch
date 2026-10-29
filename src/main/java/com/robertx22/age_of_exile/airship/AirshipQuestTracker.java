@@ -6,6 +6,7 @@ import java.util.List;
 public final class AirshipQuestTracker {
     private AirshipQuestTracker() {}
     public static String main(AirshipData d,QuestBookData b){
+        if(com.robertx22.age_of_exile.airship.adventure.Recon.started(d.adventure))return "ОСНОВНОЙ СЮЖЕТ • "+com.robertx22.age_of_exile.airship.adventure.Recon.objective(d.adventure);
         if(com.robertx22.age_of_exile.airship.adventure.Council.started(d.adventure))return "ОСНОВНОЙ СЮЖЕТ • "+com.robertx22.age_of_exile.airship.adventure.Council.objective(d.adventure);
         if(com.robertx22.age_of_exile.airship.adventure.Voyage.started(d.adventure))return "ОСНОВНОЙ СЮЖЕТ • "+com.robertx22.age_of_exile.airship.adventure.Voyage.objective(d.adventure);
         if(d.stage==11&&!d.adventure.callDecision.isEmpty())return "ОСНОВНОЙ СЮЖЕТ • "+com.robertx22.age_of_exile.airship.adventure.Investigation.objective(d.adventure);
