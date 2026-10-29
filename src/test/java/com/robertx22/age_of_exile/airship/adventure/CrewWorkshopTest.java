@@ -45,4 +45,19 @@ class CrewWorkshopTest {
             d.lastInvestigationLine="different";assertNull(AdventureVoice.action(d,npc,action));
         }
     }
+    @Test void playerCanRespectPrivacyWithoutTellingOrenOrReplayingReward(){
+        for(int topic:new int[]{93,94}){
+            var d=ready(0);CrewWorkshop.act(d,"oren",92);CrewWorkshop.act(d,"tik",topic);
+            assertEquals("",CrewWorkshop.act(d,"oren",95));
+            assertFalse(CrewWorkshop.act(d,"tik",95).isBlank());
+            assertTrue(d.facts.contains("workshop:private"));assertTrue(d.facts.contains("workshop:finished"));
+            assertFalse(d.facts.contains("workshop:consent"));assertFalse(d.facts.contains("workshop:oren_informed"));
+            int trust=d.trust.get("tik");assertEquals("",CrewWorkshop.act(d,"oren",97));
+            assertEquals("",CrewWorkshop.act(d,"tik",95));assertEquals("",CrewWorkshop.act(d,"tik",96));
+            assertEquals(trust,d.trust.get("tik"));assertTrue(CrewWorkshop.options(d,"tik").isEmpty());
+            assertTrue(CrewWorkshop.objective(d).contains("оставил разговор"));
+            var restored=new com.google.gson.Gson().fromJson(new com.google.gson.Gson().toJson(d),AdventureData.class);
+            assertEquals("",CrewWorkshop.act(restored,"oren",97));assertEquals("",CrewWorkshop.act(restored,"tik",95));
+        }
+    }
 }

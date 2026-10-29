@@ -6,7 +6,7 @@ import java.util.List;
 /** A personal evidence ledger. Public here means this character's crew scene, never a world-wide unlock. */
 public final class Investigation {
     private Investigation() {}
-    public static final String ANALYSIS="Первая фраза совпадает с предупреждением капитана. Но это не доказывает, что за бортом живой человек. Отделим то, что слышали, от того, что хотим услышать. Попроси Тика проверить второй источник.";
+    public static final String ANALYSIS="Первая фраза точно совпадает с предупреждением капитана. Но мы не знаем, кто её повторил. Попроси Тика проверить второй источник.";
     public static final String CONFESSION="Тридцать лет назад я перевёл резерв якоря на наш корабль. Мы ушли, а у другого причала не осталось возможности перейти. Я не знаю, сколько людей выжило. И я слишком долго об этом молчал.";
     public record Option(int action,String label) {}
     public static boolean started(AdventureData d){return d.facts.contains("investigation.analysis");}

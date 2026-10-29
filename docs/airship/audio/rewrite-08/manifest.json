@@ -1,0 +1,72 @@
+{
+  "mara_waiting": {
+    "text": "Нужно открыть три новых сундука с добычей после нашего разговора. Старые находки не подойдут. Когда закончишь, возвращайся ко мне.",
+    "durationMillis": 8348,
+    "voice": "voice-03",
+    "sound": "mara_waiting",
+    "source": "crew"
+  },
+  "bram_idle": {
+    "text": "Для ремонта нужны шестнадцать железных слитков. Если принесёшь, займусь креплениями на нижней палубе. Там давно пора всё проверить.",
+    "durationMillis": 8960,
+    "voice": "voice-05",
+    "sound": "bram_idle",
+    "source": "crew"
+  },
+  "bram_waiting": {
+    "text": "Победи десять противников после принятия поручения, потом доложи мне. То, что было до разговора, не считается.",
+    "durationMillis": 7480,
+    "voice": "voice-05",
+    "sound": "bram_waiting",
+    "source": "crew"
+  },
+  "bram_waiting_anchor": {
+    "text": "Сначала заверши одно обычное подземелье после принятия поручения. Старый поход для настройки якоря не подойдёт. Потом возвращайся.",
+    "durationMillis": 9880,
+    "voice": "voice-05",
+    "sound": "bram_waiting_anchor",
+    "source": "crew"
+  },
+  "mara_analysis": {
+    "text": "Первая фраза точно совпадает с предупреждением капитана. Но мы не знаем, кто её повторил. Попроси Тика проверить второй источник.",
+    "durationMillis": 8348,
+    "voice": "voice-03",
+    "sound": "personal_mara_analysis",
+    "source": "adventure"
+  },
+  "captain_recon_start": {
+    "text": "Корабль пока остаётся здесь. Поговори с Веей о разведке, а потом отправляйся осмотреть местность. Вернёшься — доложишь мне.",
+    "durationMillis": 9207,
+    "voice": "voice-01",
+    "sound": "personal_captain_recon_start",
+    "source": "adventure"
+  },
+  "veya_recon_start": {
+    "text": "После того как примешь поручение, найди два разных биома в обычном мире, не ближе 128 блоков от корабля. Мне нужны новые наблюдения. Посмотришь оба — возвращайся ко мне.",
+    "durationMillis": 11510,
+    "voice": "voice-10",
+    "sound": "personal_veya_recon_start",
+    "source": "adventure"
+  },
+  "selin_recon": {
+    "text": "Перед выходом проверь, есть ли у тебя еда и чем перевязать рану. И возвращайся, если почувствуешь себя плохо. Маршрут никуда не денется.",
+    "durationMillis": 9718,
+    "voice": "voice-12",
+    "sound": "personal_selin_recon",
+    "source": "adventure"
+  },
+  "oren_recon": {
+    "text": "Я буду у якоря, когда вернёшься. Если захочешь передохнуть перед докладом, заходи. Плед всё ещё на месте.",
+    "durationMillis": 7840,
+    "voice": "voice-08",
+    "sound": "personal_oren_recon",
+    "source": "adventure"
+  },
+  "tik_recon": {
+    "text": "Приёмник проверил, но источник голоса всё ещё не нашёл. Если услышишь что-нибудь странное, запомни, где и когда. И на знакомый голос не отвечай.",
+    "durationMillis": 14036,
+    "voice": "voice-18",
+    "sound": "personal_tik_recon",
+    "source": "adventure"
+  }
+}

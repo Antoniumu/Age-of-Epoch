@@ -205,6 +205,16 @@ public final class AirshipProbe {
                 if(com.robertx22.age_of_exile.airship.adventure.CrewMoments.choose(ad,"oren",0).isEmpty())throw new IllegalStateException("Oren moment prerequisites missing");
                 ad.completed.add("tik.spare_key");AirshipService.sync(p);
                 if(!com.robertx22.age_of_exile.airship.adventure.CrewWorkshop.eligible(ad))throw new IllegalStateException("Workshop fixture failed");
+            } else if(action.equals("workshop-private-setup")) {
+                // Test-only reset after the consent-path proof; not an ordinary player action.
+                d.adventure.facts.removeIf(f->f.startsWith("workshop:"));
+                d.adventure.lastInvestigationLine="";AirshipService.sync(p);
+                if(!com.robertx22.age_of_exile.airship.adventure.CrewWorkshop.eligible(d.adventure))throw new IllegalStateException("Private-path fixture failed");
+            } else if(action.equals("workshop-private-proof")) {
+                var ad=d.adventure;
+                if(!ad.facts.containsAll(java.util.List.of("workshop:asked","workshop:talk_key","workshop:private","workshop:finished")) || ad.facts.contains("workshop:consent") || ad.facts.contains("workshop:oren_informed"))throw new IllegalStateException("Private branch omitted or leaked a fact");
+                var rpg=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p);var restored=new com.robertx22.age_of_exile.capability.player.RPGPlayerData(p);restored.loadFromNBT(rpg.saveToNBT());
+                if(!restored.airship.adventure.facts.contains("workshop:private") || !com.robertx22.age_of_exile.airship.adventure.CrewWorkshop.act(restored.airship.adventure,"oren",97).isEmpty() || !com.robertx22.age_of_exile.airship.adventure.CrewWorkshop.act(restored.airship.adventure,"tik",95).isEmpty())throw new IllegalStateException("Private branch did not survive NBT or replayed");
             } else if(action.equals("workshop-proof")) {
                 var ad=d.adventure;
                 if(!ad.facts.containsAll(java.util.List.of("workshop:asked","workshop:talk_key","workshop:consent","workshop:oren_informed","workshop:finished")))throw new IllegalStateException("Workshop UI omitted a consent step");
