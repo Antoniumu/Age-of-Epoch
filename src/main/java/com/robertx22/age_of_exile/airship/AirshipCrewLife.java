@@ -12,7 +12,7 @@ public final class AirshipCrewLife {
     private AirshipCrewLife() {}
     private static final WeakHashMap<LivingEntity,Attention> MEMORY=new WeakHashMap<>();
     private static final class Attention {
-        int target=-1,refresh;final float home;final double phase;
+        int target=-1,refresh,peer=-1;final float home;final double phase;
         Attention(LivingEntity npc) { home=npc.getYRot();phase=(npc.getUUID().getLeastSignificantBits()&65535)*.01; }
     }
     public static void register() { ServerTickEvents.END_LEVEL_TICK.register(AirshipCrewLife::tick); }
@@ -41,8 +41,22 @@ public final class AirshipCrewLife {
                     double dx=target.getX()-npc.getX(),dz=target.getZ()-npc.getZ();
                     yaw=CrewMotion.yaw(dx,dz);pitch=CrewMotion.pitch(target.getEyeY()-npc.getEyeY(),Math.hypot(dx,dz));
                 } else {
-                    yaw=a.home+(float)Math.sin(time*.47)*13;
-                    pitch=(float)Math.sin(time*.73)*3;
+                    // Briefly notice a colleague when nobody is addressing us. No movement,
+                    // invented conversation, relationship mutation or cross-player state.
+                    if(Math.floorMod(level.getGameTime()+npc.getId(),80)==0){
+                        String peerId=CrewMotion.colleague(AirshipService.npcId(npc));
+                        a.peer=level.getEntitiesOfClass(LivingEntity.class,npc.getBoundingBox().inflate(8),
+                            e->e!=npc && e.isAlive() && AirshipService.npcId(e).equals(peerId) && npc.hasLineOfSight(e))
+                            .stream().min(java.util.Comparator.comparingDouble(npc::distanceToSqr)).map(LivingEntity::getId).orElse(-1);
+                    }
+                    LivingEntity peer=level.getEntity(a.peer) instanceof LivingEntity e && e.isAlive() && npc.distanceToSqr(e)<64 && npc.hasLineOfSight(e)?e:null;
+                    if(peer!=null && CrewMotion.colleagueWindow(level.getGameTime())){
+                        double dx=peer.getX()-npc.getX(),dz=peer.getZ()-npc.getZ();
+                        yaw=CrewMotion.yaw(dx,dz);pitch=CrewMotion.pitch(peer.getEyeY()-npc.getEyeY(),Math.hypot(dx,dz));
+                    }else{
+                        yaw=a.home+(float)Math.sin(time*.47)*13;
+                        pitch=(float)Math.sin(time*.73)*3;
+                    }
                 }
                 // Head leads; torso follows more slowly. No walking/falling off deck, no random teleporting.
                 float body=CrewMotion.approach(npc.getYRot(),yaw,1.8F);

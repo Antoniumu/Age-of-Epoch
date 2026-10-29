@@ -70,7 +70,7 @@ public final class AirshipService {
         AirshipData d=data(p);String npc=npcId(e);var book=Load.playerRPGData(p).questBook;
         if(expectedStage!=d.stage) return; // Reject replayed/stale UI packets.
         com.robertx22.age_of_exile.airship.adventure.AdventureEngine.migrate(d);
-        if((choice>=10 && choice<=22)||(choice>=30 && choice<=55)||(choice>=60 && choice<=74)||(choice>=80 && choice<=89)){com.robertx22.age_of_exile.airship.adventure.AdventureService.action(p,npc,choice);return;}
+        if((choice>=10 && choice<=22)||(choice>=30 && choice<=55)||(choice>=60 && choice<=74)||(choice>=80 && choice<=91)){com.robertx22.age_of_exile.airship.adventure.AdventureService.action(p,npc,choice);return;}
         if(choice==2) {
             int iron=0;
             for(int i=0;i<p.getInventory().getContainerSize();i++) if(p.getInventory().getItem(i).is(Items.IRON_INGOT)) iron+=p.getInventory().getItem(i).getCount();

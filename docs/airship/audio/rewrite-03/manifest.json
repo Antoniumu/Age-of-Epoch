@@ -1,0 +1,62 @@
+{
+  "captain_confidence": {
+    "text": "После вахты всё ещё хожу по палубе, проверяю, все ли на местах. Сесть и отдохнуть почему-то труднее. Посидишь со мной немного?",
+    "sound": "personal_captain_confidence",
+    "durationMillis": 11836,
+    "voice": "voice-01"
+  },
+  "mara_confidence": {
+    "text": "Здесь пока оставлю пустое место: я не знаю, что там. Раньше, наверное, нарисовала бы что-нибудь наугад. Не бери с меня пример.",
+    "sound": "personal_mara_confidence",
+    "durationMillis": 8266,
+    "voice": "voice-03"
+  },
+  "quartermaster_confidence": {
+    "text": "Я отложил порцию для того, кто сегодня не пришёл к столу. Разогреем позже, если проголодается.",
+    "sound": "personal_bram_confidence",
+    "durationMillis": 6640,
+    "voice": "voice-05"
+  },
+  "oren_confidence": {
+    "text": "Если станет тяжело, я скажу, что мне нужен перерыв. А ты напомни, если я опять стану упрямиться. Договорились?",
+    "sound": "personal_oren_confidence",
+    "durationMillis": 7600,
+    "voice": "voice-08"
+  },
+  "veya_confidence": {
+    "text": "Если задержусь к ужину, сходи меня поискать, ладно? Обычно я отшучиваюсь, но мне правда спокойнее, когда кто-то знает, куда я ушла.",
+    "sound": "personal_veya_confidence",
+    "durationMillis": 7990,
+    "voice": "voice-10"
+  },
+  "selin_confidence": {
+    "text": "Я опять сказала, что уже ела, да? Не ела. Если заметишь такое в следующий раз, напомни мне. Только не при всей команде, пожалуйста.",
+    "sound": "personal_selin_confidence",
+    "durationMillis": 9636,
+    "voice": "voice-12"
+  },
+  "lysander_confidence": {
+    "text": "Кстати, если расскажешь что-то только для меня, я это никуда не запишу. Можешь сказать прямо — я не обижусь.",
+    "sound": "personal_lysander_confidence",
+    "durationMillis": 8080,
+    "voice": "voice-14"
+  },
+  "tik_confidence": {
+    "text": "Я всё ещё не отдал ключ Орену. То занят, то его нет рядом... Нет, это я прячусь. Давай сначала тебе скажу: я потерял ключ. Ну вот.",
+    "sound": "personal_tik_confidence",
+    "durationMillis": 12701,
+    "voice": "voice-18"
+  },
+  "captain_voyage_start": {
+    "text": "Теперь ты знаешь, что случилось. Нам нужно подготовиться к следующему переходу. Поговори с командой и выбери два способа подготовки. Если с кем-то не согласен, так и скажи.",
+    "sound": "personal_captain_voyage_start",
+    "durationMillis": 11645,
+    "voice": "voice-01"
+  },
+  "captain_voyage_finish": {
+    "text": "Мы проверили оба выбранных способа. Я записал результаты и тех, кто помогал. Перед переходом ещё раз посмотрим, достаточно ли этого. Если нет — остановимся.",
+    "sound": "personal_captain_voyage_finish",
+    "durationMillis": 14454,
+    "voice": "voice-01"
+  }
+}

@@ -15,4 +15,10 @@ class CrewMotionTest {
         assertTrue(CrewMotion.pitch(1,3)<0);assertEquals(-35,CrewMotion.pitch(100,1),.001);
         assertEquals(35,CrewMotion.pitch(-100,1),.001);
     }
+    @Test void idleColleaguesArePairedAndOnlyNoticeEachOtherBriefly(){
+        for(String id:AirshipStory.IDS){String other=CrewMotion.colleague(id);assertNotEquals("",other);assertEquals(id,CrewMotion.colleague(other));}
+        assertEquals("",CrewMotion.colleague("unknown"));
+        assertTrue(CrewMotion.colleagueWindow(0));assertTrue(CrewMotion.colleagueWindow(99));
+        assertFalse(CrewMotion.colleagueWindow(100));assertTrue(CrewMotion.colleagueWindow(1200));
+    }
 }

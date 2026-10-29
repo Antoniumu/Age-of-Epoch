@@ -191,6 +191,13 @@ public final class AirshipProbe {
                 if(!d.adventure.completed.contains("captain.quiet_water")||!d.adventure.facts.contains("memory:captain:confidence")||d.relationshipValue("captain")<=20||d.relationshipValue("captain")>=100)throw new IllegalStateException("Personal scene did not change gated relationship");
                 var original=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p);var restored=new com.robertx22.age_of_exile.capability.player.RPGPlayerData(p);restored.loadFromNBT(original.saveToNBT());
                 if(restored.airship.relationshipValue("captain")!=d.relationshipValue("captain")||!restored.airship.adventure.completed.equals(d.adventure.completed))throw new IllegalStateException("Relationship memory lost on NBT save");
+            } else if(action.equals("adventure-moment-check")) {
+                var ad=d.adventure;
+                if(com.robertx22.age_of_exile.airship.adventure.CrewMoments.chosen(ad,"captain")!=0)throw new IllegalStateException("Captain personal choice not made through NPC UI");
+                var rpg=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p);var restored=new com.robertx22.age_of_exile.capability.player.RPGPlayerData(p);restored.loadFromNBT(rpg.saveToNBT());
+                if(com.robertx22.age_of_exile.airship.adventure.CrewMoments.chosen(restored.airship.adventure,"captain")!=0)throw new IllegalStateException("Personal choice lost on NBT roundtrip");
+                if(!com.robertx22.age_of_exile.airship.adventure.CrewMoments.choose(ad,"captain",1).isEmpty())throw new IllegalStateException("Personal choice replayed");
+                if(com.robertx22.age_of_exile.airship.adventure.CrewMoments.chosen(new com.robertx22.age_of_exile.airship.adventure.AdventureData(),"captain")!=-1)throw new IllegalStateException("Choice leaked to independent player state");
             } else if(action.equals("adventure-plant")) {
                 if(!d.adventure.accepted.contains("oren.new_roots"))throw new IllegalStateException("Plant quest must first be accepted via native NPC UI");
                 int x=d.x+85,z=d.z,y=level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING,x,z)+3;

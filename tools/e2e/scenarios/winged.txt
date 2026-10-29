@@ -442,6 +442,15 @@ log_mark
 write run/airship-e2e.flag adventure-heart-check
 wait_log_new 30000 AIRSHIPTEST PASS adventure-heart-check
 shot 46-personal-heart-memory
+# Stop the recorded confidence line before choosing a new text-only personal moment.
+key space
+wait 800
+click 640 420
+wait 1200
+log_mark
+write run/airship-e2e.flag adventure-moment-check
+wait_log_new 30000 AIRSHIPTEST PASS adventure-moment-check
+shot 76-captain-personal-choice
 key Escape
 hold h 200
 wait 1000
