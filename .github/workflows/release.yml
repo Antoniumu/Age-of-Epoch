@@ -9,7 +9,6 @@ name: Release
 on:
   push:
     tags: ['v*']
-    branches: ['arena/c35f20b1-age-of-epoch']
   workflow_dispatch:
     inputs:
       tag:
@@ -28,7 +27,6 @@ env:
 
 jobs:
   release:
-    if: (github.event_name != 'workflow_dispatch' || inputs.tag != 'build-3af2be7') && github.ref != 'refs/heads/arena/c35f20b1-age-of-epoch'
     name: Build & publish release
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -85,45 +83,3 @@ jobs:
             --title "Age of Epoch $TAG" \
             --generate-notes \
             --verify-tag
-
-  publish-verified-main-build:
-    if: (github.event_name == 'workflow_dispatch' && inputs.tag == 'build-3af2be7') || (github.event_name == 'push' && github.ref == 'refs/heads/arena/c35f20b1-age-of-epoch')
-    name: Publish verified main build
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - name: Download and verify the successful main build
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          run=40885757474
-          repo="${{ github.repository }}"
-          test "$(gh run view "$run" --repo "$repo" --json conclusion --jq .conclusion)" = success
-          test "$(gh run view "$run" --repo "$repo" --json headSha --jq .headSha)" = 3af2be78270a173bf1bd5d9e206ddb9c3803244a
-          mkdir artifacts
-          gh run download "$run" --repo "$repo" --name Age-of-Epoch-jar --dir artifacts
-          python3 - <<'PYVERIFY'
-          import glob, hashlib, json, os, zipfile
-          jars = [p for p in glob.glob('artifacts/*.jar') if not p.endswith('-sources.jar')]
-          assert len(jars) == 1, jars
-          with zipfile.ZipFile(jars[0]) as jar:
-              assert jar.testzip() is None
-              mod = json.loads(jar.read('fabric.mod.json'))
-              assert mod['id'] == 'mmorpg' and mod['version'] == '5.1.0', mod
-              assert 'com/robertx22/age_of_exile/gamemaster/WorldStorage.class' in jar.namelist()
-          for path in glob.glob('artifacts/*.jar'):
-              print(os.path.basename(path), hashlib.sha256(open(path, 'rb').read()).hexdigest())
-          PYVERIFY
-
-      - name: Publish GitHub release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          gh release create build-3af2be7 artifacts/*.jar \
-            --repo "${{ github.repository }}" \
-            --target 3af2be78270a173bf1bd5d9e206ddb9c3803244a \
-            --title 'Age of Epoch — сборка main 3af2be7' \
-            --latest \
-            --notes 'Проверенная сборка актуального main (коммит 3af2be7), включая хранение телеметрии и данных GameMaster в папке мира. Внутренняя версия мода: 5.1.0. JAR и исходники собраны и проверены GitHub Actions: https://github.com/Antoniumu/Age-of-Epoch/actions/runs/40885757474'
