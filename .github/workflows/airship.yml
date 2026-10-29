@@ -216,7 +216,7 @@ jobs:
           for npc in captain mara quartermaster oren veya selin lysander tik; do
             grep -q "AIRSHIPROUTE RESULT npc=$npc " run/logs/latest.log
           done
-          test "$(grep -c 'AIRSHIPROUTE RESULT npc=captain ' run/logs/latest.log)" -ge 9
+          test "$(grep -c 'AIRSHIPROUTE RESULT npc=captain ' run/logs/latest.log)" -ge 10
       - name: Publish diagnostic log without claiming reachability
         if: always() && !cancelled() && github.ref == 'refs/heads/arena/7bde44a9-age-of-epoch'
         run: |

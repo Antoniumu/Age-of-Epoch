@@ -245,6 +245,8 @@ public final class AirshipProbe {
             } else if(action.equals("side-ui-check")) {
                 if((d.favorAccepted&2)==0||(d.favorCompleted&2)!=0)throw new IllegalStateException("Real UI did not explicitly accept Mara side quest");
                 if(!AirshipQuestTracker.active(d,com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p).questBook,0).stream().anyMatch(v->v.contains("0/2 новых сундуков")))throw new IllegalStateException("Missing tracked named progress");
+            } else if(action.equals("captain-candidate-placement")) {
+                if(!AirshipCrewPlacement.experimentCaptain(level,d))throw new IllegalStateException("No safe captain candidate near Mara");
             } else if(action.equals("crew-walk-start")) {
                 DevCrewWalk.start(level,p,d);
             } else if(action.equals("crew-walk-block")) {

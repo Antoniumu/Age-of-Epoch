@@ -103,6 +103,17 @@ public final class AirshipCrewPlacement {
         }
         actor.snapTo(oldX,oldY,oldZ,oldYaw,oldPitch);return false;
     }
+    /** Invoked only by the development probe to assess a candidate captain location. */
+    static boolean experimentCaptain(ServerLevel level,AirshipData d){
+        var crew=level.getEntitiesOfClass(LivingEntity.class,new AABB(d.x-60,d.y-52,d.z-36,d.x+61,d.y+51,d.z+56),e->!AirshipService.npcId(e).isEmpty());
+        var captain=crew.stream().filter(e->AirshipService.npcId(e).equals("captain")).toList();
+        var mara=crew.stream().filter(e->AirshipService.npcId(e).equals("mara")).toList();
+        if(captain.size()!=1||mara.size()!=1)return false;
+        var actor=captain.getFirst();var uuid=actor.getUUID();var old=actor.position();
+        boolean placed=placeConnected(level,actor,mara.getFirst(),crew,"aoe_dev_captain_candidate");
+        System.out.println("AIRSHIPROUTE CAPTAIN_FIXTURE placed="+placed+" uuid="+uuid+" old="+old+" new="+actor.position());
+        return placed && actor.getUUID().equals(uuid);
+    }
     /** Once per existing Winged Sailor, move the same actor, retaining its UUID and all story data. */
     public static boolean repairLysander(ServerPlayer player){
         var d=AirshipService.data(player);if(!d.summoned||!"winged_sailor".equals(d.layout)||!net.minecraft.world.level.Level.OVERWORLD.equals(player.level().dimension()))return false;

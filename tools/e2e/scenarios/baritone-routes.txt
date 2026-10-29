@@ -365,3 +365,26 @@ write run/airship-e2e.flag route-result-captain
 wait_log_new 30000 AIRSHIPTEST PASS route-result-captain
 baritone_click
 shot captain-candidate-8
+
+# Dev-only relocation hypothesis: same captain UUID, no blocks changed.
+log_mark
+write run/airship-e2e.flag captain-candidate-placement
+wait_log_new 30000 AIRSHIPTEST PASS captain-candidate-placement
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-target-captain
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-result-captain
+baritone_click
+shot captain-relocation-result
