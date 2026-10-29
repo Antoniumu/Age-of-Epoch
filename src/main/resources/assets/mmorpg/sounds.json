@@ -790,5 +790,85 @@
         "stream": true
       }
     ]
+  },
+  "airship.personal_mara_moment_path": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_mara_moment_path",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_mara_moment_rest": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_mara_moment_rest",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_quartermaster_moment_warm": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_quartermaster_moment_warm",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_quartermaster_moment_fresh": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_quartermaster_moment_fresh",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_veya_moment_forest": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_veya_moment_forest",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_veya_moment_shore": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_veya_moment_shore",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_selin_moment_salt": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_selin_moment_salt",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_selin_moment_leave": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_selin_moment_leave",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_lysander_moment_write": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_lysander_moment_write",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_lysander_moment_private": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_lysander_moment_private",
+        "stream": true
+      }
+    ]
   }
 }

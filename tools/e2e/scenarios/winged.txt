@@ -45,6 +45,10 @@ wait 4000
 log_mark
 write run/airship-e2e.flag lift-check
 wait_log_new 30000 AIRSHIPTEST PASS lift-check
+# Snapshot only; does not claim anyone walked from the lift to a crew member.
+log_mark
+write run/airship-e2e.flag route-observe
+wait_log_new 30000 AIRSHIPTEST PASS route-observe
 shot 03-lift-arrival
 log_mark
 write run/airship-e2e.flag far-reject

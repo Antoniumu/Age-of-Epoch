@@ -22,7 +22,7 @@ public final class AirshipProbe {
     private static int blocks(ServerLevel l,int x,int y,int z){int n=0;for(var pos:net.minecraft.core.BlockPos.betweenClosed(new net.minecraft.core.BlockPos(x-57,y-50,z-34),new net.minecraft.core.BlockPos(x+59,y+49,z+54)))if(!l.getBlockState(pos).isAir())n++;return n;}
 
     public static void tick(MinecraftServer server) {
-        if(server.getPlayerList().getPlayers().isEmpty() || !Files.exists(FLAG)) return;
+        if(!net.fabricmc.loader.api.FabricLoader.getInstance().isDevelopmentEnvironment() || server.getPlayerList().getPlayers().isEmpty() || !Files.exists(FLAG)) return;
         try {
             ServerPlayer p=server.getPlayerList().getPlayers().get(0);
             if(!Level.OVERWORLD.equals(p.level().dimension())) return;
@@ -48,6 +48,13 @@ public final class AirshipProbe {
                 // Spectator gives a stable exterior shot without falling; restored before interactions.
                 p.setGameMode(net.minecraft.world.level.GameType.SPECTATOR);
             } else if(action.equals("ritual-stock")) {
+                // CI fixture only: deterministic dry landing when a random spawn is in water or blocked.
+                // Production summon/landing checks remain unchanged; the ship geometry is untouched.
+                int x=p.blockPosition().getX(),z=p.blockPosition().getZ();
+                int y=level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING,x,z)+3;
+                for(int dx=-1;dx<=1;dx++)for(int dz=-1;dz<=1;dz++)
+                    level.setBlock(new net.minecraft.core.BlockPos(x+dx,y,z+dz),net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(),18);
+                p.teleportTo(level,x+.5,y+1,z+.5,Set.of(),p.getYRot(),0,false);
                 p.getInventory().add(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.EMERALD,32));
                 p.getInventory().add(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_INGOT,16));
                 ritualEmeralds=countItem(p,net.minecraft.world.item.Items.EMERALD);ritualIron=countIron(p);
@@ -235,6 +242,12 @@ public final class AirshipProbe {
             } else if(action.equals("side-ui-check")) {
                 if((d.favorAccepted&2)==0||(d.favorCompleted&2)!=0)throw new IllegalStateException("Real UI did not explicitly accept Mara side quest");
                 if(!AirshipQuestTracker.active(d,com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p).questBook,0).stream().anyMatch(v->v.contains("0/2 новых сундуков")))throw new IllegalStateException("Missing tracked named progress");
+            } else if(action.equals("route-observe")) {
+                // Read-only checkpoint for a player actually walking the ship; never moves anyone.
+                var crew=level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class,new AABB(d.x-60,d.y-52,d.z-36,d.x+61,d.y+51,d.z+56),e->!AirshipService.npcId(e).isEmpty());
+                if(crew.size()!=AirshipStory.IDS.length)throw new IllegalStateException("Expected eight crew for route observation");
+                System.out.println("AIRSHIPROUTE PLAYER x="+p.getX()+" y="+p.getY()+" z="+p.getZ()+" alive="+p.isAlive()+" spectator="+p.isSpectator());
+                for(var npc:crew)System.out.println("AIRSHIPROUTE NPC="+AirshipService.npcId(npc)+" x="+npc.getX()+" y="+npc.getY()+" z="+npc.getZ()+" distance_sq="+p.distanceToSqr(npc)+" los="+p.hasLineOfSight(npc)+" server_open_range="+(p.isAlive()&&!p.isSpectator()&&npc.isAlive()&&p.distanceToSqr(npc)<=36&&p.hasLineOfSight(npc)));
             } else if(action.equals("crew-floor-audit")) {
                 // Observation only. Flat plank connectivity is a lower bound, not a complete route.
                 var crew=level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class,new AABB(d.x-60,d.y-52,d.z-36,d.x+61,d.y+51,d.z+56),e->!AirshipService.npcId(e).isEmpty());

@@ -460,5 +460,75 @@
     "durationMillis": 5410,
     "voice": "voice-18",
     "batch": 10
+  },
+  "mara_moment_path": {
+    "sound": "personal_mara_moment_path",
+    "text": "Тропу — так тропу. Возьму тонкое перо, здесь узко.",
+    "durationMillis": 4389,
+    "voice": "voice-03",
+    "batch": 11
+  },
+  "mara_moment_rest": {
+    "sound": "personal_mara_moment_rest",
+    "text": "Хорошо, начнём с привалов. Брам оценит, если рядом найдётся вода.",
+    "durationMillis": 4516,
+    "voice": "voice-03",
+    "batch": 11
+  },
+  "quartermaster_moment_warm": {
+    "sound": "personal_quartermaster_moment_warm",
+    "text": "Подогреем. Только проследи за печью, пока я позову остальных.",
+    "durationMillis": 4200,
+    "voice": "voice-05",
+    "batch": 11
+  },
+  "quartermaster_moment_fresh": {
+    "sound": "personal_quartermaster_moment_fresh",
+    "text": "Свежим тоже хорошо. Тогда достану масло, если Тик его ещё не нашёл.",
+    "durationMillis": 5320,
+    "voice": "voice-05",
+    "batch": 11
+  },
+  "veya_moment_forest": {
+    "sound": "personal_veya_moment_forest",
+    "text": "Лес, значит. Если заблудимся, скажем Маре, что изучали деревья.",
+    "durationMillis": 4470,
+    "voice": "voice-10",
+    "batch": 11
+  },
+  "veya_moment_shore": {
+    "sound": "personal_veya_moment_shore",
+    "text": "Берег? Отлично. Только учти: я всегда проверяю, что лежит за следующим поворотом.",
+    "durationMillis": 5430,
+    "voice": "voice-10",
+    "batch": 11
+  },
+  "selin_moment_salt": {
+    "sound": "personal_selin_moment_salt",
+    "text": "Совсем немного? Ладно, доверюсь тебе. В прошлый раз у меня получилась морская вода.",
+    "durationMillis": 6560,
+    "voice": "voice-12",
+    "batch": 11
+  },
+  "selin_moment_leave": {
+    "sound": "personal_selin_moment_leave",
+    "text": "Оставим. Приятно, когда кто-то останавливает меня до того, как я всё пересолю.",
+    "durationMillis": 5968,
+    "voice": "voice-12",
+    "batch": 11
+  },
+  "lysander_moment_write": {
+    "sound": "personal_lysander_moment_write",
+    "text": "Запишу, если захочешь рассказать. И покажу тебе прежде, чем кто-то другой прочтёт.",
+    "durationMillis": 6120,
+    "voice": "voice-14",
+    "batch": 11
+  },
+  "lysander_moment_private": {
+    "sound": "personal_lysander_moment_private",
+    "text": "Хорошо. Тетрадь останется закрытой. Можем поговорить без неё.",
+    "durationMillis": 4680,
+    "voice": "voice-14",
+    "batch": 11
   }
 }
