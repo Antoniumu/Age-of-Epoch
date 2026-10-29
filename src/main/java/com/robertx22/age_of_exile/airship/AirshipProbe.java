@@ -24,7 +24,7 @@ public final class AirshipProbe {
     public static void tick(MinecraftServer server) {
         if(!net.fabricmc.loader.api.FabricLoader.getInstance().isDevelopmentEnvironment() || server.getPlayerList().getPlayers().isEmpty()) return;
         var observer=server.getPlayerList().getPlayers().getFirst();
-        if(observer.level() instanceof ServerLevel serverLevel)DevRouteProbe.trace(serverLevel,observer);
+        if(observer.level() instanceof ServerLevel serverLevel){DevRouteProbe.trace(serverLevel,observer);DevCrewWalk.tick(serverLevel);}
         if(!Files.exists(FLAG))return;
         try {
             ServerPlayer p=server.getPlayerList().getPlayers().get(0);
@@ -245,6 +245,10 @@ public final class AirshipProbe {
             } else if(action.equals("side-ui-check")) {
                 if((d.favorAccepted&2)==0||(d.favorCompleted&2)!=0)throw new IllegalStateException("Real UI did not explicitly accept Mara side quest");
                 if(!AirshipQuestTracker.active(d,com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p).questBook,0).stream().anyMatch(v->v.contains("0/2 новых сундуков")))throw new IllegalStateException("Missing tracked named progress");
+            } else if(action.equals("crew-walk-start")) {
+                DevCrewWalk.start(level,p,d);
+            } else if(action.equals("crew-walk-check")) {
+                DevCrewWalk.check(level);
             } else if(action.startsWith("route-target-")) {
                 DevRouteProbe.target(level,p,d,action.substring("route-target-".length()));
             } else if(action.startsWith("route-result-")) {

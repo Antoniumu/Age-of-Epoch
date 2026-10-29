@@ -18,11 +18,11 @@ permissions:
   contents: write
   actions: read
 concurrency:
-  group: ${{ (inputs.recover_run == 'baritone' || contains(github.event.head_commit.message, '[baritone-audit]')) && 'baritone-audit' || 'airship' }}-${{ github.ref }}
+  group: ${{ contains(github.event.head_commit.message, '[crew-walk-audit]') && 'crew-walk-audit' || (inputs.recover_run == 'baritone' || contains(github.event.head_commit.message, '[baritone-audit]')) && 'baritone-audit' || 'airship' }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   client:
-    if: ${{ !contains(github.event.head_commit.message, '[baritone-audit]') && !contains(github.event.head_commit.message, '[recover-proof:') && (github.event_name != 'workflow_dispatch' || inputs.recover_run == '') }}
+    if: ${{ !contains(github.event.head_commit.message, '[crew-walk-audit]') && !contains(github.event.head_commit.message, '[baritone-audit]') && !contains(github.event.head_commit.message, '[recover-proof:') && (github.event_name != 'workflow_dispatch' || inputs.recover_run == '') }}
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
@@ -246,3 +246,53 @@ jobs:
             run/logs/
             run/e2e/gradle.log
             run/baritone/settings.txt
+
+  crew-walk-audit:
+    if: ${{ contains(github.event.head_commit.message, '[crew-walk-audit]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-build-env
+      - name: Compile and unit tests
+        run: ./gradlew build
+      - name: Headless graphics
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends xvfb x11-utils xdotool imagemagick x11-apps openbox wmctrl libgl1 libglu1-mesa libgl1-mesa-dri mesa-utils mesa-vulkan-drivers vulkan-tools libxi6 libxcursor1 libxrandr2 libxinerama1 libxxf86vm1 libopenal1 libpulse0 libegl1 libegl-mesa0
+      - name: Dev-only crew movement experiment in real client
+        env:
+          RENDER_DISTANCE: 10
+          E2E_FAIL_FAST: 1
+        run: |
+          bash tools/e2e/run-in-xvfb.sh tools/e2e/scenarios/crew-walk.txt run/e2e/crew-walk
+          ! grep -q 'AIRSHIPTEST FAIL' run/logs/latest.log
+          grep -q 'AIRSHIPWALK COMPLETE npc=veya' run/logs/latest.log
+          grep -q 'AIRSHIPTEST PASS crew-walk-check' run/logs/latest.log
+      - name: Publish experiment log
+        if: always() && !cancelled() && github.ref == 'refs/heads/arena/7bde44a9-age-of-epoch'
+        run: |
+          set -euo pipefail
+          git pull --rebase --autostash origin arena/7bde44a9-age-of-epoch
+          {
+            echo "Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo "Source: ${{ github.sha }}"
+            echo 'Dev-only experiment, not a production movement system or animation proof.'
+            grep -E 'AIRSHIPWALK|AIRSHIPTEST (PASS|FAIL)' run/logs/latest.log 2>/dev/null || true
+            tail -20 run/e2e/gradle.log 2>/dev/null || true
+          } > docs/airship/crew-walk-proof.txt
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/airship/crew-walk-proof.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Record dev crew walk experiment [skip ci]'
+            git push origin HEAD:arena/7bde44a9-age-of-epoch
+          fi
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: crew-walk-experiment
+          path: |
+            run/e2e/crew-walk/
+            run/logs/
+            run/e2e/gradle.log
