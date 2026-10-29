@@ -51,6 +51,12 @@ dependencies {
         }
     }
 
+    // Optional, temporary CI-only client dependency; never included in the mod jar.
+    // Fabric Loom dev launch discovers runtime classpath mods, not run/mods.
+    if (project.hasProperty('baritoneAudit')) {
+        runtimeOnly files('run/mods/baritone-standalone-fabric-1.20.0.jar')
+    }
+
     // Тесты парсера вики (src/test/java). Парсер WikiMarkdown специально не
     // зависит от Minecraft, поэтому обычный JUnit хватает — и ./gradlew build
     // теперь действительно проверяет разметку, а не только компилирует её.

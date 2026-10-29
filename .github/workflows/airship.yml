@@ -224,7 +224,7 @@ jobs:
           {
             echo "Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             echo "Source: ${{ github.sha }}"
-            echo 'Experiment only: one candidate per NPC, 35-second budget, no proof of actual click or globally optimal route.'
+            echo 'Experiment only: one candidate per NPC, 35-second budget; inspect CLIENT_OPEN and click screenshots individually. No global optimality claim.'
             grep -E 'AIRSHIPROUTE|AIRSHIPTEST (PASS|FAIL|WINGED diagnostic)' run/logs/latest.log 2>/dev/null || true
             echo '--- runner tail ---'
             tail -60 run/e2e/gradle.log 2>/dev/null || true

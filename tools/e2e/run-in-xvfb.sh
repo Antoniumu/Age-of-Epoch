@@ -112,6 +112,10 @@ gradle_pid=""
 echo "=== запуск клиента ==="
 gradle_args=()
 case "$(basename "$scenario")" in
+    baritone-routes.txt)
+        # Opt in the externally downloaded and hash-checked client mod.
+        gradle_args+=(-PbaritoneAudit)
+        ;;
     jei.txt)
         # The JEI scenario must run against the real JEI mod, not only the
         # compile-time API used by the normal optional integration.
