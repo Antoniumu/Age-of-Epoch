@@ -12,6 +12,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.storage.LevelResource;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -104,9 +105,11 @@ public class GameMaster {
     // ------------------------------------------------------------------
 
     public static Path baseDir() {
-        return FabricLoader.getInstance()
-            .getConfigDir()
-            .resolve("age_of_epoch");
+        GameMaster gm = get();
+        if (gm.server == null) {
+            throw new IllegalStateException("GameMaster world is not active");
+        }
+        return gm.server.getWorldPath(LevelResource.ROOT).resolve("age_of_epoch");
     }
 
     public static Path configPath() {
@@ -122,6 +125,12 @@ public class GameMaster {
         if (loaded) {
             restartWeb();
             return;
+        }
+        try {
+            WorldStorage.initialize(baseDir(), FabricLoader.getInstance().getConfigDir().resolve("age_of_epoch"));
+        } catch (java.io.IOException e) {
+            this.server = null;
+            throw new IllegalStateException("Не удалось перенести данные GameMaster в мир", e);
         }
         loadConfig();
         loadData();
@@ -166,6 +175,11 @@ public class GameMaster {
         }
         loaded = false;
         server = null;
+        // Integrated servers can open another world in the same JVM. Do not carry
+        // configuration, telemetry, feed or cached values across worlds.
+        if (INSTANCE == this) {
+            INSTANCE = null;
+        }
     }
 
     /**
@@ -383,10 +397,7 @@ public class GameMaster {
                 try (BufferedReader reader = Files.newBufferedReader(dataPath(), StandardCharsets.UTF_8)) {
                     GameMasterData parsed = GSON.fromJson(reader, GameMasterData.class);
                     if (parsed != null) {
-                        data.version = parsed.version;
-                        data.players = parsed.players != null ? parsed.players : new java.util.HashMap<>();
-                        data.level_times = parsed.level_times != null ? parsed.level_times : new java.util.HashMap<>();
-                        data.observed_seconds = parsed.observed_seconds;
+                        data.copyFrom(parsed);
                     }
                 }
             }

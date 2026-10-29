@@ -15,7 +15,7 @@ import java.util.UUID;
 /**
  * Настройки «GameMaster» — систем динамической подстройки опыта и spawn-rate мобов.
  * <p>
- * Файл: {@code config/age_of_epoch/gamemaster.json}
+ * Файл: {@code <папка мира>/age_of_epoch/gamemaster.json}
  * <p>
  * Независимые переключатели:
  * <ul>

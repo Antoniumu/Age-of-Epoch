@@ -7,7 +7,7 @@ import java.util.Map;
 
 /**
  * Сохраняемые данные GameMaster: прогресс игроков и замеры времени по уровням.
- * Файл: {@code config/age_of_epoch/gamemaster_data.json}
+ * Файл: {@code <папка мира>/age_of_epoch/gamemaster_data.json}
  */
 public class GameMasterData {
 
@@ -107,6 +107,22 @@ public class GameMasterData {
         LevelTimeStat stat = level_times.computeIfAbsent(String.valueOf(level), k -> new LevelTimeStat());
         stat.add(baselineSeconds, completions);
         observed_seconds += Math.max(0, baselineSeconds);
+    }
+
+    /** Восстанавливает все сохраняемые поля, включая статистику и телеметрию. */
+    void copyFrom(GameMasterData parsed) {
+        version = parsed.version;
+        players = parsed.players != null ? parsed.players : new HashMap<>();
+        level_times = parsed.level_times != null ? parsed.level_times : new HashMap<>();
+        observed_seconds = parsed.observed_seconds;
+        hour_activity = parsed.hour_activity != null ? parsed.hour_activity : new long[24];
+        firsts = parsed.firsts != null ? parsed.firsts : new HashMap<>();
+        week_index = parsed.week_index;
+        week_kills = parsed.week_kills;
+        week_goal_epoch = parsed.week_goal_epoch;
+        week_claimed = parsed.week_claimed != null ? parsed.week_claimed : new ArrayList<>();
+        last_goal_hint = parsed.last_goal_hint;
+        telemetry = parsed.telemetry != null ? parsed.telemetry : new Telemetry.State();
     }
 
     /** Убирает прогресс игроков и замеры (не трогая конфиг). */
