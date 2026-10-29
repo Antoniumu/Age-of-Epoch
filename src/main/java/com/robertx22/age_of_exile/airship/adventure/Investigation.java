@@ -7,7 +7,7 @@ import java.util.List;
 public final class Investigation {
     private Investigation() {}
     public static final String ANALYSIS="Первая фраза совпадает с предупреждением капитана. Но это не доказывает, что за бортом живой человек. Отделим то, что слышали, от того, что хотим услышать. Попроси Тика проверить второй источник.";
-    public static final String CONFESSION="Тридцать лет назад я отвёл резерв якоря к нашему кораблю. Мы вышли. Другой причал остался без перехода. Я не знаю, сколько людей там выжило. И слишком долго выдавал это незнание за право молчать.";
+    public static final String CONFESSION="Тридцать лет назад я перевёл резерв якоря на наш корабль. Мы ушли, а у другого причала не осталось возможности перейти. Я не знаю, сколько людей выжило. И я слишком долго об этом молчал.";
     public record Option(int action,String label) {}
     public static boolean started(AdventureData d){return d.facts.contains("investigation.analysis");}
     public static boolean decided(AdventureData d){return d.facts.contains("truth.shared")||d.facts.contains("truth.public")||d.facts.contains("truth.review")||d.facts.contains("truth.mediator");}

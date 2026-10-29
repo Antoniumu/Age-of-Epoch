@@ -23,4 +23,13 @@ class CrewFloorSearchTest {
         assertTrue(found.cells().stream().allMatch(c->(long)Integer.MAX_VALUE-c.x()>=0));
         assertThrows(UnsupportedOperationException.class,()->found.cells().add(cell(1,1)));
     }
+    @Test void checksTheWholeFootprintIncludingLargeActorsAndNegativeCoordinates(){
+        var tiles=Set.of(cell(-2,-2),cell(-2,-1),cell(-1,-2),cell(-1,-1));
+        assertTrue(CrewFloorSearch.supported(-1.8,-1.8,-.2,-.2,tiles::contains));
+        assertFalse(CrewFloorSearch.supported(-1.8,-1.8,.2,-.2,tiles::contains));
+        assertTrue(CrewFloorSearch.supported(-1,-1,0,0,Set.of(cell(-1,-1))::contains));
+        assertFalse(CrewFloorSearch.supported(Double.NaN,0,1,1,c->true));
+        assertFalse(CrewFloorSearch.supported(0,0,5,1,c->true));
+        assertFalse(CrewFloorSearch.supported(0,0,0,1,c->true));
+    }
 }

@@ -11,13 +11,14 @@ import java.util.List;
 public final class CrewFloorAudit {
     private CrewFloorAudit() {}
     private static CrewFloorSearch.Result scan(ServerLevel level,LivingEntity actor,BlockPos origin,int radius,int maximum){
-        if(actor.getBbWidth()>1F)return new CrewFloorSearch.Result(java.util.Set.of(),false);
         return CrewFloorSearch.search(new CrewFloorSearch.Cell(origin.getX(),origin.getZ()),radius,maximum,cell->{
             var feet=new BlockPos(cell.x(),origin.getY(),cell.z());
-            if(!level.hasChunkAt(feet)||!level.getWorldBorder().isWithinBounds(feet)||!level.getBlockState(feet.below()).is(BlockTags.PLANKS))return false;
-            // Use the actual scaled actor bounds and current in-world block states.
+            // Use the actual scaled actor bounds and require full support under its footprint.
             AABB bounds=actor.getBoundingBox().move(feet.getX()+.5-actor.getX(),feet.getY()-actor.getY(),feet.getZ()+.5-actor.getZ());
-            if(!level.noCollision(actor,bounds))return false;
+            if(!CrewFloorSearch.supported(bounds.minX,bounds.minZ,bounds.maxX,bounds.maxZ,c->{
+                var at=new BlockPos(c.x(),origin.getY(),c.z());
+                return level.hasChunkAt(at)&&level.getWorldBorder().isWithinBounds(at)&&level.getBlockState(at.below()).is(BlockTags.PLANKS);
+            })||!level.noCollision(actor,bounds))return false;
             return level.getEntitiesOfClass(LivingEntity.class,bounds.inflate(.03),e->e!=actor&&e.isAlive()).isEmpty();
         });
     }
