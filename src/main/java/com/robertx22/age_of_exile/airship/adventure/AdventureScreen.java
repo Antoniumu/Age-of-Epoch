@@ -42,15 +42,15 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
                 if(!done)option("§b[ЛИЧНОЕ] "+(accepted?"Сдать: ":"Принять: ")+q.title(),accepted?21:20,row++,!accepted||AdventureEngine.progress(d,q,AdventureService.inventory(mc.player,q))>=q.target());
                 else if(!d.facts.contains("memory:"+npc+":confidence"))option("Остаться и поговорить не о работе",22,row++,true);
             }
+            for(var o:Investigation.options(d,npc))option("§6[СЮЖЕТ] "+o.label(),o.action(),row++,o.action()!=31||AdventureService.inventory(mc.player,AdventureCatalog.personal("tik"))>=4);
+            for(var o:Voyage.options(d,npc))option("§6[ПОДГОТОВКА] "+o.label(),o.action(),row++,o.enabled());
+            for(var o:Council.options(d,npc,AdventureService.itemCount(mc.player,net.minecraft.world.item.Items.COPPER_INGOT),AdventureService.itemCount(mc.player,net.minecraft.world.item.Items.BREAD)))option("§6[СОВЕТ] "+o.label(),o.action(),row++,o.enabled());
+            for(var o:Recon.options(d,npc))option("§6[РАЗВЕДКА] "+o.label(),o.action(),row++,o.enabled());
             if(CrewMoments.available(d,npc)){
                 var moment=CrewMoments.moment(npc);
                 option("§d[ВМЕСТЕ] "+moment.first(),90,row++,true);
                 option("§d[ВМЕСТЕ] "+moment.second(),91,row++,true);
             }
-            for(var o:Investigation.options(d,npc))option("§6[СЮЖЕТ] "+o.label(),o.action(),row++,o.action()!=31||AdventureService.inventory(mc.player,AdventureCatalog.personal("tik"))>=4);
-            for(var o:Voyage.options(d,npc))option("§6[ПОДГОТОВКА] "+o.label(),o.action(),row++,o.enabled());
-            for(var o:Council.options(d,npc,AdventureService.itemCount(mc.player,net.minecraft.world.item.Items.COPPER_INGOT),AdventureService.itemCount(mc.player,net.minecraft.world.item.Items.BREAD)))option("§6[СОВЕТ] "+o.label(),o.action(),row++,o.enabled());
-            for(var o:Recon.options(d,npc))option("§6[РАЗВЕДКА] "+o.label(),o.action(),row++,o.enabled());
         }
         int pages=Math.max(1,(choices.size()+4)/5);optionPage=Math.clamp(optionPage,0,pages-1);
         for(int i=optionPage*5;i<Math.min(choices.size(),optionPage*5+5);i++){

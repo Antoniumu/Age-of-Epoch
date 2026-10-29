@@ -563,7 +563,9 @@ hold space 300
 wait 600
 click 1040 332
 wait 1200
+log_mark
 click 640 420
+wait_log_new 10000 AIRSHIPTEST ACTION choice=33
 wait 1200
 shot 54-investigation-crosscheck
 key Escape

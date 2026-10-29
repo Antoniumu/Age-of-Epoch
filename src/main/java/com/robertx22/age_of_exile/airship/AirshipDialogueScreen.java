@@ -81,10 +81,10 @@ public class AirshipDialogueScreen extends BaseScreen {
         addButton(new Choice(panelX+panelW-134,panelY+5,124,"Личная история",b->{onClose();mc.gui.setScreen(new com.robertx22.age_of_exile.airship.adventure.AdventureScreen(entityId,npc,storyStage));}));
         int y=panelY+(AirshipStory.index(npc)>=3?168:101),w=panelW-20,x=panelX+10;
         if(AirshipStory.advance(npc,storyStage)!=storyStage) {
-            String label=storyStage==7?"1 • Рассказать правду всей команде":storyStage==0?"1 • §6[СЮЖЕТ]§r Познакомиться с Марой":AirshipStory.target(storyStage+1)>0?"1 • §6[СЮЖЕТ]§r Принять следующее задание":"1 • §6[СЮЖЕТ]§r Продолжить / сдать задание";
+            String label=storyStage==7?"1 • Предложить рассказать всей команде":storyStage==0?"1 • §6[СЮЖЕТ]§r Познакомиться с Марой":AirshipStory.target(storyStage+1)>0?"1 • §6[СЮЖЕТ]§r Принять следующее задание":"1 • §6[СЮЖЕТ]§r Продолжить / сдать задание";
             var button=new Choice(x,y,w,label,b->send(storyStage==7?1:0));
             button.active=AirshipCampaign.ready(data,book);addButton(button);y+=21;
-            if(storyStage==7) { addButton(new Choice(x,y,w,"2 • Сначала обсудим это только на мостике",b->send(0)));y+=21; }
+            if(storyStage==7) { addButton(new Choice(x,y,w,"2 • Предложить сначала обсудить на мостике",b->send(0)));y+=21; }
         }
         if(AirshipStory.hasFavor(npc) && data.stage>0 && (data.favorCompleted&AirshipCampaign.bit(npc))!=0){
             var done=new Choice(x,y,w,"§b[ПОБОЧНОЕ] §aВыполнено • "+AirshipQuestTracker.sideTarget(npc)+"/"+AirshipQuestTracker.sideTarget(npc)+" • "+AirshipStory.favor(npc),b->{});done.active=false;addButton(done);y+=21;

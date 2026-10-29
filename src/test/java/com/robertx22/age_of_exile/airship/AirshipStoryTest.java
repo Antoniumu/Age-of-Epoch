@@ -24,4 +24,12 @@ class AirshipStoryTest {
             for(String npc:AirshipStory.IDS) assertFalse(AirshipStory.dialogue(npc,stage).isBlank());
         }
     }
+    @org.junit.jupiter.api.Test void earlyCampaignDoesNotAssumePlayerHeardOptionalCall() {
+        String bram=AirshipStory.dialogue("quartermaster",6);
+        String captain=AirshipStory.dialogue("captain",7);
+        assertFalse(bram.contains("слышал зов"));
+        assertFalse(captain.contains("Ты слышал"));
+        assertTrue(captain.contains("не знаем"));
+        assertFalse(AirshipStory.objective(10).contains("снова звучит"));
+    }
 }
