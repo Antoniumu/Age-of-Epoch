@@ -245,6 +245,14 @@ public final class AirshipProbe {
             } else if(action.equals("side-ui-check")) {
                 if((d.favorAccepted&2)==0||(d.favorCompleted&2)!=0)throw new IllegalStateException("Real UI did not explicitly accept Mara side quest");
                 if(!AirshipQuestTracker.active(d,com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p).questBook,0).stream().anyMatch(v->v.contains("0/2 новых сундуков")))throw new IllegalStateException("Missing tracked named progress");
+            } else if(action.equals("captain-migration-check")) {
+                var actors=level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class,new AABB(d.x-60,d.y-52,d.z-36,d.x+61,d.y+51,d.z+56),e->AirshipService.npcId(e).equals("captain"));
+                if(actors.size()!=1)throw new IllegalStateException("Expected one captain");
+                var captain=actors.getFirst();var uuid=captain.getUUID();
+                AirshipCrewPlacement.repairCaptain(p);
+                if(!captain.getUUID().equals(uuid)||!captain.entityTags().contains("aoe_captain_access_v1"))throw new IllegalStateException("Captain migration not completed");
+                if(AirshipCrewPlacement.repairCaptain(p))throw new IllegalStateException("Captain migration repeated");
+                System.out.println("AIRSHIPTEST CAPTAIN MIGRATION uuid="+uuid+" pos="+captain.position());
             } else if(action.equals("captain-candidate-placement")) {
                 if(!AirshipCrewPlacement.experimentCaptain(level,d))throw new IllegalStateException("No safe captain candidate near Mara");
             } else if(action.equals("crew-walk-start")) {

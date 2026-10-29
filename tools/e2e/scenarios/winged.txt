@@ -39,6 +39,9 @@ wait_log_new 30000 AIRSHIPTEST PASS board
 wait 6000
 shot 02-on-deck
 log_mark
+write run/airship-e2e.flag captain-migration-check
+wait_log_new 30000 AIRSHIPTEST PASS captain-migration-check
+log_mark
 write run/airship-e2e.flag lift
 wait_log_new 30000 AIRSHIPTEST PASS lift
 wait 4000

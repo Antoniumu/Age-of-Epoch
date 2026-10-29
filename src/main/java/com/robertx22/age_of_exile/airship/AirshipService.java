@@ -216,6 +216,7 @@ public final class AirshipService {
         com.robertx22.age_of_exile.airship.adventure.AdventureService.tick(p);
         AirshipData d=data(p);
         if(p.tickCount%200==0 && d.summoned && "winged_sailor".equals(d.layout)) {
+            AirshipCrewPlacement.repairCaptain(p);
             AirshipCrewPlacement.repairLysander(p);
             AirshipCrewPlacement.repairOtherCrew(p);
         }

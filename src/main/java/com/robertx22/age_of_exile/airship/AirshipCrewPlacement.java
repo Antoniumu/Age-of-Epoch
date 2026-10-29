@@ -114,6 +114,26 @@ public final class AirshipCrewPlacement {
         System.out.println("AIRSHIPROUTE CAPTAIN_FIXTURE placed="+placed+" uuid="+uuid+" old="+old+" new="+actor.position());
         return placed && actor.getUUID().equals(uuid);
     }
+    /** One-time access migration for the original bridge captain. Never changes ship blocks.
+     * A nearby player postpones the move, so a conversation is not interrupted. */
+    public static boolean repairCaptain(ServerPlayer player){
+        var d=AirshipService.data(player);
+        if(!d.summoned||!"winged_sailor".equals(d.layout)||!net.minecraft.world.level.Level.OVERWORLD.equals(player.level().dimension()))return false;
+        var level=(ServerLevel)player.level();var hub=AirshipHub.state(level.getServer());
+        if(!hub.exists||!"IDLE".equals(hub.phase)||player.distanceToSqr(d.x,d.y,d.z)>100*100)return false;
+        var crew=level.getEntitiesOfClass(LivingEntity.class,new AABB(d.x-60,d.y-52,d.z-36,d.x+61,d.y+51,d.z+56),e->!AirshipService.npcId(e).isEmpty());
+        var captains=crew.stream().filter(e->AirshipService.npcId(e).equals("captain")).toList();
+        var anchors=crew.stream().filter(e->AirshipService.npcId(e).equals("mara")).toList();
+        if(captains.size()!=1||anchors.size()!=1)return false;
+        var actor=captains.getFirst();String tag="aoe_captain_access_v1";
+        if(actor.entityTags().contains(tag))return false;
+        // Respect non-original/custom placements and keep existing accessible positions.
+        if(actor.getY()<d.y+9||lysanderConnected(level,actor,anchors.getFirst(),crew)){actor.addTag(tag);return false;}
+        if(level.players().stream().anyMatch(p->p.isAlive()&&!p.isSpectator()&&p.distanceToSqr(actor)<64))return false;
+        var uuid=actor.getUUID();boolean moved=placeConnected(level,actor,anchors.getFirst(),crew,tag);
+        if(moved)System.out.println("AIRSHIPTEST CAPTAIN ACCESS relocated uuid="+uuid+" pos="+actor.blockPosition());
+        return moved;
+    }
     /** Once per existing Winged Sailor, move the same actor, retaining its UUID and all story data. */
     public static boolean repairLysander(ServerPlayer player){
         var d=AirshipService.data(player);if(!d.summoned||!"winged_sailor".equals(d.layout)||!net.minecraft.world.level.Level.OVERWORLD.equals(player.level().dimension()))return false;
