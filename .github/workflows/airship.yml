@@ -47,6 +47,7 @@ jobs:
         run: |
           python3 -m pip install Pillow
           python3 tools/airship/check_adventure_audio.py
+          python3 tools/airship/check_first_signal_audio.py
           python3 tools/airship/audit_crew_uv.py
       - name: Headless graphics
         run: |

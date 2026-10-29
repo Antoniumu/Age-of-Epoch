@@ -38,21 +38,21 @@ public final class AirshipHubRitual {
         if(action==0){
             long last=room.lastRequest.getOrDefault(p.getUUID(),0L);if(now-last<2000)return;room.lastRequest.put(p.getUUID(),now);
             Offer offer=new Offer(UUID.randomUUID().toString(),now+30_000,p.blockPosition(),hub.revision);room.offers.put(p.getUUID(),offer);
-            answer(p,offer.nonce,"Первое размещение общего Winged Sailor: 32 изумруда и 16 железных слитков. Один корабль на мир. Подтверждение действует 30 секунд. Зарядка — 20 секунд: оставайся в пределах 3 блоков. При отказе площадки оплата не списывается. После призыва навигатор сможет переносить этот же хаб.");return;
+            answer(p,offer.nonce,"СИГНАЛ «ПОСЛЕДНЕМУ РАССВЕТУ»\nПодтверди сигнал и настройку стоянки: экипаж сможет подойти сюда. Корабль общий для всех игроков мира.\nЦена: 32 изумруда и 16 железных слитков. Подтверждение действует 30 секунд. Зарядка — 20 секунд, не отходи дальше 3 блоков. При отмене или отказе площадки ресурсы не списываются.");return;
         }
         if(action!=1)return;
         Offer offer=room.offers.remove(p.getUUID());
         if(offer==null || !offer.nonce.equals(nonce) || offer.expires<now || offer.revision!=hub.revision || p.blockPosition().distSqr(offer.position)>9){answer(p,"","Предложение устарело или место изменилось. Открой H и запроси новое.");return;}
         if(count(p,Items.EMERALD)<32 || count(p,Items.IRON_INGOT)<16){answer(p,"","Недостаточно ресурсов: нужны 32 изумруда и 16 железных слитков. Ничего не списано.");return;}
         room.active=new Charge(p.getUUID(),p.blockPosition(),now);
-        p.sendSystemMessage(Component.literal("Якорь заряжается 20 секунд. Не отходи дальше 3 блоков. Выход/смерть отменяют ритуал без оплаты."));
+        p.sendSystemMessage(Component.literal("Сигнал отправлен. Точка стоянки настраивается 20 секунд: не отходи дальше 3 блоков. Выход или смерть отменяют настройку без оплаты."));
     }
     private static int count(ServerPlayer p,Item item){int total=0;for(int i=0;i<p.getInventory().getContainerSize();i++){var stack=p.getInventory().getItem(i);if(stack.is(item))total+=stack.getCount();}return total;}
     private static void take(ServerPlayer p,Item item,int n){for(int i=0;i<p.getInventory().getContainerSize() && n>0;i++){var stack=p.getInventory().getItem(i);if(stack.is(item)){int amount=Math.min(n,stack.getCount());stack.shrink(amount);n-=amount;}}}
     private static void tick(MinecraftServer server){
         Room room=ROOMS.get(server);if(room==null)return;long now=System.currentTimeMillis();room.offers.values().removeIf(o->o.expires<now);
         Charge c=room.active;if(c==null)return;ServerPlayer p=server.getPlayerList().getPlayer(c.player);
-        if(p==null || !allowed(p) || p.blockPosition().distSqr(c.position)>9 || AirshipHub.state(server).exists){room.active=null;if(p!=null)p.sendSystemMessage(Component.literal("Ритуал отменён. Оплата не списана."));return;}
+        if(p==null || !allowed(p) || p.blockPosition().distSqr(c.position)>9 || AirshipHub.state(server).exists){room.active=null;if(p!=null)p.sendSystemMessage(Component.literal("Настройка сигнала отменена. Оплата не списана."));return;}
         ServerLevel level=(ServerLevel)p.level();double progress=Math.min(1,(now-c.start)/20_000.0);
         if(level.getGameTime()%4==0)AirshipAmbience.volume(level,c.position.getX()+.5,c.position.getY()+8,c.position.getZ()+.5,now*.00015,2);
         if(level.getGameTime()%4==0)for(int i=0;i<16;i++){

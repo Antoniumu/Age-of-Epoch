@@ -66,9 +66,11 @@ shot 05-captain-subtitle-head-left
 move 1230 650
 wait 1000
 shot 06-captain-subtitle-head-right
+log_mark
 hold r 300
-# Let actual audio clips finish: choices must appear after both clips, not via a fake delay.
-wait 24500
+# Wait for real playback, not a fixed delay that goes stale when clips change.
+wait_log_new 60000 AIRSHIPVOICE END captain_intro_b
+wait 1000
 shot 07-captain-transcript
 # Click the actual bottom-strip accept button, GUI scale 2, 1280x720.
 click 640 532

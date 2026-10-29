@@ -88,23 +88,23 @@ public final class AirshipJump {
     public static void cancel(ServerPlayer p,String nonce){Room r=ROOMS.get(level(p).getServer());if(r!=null)r.quotes.computeIfPresent(p.getUUID(),(id,o)->o.nonce.equals(nonce)?null:o);}
     public static void request(ServerPlayer p,int action,String nonce){
         var l=level(p);var server=l.getServer();var h=AirshipHub.state(server);Room r=ROOMS.computeIfAbsent(server,s->new Room());long now=System.currentTimeMillis();
-        String status="Общий хаб: "+h.x+", "+h.y+", "+(h.z+4)+". ";String denial=rights(p,h);
+        String status="Общий корабль: круг подъёмника на земле X="+h.x+", Y="+h.groundY+", Z="+(h.z+4)+". ";String denial=rights(p,h);
         if(!denial.isEmpty()){reply(p,"",status+denial);return;}
-        if(r.job!=null){reply(p,"","Уже выполняется прыжок общего хаба.");return;}
+        if(r.job!=null){reply(p,"",status+"Уже выполняется прыжок общего хаба.");return;}
         try{
             if(action==0){
                 if(now-r.requests.getOrDefault(p.getUUID(),0L)<2000)return;r.requests.put(p.getUUID(),now);
                 emptyShip(l,h);Site s=site(p,h);String key="jump:"+UUID.randomUUID();
                 r.quotes.put(p.getUUID(),new Offer(key,now+30_000,h.revision,p.blockPosition(),s));
                 System.out.println("AIRSHIPJUMP QUOTED target="+s);
-                reply(p,key,"ПРЫЖОК ОБЩЕГО ХАБА • 16 изумрудов + 8 эндер-жемчужин. Кулдаун мира 30 минут, личный 10 минут. Зарядка 20 секунд. Борт должен быть пуст, кроме экипажа. Не отходи дальше 3 блоков. Цель: "+s.x+", "+s.y+", "+(s.z+4)+". Сюжеты и UUID экипажа сохраняются.");return;
+                reply(p,key,status+"ПРЫЖОК • 16 изумрудов + 8 эндер-жемчужин. Ожидание: мир 30 минут, личное 10 минут. Зарядка 20 секунд; не отходи дальше 3 блоков. Борт должен быть пуст, кроме экипажа. Цель: "+s.x+", "+s.y+", "+(s.z+4)+". Истории и экипаж сохраняются.");return;
             }
             Offer o=r.quotes.remove(p.getUUID());
             if(action!=1||o==null||!o.nonce.equals(nonce)||o.expires<now||o.revision!=h.revision||o.player.distSqr(p.blockPosition())>9)throw new IllegalStateException("Предложение прыжка устарело.");
             if(count(p,Items.EMERALD)<16||count(p,Items.ENDER_PEARL)<8)throw new IllegalStateException("Нужны 16 изумрудов и 8 эндер-жемчужин.");
             emptyShip(l,h);Job j=new Job();j.payer=p.getUUID();j.player=p.blockPosition();j.site=o.site;j.start=now;r.job=j;
             for(ServerPlayer other:l.players())other.sendSystemMessage(Component.literal("Последний Рассвет готовит прыжок через 20 секунд. Покиньте борт."));
-        }catch(Exception e){System.out.println("AIRSHIPJUMP REFUSED "+e.getMessage());reply(p,"",e.getMessage());}
+        }catch(Exception e){System.out.println("AIRSHIPJUMP REFUSED "+e.getMessage());reply(p,"",status+e.getMessage());}
     }
     private static void prepare(ServerLevel l,ServerPlayer p,HubState h,Job j){
         emptyShip(l,h);Site actual=site(p,h);if(!actual.equals(j.site))throw new IllegalStateException("Площадка изменилась. Запроси новое подтверждение.");

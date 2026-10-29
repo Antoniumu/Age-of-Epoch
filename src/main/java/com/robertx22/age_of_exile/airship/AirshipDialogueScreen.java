@@ -21,7 +21,7 @@ public class AirshipDialogueScreen extends BaseScreen {
     private String transcript="";
     private List<AirshipVoiceScript.Cue> cues=List.of();
     private SimpleSoundInstance playing;
-    private int cueIndex;
+    private int cueIndex,transcriptScroll;
     private long cueStarted;
     private boolean fullText,started,heardActive;
     private int panelX,panelY,panelW;
@@ -81,7 +81,7 @@ public class AirshipDialogueScreen extends BaseScreen {
         addButton(new Choice(panelX+panelW-134,panelY+5,124,"Личная история",b->{onClose();mc.gui.setScreen(new com.robertx22.age_of_exile.airship.adventure.AdventureScreen(entityId,npc,storyStage));}));
         int y=panelY+(AirshipStory.index(npc)>=3?168:101),w=panelW-20,x=panelX+10;
         if(AirshipStory.advance(npc,storyStage)!=storyStage) {
-            String label=storyStage==7?"1 • Рассказать правду всей команде":storyStage==0?"1 • §6[СЮЖЕТ]§r Принять поручение":AirshipStory.target(storyStage+1)>0?"1 • §6[СЮЖЕТ]§r Принять следующее задание":"1 • §6[СЮЖЕТ]§r Продолжить / сдать задание";
+            String label=storyStage==7?"1 • Рассказать правду всей команде":storyStage==0?"1 • §6[СЮЖЕТ]§r Познакомиться с Марой":AirshipStory.target(storyStage+1)>0?"1 • §6[СЮЖЕТ]§r Принять следующее задание":"1 • §6[СЮЖЕТ]§r Продолжить / сдать задание";
             var button=new Choice(x,y,w,label,b->send(storyStage==7?1:0));
             button.active=AirshipCampaign.ready(data,book);addButton(button);y+=21;
             if(storyStage==7) { addButton(new Choice(x,y,w,"2 • Сначала обсудим это только на мостике",b->send(0)));y+=21; }
@@ -117,6 +117,13 @@ public class AirshipDialogueScreen extends BaseScreen {
         if(!fullText && button==0 && x>=panelX && x<panelX+panelW && y>=panelY && y<height-8) { reveal();return true; }
         return super.mouseClicked(x,y,button);
     }
+    @Override public boolean mouseScrolled(double x,double y,double amount) {
+        if(!fullText || x<panelX || x>=panelX+panelW || y<panelY || y>=height-8) return super.mouseScrolled(x,y,amount);
+        int lines=mc.font.split(Component.literal(transcript),panelW-96).size();
+        int visible=AirshipStory.index(npc)>=3?12:5;
+        transcriptScroll=Math.clamp(transcriptScroll-(int)Math.signum(amount),0,Math.max(0,lines-visible));
+        return true;
+    }
     @Override public void onClose() { stopVoice();mc.gui.setScreen(null); }
     @Override public void removed() { stopVoice();if(previousChat!=null) mc.options.chatVisibility().set(previousChat);super.removed(); }
     @Override public void render(PoseStack pose,int mx,int my,float partial) {
@@ -134,15 +141,21 @@ public class AirshipDialogueScreen extends BaseScreen {
             text(pose,com.robertx22.age_of_exile.airship.adventure.AdventureEngine.greeting(Load.playerRPGData(mc.player).airship.adventure,npc),x+8,y-12,0xAFCDB8);
         }
         String subtitle=fullText?transcript:cues.isEmpty()?transcript:cues.get(Math.min(cueIndex,cues.size()-1)).text();
-        int yy=y+39;
-        for(var line:mc.font.split(Component.literal(subtitle),w-96)) {
+        int yy=y+39;var lines=mc.font.split(Component.literal(subtitle),w-96);
+        int visible=AirshipStory.index(npc)>=3?12:5;
+        int first=fullText?Math.min(transcriptScroll,Math.max(0,lines.size()-visible)):0;
+        for(int i=first;i<lines.size();i++) {
             if(yy>y+(fullText?(AirshipStory.index(npc)>=3?154:88):h-18)) break;
-            AbstractGui.drawShadow(mc.font,pose,line,x+83,yy,0xF0ECE4);yy+=10;
+            AbstractGui.drawShadow(mc.font,pose,lines.get(i),x+83,yy,0xF0ECE4);yy+=10;
         }
         if(!fullText) text(pose,"ПРОБЕЛ • полный текст и ответы"+(!cues.isEmpty()?"   R • повторить":""),x+83,y+h-12,0x8F999E);
-        else if(mc.player!=null && AirshipStory.target(storyStage)>0) {
-            int progress=AirshipCampaign.measured(Load.playerRPGData(mc.player).airship,Load.playerRPGData(mc.player).questBook);
-            text(pose,"§6СЮЖЕТ • Проверено сервером: "+Math.min(progress,AirshipStory.target(storyStage))+" / "+AirshipStory.target(storyStage),x+83,y+88,0xA9C9A7);
+        else {
+            String hint=lines.size()>visible?"Колесо мыши • текст "+(first+1)+"–"+Math.min(first+visible,lines.size())+" / "+lines.size():"";
+            if(mc.player!=null && AirshipStory.target(storyStage)>0) {
+                int progress=AirshipCampaign.measured(Load.playerRPGData(mc.player).airship,Load.playerRPGData(mc.player).questBook);
+                hint="§6СЮЖЕТ "+Math.min(progress,AirshipStory.target(storyStage))+" / "+AirshipStory.target(storyStage)+"  §r"+hint;
+            }
+            if(!hint.isEmpty()) text(pose,hint,x+83,y+(AirshipStory.index(npc)>=3?156:88),0xA9C9A7);
         }
         super.render(pose,mx,my,partial);
     }

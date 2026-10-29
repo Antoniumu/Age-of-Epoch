@@ -92,7 +92,7 @@ public final class WingedSailorService {
         AirshipHub.commit(p);
         Load.playerRPGData(p).syncToClient(p);
         System.out.println("AIRSHIPTEST WINGED placed origin="+origin+" size="+size+" crew="+crew.size());
-        return tell(p,"Winged Sailor на причале. Световой круг: X="+d.x+", Z="+(d.z+4)+". Капитан наверху, Мара у карт, Брам на нижней палубе.");
+        return tell(p,"«Последний Рассвет» на стоянке. Встань в световой круг на земле, чтобы подняться: X="+d.x+", Z="+(d.z+4)+". Капитан ждёт наверху; поговори с ним.");
     }
     private static int tell(ServerPlayer p,String message) { System.out.println("AIRSHIPTEST WINGED diagnostic: "+message);p.sendSystemMessage(Component.literal(message));return 1; }
 }
