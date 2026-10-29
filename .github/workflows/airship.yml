@@ -269,6 +269,7 @@ jobs:
           ! grep -q 'AIRSHIPTEST FAIL' run/logs/latest.log
           grep -q 'AIRSHIPWALK COMPLETE npc=veya' run/logs/latest.log
           grep -q 'AIRSHIPTEST PASS crew-walk-check' run/logs/latest.log
+          grep -q 'AIRSHIPTEST PASS crew-walk-block-check' run/logs/latest.log
       - name: Publish experiment log
         if: always() && !cancelled() && github.ref == 'refs/heads/arena/7bde44a9-age-of-epoch'
         run: |

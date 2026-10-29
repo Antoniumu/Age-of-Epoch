@@ -247,6 +247,10 @@ public final class AirshipProbe {
                 if(!AirshipQuestTracker.active(d,com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p).questBook,0).stream().anyMatch(v->v.contains("0/2 новых сундуков")))throw new IllegalStateException("Missing tracked named progress");
             } else if(action.equals("crew-walk-start")) {
                 DevCrewWalk.start(level,p,d);
+            } else if(action.equals("crew-walk-block")) {
+                DevCrewWalk.block(level,p);
+            } else if(action.equals("crew-walk-block-check")) {
+                DevCrewWalk.checkBlocked(level);
             } else if(action.equals("crew-walk-check")) {
                 DevCrewWalk.check(level);
             } else if(action.startsWith("route-target-")) {

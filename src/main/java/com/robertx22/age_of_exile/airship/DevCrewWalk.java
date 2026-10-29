@@ -58,6 +58,16 @@ final class DevCrewWalk {
         if(steps%20==0)System.out.println("AIRSHIPWALK STEP npc=veya step="+steps+" pos="+actor.position());
         if(distance<=.035+1e-8 && ++next==path.size()){state="completed";System.out.println("AIRSHIPWALK COMPLETE npc=veya steps="+steps+" max_distance="+maxDisplacement+" end="+actor.position());}
     }
+    /** Dev fixture only: put the test player in the route, then expect a safe stop. */
+    static void block(ServerLevel level,ServerPlayer p){
+        if(!state.equals("walking") || !(level.getEntity(actorId) instanceof LivingEntity actor))throw new IllegalStateException("No running experiment");
+        p.teleportTo(level,actor.getX(),actor.getY(),actor.getZ(),java.util.Set.of(),p.getYRot(),p.getXRot(),false);
+        System.out.println("AIRSHIPWALK FIXTURE player placed in actor space");
+    }
+    static void checkBlocked(ServerLevel level){
+        System.out.println("AIRSHIPWALK BLOCKED_RESULT state="+state+" reason="+reason+" steps="+steps);
+        if(!state.equals("stopped")||!reason.equals("obstruction or lost support"))throw new IllegalStateException("Did not stop for blocker: "+state+" "+reason);
+    }
     static void check(ServerLevel level){
         var actor=actorId==null?null:level.getEntity(actorId);
         System.out.println("AIRSHIPWALK RESULT state="+state+" reason="+reason+" steps="+steps+" max_distance="+maxDisplacement+" actor="+(actor==null?"missing":actor.position()));

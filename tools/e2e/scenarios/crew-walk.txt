@@ -66,3 +66,16 @@ log_mark
 write run/airship-e2e.flag crew-walk-check
 wait_log_new 30000 AIRSHIPTEST PASS crew-walk-check
 shot crew-walk-after
+
+# Separate fixture: a player enters the planned route; movement must stop.
+log_mark
+write run/airship-e2e.flag crew-walk-start
+wait_log_new 30000 AIRSHIPTEST PASS crew-walk-start
+log_mark
+write run/airship-e2e.flag crew-walk-block
+wait_log_new 30000 AIRSHIPTEST PASS crew-walk-block
+wait 1000
+log_mark
+write run/airship-e2e.flag crew-walk-block-check
+wait_log_new 30000 AIRSHIPTEST PASS crew-walk-block-check
+shot crew-walk-blocked
