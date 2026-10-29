@@ -1,0 +1,72 @@
+{
+  "quartermaster_thanks": {
+    "clipKey": "quartermaster_thanks",
+    "sound": "personal_quartermaster_thanks",
+    "text": "Хлеб принёс? Спасибо. Поставлю на общий стол, пока Тик не утащил половину. Сам тоже приходи, места хватит.",
+    "durationMillis": 7560,
+    "voice": "voice-05"
+  },
+  "oren_thanks": {
+    "clipKey": "oren_thanks",
+    "sound": "personal_oren_thanks",
+    "text": "Спасибо, что посадил саженцы. Я как-нибудь схожу посмотреть, как они приживаются. Деревьям, наверное, тоже нужно время, чтобы освоиться на новом месте.",
+    "durationMillis": 9720,
+    "voice": "voice-08"
+  },
+  "veya_thanks": {
+    "clipKey": "veya_thanks",
+    "sound": "personal_veya_thanks",
+    "text": "Четыре факела, отлично. Теперь у трапа будет светлее. Браму ничего не говори: я сама расскажу, почему они понадобились.",
+    "durationMillis": 7990,
+    "voice": "voice-10"
+  },
+  "selin_thanks": {
+    "clipKey": "selin_thanks",
+    "sound": "personal_selin_thanks",
+    "text": "Спасибо, как раз вовремя. Я закончила с лекарствами и уже проголодалась. Садись рядом, пока картошка не остыла.",
+    "durationMillis": 8394,
+    "voice": "voice-12"
+  },
+  "lysander_thanks": {
+    "clipKey": "lysander_thanks",
+    "sound": "personal_lysander_thanks",
+    "text": "Бумага, прекрасно. Начну с людей, которые помогали на старом причале. Если вспомнишь кого-нибудь ещё, скажи мне. Я оставлю место в списке.",
+    "durationMillis": 10240,
+    "voice": "voice-14"
+  },
+  "tik_thanks": {
+    "clipKey": "tik_thanks",
+    "sound": "personal_tik_thanks",
+    "text": "Медь есть! Сделаю запасной ключ. И Орену скажу сам, что случилось с первым. Если будешь рядом, мне будет чуть спокойнее.",
+    "durationMillis": 10228,
+    "voice": "voice-18"
+  },
+  "workshop_oren_start": {
+    "clipKey": "oren_workshop_start",
+    "sound": "personal_oren_workshop_start",
+    "text": "Я всё ещё хочу сделать Тику фигурку. Но он в последнее время какой-то напряжённый. Если будешь с ним говорить, спроси, всё ли в порядке. Только не заставляй рассказывать, ладно?",
+    "durationMillis": 12240,
+    "voice": "voice-08"
+  },
+  "workshop_tik_key": {
+    "clipKey": "tik_workshop_key",
+    "sound": "personal_tik_workshop_key",
+    "text": "Ключ? Я немного погнул защёлку, когда искал его. Орен ещё не знает. Я скажу ему сам, только сначала соберусь с мыслями. Не надо говорить за меня.",
+    "durationMillis": 11215,
+    "voice": "voice-18"
+  },
+  "workshop_tik_figure": {
+    "clipKey": "tik_workshop_figure",
+    "sound": "personal_tik_workshop_figure",
+    "text": "Фигурку для меня? Вот это да. Слушай, я ещё защёлку погнул, пока искал ключ. Хочу сам сказать об этом Орену. Только дай мне немного времени.",
+    "durationMillis": 12016,
+    "voice": "voice-18"
+  },
+  "workshop_oren_reply": {
+    "clipKey": "oren_workshop_reply",
+    "sound": "personal_oren_workshop_reply",
+    "text": "Понятно. Не буду торопить Тика. Пусть подойдёт, когда будет готов, а там вместе посмотрим на защёлку. Спасибо, что предупредил.",
+    "durationMillis": 8960,
+    "voice": "voice-08"
+  }
+}

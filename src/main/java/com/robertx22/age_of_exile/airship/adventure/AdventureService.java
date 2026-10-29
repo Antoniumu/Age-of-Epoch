@@ -71,7 +71,10 @@ public final class AdventureService {
     }
     public static void action(ServerPlayer p,String npc,int choice){
         var legacy=AirshipService.data(p);AdventureEngine.migrate(legacy);var d=legacy.adventure;var q=AdventureCatalog.personal(npc);
-        if(choice==90||choice==91){
+        if(choice>=92&&choice<=98){
+            String line=CrewWorkshop.act(d,npc,choice);
+            if(!line.isEmpty()){d.lastInvestigationLine=line;say(p,line);}
+        }else if(choice==90||choice==91){
             String line=CrewMoments.choose(d,npc,choice-90);
             if(!line.isEmpty()){d.lastInvestigationLine=line;say(p,line);}
         }else if(choice>=80&&choice<=89){

@@ -485,9 +485,14 @@ write run/airship-e2e.flag adventure-plant
 wait_log_new 30000 AIRSHIPTEST PASS adventure-plant
 wait 1200
 shot 47-oren-new-roots
+log_mark
 click 640 420
-wait 1200
+wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_oren_thanks
+hold space 300
+wait 600
+log_mark
 click 640 420
+wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_oren_confidence
 wait 1200
 shot 48-oren-personal-memory
 key Escape
@@ -944,3 +949,86 @@ key Escape
 log_mark
 write run/airship-e2e.flag recon-proof
 wait_log_new 30000 AIRSHIPTEST PASS recon-proof
+
+# Partial fixture: Tik's earlier delivery is seeded; all following choices use NPC UI and server.
+log_mark
+write run/airship-e2e.flag workshop-setup
+wait_log_new 30000 AIRSHIPTEST PASS workshop-setup
+log_mark
+write run/airship-e2e.flag photo-oren
+wait_log_new 30000 AIRSHIPTEST PASS photo-oren
+log_mark
+write run/airship-e2e.flag talk-oren
+wait_log_new 30000 AIRSHIPTEST PASS talk-oren
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+log_mark
+click 640 420
+wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_oren_workshop_start
+shot 77-workshop-oren
+hold space 300
+wait 600
+key Escape
+log_mark
+write run/airship-e2e.flag photo-tik
+wait_log_new 30000 AIRSHIPTEST PASS photo-tik
+log_mark
+write run/airship-e2e.flag talk-tik
+wait_log_new 30000 AIRSHIPTEST PASS talk-tik
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+log_mark
+click 640 462
+wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_tik_workshop_key
+shot 78-workshop-tik
+hold space 300
+wait 600
+log_mark
+click 640 462
+wait_log_new 10000 AIRSHIPTEST ACTION choice=96
+wait 1000
+shot 79-workshop-consent
+key Escape
+log_mark
+write run/airship-e2e.flag photo-oren
+wait_log_new 30000 AIRSHIPTEST PASS photo-oren
+log_mark
+write run/airship-e2e.flag talk-oren
+wait_log_new 30000 AIRSHIPTEST PASS talk-oren
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+log_mark
+click 640 420
+wait_log_new 10000 AIRSHIPVOICE ACTIVE personal_oren_workshop_reply
+hold space 300
+wait 600
+key Escape
+log_mark
+write run/airship-e2e.flag photo-tik
+wait_log_new 30000 AIRSHIPTEST PASS photo-tik
+log_mark
+write run/airship-e2e.flag talk-tik
+wait_log_new 30000 AIRSHIPTEST PASS talk-tik
+wait 1200
+hold space 300
+wait 600
+click 1040 332
+wait 1200
+log_mark
+click 640 462
+wait_log_new 10000 AIRSHIPTEST ACTION choice=98
+wait 1000
+shot 80-workshop-outcome
+key Escape
+log_mark
+write run/airship-e2e.flag workshop-proof
+wait_log_new 30000 AIRSHIPTEST PASS workshop-proof

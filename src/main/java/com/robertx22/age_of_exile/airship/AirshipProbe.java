@@ -198,6 +198,20 @@ public final class AirshipProbe {
                 if(com.robertx22.age_of_exile.airship.adventure.CrewMoments.chosen(restored.airship.adventure,"captain")!=0)throw new IllegalStateException("Personal choice lost on NBT roundtrip");
                 if(!com.robertx22.age_of_exile.airship.adventure.CrewMoments.choose(ad,"captain",1).isEmpty())throw new IllegalStateException("Personal choice replayed");
                 if(com.robertx22.age_of_exile.airship.adventure.CrewMoments.chosen(new com.robertx22.age_of_exile.airship.adventure.AdventureData(),"captain")!=-1)throw new IllegalStateException("Choice leaked to independent player state");
+            } else if(action.equals("workshop-setup")) {
+                // Fixtures ONLY: Oren's earlier quest/confidence came from UI and real sapling placement;
+                // Tik's completion is seeded here, not claimed as an end-to-end delivery test.
+                var ad=d.adventure;
+                if(com.robertx22.age_of_exile.airship.adventure.CrewMoments.choose(ad,"oren",0).isEmpty())throw new IllegalStateException("Oren moment prerequisites missing");
+                ad.completed.add("tik.spare_key");AirshipService.sync(p);
+                if(!com.robertx22.age_of_exile.airship.adventure.CrewWorkshop.eligible(ad))throw new IllegalStateException("Workshop fixture failed");
+            } else if(action.equals("workshop-proof")) {
+                var ad=d.adventure;
+                if(!ad.facts.containsAll(java.util.List.of("workshop:asked","workshop:talk_key","workshop:consent","workshop:oren_informed","workshop:finished")))throw new IllegalStateException("Workshop UI omitted a consent step");
+                var rpg=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p);var restored=new com.robertx22.age_of_exile.capability.player.RPGPlayerData(p);restored.loadFromNBT(rpg.saveToNBT());
+                if(!restored.airship.adventure.facts.containsAll(ad.facts))throw new IllegalStateException("Workshop facts lost on NBT roundtrip");
+                if(!com.robertx22.age_of_exile.airship.adventure.CrewWorkshop.act(ad,"tik",98).isEmpty())throw new IllegalStateException("Workshop reward replayed");
+                if(com.robertx22.age_of_exile.airship.adventure.CrewWorkshop.eligible(new com.robertx22.age_of_exile.airship.adventure.AdventureData()))throw new IllegalStateException("Workshop leaked between character states");
             } else if(action.equals("adventure-plant")) {
                 if(!d.adventure.accepted.contains("oren.new_roots"))throw new IllegalStateException("Plant quest must first be accepted via native NPC UI");
                 int x=d.x+85,z=d.z,y=level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING,x,z)+3;

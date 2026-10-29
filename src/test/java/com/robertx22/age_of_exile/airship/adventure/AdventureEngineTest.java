@@ -74,14 +74,18 @@ class AdventureEngineTest {
             assertTrue(AdventureEngine.heart(d,npc)>heart);assertTrue(AdventureEngine.heart(d,npc)<100);
         }
     }
-    @Test void batchOneRecordingsMatchExactQuestTextAndPreserveUnrecordedThanks(){
+    @Test void recordingsMatchExactQuestTextForAllCharacters(){
         for(var q:AdventureCatalog.QUESTS){
             var cue=AdventureVoice.cue(q.npc(),false);assertNotNull(cue);
             assertEquals(q.request(),cue.text());assertTrue(cue.durationMillis()>1000);
             var thanks=AdventureVoice.cue(q.npc(),true);
-            if(q.npc().equals("captain")||q.npc().equals("mara")){assertNotNull(thanks);assertEquals(q.thanks(),thanks.text());}
-            else assertNull(thanks);
+            assertNotNull(thanks);assertEquals(q.thanks(),thanks.text());
         }
         assertNull(AdventureVoice.cue("unknown",false));
+    }
+    @Test void neutralGreetingsDoNotAssumeEarlierMeetings(){
+        var d=new AdventureData();
+        assertFalse(AdventureEngine.greeting(d,"captain").contains("Вернул"));
+        assertFalse(AdventureEngine.greeting(d,"tik").contains("возвращени"));
     }
 }

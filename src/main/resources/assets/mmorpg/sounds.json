@@ -662,5 +662,85 @@
         "stream": true
       }
     ]
+  },
+  "airship.personal_quartermaster_thanks": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_quartermaster_thanks",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_oren_thanks": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_oren_thanks",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_veya_thanks": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_veya_thanks",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_selin_thanks": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_selin_thanks",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_lysander_thanks": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_lysander_thanks",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_tik_thanks": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_tik_thanks",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_oren_workshop_start": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_oren_workshop_start",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_tik_workshop_key": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_tik_workshop_key",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_tik_workshop_figure": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_tik_workshop_figure",
+        "stream": true
+      }
+    ]
+  },
+  "airship.personal_oren_workshop_reply": {
+    "sounds": [
+      {
+        "name": "mmorpg:airship/personal_oren_workshop_reply",
+        "stream": true
+      }
+    ]
   }
 }

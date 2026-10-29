@@ -46,6 +46,7 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
             for(var o:Voyage.options(d,npc))option("§6[ПОДГОТОВКА] "+o.label(),o.action(),row++,o.enabled());
             for(var o:Council.options(d,npc,AdventureService.itemCount(mc.player,net.minecraft.world.item.Items.COPPER_INGOT),AdventureService.itemCount(mc.player,net.minecraft.world.item.Items.BREAD)))option("§6[СОВЕТ] "+o.label(),o.action(),row++,o.enabled());
             for(var o:Recon.options(d,npc))option("§6[РАЗВЕДКА] "+o.label(),o.action(),row++,o.enabled());
+            for(var o:CrewWorkshop.options(d,npc))option("§d[ОРЕН И ТИК] "+o.label(),o.action(),row++,true);
             if(CrewMoments.available(d,npc)){
                 var moment=CrewMoments.moment(npc);
                 option("§d[ВМЕСТЕ] "+moment.first(),90,row++,true);
@@ -74,7 +75,7 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
             case 20->q!=null&&d.accepted.contains(q.id());
             case 21->q!=null&&d.completed.contains(q.id());
             case 22->d.facts.contains("memory:"+npc+":confidence");
-            default->((pendingAction>=30&&pendingAction<=55)||(pendingAction>=60&&pendingAction<=74)||(pendingAction>=80&&pendingAction<=91))&&!d.lastInvestigationLine.equals(beforeLine);
+            default->((pendingAction>=30&&pendingAction<=55)||(pendingAction>=60&&pendingAction<=74)||(pendingAction>=80&&pendingAction<=98))&&!d.lastInvestigationLine.equals(beforeLine);
         };
     }
     private void playConfirmedAction(){
@@ -88,7 +89,7 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
         super.tick();
         if(!signature.equals(stamp())){
             if(confirmed()){
-                if(((pendingAction>=30&&pendingAction<=55)||(pendingAction>=60&&pendingAction<=74)||(pendingAction>=80&&pendingAction<=91)))storyLine=data().lastInvestigationLine;
+                if(((pendingAction>=30&&pendingAction<=55)||(pendingAction>=60&&pendingAction<=74)||(pendingAction>=80&&pendingAction<=98)))storyLine=data().lastInvestigationLine;
                 playConfirmedAction();pendingAction=-1;
             }
             init();
@@ -119,6 +120,7 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
             y=lines(pose,AdventureEngine.callSummary(d),y,0xB8CED2,bottom);
             y=lines(pose,Investigation.objective(d),y,0xE4C897,bottom);
             for(var q:AdventureCatalog.QUESTS)if(d.accepted.contains(q.id()))y=lines(pose,(d.completed.contains(q.id())?"✓ ":"• ")+q.title()+" • "+AdventureEngine.progress(d,q,AdventureService.inventory(mc.player,q))+"/"+q.target()+" "+q.objective(),y,0x80D9D1,bottom);
+            if(!CrewWorkshop.objective(d).isEmpty())y=lines(pose,CrewWorkshop.objective(d),y,0xE7C6DF,bottom);
             for(String entry:Recon.journal(d))y=lines(pose,entry,y,0xE4C897,bottom);
             for(String entry:Council.journal(d))y=lines(pose,entry,y,0xE4C897,bottom);
             for(String entry:Voyage.journal(d))y=lines(pose,entry,y,0xE4C897,bottom);
@@ -139,6 +141,7 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
                 if(CrewMoments.available(d,npc))y=lines(pose,CrewMoments.moment(npc).prompt(),y,0xE7C6DF,bottom);
                 else {String memory=CrewMoments.remembered(d,npc);if(!memory.isEmpty())y=lines(pose,memory,y,0xE7C6DF,bottom);}
             }
+            if(speaking==null && (npc.equals("oren") || npc.equals("tik")) && !CrewWorkshop.objective(d).isEmpty())y=lines(pose,CrewWorkshop.objective(d),y,0xE7C6DF,bottom);
             if(speaking==null&&Recon.started(d)){y=lines(pose,Recon.objective(d),y,0xE4C897,bottom);y=lines(pose,Recon.context(d),y,0xB8CED2,bottom);}
             else if(speaking==null&&Council.started(d))y=lines(pose,Council.objective(d),y,0xE4C897,bottom);
             else if(speaking==null&&Voyage.started(d))y=lines(pose,Voyage.objective(d),y,0xE4C897,bottom);
