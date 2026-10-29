@@ -22,7 +22,10 @@ public final class AirshipProbe {
     private static int blocks(ServerLevel l,int x,int y,int z){int n=0;for(var pos:net.minecraft.core.BlockPos.betweenClosed(new net.minecraft.core.BlockPos(x-57,y-50,z-34),new net.minecraft.core.BlockPos(x+59,y+49,z+54)))if(!l.getBlockState(pos).isAir())n++;return n;}
 
     public static void tick(MinecraftServer server) {
-        if(!net.fabricmc.loader.api.FabricLoader.getInstance().isDevelopmentEnvironment() || server.getPlayerList().getPlayers().isEmpty() || !Files.exists(FLAG)) return;
+        if(!net.fabricmc.loader.api.FabricLoader.getInstance().isDevelopmentEnvironment() || server.getPlayerList().getPlayers().isEmpty()) return;
+        var observer=server.getPlayerList().getPlayers().getFirst();
+        if(observer.level() instanceof ServerLevel serverLevel)DevRouteProbe.trace(serverLevel,observer);
+        if(!Files.exists(FLAG))return;
         try {
             ServerPlayer p=server.getPlayerList().getPlayers().get(0);
             if(!Level.OVERWORLD.equals(p.level().dimension())) return;
@@ -242,6 +245,10 @@ public final class AirshipProbe {
             } else if(action.equals("side-ui-check")) {
                 if((d.favorAccepted&2)==0||(d.favorCompleted&2)!=0)throw new IllegalStateException("Real UI did not explicitly accept Mara side quest");
                 if(!AirshipQuestTracker.active(d,com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p).questBook,0).stream().anyMatch(v->v.contains("0/2 новых сундуков")))throw new IllegalStateException("Missing tracked named progress");
+            } else if(action.startsWith("route-target-")) {
+                DevRouteProbe.target(level,p,d,action.substring("route-target-".length()));
+            } else if(action.startsWith("route-result-")) {
+                DevRouteProbe.result(level,p,d,action.substring("route-result-".length()));
             } else if(action.equals("route-observe")) {
                 // Read-only checkpoint for a player actually walking the ship; never moves anyone.
                 var crew=level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class,new AABB(d.x-60,d.y-52,d.z-36,d.x+61,d.y+51,d.z+56),e->!AirshipService.npcId(e).isEmpty());
