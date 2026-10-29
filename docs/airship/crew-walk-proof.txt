@@ -1,51 +1,51 @@
-Run: https://github.com/Antoniumu/Age-of-Epoch/actions/runs/40965419019
-Source: 8ef0754d70af13ab67c5f6624ee1cc840def81a5
+Run: https://github.com/Antoniumu/Age-of-Epoch/actions/runs/40966124609
+Source: c5d63a3a1999ed15a04780783ebb23fddd29bcfb
 Dev-only experiment, not a production movement system or animation proof.
-[22:25:02] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS prepare stage=0
-[22:25:48] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS ritual-stock stage=0
-[22:26:15] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS ritual-paid stage=0
-[22:26:16] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS winged stage=0
-[22:26:28] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS board stage=0
-[22:26:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift stage=0
-[22:26:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift-check stage=0
-[22:26:40] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-observe stage=0
-[22:26:40] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-veya stage=0
-[22:26:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK START npc=veya uuid=d18170fc-0efa-43ca-badf-f43b1e9f8a27 path=[Cell[x=-3, z=13], Cell[x=-4, z=13], Cell[x=-5, z=13], Cell[x=-5, z=12], Cell[x=-5, z=13], Cell[x=-4, z=13], Cell[x=-3, z=13]] position=(-2.5, 163.0, 13.5)
-[22:26:42] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-start stage=0
-[22:26:43] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=20 pos=(-3.200000000000003, 163.0, 13.5)
-[22:26:44] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=40 pos=(-3.8850000000000016, 163.0, 13.5)
-[22:26:45] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=60 pos=(-4.5, 163.0, 13.43)
-[22:26:46] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=80 pos=(-4.5, 163.0, 12.729999999999997)
-[22:26:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=100 pos=(-4.5, 163.0, 12.955000000000002)
-[22:26:48] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=120 pos=(-4.359999999999999, 163.0, 13.5)
-[22:26:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=140 pos=(-3.6599999999999966, 163.0, 13.5)
-[22:26:50] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=160 pos=(-2.974999999999998, 163.0, 13.5)
-[22:26:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK COMPLETE npc=veya steps=174 max_distance=2.23606797749979 end=(-2.5, 163.0, 13.5)
-[22:27:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK RESULT state=completed reason= steps=174 max_distance=2.23606797749979 actor=(-2.5, 163.0, 13.5)
-[22:27:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-check stage=0
-[22:27:02] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK START npc=veya uuid=d18170fc-0efa-43ca-badf-f43b1e9f8a27 path=[Cell[x=-3, z=13], Cell[x=-4, z=13], Cell[x=-5, z=13], Cell[x=-5, z=12], Cell[x=-5, z=13], Cell[x=-4, z=13], Cell[x=-3, z=13]] position=(-2.5, 163.0, 13.5)
-[22:27:02] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-start stage=0
-[22:27:02] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK FIXTURE player placed in actor space
-[22:27:02] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-block stage=0
-[22:27:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK BLOCKED_RESULT state=stopped reason=obstruction or lost support steps=6
-[22:27:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-block-check stage=0
-[22:27:02] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-block stage=0
-[22:27:02] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:27:02] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:27:03] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:27:03] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:27:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=crew-walk-block-check anchor=-2,157,0 player=(-3.4027270007201462, 163.0, 13.5) eye=Block{minecraft:air}
-[22:27:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 413 [aoe_crew_access_v1_veya, aoe_npc_veya, aoe_airship_npc] pos=(-2.710000000000001, 163.0, 13.5) alive=true
-[22:27:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 411 [aoe_npc_quartermaster, aoe_airship_npc] pos=(-2.5, 158.0, 27.5) alive=true
-[22:27:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 412 [aoe_npc_oren, aoe_crew_access_v1_oren, aoe_airship_npc] pos=(-5.5, 158.0, 26.5) alive=true
-[22:27:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 414 [aoe_npc_selin, aoe_airship_npc, aoe_crew_access_v1_selin] pos=(-1.5, 158.0, 22.5) alive=true
-[22:27:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 416 [aoe_crew_access_v1_tik, aoe_npc_tik, aoe_airship_npc] pos=(-1.5, 163.0, 16.5) alive=true
-[22:27:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 409 [aoe_npc_captain, aoe_airship_npc] pos=(-0.5, 170.0, 33.5) alive=true
-[22:27:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 415 [aoe_lysander_access_v1, aoe_npc_lysander, aoe_airship_npc] pos=(0.5, 163.0, 12.5) alive=true
-[22:27:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 410 [aoe_npc_mara, aoe_airship_npc] pos=(0.5, 163.0, 16.5) alive=true
-[22:27:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK BLOCKED_RESULT state=stopped reason=obstruction or lost support steps=6
-[22:27:03] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-block-check stage=0
-[22:27:03] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:27:03] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:27:04] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[22:27:04] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:30:34] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS prepare stage=0
+[22:31:20] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS ritual-stock stage=0
+[22:31:47] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS ritual-paid stage=0
+[22:31:48] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS winged stage=0
+[22:32:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS board stage=0
+[22:32:07] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift stage=0
+[22:32:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift-check stage=0
+[22:32:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-observe stage=0
+[22:32:12] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-veya stage=0
+[22:32:14] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK START npc=veya uuid=e3eb7549-3256-4f5a-8e8d-503c87d54b2d path=[Cell[x=9, z=9], Cell[x=8, z=9], Cell[x=7, z=9], Cell[x=7, z=8], Cell[x=7, z=9], Cell[x=8, z=9], Cell[x=9, z=9]] position=(9.5, 204.0, 9.5)
+[22:32:14] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-start stage=0
+[22:32:15] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=20 pos=(8.799999999999997, 204.0, 9.5)
+[22:32:16] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=40 pos=(8.114999999999998, 204.0, 9.5)
+[22:32:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=60 pos=(7.5, 204.0, 9.43)
+[22:32:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=80 pos=(7.5, 204.0, 8.729999999999997)
+[22:32:19] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=100 pos=(7.5, 204.0, 8.955000000000002)
+[22:32:20] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=120 pos=(7.640000000000001, 204.0, 9.5)
+[22:32:21] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=140 pos=(8.340000000000003, 204.0, 9.5)
+[22:32:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=160 pos=(9.025000000000002, 204.0, 9.5)
+[22:32:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK COMPLETE npc=veya steps=174 max_distance=2.23606797749979 end=(9.5, 204.0, 9.5)
+[22:32:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK RESULT state=completed reason= steps=174 max_distance=2.23606797749979 actor=(9.5, 204.0, 9.5)
+[22:32:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-check stage=0
+[22:32:34] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK START npc=veya uuid=e3eb7549-3256-4f5a-8e8d-503c87d54b2d path=[Cell[x=9, z=9], Cell[x=8, z=9], Cell[x=7, z=9], Cell[x=7, z=8], Cell[x=7, z=9], Cell[x=8, z=9], Cell[x=9, z=9]] position=(9.5, 204.0, 9.5)
+[22:32:34] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-start stage=0
+[22:32:34] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK FIXTURE player placed in actor space
+[22:32:34] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-block stage=0
+[22:32:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK BLOCKED_RESULT state=stopped reason=obstruction or lost support steps=6
+[22:32:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-block-check stage=0
+[22:32:34] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-block stage=0
+[22:32:34] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:32:34] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:32:34] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:32:34] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:32:35] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:32:35] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:32:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=crew-walk-block-check anchor=10,198,-4 player=(8.545331909984476, 204.0, 9.5) eye=Block{minecraft:air}
+[22:32:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 437 [aoe_npc_mara, aoe_airship_npc] pos=(12.5, 204.0, 12.5) alive=true
+[22:32:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 440 [aoe_crew_access_v1_veya, aoe_npc_veya, aoe_airship_npc] pos=(9.29, 204.0, 9.5) alive=true
+[22:32:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 442 [aoe_lysander_access_v1, aoe_npc_lysander, aoe_airship_npc] pos=(12.5, 204.0, 8.5) alive=true
+[22:32:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 443 [aoe_crew_access_v1_tik, aoe_npc_tik, aoe_airship_npc] pos=(10.5, 204.0, 12.5) alive=true
+[22:32:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 438 [aoe_npc_quartermaster, aoe_airship_npc] pos=(9.5, 199.0, 23.5) alive=true
+[22:32:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 439 [aoe_npc_oren, aoe_crew_access_v1_oren, aoe_airship_npc] pos=(6.5, 199.0, 22.5) alive=true
+[22:32:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 441 [aoe_npc_selin, aoe_airship_npc, aoe_crew_access_v1_selin] pos=(10.5, 199.0, 18.5) alive=true
+[22:32:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 436 [aoe_npc_captain, aoe_airship_npc] pos=(11.5, 211.0, 29.5) alive=true
+[22:32:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK BLOCKED_RESULT state=stopped reason=obstruction or lost support steps=6
+[22:32:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-block-check stage=0
+[22:32:35] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[22:32:35] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
