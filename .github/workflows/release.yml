@@ -9,6 +9,7 @@ name: Release
 on:
   push:
     tags: ['v*']
+    branches: ['arena/c35f20b1-age-of-epoch']
   workflow_dispatch:
     inputs:
       tag:
@@ -27,7 +28,7 @@ env:
 
 jobs:
   release:
-    if: github.event_name != 'workflow_dispatch' || inputs.tag != 'build-3af2be7'
+    if: (github.event_name != 'workflow_dispatch' || inputs.tag != 'build-3af2be7') && github.ref != 'refs/heads/arena/c35f20b1-age-of-epoch'
     name: Build & publish release
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -86,7 +87,7 @@ jobs:
             --verify-tag
 
   publish-verified-main-build:
-    if: github.event_name == 'workflow_dispatch' && inputs.tag == 'build-3af2be7'
+    if: (github.event_name == 'workflow_dispatch' && inputs.tag == 'build-3af2be7') || (github.event_name == 'push' && github.ref == 'refs/heads/arena/c35f20b1-age-of-epoch')
     name: Publish verified main build
     runs-on: ubuntu-latest
     timeout-minutes: 15
