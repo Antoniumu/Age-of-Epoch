@@ -10,6 +10,7 @@ class AirshipVoiceSettingsTest {
         assertTrue(AirshipVoiceSettings.read(file));
         AirshipVoiceSettings.write(file,false);assertFalse(AirshipVoiceSettings.read(file));
         AirshipVoiceSettings.write(file,true);assertTrue(AirshipVoiceSettings.read(file));
+        Files.writeString(file,"enabled= FALSE ");assertFalse(AirshipVoiceSettings.read(file));
         Files.writeString(file,"enabled=\\uXYZ1");assertTrue(AirshipVoiceSettings.read(file));
     }
 }
