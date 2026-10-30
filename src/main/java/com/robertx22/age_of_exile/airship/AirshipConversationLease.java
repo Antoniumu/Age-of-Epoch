@@ -23,15 +23,26 @@ public final class AirshipConversationLease {
         LEASES.put(player,new Lease(actor.getUUID(),level.dimension(),level.getGameTime()+LIFETIME_TICKS));
         return true;
     }
-    public static boolean active(ServerLevel level,Entity actor){
-        var it=LEASES.entrySet().iterator();boolean active=false;
+    /** Stable tie-break regardless of WeakHashMap iteration order. */
+    static boolean preferred(double distance,UUID id,double bestDistance,UUID bestId){
+        return bestId==null || distance<bestDistance || (distance==bestDistance && id.compareTo(bestId)<0);
+    }
+    /** The nearest valid listener, with UUID tie-breaking for concurrent conversations. */
+    public static ServerPlayer listener(ServerLevel level,Entity actor){
+        var it=LEASES.entrySet().iterator();ServerPlayer best=null;double bestDistance=Double.POSITIVE_INFINITY;
         while(it.hasNext()){
             var entry=it.next();var p=entry.getKey();var lease=entry.getValue();
             if(p==null||!p.isAlive()||p.isRemoved()||p.isSpectator()||!p.level().dimension().equals(lease.dimension())||
                !unexpired(p.level().getGameTime(),lease.expires())){it.remove();continue;}
-            if(p.level()==level&&actor.isAlive()&&lease.actor().equals(actor.getUUID())&&
-               p.distanceToSqr(actor)<=36&&p.hasLineOfSight(actor))active=true;
+            if(p.level()==level&&actor.isAlive()&&!actor.isRemoved()&&lease.actor().equals(actor.getUUID())){
+                double distance=p.distanceToSqr(actor);
+                if(distance<=36&&p.hasLineOfSight(actor)&&preferred(distance,p.getUUID(),bestDistance,best==null?null:best.getUUID())){
+                    best=p;bestDistance=distance;
+                }
+            }
         }
-        return active;
+        return best;
     }
+    public static boolean active(ServerLevel level,Entity actor){return listener(level,actor)!=null;}
+
 }

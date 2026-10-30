@@ -28,8 +28,13 @@ public final class AirshipCrewLife {
                 // Re-apply the current profile once on first observation, including actors from old saves.
                 // No respawn, UUID replacement or personal story mutation.
                 Attention a=MEMORY.computeIfAbsent(npc,actor->{AirshipService.configureSkin(level,actor);return new Attention(actor);});
-                ServerPlayer target=level.getEntity(a.target) instanceof ServerPlayer p && eligible(npc,p,12)?p:null;
-                if(target==null || --a.refresh<=0) {
+                // A real listener takes precedence over a closer bystander. In multiplayer
+                // the lease chooses one listener deterministically; no story state is shared.
+                ServerPlayer listener=AirshipConversationLease.listener(level,npc);
+                ServerPlayer target=listener!=null?listener:
+                    level.getEntity(a.target) instanceof ServerPlayer p && eligible(npc,p,12)?p:null;
+                if(listener!=null){a.target=listener.getId();a.refresh=40;}
+                else if(target==null || --a.refresh<=0) {
                     // Keep the current listener unless a significantly closer player arrives.
                     double best=target==null?100:npc.distanceToSqr(target)*.65;
                     for(ServerPlayer p:level.players()) if(eligible(npc,p,10) && npc.distanceToSqr(p)<best) { target=p;best=npc.distanceToSqr(p); }

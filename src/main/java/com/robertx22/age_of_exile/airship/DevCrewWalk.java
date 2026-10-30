@@ -66,9 +66,15 @@ final class DevCrewWalk {
         if(!AirshipConversationLease.active(level,actor))throw new IllegalStateException("Conversation not opened in range");
         System.out.println("AIRSHIPWALK FIXTURE conversation requested");
     }
-    static void checkPause(){
+    static void checkPause(ServerLevel level,ServerPlayer player){
         System.out.println("AIRSHIPWALK PAUSE_RESULT ticks="+pausedTicks+" steps="+steps);
         if(!state.equals("walking")||pausedTicks<40)throw new IllegalStateException("Conversation did not pause crew");
+        if(!(level.getEntity(actorId) instanceof LivingEntity actor)||AirshipConversationLease.listener(level,actor)!=player)
+            throw new IllegalStateException("Conversation listener not selected");
+        float desired=CrewMotion.yaw(player.getX()-actor.getX(),player.getZ()-actor.getZ());
+        if(Math.abs(CrewMotion.wrap(actor.getYHeadRot()-desired))>12)
+            throw new IllegalStateException("Crew did not face listener");
+        System.out.println("AIRSHIPWALK LISTENER npc=veya head="+actor.getYHeadRot()+" desired="+desired);
         if(checkedSteps>=0&&steps!=checkedSteps)throw new IllegalStateException("Crew moved during conversation screen transition");
         checkedSteps=steps;
     }

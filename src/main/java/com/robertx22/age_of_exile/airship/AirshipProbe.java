@@ -260,7 +260,7 @@ public final class AirshipProbe {
             } else if(action.equals("crew-walk-dialogue-open")) {
                 DevCrewWalk.openConversation(level,p);
             } else if(action.equals("crew-walk-pause-check")) {
-                DevCrewWalk.checkPause();
+                DevCrewWalk.checkPause(level,p);
             } else if(action.equals("crew-walk-resume-check")) {
                 DevCrewWalk.checkResume();
             } else if(action.equals("crew-walk-block")) {
