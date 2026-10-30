@@ -78,6 +78,11 @@ wait_log_new 30000 AIRSHIPTEST PASS crew-walk-dialogue-open
 log_mark
 key v
 wait_log_new 30000 AIRSHIPVOICE SETTING enabled=false
+# Reopen while muted: the dialogue must enter text mode without starting a clip.
+log_mark
+write run/airship-e2e.flag crew-walk-dialogue-open
+wait_log_new 30000 AIRSHIPVOICE MUTED veya
+wait_log_new 30000 AIRSHIPTEST PASS crew-walk-dialogue-open
 wait 6500
 log_mark
 write run/airship-e2e.flag crew-walk-pause-check

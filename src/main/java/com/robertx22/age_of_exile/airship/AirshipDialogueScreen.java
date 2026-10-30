@@ -38,7 +38,7 @@ public class AirshipDialogueScreen extends BaseScreen {
                 && !AirshipCampaign.ready(Load.playerRPGData(mc.player).airship,Load.playerRPGData(mc.player).questBook))
                 transcript=AirshipCrewVoice.waitingDialogue(npc,storyStage);
             cues=AirshipCrewVoice.cues(npc,storyStage,transcript);
-            if(AirshipVoiceSettings.enabled())startCue();else fullText=true;
+            if(AirshipVoiceSettings.enabled())startCue();else {fullText=true;proof("MUTED "+npc);}
         }
         panelY=height-(fullText?196:subtitleHeight())-8;
         if(fullText) buildChoices();
