@@ -232,7 +232,7 @@ jobs:
               echo "### Живые шаги (сетка крафта 3×2)"
               echo
               echo '```'
-              grep -hE "AOEPR (given|placed|result_ready|taken|crafted)" run/e2e/aoepr.log | tail -30
+              grep -hE "AOEPR (given|gui_open|placed|result_ready|taken|crafted)" run/e2e/aoepr.log | tail -30
               echo '```'
               echo
             else

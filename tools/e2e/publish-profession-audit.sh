@@ -123,7 +123,7 @@ echo "  + logs/aoepr.log ($(wc -l < logs/aoepr.log 2>/dev/null || echo 0) стр
         echo "## Живые шаги (что происходило в сетке крафта)"
         echo
         echo '```'
-        grep -hE "AOEPR (given|placed|result_ready|taken|crafted|prof=)" logs/aoepr.log | tail -60
+        grep -hE "AOEPR (given|gui_open|placed|result_ready|taken|crafted|prof=)" logs/aoepr.log | tail -60
         echo '```'
         echo
     fi

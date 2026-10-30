@@ -153,8 +153,10 @@ def main():
     # имён скриншотов *-slot-*.
     scenario_text = read(SCENARIO)
     if scenario_text:
+        # Центры слотов сетки 3×2 в экранных координатах (guiScale 2):
+        # сетка 0,2,4 (верх) и 1 (низ) — те, куда сценарий кладёт предметы.
         grid_clicks = len(re.findall(
-            r"^click (?:673|691|709) (?:275|293)$", scenario_text, re.M))
+            r"^click (?:706|742|778) 190$|^click 706 226$", scenario_text, re.M))
         slot_shots = len(re.findall(r"^shot \S+-slot-\d+$", scenario_text, re.M))
         if grid_clicks != slot_shots or slot_shots == 0:
             problems.append(("все", "shot_per_grid_move",
