@@ -15,9 +15,27 @@ class CrewMomentsTest {
             assertEquals("",CrewMoments.choose(d,npc,2));assertTrue(CrewMoments.available(d,npc));
             assertEquals(CrewMoments.moment(npc).secondReply(),CrewMoments.choose(d,npc,1));
             assertEquals(1,CrewMoments.chosen(d,npc));assertEquals(-1,CrewMoments.chosen(other,npc));
-            assertEquals(CrewMoments.moment(npc).secondReply(),CrewMoments.remembered(d,npc));
+            assertFalse(CrewMoments.remembered(d,npc).isBlank());assertNotEquals(CrewMoments.moment(npc).secondReply(),CrewMoments.remembered(d,npc));
             int heart=AdventureEngine.heart(d,npc);assertEquals("",CrewMoments.choose(d,npc,0));
             assertEquals(heart,AdventureEngine.heart(d,npc));
+        }
+    }
+    @Test void callbacksReflectBothChoicesWithoutChangingEitherPlayersState(){
+        for(String npc:AirshipStory.IDS){
+            var first=new AdventureData();var second=new AdventureData();var untouched=new AdventureData();
+            for(var d:new AdventureData[]{first,second}){
+                d.completed.add(AdventureCatalog.personal(npc).id());
+                d.facts.add("memory:"+npc+":confidence");
+            }
+            CrewMoments.choose(first,npc,0);CrewMoments.choose(second,npc,1);
+            var firstFacts=java.util.Set.copyOf(first.facts);var secondFacts=java.util.Set.copyOf(second.facts);
+            int firstHeart=AdventureEngine.heart(first,npc),secondHeart=AdventureEngine.heart(second,npc);
+            assertFalse(CrewMoments.remembered(first,npc).isBlank());
+            assertFalse(CrewMoments.remembered(second,npc).isBlank());
+            assertNotEquals(CrewMoments.remembered(first,npc),CrewMoments.remembered(second,npc));
+            assertEquals("",CrewMoments.remembered(untouched,npc));
+            assertEquals(firstFacts,first.facts);assertEquals(secondFacts,second.facts);
+            assertEquals(firstHeart,AdventureEngine.heart(first,npc));assertEquals(secondHeart,AdventureEngine.heart(second,npc));
         }
     }
     @Test void invalidNpcsCannotCreateMemories(){
