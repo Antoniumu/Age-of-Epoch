@@ -1,126 +1,144 @@
-Run: https://github.com/Antoniumu/Age-of-Epoch/actions/runs/41030561375
-Source: 1077e109a1a5eae985a69c7593e03044f8fced74
+Run: https://github.com/Antoniumu/Age-of-Epoch/actions/runs/41031605182
+Source: 0808f3d94c55d49ee5133e8bceb488f3324cfeed
 Dev-only experiment, not a production movement system or animation proof.
-[09:04:53] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS prepare stage=0
-[09:05:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS ritual-stock stage=0
-[09:06:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS ritual-paid stage=0
-[09:06:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS winged stage=0
-[09:06:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS board stage=0
-[09:06:25] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift stage=0
-[09:06:29] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift-check stage=0
-[09:06:29] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-observe stage=0
-[09:06:30] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-veya stage=0
-[09:06:32] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK START npc=veya uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 path=[Cell[x=-8, z=-1], Cell[x=-9, z=-1], Cell[x=-10, z=-1], Cell[x=-10, z=-2], Cell[x=-10, z=-1], Cell[x=-9, z=-1], Cell[x=-8, z=-1]] position=(-7.5, 224.0, -0.5)
-[09:06:32] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-start stage=0
-[09:06:32] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=1980 pos=(-7.5350341796875, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=20 pos=(-8.200000000000003, 224.0, -0.5)
-[09:06:33] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2000 pos=(-8.199951171875, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:34] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=40 pos=(-8.885000000000002, 224.0, -0.5)
-[09:06:34] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2020 pos=(-8.885009765625, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:34] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2020 pos=(-8.9200439453125, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:35] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=60 pos=(-9.5, 224.0, -0.5700000000000001)
-[09:06:35] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2040 pos=(-9.5, 224.0, -0.60498046875) player=(-4.5, 224.0, -0.5)
-[09:06:36] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=80 pos=(-9.5, 224.0, -1.2699999999999998)
-[09:06:36] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2060 pos=(-9.5, 224.0, -1.27001953125) player=(-4.5, 224.0, -0.5)
-[09:06:37] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=100 pos=(-9.5, 224.0, -1.045000000000001)
-[09:06:37] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2080 pos=(-9.5, 224.0, -1.044921875) player=(-4.5, 224.0, -0.5)
-[09:06:38] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=120 pos=(-9.36, 224.0, -0.5)
-[09:06:38] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2100 pos=(-9.360107421875, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:39] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=140 pos=(-8.659999999999997, 224.0, -0.5)
-[09:06:39] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2120 pos=(-8.659912109375, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:39] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2120 pos=(-8.625, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:40] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=160 pos=(-7.974999999999998, 224.0, -0.5)
-[09:06:40] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2140 pos=(-7.9400634765625, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:41] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK COMPLETE npc=veya steps=174 max_distance=2.23606797749979 end=(-7.5, 224.0, -0.5)
-[09:06:41] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2160 pos=(-7.5, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:42] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2180 pos=(-7.5, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:42] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2180 pos=(-7.5, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:43] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2200 pos=(-7.5, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:44] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2220 pos=(-7.5, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:45] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2240 pos=(-7.5, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:46] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2260 pos=(-7.5, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:47] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2280 pos=(-7.5, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:47] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2280 pos=(-7.5, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:48] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2300 pos=(-7.5, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:49] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2320 pos=(-7.5, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:50] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2340 pos=(-7.5, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:50] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2340 pos=(-7.5, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK RESULT state=completed reason= steps=174 max_distance=2.23606797749979 actor=(-7.5, 224.0, -0.5)
-[09:06:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-check stage=0
-[09:06:51] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2360 pos=(-7.5, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK START npc=veya uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 path=[Cell[x=-8, z=-1], Cell[x=-9, z=-1], Cell[x=-10, z=-1], Cell[x=-10, z=-2], Cell[x=-10, z=-1], Cell[x=-9, z=-1], Cell[x=-8, z=-1]] position=(-7.5, 224.0, -0.5)
-[09:06:51] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-start stage=0
-[09:06:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK FIXTURE conversation requested
-[09:06:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-dialogue-open stage=0
-[09:06:52] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK PAUSE conversation=true
-[09:06:52] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2380 pos=(-7.7099609375, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:53] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2400 pos=(-7.7099609375, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:54] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2420 pos=(-7.7099609375, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:54] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2420 pos=(-7.7099609375, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:55] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2440 pos=(-7.7099609375, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:56] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2460 pos=(-7.7099609375, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:57] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2480 pos=(-7.7099609375, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:58] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2500 pos=(-7.7099609375, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:58] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK PAUSE_RESULT ticks=136 steps=6
-[09:06:58] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-pause-check stage=0
-[09:06:59] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2520 pos=(-7.7099609375, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:06:59] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2520 pos=(-7.7099609375, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:07:00] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2540 pos=(-7.7099609375, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:07:01] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2560 pos=(-7.7099609375, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:07:01] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2560 pos=(-7.7099609375, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:07:02] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2580 pos=(-7.7099609375, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:07:03] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2600 pos=(-7.7099609375, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:07:04] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=20 pos=(-8.200000000000003, 224.0, -0.5)
-[09:07:04] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2620 pos=(-8.3050537109375, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:07:05] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=40 pos=(-8.885000000000002, 224.0, -0.5)
-[09:07:05] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2640 pos=(-8.989990234375, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:07:06] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=60 pos=(-9.5, 224.0, -0.5700000000000001)
-[09:07:06] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2660 pos=(-9.5, 224.0, -0.6749267578125) player=(-4.5, 224.0, -0.5)
-[09:07:07] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=80 pos=(-9.5, 224.0, -1.2699999999999998)
-[09:07:07] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2680 pos=(-9.5, 224.0, -1.375) player=(-4.5, 224.0, -0.5)
-[09:07:08] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=100 pos=(-9.5, 224.0, -1.045000000000001)
-[09:07:08] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2700 pos=(-9.5, 224.0, -0.9400634765625) player=(-4.5, 224.0, -0.5)
-[09:07:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=120 pos=(-9.36, 224.0, -0.5)
-[09:07:09] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2720 pos=(-9.2550048828125, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:07:10] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=140 pos=(-8.659999999999997, 224.0, -0.5)
-[09:07:10] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2740 pos=(-8.5550537109375, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:07:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=160 pos=(-7.974999999999998, 224.0, -0.5)
-[09:07:11] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2760 pos=(-7.8699951171875, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:07:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK COMPLETE npc=veya steps=174 max_distance=2.23606797749979 end=(-7.5, 224.0, -0.5)
-[09:07:12] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2780 pos=(-7.5, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:07:13] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2800 pos=(-7.5, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:07:14] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2820 pos=(-7.5, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:07:15] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2840 pos=(-7.5, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:07:15] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2840 pos=(-7.5, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:07:16] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2860 pos=(-7.5, 224.0, -0.5) player=(-4.5, 224.0, -0.5)
-[09:07:16] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK RESUME_RESULT state=completed steps=174 paused=228
-[09:07:16] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-resume-check stage=0
-[09:07:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK START npc=veya uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 path=[Cell[x=-8, z=-1], Cell[x=-9, z=-1], Cell[x=-10, z=-1], Cell[x=-10, z=-2], Cell[x=-10, z=-1], Cell[x=-9, z=-1], Cell[x=-8, z=-1]] position=(-7.5, 224.0, -0.5)
-[09:07:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-start stage=0
-[09:07:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK FIXTURE player placed in actor space
-[09:07:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-block stage=0
-[09:07:17] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2880 pos=(-7.7099609375, 224.0, -0.5) player=(-7.74627631776043, 224.0, -0.5)
-[09:07:18] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2900 pos=(-7.7099609375, 224.0, -0.5) player=(-8.443320358015178, 224.0, -0.5)
-[09:07:18] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2900 pos=(-7.7099609375, 224.0, -0.5) player=(-8.443320358015178, 224.0, -0.5)
-[09:07:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK BLOCKED_RESULT state=stopped reason=obstruction or lost support steps=6
-[09:07:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-block-check stage=0
-[09:07:17] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[09:07:18] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[09:07:18] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[09:07:18] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2900 pos=(-7.7099609375, 224.0, -0.5) player=(-8.443320358015178, 224.0, -0.5)
-[09:07:18] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=a47b0635-3fa9-4739-89da-4b7dc03b6c04 time=2900 pos=(-7.7099609375, 224.0, -0.5) player=(-8.443320358015178, 224.0, -0.5)
-[09:07:18] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[09:07:18] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[09:07:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=crew-walk-block-check anchor=-7,218,-14 player=(-8.443320358015178, 224.0, -0.5) eye=Block{minecraft:air}
-[09:07:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 395 [aoe_npc_quartermaster, aoe_airship_npc] pos=(-7.5, 219.0, 13.5) alive=true
-[09:07:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 396 [aoe_npc_oren, aoe_crew_access_v1_oren, aoe_airship_npc] pos=(-10.5, 219.0, 12.5) alive=true
-[09:07:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 398 [aoe_npc_selin, aoe_airship_npc, aoe_crew_access_v1_selin] pos=(-6.5, 219.0, 8.5) alive=true
-[09:07:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 394 [aoe_npc_mara, aoe_airship_npc] pos=(-4.5, 224.0, 2.5) alive=true
-[09:07:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 400 [aoe_crew_access_v1_tik, aoe_npc_tik, aoe_airship_npc] pos=(-6.5, 224.0, 2.5) alive=true
-[09:07:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 397 [aoe_crew_access_v1_veya, aoe_npc_veya, aoe_airship_npc] pos=(-7.710000000000001, 224.0, -0.5) alive=true
-[09:07:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 399 [aoe_lysander_access_v1, aoe_npc_lysander, aoe_airship_npc] pos=(-4.5, 224.0, -1.5) alive=true
-[09:07:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 393 [aoe_captain_access_v1, aoe_npc_captain, aoe_airship_npc] pos=(-1.5, 224.0, -0.5) alive=true
-[09:07:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK BLOCKED_RESULT state=stopped reason=obstruction or lost support steps=6
-[09:07:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-block-check stage=0
-[09:07:19] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
-[09:07:19] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[09:13:34] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS prepare stage=0
+[09:14:20] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS ritual-stock stage=0
+[09:14:48] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS ritual-paid stage=0
+[09:14:48] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS winged stage=0
+[09:15:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS board stage=0
+[09:15:07] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift stage=0
+[09:15:11] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS lift-check stage=0
+[09:15:12] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS route-observe stage=0
+[09:15:12] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS photo-veya stage=0
+[09:15:14] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK START npc=veya uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 path=[Cell[x=2, z=18], Cell[x=1, z=18], Cell[x=0, z=18], Cell[x=0, z=17], Cell[x=0, z=18], Cell[x=1, z=18], Cell[x=2, z=18]] position=(2.5, 167.0, 18.5)
+[09:15:14] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-start stage=0
+[09:15:14] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=1960 pos=(2.4300537109375, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:15] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=20 pos=(1.7999999999999985, 167.0, 18.5)
+[09:15:15] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=1980 pos=(1.764892578125, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:15] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=1980 pos=(1.72998046875, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:16] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=40 pos=(1.1150000000000009, 167.0, 18.5)
+[09:15:16] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2000 pos=(1.0450439453125, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:17] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=60 pos=(0.5, 167.0, 18.43)
+[09:15:17] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2020 pos=(0.5, 167.0, 18.3599853515625) player=(5.5, 167.0, 18.5)
+[09:15:18] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=80 pos=(0.5, 167.0, 17.729999999999997)
+[09:15:18] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2040 pos=(0.5, 167.0, 17.6600341796875) player=(5.5, 167.0, 18.5)
+[09:15:19] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=100 pos=(0.5, 167.0, 17.955000000000002)
+[09:15:19] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2060 pos=(0.5, 167.0, 18.0250244140625) player=(5.5, 167.0, 18.5)
+[09:15:20] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=120 pos=(0.6400000000000001, 167.0, 18.5)
+[09:15:20] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2080 pos=(0.7100830078125, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:21] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=140 pos=(1.3399999999999996, 167.0, 18.5)
+[09:15:21] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2100 pos=(1.409461110830307, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:22] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=160 pos=(2.024999999999999, 167.0, 18.5)
+[09:15:22] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2120 pos=(2.06005859375, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:22] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2120 pos=(2.094970703125, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:23] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK COMPLETE npc=veya steps=174 max_distance=2.23606797749979 end=(2.5, 167.0, 18.5)
+[09:15:23] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2140 pos=(2.5, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:24] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2160 pos=(2.5, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:25] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2180 pos=(2.5, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:25] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2180 pos=(2.5, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:26] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2200 pos=(2.5, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:27] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2220 pos=(2.5, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:27] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2220 pos=(2.5, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:28] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2240 pos=(2.5, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:29] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2260 pos=(2.5, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:30] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2280 pos=(2.5, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:30] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2280 pos=(2.5, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:31] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2300 pos=(2.5, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:32] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2320 pos=(2.5, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK RESULT state=completed reason= steps=174 max_distance=2.23606797749979 actor=(2.5, 167.0, 18.5)
+[09:15:33] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-check stage=0
+[09:15:33] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2340 pos=(2.5, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:33] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2340 pos=(2.5, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:34] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK START npc=veya uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 path=[Cell[x=2, z=18], Cell[x=1, z=18], Cell[x=0, z=18], Cell[x=0, z=17], Cell[x=0, z=18], Cell[x=1, z=18], Cell[x=2, z=18]] position=(2.5, 167.0, 18.5)
+[09:15:34] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-start stage=0
+[09:15:34] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK FIXTURE conversation requested
+[09:15:34] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-dialogue-open stage=0
+[09:15:34] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK PAUSE conversation=true
+[09:15:34] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2360 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:35] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2380 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:36] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2400 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:36] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2400 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:37] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2420 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:38] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2440 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:38] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2440 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:39] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2460 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:40] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2480 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:41] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK PAUSE_RESULT ticks=136 steps=6
+[09:15:41] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-pause-check stage=0
+[09:15:41] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2500 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:41] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2500 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:42] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2520 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:43] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2540 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:44] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2560 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:44] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2560 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:45] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2580 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:46] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2600 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:46] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2600 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:47] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2620 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:48] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2640 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:49] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2660 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK PAUSE_RESULT ticks=309 steps=6
+[09:15:49] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-pause-check stage=0
+[09:15:50] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2680 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:51] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2700 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:52] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2720 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:53] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2740 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:53] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2740 pos=(2.2900390625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:54] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2760 pos=(2.2550048828125, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:55] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=20 pos=(1.7999999999999985, 167.0, 18.5)
+[09:15:55] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2780 pos=(1.594451904296875, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:56] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=40 pos=(1.1150000000000009, 167.0, 18.5)
+[09:15:56] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2800 pos=(0.905029296875, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:56] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2800 pos=(0.8699951171875, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:15:57] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=60 pos=(0.5, 167.0, 18.43)
+[09:15:57] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2820 pos=(0.5, 167.0, 18.1849365234375) player=(5.5, 167.0, 18.5)
+[09:15:58] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=80 pos=(0.5, 167.0, 17.729999999999997)
+[09:15:58] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2840 pos=(0.5, 167.0, 17.52001953125) player=(5.5, 167.0, 18.5)
+[09:15:59] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=100 pos=(0.5, 167.0, 17.955000000000002)
+[09:15:59] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2860 pos=(0.5, 167.0, 18.1300048828125) player=(5.5, 167.0, 18.5)
+[09:15:59] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2860 pos=(0.5, 167.0, 18.2000732421875) player=(5.5, 167.0, 18.5)
+[09:16:00] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=120 pos=(0.6400000000000001, 167.0, 18.5)
+[09:16:00] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2880 pos=(0.8150634765625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:16:01] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=140 pos=(1.3399999999999996, 167.0, 18.5)
+[09:16:01] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2900 pos=(1.5699462890625, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:16:02] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK STEP npc=veya step=160 pos=(2.024999999999999, 167.0, 18.5)
+[09:16:02] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2920 pos=(2.2000732421875, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:16:02] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2920 pos=(2.27001953125, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:16:02] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK COMPLETE npc=veya steps=174 max_distance=2.23606797749979 end=(2.5, 167.0, 18.5)
+[09:16:03] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2940 pos=(2.5, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:16:04] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2960 pos=(2.5, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:16:05] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=2980 pos=(2.5, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:16:06] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=3000 pos=(2.5, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:16:07] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=3020 pos=(2.5, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:16:07] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK RESUME_RESULT state=completed steps=174 paused=401
+[09:16:07] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-resume-check stage=0
+[09:16:07] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=3020 pos=(2.5, 167.0, 18.5) player=(5.5, 167.0, 18.5)
+[09:16:08] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK START npc=veya uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 path=[Cell[x=2, z=18], Cell[x=1, z=18], Cell[x=0, z=18], Cell[x=0, z=17], Cell[x=0, z=18], Cell[x=1, z=18], Cell[x=2, z=18]] position=(2.5, 167.0, 18.5)
+[09:16:08] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-start stage=0
+[09:16:08] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK FIXTURE player placed in actor space
+[09:16:08] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-block stage=0
+[09:16:08] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=3040 pos=(2.2900390625, 167.0, 18.5) player=(2.1509564088712194, 167.0, 18.5)
+[09:16:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK BLOCKED_RESULT state=stopped reason=obstruction or lost support steps=6
+[09:16:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-block-check stage=0
+[09:16:09] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=3060 pos=(2.2900390625, 167.0, 18.5) player=(1.5635904830953764, 167.0, 18.5)
+[09:16:09] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=3060 pos=(2.2900390625, 167.0, 18.5) player=(1.5635904830953764, 167.0, 18.5)
+[09:16:08] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=3040 pos=(2.2900390625, 167.0, 18.5) player=(2.1509564088712194, 167.0, 18.5)
+[09:16:09] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[09:16:09] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[09:16:09] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[09:16:09] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[09:16:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST SNAP action=crew-walk-block-check anchor=3,161,5 player=(1.5635904830953764, 167.0, 18.5) eye=Block{minecraft:air}
+[09:16:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 470 [aoe_npc_oren, aoe_crew_access_v1_oren, aoe_airship_npc] pos=(-0.5, 162.0, 31.5) alive=true
+[09:16:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 468 [aoe_npc_mara, aoe_airship_npc] pos=(5.5, 167.0, 21.5) alive=true
+[09:16:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 471 [aoe_crew_access_v1_veya, aoe_npc_veya, aoe_airship_npc] pos=(2.289999999999999, 167.0, 18.5) alive=true
+[09:16:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 472 [aoe_npc_selin, aoe_airship_npc, aoe_crew_access_v1_selin] pos=(3.5, 162.0, 27.5) alive=true
+[09:16:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 473 [aoe_lysander_access_v1, aoe_npc_lysander, aoe_airship_npc] pos=(5.5, 167.0, 17.5) alive=true
+[09:16:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 474 [aoe_crew_access_v1_tik, aoe_npc_tik, aoe_airship_npc] pos=(3.5, 167.0, 21.5) alive=true
+[09:16:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 467 [aoe_captain_access_v1, aoe_npc_captain, aoe_airship_npc] pos=(8.5, 167.0, 18.5) alive=true
+[09:16:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST CREW 469 [aoe_npc_quartermaster, aoe_airship_npc] pos=(2.5, 162.0, 32.5) alive=true
+[09:16:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK BLOCKED_RESULT state=stopped reason=obstruction or lost support steps=6
+[09:16:09] [Server thread/INFO] (Minecraft) [STDOUT]: AIRSHIPTEST PASS crew-walk-block-check stage=0
+[09:16:09] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=3060 pos=(2.2900390625, 167.0, 18.5) player=(1.5635904830953764, 167.0, 18.5)
+[09:16:09] [Render thread/INFO] (Minecraft) [STDOUT]: AIRSHIPWALK CLIENT uuid=4dcb6eca-052f-4069-8e93-355b18d05af8 time=3060 pos=(2.2900390625, 167.0, 18.5) player=(1.5635904830953764, 167.0, 18.5)
+[09:16:10] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[09:16:10] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
