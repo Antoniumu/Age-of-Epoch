@@ -14,7 +14,7 @@ final class DevCrewWalk {
     private static volatile UUID actorId;
     static UUID observedActor(){return actorId;}
     private static List<CrewRoutePlanner.Cell> path=List.of();
-    private static int next,steps;
+    private static int next,steps,pausedTicks;
     private static double originX,originY,originZ,maxDisplacement;
     private static String state="idle",reason="";
     private DevCrewWalk() {}
@@ -45,19 +45,34 @@ final class DevCrewWalk {
         }
         if(selected.isEmpty())throw new IllegalStateException("No conservative local route for Veya");
         var loop=new java.util.ArrayList<>(selected);for(int i=selected.size()-2;i>=0;i--)loop.add(selected.get(i));
-        actorId=actor.getUUID();path=List.copyOf(loop);next=1;steps=0;originX=actor.getX();originY=actor.getY();originZ=actor.getZ();maxDisplacement=0;state="walking";reason="";
+        actorId=actor.getUUID();path=List.copyOf(loop);next=1;steps=0;pausedTicks=0;originX=actor.getX();originY=actor.getY();originZ=actor.getZ();maxDisplacement=0;state="walking";reason="";
         System.out.println("AIRSHIPWALK START npc=veya uuid="+actorId+" path="+path+" position="+actor.position());
     }
     static void tick(ServerLevel level){
         if(!state.equals("walking"))return;
         if(!(level.getEntity(actorId) instanceof LivingEntity actor)||!actor.isAlive()){state="stopped";reason="missing actor";return;}
         if(!AirshipHub.state(level.getServer()).phase.equals("IDLE")){state="stopped";reason="ship transition";return;}
+        if(AirshipConversationLease.active(level,actor)){if(pausedTicks++==0)System.out.println("AIRSHIPWALK PAUSE conversation=true");return;}
         var target=path.get(next);double dx=target.x()+.5-actor.getX(),dz=target.z()+.5-actor.getZ(),distance=Math.hypot(dx,dz);
         double step=Math.min(.035,distance),x=actor.getX()+(distance<1e-8?0:dx/distance*step),z=actor.getZ()+(distance<1e-8?0:dz/distance*step);
         if(!safe(level,actor,swept(actor.getBoundingBox(),at(actor,x,originY,z)),(int)originY)){state="stopped";reason="obstruction or lost support";return;}
         actor.setPos(x,originY,z);steps++;maxDisplacement=Math.max(maxDisplacement,Math.hypot(x-originX,z-originZ));
         if(steps%20==0)System.out.println("AIRSHIPWALK STEP npc=veya step="+steps+" pos="+actor.position());
         if(distance<=.035+1e-8 && ++next==path.size()){state="completed";System.out.println("AIRSHIPWALK COMPLETE npc=veya steps="+steps+" max_distance="+maxDisplacement+" end="+actor.position());}
+    }
+    static void openConversation(ServerLevel level,ServerPlayer p){
+        if(!state.equals("walking")||!(level.getEntity(actorId) instanceof LivingEntity actor))throw new IllegalStateException("No running experiment");
+        AirshipService.open(p,actor);
+        if(!AirshipConversationLease.active(level,actor))throw new IllegalStateException("Conversation not opened in range");
+        System.out.println("AIRSHIPWALK FIXTURE conversation requested");
+    }
+    static void checkPause(){
+        System.out.println("AIRSHIPWALK PAUSE_RESULT ticks="+pausedTicks+" steps="+steps);
+        if(!state.equals("walking")||pausedTicks<40)throw new IllegalStateException("Conversation did not pause crew");
+    }
+    static void checkResume(){
+        System.out.println("AIRSHIPWALK RESUME_RESULT state="+state+" steps="+steps+" paused="+pausedTicks);
+        if(!state.equals("completed"))throw new IllegalStateException("Crew did not resume after dialogue lease expired: "+state);
     }
     /** Dev fixture only: put the test player in the route, then expect a safe stop. */
     static void block(ServerLevel level,ServerPlayer p){

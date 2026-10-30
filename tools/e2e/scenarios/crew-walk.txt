@@ -67,6 +67,24 @@ write run/airship-e2e.flag crew-walk-check
 wait_log_new 30000 AIRSHIPTEST PASS crew-walk-check
 shot crew-walk-after
 
+# Real client dialogue remains open; heartbeat must pause movement, then expiry resumes it.
+log_mark
+write run/airship-e2e.flag crew-walk-start
+wait_log_new 30000 AIRSHIPTEST PASS crew-walk-start
+log_mark
+write run/airship-e2e.flag crew-walk-dialogue-open
+wait_log_new 30000 AIRSHIPTEST PASS crew-walk-dialogue-open
+wait 6500
+log_mark
+write run/airship-e2e.flag crew-walk-pause-check
+wait_log_new 30000 AIRSHIPTEST PASS crew-walk-pause-check
+shot crew-walk-dialogue
+key Escape
+wait 17000
+log_mark
+write run/airship-e2e.flag crew-walk-resume-check
+wait_log_new 30000 AIRSHIPTEST PASS crew-walk-resume-check
+
 # Separate fixture: a player enters the planned route; movement must stop.
 log_mark
 write run/airship-e2e.flag crew-walk-start

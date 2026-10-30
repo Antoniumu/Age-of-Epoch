@@ -58,6 +58,7 @@ public final class AirshipService {
     }
     public static void open(ServerPlayer p, Entity e) {
         if (!p.isAlive() || p.isSpectator() || e.level() != p.level() || !e.isAlive() || p.distanceToSqr(e) > 36 || npcId(e).isEmpty() || !p.hasLineOfSight(e)) return;
+        AirshipConversationLease.renew(p,e);
         com.robertx22.age_of_exile.airship.adventure.AdventureEngine.migrate(data(p));
         sync(p);
         Packets.sendToClient(p, new AirshipDialoguePacket(e.getId(), npcId(e), AirshipCrew.texture(npcId(e))));
@@ -67,6 +68,7 @@ public final class AirshipService {
         Entity e=p.level().getEntity(entityId);
         if(net.fabricmc.loader.api.FabricLoader.getInstance().isDevelopmentEnvironment())System.out.println("AIRSHIPTEST ACTION choice="+choice+" expected="+expectedStage+" current="+data(p).stage+" npc="+(e==null?"missing":npcId(e))+" distance="+(e==null?-1:p.distanceToSqr(e))+" los="+(e!=null&&p.hasLineOfSight(e)));
         if(!p.isAlive() || p.isSpectator() || e==null || !e.isAlive() || p.distanceToSqr(e)>36 || npcId(e).isEmpty() || !p.hasLineOfSight(e)) return;
+        if(choice==-1) { AirshipConversationLease.renew(p,e);return; } // Validated heartbeat; no story action.
         AirshipData d=data(p);String npc=npcId(e);var book=Load.playerRPGData(p).questBook;
         if(expectedStage!=d.stage) return; // Reject replayed/stale UI packets.
         com.robertx22.age_of_exile.airship.adventure.AdventureEngine.migrate(d);

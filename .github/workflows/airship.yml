@@ -273,6 +273,8 @@ jobs:
           grep -q 'AIRSHIPWALK COMPLETE npc=veya' run/logs/latest.log
           grep -q 'AIRSHIPTEST PASS crew-walk-check' run/logs/latest.log
           grep -q 'AIRSHIPTEST PASS crew-walk-block-check' run/logs/latest.log
+          grep -q 'AIRSHIPTEST PASS crew-walk-pause-check' run/logs/latest.log
+          grep -q 'AIRSHIPTEST PASS crew-walk-resume-check' run/logs/latest.log
           python -m unittest discover -s tools/e2e -p test_crew_walk_sync.py
           python tools/e2e/check_crew_walk_sync.py run/logs/latest.log
       - name: Publish experiment log

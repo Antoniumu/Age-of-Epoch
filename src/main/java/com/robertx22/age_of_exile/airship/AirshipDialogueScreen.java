@@ -58,6 +58,7 @@ public class AirshipDialogueScreen extends BaseScreen {
     }
     @Override public void tick() {
         super.tick();
+        if(mc.player!=null && mc.player.tickCount%20==0)Packets.sendToServer(new AirshipAcceptPacket(entityId,storyStage,-1));
         if(fullText || !started) return;
         long elapsed=(System.nanoTime()-cueStarted)/1_000_000;
         if(cues.isEmpty()) { if(elapsed>Math.clamp(transcript.length()*22,2200,9500)) reveal();return; }

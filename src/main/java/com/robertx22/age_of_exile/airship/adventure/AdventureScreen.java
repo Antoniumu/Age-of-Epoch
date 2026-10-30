@@ -87,6 +87,7 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
     }
     @Override public void tick(){
         super.tick();
+        if(entity>=0 && mc.player!=null && mc.player.tickCount%20==0)Packets.sendToServer(new AirshipAcceptPacket(entity,stage,-1));
         if(!signature.equals(stamp())){
             if(confirmed()){
                 if(((pendingAction>=30&&pendingAction<=55)||(pendingAction>=60&&pendingAction<=74)||(pendingAction>=80&&pendingAction<=98)))storyLine=data().lastInvestigationLine;

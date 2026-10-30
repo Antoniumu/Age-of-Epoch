@@ -257,6 +257,12 @@ public final class AirshipProbe {
                 if(!AirshipCrewPlacement.experimentCaptain(level,d))throw new IllegalStateException("No safe captain candidate near Mara");
             } else if(action.equals("crew-walk-start")) {
                 DevCrewWalk.start(level,p,d);
+            } else if(action.equals("crew-walk-dialogue-open")) {
+                DevCrewWalk.openConversation(level,p);
+            } else if(action.equals("crew-walk-pause-check")) {
+                DevCrewWalk.checkPause();
+            } else if(action.equals("crew-walk-resume-check")) {
+                DevCrewWalk.checkResume();
             } else if(action.equals("crew-walk-block")) {
                 DevCrewWalk.block(level,p);
             } else if(action.equals("crew-walk-block-check")) {
