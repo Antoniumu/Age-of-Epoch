@@ -14,7 +14,7 @@ final class DevCrewWalk {
     private static volatile UUID actorId;
     static UUID observedActor(){return actorId;}
     private static List<CrewRoutePlanner.Cell> path=List.of();
-    private static int next,steps,pausedTicks;
+    private static int next,steps,pausedTicks,checkedSteps;
     private static double originX,originY,originZ,maxDisplacement;
     private static String state="idle",reason="";
     private DevCrewWalk() {}
@@ -45,7 +45,7 @@ final class DevCrewWalk {
         }
         if(selected.isEmpty())throw new IllegalStateException("No conservative local route for Veya");
         var loop=new java.util.ArrayList<>(selected);for(int i=selected.size()-2;i>=0;i--)loop.add(selected.get(i));
-        actorId=actor.getUUID();path=List.copyOf(loop);next=1;steps=0;pausedTicks=0;originX=actor.getX();originY=actor.getY();originZ=actor.getZ();maxDisplacement=0;state="walking";reason="";
+        actorId=actor.getUUID();path=List.copyOf(loop);next=1;steps=0;pausedTicks=0;checkedSteps=-1;originX=actor.getX();originY=actor.getY();originZ=actor.getZ();maxDisplacement=0;state="walking";reason="";
         System.out.println("AIRSHIPWALK START npc=veya uuid="+actorId+" path="+path+" position="+actor.position());
     }
     static void tick(ServerLevel level){
@@ -69,6 +69,8 @@ final class DevCrewWalk {
     static void checkPause(){
         System.out.println("AIRSHIPWALK PAUSE_RESULT ticks="+pausedTicks+" steps="+steps);
         if(!state.equals("walking")||pausedTicks<40)throw new IllegalStateException("Conversation did not pause crew");
+        if(checkedSteps>=0&&steps!=checkedSteps)throw new IllegalStateException("Crew moved during conversation screen transition");
+        checkedSteps=steps;
     }
     static void checkResume(){
         System.out.println("AIRSHIPWALK RESUME_RESULT state="+state+" steps="+steps+" paused="+pausedTicks);

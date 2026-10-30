@@ -79,6 +79,18 @@ log_mark
 write run/airship-e2e.flag crew-walk-pause-check
 wait_log_new 30000 AIRSHIPTEST PASS crew-walk-pause-check
 shot crew-walk-dialogue
+# Switch to the personal screen, remain there longer than a lease lifetime,
+# and verify the actor has not moved between checkpoints.
+hold space 300
+wait 600
+log_mark
+click 1040 332
+wait_log_new 30000 AIRSHIPTEST UI npc=veya
+wait 6500
+log_mark
+write run/airship-e2e.flag crew-walk-pause-check
+wait_log_new 30000 AIRSHIPTEST PASS crew-walk-pause-check
+shot crew-walk-personal-dialogue
 key Escape
 wait 17000
 log_mark
