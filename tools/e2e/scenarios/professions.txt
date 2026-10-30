@@ -81,7 +81,7 @@ wait 300
 shot alchemy-05-result-ready
 
 # Забираем результат → пустой слот инвентаря 13
-click 693 339
+click 746 318
 wait 300
 shot alchemy-06-result-taken
 click 640 418
@@ -123,7 +123,7 @@ move 640 650
 wait 300
 shot inscribing-05-result-ready
 
-click 693 339
+click 746 318
 wait 300
 shot inscribing-06-result-taken
 click 640 418
@@ -165,7 +165,7 @@ move 640 650
 wait 300
 shot cooking-05-result-ready
 
-click 693 339
+click 746 318
 wait 300
 shot cooking-06-result-taken
 click 640 418
@@ -213,7 +213,7 @@ move 640 650
 wait 300
 shot armor_craft-06-result-ready
 
-click 693 339
+click 746 318
 wait 300
 shot armor_craft-07-result-taken
 click 640 418
@@ -261,7 +261,7 @@ move 640 650
 wait 300
 shot wep_craft-06-result-ready
 
-click 693 339
+click 746 318
 wait 300
 shot wep_craft-07-result-taken
 click 640 418
@@ -309,7 +309,7 @@ move 640 650
 wait 300
 shot jewel_craft-06-result-ready
 
-click 693 339
+click 746 318
 wait 300
 shot jewel_craft-07-result-taken
 click 640 418
