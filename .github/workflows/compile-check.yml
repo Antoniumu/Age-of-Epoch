@@ -1,5 +1,8 @@
 name: Compile check
 on:
+  push:
+    branches: [arena/035bf2ad-age-of-epoch]
+    paths: [.github/workflows/compile-check.yml]
   workflow_dispatch:
 permissions:
   contents: write
