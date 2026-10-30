@@ -95,7 +95,7 @@ jobs:
           git add docs/airship/proof-images docs/airship/ci-proof.txt
           if ! git diff --cached --quiet; then
             git commit -m "Record actual airship client proof [skip ci]"
-            git push origin HEAD:arena/7bde44a9-age-of-epoch
+            bash tools/ci/push-airship-proof.sh
           fi
       - uses: actions/upload-artifact@v7
         if: always()
@@ -173,7 +173,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add docs/airship/proof-images docs/airship/ci-proof.txt
           git commit -m 'Recover actual successful in-game execution proof from original artifact [skip ci]'
-          git push origin HEAD:arena/7bde44a9-age-of-epoch
+          bash tools/ci/push-airship-proof.sh
 
   baritone-audit:
     if: ${{ (github.event_name == 'workflow_dispatch' && inputs.recover_run == 'baritone') || contains(github.event.head_commit.message, '[baritone-audit]') }}
@@ -238,7 +238,7 @@ jobs:
           git add docs/airship/baritone-proof.txt
           if ! git diff --cached --quiet; then
             git commit -m 'Record Baritone route experiment [skip ci]'
-            git push origin HEAD:arena/7bde44a9-age-of-epoch
+            bash tools/ci/push-airship-proof.sh
           fi
       - uses: actions/upload-artifact@v7
         if: always()
@@ -300,7 +300,7 @@ jobs:
           git add docs/airship/crew-walk-proof.txt docs/airship/crew-walk-images
           if ! git diff --cached --quiet; then
             git commit -m 'Record dev crew walk experiment [skip ci]'
-            git push origin HEAD:arena/7bde44a9-age-of-epoch
+            bash tools/ci/push-airship-proof.sh
           fi
       - uses: actions/upload-artifact@v7
         if: always()
