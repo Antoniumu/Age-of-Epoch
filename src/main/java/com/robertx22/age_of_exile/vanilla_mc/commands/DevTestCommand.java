@@ -40,6 +40,13 @@ public final class DevTestCommand {
                     .executes(ctx -> audit(ctx.getSource().getPlayerOrException(), "school=no_school")))
                 .then(Commands.argument("what", com.mojang.brigadier.arguments.StringArgumentType.string())
                     .executes(ctx -> audit(ctx.getSource().getPlayerOrException(),
+                        com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "what")))))
+            .then(literal("profaudit")
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                .executes(ctx -> profaudit(ctx.getSource().getPlayerOrException(), "all"))
+                .then(literal("all").executes(ctx -> profaudit(ctx.getSource().getPlayerOrException(), "all")))
+                .then(Commands.argument("what", com.mojang.brigadier.arguments.StringArgumentType.string())
+                    .executes(ctx -> profaudit(ctx.getSource().getPlayerOrException(),
                         com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "what"))))));
     }
 
@@ -48,6 +55,14 @@ public final class DevTestCommand {
         SpellAuditProbe.request(target);
         player.sendSystemMessage(Component.literal(
             "§a[Аудит умений] " + target + ": запущено, результат — строки AOEAI в логе и spell-audit.md"));
+        return 1;
+    }
+
+    private static int profaudit(ServerPlayer player, String what) {
+        String target = what == null || what.isBlank() ? "all" : what.trim();
+        com.robertx22.age_of_exile.uncommon.testing.ProfessionAuditProbe.request(target);
+        player.sendSystemMessage(Component.literal(
+            "§a[Аудит профессий] " + target + ": запущено, результат — строки AOEPR в логе и profession-audit.md"));
         return 1;
     }
 

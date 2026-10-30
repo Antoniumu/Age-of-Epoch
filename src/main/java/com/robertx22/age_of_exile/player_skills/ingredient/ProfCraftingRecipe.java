@@ -4,7 +4,9 @@ import com.robertx22.age_of_exile.player_skills.crafting_inv.ProfCraftResult;
 import com.robertx22.age_of_exile.player_skills.ingredient.data.CraftSlotData;
 import com.robertx22.age_of_exile.player_skills.ingredient.data.CraftingProcessData;
 import com.robertx22.age_of_exile.player_skills.ingredient.data.IngredientData;
+import com.robertx22.age_of_exile.saveclasses.item_classes.GearItemData;
 import com.robertx22.age_of_exile.saveclasses.player_skills.PlayerSkillEnum;
+import com.robertx22.age_of_exile.uncommon.datasaving.Gear;
 import com.robertx22.age_of_exile.uncommon.datasaving.StackSaving;
 import com.robertx22.age_of_exile.uncommon.localization.Words;
 import com.robertx22.age_of_exile.uncommon.utilityclasses.OnScreenMessageUtils;
@@ -22,6 +24,34 @@ import java.util.List;
 
 public class ProfCraftingRecipe {
 
+    /**
+     * Есть ли у снаряжения «настоящие» статы: наложенная душа или уже созданные
+     * крафт-статы.
+     *
+     * <p>Важно: любая вещь снаряжения в инвентаре получает бесдушную основу
+     * автоматически ({@code SoullessGear.ensure} по тику инвентаря), поэтому сам
+     * факт наличия {@code GEAR_ITEM_DATA} ничего не значит. Раньше проверка была
+     * именно такой — и все три гир-профессии (броня/оружие/украшения) никогда не
+     * могли завершить крафт: на любую броню вылезало «The used gear has stats
+     * already», результат не появлялся.
+     */
+    static boolean hasRealGearStats(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) {
+            return false;
+        }
+        // Gear.Load чинит данные «от чужого предмета» (item_id не совпадает) —
+        // такие данные статами не считаются, основа всё равно будет заменена.
+        GearItemData data = Gear.Load(stack);
+        if (data == null || !data.isValidItem()) {
+            return false;
+        }
+        if (data.hasCraftedStats()) {
+            return true; // перекрафт стёр бы уже созданные статы
+        }
+        // Бесдушная основа (sl=true) — обычное состояние предмета, это не «статы».
+        return !data.isSoulless();
+    }
+
     public static ProfCraftResult canCraft(Player player, CraftingContainer inv, SimpleContainer resultinv, PlayerSkillEnum skill) {
         List<IngredientData> list = new ArrayList<>();
 
@@ -33,7 +63,7 @@ public class ProfCraftingRecipe {
                 ItemStack stack = inv.getItem(i);
                 if (!stack.isEmpty()) {
 
-                    if (StackSaving.GEARS.has(stack)) {
+                    if (hasRealGearStats(stack)) {
                         hasgearwithdata = true;
                         break;
                     }
@@ -157,6 +187,10 @@ public class ProfCraftingRecipe {
                         break;
                     }
                 }
+            }
+            // Без основы крафт не начинается: сохранять «процесс» на пустой стак нельзя.
+            if (stack.isEmpty()) {
+                return ItemStack.EMPTY;
             }
 
         } else {

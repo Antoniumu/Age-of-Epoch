@@ -22,7 +22,7 @@ public enum Words implements IAutoLocName {
     EmptyString(" "),
     GearHasData("The used gear has stats already"),
     NoGear("This recipe requires gear as ingredient"),
-    WrongIngredient("You can't use use that item in this recipe."),
+    WrongIngredient("You can't use that item in this recipe."),
     WrongRecipeIngredient("That ingredient isn't usable in this profession."),
     CantUseMoreOf("Can't use more than 1 ingredient of that type."),
     NoIngredients("No Ingredients."),

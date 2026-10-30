@@ -65,7 +65,11 @@ public class GridHelper {
                             .forEach(s -> {
                                 if (isValidPoint(s.x, s.y)) {
                                     CraftSlotData data = grid[s.x][s.y];
-                                    data.multi += multiadd;
+                                    // В старом NBT могло быть меньше 6 записей — тогда
+                                    // часть сетки пустая, и трогать нечего.
+                                    if (data != null) {
+                                        data.multi += multiadd;
+                                    }
                                 }
                             });
 
