@@ -1,136 +1,28 @@
 name: Compile check
-
-# Зачем отдельный пайплайн компиляции, если есть «Branch build»:
-#   * build собирает весь мод с тестами (десятки минут) и падает «где-то» —
-#     по нему неудобно ловить ошибку компиляции в цикле правок;
-#   * здесь только compileJava, а ошибки не остаются в логе GitHub, а
-#     публикуются комментарием в PR — их видно с первого экрана, без выкачивания
-#     артефактов.
-#
-# То есть это быстрый цикл «поправил Java → увидел error: строка в PR».
-
 on:
-  pull_request:
-    paths:
-      - 'src/**/*.java'
-      - 'build.gradle'
-      - 'gradle.properties'
-      - '.github/workflows/compile-check.yml'
   workflow_dispatch:
-
 permissions:
-  contents: read
-  pull-requests: write
-
-concurrency:
-  group: compile-check-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
-
-env:
-  GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx4G'
-
+  contents: write
 jobs:
-  compile:
-    name: compileJava
+  package:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
-
-      # Секундная проверка «Класс.КОНСТАНТА без импорта»: она ловит именно те
-      # ошибки, ради которых этот пайплайн и существует, и делает это до того,
-      # как тратить минуты на Gradle.
-      - name: Импорты (быстрая проверка)
-        id: imports
-        continue-on-error: true
-        run: python3 tools/verify/check_imports.py --all
-
-      - uses: ./.github/actions/setup-build-env
         with:
-          cache-read-only: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork }}
-
-      - name: Компиляция
-        id: compile
-        continue-on-error: true
-        shell: bash
-        run: |
-          set +e
-          ./gradlew --no-daemon --stacktrace compileJava > compile.log 2>&1
-          status=$?
-          set -e
-          echo "status=$status" >> "$GITHUB_OUTPUT"
-          grep -E "error:|symbol:|location:|\.java:[0-9]+: error" compile.log | head -120 || true
-          tail -n 30 compile.log
-          {
-            echo "### compileJava: статус $status"
-            echo '```text'
-            grep -E "error:|symbol:" compile.log | head -40 || echo "ошибок в логе нет"
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
-          exit 0
-
-      - name: Ошибки компиляции — комментарием в PR
-        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork != true
+          ref: ce79d9a7ba547cf74dc926e7a677d7eb8942990e
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Compile and package without tests
+        run: ./gradlew jar sourcesJar --stacktrace --no-problems-report
+      - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
-          REPO: ${{ github.repository }}
-          PR: ${{ github.event.pull_request.number }}
-          STATUS: ${{ steps.compile.outputs.status }}
         run: |
-          md="$(mktemp)"
-          {
-            echo '<!-- aoe-compile -->'
-            if [ "${STATUS:-1}" = "0" ]; then
-              echo "## Компиляция: успешно ✅"
-              echo
-              echo '`./gradlew compileJava` прошёл без ошибок.'
-            else
-              echo "## Компиляция: ошибка ❌ (статус ${STATUS:-?})"
-              echo
-              echo '```text'
-              grep -E "error:|symbol:|location:" compile.log 2>/dev/null | head -120 \
-                || echo "строк error: в логе нет — смотри хвост ниже"
-              echo '```'
-              echo
-              echo '<details><summary>хвост лога</summary>'
-              echo
-              echo '```text'
-              tail -n 40 compile.log 2>/dev/null || echo "лога нет"
-              echo '```'
-              echo
-              echo '</details>'
-            fi
-          } > "$md"
-          # Комментарий переиспользуется по скрытому маркеру: не плодим по одному
-          # на каждый пуш.
-          existing="$(gh api "repos/${REPO}/issues/${PR}/comments" --paginate \
-            --jq '.[] | select(.body | contains("<!-- aoe-compile -->")) | .id' | head -1)"
-          if [ -n "$existing" ]; then
-            gh api -X PATCH "repos/${REPO}/issues/comments/${existing}" -F "body=@${md}" > /dev/null
-            echo "комментарий обновлён"
-          else
-            gh api -X POST "repos/${REPO}/issues/${PR}/comments" -F "body=@${md}" > /dev/null
-            echo "комментарий создан"
-          fi
-
-      - name: Лог компиляции в артефакты
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: compile-log
-          path: compile.log
-          if-no-files-found: warn
-          retention-days: 14
-
-      - name: Вердикт
-        if: always()
-        run: |
-          if [ "${{ steps.imports.outcome }}" != "success" ]; then
-            echo "::error::check_imports нашёл использование класса без импорта — это ошибка компиляции"
-            exit 1
-          fi
-          if [ "${{ steps.compile.outputs.status }}" != "0" ]; then
-            echo "::error::compileJava упал — подробности в комментарии PR"
-            exit 1
-          fi
-          echo "compileJava прошёл"
+          gh release create build-ce79d9a build/libs/Age-of-Epoch-5.1.0.jar build/libs/Age-of-Epoch-5.1.0-sources.jar \
+            --target ce79d9a7ba547cf74dc926e7a677d7eb8942990e \
+            --title 'Age of Epoch — сборка main ce79d9a' \
+            --notes 'Сборка main (ce79d9a), внутренняя версия мода 5.1.0. Скомпилировано без запуска тестов и дополнительных проверок.'
