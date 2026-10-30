@@ -1,0 +1,25 @@
+name: Collect real crew skin candidates
+on:
+  push:
+    branches: [arena/7bde44a9-age-of-epoch]
+    paths: ['.github/workflows/crew-skin-preview.yml', 'tools/airship/fetch_skin_candidates.py']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: pip install Pillow
+      - run: python tools/airship/fetch_skin_candidates.py
+      - name: Preserve originals and acquisition diagnostics
+        if: always()
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/airship/crew-preview
+          if ! git diff --cached --quiet; then
+            git commit -m 'Record downloaded crew skin candidates and source hashes [skip ci]'
+            git push origin HEAD:arena/7bde44a9-age-of-epoch
+          fi

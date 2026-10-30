@@ -1,0 +1,52 @@
+{
+  "bram_kitchen": {
+    "voice": "voice-05",
+    "durationMillis": 11064,
+    "status": "preview_only"
+  },
+  "captain_arrival": {
+    "voice": "voice-01",
+    "durationMillis": 11285,
+    "status": "preview_only"
+  },
+  "captain_helm": {
+    "voice": "voice-01",
+    "durationMillis": 13427,
+    "status": "preview_only"
+  },
+  "lysander_song": {
+    "voice": "voice-14",
+    "durationMillis": 11064,
+    "status": "preview_only"
+  },
+  "mara_access": {
+    "voice": "voice-03",
+    "durationMillis": 9509,
+    "status": "preview_only"
+  },
+  "mara_route": {
+    "voice": "voice-03",
+    "durationMillis": 10867,
+    "status": "preview_only"
+  },
+  "oren_room": {
+    "voice": "voice-08",
+    "durationMillis": 10128,
+    "status": "preview_only"
+  },
+  "selin_care": {
+    "voice": "voice-12",
+    "durationMillis": 8385,
+    "status": "preview_only"
+  },
+  "tik_tools": {
+    "voice": "voice-18",
+    "durationMillis": 12487,
+    "status": "preview_only"
+  },
+  "veya_post": {
+    "voice": "voice-10",
+    "durationMillis": 8986,
+    "status": "preview_only"
+  }
+}

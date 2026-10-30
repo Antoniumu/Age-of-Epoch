@@ -1,0 +1,32 @@
+{
+  "state": {
+    "ready": true,
+    "stats": {
+      "textures": 7,
+      "characters": 8,
+      "slimModels": 3,
+      "orenScale": 1.6,
+      "birdGeometry": "non-humanoid original prototype"
+    }
+  },
+  "errors": [],
+  "viewports": [
+    [
+      1500,
+      1100
+    ],
+    [
+      390,
+      844
+    ]
+  ],
+  "checks": [
+    "7 textures loaded",
+    "3 slim models",
+    "8 non-default models",
+    "Oren 1.6 scale",
+    "front/back controls clicked",
+    "desktop/mobile rendered",
+    "no browser errors"
+  ]
+}

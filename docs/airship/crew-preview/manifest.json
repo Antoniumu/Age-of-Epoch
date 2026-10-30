@@ -1,0 +1,104 @@
+[
+  {
+    "id": "captain",
+    "name": "Капитан",
+    "role": "Капитан «Последнего Рассвета»",
+    "title": "Steampunk Captain",
+    "author": "TacosJo",
+    "page": "https://www.planetminecraft.com/skin/steampunk-captain-2738032/",
+    "fileId": "7146365",
+    "model": "default",
+    "scale": 1,
+    "rawCandidates": [
+      "https://static.planetminecraft.com/files/resource_media/skin/1407/captainsteampunk7964.png"
+    ]
+  },
+  {
+    "id": "mara",
+    "name": "Мара",
+    "role": "Картограф",
+    "title": "Explorer",
+    "author": "deasonata",
+    "page": "https://www.planetminecraft.com/skin/explorer-6044259/",
+    "fileId": "17080595",
+    "model": "slim",
+    "scale": 1,
+    "rawCandidates": [
+      "https://static.planetminecraft.com/files/resource_media/skin/pmcskin3d-alex-slim-arms-1.png",
+      "https://static.planetminecraft.com/files/resource_media/skin/2333/pmcskin3d-alex-slim-arms-1.png"
+    ]
+  },
+  {
+    "id": "bram",
+    "name": "Брам",
+    "role": "Квартирмейстер",
+    "title": "Casual Steampunk Engineer",
+    "author": "MentallyFloridian",
+    "page": "https://www.planetminecraft.com/skin/casual-steampunk-engineer/",
+    "fileId": "17684340",
+    "model": "default",
+    "scale": 1,
+    "rawCandidates": [
+      "https://static.planetminecraft.com/files/resource_media/skin/d5018819db59b47a.png",
+      "https://static.planetminecraft.com/files/resource_media/skin/2414/d5018819db59b47a.png"
+    ]
+  },
+  {
+    "id": "oren",
+    "name": "Орен Тихий",
+    "role": "Хранитель якоря · масштаб 1,6×",
+    "title": "LumberJack [3D]",
+    "author": "broswen",
+    "page": "https://www.planetminecraft.com/skin/lumberjack-3d/",
+    "fileId": "4828596",
+    "model": "default",
+    "scale": 1.6,
+    "rawCandidates": [
+      "https://static.planetminecraft.com/files/resource_media/skin/lumberjack.png",
+      "https://static.planetminecraft.com/files/resource_media/skin/1307/lumberjack.png"
+    ]
+  },
+  {
+    "id": "veya",
+    "name": "Вея «Искра»",
+    "role": "Разведчица",
+    "title": "Nocturnal",
+    "author": "AlmondJoy",
+    "page": "https://www.planetminecraft.com/skin/nocturnal-6878500/",
+    "fileId": "19630100",
+    "model": "slim",
+    "scale": 1,
+    "rawCandidates": [
+      "https://static.planetminecraft.com/files/resource_media/skin/1000010157.png",
+      "https://static.planetminecraft.com/files/resource_media/skin/2611/1000010157.png"
+    ]
+  },
+  {
+    "id": "selin",
+    "name": "Селин Валь",
+    "role": "Врачевательница разломов",
+    "title": "Female Healer",
+    "author": "Frostus",
+    "page": "https://www.planetminecraft.com/skin/female-healer/",
+    "fileId": "11875509",
+    "model": "slim",
+    "scale": 1,
+    "rawCandidates": [
+      "https://static.planetminecraft.com/files/resource_media/skin/1842/skin28-1540018570.png"
+    ]
+  },
+  {
+    "id": "lysander",
+    "name": "Лисандр Рэй",
+    "role": "Переговорщик и рассказчик",
+    "title": "Yar Har, Pirate Bard!",
+    "author": "Jay-Kay",
+    "page": "https://www.planetminecraft.com/skin/yar-har-pirate-bard/",
+    "fileId": "11149819",
+    "model": "default",
+    "scale": 1,
+    "rawCandidates": [
+      "https://static.planetminecraft.com/files/resource_media/skin/1729/pirate1-1500782976.png"
+    ]
+  }
+]

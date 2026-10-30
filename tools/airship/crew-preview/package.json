@@ -1,0 +1,1 @@
+{"private":true,"type":"module","scripts":{"build":"esbuild entry.js --bundle --format=esm --minify --outfile=../../../docs/airship/crew-preview/vendor/viewer.js","test":"node test.mjs"},"devDependencies":{"esbuild":"0.27.4","skinview3d":"3.4.2","playwright-core":"1.61.1"}}

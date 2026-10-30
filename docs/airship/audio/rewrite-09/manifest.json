@@ -1,0 +1,62 @@
+{
+  "mara_followup": {
+    "text": "Я сверила направление с нашими измерениями. Там, где сведений нет, пока ничего не нарисовала. Принесёшь новые — добавим.",
+    "durationMillis": 7964,
+    "voice": "voice-03",
+    "sound": "personal_mara_followup"
+  },
+  "captain_recon_finish": {
+    "text": "Вея получила оба наблюдения? Хорошо. Теперь у нас есть ещё кое-какие сведения для маршрута. Спасибо, что вернулся с ними.",
+    "durationMillis": 14710,
+    "voice": "voice-01",
+    "sound": "personal_captain_recon_finish"
+  },
+  "veya_recon_finish": {
+    "text": "Два разных биома, отлично. Я запишу, что ты видел, и передам сведения Маре. Теперь расскажи капитану, что вернулся.",
+    "durationMillis": 7990,
+    "voice": "voice-10",
+    "sound": "personal_veya_recon_finish"
+  },
+  "mara_recon": {
+    "text": "Запоминай, какая там местность. Если не знаешь, что видишь, так и скажи — потом вместе разберёмся. Я добавлю наблюдения к карте.",
+    "durationMillis": 8057,
+    "voice": "voice-03",
+    "sound": "personal_mara_recon"
+  },
+  "tik_workshop_private": {
+    "text": "Спасибо. Я сам поговорю с Ореном, когда буду готов. Только не рассказывай пока про защёлку, ладно?",
+    "durationMillis": 6989,
+    "voice": "voice-18",
+    "sound": "personal_tik_workshop_private"
+  },
+  "tik_workshop_finish": {
+    "text": "Спасибо, что спросил меня сначала. Я поговорю с Ореном сам. И про фигурку потом тоже спрошу.",
+    "durationMillis": 6827,
+    "voice": "voice-18",
+    "sound": "personal_tik_workshop_finish"
+  },
+  "oren_moment_bird": {
+    "text": "Птичку? Хорошо. А крылья попробую сделать подвижными. Надеюсь, Тику понравится.",
+    "durationMillis": 7560,
+    "voice": "voice-08",
+    "sound": "personal_oren_moment_bird"
+  },
+  "oren_moment_ship": {
+    "text": "Корабль? Хорошо. Придётся сделать его маленьким, чтобы Тик мог держать его в лапках.",
+    "durationMillis": 7240,
+    "voice": "voice-08",
+    "sound": "personal_oren_moment_ship"
+  },
+  "tik_moment_key": {
+    "text": "Ключ! А внутри будет место для запасного. Орену пока не показывай, это сюрприз.",
+    "durationMillis": 7082,
+    "voice": "voice-18",
+    "sound": "personal_tik_moment_key"
+  },
+  "tik_moment_gear": {
+    "text": "Шестерёнку! Сделаю побольше, чтобы никто не перепутал мой ящик с обычным.",
+    "durationMillis": 5410,
+    "voice": "voice-18",
+    "sound": "personal_tik_moment_gear"
+  }
+}

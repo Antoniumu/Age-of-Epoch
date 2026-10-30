@@ -488,6 +488,31 @@ class Runner:
                     self.key("keyup " + rest.strip())
                 elif command == "type":
                     self.type_text(rest)
+                elif command == "baritone_goal":
+                    # Candidate is produced by the dev server; this sends a real player command.
+                    import json
+                    with open(os.path.join(REPO, "run", "airship-route-target.json"), encoding="utf-8") as handle:
+                        goal=json.load(handle)
+                    if goal.get("candidate"):
+                        self.key("t")
+                        time.sleep(.4)
+                        self.type_text("#goto %d %d %d" % (goal["x"],goal["y"],goal["z"]))
+                        self.key("Return")
+                    else:
+                        self.note("No candidate near " + str(goal.get("npc")))
+                elif command == "baritone_click":
+                    import json
+                    with open(os.path.join(REPO, "run", "airship-route-target.json"), encoding="utf-8") as handle:
+                        result=json.load(handle)
+                    if result.get("click_ready"):
+                        time.sleep(1)
+                        self.click(640, 360, 3)
+                        time.sleep(2)
+                        self.shot("route-click-" + result["npc"])
+                        self.key("Escape")
+                        time.sleep(1)
+                    else:
+                        self.note("Interaction not attempted: player did not reach a suitable point")
                 elif command == "wait":
                     time.sleep(int(args[0]) / 1000.0)
                 elif command == "wait_window":
@@ -569,6 +594,10 @@ class Runner:
                     self.fail("неизвестная команда в строке %d: %s" % (number, line))
             except Exception:
                 self.fail("строка %d (%s):\n%s" % (number, line, traceback.format_exc()))
+
+            if self.failures and os.environ.get("E2E_FAIL_FAST") == "1":
+                self.note("Остановка сценария после первой ошибки (E2E_FAIL_FAST)")
+                break
 
         self.note("итог: снимков %d, ошибок %d" % (len(self.shots), self.failures))
         with open(os.path.join(self.outdir, "index.txt"), "w", encoding="utf-8") as handle:

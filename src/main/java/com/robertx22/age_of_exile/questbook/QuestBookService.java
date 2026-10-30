@@ -180,6 +180,7 @@ public final class QuestBookService {
                 }
             }
             if (themeId != null && bossId != null && isKnownTowerBoss(themeId, bossId)) {
+                com.robertx22.age_of_exile.airship.adventure.AdventureService.mechanic(player,com.robertx22.age_of_exile.airship.adventure.Voyage.Metric.TOWER,themeId+":"+bossId,mob.getUUID().toString());
                 changed |= book.towerBosses.add(themeId + ":" + bossId);
                 changed |= book.towerThemes.add(themeId);
             }
@@ -206,6 +207,7 @@ public final class QuestBookService {
             return;
         }
         QuestBookData book = data(player);
+        com.robertx22.age_of_exile.airship.adventure.AdventureService.mechanic(player,com.robertx22.age_of_exile.airship.adventure.Voyage.Metric.TOWER,themeId+":"+bossId,mob.getUUID().toString());
         boolean changed = book.towerBosses.add(towerBossKey(themeId, bossId));
         changed |= book.towerThemes.add(themeId);
         afterProgress(player, changed);
@@ -224,6 +226,7 @@ public final class QuestBookService {
             || skill == PlayerSkillEnum.ALL || skill == PlayerSkillEnum.NONE) {
             return;
         }
+        com.robertx22.age_of_exile.airship.adventure.AdventureService.mechanic(serverPlayer,com.robertx22.age_of_exile.airship.adventure.Voyage.Metric.PROFESSION,skill.id,UUID.randomUUID().toString());
         afterProgress(serverPlayer, data(serverPlayer).professionsUsed.add(skill.id));
     }
 
@@ -231,6 +234,7 @@ public final class QuestBookService {
         if (!(player instanceof ServerPlayer serverPlayer)) {
             return;
         }
+        com.robertx22.age_of_exile.airship.adventure.AdventureService.mechanic(serverPlayer,com.robertx22.age_of_exile.airship.adventure.Voyage.Metric.DUNGEON,"standard",UUID.randomUUID().toString());
         data(serverPlayer).standardDungeonsCompleted++;
         afterProgress(serverPlayer, true);
     }
@@ -249,6 +253,7 @@ public final class QuestBookService {
         if (!(player instanceof ServerPlayer serverPlayer) || godId == null || godId.isBlank()) {
             return;
         }
+        com.robertx22.age_of_exile.airship.adventure.AdventureService.mechanic(serverPlayer,com.robertx22.age_of_exile.airship.adventure.Voyage.Metric.MISSION,godId,UUID.randomUUID().toString());
         afterProgress(serverPlayer, data(serverPlayer).missionGods.add(godId));
     }
 
@@ -256,6 +261,7 @@ public final class QuestBookService {
         if (!(player instanceof ServerPlayer serverPlayer) || word == null || word.GUID() == null) {
             return;
         }
+        com.robertx22.age_of_exile.airship.adventure.AdventureService.mechanic(serverPlayer,com.robertx22.age_of_exile.airship.adventure.Voyage.Metric.RUNEWORD,word.GUID(),UUID.randomUUID().toString());
         afterProgress(serverPlayer, data(serverPlayer).runewords.add(word.GUID()));
     }
 

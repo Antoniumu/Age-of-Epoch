@@ -1,0 +1,502 @@
+# Real Minecraft UI and world. Counter seeding is explicitly synthetic, not a claimed dungeon playthrough.
+wait_window Minecraft 420000
+write run/airship-e2e.flag prepare
+wait_log 300000 Created: .*atlas/items
+wait 8000
+click 640 296
+wait 4000
+click 480 688
+wait 3000
+click 480 688
+wait_log_new 60000 AIRSHIPTEST PASS prepare
+wait 45000
+shot 00-world
+log_mark
+write run/airship-e2e.flag ritual-stock
+wait_log_new 30000 AIRSHIPTEST PASS ritual-stock
+hold h 200
+wait 1000
+shot 29-H-summon-button
+click 1140 688
+wait 1500
+shot 30-hub-confirmation
+log_mark
+click 640 476
+wait 7000
+shot 31-anchor-charging
+wait_log_new 120000 AIRSHIPHUB COMMISSIONED
+log_mark
+write run/airship-e2e.flag ritual-paid
+wait_log_new 30000 AIRSHIPTEST PASS ritual-paid
+log_mark
+write run/airship-e2e.flag winged
+wait_log_new 120000 AIRSHIPTEST PASS winged
+wait 12000
+shot 01-airship-exterior
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+wait 6000
+shot 02-on-deck
+log_mark
+write run/airship-e2e.flag lift
+wait_log_new 30000 AIRSHIPTEST PASS lift
+wait 4000
+log_mark
+write run/airship-e2e.flag lift-check
+wait_log_new 30000 AIRSHIPTEST PASS lift-check
+# Snapshot only; does not claim anyone walked from the lift to a crew member.
+log_mark
+write run/airship-e2e.flag route-observe
+wait_log_new 30000 AIRSHIPTEST PASS route-observe
+shot 03-lift-arrival
+# Each attempt begins at the same lift exit using a test-only reset; no teleport to any NPC.
+
+# captain: one conservative candidate, 35 s budget. Failure does not imply no route exists.
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-target-captain
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-result-captain
+baritone_click
+# Attempt a real return from the endpoint without a fixture reset.
+log_mark
+write run/airship-e2e.flag route-return-start-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-return-start-captain
+baritone_goal
+wait 30000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-return-result-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-return-result-captain
+shot route-captain
+
+# mara: one conservative candidate, 35 s budget. Failure does not imply no route exists.
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-mara
+wait_log_new 30000 AIRSHIPTEST PASS route-target-mara
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-mara
+wait_log_new 30000 AIRSHIPTEST PASS route-result-mara
+baritone_click
+# Attempt a real return from the endpoint without a fixture reset.
+log_mark
+write run/airship-e2e.flag route-return-start-mara
+wait_log_new 30000 AIRSHIPTEST PASS route-return-start-mara
+baritone_goal
+wait 30000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-return-result-mara
+wait_log_new 30000 AIRSHIPTEST PASS route-return-result-mara
+shot route-mara
+
+# quartermaster: one conservative candidate, 35 s budget. Failure does not imply no route exists.
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-quartermaster
+wait_log_new 30000 AIRSHIPTEST PASS route-target-quartermaster
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-quartermaster
+wait_log_new 30000 AIRSHIPTEST PASS route-result-quartermaster
+baritone_click
+# Attempt a real return from the endpoint without a fixture reset.
+log_mark
+write run/airship-e2e.flag route-return-start-quartermaster
+wait_log_new 30000 AIRSHIPTEST PASS route-return-start-quartermaster
+baritone_goal
+wait 30000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-return-result-quartermaster
+wait_log_new 30000 AIRSHIPTEST PASS route-return-result-quartermaster
+shot route-quartermaster
+
+# oren: one conservative candidate, 35 s budget. Failure does not imply no route exists.
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-oren
+wait_log_new 30000 AIRSHIPTEST PASS route-target-oren
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-oren
+wait_log_new 30000 AIRSHIPTEST PASS route-result-oren
+baritone_click
+# Attempt a real return from the endpoint without a fixture reset.
+log_mark
+write run/airship-e2e.flag route-return-start-oren
+wait_log_new 30000 AIRSHIPTEST PASS route-return-start-oren
+baritone_goal
+wait 30000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-return-result-oren
+wait_log_new 30000 AIRSHIPTEST PASS route-return-result-oren
+shot route-oren
+
+# veya: one conservative candidate, 35 s budget. Failure does not imply no route exists.
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-veya
+wait_log_new 30000 AIRSHIPTEST PASS route-target-veya
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-veya
+wait_log_new 30000 AIRSHIPTEST PASS route-result-veya
+baritone_click
+# Attempt a real return from the endpoint without a fixture reset.
+log_mark
+write run/airship-e2e.flag route-return-start-veya
+wait_log_new 30000 AIRSHIPTEST PASS route-return-start-veya
+baritone_goal
+wait 30000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-return-result-veya
+wait_log_new 30000 AIRSHIPTEST PASS route-return-result-veya
+shot route-veya
+
+# selin: one conservative candidate, 35 s budget. Failure does not imply no route exists.
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-selin
+wait_log_new 30000 AIRSHIPTEST PASS route-target-selin
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-selin
+wait_log_new 30000 AIRSHIPTEST PASS route-result-selin
+baritone_click
+# Attempt a real return from the endpoint without a fixture reset.
+log_mark
+write run/airship-e2e.flag route-return-start-selin
+wait_log_new 30000 AIRSHIPTEST PASS route-return-start-selin
+baritone_goal
+wait 30000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-return-result-selin
+wait_log_new 30000 AIRSHIPTEST PASS route-return-result-selin
+shot route-selin
+
+# lysander: one conservative candidate, 35 s budget. Failure does not imply no route exists.
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-lysander
+wait_log_new 30000 AIRSHIPTEST PASS route-target-lysander
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-lysander
+wait_log_new 30000 AIRSHIPTEST PASS route-result-lysander
+baritone_click
+# Attempt a real return from the endpoint without a fixture reset.
+log_mark
+write run/airship-e2e.flag route-return-start-lysander
+wait_log_new 30000 AIRSHIPTEST PASS route-return-start-lysander
+baritone_goal
+wait 30000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-return-result-lysander
+wait_log_new 30000 AIRSHIPTEST PASS route-return-result-lysander
+shot route-lysander
+
+# tik: one conservative candidate, 35 s budget. Failure does not imply no route exists.
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-tik
+wait_log_new 30000 AIRSHIPTEST PASS route-target-tik
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-tik
+wait_log_new 30000 AIRSHIPTEST PASS route-result-tik
+baritone_click
+# Attempt a real return from the endpoint without a fixture reset.
+log_mark
+write run/airship-e2e.flag route-return-start-tik
+wait_log_new 30000 AIRSHIPTEST PASS route-return-start-tik
+baritone_goal
+wait 30000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-return-result-tik
+wait_log_new 30000 AIRSHIPTEST PASS route-return-result-tik
+shot route-tik
+
+# Additional independent candidate trials for the captain. Each begins at the lift.
+
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-captain@1
+wait_log_new 30000 AIRSHIPTEST PASS route-target-captain@1
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-result-captain
+baritone_click
+shot captain-candidate-1
+
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-captain@2
+wait_log_new 30000 AIRSHIPTEST PASS route-target-captain@2
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-result-captain
+baritone_click
+shot captain-candidate-2
+
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-captain@3
+wait_log_new 30000 AIRSHIPTEST PASS route-target-captain@3
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-result-captain
+baritone_click
+shot captain-candidate-3
+
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-captain@4
+wait_log_new 30000 AIRSHIPTEST PASS route-target-captain@4
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-result-captain
+baritone_click
+shot captain-candidate-4
+
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-captain@5
+wait_log_new 30000 AIRSHIPTEST PASS route-target-captain@5
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-result-captain
+baritone_click
+shot captain-candidate-5
+
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-captain@6
+wait_log_new 30000 AIRSHIPTEST PASS route-target-captain@6
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-result-captain
+baritone_click
+shot captain-candidate-6
+
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-captain@7
+wait_log_new 30000 AIRSHIPTEST PASS route-target-captain@7
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-result-captain
+baritone_click
+shot captain-candidate-7
+
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-captain@8
+wait_log_new 30000 AIRSHIPTEST PASS route-target-captain@8
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-result-captain
+baritone_click
+shot captain-candidate-8
+
+# Dev-only relocation hypothesis: same captain UUID, no blocks changed.
+log_mark
+write run/airship-e2e.flag captain-candidate-placement
+wait_log_new 30000 AIRSHIPTEST PASS captain-candidate-placement
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+log_mark
+write run/airship-e2e.flag route-target-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-target-captain
+baritone_goal
+wait 35000
+key t
+wait 500
+type #stop
+key Return
+wait 1000
+log_mark
+write run/airship-e2e.flag route-result-captain
+wait_log_new 30000 AIRSHIPTEST PASS route-result-captain
+baritone_click
+shot captain-relocation-result

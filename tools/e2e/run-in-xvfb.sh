@@ -82,7 +82,7 @@ wm_watcher=$!
 mkdir -p run
 cat > run/options.txt <<EOF
 version:4620
-renderDistance:2
+renderDistance:${RENDER_DISTANCE:-2}
 simulationDistance:5
 guiScale:2
 maxFps:60
@@ -112,6 +112,10 @@ gradle_pid=""
 echo "=== запуск клиента ==="
 gradle_args=()
 case "$(basename "$scenario")" in
+    baritone-routes.txt)
+        # Opt in the externally downloaded and hash-checked client mod.
+        gradle_args+=(-PbaritoneAudit)
+        ;;
     jei.txt)
         # The JEI scenario must run against the real JEI mod, not only the
         # compile-time API used by the normal optional integration.

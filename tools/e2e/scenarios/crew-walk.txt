@@ -1,0 +1,123 @@
+# Real Minecraft UI and world. Counter seeding is explicitly synthetic, not a claimed dungeon playthrough.
+wait_window Minecraft 420000
+write run/airship-e2e.flag prepare
+wait_log 300000 Created: .*atlas/items
+wait 8000
+click 640 296
+wait 4000
+click 480 688
+wait 3000
+click 480 688
+wait_log_new 60000 AIRSHIPTEST PASS prepare
+wait 45000
+shot 00-world
+log_mark
+write run/airship-e2e.flag ritual-stock
+wait_log_new 30000 AIRSHIPTEST PASS ritual-stock
+hold h 200
+wait 1000
+shot 29-H-summon-button
+click 1140 688
+wait 1500
+shot 30-hub-confirmation
+log_mark
+click 640 476
+wait 7000
+shot 31-anchor-charging
+wait_log_new 120000 AIRSHIPHUB COMMISSIONED
+log_mark
+write run/airship-e2e.flag ritual-paid
+wait_log_new 30000 AIRSHIPTEST PASS ritual-paid
+log_mark
+write run/airship-e2e.flag winged
+wait_log_new 120000 AIRSHIPTEST PASS winged
+wait 12000
+shot 01-airship-exterior
+log_mark
+write run/airship-e2e.flag board
+wait_log_new 30000 AIRSHIPTEST PASS board
+wait 6000
+shot 02-on-deck
+log_mark
+write run/airship-e2e.flag lift
+wait_log_new 30000 AIRSHIPTEST PASS lift
+wait 4000
+log_mark
+write run/airship-e2e.flag lift-check
+wait_log_new 30000 AIRSHIPTEST PASS lift-check
+# Snapshot only; does not claim anyone walked from the lift to a crew member.
+log_mark
+write run/airship-e2e.flag route-observe
+wait_log_new 30000 AIRSHIPTEST PASS route-observe
+shot 03-lift-arrival
+# Test-only camera placement to observe the actor; no claim of a player walking here.
+log_mark
+write run/airship-e2e.flag photo-veya
+wait_log_new 30000 AIRSHIPTEST PASS photo-veya
+wait 1000
+shot crew-walk-before
+log_mark
+write run/airship-e2e.flag crew-walk-start
+wait_log_new 30000 AIRSHIPTEST PASS crew-walk-start
+wait 3000
+shot crew-walk-during
+wait 15000
+log_mark
+write run/airship-e2e.flag crew-walk-check
+wait_log_new 30000 AIRSHIPTEST PASS crew-walk-check
+shot crew-walk-after
+
+# Real client dialogue remains open; heartbeat must pause movement, then expiry resumes it.
+log_mark
+write run/airship-e2e.flag crew-walk-start
+wait_log_new 30000 AIRSHIPTEST PASS crew-walk-start
+log_mark
+write run/airship-e2e.flag crew-walk-dialogue-open
+wait_log_new 30000 AIRSHIPTEST PASS crew-walk-dialogue-open
+# Muting an active line immediately exposes the transcript without ending the conversation.
+log_mark
+key v
+wait_log_new 30000 AIRSHIPVOICE SETTING enabled=false
+# Reopen while muted: the dialogue must enter text mode without starting a clip.
+log_mark
+write run/airship-e2e.flag crew-walk-dialogue-open
+wait_log_new 30000 AIRSHIPVOICE MUTED veya
+wait_log_new 30000 AIRSHIPTEST PASS crew-walk-dialogue-open
+wait 6500
+log_mark
+write run/airship-e2e.flag crew-walk-pause-check
+wait_log_new 30000 AIRSHIPTEST PASS crew-walk-pause-check
+shot crew-walk-dialogue
+# Switch to the personal screen, remain there longer than a lease lifetime,
+# and verify the actor has not moved between checkpoints.
+wait 600
+log_mark
+click 1040 332
+wait_log_new 30000 AIRSHIPTEST UI npc=veya
+# The setting also works from the personal screen and remains shared across screens.
+log_mark
+key v
+wait_log_new 30000 AIRSHIPVOICE SETTING enabled=true
+wait 6500
+log_mark
+write run/airship-e2e.flag crew-walk-pause-check
+wait_log_new 30000 AIRSHIPTEST PASS crew-walk-pause-check
+shot crew-walk-personal-dialogue
+key Escape
+wait 17000
+log_mark
+write run/airship-e2e.flag crew-walk-resume-check
+wait_log_new 30000 AIRSHIPTEST PASS crew-walk-resume-check
+
+# Separate fixture: a player enters the planned route; movement must stop.
+log_mark
+write run/airship-e2e.flag crew-walk-start
+wait_log_new 30000 AIRSHIPTEST PASS crew-walk-start
+log_mark
+write run/airship-e2e.flag crew-walk-block
+wait_log_new 30000 AIRSHIPTEST PASS crew-walk-block
+wait 1000
+log_mark
+write run/airship-e2e.flag crew-walk-block-check
+wait_log_new 30000 AIRSHIPTEST PASS crew-walk-block-check
+shot crew-walk-blocked
