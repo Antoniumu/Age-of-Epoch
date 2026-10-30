@@ -11,7 +11,8 @@ import net.minecraft.world.entity.Entity;
  * It is not saved and it never changes story progress. All calls are on the server thread. */
 public final class AirshipConversationLease {
     static final int LIFETIME_TICKS=80;
-    private record Lease(UUID actor,ServerLevel level,long expires) {}
+    // Do not retain ServerLevel: its player list would keep weak keys alive after shutdown.
+    private record Lease(UUID actor,net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dimension,long expires) {}
     private static final WeakHashMap<ServerPlayer,Lease> LEASES=new WeakHashMap<>();
     private AirshipConversationLease() {}
     static boolean unexpired(long now,long expires){return now<expires;}
@@ -19,16 +20,16 @@ public final class AirshipConversationLease {
         if(player==null||actor==null||!player.isAlive()||player.isSpectator()||player.isRemoved()||
            !(player.level() instanceof ServerLevel level)||actor.level()!=level||!actor.isAlive()||
            AirshipService.npcId(actor).isEmpty()||player.distanceToSqr(actor)>36||!player.hasLineOfSight(actor))return false;
-        LEASES.put(player,new Lease(actor.getUUID(),level,level.getGameTime()+LIFETIME_TICKS));
+        LEASES.put(player,new Lease(actor.getUUID(),level.dimension(),level.getGameTime()+LIFETIME_TICKS));
         return true;
     }
     public static boolean active(ServerLevel level,Entity actor){
         var it=LEASES.entrySet().iterator();boolean active=false;
         while(it.hasNext()){
             var entry=it.next();var p=entry.getKey();var lease=entry.getValue();
-            if(p==null||!p.isAlive()||p.isRemoved()||p.isSpectator()||p.level()!=lease.level()||
-               !unexpired(lease.level().getGameTime(),lease.expires())){it.remove();continue;}
-            if(lease.level()==level&&actor.isAlive()&&lease.actor().equals(actor.getUUID())&&
+            if(p==null||!p.isAlive()||p.isRemoved()||p.isSpectator()||!p.level().dimension().equals(lease.dimension())||
+               !unexpired(p.level().getGameTime(),lease.expires())){it.remove();continue;}
+            if(p.level()==level&&actor.isAlive()&&lease.actor().equals(actor.getUUID())&&
                p.distanceToSqr(actor)<=36&&p.hasLineOfSight(actor))active=true;
         }
         return active;
