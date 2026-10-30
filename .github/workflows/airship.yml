@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       recover_run:
-        description: 'Recover a verified run ID, or use baritone for the isolated route audit'
+        description: 'Recover a verified client run ID, or use baritone for the isolated route audit'
         required: false
         default: ''
         type: string
