@@ -580,15 +580,20 @@ public final class ProfessionAuditProbe {
             PlayerSkillData data = Load.playerRPGData(player).professions.getDataFor(skill);
             data.setLvl(1); // опыт за крафт должен начисляться (иначе упирается в потолок уровня)
 
-            player.getInventory().setItem(0, toolFor(skill));
-            player.getInventory().selected = 0;
+            // Инструмент — в руку: setItemSlot кладёт его в выбранный слот хотбара,
+            // а выбор слота нам безразличен (слоты хотбара сценарий не кликает).
+            player.setItemSlot(net.minecraft.world.entity.EquipmentSlot.MAINHAND, toolFor(skill));
+            // Предметы — в главный инвентарь (слоты 9..12), а не в хотбар:
+            // их координаты в GUI фиксированы и не зависят от выбранного слота.
             if (skill.isGearCraftingProf()) {
-                player.getInventory().setItem(1, baseGearFor(skill));
+                player.getInventory().setItem(9, baseGearFor(skill));
             }
-            player.getInventory().setItem(2, buildIngredient(soulMatrix(), LIVE_TIER));
+            player.getInventory().setItem(10, buildIngredient(soulMatrix(), LIVE_TIER));
             List<SlashIngredient> regular = regularIngredients(skill);
-            player.getInventory().setItem(3, buildIngredient(regular.get(0), LIVE_TIER));
-            player.getInventory().setItem(4, buildIngredient(regular.get(1), LIVE_TIER));
+            player.getInventory().setItem(11, buildIngredient(regular.get(0), LIVE_TIER));
+            player.getInventory().setItem(12, buildIngredient(regular.get(1), LIVE_TIER));
+            player.getInventory().setChanged();
+            player.inventoryMenu.broadcastChanges();
 
             // Смотрим в небо: правый клик гарантированно попадает в воздух и
             // открывает менё инструмента, а не взаимодействует с блоком.

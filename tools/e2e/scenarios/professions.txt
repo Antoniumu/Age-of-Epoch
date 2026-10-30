@@ -14,9 +14,11 @@
 #       ProfCraftScreen 176x207 центрируется: left=552, top=256;
 #       слоты сетки 3×2 (центр): (673,275) (691,275) (709,275) / (673,293) (691,293) (709,293);
 #       слот результата: (693,339);
-#       хотбар: y=447, слоты 0..8 — x=568..712 шаг 18;
-#       раздача зонда: 0 — инструмент (в руке), 1 — основа (гир-профессии),
-#       2 — матрица душ (+20% успеха), 3/4 — обычные ингредиенты, 8 — пустой.
+#       главный инвентарь, ряд 1: y=389, слоты 9..17 — x=568..712 шаг 18
+#       (слоты хотбара НЕ используются: их вид зависит от выбранного слота);
+#       раздача зонда: 9 — основа (гир-профессии), 10 — матрица душ
+#       (+20% успеха), 11/12 — обычные ингредиенты, 13 — пустой (результат);
+#       инструмент зонд кладёт в руку (ПКМ открывает меню крафта).
 
 wait_window Minecraft 420000
 wait_log 300000 Created: .*atlas/items
@@ -52,20 +54,20 @@ rclick 640 360
 wait 1500
 shot alchemy-01-grid-empty
 
-# Матрица душ (хотбар 2) → слот сетки 0
-click 604 447
+# Матрица душ (инв. 10) → слот сетки 0
+click 586 389
 click 673 275
 wait 300
 shot alchemy-02-slot-1
 
-# Ингредиент A (хотбар 3) → слот сетки 2
-click 622 447
+# Ингредиент A (инв. 11) → слот сетки 2
+click 604 389
 click 691 275
 wait 300
 shot alchemy-03-slot-2
 
-# Ингредиент B (хотбар 4) → слот сетки 4
-click 640 447
+# Ингредиент B (инв. 12) → слот сетки 4
+click 622 389
 click 709 275
 wait 300
 shot alchemy-04-slot-3
@@ -74,16 +76,16 @@ move 640 650
 wait 300
 shot alchemy-05-result-ready
 
-# Забираем результат → пустой слот хотбара 8
+# Забираем результат → пустой слот инвентаря 13
 click 693 339
 wait 300
 shot alchemy-06-result-taken
-click 712 447
+click 640 389
 wait 300
 shot alchemy-07-stored
 
 wait_log 60000 AOEPR crafted prof=alchemy
-move 712 447
+move 640 389
 wait 1200
 shot alchemy-08-tooltip
 key Escape
@@ -98,17 +100,17 @@ rclick 640 360
 wait 1500
 shot inscribing-01-grid-empty
 
-click 604 447
+click 586 389
 click 673 275
 wait 300
 shot inscribing-02-slot-1
 
-click 622 447
+click 604 389
 click 691 275
 wait 300
 shot inscribing-03-slot-2
 
-click 640 447
+click 622 389
 click 709 275
 wait 300
 shot inscribing-04-slot-3
@@ -120,12 +122,12 @@ shot inscribing-05-result-ready
 click 693 339
 wait 300
 shot inscribing-06-result-taken
-click 712 447
+click 640 389
 wait 300
 shot inscribing-07-stored
 
 wait_log 60000 AOEPR crafted prof=inscribing
-move 712 447
+move 640 389
 wait 1200
 shot inscribing-08-tooltip
 key Escape
@@ -140,17 +142,17 @@ rclick 640 360
 wait 1500
 shot cooking-01-grid-empty
 
-click 604 447
+click 586 389
 click 673 275
 wait 300
 shot cooking-02-slot-1
 
-click 622 447
+click 604 389
 click 691 275
 wait 300
 shot cooking-03-slot-2
 
-click 640 447
+click 622 389
 click 709 275
 wait 300
 shot cooking-04-slot-3
@@ -162,12 +164,12 @@ shot cooking-05-result-ready
 click 693 339
 wait 300
 shot cooking-06-result-taken
-click 712 447
+click 640 389
 wait 300
 shot cooking-07-stored
 
 wait_log 60000 AOEPR crafted prof=cooking
-move 712 447
+move 640 389
 wait 1200
 shot cooking-08-tooltip
 key Escape
@@ -182,23 +184,23 @@ rclick 640 360
 wait 1500
 shot armor_craft-01-grid-empty
 
-# Основа — железный нагрудник (хотбар 1) → слот сетки 0
-click 586 447
+# Основа — железный нагрудник (инв. 9) → слот сетки 0
+click 568 389
 click 673 275
 wait 300
 shot armor_craft-02-slot-1
 
-click 604 447
+click 586 389
 click 691 275
 wait 300
 shot armor_craft-03-slot-2
 
-click 622 447
+click 604 389
 click 709 275
 wait 300
 shot armor_craft-04-slot-3
 
-click 640 447
+click 622 389
 click 673 293
 wait 300
 shot armor_craft-05-slot-4
@@ -210,12 +212,12 @@ shot armor_craft-06-result-ready
 click 693 339
 wait 300
 shot armor_craft-07-result-taken
-click 712 447
+click 640 389
 wait 300
 shot armor_craft-08-stored
 
 wait_log 60000 AOEPR crafted prof=armor_craft
-move 712 447
+move 640 389
 wait 1200
 shot armor_craft-09-tooltip
 key Escape
@@ -230,23 +232,23 @@ rclick 640 360
 wait 1500
 shot wep_craft-01-grid-empty
 
-# Основа — железный меч (хотбар 1) → слот сетки 0
-click 586 447
+# Основа — железный меч (инв. 9) → слот сетки 0
+click 568 389
 click 673 275
 wait 300
 shot wep_craft-02-slot-1
 
-click 604 447
+click 586 389
 click 691 275
 wait 300
 shot wep_craft-03-slot-2
 
-click 622 447
+click 604 389
 click 709 275
 wait 300
 shot wep_craft-04-slot-3
 
-click 640 447
+click 622 389
 click 673 293
 wait 300
 shot wep_craft-05-slot-4
@@ -258,12 +260,12 @@ shot wep_craft-06-result-ready
 click 693 339
 wait 300
 shot wep_craft-07-result-taken
-click 712 447
+click 640 389
 wait 300
 shot wep_craft-08-stored
 
 wait_log 60000 AOEPR crafted prof=wep_craft
-move 712 447
+move 640 389
 wait 1200
 shot wep_craft-09-tooltip
 key Escape
@@ -278,23 +280,23 @@ rclick 640 360
 wait 1500
 shot jewel_craft-01-grid-empty
 
-# Основа — железное кольцо (хотбар 1) → слот сетки 0
-click 586 447
+# Основа — железное кольцо (инв. 9) → слот сетки 0
+click 568 389
 click 673 275
 wait 300
 shot jewel_craft-02-slot-1
 
-click 604 447
+click 586 389
 click 691 275
 wait 300
 shot jewel_craft-03-slot-2
 
-click 622 447
+click 604 389
 click 709 275
 wait 300
 shot jewel_craft-04-slot-3
 
-click 640 447
+click 622 389
 click 673 293
 wait 300
 shot jewel_craft-05-slot-4
@@ -306,12 +308,12 @@ shot jewel_craft-06-result-ready
 click 693 339
 wait 300
 shot jewel_craft-07-result-taken
-click 712 447
+click 640 389
 wait 300
 shot jewel_craft-08-stored
 
 wait_log 60000 AOEPR crafted prof=jewel_craft
-move 712 447
+move 640 389
 wait 1200
 shot jewel_craft-09-tooltip
 key Escape
