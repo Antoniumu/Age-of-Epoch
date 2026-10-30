@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       recover_run:
-        description: 'Recover publication only from a run whose compile and real-client steps passed'
+        description: 'Recover a verified run ID, or use baritone for the isolated route audit'
         required: false
         default: ''
         type: string
