@@ -1,0 +1,64 @@
+[17:33:29] DISPLAY=:99, сценарий combat.txt
+[17:33:29] жду окно: дисплей :99, X-сокеты: :100, :99
+[17:33:37] дисплей клиента из /proc/4816/environ: :101 (был :99)
+[17:33:37] XAUTHORITY клиента: /tmp/xvfb-run.OuP1pK/Xauthority
+[17:33:51] окно 2097203 на :101: Minecraft* 26.3 | WINDOW=2097203 X=0 Y=152 WIDTH=1280 HEIGHT=720 SCREEN=0 | Map State: IsViewable
+[17:33:55] в логе найдено: [17:33:54] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/items.png-atlas
+[17:34:04] снимок 00-main-menu (окно 2097203, 713 КБ)
+[17:34:04] курсор 640,296
+[17:34:04] клик 640,296 (экран 640,448, кнопка 1)
+[17:34:09] снимок 01-world-list (окно 2097203, 384 КБ)
+[17:34:10] курсор 640,124
+[17:34:10] клик 640,124 (экран 640,276, кнопка 1)
+[17:34:11] курсор 483,637
+[17:34:11] клик 483,637 (экран 483,789, кнопка 1)
+[17:34:57] снимок 03-in-world (окно 2097203, 387 КБ)
+[17:34:57] курсор 797,637
+[17:34:57] клик 797,637 (экран 797,789, кнопка 1)
+[17:35:00] курсор 480,688
+[17:35:00] клик 480,688 (экран 480,840, кнопка 1)
+[17:35:46] снимок 03b-in-world-created (окно 2097203, 304 КБ)
+[17:35:46] отметка в логе: байт 6405698
+[17:35:46] создан файл-триггер run/aoe-devtest.flag
+[17:35:47] в логе найдено (новое): [17:35:46] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST dps hits=10 requested=400.0 recorded=352.64 elapsed_ms=549 dps_chart=642.3 dps_hud=705.3 fight_acti
+[17:35:47] снимок 04-combat-hud (окно 2097203, 314 КБ)
+[17:35:47] в логе найдено (новое): [17:35:47] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST gear_equip max_before=30.0 max_after=32.4 check_equip_raises_max=true
+[17:35:50] снимок 05-gear-equip-max-hp (окно 2097203, 290 КБ)
+[17:35:55] в логе найдено (новое): [17:35:55] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST gear_unequip max_before=30.0 max_after=30.0 check_unequip_restores_max=true
+[17:35:57] снимок 06-gear-unequip-max-hp (окно 2097203, 305 КБ)
+[17:35:57] в логе найдено (новое): [17:35:56] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST summary checks=74 failed=0
+[17:36:06] снимок 08-after-fight (окно 2097203, 305 КБ)
+[17:36:06] клавиша E
+[17:36:07] курсор 497,490
+[17:36:09] снимок 09-inventory-soulless-decheap (окно 2097203, 190 КБ)
+[17:36:09] курсор 534,490
+[17:36:10] снимок 10-inventory-soulless-neserite (окно 2097203, 252 КБ)
+[17:36:10] курсор 571,490
+[17:36:12] снимок 11-inventory-souled (окно 2097203, 182 КБ)
+[17:36:12] курсор 608,490
+[17:36:13] снимок 12-inventory-soul (окно 2097203, 187 КБ)
+[17:36:13] курсор 645,490
+[17:36:15] снимок 12b-inventory-soulless-whole (окно 2097203, 179 КБ)
+[17:36:15] клавиша E
+[17:36:16] удержание F7 400 мс (фокус: 2097203)
+[17:36:18] снимок 13-hud-hidden (окно 2097203, 296 КБ)
+[17:36:19] удержание F7 400 мс (фокус: 2097203)
+[17:36:21] снимок 14-hud-shown (окно 2097203, 296 КБ)
+[17:36:21] удержание F8 400 мс (фокус: 2097203)
+[17:36:23] снимок 15-hud-position (окно 2097203, 297 КБ)
+[17:36:24] jstack[combat]: pid 4816, 419 строк -> jstack-combat.txt
+[17:36:24] render thread:
+    "Render thread" #3 [4817] prio=5 os_prio=0 cpu=25141.15ms elapsed=166.75s tid=0x00007f6628030760 nid=4817 runnable  [0x00007f662c9fd000]
+    java.lang.Thread.State: RUNNABLE
+    at java.lang.invoke.LambdaForm$MH/0x0000000092610c00.invoke(java.base@25.0.5/LambdaForm$MH)
+    at java.lang.invoke.LambdaForm$MH/0x000000009229dc00.invokeExact_MT(java.base@25.0.5/LambdaForm$MH)
+    at jdk.internal.foreign.abi.DowncallStub/0x000000009229b000.invoke(java.base@25.0.5/Unknown Source)
+    at java.lang.invoke.LambdaForm$DMH/0x000000009229b400.invokeStatic(java.base@25.0.5/LambdaForm$DMH)
+    at java.lang.invoke.LambdaForm$MH/0x0000000092610800.invoke(java.base@25.0.5/LambdaForm$MH)
+    at java.lang.invoke.LambdaForm$MH/0x000000009229d400.invokeExact_MT(java.base@25.0.5/LambdaForm$MH)
+    at org.lwjgl.system.JNIBindingsImpl/0x00000000912d0000.callPJPV(Unknown Source)
+    at org.lwjgl.system.JNI.callPJPV(JNI.java:2541)
+    at org.lwjgl.vulkan.VK10.nvkDestroyBufferView(VK10.java:2027)
+    at org.lwjgl.vulkan.VK10.vkDestroyBufferView(VK10.java:2032)
+[17:36:24] конец сценария combat
+[17:36:24] итог: снимков 16, ошибок 0
