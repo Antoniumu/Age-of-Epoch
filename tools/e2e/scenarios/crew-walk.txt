@@ -74,6 +74,10 @@ wait_log_new 30000 AIRSHIPTEST PASS crew-walk-start
 log_mark
 write run/airship-e2e.flag crew-walk-dialogue-open
 wait_log_new 30000 AIRSHIPTEST PASS crew-walk-dialogue-open
+# Muting an active line immediately exposes the transcript without ending the conversation.
+log_mark
+key v
+wait_log_new 30000 AIRSHIPVOICE SETTING enabled=false
 wait 6500
 log_mark
 write run/airship-e2e.flag crew-walk-pause-check
@@ -81,11 +85,14 @@ wait_log_new 30000 AIRSHIPTEST PASS crew-walk-pause-check
 shot crew-walk-dialogue
 # Switch to the personal screen, remain there longer than a lease lifetime,
 # and verify the actor has not moved between checkpoints.
-hold space 300
 wait 600
 log_mark
 click 1040 332
 wait_log_new 30000 AIRSHIPTEST UI npc=veya
+# The setting also works from the personal screen and remains shared across screens.
+log_mark
+key v
+wait_log_new 30000 AIRSHIPVOICE SETTING enabled=true
 wait 6500
 log_mark
 write run/airship-e2e.flag crew-walk-pause-check

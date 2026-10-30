@@ -38,7 +38,7 @@ public class AirshipDialogueScreen extends BaseScreen {
                 && !AirshipCampaign.ready(Load.playerRPGData(mc.player).airship,Load.playerRPGData(mc.player).questBook))
                 transcript=AirshipCrewVoice.waitingDialogue(npc,storyStage);
             cues=AirshipCrewVoice.cues(npc,storyStage,transcript);
-            startCue();
+            if(AirshipVoiceSettings.enabled())startCue();else fullText=true;
         }
         panelY=height-(fullText?196:subtitleHeight())-8;
         if(fullText) buildChoices();
@@ -107,8 +107,9 @@ public class AirshipDialogueScreen extends BaseScreen {
     }
     @Override public boolean keyPressed(int key,int scan,int modifiers) {
         proof("KEY compatible="+key+" fullText="+fullText);
+        if(key==InputConstants.KEY_V) { boolean enabled=AirshipVoiceSettings.toggle();proof("SETTING enabled="+enabled);if(!enabled&&!fullText)reveal();return true; }
         if(key==InputConstants.KEY_SPACE) { if(!fullText) reveal();return true; }
-        if(key==InputConstants.KEY_R && !cues.isEmpty()) { fullText=false;cueIndex=0;init();startCue();return true; }
+        if(key==InputConstants.KEY_R && AirshipVoiceSettings.enabled() && !cues.isEmpty()) { fullText=false;cueIndex=0;init();startCue();return true; }
         if(fullText && key==InputConstants.KEY_1 && AirshipStory.advance(npc,storyStage)!=storyStage && mc.player!=null && AirshipCampaign.ready(Load.playerRPGData(mc.player).airship,Load.playerRPGData(mc.player).questBook)) { send(storyStage==7?1:0);return true; }
         if(fullText && key==InputConstants.KEY_2 && storyStage==7) { send(0);return true; }
         if(key==InputConstants.KEY_ESCAPE) { onClose();return true; }
@@ -158,6 +159,7 @@ public class AirshipDialogueScreen extends BaseScreen {
             }
             if(!hint.isEmpty()) text(pose,hint,x+83,y+(AirshipStory.index(npc)>=3?156:88),0xA9C9A7);
         }
+        text(pose,AirshipVoiceSettings.hint(),x+w-125,y-27,0xDCE6DC);
         super.render(pose,mx,my,partial);
     }
     private void text(PoseStack p,String s,int x,int y,int c) { AbstractGui.drawShadow(mc.font,p,s,x,y,c); }

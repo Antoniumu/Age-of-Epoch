@@ -79,7 +79,7 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
         };
     }
     private void playConfirmedAction(){
-        var cue=AdventureVoice.action(data(),npc,pendingAction);if(cue==null)return;
+        var cue=AdventureVoice.action(data(),npc,pendingAction);if(cue==null||!AirshipVoiceSettings.enabled())return;
         stopVoice();speaking=cue;
         scroll=0;activeSeen=false;voiceStarted=System.nanoTime();
         playing=net.minecraft.client.resources.sounds.SimpleSoundInstance.forUI(net.minecraft.sounds.SoundEvent.createVariableRangeEvent(Identifier.fromNamespaceAndPath("mmorpg","airship."+speaking.sound())),1F,1F);
@@ -107,6 +107,7 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
         return keyPressed(event.key(),0,0)||super.keyPressed(event);
     }
     @Override public boolean keyPressed(int key,int scan,int modifiers){
+        if(key==com.mojang.blaze3d.platform.InputConstants.KEY_V){boolean enabled=AirshipVoiceSettings.toggle();if(net.fabricmc.loader.api.FabricLoader.getInstance().isDevelopmentEnvironment())System.out.println("AIRSHIPVOICE SETTING enabled="+enabled);stopVoice();init();return true;}
         if(key==com.mojang.blaze3d.platform.InputConstants.KEY_SPACE&&speaking!=null){stopVoice();init();return true;}
         return super.keyPressed(key,scan,modifiers);
     }
@@ -114,6 +115,7 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
     private int lines(PoseStack pose,String text,int y,int color,int bottom){for(var line:mc.font.split(Component.literal(text),366)){if(y>=guiTop+12 && y<=bottom)AbstractGui.drawShadow(mc.font,pose,line,guiLeft+12,y,color);y+=10;}extent=Math.max(extent,y+scroll-guiTop);return y+5;}
     @Override public void render(PoseStack pose,int mx,int my,float delta){
         AbstractGui.fill(pose,guiLeft,guiTop,guiLeft+390,guiTop+310,0xEA111B20);
+        AbstractGui.drawShadow(mc.font,pose,AirshipVoiceSettings.hint(),guiLeft+250,guiTop-13,0xDCE6DC);
         if(mc.player==null)return;var legacy=Load.playerRPGData(mc.player).airship;var d=data();extent=0;int y=guiTop+12-scroll,bottom=guiTop+(entity>=0?166:275);
         y=lines(pose,entity<0?"ПРИКЛЮЧЕНИЯ • Последний Рассвет":AirshipStory.name(npc),y,0xE4C897,bottom);
         if(entity<0){
