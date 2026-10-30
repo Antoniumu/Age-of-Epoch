@@ -206,6 +206,12 @@ public final class AirshipProbe {
                 if(com.robertx22.age_of_exile.airship.adventure.CrewMoments.chosen(ad,"captain")!=0)throw new IllegalStateException("Captain personal choice not made through NPC UI");
                 var rpg=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p);var restored=new com.robertx22.age_of_exile.capability.player.RPGPlayerData(p);restored.loadFromNBT(rpg.saveToNBT());
                 if(com.robertx22.age_of_exile.airship.adventure.CrewMoments.chosen(restored.airship.adventure,"captain")!=0)throw new IllegalStateException("Personal choice lost on NBT roundtrip");
+                String remembered=com.robertx22.age_of_exile.airship.adventure.CrewMoments.remembered(ad,"captain");
+                if(remembered.isEmpty()||!remembered.equals(com.robertx22.age_of_exile.airship.adventure.CrewMoments.remembered(restored.airship.adventure,"captain")))
+                    throw new IllegalStateException("Personal callback lost on NBT roundtrip");
+                if(!com.robertx22.age_of_exile.airship.adventure.CrewMoments.remembered(new com.robertx22.age_of_exile.airship.adventure.AdventureData(),"captain").isEmpty())
+                    throw new IllegalStateException("Personal callback leaked to independent state");
+                System.out.println("AIRSHIPTEST MOMENT callback survived NBT and remains private");
                 if(!com.robertx22.age_of_exile.airship.adventure.CrewMoments.choose(ad,"captain",1).isEmpty())throw new IllegalStateException("Personal choice replayed");
                 if(com.robertx22.age_of_exile.airship.adventure.CrewMoments.chosen(new com.robertx22.age_of_exile.airship.adventure.AdventureData(),"captain")!=-1)throw new IllegalStateException("Choice leaked to independent player state");
             } else if(action.equals("workshop-setup")) {
