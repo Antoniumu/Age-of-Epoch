@@ -1,0 +1,600 @@
+[11:35:56] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:35:56] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:35:56] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:35:57] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:35:57] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:35:57] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:35:57] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:35:58] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:35:58] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:35:58] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:35:58] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:35:59] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:35:59] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:35:59] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:35:59] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:00] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:00] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:00] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:00] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:01] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:01] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:01] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:01] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:02] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:02] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:02] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:02] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:03] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:03] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:03] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:03] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:04] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:04] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:04] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:04] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:05] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:05] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:05] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:05] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:06] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:06] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:06] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:06] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:07] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:07] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:07] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:07] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:08] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:08] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:08] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:08] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:09] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:09] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:09] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:09] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:10] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:10] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:10] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:10] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:11] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:11] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:11] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:11] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:12] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:12] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:12] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:12] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:13] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:13] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:13] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:13] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:14] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR старт прогона what=all
+[11:36:14] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR режим: creative (инструмент и ингредиенты выдаются без выживания)
+[11:36:14] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR уровень игрока выставлен на 40
+[11:36:14] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR_MARK audit_start all 1793446574123
+[11:36:14] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR start what=all profs=6
+[11:36:14] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=tool_registered ok=true detail=mmorpg:craft_tools/alchemy
+[11:36:14] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=ingredients_available ok=true detail=доступно ингредиентов: 26
+[11:36:14] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=has_regular_ingredients ok=true detail=soul_matrix=true, обычных=22
+[11:36:14] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=grid_empty_fails ok=true detail=No Ingredients.
+[11:36:14] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=junk_rejected ok=true detail=палка в слот не должна проходить
+[11:36:14] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=ingredient_accepted ok=true detail=red_coral
+[11:36:14] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=wrong_prof_rejected ok=true detail=fire_stone
+[11:36:14] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=full_recipe_works ok=true detail=
+[11:36:14] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=result_process_saved ok=true detail=ингредиентов в процессе: 3
+[11:36:14] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=success_chance_100 ok=true detail=шанс успеха: 100%
+[11:36:14] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=stat_multi_sane ok=true detail=множитель: 100%
+[11:36:14] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=crafted_output_valid ok=true detail=статов в расходуемом: 3
+[11:36:14] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:14] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:14] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR_MARK prof_start alchemy 1793446574220
+[11:36:14] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR given prof=alchemy tool=mmorpg:craft_tools/alchemy gear=no ings=3
+[11:36:14] [Render thread/INFO] (Minecraft) [System] [CHAT] GameMaster: первые 10 уровней позади. Дальше — башни и делвы: там падают лучшие вещи, а с боссов можно получить уникат. Загляни в ближайшую башню.
+[11:36:14] [Render thread/INFO] (Minecraft) [System] [CHAT] ★ Player804 первым достиг 10 уровня!
+[11:36:14] [Render thread/INFO] (Minecraft) [System] [CHAT] ★ Player804 первым достиг 20 уровня!
+[11:36:14] [Render thread/INFO] (Minecraft) [System] [CHAT] ★ Player804 первым достиг 30 уровня!
+[11:36:14] [Render thread/INFO] (Minecraft) [System] [CHAT] ★ Player804 первым достиг 40 уровня!
+[11:36:14] [Render thread/INFO] (Minecraft) [System] [CHAT] Веха: уровень 40! +270 Благосклонности, редкая вещь гарантирована
+[11:36:14] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:14] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:15] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:15] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:15] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:15] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:16] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:16] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:16] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR gui_open prof=alchemy
+[11:36:16] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:16] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:17] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:17] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:17] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:17] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:18] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:18] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:18] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:18] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=alchemy filled=1 item=mmorpg:ingredient/soul_matrix
+[11:36:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR result_ready prof=alchemy item=mmorpg:craft_result/alchemy/3 chance=100
+[11:36:19] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:19] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:19] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:19] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:20] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=alchemy filled=2 item=mmorpg:ingredient/red_coral
+[11:36:20] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:20] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:20] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:20] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:21] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:21] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:21] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=alchemy filled=3 item=mmorpg:ingredient/enigma_stone
+[11:36:21] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:21] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:22] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:22] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:22] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:22] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:22] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=alchemy filled=0 item=-
+[11:36:22] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR taken prof=alchemy slot=-2
+[11:36:23] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:23] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:23] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:23] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:23] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR crafted prof=alchemy ok=true item=mmorpg:craft_result/alchemy/1 stats=3 exp_gain=true
+[11:36:23] [Render thread/INFO] (Minecraft) [System] [CHAT] Alchemy повышен в уровне!
+[11:36:23] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR prof=alchemy verdict=PASS checks=12 gui=true placed=3 result=true taken=true crafted=true item=mmorpg:craft_result/alchemy/1 stats=3 exp=true
+[11:36:23] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR_MARK prof_end alchemy 1793446583966
+[11:36:24] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:24] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:24] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:24] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:25] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:25] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:25] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:25] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:26] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:26] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:26] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:26] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:26] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=tool_registered ok=true detail=mmorpg:craft_tools/inscribing
+[11:36:26] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=ingredients_available ok=true detail=доступно ингредиентов: 13
+[11:36:26] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=has_regular_ingredients ok=true detail=soul_matrix=true, обычных=9
+[11:36:26] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=grid_empty_fails ok=true detail=No Ingredients.
+[11:36:26] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=junk_rejected ok=true detail=палка в слот не должна проходить
+[11:36:26] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=ingredient_accepted ok=true detail=redstone_crystal
+[11:36:26] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=wrong_prof_rejected ok=true detail=red_coral
+[11:36:26] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=full_recipe_works ok=true detail=
+[11:36:26] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=result_process_saved ok=true detail=ингредиентов в процессе: 3
+[11:36:26] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=success_chance_100 ok=true detail=шанс успеха: 100%
+[11:36:26] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=stat_multi_sane ok=true detail=множитель: 100%
+[11:36:26] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=crafted_output_valid ok=true detail=статов в расходуемом: 2
+[11:36:26] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR_MARK prof_start inscribing 1793446586814
+[11:36:26] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR given prof=inscribing tool=mmorpg:craft_tools/inscribing gear=no ings=3
+[11:36:27] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:27] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:27] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR gui_open prof=inscribing
+[11:36:27] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:27] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:28] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:28] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:28] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:28] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:29] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:29] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:29] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:29] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:29] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=inscribing filled=1 item=mmorpg:ingredient/soul_matrix
+[11:36:29] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR result_ready prof=inscribing item=mmorpg:craft_result/inscribing/3 chance=100
+[11:36:30] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:30] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:30] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:30] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:31] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=inscribing filled=2 item=mmorpg:ingredient/redstone_crystal
+[11:36:31] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:31] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:31] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:31] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:32] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:32] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:32] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=inscribing filled=3 item=mmorpg:ingredient/magic_log
+[11:36:32] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:32] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:33] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:33] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:33] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:33] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:33] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=inscribing filled=0 item=-
+[11:36:33] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR taken prof=inscribing slot=-2
+[11:36:34] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:34] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:34] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:34] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:34] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR crafted prof=inscribing ok=true item=mmorpg:craft_result/inscribing/2 stats=2 exp_gain=true
+[11:36:34] [Render thread/INFO] (Minecraft) [System] [CHAT] Inscribing повышен в уровне!
+[11:36:34] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR prof=inscribing verdict=PASS checks=12 gui=true placed=3 result=true taken=true crafted=true item=mmorpg:craft_result/inscribing/2 stats=2 exp=true
+[11:36:34] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR_MARK prof_end inscribing 1793446594962
+[11:36:35] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:35] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:35] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:35] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:36] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:36] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:36] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:36] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:37] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:37] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:37] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:37] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:37] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=tool_registered ok=true detail=mmorpg:craft_tools/cooking
+[11:36:37] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=ingredients_available ok=true detail=доступно ингредиентов: 18
+[11:36:37] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=has_regular_ingredients ok=true detail=soul_matrix=true, обычных=14
+[11:36:37] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=grid_empty_fails ok=true detail=No Ingredients.
+[11:36:37] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=junk_rejected ok=true detail=палка в слот не должна проходить
+[11:36:37] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=ingredient_accepted ok=true detail=red_coral
+[11:36:37] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=wrong_prof_rejected ok=true detail=enigma_stone
+[11:36:37] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=full_recipe_works ok=true detail=
+[11:36:37] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=result_process_saved ok=true detail=ингредиентов в процессе: 3
+[11:36:37] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=success_chance_100 ok=true detail=шанс успеха: 100%
+[11:36:37] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=stat_multi_sane ok=true detail=множитель: 100%
+[11:36:37] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=crafted_output_valid ok=true detail=статов в расходуемом: 3
+[11:36:37] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR_MARK prof_start cooking 1793446597815
+[11:36:37] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR given prof=cooking tool=mmorpg:craft_tools/cooking gear=no ings=3
+[11:36:38] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:38] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:38] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR gui_open prof=cooking
+[11:36:38] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:38] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:39] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:39] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:39] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:39] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:40] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:40] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:40] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:40] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:40] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=cooking filled=1 item=mmorpg:ingredient/soul_matrix
+[11:36:40] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR result_ready prof=cooking item=mmorpg:craft_result/cooking/2 chance=100
+[11:36:41] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:41] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:41] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:41] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:42] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:42] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:42] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=cooking filled=2 item=mmorpg:ingredient/red_coral
+[11:36:42] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:42] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:43] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:43] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:43] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=cooking filled=3 item=mmorpg:ingredient/yarrow_flower
+[11:36:43] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:43] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:44] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:44] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:44] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:44] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:44] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=cooking filled=0 item=-
+[11:36:44] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR taken prof=cooking slot=-2
+[11:36:45] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:45] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:45] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:45] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:45] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR crafted prof=cooking ok=true item=mmorpg:craft_result/cooking/4 stats=3 exp_gain=true
+[11:36:45] [Render thread/INFO] (Minecraft) [System] [CHAT] Cooking повышен в уровне!
+[11:36:45] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR prof=cooking verdict=PASS checks=12 gui=true placed=3 result=true taken=true crafted=true item=mmorpg:craft_result/cooking/4 stats=3 exp=true
+[11:36:45] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR_MARK prof_end cooking 1793446605959
+[11:36:46] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:46] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:46] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:46] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:47] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:47] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:47] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:47] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:48] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:48] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:48] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:48] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=tool_registered ok=true detail=mmorpg:craft_tools/armor_craft
+[11:36:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=ingredients_available ok=true detail=доступно ингредиентов: 12
+[11:36:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=has_regular_ingredients ok=true detail=soul_matrix=true, обычных=8
+[11:36:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=gear_base_found ok=true detail=minecraft:iron_chestplate
+[11:36:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=gear_slot_matches ok=true detail=chest
+[11:36:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=grid_empty_fails ok=true detail=This recipe requires gear as ingredient
+[11:36:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=junk_rejected ok=true detail=палка в слот не должна проходить
+[11:36:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=ingredient_accepted ok=true detail=fire_stone
+[11:36:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=gear_accepted ok=true detail=minecraft:iron_chestplate
+[11:36:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=soulless_gear_accepted ok=true detail=бесдушная основа проходит
+[11:36:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=souled_gear_rejected ok=true detail=The used gear has stats already
+[11:36:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=crafted_stats_rejected ok=true detail=The used gear has stats already
+[11:36:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=wrong_prof_rejected ok=true detail=red_coral
+[11:36:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=full_recipe_works ok=true detail=
+[11:36:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=result_process_saved ok=true detail=ингредиентов в процессе: 3
+[11:36:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=success_chance_100 ok=true detail=шанс успеха: 100%
+[11:36:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=stat_multi_sane ok=true detail=множитель: 100%
+[11:36:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=crafted_output_valid ok=true detail=бесдушная основа со статами: 3
+[11:36:48] [Server thread/INFO] (Minecraft) System chat: Player804 has made the advancement [Suit Up]
+[11:36:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR_MARK prof_start armor_craft 1793446608768
+[11:36:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR given prof=armor_craft tool=mmorpg:craft_tools/armor_craft gear=yes ings=3
+[11:36:48] [Render thread/INFO] (Minecraft) [System] [CHAT] Player804 has made the advancement [Suit Up]
+[11:36:48] [Render thread/INFO] (Minecraft) Loaded 10 advancements
+[11:36:49] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:49] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:49] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR gui_open prof=armor_craft
+[11:36:49] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:49] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:50] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:50] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:50] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:50] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:51] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:51] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:51] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:51] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:51] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=armor_craft filled=1 item=minecraft:iron_chestplate
+[11:36:52] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:52] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:52] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:52] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:53] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=armor_craft filled=2 item=mmorpg:ingredient/soul_matrix
+[11:36:53] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR result_ready prof=armor_craft item=minecraft:iron_chestplate chance=100
+[11:36:53] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:53] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:53] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:53] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:54] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:54] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:54] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=armor_craft filled=3 item=mmorpg:ingredient/fire_stone
+[11:36:54] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:54] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:55] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:55] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:55] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=armor_craft filled=4 item=mmorpg:ingredient/fire_stone
+[11:36:55] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:55] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:56] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:56] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:56] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:56] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:56] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=armor_craft filled=0 item=-
+[11:36:56] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR taken prof=armor_craft slot=-2
+[11:36:57] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:57] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:57] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:57] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:57] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR crafted prof=armor_craft ok=true item=minecraft:iron_chestplate stats=3 exp_gain=true
+[11:36:57] [Render thread/INFO] (Minecraft) [System] [CHAT] Armor Crafting повышен в уровне!
+[11:36:57] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR prof=armor_craft verdict=PASS checks=18 gui=true placed=4 result=true taken=true crafted=true item=minecraft:iron_chestplate stats=3 exp=true
+[11:36:57] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR_MARK prof_end armor_craft 1793446617961
+[11:36:58] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:58] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:58] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:58] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:59] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:59] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:59] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:36:59] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:00] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:00] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:00] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:00] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=tool_registered ok=true detail=mmorpg:craft_tools/wep_craft
+[11:37:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=ingredients_available ok=true detail=доступно ингредиентов: 12
+[11:37:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=has_regular_ingredients ok=true detail=soul_matrix=true, обычных=9
+[11:37:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=gear_base_found ok=true detail=minecraft:iron_sword
+[11:37:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=gear_slot_matches ok=true detail=sword
+[11:37:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=grid_empty_fails ok=true detail=This recipe requires gear as ingredient
+[11:37:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=junk_rejected ok=true detail=палка в слот не должна проходить
+[11:37:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=ingredient_accepted ok=true detail=enigma_stone
+[11:37:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=gear_accepted ok=true detail=minecraft:iron_sword
+[11:37:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=soulless_gear_accepted ok=true detail=бесдушная основа проходит
+[11:37:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=souled_gear_rejected ok=true detail=The used gear has stats already
+[11:37:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=crafted_stats_rejected ok=true detail=The used gear has stats already
+[11:37:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=wrong_prof_rejected ok=true detail=red_coral
+[11:37:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=full_recipe_works ok=true detail=
+[11:37:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=result_process_saved ok=true detail=ингредиентов в процессе: 3
+[11:37:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=success_chance_100 ok=true detail=шанс успеха: 100%
+[11:37:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=stat_multi_sane ok=true detail=множитель: 100%
+[11:37:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=crafted_output_valid ok=true detail=бесдушная основа со статами: 3
+[11:37:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR_MARK prof_start wep_craft 1793446620961
+[11:37:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR given prof=wep_craft tool=mmorpg:craft_tools/wep_craft gear=yes ings=3
+[11:37:01] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:01] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:01] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:01] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:01] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR gui_open prof=wep_craft
+[11:37:02] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:02] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:02] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:02] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:03] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:03] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:03] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:03] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:04] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=wep_craft filled=1 item=minecraft:iron_sword
+[11:37:04] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:04] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:04] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:04] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:05] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:05] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:05] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=wep_craft filled=2 item=mmorpg:ingredient/soul_matrix
+[11:37:05] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR result_ready prof=wep_craft item=minecraft:iron_sword chance=100
+[11:37:05] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:05] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:06] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:06] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:06] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=wep_craft filled=3 item=mmorpg:ingredient/enigma_stone
+[11:37:06] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:06] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:07] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:07] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:07] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:07] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:07] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=wep_craft filled=4 item=mmorpg:ingredient/enigma_stone
+[11:37:08] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:08] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:08] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:08] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:09] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=wep_craft filled=0 item=-
+[11:37:09] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR taken prof=wep_craft slot=-2
+[11:37:09] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:09] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:09] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:09] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:10] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:10] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:10] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:10] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:10] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR crafted prof=wep_craft ok=true item=minecraft:iron_sword stats=3 exp_gain=true
+[11:37:10] [Render thread/INFO] (Minecraft) [System] [CHAT] Weapon Crafting повышен в уровне!
+[11:37:10] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR prof=wep_craft verdict=PASS checks=18 gui=true placed=4 result=true taken=true crafted=true item=minecraft:iron_sword stats=3 exp=true
+[11:37:10] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR_MARK prof_end wep_craft 1793446630982
+[11:37:11] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:11] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:11] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:11] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:12] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:12] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:12] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:12] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:13] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:13] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:13] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:13] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:14] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:14] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:14] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:14] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:15] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:15] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:15] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=tool_registered ok=true detail=mmorpg:craft_tools/jewel_craft
+[11:37:15] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=ingredients_available ok=true detail=доступно ингредиентов: 15
+[11:37:15] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=has_regular_ingredients ok=true detail=soul_matrix=true, обычных=11
+[11:37:15] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=gear_base_found ok=true detail=mmorpg:jewelry/ring/iron
+[11:37:15] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=gear_slot_matches ok=true detail=ring
+[11:37:15] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=grid_empty_fails ok=true detail=This recipe requires gear as ingredient
+[11:37:15] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=junk_rejected ok=true detail=палка в слот не должна проходить
+[11:37:15] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=ingredient_accepted ok=true detail=enigma_stone
+[11:37:15] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=gear_accepted ok=true detail=mmorpg:jewelry/ring/iron
+[11:37:15] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=soulless_gear_accepted ok=true detail=бесдушная основа проходит
+[11:37:15] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=souled_gear_rejected ok=true detail=The used gear has stats already
+[11:37:15] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=crafted_stats_rejected ok=true detail=The used gear has stats already
+[11:37:15] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=wrong_prof_rejected ok=true detail=red_coral
+[11:37:15] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=full_recipe_works ok=true detail=
+[11:37:15] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=result_process_saved ok=true detail=ингредиентов в процессе: 3
+[11:37:15] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=success_chance_100 ok=true detail=шанс успеха: 100%
+[11:37:15] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=stat_multi_sane ok=true detail=множитель: 100%
+[11:37:15] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=crafted_output_valid ok=true detail=бесдушная основа со статами: 3
+[11:37:15] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR_MARK prof_start jewel_craft 1793446635262
+[11:37:15] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR given prof=jewel_craft tool=mmorpg:craft_tools/jewel_craft gear=yes ings=3
+[11:37:15] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:15] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:15] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR gui_open prof=jewel_craft
+[11:37:16] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:16] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:16] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:16] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:17] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:17] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:17] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:17] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:18] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:18] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=jewel_craft filled=1 item=mmorpg:jewelry/ring/iron
+[11:37:18] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:18] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:19] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:19] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:19] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=jewel_craft filled=2 item=mmorpg:ingredient/soul_matrix
+[11:37:19] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR result_ready prof=jewel_craft item=mmorpg:jewelry/ring/iron chance=100
+[11:37:19] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:19] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:20] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:20] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:20] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:20] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:20] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=jewel_craft filled=3 item=mmorpg:ingredient/enigma_stone
+[11:37:21] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:21] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:21] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:21] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:22] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=jewel_craft filled=4 item=mmorpg:ingredient/enigma_stone
+[11:37:22] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:22] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:22] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:22] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:23] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:23] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:23] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=jewel_craft filled=0 item=-
+[11:37:23] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR taken prof=jewel_craft slot=-2
+[11:37:23] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:23] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:24] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:24] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:24] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:24] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:24] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR crafted prof=jewel_craft ok=true item=mmorpg:jewelry/ring/iron stats=3 exp_gain=true
+[11:37:24] [Render thread/INFO] (Minecraft) [System] [CHAT] Jewel Crafting повышен в уровне!
+[11:37:24] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR prof=jewel_craft verdict=PASS checks=18 gui=true placed=4 result=true taken=true crafted=true item=mmorpg:jewelry/ring/iron stats=3 exp=true
+[11:37:24] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR_MARK prof_end jewel_craft 1793446644959
+[11:37:25] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:25] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:25] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:25] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:26] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:26] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:26] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:26] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:27] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:27] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:27] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:27] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:28] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:28] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:28] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:28] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:29] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:29] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:29] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR done profs=6 passed=6 failed=0
+[11:37:29] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR_MARK audit_end profs_6_failed_0 1793446649413
+[11:37:29] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:29] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:30] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:30] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:30] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:30] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:31] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:31] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:31] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:31] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:32] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:32] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:32] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:32] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:33] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:33] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:34] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:34] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:34] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:34] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:35] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:35] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:35] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:35] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:36] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:36] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:36] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:36] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:37] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:37] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:37] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:37] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:38] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:38] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:38] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:38] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:39] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:39] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:39] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[11:37:39] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0

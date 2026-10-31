@@ -1,0 +1,186 @@
+{
+  "professions": [
+    {
+      "id": "alchemy",
+      "checks": [
+        {
+          "name": "tool_registered",
+          "ok": true,
+          "detail": "CraftToolItems: есть"
+        },
+        {
+          "name": "ingredients_allowed",
+          "ok": true,
+          "detail": "разрешено ингредиентов: 26 (обычных 22)"
+        },
+        {
+          "name": "regular_ingredients",
+          "ok": true,
+          "detail": "обычных ингредиентов: 22 (нужно >= 2 для рецепта аудита)"
+        },
+        {
+          "name": "result_items",
+          "ok": true,
+          "detail": "AlchemyConsumableItem"
+        },
+        {
+          "name": "words_AlchemyDesc",
+          "ok": true,
+          "detail": "Words.AlchemyDesc"
+        }
+      ]
+    },
+    {
+      "id": "inscribing",
+      "checks": [
+        {
+          "name": "tool_registered",
+          "ok": true,
+          "detail": "CraftToolItems: есть"
+        },
+        {
+          "name": "ingredients_allowed",
+          "ok": true,
+          "detail": "разрешено ингредиентов: 13 (обычных 9)"
+        },
+        {
+          "name": "regular_ingredients",
+          "ok": true,
+          "detail": "обычных ингредиентов: 9 (нужно >= 2 для рецепта аудита)"
+        },
+        {
+          "name": "result_items",
+          "ok": true,
+          "detail": "InscribingConsumableItem"
+        },
+        {
+          "name": "words_InscribingDesc",
+          "ok": true,
+          "detail": "Words.InscribingDesc"
+        }
+      ]
+    },
+    {
+      "id": "cooking",
+      "checks": [
+        {
+          "name": "tool_registered",
+          "ok": true,
+          "detail": "CraftToolItems: есть"
+        },
+        {
+          "name": "ingredients_allowed",
+          "ok": true,
+          "detail": "разрешено ингредиентов: 18 (обычных 14)"
+        },
+        {
+          "name": "regular_ingredients",
+          "ok": true,
+          "detail": "обычных ингредиентов: 14 (нужно >= 2 для рецепта аудита)"
+        },
+        {
+          "name": "result_items",
+          "ok": true,
+          "detail": "CookingConsumableItem"
+        },
+        {
+          "name": "words_CookingDesc",
+          "ok": true,
+          "detail": "Words.CookingDesc"
+        }
+      ]
+    },
+    {
+      "id": "jewel_craft",
+      "checks": [
+        {
+          "name": "tool_registered",
+          "ok": true,
+          "detail": "CraftToolItems: есть"
+        },
+        {
+          "name": "ingredients_allowed",
+          "ok": true,
+          "detail": "разрешено ингредиентов: 15 (обычных 11)"
+        },
+        {
+          "name": "regular_ingredients",
+          "ok": true,
+          "detail": "обычных ингредиентов: 11 (нужно >= 2 для рецепта аудита)"
+        },
+        {
+          "name": "gear_mapping",
+          "ok": true,
+          "detail": "gearMatchesProfession в PlayerSkillEnum"
+        },
+        {
+          "name": "words_JewelCraftingDesc",
+          "ok": true,
+          "detail": "Words.JewelCraftingDesc"
+        }
+      ]
+    },
+    {
+      "id": "armor_craft",
+      "checks": [
+        {
+          "name": "tool_registered",
+          "ok": true,
+          "detail": "CraftToolItems: есть"
+        },
+        {
+          "name": "ingredients_allowed",
+          "ok": true,
+          "detail": "разрешено ингредиентов: 12 (обычных 8)"
+        },
+        {
+          "name": "regular_ingredients",
+          "ok": true,
+          "detail": "обычных ингредиентов: 8 (нужно >= 2 для рецепта аудита)"
+        },
+        {
+          "name": "gear_mapping",
+          "ok": true,
+          "detail": "gearMatchesProfession в PlayerSkillEnum"
+        },
+        {
+          "name": "words_ArmorCraftingDesc",
+          "ok": true,
+          "detail": "Words.ArmorCraftingDesc"
+        }
+      ]
+    },
+    {
+      "id": "wep_craft",
+      "checks": [
+        {
+          "name": "tool_registered",
+          "ok": true,
+          "detail": "CraftToolItems: есть"
+        },
+        {
+          "name": "ingredients_allowed",
+          "ok": true,
+          "detail": "разрешено ингредиентов: 12 (обычных 9)"
+        },
+        {
+          "name": "regular_ingredients",
+          "ok": true,
+          "detail": "обычных ингредиентов: 9 (нужно >= 2 для рецепта аудита)"
+        },
+        {
+          "name": "gear_mapping",
+          "ok": true,
+          "detail": "gearMatchesProfession в PlayerSkillEnum"
+        },
+        {
+          "name": "words_WeaponCraftingDesc",
+          "ok": true,
+          "detail": "Words.WeaponCraftingDesc"
+        }
+      ]
+    }
+  ],
+  "problems": [],
+  "warnings": []
+}
