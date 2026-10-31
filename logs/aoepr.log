@@ -1,0 +1,315 @@
+[08:07:17] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR старт прогона what=all
+[08:07:17] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR режим: creative (инструмент и ингредиенты выдаются без выживания)
+[08:07:17] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR уровень игрока выставлен на 40
+[08:07:17] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR start what=all profs=6
+[08:07:17] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=tool_registered ok=true detail=mmorpg:craft_tools/alchemy
+[08:07:17] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=ingredients_available ok=true detail=доступно ингредиентов: 26
+[08:07:17] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=has_regular_ingredients ok=true detail=soul_matrix=true, обычных=22
+[08:07:17] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=grid_empty_fails ok=true detail=No Ingredients.
+[08:07:17] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=junk_rejected ok=true detail=палка в слот не должна проходить
+[08:07:17] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=ingredient_accepted ok=true detail=red_coral
+[08:07:17] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=wrong_prof_rejected ok=true detail=fire_stone
+[08:07:17] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=full_recipe_works ok=true detail=
+[08:07:17] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=result_process_saved ok=true detail=ингредиентов в процессе: 3
+[08:07:17] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=success_chance_100 ok=true detail=шанс успеха: 100%
+[08:07:17] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=stat_multi_sane ok=true detail=множитель: 100%
+[08:07:17] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=alchemy name=crafted_output_valid ok=true detail=статов в расходуемом: 3
+[08:07:17] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR given prof=alchemy tool=mmorpg:craft_tools/alchemy gear=no ings=3
+[08:07:19] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR gui_open prof=alchemy
+[08:07:22] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=alchemy filled=1 item=mmorpg:ingredient/soul_matrix
+[08:07:22] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR result_ready prof=alchemy item=mmorpg:craft_result/alchemy/3 chance=100
+[08:07:23] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=alchemy filled=2 item=mmorpg:ingredient/red_coral
+[08:07:24] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=alchemy filled=3 item=mmorpg:ingredient/enigma_stone
+[08:07:25] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=alchemy filled=0 item=-
+[08:07:25] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR taken prof=alchemy slot=-2
+[08:07:26] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR crafted prof=alchemy ok=true item=mmorpg:craft_result/alchemy/4 stats=3 exp_gain=true
+[08:07:26] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR prof=alchemy verdict=PASS checks=12 gui=true placed=3 result=true taken=true crafted=true item=mmorpg:craft_result/alchemy/4 stats=3 exp=true
+[08:07:29] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=tool_registered ok=true detail=mmorpg:craft_tools/inscribing
+[08:07:29] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=ingredients_available ok=true detail=доступно ингредиентов: 13
+[08:07:29] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=has_regular_ingredients ok=true detail=soul_matrix=true, обычных=9
+[08:07:29] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=grid_empty_fails ok=true detail=No Ingredients.
+[08:07:29] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=junk_rejected ok=true detail=палка в слот не должна проходить
+[08:07:29] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=ingredient_accepted ok=true detail=redstone_crystal
+[08:07:29] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=wrong_prof_rejected ok=true detail=red_coral
+[08:07:29] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=full_recipe_works ok=true detail=
+[08:07:29] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=result_process_saved ok=true detail=ингредиентов в процессе: 3
+[08:07:29] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=success_chance_100 ok=true detail=шанс успеха: 100%
+[08:07:29] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=stat_multi_sane ok=true detail=множитель: 100%
+[08:07:29] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=inscribing name=crafted_output_valid ok=true detail=статов в расходуемом: 2
+[08:07:29] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR given prof=inscribing tool=mmorpg:craft_tools/inscribing gear=no ings=3
+[08:07:30] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR gui_open prof=inscribing
+[08:07:32] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=inscribing filled=1 item=mmorpg:ingredient/soul_matrix
+[08:07:32] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR result_ready prof=inscribing item=mmorpg:craft_result/inscribing/4 chance=100
+[08:07:33] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=inscribing filled=2 item=mmorpg:ingredient/redstone_crystal
+[08:07:35] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=inscribing filled=3 item=mmorpg:ingredient/magic_log
+[08:07:36] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=inscribing filled=0 item=-
+[08:07:36] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR taken prof=inscribing slot=-2
+[08:07:37] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR crafted prof=inscribing ok=true item=mmorpg:craft_result/inscribing/2 stats=2 exp_gain=true
+[08:07:37] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR prof=inscribing verdict=PASS checks=12 gui=true placed=3 result=true taken=true crafted=true item=mmorpg:craft_result/inscribing/2 stats=2 exp=true
+[08:07:42] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=tool_registered ok=true detail=mmorpg:craft_tools/cooking
+[08:07:42] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=ingredients_available ok=true detail=доступно ингредиентов: 18
+[08:07:42] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=has_regular_ingredients ok=true detail=soul_matrix=true, обычных=14
+[08:07:42] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=grid_empty_fails ok=true detail=No Ingredients.
+[08:07:42] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=junk_rejected ok=true detail=палка в слот не должна проходить
+[08:07:42] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=ingredient_accepted ok=true detail=red_coral
+[08:07:42] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=wrong_prof_rejected ok=true detail=enigma_stone
+[08:07:42] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=full_recipe_works ok=true detail=
+[08:07:42] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=result_process_saved ok=true detail=ингредиентов в процессе: 3
+[08:07:42] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=success_chance_100 ok=true detail=шанс успеха: 100%
+[08:07:42] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=stat_multi_sane ok=true detail=множитель: 100%
+[08:07:42] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=cooking name=crafted_output_valid ok=true detail=статов в расходуемом: 3
+[08:07:42] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR given prof=cooking tool=mmorpg:craft_tools/cooking gear=no ings=3
+[08:07:42] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR gui_open prof=cooking
+[08:07:45] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=cooking filled=1 item=mmorpg:ingredient/soul_matrix
+[08:07:45] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR result_ready prof=cooking item=mmorpg:craft_result/cooking/1 chance=100
+[08:07:46] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=cooking filled=2 item=mmorpg:ingredient/red_coral
+[08:07:47] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=cooking filled=3 item=mmorpg:ingredient/yarrow_flower
+[08:07:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=cooking filled=0 item=-
+[08:07:48] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR taken prof=cooking slot=-2
+[08:07:49] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR crafted prof=cooking ok=true item=mmorpg:craft_result/cooking/2 stats=3 exp_gain=true
+[08:07:49] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR prof=cooking verdict=PASS checks=12 gui=true placed=3 result=true taken=true crafted=true item=mmorpg:craft_result/cooking/2 stats=3 exp=true
+[08:07:52] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=tool_registered ok=true detail=mmorpg:craft_tools/armor_craft
+[08:07:52] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=ingredients_available ok=true detail=доступно ингредиентов: 12
+[08:07:52] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=has_regular_ingredients ok=true detail=soul_matrix=true, обычных=8
+[08:07:52] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=gear_base_found ok=true detail=minecraft:iron_chestplate
+[08:07:52] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=gear_slot_matches ok=true detail=chest
+[08:07:52] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=grid_empty_fails ok=true detail=This recipe requires gear as ingredient
+[08:07:52] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=junk_rejected ok=true detail=палка в слот не должна проходить
+[08:07:52] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=ingredient_accepted ok=true detail=fire_stone
+[08:07:52] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=gear_accepted ok=true detail=minecraft:iron_chestplate
+[08:07:52] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=soulless_gear_accepted ok=true detail=бесдушная основа проходит
+[08:07:52] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=souled_gear_rejected ok=true detail=The used gear has stats already
+[08:07:52] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=crafted_stats_rejected ok=true detail=The used gear has stats already
+[08:07:52] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=wrong_prof_rejected ok=true detail=red_coral
+[08:07:52] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=full_recipe_works ok=true detail=
+[08:07:52] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=result_process_saved ok=true detail=ингредиентов в процессе: 3
+[08:07:52] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=success_chance_100 ok=true detail=шанс успеха: 100%
+[08:07:52] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=stat_multi_sane ok=true detail=множитель: 100%
+[08:07:52] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=armor_craft name=crafted_output_valid ok=true detail=бесдушная основа со статами: 3
+[08:07:52] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR given prof=armor_craft tool=mmorpg:craft_tools/armor_craft gear=yes ings=3
+[08:07:53] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR gui_open prof=armor_craft
+[08:07:55] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=armor_craft filled=1 item=minecraft:iron_chestplate
+[08:07:57] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=armor_craft filled=2 item=mmorpg:ingredient/soul_matrix
+[08:07:57] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR result_ready prof=armor_craft item=minecraft:iron_chestplate chance=100
+[08:07:58] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=armor_craft filled=3 item=mmorpg:ingredient/fire_stone
+[08:07:59] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=armor_craft filled=4 item=mmorpg:ingredient/fire_stone
+[08:08:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=armor_craft filled=0 item=-
+[08:08:00] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR taken prof=armor_craft slot=-2
+[08:08:01] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR crafted prof=armor_craft ok=true item=minecraft:iron_chestplate stats=3 exp_gain=true
+[08:08:01] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR prof=armor_craft verdict=PASS checks=18 gui=true placed=4 result=true taken=true crafted=true item=minecraft:iron_chestplate stats=3 exp=true
+[08:08:04] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=tool_registered ok=true detail=mmorpg:craft_tools/wep_craft
+[08:08:04] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=ingredients_available ok=true detail=доступно ингредиентов: 12
+[08:08:04] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=has_regular_ingredients ok=true detail=soul_matrix=true, обычных=9
+[08:08:04] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=gear_base_found ok=true detail=minecraft:iron_sword
+[08:08:04] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=gear_slot_matches ok=true detail=sword
+[08:08:04] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=grid_empty_fails ok=true detail=This recipe requires gear as ingredient
+[08:08:04] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=junk_rejected ok=true detail=палка в слот не должна проходить
+[08:08:04] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=ingredient_accepted ok=true detail=enigma_stone
+[08:08:04] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=gear_accepted ok=true detail=minecraft:iron_sword
+[08:08:04] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=soulless_gear_accepted ok=true detail=бесдушная основа проходит
+[08:08:04] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=souled_gear_rejected ok=true detail=The used gear has stats already
+[08:08:04] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=crafted_stats_rejected ok=true detail=The used gear has stats already
+[08:08:04] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=wrong_prof_rejected ok=true detail=red_coral
+[08:08:04] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=full_recipe_works ok=true detail=
+[08:08:04] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=result_process_saved ok=true detail=ингредиентов в процессе: 3
+[08:08:04] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=success_chance_100 ok=true detail=шанс успеха: 100%
+[08:08:04] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=stat_multi_sane ok=true detail=множитель: 100%
+[08:08:04] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=wep_craft name=crafted_output_valid ok=true detail=бесдушная основа со статами: 3
+[08:08:04] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR given prof=wep_craft tool=mmorpg:craft_tools/wep_craft gear=yes ings=3
+[08:08:05] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR gui_open prof=wep_craft
+[08:08:07] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=wep_craft filled=1 item=minecraft:iron_sword
+[08:08:08] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=wep_craft filled=2 item=mmorpg:ingredient/soul_matrix
+[08:08:08] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR result_ready prof=wep_craft item=minecraft:iron_sword chance=100
+[08:08:09] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=wep_craft filled=3 item=mmorpg:ingredient/enigma_stone
+[08:08:11] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=wep_craft filled=4 item=mmorpg:ingredient/enigma_stone
+[08:08:12] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=wep_craft filled=0 item=-
+[08:08:12] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR taken prof=wep_craft slot=-2
+[08:08:13] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR crafted prof=wep_craft ok=true item=minecraft:iron_sword stats=3 exp_gain=true
+[08:08:13] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR prof=wep_craft verdict=PASS checks=18 gui=true placed=4 result=true taken=true crafted=true item=minecraft:iron_sword stats=3 exp=true
+[08:08:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=tool_registered ok=true detail=mmorpg:craft_tools/jewel_craft
+[08:08:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=ingredients_available ok=true detail=доступно ингредиентов: 15
+[08:08:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=has_regular_ingredients ok=true detail=soul_matrix=true, обычных=11
+[08:08:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=gear_base_found ok=true detail=mmorpg:jewelry/ring/iron
+[08:08:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=gear_slot_matches ok=true detail=ring
+[08:08:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=grid_empty_fails ok=true detail=This recipe requires gear as ingredient
+[08:08:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=junk_rejected ok=true detail=палка в слот не должна проходить
+[08:08:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=ingredient_accepted ok=true detail=enigma_stone
+[08:08:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=gear_accepted ok=true detail=mmorpg:jewelry/ring/iron
+[08:08:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=soulless_gear_accepted ok=true detail=бесдушная основа проходит
+[08:08:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=souled_gear_rejected ok=true detail=The used gear has stats already
+[08:08:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=crafted_stats_rejected ok=true detail=The used gear has stats already
+[08:08:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=wrong_prof_rejected ok=true detail=red_coral
+[08:08:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=full_recipe_works ok=true detail=
+[08:08:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=result_process_saved ok=true detail=ингредиентов в процессе: 3
+[08:08:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=success_chance_100 ok=true detail=шанс успеха: 100%
+[08:08:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=stat_multi_sane ok=true detail=множитель: 100%
+[08:08:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR check prof=jewel_craft name=crafted_output_valid ok=true detail=бесдушная основа со статами: 3
+[08:08:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR given prof=jewel_craft tool=mmorpg:craft_tools/jewel_craft gear=yes ings=3
+[08:08:18] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR gui_open prof=jewel_craft
+[08:08:21] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=jewel_craft filled=1 item=mmorpg:jewelry/ring/iron
+[08:08:22] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=jewel_craft filled=2 item=mmorpg:ingredient/soul_matrix
+[08:08:22] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR result_ready prof=jewel_craft item=mmorpg:jewelry/ring/iron chance=100
+[08:08:23] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=jewel_craft filled=3 item=mmorpg:ingredient/enigma_stone
+[08:08:24] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=jewel_craft filled=4 item=mmorpg:ingredient/enigma_stone
+[08:08:26] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR placed prof=jewel_craft filled=0 item=-
+[08:08:26] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR taken prof=jewel_craft slot=-2
+[08:08:27] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR crafted prof=jewel_craft ok=true item=mmorpg:jewelry/ring/iron stats=3 exp_gain=true
+[08:08:27] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR prof=jewel_craft verdict=PASS checks=18 gui=true placed=4 result=true taken=true crafted=true item=mmorpg:jewelry/ring/iron stats=3 exp=true
+[08:08:31] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR done profs=6 passed=6 failed=0
+AOEPR режим: creative (инструмент и ингредиенты выдаются без выживания)
+AOEPR уровень игрока выставлен на 40
+AOEPR start what=all profs=6
+AOEPR check prof=alchemy name=tool_registered ok=true detail=mmorpg:craft_tools/alchemy
+AOEPR check prof=alchemy name=ingredients_available ok=true detail=доступно ингредиентов: 26
+AOEPR check prof=alchemy name=has_regular_ingredients ok=true detail=soul_matrix=true, обычных=22
+AOEPR check prof=alchemy name=grid_empty_fails ok=true detail=No Ingredients.
+AOEPR check prof=alchemy name=junk_rejected ok=true detail=палка в слот не должна проходить
+AOEPR check prof=alchemy name=ingredient_accepted ok=true detail=red_coral
+AOEPR check prof=alchemy name=wrong_prof_rejected ok=true detail=fire_stone
+AOEPR check prof=alchemy name=full_recipe_works ok=true detail=
+AOEPR check prof=alchemy name=result_process_saved ok=true detail=ингредиентов в процессе: 3
+AOEPR check prof=alchemy name=success_chance_100 ok=true detail=шанс успеха: 100%
+AOEPR check prof=alchemy name=stat_multi_sane ok=true detail=множитель: 100%
+AOEPR check prof=alchemy name=crafted_output_valid ok=true detail=статов в расходуемом: 3
+AOEPR given prof=alchemy tool=mmorpg:craft_tools/alchemy gear=no ings=3
+AOEPR gui_open prof=alchemy
+AOEPR placed prof=alchemy filled=1 item=mmorpg:ingredient/soul_matrix
+AOEPR result_ready prof=alchemy item=mmorpg:craft_result/alchemy/3 chance=100
+AOEPR placed prof=alchemy filled=2 item=mmorpg:ingredient/red_coral
+AOEPR placed prof=alchemy filled=3 item=mmorpg:ingredient/enigma_stone
+AOEPR placed prof=alchemy filled=0 item=-
+AOEPR taken prof=alchemy slot=-2
+AOEPR crafted prof=alchemy ok=true item=mmorpg:craft_result/alchemy/4 stats=3 exp_gain=true
+AOEPR prof=alchemy verdict=PASS checks=12 gui=true placed=3 result=true taken=true crafted=true item=mmorpg:craft_result/alchemy/4 stats=3 exp=true
+AOEPR check prof=inscribing name=tool_registered ok=true detail=mmorpg:craft_tools/inscribing
+AOEPR check prof=inscribing name=ingredients_available ok=true detail=доступно ингредиентов: 13
+AOEPR check prof=inscribing name=has_regular_ingredients ok=true detail=soul_matrix=true, обычных=9
+AOEPR check prof=inscribing name=grid_empty_fails ok=true detail=No Ingredients.
+AOEPR check prof=inscribing name=junk_rejected ok=true detail=палка в слот не должна проходить
+AOEPR check prof=inscribing name=ingredient_accepted ok=true detail=redstone_crystal
+AOEPR check prof=inscribing name=wrong_prof_rejected ok=true detail=red_coral
+AOEPR check prof=inscribing name=full_recipe_works ok=true detail=
+AOEPR check prof=inscribing name=result_process_saved ok=true detail=ингредиентов в процессе: 3
+AOEPR check prof=inscribing name=success_chance_100 ok=true detail=шанс успеха: 100%
+AOEPR check prof=inscribing name=stat_multi_sane ok=true detail=множитель: 100%
+AOEPR check prof=inscribing name=crafted_output_valid ok=true detail=статов в расходуемом: 2
+AOEPR given prof=inscribing tool=mmorpg:craft_tools/inscribing gear=no ings=3
+AOEPR gui_open prof=inscribing
+AOEPR placed prof=inscribing filled=1 item=mmorpg:ingredient/soul_matrix
+AOEPR result_ready prof=inscribing item=mmorpg:craft_result/inscribing/4 chance=100
+AOEPR placed prof=inscribing filled=2 item=mmorpg:ingredient/redstone_crystal
+AOEPR placed prof=inscribing filled=3 item=mmorpg:ingredient/magic_log
+AOEPR placed prof=inscribing filled=0 item=-
+AOEPR taken prof=inscribing slot=-2
+AOEPR crafted prof=inscribing ok=true item=mmorpg:craft_result/inscribing/2 stats=2 exp_gain=true
+AOEPR prof=inscribing verdict=PASS checks=12 gui=true placed=3 result=true taken=true crafted=true item=mmorpg:craft_result/inscribing/2 stats=2 exp=true
+AOEPR check prof=cooking name=tool_registered ok=true detail=mmorpg:craft_tools/cooking
+AOEPR check prof=cooking name=ingredients_available ok=true detail=доступно ингредиентов: 18
+AOEPR check prof=cooking name=has_regular_ingredients ok=true detail=soul_matrix=true, обычных=14
+AOEPR check prof=cooking name=grid_empty_fails ok=true detail=No Ingredients.
+AOEPR check prof=cooking name=junk_rejected ok=true detail=палка в слот не должна проходить
+AOEPR check prof=cooking name=ingredient_accepted ok=true detail=red_coral
+AOEPR check prof=cooking name=wrong_prof_rejected ok=true detail=enigma_stone
+AOEPR check prof=cooking name=full_recipe_works ok=true detail=
+AOEPR check prof=cooking name=result_process_saved ok=true detail=ингредиентов в процессе: 3
+AOEPR check prof=cooking name=success_chance_100 ok=true detail=шанс успеха: 100%
+AOEPR check prof=cooking name=stat_multi_sane ok=true detail=множитель: 100%
+AOEPR check prof=cooking name=crafted_output_valid ok=true detail=статов в расходуемом: 3
+AOEPR given prof=cooking tool=mmorpg:craft_tools/cooking gear=no ings=3
+AOEPR gui_open prof=cooking
+AOEPR placed prof=cooking filled=1 item=mmorpg:ingredient/soul_matrix
+AOEPR result_ready prof=cooking item=mmorpg:craft_result/cooking/1 chance=100
+AOEPR placed prof=cooking filled=2 item=mmorpg:ingredient/red_coral
+AOEPR placed prof=cooking filled=3 item=mmorpg:ingredient/yarrow_flower
+AOEPR placed prof=cooking filled=0 item=-
+AOEPR taken prof=cooking slot=-2
+AOEPR crafted prof=cooking ok=true item=mmorpg:craft_result/cooking/2 stats=3 exp_gain=true
+AOEPR prof=cooking verdict=PASS checks=12 gui=true placed=3 result=true taken=true crafted=true item=mmorpg:craft_result/cooking/2 stats=3 exp=true
+AOEPR check prof=armor_craft name=tool_registered ok=true detail=mmorpg:craft_tools/armor_craft
+AOEPR check prof=armor_craft name=ingredients_available ok=true detail=доступно ингредиентов: 12
+AOEPR check prof=armor_craft name=has_regular_ingredients ok=true detail=soul_matrix=true, обычных=8
+AOEPR check prof=armor_craft name=gear_base_found ok=true detail=minecraft:iron_chestplate
+AOEPR check prof=armor_craft name=gear_slot_matches ok=true detail=chest
+AOEPR check prof=armor_craft name=grid_empty_fails ok=true detail=This recipe requires gear as ingredient
+AOEPR check prof=armor_craft name=junk_rejected ok=true detail=палка в слот не должна проходить
+AOEPR check prof=armor_craft name=ingredient_accepted ok=true detail=fire_stone
+AOEPR check prof=armor_craft name=gear_accepted ok=true detail=minecraft:iron_chestplate
+AOEPR check prof=armor_craft name=soulless_gear_accepted ok=true detail=бесдушная основа проходит
+AOEPR check prof=armor_craft name=souled_gear_rejected ok=true detail=The used gear has stats already
+AOEPR check prof=armor_craft name=crafted_stats_rejected ok=true detail=The used gear has stats already
+AOEPR check prof=armor_craft name=wrong_prof_rejected ok=true detail=red_coral
+AOEPR check prof=armor_craft name=full_recipe_works ok=true detail=
+AOEPR check prof=armor_craft name=result_process_saved ok=true detail=ингредиентов в процессе: 3
+AOEPR check prof=armor_craft name=success_chance_100 ok=true detail=шанс успеха: 100%
+AOEPR check prof=armor_craft name=stat_multi_sane ok=true detail=множитель: 100%
+AOEPR check prof=armor_craft name=crafted_output_valid ok=true detail=бесдушная основа со статами: 3
+AOEPR given prof=armor_craft tool=mmorpg:craft_tools/armor_craft gear=yes ings=3
+AOEPR gui_open prof=armor_craft
+AOEPR placed prof=armor_craft filled=1 item=minecraft:iron_chestplate
+AOEPR placed prof=armor_craft filled=2 item=mmorpg:ingredient/soul_matrix
+AOEPR result_ready prof=armor_craft item=minecraft:iron_chestplate chance=100
+AOEPR placed prof=armor_craft filled=3 item=mmorpg:ingredient/fire_stone
+AOEPR placed prof=armor_craft filled=4 item=mmorpg:ingredient/fire_stone
+AOEPR placed prof=armor_craft filled=0 item=-
+AOEPR taken prof=armor_craft slot=-2
+AOEPR crafted prof=armor_craft ok=true item=minecraft:iron_chestplate stats=3 exp_gain=true
+AOEPR prof=armor_craft verdict=PASS checks=18 gui=true placed=4 result=true taken=true crafted=true item=minecraft:iron_chestplate stats=3 exp=true
+AOEPR check prof=wep_craft name=tool_registered ok=true detail=mmorpg:craft_tools/wep_craft
+AOEPR check prof=wep_craft name=ingredients_available ok=true detail=доступно ингредиентов: 12
+AOEPR check prof=wep_craft name=has_regular_ingredients ok=true detail=soul_matrix=true, обычных=9
+AOEPR check prof=wep_craft name=gear_base_found ok=true detail=minecraft:iron_sword
+AOEPR check prof=wep_craft name=gear_slot_matches ok=true detail=sword
+AOEPR check prof=wep_craft name=grid_empty_fails ok=true detail=This recipe requires gear as ingredient
+AOEPR check prof=wep_craft name=junk_rejected ok=true detail=палка в слот не должна проходить
+AOEPR check prof=wep_craft name=ingredient_accepted ok=true detail=enigma_stone
+AOEPR check prof=wep_craft name=gear_accepted ok=true detail=minecraft:iron_sword
+AOEPR check prof=wep_craft name=soulless_gear_accepted ok=true detail=бесдушная основа проходит
+AOEPR check prof=wep_craft name=souled_gear_rejected ok=true detail=The used gear has stats already
+AOEPR check prof=wep_craft name=crafted_stats_rejected ok=true detail=The used gear has stats already
+AOEPR check prof=wep_craft name=wrong_prof_rejected ok=true detail=red_coral
+AOEPR check prof=wep_craft name=full_recipe_works ok=true detail=
+AOEPR check prof=wep_craft name=result_process_saved ok=true detail=ингредиентов в процессе: 3
+AOEPR check prof=wep_craft name=success_chance_100 ok=true detail=шанс успеха: 100%
+AOEPR check prof=wep_craft name=stat_multi_sane ok=true detail=множитель: 100%
+AOEPR check prof=wep_craft name=crafted_output_valid ok=true detail=бесдушная основа со статами: 3
+AOEPR given prof=wep_craft tool=mmorpg:craft_tools/wep_craft gear=yes ings=3
+AOEPR gui_open prof=wep_craft
+AOEPR placed prof=wep_craft filled=1 item=minecraft:iron_sword
+AOEPR placed prof=wep_craft filled=2 item=mmorpg:ingredient/soul_matrix
+AOEPR result_ready prof=wep_craft item=minecraft:iron_sword chance=100
+AOEPR placed prof=wep_craft filled=3 item=mmorpg:ingredient/enigma_stone
+AOEPR placed prof=wep_craft filled=4 item=mmorpg:ingredient/enigma_stone
+AOEPR placed prof=wep_craft filled=0 item=-
+AOEPR taken prof=wep_craft slot=-2
+AOEPR crafted prof=wep_craft ok=true item=minecraft:iron_sword stats=3 exp_gain=true
+AOEPR prof=wep_craft verdict=PASS checks=18 gui=true placed=4 result=true taken=true crafted=true item=minecraft:iron_sword stats=3 exp=true
+AOEPR check prof=jewel_craft name=tool_registered ok=true detail=mmorpg:craft_tools/jewel_craft
+AOEPR check prof=jewel_craft name=ingredients_available ok=true detail=доступно ингредиентов: 15
+AOEPR check prof=jewel_craft name=has_regular_ingredients ok=true detail=soul_matrix=true, обычных=11
+AOEPR check prof=jewel_craft name=gear_base_found ok=true detail=mmorpg:jewelry/ring/iron
+AOEPR check prof=jewel_craft name=gear_slot_matches ok=true detail=ring
+AOEPR check prof=jewel_craft name=grid_empty_fails ok=true detail=This recipe requires gear as ingredient
+AOEPR check prof=jewel_craft name=junk_rejected ok=true detail=палка в слот не должна проходить
+AOEPR check prof=jewel_craft name=ingredient_accepted ok=true detail=enigma_stone
+AOEPR check prof=jewel_craft name=gear_accepted ok=true detail=mmorpg:jewelry/ring/iron
+AOEPR check prof=jewel_craft name=soulless_gear_accepted ok=true detail=бесдушная основа проходит
+AOEPR check prof=jewel_craft name=souled_gear_rejected ok=true detail=The used gear has stats already
+AOEPR check prof=jewel_craft name=crafted_stats_rejected ok=true detail=The used gear has stats already
+AOEPR check prof=jewel_craft name=wrong_prof_rejected ok=true detail=red_coral
+AOEPR check prof=jewel_craft name=full_recipe_works ok=true detail=
+AOEPR check prof=jewel_craft name=result_process_saved ok=true detail=ингредиентов в процессе: 3
+AOEPR check prof=jewel_craft name=success_chance_100 ok=true detail=шанс успеха: 100%
+AOEPR check prof=jewel_craft name=stat_multi_sane ok=true detail=множитель: 100%
+AOEPR check prof=jewel_craft name=crafted_output_valid ok=true detail=бесдушная основа со статами: 3
+AOEPR given prof=jewel_craft tool=mmorpg:craft_tools/jewel_craft gear=yes ings=3
+AOEPR gui_open prof=jewel_craft
+AOEPR placed prof=jewel_craft filled=1 item=mmorpg:jewelry/ring/iron
+AOEPR placed prof=jewel_craft filled=2 item=mmorpg:ingredient/soul_matrix
+AOEPR result_ready prof=jewel_craft item=mmorpg:jewelry/ring/iron chance=100
+AOEPR placed prof=jewel_craft filled=3 item=mmorpg:ingredient/enigma_stone
+AOEPR placed prof=jewel_craft filled=4 item=mmorpg:ingredient/enigma_stone
+AOEPR placed prof=jewel_craft filled=0 item=-
+AOEPR taken prof=jewel_craft slot=-2
+AOEPR crafted prof=jewel_craft ok=true item=mmorpg:jewelry/ring/iron stats=3 exp_gain=true
+AOEPR prof=jewel_craft verdict=PASS checks=18 gui=true placed=4 result=true taken=true crafted=true item=mmorpg:jewelry/ring/iron stats=3 exp=true
+AOEPR done profs=6 passed=6 failed=0
