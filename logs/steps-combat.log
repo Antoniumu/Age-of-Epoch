@@ -1,0 +1,64 @@
+[11:35:52] DISPLAY=:99, сценарий combat.txt
+[11:35:52] жду окно: дисплей :99, X-сокеты: :100, :99
+[11:35:58] дисплей клиента из /proc/4426/environ: :101 (был :99)
+[11:35:58] XAUTHORITY клиента: /tmp/xvfb-run.IKYF1P/Xauthority
+[11:36:05] окно 2097203 на :101: Minecraft* 26.3 | WINDOW=2097203 X=0 Y=152 WIDTH=1280 HEIGHT=720 SCREEN=0 | Map State: IsViewable
+[11:36:07] в логе найдено: [11:36:07] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/items.png-atlas
+[11:36:15] снимок 00-main-menu (окно 2097203, 717 КБ)
+[11:36:15] курсор 640,296
+[11:36:15] клик 640,296 (экран 640,448, кнопка 1)
+[11:36:20] снимок 01-world-list (окно 2097203, 382 КБ)
+[11:36:20] курсор 640,124
+[11:36:21] клик 640,124 (экран 640,276, кнопка 1)
+[11:36:22] курсор 483,637
+[11:36:22] клик 483,637 (экран 483,789, кнопка 1)
+[11:37:07] снимок 03-in-world (окно 2097203, 320 КБ)
+[11:37:07] курсор 797,637
+[11:37:07] клик 797,637 (экран 797,789, кнопка 1)
+[11:37:10] курсор 480,688
+[11:37:11] клик 480,688 (экран 480,840, кнопка 1)
+[11:37:56] снимок 03b-in-world-created (окно 2097203, 320 КБ)
+[11:37:56] отметка в логе: байт 6409817
+[11:37:56] создан файл-триггер run/aoe-devtest.flag
+[11:37:57] в логе найдено (новое): [11:37:57] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST dps hits=10 requested=400.0 recorded=320.0 elapsed_ms=545 dps_chart=587.2 dps_hud=640.0 fight_activ
+[11:37:57] снимок 04-combat-hud (окно 2097203, 366 КБ)
+[11:37:57] в логе найдено (новое): [11:37:57] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST gear_equip max_before=30.0 max_after=32.4 check_equip_raises_max=true
+[11:38:00] снимок 05-gear-equip-max-hp (окно 2097203, 316 КБ)
+[11:38:05] в логе найдено (новое): [11:38:05] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST gear_unequip max_before=30.0 max_after=30.0 check_unequip_restores_max=true
+[11:38:07] снимок 06-gear-unequip-max-hp (окно 2097203, 322 КБ)
+[11:38:07] в логе найдено (новое): [11:38:06] [Server thread/INFO] (AgeOfEpoch-DevTest) AOETEST summary checks=74 failed=0
+[11:38:15] снимок 08-after-fight (окно 2097203, 320 КБ)
+[11:38:15] клавиша E
+[11:38:17] курсор 497,490
+[11:38:18] снимок 09-inventory-soulless-decheap (окно 2097203, 151 КБ)
+[11:38:18] курсор 534,490
+[11:38:20] снимок 10-inventory-soulless-neserite (окно 2097203, 149 КБ)
+[11:38:20] курсор 571,490
+[11:38:21] снимок 11-inventory-souled (окно 2097203, 149 КБ)
+[11:38:21] курсор 608,490
+[11:38:23] снимок 12-inventory-soul (окно 2097203, 164 КБ)
+[11:38:23] курсор 645,490
+[11:38:24] снимок 12b-inventory-soulless-whole (окно 2097203, 147 КБ)
+[11:38:24] клавиша E
+[11:38:25] удержание F7 400 мс (фокус: 2097203)
+[11:38:27] снимок 13-hud-hidden (окно 2097203, 316 КБ)
+[11:38:28] удержание F7 400 мс (фокус: 2097203)
+[11:38:29] снимок 14-hud-shown (окно 2097203, 320 КБ)
+[11:38:30] удержание F8 400 мс (фокус: 2097203)
+[11:38:31] снимок 15-hud-position (окно 2097203, 319 КБ)
+[11:38:32] jstack[combat]: pid 4426, 400 строк -> jstack-combat.txt
+[11:38:32] render thread:
+    "Render thread" #3 [4427] prio=5 os_prio=0 cpu=21437.30ms elapsed=154.96s tid=0x00007f1028030760 nid=4427 runnable  [0x00007f102f1fe000]
+    java.lang.Thread.State: RUNNABLE
+    at java.lang.invoke.LambdaForm$MH/0x00000000495b8800.invoke(java.base@25.0.5/LambdaForm$MH)
+    at java.lang.invoke.LambdaForm$MH/0x000000004948f400.invokeExact_MT(java.base@25.0.5/LambdaForm$MH)
+    at jdk.internal.foreign.abi.DowncallStub/0x000000004948c800.invoke(java.base@25.0.5/Unknown Source)
+    at java.lang.invoke.LambdaForm$DMH/0x000000004948cc00.invokeStatic(java.base@25.0.5/LambdaForm$DMH)
+    at java.lang.invoke.LambdaForm$MH/0x00000000495b8400.invoke(java.base@25.0.5/LambdaForm$MH)
+    at java.lang.invoke.LambdaForm$MH/0x000000004948ec00.invokeExact_MT(java.base@25.0.5/LambdaForm$MH)
+    at org.lwjgl.system.JNIBindingsImpl/0x00000000482d0000.callPJPV(Unknown Source)
+    at org.lwjgl.system.JNI.callPJPV(JNI.java:2563)
+    at org.lwjgl.vulkan.KHRPushDescriptor.nvkCmdPushDescriptorSetKHR(KHRPushDescriptor.java:37)
+    at org.lwjgl.vulkan.KHRPushDescriptor.vkCmdPushDescriptorSetKHR(KHRPushDescriptor.java:42)
+[11:38:32] конец сценария combat
+[11:38:32] итог: снимков 16, ошибок 0
