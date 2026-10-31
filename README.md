@@ -57,6 +57,9 @@
 gh run download --name Age-of-Epoch-jar -D mods
 ```
 
+Уведомления о коммитах, PR, релизах и итогах CI/аудитов можно получать в Discord —
+настройка в один секрет, см. [`docs/DISCORD.md`](docs/DISCORD.md).
+
 Локально требования: **JDK 25**, доступ в интернет к `maven.fabricmc.net` и Mojang-репозиториям.
 
 ```bash
