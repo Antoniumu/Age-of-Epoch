@@ -19,7 +19,9 @@ set -u
 cd "$(dirname "$0")/../.." || exit 1
 
 action="${1:-start}"
-out="run/e2e/spell-video.mp4"
+# Куда писать видео: по умолчанию — файл аудита умений; аудит профессий
+# передаёт свой путь через VIDEO_OUT (см. scenarios/professions.txt).
+out="${VIDEO_OUT:-run/e2e/spell-video.mp4}"
 pidfile="run/e2e/ffmpeg.pid"
 log="run/e2e/ffmpeg.log"
 startfile="run/e2e/video-start.txt"

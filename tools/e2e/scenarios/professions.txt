@@ -1,0 +1,358 @@
+# Сценарий: аудит ВСЕХ профессий ремесла — настоящая сетка крафта 3×2,
+# раскладка ингредиентов МЫШЬКОЙ и запись видео.
+#
+# Что здесь важно:
+#   * мир создаётся тем же путём, что в combat/spells — координаты проверены CI;
+#   * аудит запускает флаг-файл run/aoe-profession-audit.flag: ProfessionAuditProbe
+#     выдаёт инструмент + ингредиенты и следит за контейнером, а сценарий двигает
+#     предметы настоящими кликами;
+#   * КАЖДОЕ перемещение предмета в слоты сетки крафта (3×2) сопровождается
+#     отдельным скриншотом — сетка видна в кадре целиком;
+#   * запись видео (ffmpeg/x11grab) стартует ДО флага, чтобы в кадр попали и
+#     проверки, и первый клик, и останавливается после AOEPR done;
+#   * координаты — под окно 1280x720 (run/options.txt, guiScale 2).
+#     ВАЖНО: guiScale 2 означает, что GUI-пространство — 640x360, а экранные
+#     координаты = координаты GUI × 2. ProfCraftScreen 176x207 центрируется в
+#     GUI-пространстве: left=232, top=76, поэтому центр слота (sx,sy) — это
+#     ((232+sx+8)×2, (76+sy+8)×2):
+#       слоты сетки 3×2: 0→(706,190) 2→(742,190) 4→(778,190) / 1→(706,226);
+#       слот результата: (746,318);
+#       главный инвентарь, ряд 1 (слоты 9..13): (496,418) (532,418) (568,418)
+#       (604,418) (640,418) — слоты хотбара НЕ используются: их вид зависит
+#       от выбранного слота;
+#       раздача зонда: 9 — основа (гир-профессии), 10 — матрица душ
+#       (+20% успеха), 11/12 — обычные ингредиенты, 13 — пустой (результат);
+#       инструмент зонд кладёт в руку (ПКМ открывает меню крафта);
+#   * между профессиями сценарий передаёт ход зонду флагом
+#     run/aoe-profession-next.flag: только после него зонд выдаёт предметы
+#     следующей профессии. Без этого экран крафта закрывался прямо из-под
+#     мыши (тултип и Escape уходили в пустоту).
+
+wait_window Minecraft 420000
+wait_log 300000 Created: .*atlas/items
+wait 8000
+shot 00-main-menu
+
+# Главное меню → Одиночная игра → создать мир (как в spells.txt)
+move 640 296
+click 640 296
+wait 4000
+shot 01-world-list
+move 480 688
+click 480 688
+wait 3000
+shot 02-create-world
+move 480 688
+click 480 688
+wait 45000
+shot 03-in-world
+
+# --- запись видео + запуск аудита профессий ---------------------------------
+shell mkdir -p run/e2e
+shell VIDEO_OUT=run/e2e/profession-video.mp4 bash tools/e2e/spell-video.sh start
+wait 2000
+write run/aoe-profession-audit.flag ${AOE_AUDIT_TARGET:-all}
+log флаг аудита профессий поставлен, жду given
+
+# ============================================================================
+# 1. ALCHEMY — расходники (зелья): ингредиенты в сетку 3×2, без основы
+# ============================================================================
+wait_log 120000 AOEPR given prof=alchemy
+rclick 640 360
+wait 1500
+shot alchemy-01-grid-empty
+
+# Матрица душ (инв. 10) → слот сетки 0
+click 532 418
+click 706 190
+wait 300
+shot alchemy-02-slot-1
+
+# Ингредиент A (инв. 11) → слот сетки 2
+click 568 418
+click 742 190
+wait 300
+shot alchemy-03-slot-2
+
+# Ингредиент B (инв. 12) → слот сетки 4
+click 604 418
+click 778 190
+wait 300
+shot alchemy-04-slot-3
+
+move 640 650
+wait 300
+shot alchemy-05-result-ready
+
+# Забираем результат → пустой слот инвентаря 13
+click 746 318
+wait 300
+shot alchemy-06-result-taken
+click 640 418
+wait 300
+shot alchemy-07-stored
+
+wait_log 60000 AOEPR crafted prof=alchemy
+move 640 418
+wait 1200
+shot alchemy-08-tooltip
+key Escape
+wait 600
+shot alchemy-09-closed
+write run/aoe-profession-next.flag go
+wait 500
+
+# ============================================================================
+# 2. INSCRIBING — расходники (свитки)
+# ============================================================================
+wait_log 120000 AOEPR given prof=inscribing
+rclick 640 360
+wait 1500
+shot inscribing-01-grid-empty
+
+click 532 418
+click 706 190
+wait 300
+shot inscribing-02-slot-1
+
+click 568 418
+click 742 190
+wait 300
+shot inscribing-03-slot-2
+
+click 604 418
+click 778 190
+wait 300
+shot inscribing-04-slot-3
+
+move 640 650
+wait 300
+shot inscribing-05-result-ready
+
+click 746 318
+wait 300
+shot inscribing-06-result-taken
+click 640 418
+wait 300
+shot inscribing-07-stored
+
+wait_log 60000 AOEPR crafted prof=inscribing
+move 640 418
+wait 1200
+shot inscribing-08-tooltip
+key Escape
+wait 600
+shot inscribing-09-closed
+write run/aoe-profession-next.flag go
+wait 500
+
+# ============================================================================
+# 3. COOKING — расходники (еда)
+# ============================================================================
+wait_log 120000 AOEPR given prof=cooking
+rclick 640 360
+wait 1500
+shot cooking-01-grid-empty
+
+click 532 418
+click 706 190
+wait 300
+shot cooking-02-slot-1
+
+click 568 418
+click 742 190
+wait 300
+shot cooking-03-slot-2
+
+click 604 418
+click 778 190
+wait 300
+shot cooking-04-slot-3
+
+move 640 650
+wait 300
+shot cooking-05-result-ready
+
+click 746 318
+wait 300
+shot cooking-06-result-taken
+click 640 418
+wait 300
+shot cooking-07-stored
+
+wait_log 60000 AOEPR crafted prof=cooking
+move 640 418
+wait 1200
+shot cooking-08-tooltip
+key Escape
+wait 600
+shot cooking-09-closed
+write run/aoe-profession-next.flag go
+wait 500
+
+# ============================================================================
+# 4. ARMOR_CRAFTING — гир-профессия: сначала основа (нагрудник), потом ингредиенты
+# ============================================================================
+wait_log 120000 AOEPR given prof=armor_craft
+rclick 640 360
+wait 1500
+shot armor_craft-01-grid-empty
+
+# Основа — железный нагрудник (инв. 9) → слот сетки 0
+click 496 418
+click 706 190
+wait 300
+shot armor_craft-02-slot-1
+
+click 532 418
+click 742 190
+wait 300
+shot armor_craft-03-slot-2
+
+click 568 418
+click 778 190
+wait 300
+shot armor_craft-04-slot-3
+
+click 604 418
+click 706 226
+wait 300
+shot armor_craft-05-slot-4
+
+move 640 650
+wait 300
+shot armor_craft-06-result-ready
+
+click 746 318
+wait 300
+shot armor_craft-07-result-taken
+click 640 418
+wait 300
+shot armor_craft-08-stored
+
+wait_log 60000 AOEPR crafted prof=armor_craft
+move 640 418
+wait 1200
+shot armor_craft-09-tooltip
+key Escape
+wait 600
+shot armor_craft-10-closed
+write run/aoe-profession-next.flag go
+wait 500
+
+# ============================================================================
+# 5. WEAPON_CRAFTING — гир-профессия: основа (меч) + ингредиенты
+# ============================================================================
+wait_log 120000 AOEPR given prof=wep_craft
+rclick 640 360
+wait 1500
+shot wep_craft-01-grid-empty
+
+# Основа — железный меч (инв. 9) → слот сетки 0
+click 496 418
+click 706 190
+wait 300
+shot wep_craft-02-slot-1
+
+click 532 418
+click 742 190
+wait 300
+shot wep_craft-03-slot-2
+
+click 568 418
+click 778 190
+wait 300
+shot wep_craft-04-slot-3
+
+click 604 418
+click 706 226
+wait 300
+shot wep_craft-05-slot-4
+
+move 640 650
+wait 300
+shot wep_craft-06-result-ready
+
+click 746 318
+wait 300
+shot wep_craft-07-result-taken
+click 640 418
+wait 300
+shot wep_craft-08-stored
+
+wait_log 60000 AOEPR crafted prof=wep_craft
+move 640 418
+wait 1200
+shot wep_craft-09-tooltip
+key Escape
+wait 600
+shot wep_craft-10-closed
+write run/aoe-profession-next.flag go
+wait 500
+
+# ============================================================================
+# 6. JEWEL_CRAFTING — гир-профессия: основа (кольцо) + ингредиенты
+# ============================================================================
+wait_log 120000 AOEPR given prof=jewel_craft
+rclick 640 360
+wait 1500
+shot jewel_craft-01-grid-empty
+
+# Основа — железное кольцо (инв. 9) → слот сетки 0
+click 496 418
+click 706 190
+wait 300
+shot jewel_craft-02-slot-1
+
+click 532 418
+click 742 190
+wait 300
+shot jewel_craft-03-slot-2
+
+click 568 418
+click 778 190
+wait 300
+shot jewel_craft-04-slot-3
+
+click 604 418
+click 706 226
+wait 300
+shot jewel_craft-05-slot-4
+
+move 640 650
+wait 300
+shot jewel_craft-06-result-ready
+
+click 746 318
+wait 300
+shot jewel_craft-07-result-taken
+click 640 418
+wait 300
+shot jewel_craft-08-stored
+
+wait_log 60000 AOEPR crafted prof=jewel_craft
+move 640 418
+wait 1200
+shot jewel_craft-09-tooltip
+key Escape
+wait 600
+shot jewel_craft-10-closed
+write run/aoe-profession-next.flag go
+wait 500
+
+# ============================================================================
+# Финал: ждём отчёт зонда, показываем экран профессий, останавливаем видео
+# ============================================================================
+wait_log 120000 AOEPR done
+wait 3000
+shot 90-audit-done
+
+hold h 600
+wait 2500
+shot 91-character
+hold h 600
+wait 1500
+
+shell VIDEO_OUT=run/e2e/profession-video.mp4 bash tools/e2e/spell-video.sh stop
+jstack professions
+log конец сценария professions

@@ -1,0 +1,353 @@
+name: Profession audit (all professions + mouse video)
+
+# Что делает этот пайплайн:
+#   1) Структурный аудит без игры (tools/verify/check_professions.py): у каждой
+#      профессии должен быть инструмент, ингредиенты, результат, локализация,
+#      сетка крафта 3×2 и фикс проверки «настоящих статов» снаряжения.
+#   2) Живой аудит: dev-клиент под Xvfb создаёт мир, ProfessionAuditProbe
+#      выдаёт инструменты и ингредиенты, а сценарий МЫШЬКОЙ раскладывает предметы
+#      по слотам сетки крафта 3×2 (каждое перемещение — отдельный скриншот) и
+#      забирает результат. Зонд проверяет canCraft/mayPlace/craftResult тем же
+#      кодом, что и экран, и финализацию крафта в инвентаре.
+#   3) Видео: весь прогон пишется через ffmpeg/x11grab, затем режется на ролики
+#      по профессиям (маркеры таймлайна пишет сам зонд). Полное видео прогона —
+#      «видео с полной отладкой». В кадре — подпись, какая профессия и что
+#      сейчас происходит.
+#
+# Job остаётся красным, пока хотя бы одна профессия провалила проверку: это и
+# есть цикл «багфиксим, пока не станет зелёным».
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Что проверять: all | prof=alchemy,cooking'
+        required: false
+        default: 'all'
+  pull_request:
+    paths:
+      - 'src/main/java/com/robertx22/age_of_exile/player_skills/**'
+      - 'src/main/java/com/robertx22/age_of_exile/saveclasses/player_skills/**'
+      - 'src/main/java/com/robertx22/age_of_exile/aoe_data/database/player_skills/**'
+      - 'src/main/java/com/robertx22/age_of_exile/aoe_data/database/ingredient/**'
+      - 'src/main/java/com/robertx22/age_of_exile/database/data/ingredient/**'
+      - 'src/main/java/com/robertx22/age_of_exile/saveclasses/stat_soul/**'
+      - 'src/main/java/com/robertx22/age_of_exile/uncommon/testing/ProfessionAudit*.java'
+      - 'src/main/java/com/robertx22/age_of_exile/gui/overlays/profession_audit/**'
+      - 'src/main/java/com/robertx22/age_of_exile/mmorpg/registers/common/items/CraftToolItems.java'
+      - 'src/main/java/com/robertx22/age_of_exile/mmorpg/registers/common/items/CraftedConsumableItems.java'
+      - 'tools/verify/check_professions.py'
+      - 'tools/e2e/**'
+      - '.github/workflows/profession-audit.yml'
+  push:
+    branches: [main]
+
+concurrency:
+  group: profession-audit-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write        # публикация ветки ci-profession-audit-*
+  pull-requests: write   # комментарий с итогами и видео
+
+env:
+  GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx4G'
+  BRANCH_RAW: ci-profession-audit-${{ github.head_ref || github.ref_name }}
+  AUDIT_TARGET: ${{ inputs.target || 'all' }}
+
+jobs:
+  audit:
+    name: Live profession audit + mouse video
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v7
+
+      # `arena/xxx-age-of-epoch` -> `arena-xxx-age-of-epoch`: слеши в именах
+      # веток git не допускает, а имя ветки публикации должно быть уникальным
+      # для источника, иначе параллельные сессии затирают результаты друг друга.
+      - name: Имя ветки публикации
+        run: echo "BRANCH=$(echo "$BRANCH_RAW" | tr '/' '-')" >> "$GITHUB_ENV"
+
+      - name: Каталог прогона чистый
+        run: |
+          rm -rf run/profession-audit* run/e2e/prof-videos run/e2e/profession-video.mp4 run/e2e/video-start.txt run/e2e/video-end.txt
+          mkdir -p run/e2e/shots
+          rm -f run/aoe-profession-audit.flag run/aoe-devtest.flag
+          ls -la run 2>/dev/null || true
+
+      # ---- 1. структурный аудит: секунды, без игры -------------------------
+      - name: Структурный аудит профессий
+        id: structural
+        run: |
+          set +e
+          python3 tools/verify/check_professions.py \
+            --markdown run/e2e/profession-audit-structural.md \
+            --json run/e2e/profession-audit-structural.json > run/e2e/structural.log 2>&1
+          status=$?
+          set -e
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          tail -n 40 run/e2e/structural.log
+          {
+            echo "### Структурный аудит: статус $status"
+            echo '```'
+            tail -n 30 run/e2e/structural.log
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+
+      - uses: ./.github/actions/setup-build-env
+        with:
+          cache-read-only: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork }}
+
+      # mesa-vulkan-drivers обязателен: MC 26.3 (SDL3 + renderpearl) под Xvfb не
+      # создаёт OpenGL-контекст и уходит в Vulkan (lavapipe). ffmpeg нужен для
+      # записи видео прогона.
+      - name: Пакеты для headless-клиента, скриншотов и записи видео
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends \
+            xvfb x11-utils xdotool imagemagick x11-apps openbox wmctrl \
+            libgl1 libglu1-mesa libgl1-mesa-dri mesa-utils \
+            mesa-vulkan-drivers vulkan-tools ffmpeg \
+            libxi6 libxcursor1 libxrandr2 libxinerama1 libxxf86vm1 \
+            libopenal1 libpulse0 libegl1 libegl-mesa0
+
+      # ---- 2. живой аудит мышкой + 3. запись видео -------------------------
+      - name: Клиент, аудит всех профессий мышкой, запись видео
+        id: live
+        continue-on-error: true
+        env:
+          CLIENT_TIMEOUT: '2700'
+          AOE_AUDIT_TARGET: ${{ env.AUDIT_TARGET }}
+        run: |
+          set +e
+          bash tools/e2e/run-in-xvfb.sh tools/e2e/scenarios/professions.txt run/e2e/shots/professions
+          status=$?
+          set -e
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+
+          grep -h "AOEPR " run/logs/latest.log run/profession-audit.log 2>/dev/null | awk '!seen[$0]++' > run/e2e/aoepr.log || true
+          shots=$(find run/e2e/shots/professions -name '*.png' 2>/dev/null | wc -l)
+          slot_shots=$(find run/e2e/shots/professions -name '*-slot-*.png' 2>/dev/null | wc -l)
+          placed=$(grep -c "AOEPR placed" run/e2e/aoepr.log 2>/dev/null || echo 0)
+          echo "снимков=$shots (перемещений в сетку: $slot_shots), событий placed=$placed, статус сценария=$status"
+          {
+            echo "### Сценарий: статус $status, снимков $shots (из них перемещений в сетку 3×2: $slot_shots)"
+            if [ -s run/e2e/aoepr.log ]; then
+              grep -E "AOEPR (done|prof=)" run/e2e/aoepr.log | tail -8
+            fi
+            ls -la run/e2e/*.mp4 run/profession-audit.* 2>/dev/null || true
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+
+      # ---- 4. нарезка видео по профессиям ---------------------------------
+      - name: Нарезать видео по профессиям
+        id: videos
+        run: |
+          ls -la run/e2e/*.mp4 2>/dev/null || echo "видео нет"
+          set +e
+          python3 tools/e2e/split_profession_videos.py \
+            --video run/e2e/profession-video.mp4 \
+            --timeline run/profession-audit-timeline.txt \
+            --start run/e2e/video-start.txt \
+            --out run/e2e/prof-videos \
+            --report run/profession-audit.json
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+          set -e
+          ls -la run/e2e/prof-videos 2>/dev/null || true
+          {
+            echo "### Видео"
+            echo '```'
+            ls -la run/e2e/prof-videos 2>/dev/null || echo "нет"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Сводка аудита в summary
+        if: always()
+        run: |
+          {
+            echo "## Аудит профессий"
+            if [ -s run/e2e/aoepr.log ]; then
+              echo '```'
+              grep -h "AOEPR done" run/e2e/aoepr.log | tail -1
+              echo '```'
+              echo "### Провалы"
+              echo '```'
+              grep -h "AOEPR prof=" run/e2e/aoepr.log | grep "verdict=FAIL" | head -20 || echo "нет"
+              echo '```'
+              echo "### Шаги в сетке крафта"
+              echo '```'
+              grep -hE "AOEPR (placed|result_ready|taken|crafted)" run/e2e/aoepr.log | tail -40
+              echo '```'
+            else
+              echo "Строк AOEPR нет: клиент не дошёл до аудита."
+            fi
+            if [ -f run/profession-audit.md ]; then
+              echo
+              sed -n '1,12p' run/profession-audit.md
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Опубликовать отчёт, скриншоты и видео в ветку ${{ env.BRANCH }}
+        id: publish
+        continue-on-error: true
+        if: always() && github.event.pull_request.head.repo.fork != true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          AUDIT_TITLE: "Цель: `${{ env.AUDIT_TARGET }}`, клиент под Xvfb, ветка `${{ github.head_ref || github.ref_name }}`"
+        run: |
+          set +e
+          bash tools/e2e/publish-profession-audit.sh run/e2e
+          status=$?
+          set -e
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          if [ "$status" != "0" ]; then
+            echo "::error::Публикация в ветку ${BRANCH} не удалась (статус $status)"
+          fi
+
+      - name: Комментарий в PR с итогами и видео
+        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork != true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          md="$(mktemp)"
+          raw="https://raw.githubusercontent.com/${REPO}/${BRANCH}"
+          {
+            echo "## Аудит профессий: живой прогон мышкой + видео"
+            echo
+            echo "Прогон: [${GITHUB_RUN_ID}](${GITHUB_SERVER_URL}/${REPO}/actions/runs/${GITHUB_RUN_ID}) · ветка: [\`${BRANCH}\`](https://github.com/${REPO}/tree/${BRANCH})"
+            echo
+            if [ -s run/e2e/aoepr.log ]; then
+              summary="$(grep -h "AOEPR done" run/e2e/aoepr.log | tail -1)"
+              failed_total="$(grep -h "AOEPR prof=" run/e2e/aoepr.log | grep -c "verdict=FAIL" || true)"
+              echo "**Итог:** \`${summary:-нет строки done}\`"
+              echo
+              if [ "${failed_total:-0}" -gt 0 ]; then
+                echo "### Провалились"
+                echo
+                echo "| профессия | проблемы |"
+                echo "|---|---|"
+                grep -h "AOEPR prof=" run/e2e/aoepr.log | grep "verdict=FAIL" \
+                  | sed -E 's/.*prof=([^ ]+).*problems=([^ ]*).*/| `\1` | \2 |/' \
+                  | head -20
+                echo
+              fi
+              echo "### Живые шаги (сетка крафта 3×2)"
+              echo
+              echo '```'
+              grep -hE "AOEPR (given|gui_open|placed|result_ready|taken|crafted)" run/e2e/aoepr.log | tail -30
+              echo '```'
+              echo
+            else
+              echo "> Строк AOEPR нет — клиент не дошёл до аудита. Смотри ветку \`${BRANCH}\` (logs/steps.log)."
+              echo
+            fi
+            slot_shots=$(find run/e2e/shots/professions -name '*-slot-*.png' 2>/dev/null | wc -l)
+            echo "**Скриншотов перемещений в сетку 3×2:** ${slot_shots} — каждое перемещение предмета в слоты крафта снято отдельно ([галерея](${raw}/shots/))."
+            echo
+            if [ -f run/e2e/profession-video.mp4 ]; then
+              echo "### Видео с полной отладкой"
+              echo
+              echo "* [▶ Полное видео прогона](${raw}/videos/full-debug.mp4)"
+              echo
+            fi
+            if ls run/e2e/prof-videos/*.mp4 >/dev/null 2>&1; then
+              echo "### Видео по профессиям"
+              echo
+              for f in run/e2e/prof-videos/*.mp4; do
+                base="$(basename "$f" .mp4)"
+                echo "* [▶ ${base}](${raw}/videos/${base}.mp4)"
+              done
+              echo
+              echo "Подпись в кадре: какая профессия, что кладётся в сетку и чем подтверждён результат."
+              echo
+            else
+              echo "_Видео по профессиям не собралось — смотри артефакт прогона._"
+              echo
+            fi
+            echo "> Отчёт: [\`profession-audit.md\`](${raw}/reports/profession-audit.md) · структурный: [\`profession-audit-structural.md\`](${raw}/reports/profession-audit-structural.md)"
+          } > "$md"
+
+          existing="$(gh api "repos/${REPO}/issues/${PR}/comments" --paginate \
+            --jq '.[] | select(.body | contains("<!-- aoe-profession-audit -->")) | .id' | head -1)"
+          { echo '<!-- aoe-profession-audit -->'; cat "$md"; } > "$md.body"
+          if [ -n "$existing" ]; then
+            gh api -X PATCH "repos/${REPO}/issues/comments/${existing}" -F "body=@${md}.body" > /dev/null
+            echo "комментарий обновлён"
+          else
+            gh api -X POST "repos/${REPO}/issues/${PR}/comments" -F "body=@${md}.body" > /dev/null
+            echo "комментарий создан"
+          fi
+
+      - name: Артефакты (полное видео, скриншоты, отчёты, логи)
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: profession-audit
+          path: |
+            run/e2e/profession-video.mp4
+            run/e2e/prof-videos/**
+            run/e2e/profession-audit-structural.md
+            run/e2e/profession-audit-structural.json
+            run/profession-audit.md
+            run/profession-audit.json
+            run/profession-audit.log
+            run/profession-audit-timeline.txt
+            run/e2e/aoepr.log
+            run/e2e/structural.log
+            run/e2e/ffmpeg.log
+            run/logs/latest.log
+            run/e2e/gradle.log
+            run/e2e/shots/professions/**
+          if-no-files-found: warn
+          retention-days: 30
+
+      # ---- 5. красный job, пока есть провалы ------------------------------
+      - name: Вердикт
+        if: always()
+        env:
+          PUBLISH_STATUS: ${{ steps.publish.outputs.status }}
+        run: |
+          failed_total=0
+          if [ -s run/e2e/aoepr.log ]; then
+            if ! grep -q "AOEPR done" run/e2e/aoepr.log; then
+              echo "::error::Аудит не дошёл до конца: нет строки AOEPR done (см. AOEPR phase_error/fatal в логе)"
+              exit 1
+            fi
+            failed_total="$(grep -h "AOEPR prof=" run/e2e/aoepr.log | grep -c "verdict=FAIL" || true)"
+            total="$(grep -h "AOEPR prof=" run/e2e/aoepr.log | grep -c "verdict=" || true)"
+            echo "профессий: $total, провалов: $failed_total"
+            # Для прогона all проверяем, что пройдены ВСЕ шесть профессий:
+            # иначе «зелёным» становится прогон, упавший на второй из шести.
+            if [ "${{ env.AUDIT_TARGET }}" = "all" ] && [ "$total" -lt 6 ]; then
+              echo "::error::Проверено только $total профессий из 6 — прогон оборвался"
+              exit 1
+            fi
+            slot_shots=$(find run/e2e/shots/professions -name '*-slot-*.png' 2>/dev/null | wc -l)
+            echo "скриншотов перемещений в сетку 3×2: $slot_shots"
+            if [ "$slot_shots" -lt 1 ]; then
+              echo "::error::Нет скриншотов перемещений в сетку крафта — сценарий не дошёл до GUI"
+              exit 1
+            fi
+          else
+            echo "::error::Аудит не отработал: строк AOEPR нет"
+            exit 1
+          fi
+          if [ "$failed_total" -gt 0 ]; then
+            echo "::error::Провалили проверку $failed_total профессий — смотри profession-audit.md"
+            exit 1
+          fi
+          if [ "${{ steps.structural.outputs.status }}" != "0" ]; then
+            echo "::error::Структурный аудит нашёл проблемы — смотри profession-audit-structural.md"
+            exit 1
+          fi
+          if [ -n "$PUBLISH_STATUS" ] && [ "$PUBLISH_STATUS" != "0" ]; then
+            echo "::error::Публикация в ветку не удалась — отчёт/видео недоступны снаружи"
+            exit 1
+          fi
+          echo "Все профессии прошли проверку"

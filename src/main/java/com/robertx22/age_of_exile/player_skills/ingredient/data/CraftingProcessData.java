@@ -57,7 +57,7 @@ public class CraftingProcessData {
         total += plus;
 
         PlayerSkillEnum skill = getProfession();
-        int skillLvl = Load.playerRPGData(player).professions.getProfessionLevel(skill);
+        int skillLvl = skill == null ? 0 : Load.playerRPGData(player).professions.getProfessionLevel(skill);
 
         int itemLvl = LevelUtils.tierToLevel(getAverageTier());
 
@@ -231,6 +231,13 @@ public class CraftingProcessData {
     }
 
     public PlayerSkillEnum getProfession() {
+        // Незарегистрированный/пустой id не должен ронять крафт NPE:
+        // GearSoulOnInvTick проверяет getProfession() == null и утилизирует
+        // такой предмет в порох.
+        if (prof == null || prof.isEmpty() || !ExileDB.PlayerSkills()
+            .isRegistered(prof)) {
+            return null;
+        }
         return ExileDB.PlayerSkills()
             .get(prof).type_enum;
 

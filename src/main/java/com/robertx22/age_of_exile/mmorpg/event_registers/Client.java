@@ -12,6 +12,7 @@ import com.robertx22.age_of_exile.gui.overlays.party_hud.PartyHudOverlay;
 import com.robertx22.age_of_exile.gui.overlays.spell_cast_bar.SpellCastBarOverlay;
 import com.robertx22.age_of_exile.gui.overlays.spell_hotbar.SpellHotbarOverlay;
 import com.robertx22.age_of_exile.gui.overlays.spell_audit.SpellAuditOverlay;
+import com.robertx22.age_of_exile.gui.overlays.profession_audit.ProfessionAuditOverlay;
 import com.robertx22.forge_compat.client.event.RenderGameOverlayEvent;
 import com.robertx22.forge_compat.event.TickEvent;
 import com.robertx22.library_of_exile.main.ForgeEvents;
@@ -23,6 +24,7 @@ public class Client {
 
         SpellHotbarOverlay spellHotbarOverlay = new SpellHotbarOverlay();
         SpellAuditOverlay spellAuditOverlay = new SpellAuditOverlay();
+        ProfessionAuditOverlay professionAuditOverlay = new ProfessionAuditOverlay();
         DeathStatsOverlay death = new DeathStatsOverlay();
         SpellCastBarOverlay castbar = new SpellCastBarOverlay();
         RPGGuiOverlay rpggui = new RPGGuiOverlay();
@@ -51,6 +53,7 @@ public class Client {
             mobBar.onHudRender(event.getMatrixStack(), event.getPartialTicks());
             partyHud.onHudRender(event.getMatrixStack(), event.getPartialTicks());
             spellAuditOverlay.onHudRender(event.getMatrixStack(), event.getPartialTicks());
+            professionAuditOverlay.onHudRender(event.getMatrixStack(), event.getPartialTicks());
             DamageParticleRenderer.renderHudParticles(event.getMatrixStack());
             MobPlateStyleHud.render(event.getMatrixStack());
 
