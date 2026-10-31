@@ -1,0 +1,130 @@
+name: Discord notify
+
+# GitHub → Discord: присылает в канал всё, что происходит с репозиторием.
+#
+#   push            — коммиты в любую ветку и теги (кроме удаления ветки)
+#   pull_request    — открыт / обновлён / готов к ревью / смержен / закрыт
+#   review          — одобрено / запрошены изменения / комментарий
+#   issues          — открыт / закрыт / переоткрыт / метка
+#   issue_comment   — новые и удалённые комментарии (ботов и отчёты CI не дублируем)
+#   release         — публикация релиза (с пингом роли, если она задана)
+#   workflow_run    — итог каждого прогона CI, аудитов и релизной сборки:
+#                     цвет, ветка, коммит, PR и имена упавших job-ов
+#   schedule        — раз в сутки сводка: пуши, PR, issues, релизы, состояние CI
+#   workflow_dispatch — ручная проверка: тестовое сообщение или сводка
+#
+# Настройка — ровно один секрет: DISCORD_WEBHOOK_URL.
+# Пошаговая инструкция, разделение по каналам и фильтры: docs/DISCORD.md
+#
+# Почему pull_request_target, а не pull_request: у PR из форков секреты не
+# передаются в workflow-ы на pull_request, и уведомления бы просто не приходили.
+# pull_request_target выполняется в контексте базовой ветки и берёт скрипт из неё
+# же (checkout ниже), код из PR не запускается и не чекаутится — секретам
+# некуда утекать.
+
+on:
+  push:
+  pull_request_target:
+    types: [opened, reopened, synchronize, ready_for_review, closed, converted_to_draft]
+  pull_request_review:
+    types: [submitted]
+  issues:
+    types: [opened, reopened, closed, labeled]
+  issue_comment:
+    types: [created, deleted]
+  release:
+    types: [published]
+  workflow_run:
+    workflows:
+      - CI
+      - Compile check
+      - Release
+      - Screenshots
+      - Airship in-game proof
+      - Publish tested airship jar
+      - Spell audit (all schools + video)
+      - Profession audit (all professions + mouse video)
+      - Render crew on real 3D models
+      - Collect real crew skin candidates
+    types: [completed]
+  schedule:
+    # Сводка за сутки. 07:00 UTC = 09:00 по Копенгагену (летом) / 08:00 (зимой).
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+    inputs:
+      test:
+        description: 'Тестовое сообщение (проверка вебхука)'
+        type: boolean
+        default: true
+      digest:
+        description: 'Сводка за последние DISCORD_DIGEST_HOURS часов'
+        type: boolean
+        default: false
+      dry_run:
+        description: 'Не отправлять: только напечатать payload в лог'
+        type: boolean
+        default: false
+
+# Только чтение: workflow ничего не пишет в репозиторий, ему нужны лишь
+# метаданные события и список job-ов упавшего прогона.
+permissions:
+  contents: read
+  actions: read
+  issues: read
+  pull-requests: read
+
+concurrency:
+  group: discord-notify-${{ github.event_name }}-${{ github.event.workflow_run.id || github.event.pull_request.number || github.event.issue.number || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    name: Отправить в Discord
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # Защита от рекурсии, даже если этот workflow случайно попадёт в список выше.
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.name != 'Discord notify'
+    steps:
+      - name: Забрать скрипт уведомлений
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false   # токен не нужен: наружу ничего не пушим
+          sparse-checkout: tools/ci    # для pull_request_target это база, не код PR
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Тесты моста (сборка embed-ов, фильтры)
+        run: python3 -m unittest discover -s tools/ci -p 'test_*.py'
+
+      - name: Проверить, что вебхук настроен
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          if [ -z "$DISCORD_WEBHOOK_URL" ]; then
+            {
+              echo "### Discord: вебхук не настроен"
+              echo
+              echo "Секрет \`DISCORD_WEBHOOK_URL\` пуст, уведомления отключены."
+              echo "Как включить — [docs/DISCORD.md](docs/DISCORD.md), шаг 2."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::warning::DISCORD_WEBHOOK_URL не задан — уведомления в Discord отключены (docs/DISCORD.md)"
+          fi
+
+      - name: Отправить уведомление
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_WEBHOOK_UPDATES_URL: ${{ secrets.DISCORD_WEBHOOK_UPDATES_URL }}
+          DISCORD_WEBHOOK_CI_URL: ${{ secrets.DISCORD_WEBHOOK_CI_URL }}
+          DISCORD_WEBHOOK_REPORTS_URL: ${{ secrets.DISCORD_WEBHOOK_REPORTS_URL }}
+          DISCORD_MENTION_ROLE_ID: ${{ vars.DISCORD_MENTION_ROLE_ID }}
+          DISCORD_EVENTS: ${{ vars.DISCORD_EVENTS }}
+          DISCORD_IGNORE_BRANCHES: ${{ vars.DISCORD_IGNORE_BRANCHES }}
+          DISCORD_SKIP_MARKER: ${{ vars.DISCORD_SKIP_MARKER }}
+          DISCORD_NOTIFY_CANCELLED: ${{ vars.DISCORD_NOTIFY_CANCELLED }}
+          DISCORD_DIGEST_HOURS: ${{ vars.DISCORD_DIGEST_HOURS }}
+          DISCORD_DRY_RUN: ${{ inputs.dry_run && '1' || '' }}
+        run: python3 tools/ci/discord_notify.py
