@@ -89,6 +89,15 @@ for f in "$root"/run/e2e/shots/professions/jstack-*.txt; do
     [ -e "$f" ] || continue
     cp "$f" "logs/$(basename "$f")"
 done
+# Краш-репорты клиента: если клиент умер посреди прогона, причина должна
+# остаться в ветке, а не только в недоступном артефакте Actions.
+if [ -d "$root/run/crash-reports" ]; then
+    for f in "$root"/run/crash-reports/*; do
+        [ -e "$f" ] || continue
+        cp "$f" "logs/crash-$(basename "$f")"
+        echo "  + logs/crash-$(basename "$f")"
+    done
+fi
 
 # Строки аудита — отдельным файлом: по ним строится сводка.
 {
@@ -203,5 +212,10 @@ echo "  + logs/aoepr.log ($(wc -l < logs/aoepr.log 2>/dev/null || echo 0) стр
 
 git add -A
 git commit -q -m "profession audit: $title" || true
-git push -q --force origin "$branch"
+# Без этой проверки скрипт всегда выходил с кодом echo (0), и неудачный push
+# выглядел как успех: ветка молча оставалась с результатами прошлого прогона.
+if ! git push --force origin "$branch"; then
+    echo "ОШИБКА: git push в ветку $branch не удался" >&2
+    exit 1
+fi
 echo "Готово: https://github.com/${repo}/tree/${branch}"

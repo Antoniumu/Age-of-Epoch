@@ -190,6 +190,8 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Опубликовать отчёт, скриншоты и видео в ветку ${{ env.BRANCH }}
+        id: publish
+        continue-on-error: true
         if: always() && github.event.pull_request.head.repo.fork != true
         env:
           GH_TOKEN: ${{ github.token }}
@@ -197,8 +199,14 @@ jobs:
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           AUDIT_TITLE: "Цель: `${{ env.AUDIT_TARGET }}`, клиент под Xvfb, ветка `${{ github.head_ref || github.ref_name }}`"
         run: |
-          bash tools/e2e/publish-profession-audit.sh run/e2e \
-            || echo "::error::Публикация в ветку ${BRANCH} не удалась"
+          set +e
+          bash tools/e2e/publish-profession-audit.sh run/e2e
+          status=$?
+          set -e
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          if [ "$status" != "0" ]; then
+            echo "::error::Публикация в ветку ${BRANCH} не удалась (статус $status)"
+          fi
 
       - name: Комментарий в PR с итогами и видео
         if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork != true
@@ -302,12 +310,24 @@ jobs:
       # ---- 5. красный job, пока есть провалы ------------------------------
       - name: Вердикт
         if: always()
+        env:
+          PUBLISH_STATUS: ${{ steps.publish.outputs.status }}
         run: |
           failed_total=0
           if [ -s run/e2e/aoepr.log ]; then
+            if ! grep -q "AOEPR done" run/e2e/aoepr.log; then
+              echo "::error::Аудит не дошёл до конца: нет строки AOEPR done (см. AOEPR phase_error/fatal в логе)"
+              exit 1
+            fi
             failed_total="$(grep -h "AOEPR prof=" run/e2e/aoepr.log | grep -c "verdict=FAIL" || true)"
             total="$(grep -h "AOEPR prof=" run/e2e/aoepr.log | grep -c "verdict=" || true)"
             echo "профессий: $total, провалов: $failed_total"
+            # Для прогона all проверяем, что пройдены ВСЕ шесть профессий:
+            # иначе «зелёным» становится прогон, упавший на второй из шести.
+            if [ "${{ env.AUDIT_TARGET }}" = "all" ] && [ "$total" -lt 6 ]; then
+              echo "::error::Проверено только $total профессий из 6 — прогон оборвался"
+              exit 1
+            fi
             slot_shots=$(find run/e2e/shots/professions -name '*-slot-*.png' 2>/dev/null | wc -l)
             echo "скриншотов перемещений в сетку 3×2: $slot_shots"
             if [ "$slot_shots" -lt 1 ]; then
@@ -324,6 +344,10 @@ jobs:
           fi
           if [ "${{ steps.structural.outputs.status }}" != "0" ]; then
             echo "::error::Структурный аудит нашёл проблемы — смотри profession-audit-structural.md"
+            exit 1
+          fi
+          if [ -n "$PUBLISH_STATUS" ] && [ "$PUBLISH_STATUS" != "0" ]; then
+            echo "::error::Публикация в ветку не удалась — отчёт/видео недоступны снаружи"
             exit 1
           fi
           echo "Все профессии прошли проверку"

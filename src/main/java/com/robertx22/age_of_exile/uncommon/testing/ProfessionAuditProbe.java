@@ -75,6 +75,15 @@ public final class ProfessionAuditProbe {
     public static final String TAG = "AOEPR";
     /** Флаг-файл: есть — прогон стартует сам (CI, без чата и без прав оператора). */
     public static final String FLAG_FILE = "aoe-profession-audit.flag";
+    /**
+     * Флаг-файл передачи хода: сценарий кладёт его, когда закончил текущую
+     * профессию (тултип, Escape) — только потом зонд выдаёт предметы следующей.
+     * Без этой синхронизации зонд закрывал экран крафта прямо из-под мыши
+     * сценария и тултип/Escape уходили в пустоту.
+     */
+    private static final String NEXT_FILE = "aoe-profession-next.flag";
+    /** Сколько тиков ждём флаг передачи хода, прежде чем идти дальше. */
+    private static final int HANDOVER_TIMEOUT_TICKS = 1800;
     private static final String TIMELINE_FILE = "profession-audit-timeline.txt";
     private static final String REPORT_MD = "profession-audit.md";
     private static final String REPORT_JSON = "profession-audit.json";
@@ -182,6 +191,20 @@ public final class ProfessionAuditProbe {
         }
     }
 
+    /** @return true — сценарий передал ход (флаг был и удалён). */
+    private static boolean consumeNextFlag() {
+        try {
+            Path path = gameDir().resolve(NEXT_FILE);
+            if (!Files.exists(path)) {
+                return false;
+            }
+            Files.deleteIfExists(path);
+            return true;
+        } catch (IOException error) {
+            return false;
+        }
+    }
+
     private static void writeLog(String line) {
         LOGGER.info(line);
         try {
@@ -214,6 +237,7 @@ public final class ProfessionAuditProbe {
         WATCH,
         VERIFY,
         NEXT,
+        WAIT_READY,
         DONE
     }
 
@@ -304,8 +328,33 @@ public final class ProfessionAuditProbe {
                 return false;
             }
             phaseTicks++;
+            try {
+                return dispatch(player, level);
+            } catch (Throwable error) {
+                // Ошибка на шаге одной профессии не должна убивать весь прогон:
+                // фиксируем её как проблему профессии и идём дальше.
+                LOGGER.error("{} ошибка фазы {}", TAG, phase, error);
+                writeLog(TAG + " phase_error prof=" + (current == null ? "-" : current.id)
+                    + " phase=" + phase + " error=" + sanitize(String.valueOf(error)));
+                if (current != null) {
+                    current.problem("исключение в фазе " + phase + ": " + sanitize(String.valueOf(error)));
+                    if (phase == Phase.NEXT || phase == Phase.DONE) {
+                        return false;
+                    }
+                    phase = Phase.NEXT;
+                    phaseTicks = 0;
+                } else {
+                    phase = Phase.CHECKS;
+                    phaseTicks = 0;
+                }
+                return false;
+            }
+        }
+
+        private boolean dispatch(ServerPlayer player, ServerLevel level) {
             switch (phase) {
                 case SETUP -> {
+                    consumeNextFlag(); // старый флаг от прошлого прогона
                     enterCreative(player);
                     prepareCharacter(player);
                     buildPlatform(level, player);
@@ -407,8 +456,17 @@ public final class ProfessionAuditProbe {
                     writeReports();
                     profIndex++;
                     current = null;
-                    phase = Phase.CHECKS;
+                    phase = Phase.WAIT_READY;
                     phaseTicks = 0;
+                }
+                case WAIT_READY -> {
+                    // Сценарий дописывает тултип и закрывает экран сам; флаг
+                    // «next» означает, что можно выдавать предметы следующей
+                    // профессии. Таймаут — подстраховка, чтобы прогон не встал.
+                    if (consumeNextFlag() || phaseTicks > HANDOVER_TIMEOUT_TICKS) {
+                        phase = Phase.CHECKS;
+                        phaseTicks = 0;
+                    }
                 }
                 case DONE -> {
                     return finish(player);

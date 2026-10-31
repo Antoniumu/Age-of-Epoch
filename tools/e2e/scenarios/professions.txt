@@ -22,7 +22,11 @@
 #       от выбранного слота;
 #       раздача зонда: 9 — основа (гир-профессии), 10 — матрица душ
 #       (+20% успеха), 11/12 — обычные ингредиенты, 13 — пустой (результат);
-#       инструмент зонд кладёт в руку (ПКМ открывает меню крафта).
+#       инструмент зонд кладёт в руку (ПКМ открывает меню крафта);
+#   * между профессиями сценарий передаёт ход зонду флагом
+#     run/aoe-profession-next.flag: только после него зонд выдаёт предметы
+#     следующей профессии. Без этого экран крафта закрывался прямо из-под
+#     мыши (тултип и Escape уходили в пустоту).
 
 wait_window Minecraft 420000
 wait_log 300000 Created: .*atlas/items
@@ -95,6 +99,8 @@ shot alchemy-08-tooltip
 key Escape
 wait 600
 shot alchemy-09-closed
+write run/aoe-profession-next.flag go
+wait 500
 
 # ============================================================================
 # 2. INSCRIBING — расходники (свитки)
@@ -137,6 +143,8 @@ shot inscribing-08-tooltip
 key Escape
 wait 600
 shot inscribing-09-closed
+write run/aoe-profession-next.flag go
+wait 500
 
 # ============================================================================
 # 3. COOKING — расходники (еда)
@@ -179,6 +187,8 @@ shot cooking-08-tooltip
 key Escape
 wait 600
 shot cooking-09-closed
+write run/aoe-profession-next.flag go
+wait 500
 
 # ============================================================================
 # 4. ARMOR_CRAFTING — гир-профессия: сначала основа (нагрудник), потом ингредиенты
@@ -227,6 +237,8 @@ shot armor_craft-09-tooltip
 key Escape
 wait 600
 shot armor_craft-10-closed
+write run/aoe-profession-next.flag go
+wait 500
 
 # ============================================================================
 # 5. WEAPON_CRAFTING — гир-профессия: основа (меч) + ингредиенты
@@ -275,6 +287,8 @@ shot wep_craft-09-tooltip
 key Escape
 wait 600
 shot wep_craft-10-closed
+write run/aoe-profession-next.flag go
+wait 500
 
 # ============================================================================
 # 6. JEWEL_CRAFTING — гир-профессия: основа (кольцо) + ингредиенты
@@ -323,6 +337,8 @@ shot jewel_craft-09-tooltip
 key Escape
 wait 600
 shot jewel_craft-10-closed
+write run/aoe-profession-next.flag go
+wait 500
 
 # ============================================================================
 # Финал: ждём отчёт зонда, показываем экран профессий, останавливаем видео
