@@ -1,0 +1,48 @@
+[11:34:14] DISPLAY=:99, сценарий spells.txt
+[11:34:14] жду окно: дисплей :99, X-сокеты: :99
+[11:34:45] дисплей клиента из /proc/4634/environ: :100 (был :99)
+[11:34:45] XAUTHORITY клиента: /tmp/xvfb-run.IMTumG/Xauthority
+[11:34:45] жду окно: дисплей :100, X-сокеты: :100, :99
+[11:34:58] окно 2097203 на :100: Minecraft* 26.3 | WINDOW=2097203 X=0 Y=152 WIDTH=1280 HEIGHT=720 SCREEN=0 | Map State: IsViewable
+[11:35:02] в логе найдено: [11:35:01] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/items.png-atlas
+[11:35:10] снимок 00-main-menu (окно 2097203, 716 КБ)
+[11:35:10] курсор 640,296
+[11:35:11] клик 640,296 (экран 640,448, кнопка 1)
+[11:35:16] снимок 01-world-list (окно 2097203, 455 КБ)
+[11:35:16] курсор 480,688
+[11:35:17] клик 480,688 (экран 480,840, кнопка 1)
+[11:35:23] снимок 02-create-world (окно 2097203, 462 КБ)
+[11:35:23] курсор 480,688
+[11:35:23] клик 480,688 (экран 480,840, кнопка 1)
+[11:36:08] снимок 03-in-world (окно 2097203, 394 КБ)
+[11:36:09] shell[mkdir -p run/e2e] -> 0
+    
+[11:36:09] shell[bash tools/e2e/spell-video.sh start] -> 0
+    окно клиента: 1280x720+0+152 на :100
+    запись пошла: run/e2e/spell-video.mp4 (48 байт)
+[11:36:11] записан файл-триггер run/aoe-spell-audit.flag: ${AOE_AUDIT_TARGET:-all}
+[11:36:11] флаг аудита поставлен, жду AOEAI done
+[11:42:04] в логе найдено: [11:42:02] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI done spells=72 passed=72 failed=0
+[11:42:09] снимок 04-audit-done (окно 2097203, 432 КБ)
+[11:42:09] удержание h 600 мс (фокус: 2097203)
+[11:42:13] снимок 05-character (окно 2097203, 390 КБ)
+[11:42:13] удержание h 600 мс (фокус: 2097203)
+[11:42:16] shell[bash tools/e2e/spell-video.sh stop] -> 0
+    видео готово: run/e2e/spell-video.mp4 (51M)
+    длительность: 366.0 c
+[11:42:16] jstack[spells]: pid 4634, 439 строк -> jstack-spells.txt
+[11:42:16] render thread:
+    "Render thread" #3 [4635] prio=5 os_prio=0 cpu=56199.61ms elapsed=452.86s tid=0x00007fcea0030760 nid=4635 runnable  [0x00007fcea83fd000]
+    java.lang.Thread.State: RUNNABLE
+    at net.minecraft.world.level.block.state.BlockBehaviour$BlockStateBase.getShape(BlockBehaviour.java:1060)
+    at net.minecraft.world.level.ClipContext$Block$$Lambda/0x0000000047b56638.get(Unknown Source)
+    at net.minecraft.world.level.ClipContext$Block.get(ClipContext.java:93)
+    at net.minecraft.world.level.ClipContext.getBlockShape(ClipContext.java:49)
+    at net.minecraft.world.level.BlockGetter.lambda$clip$0(BlockGetter.java:78)
+    at net.minecraft.world.level.BlockGetter$$Lambda/0x0000000047b5c000.apply(Unknown Source)
+    at net.minecraft.world.level.BlockGetter.traverseBlocks(BlockGetter.java:150)
+    at net.minecraft.world.level.BlockGetter.clip(BlockGetter.java:71)
+    at net.minecraft.world.entity.Entity.pick(Entity.java:2260)
+    at net.minecraft.client.player.LocalPlayer.pick(LocalPlayer.java:1437)
+[11:42:16] конец сценария spells
+[11:42:16] итог: снимков 6, ошибок 0

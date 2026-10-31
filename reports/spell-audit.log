@@ -1,0 +1,1575 @@
+AOEAI platform ready at y=100 player=0.5/100.0/0.5
+AOEAI режим: creative (иначе требования оружия и маны не дают применить умение)
+AOEAI уровень игрока выставлен на 40
+AOEAI start what=all groups=5
+AOEAI school_start divine spells=16
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_heal value=35 target=ServerPlayer before=12.00 after=18.48 max=20.00
+AOEAI cast spell=healing_aura can_cast=true cast_ticks=60 server_cast=true
+AOEAI diag_proj spell=healing_aura t=2 n=0
+AOEAI diag_proj spell=healing_aura t=4 n=0
+AOEAI diag_proj spell=healing_aura t=6 n=0
+AOEAI diag_proj spell=healing_aura t=8 n=0
+AOEAI diag_proj spell=healing_aura t=10 n=0
+AOEAI diag_proj spell=healing_aura t=12 n=0
+AOEAI diag_proj spell=healing_aura t=14 n=0
+AOEAI diag_proj spell=healing_aura t=16 n=0
+AOEAI diag_proj spell=healing_aura t=18 n=0
+AOEAI diag_proj spell=healing_aura t=20 n=0
+AOEAI diag_proj spell=healing_aura t=22 n=0
+AOEAI diag_proj spell=healing_aura t=24 n=0
+AOEAI spell=healing_aura school=divine verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=8.0 mana=10.8 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_damage target=Husk amount=0.0427 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9573
+AOEAI diag_cast spell=gong_strike player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [3.5б hp=1024] [4.5б hp=1024] [6.7б hp=1024] [6.7б hp=1024] [2.8б hp=1024]
+AOEAI cast spell=gong_strike can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=gong_strike t=2 n=0
+AOEAI diag_proj spell=gong_strike t=4 n=0
+AOEAI diag_proj spell=gong_strike t=6 n=0
+AOEAI diag_proj spell=gong_strike t=8 n=0
+AOEAI diag_proj spell=gong_strike t=10 n=0
+AOEAI diag_proj spell=gong_strike t=12 n=0
+AOEAI diag_proj spell=gong_strike t=14 n=0
+AOEAI diag_proj spell=gong_strike t=16 n=0
+AOEAI diag_proj spell=gong_strike t=18 n=0
+AOEAI diag_proj spell=gong_strike t=20 n=0
+AOEAI diag_proj spell=gong_strike t=22 n=0
+AOEAI diag_proj spell=gong_strike t=24 n=0
+AOEAI spell=gong_strike school=divine verdict=PASS dmg=9.4 hits=1 dmg_events=1 heal=0.0 mana=10.8 shield=0.0 moved=0.0 items=0 effects=negative/11 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_giveshield targets=1 value=5 seconds=10 caster=ServerPlayer
+AOEAI diag_giveshield_after target=ServerPlayer total=5.0
+AOEAI cast spell=shout_warn can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=shout_warn t=2 n=0
+AOEAI diag_proj spell=shout_warn t=4 n=0
+AOEAI diag_proj spell=shout_warn t=6 n=0
+AOEAI diag_proj spell=shout_warn t=8 n=0
+AOEAI diag_proj spell=shout_warn t=10 n=0
+AOEAI diag_proj spell=shout_warn t=12 n=0
+AOEAI diag_proj spell=shout_warn t=14 n=0
+AOEAI diag_proj spell=shout_warn t=16 n=0
+AOEAI diag_proj spell=shout_warn t=18 n=0
+AOEAI diag_proj spell=shout_warn t=20 n=0
+AOEAI diag_proj spell=shout_warn t=22 n=0
+AOEAI diag_proj spell=shout_warn t=24 n=0
+AOEAI spell=shout_warn school=divine verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=10.8 shield=5.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_cast spell=charge player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=60 can_cast=true dummies=5 [6.7б hp=1024] [4.5б hp=1024] [3.5б hp=1024] [2.8б hp=1024] [6.7б hp=1024]
+AOEAI cast spell=charge can_cast=true cast_ticks=60 server_cast=true
+AOEAI diag_proj spell=charge t=2 n=0
+AOEAI diag_proj spell=charge t=4 n=0
+AOEAI diag_proj spell=charge t=6 n=0
+AOEAI diag_proj spell=charge t=8 n=0
+AOEAI diag_proj spell=charge t=10 n=0
+AOEAI diag_proj spell=charge t=12 n=0
+AOEAI diag_proj spell=charge t=14 n=0
+AOEAI diag_proj spell=charge t=16 n=0
+AOEAI diag_proj spell=charge t=18 n=0
+AOEAI diag_proj spell=charge t=20 n=0
+AOEAI diag_proj spell=charge t=22 n=0
+AOEAI diag_proj spell=charge t=24 n=0
+AOEAI retry spell=charge с кольцом манекенов
+AOEAI diag_damage target=Husk amount=0.0127 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9873
+AOEAI diag_damage target=Husk amount=0.0127 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9873
+AOEAI diag_damage target=Husk amount=0.0127 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9873
+AOEAI diag_damage target=Husk amount=0.0127 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9873
+AOEAI diag_damage target=Husk amount=0.0127 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9873
+AOEAI diag_damage target=Husk amount=0.0127 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9873
+AOEAI diag_damage target=Husk amount=0.0127 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9873
+AOEAI diag_damage target=Husk amount=0.0127 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9873
+AOEAI diag_cast spell=charge player=0.9/100.0/0.7 yaw=0 pitch=30 cast_ticks=60 can_cast=true dummies=9 [1.2б hp=1024] [1.2б hp=1024] [1.2б hp=1024] [1.2б hp=1024] [1.2б hp=1024] [1.2б hp=1024] [1.2б hp=1024] [1.2б hp=1024] [1.0б hp=1024]
+AOEAI cast spell=charge can_cast=true cast_ticks=60 server_cast=true
+AOEAI diag_proj spell=charge t=2 n=0
+AOEAI diag_proj spell=charge t=4 n=0
+AOEAI diag_proj spell=charge t=6 n=0
+AOEAI diag_proj spell=charge t=8 n=0
+AOEAI diag_proj spell=charge t=10 n=0
+AOEAI diag_proj spell=charge t=12 n=0
+AOEAI diag_proj spell=charge t=14 n=0
+AOEAI diag_proj spell=charge t=16 n=0
+AOEAI diag_proj spell=charge t=18 n=0
+AOEAI diag_proj spell=charge t=20 n=0
+AOEAI diag_proj spell=charge t=22 n=0
+AOEAI diag_proj spell=charge t=24 n=0
+AOEAI spell=charge school=divine verdict=PASS dmg=22.6 hits=8 dmg_events=8 heal=0.0 mana=10.8 shield=0.0 moved=0.4 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_cast spell=whirlwind player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=100 can_cast=true dummies=5 [2.8б hp=1024] [6.7б hp=1024] [6.7б hp=1024] [3.5б hp=1024] [4.5б hp=1024]
+AOEAI cast spell=whirlwind can_cast=true cast_ticks=100 server_cast=true
+AOEAI diag_proj spell=whirlwind t=2 n=0
+AOEAI diag_proj spell=whirlwind t=4 n=0
+AOEAI diag_proj spell=whirlwind t=6 n=0
+AOEAI diag_proj spell=whirlwind t=8 n=0
+AOEAI diag_proj spell=whirlwind t=10 n=0
+AOEAI diag_proj spell=whirlwind t=12 n=0
+AOEAI diag_proj spell=whirlwind t=14 n=0
+AOEAI diag_proj spell=whirlwind t=16 n=0
+AOEAI diag_proj spell=whirlwind t=18 n=0
+AOEAI diag_proj spell=whirlwind t=20 n=0
+AOEAI diag_proj spell=whirlwind t=22 n=0
+AOEAI diag_proj spell=whirlwind t=24 n=0
+AOEAI retry spell=whirlwind с кольцом манекенов
+AOEAI diag_damage target=Husk amount=0.0084 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9916
+AOEAI diag_damage target=Husk amount=0.0084 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9916
+AOEAI diag_damage target=Husk amount=0.0084 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9916
+AOEAI diag_damage target=Husk amount=0.0025 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9975
+AOEAI diag_damage target=Husk amount=0.0025 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9975
+AOEAI diag_damage target=Husk amount=0.0084 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9916
+AOEAI diag_damage target=Husk amount=0.0084 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9916
+AOEAI diag_damage target=Husk amount=0.0084 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9916
+AOEAI diag_damage target=Husk amount=0.0084 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9916
+AOEAI diag_cast spell=whirlwind player=0.5/100.0/0.5 yaw=0 pitch=30 cast_ticks=100 can_cast=true dummies=9 [1.2б hp=1024] [1.2б hp=1024] [1.2б hp=1024] [1.2б hp=1024] [1.0б hp=1024] [1.2б hp=1024] [1.2б hp=1024] [1.2б hp=1024] [1.2б hp=1024]
+AOEAI cast spell=whirlwind can_cast=true cast_ticks=100 server_cast=true
+AOEAI diag_proj spell=whirlwind t=2 n=0
+AOEAI diag_proj spell=whirlwind t=4 n=0
+AOEAI diag_proj spell=whirlwind t=6 n=0
+AOEAI diag_proj spell=whirlwind t=8 n=0
+AOEAI diag_proj spell=whirlwind t=10 n=0
+AOEAI diag_proj spell=whirlwind t=12 n=0
+AOEAI diag_proj spell=whirlwind t=14 n=0
+AOEAI diag_proj spell=whirlwind t=16 n=0
+AOEAI diag_proj spell=whirlwind t=18 n=0
+AOEAI diag_proj spell=whirlwind t=20 n=0
+AOEAI diag_proj spell=whirlwind t=22 n=0
+AOEAI diag_proj spell=whirlwind t=24 n=0
+AOEAI spell=whirlwind school=divine verdict=PASS dmg=16.6 hits=9 dmg_events=9 heal=4.0 mana=21.6 shield=0.0 moved=0.0 items=0 effects=knockback_resist particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_projenter spell=shooting_star type=entity.mmorpg.spell_projectile count=1
+AOEAI diag_projshot spell=shooting_star uuid=86de7d2c-0435-4a2c-a488-9bf54afff632 pitch=30.0 yaw=-59.7 speed=1.00 start=0.50/101.52/0.50 d=0.75/-0.50/0.44
+AOEAI cast spell=shooting_star can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projtick spell=shooting_star uuid=86de7d2c-0435-4a2c-a488-9bf54afff632 t=1 pos=1.25/101.02/0.94 d=0.74/-0.50/0.43
+AOEAI diag_projtick spell=shooting_star uuid=86de7d2c-0435-4a2c-a488-9bf54afff632 t=2 pos=1.99/100.52/1.37 d=0.73/-0.49/0.43
+AOEAI diag_proj spell=shooting_star t=2 n=1 [SimpleProjectileEntity pos=1.49/0.52/0.87 d=0.73/-0.49/0.43 t=2]
+AOEAI diag_projonhit type=ENTITY spell=shooting_star uuid=86de7d2c-0435-4a2c-a488-9bf54afff632 t=3 pos=2.60/100.11/1.72 d=0.73/-0.49/0.43
+AOEAI diag_projimpact uuid=86de7d2c-0435-4a2c-a488-9bf54afff632 target=Husk already=false local_hit=false spell=shooting_star uuid=86de7d2c-0435-4a2c-a488-9bf54afff632 t=3 pos=2.60/100.11/1.72 d=0.73/-0.49/0.43
+AOEAI diag_projtick spell=shooting_star uuid=86de7d2c-0435-4a2c-a488-9bf54afff632 t=3 pos=2.60/100.11/1.72 d=0.72/-0.49/0.42
+AOEAI diag_heal value=5 target=ServerPlayer before=14.00 after=14.93 max=20.00
+AOEAI diag_proj spell=shooting_star t=4 n=0
+AOEAI diag_proj spell=shooting_star t=6 n=0
+AOEAI diag_proj spell=shooting_star t=8 n=0
+AOEAI diag_proj spell=shooting_star t=10 n=0
+AOEAI diag_proj spell=shooting_star t=12 n=0
+AOEAI diag_proj spell=shooting_star t=14 n=0
+AOEAI diag_proj spell=shooting_star t=16 n=0
+AOEAI diag_proj spell=shooting_star t=18 n=0
+AOEAI diag_proj spell=shooting_star t=20 n=0
+AOEAI diag_proj spell=shooting_star t=22 n=0
+AOEAI diag_proj spell=shooting_star t=24 n=0
+AOEAI spell=shooting_star school=divine verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=0.0 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=undying_will can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=undying_will t=2 n=0
+AOEAI diag_proj spell=undying_will t=4 n=0
+AOEAI diag_proj spell=undying_will t=6 n=0
+AOEAI diag_proj spell=undying_will t=8 n=0
+AOEAI diag_proj spell=undying_will t=10 n=0
+AOEAI diag_proj spell=undying_will t=12 n=0
+AOEAI diag_proj spell=undying_will t=14 n=0
+AOEAI diag_proj spell=undying_will t=16 n=0
+AOEAI diag_proj spell=undying_will t=18 n=0
+AOEAI diag_proj spell=undying_will t=20 n=0
+AOEAI diag_proj spell=undying_will t=22 n=0
+AOEAI diag_proj spell=undying_will t=24 n=0
+AOEAI spell=undying_will school=divine verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=0.0 shield=0.0 moved=0.0 items=0 effects=beneficial/24 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_damage target=Husk amount=0.0083 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9918
+AOEAI diag_damage target=Husk amount=0.0083 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9918
+AOEAI diag_damage target=Husk amount=0.0083 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9918
+AOEAI diag_damage target=Husk amount=0.0083 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9918
+AOEAI diag_damage target=Husk amount=0.0083 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9918
+AOEAI diag_cast spell=pull player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [0.0б hp=1024] [0.0б hp=1024] [0.0б hp=1024] [0.0б hp=1024] [0.0б hp=1024]
+AOEAI cast spell=pull can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=pull t=2 n=0
+AOEAI diag_proj spell=pull t=4 n=0
+AOEAI diag_proj spell=pull t=6 n=0
+AOEAI diag_proj spell=pull t=8 n=0
+AOEAI diag_proj spell=pull t=10 n=0
+AOEAI diag_proj spell=pull t=12 n=0
+AOEAI diag_proj spell=pull t=14 n=0
+AOEAI diag_proj spell=pull t=16 n=0
+AOEAI diag_proj spell=pull t=18 n=0
+AOEAI diag_proj spell=pull t=20 n=0
+AOEAI diag_proj spell=pull t=22 n=0
+AOEAI diag_proj spell=pull t=24 n=0
+AOEAI spell=pull school=divine verdict=PASS dmg=9.4 hits=5 dmg_events=5 heal=0.0 mana=0.0 shield=0.0 moved=0.0 items=0 effects=negative/11|slowness particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=song_of_perseverance can_cast=true cast_ticks=30 server_cast=true
+AOEAI diag_proj spell=song_of_perseverance t=2 n=0
+AOEAI diag_proj spell=song_of_perseverance t=4 n=0
+AOEAI diag_proj spell=song_of_perseverance t=6 n=0
+AOEAI diag_proj spell=song_of_perseverance t=8 n=0
+AOEAI diag_proj spell=song_of_perseverance t=10 n=0
+AOEAI diag_proj spell=song_of_perseverance t=12 n=0
+AOEAI diag_proj spell=song_of_perseverance t=14 n=0
+AOEAI diag_proj spell=song_of_perseverance t=16 n=0
+AOEAI diag_proj spell=song_of_perseverance t=18 n=0
+AOEAI diag_proj spell=song_of_perseverance t=20 n=0
+AOEAI diag_proj spell=song_of_perseverance t=22 n=0
+AOEAI diag_proj spell=song_of_perseverance t=24 n=0
+AOEAI spell=song_of_perseverance school=divine verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=10.8 shield=0.0 moved=0.0 items=0 effects=beneficial/19 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=song_of_valor can_cast=true cast_ticks=30 server_cast=true
+AOEAI diag_proj spell=song_of_valor t=2 n=0
+AOEAI diag_proj spell=song_of_valor t=4 n=0
+AOEAI diag_proj spell=song_of_valor t=6 n=0
+AOEAI diag_proj spell=song_of_valor t=8 n=0
+AOEAI diag_proj spell=song_of_valor t=10 n=0
+AOEAI diag_proj spell=song_of_valor t=12 n=0
+AOEAI diag_proj spell=song_of_valor t=14 n=0
+AOEAI diag_proj spell=song_of_valor t=16 n=0
+AOEAI diag_proj spell=song_of_valor t=18 n=0
+AOEAI diag_proj spell=song_of_valor t=20 n=0
+AOEAI diag_proj spell=song_of_valor t=22 n=0
+AOEAI diag_proj spell=song_of_valor t=24 n=0
+AOEAI spell=song_of_valor school=divine verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=10.8 shield=0.0 moved=0.0 items=0 effects=beneficial/18 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=song_of_vigor can_cast=true cast_ticks=30 server_cast=true
+AOEAI diag_proj spell=song_of_vigor t=2 n=0
+AOEAI diag_proj spell=song_of_vigor t=4 n=0
+AOEAI diag_proj spell=song_of_vigor t=6 n=0
+AOEAI diag_proj spell=song_of_vigor t=8 n=0
+AOEAI diag_proj spell=song_of_vigor t=10 n=0
+AOEAI diag_proj spell=song_of_vigor t=12 n=0
+AOEAI diag_proj spell=song_of_vigor t=14 n=0
+AOEAI diag_proj spell=song_of_vigor t=16 n=0
+AOEAI diag_proj spell=song_of_vigor t=18 n=0
+AOEAI diag_proj spell=song_of_vigor t=20 n=0
+AOEAI diag_proj spell=song_of_vigor t=22 n=0
+AOEAI diag_proj spell=song_of_vigor t=24 n=0
+AOEAI spell=song_of_vigor school=divine verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=10.8 shield=0.0 moved=0.0 items=0 effects=beneficial/20 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=awaken_mana can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=awaken_mana t=2 n=0
+AOEAI diag_proj spell=awaken_mana t=4 n=0
+AOEAI diag_proj spell=awaken_mana t=6 n=0
+AOEAI diag_proj spell=awaken_mana t=8 n=0
+AOEAI diag_proj spell=awaken_mana t=10 n=0
+AOEAI diag_proj spell=awaken_mana t=12 n=0
+AOEAI diag_proj spell=awaken_mana t=14 n=0
+AOEAI diag_proj spell=awaken_mana t=16 n=0
+AOEAI diag_proj spell=awaken_mana t=18 n=0
+AOEAI diag_proj spell=awaken_mana t=20 n=0
+AOEAI diag_proj spell=awaken_mana t=22 n=0
+AOEAI diag_proj spell=awaken_mana t=24 n=0
+AOEAI spell=awaken_mana school=divine verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=186.8 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_projenter spell=power_chord type=entity.mmorpg.spell_projectile count=1
+AOEAI diag_projshot spell=power_chord uuid=cafa70f4-41fe-45ec-8f7d-0c8e83f1040c pitch=30.0 yaw=-59.7 speed=1.00 start=0.50/101.52/0.50 d=0.74/-0.50/0.43
+AOEAI diag_cast spell=power_chord player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [4.5б hp=1024] [6.7б hp=1024] [2.8б hp=1024] [6.7б hp=1024] [3.5б hp=1024]
+AOEAI cast spell=power_chord can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projtick spell=power_chord uuid=cafa70f4-41fe-45ec-8f7d-0c8e83f1040c t=1 pos=1.24/101.02/0.93 d=0.74/-0.49/0.42
+AOEAI diag_projtick spell=power_chord uuid=cafa70f4-41fe-45ec-8f7d-0c8e83f1040c t=2 pos=1.98/100.53/1.35 d=0.73/-0.49/0.42
+AOEAI diag_proj spell=power_chord t=2 n=1 [SimpleProjectileEntity pos=1.48/0.53/0.85 d=0.73/-0.49/0.42 t=2]
+AOEAI diag_projonhit type=ENTITY spell=power_chord uuid=cafa70f4-41fe-45ec-8f7d-0c8e83f1040c t=3 pos=2.60/100.11/1.71 d=0.73/-0.49/0.42
+AOEAI diag_projimpact uuid=cafa70f4-41fe-45ec-8f7d-0c8e83f1040c target=Husk already=false local_hit=false spell=power_chord uuid=cafa70f4-41fe-45ec-8f7d-0c8e83f1040c t=3 pos=2.60/100.11/1.71 d=0.73/-0.49/0.42
+AOEAI diag_damage target=Husk amount=0.0217 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9783
+AOEAI diag_projtick spell=power_chord uuid=cafa70f4-41fe-45ec-8f7d-0c8e83f1040c t=3 pos=2.60/100.11/1.71 d=0.72/-0.48/0.42
+AOEAI diag_proj spell=power_chord t=4 n=0
+AOEAI diag_proj spell=power_chord t=6 n=0
+AOEAI diag_proj spell=power_chord t=8 n=0
+AOEAI diag_proj spell=power_chord t=10 n=0
+AOEAI diag_proj spell=power_chord t=12 n=0
+AOEAI diag_proj spell=power_chord t=14 n=0
+AOEAI diag_proj spell=power_chord t=16 n=0
+AOEAI diag_proj spell=power_chord t=18 n=0
+AOEAI diag_proj spell=power_chord t=20 n=0
+AOEAI diag_proj spell=power_chord t=22 n=0
+AOEAI diag_proj spell=power_chord t=24 n=0
+AOEAI spell=power_chord school=divine verdict=PASS dmg=5.0 hits=1 dmg_events=1 heal=4.0 mana=21.6 shield=0.0 moved=0.0 items=0 effects=negative/16 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=taunt can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=taunt t=2 n=0
+AOEAI diag_proj spell=taunt t=4 n=0
+AOEAI diag_proj spell=taunt t=6 n=0
+AOEAI diag_proj spell=taunt t=8 n=0
+AOEAI diag_proj spell=taunt t=10 n=0
+AOEAI diag_proj spell=taunt t=12 n=0
+AOEAI diag_proj spell=taunt t=14 n=0
+AOEAI diag_proj spell=taunt t=16 n=0
+AOEAI diag_proj spell=taunt t=18 n=0
+AOEAI diag_proj spell=taunt t=20 n=0
+AOEAI diag_proj spell=taunt t=22 n=0
+AOEAI diag_proj spell=taunt t=24 n=0
+AOEAI spell=taunt school=divine verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=10.8 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=banish can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projtick spell=banish uuid=3b56349d-a665-4b98-a267-eee8e37003b2 t=1 pos=2.92/100.00/1.91 d=0.00/0.00/0.00
+AOEAI diag_proj spell=banish t=2 n=0
+AOEAI diag_block spell=banish name=block age=1 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_proj spell=banish t=4 n=0
+AOEAI diag_proj spell=banish t=6 n=0
+AOEAI diag_proj spell=banish t=8 n=0
+AOEAI diag_proj spell=banish t=10 n=0
+AOEAI diag_proj spell=banish t=12 n=0
+AOEAI diag_proj spell=banish t=14 n=0
+AOEAI diag_proj spell=banish t=16 n=0
+AOEAI diag_proj spell=banish t=18 n=0
+AOEAI diag_proj spell=banish t=20 n=0
+AOEAI diag_block spell=banish name=block age=20 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_proj spell=banish t=22 n=0
+AOEAI diag_proj spell=banish t=24 n=0
+AOEAI diag_block spell=banish name=block age=40 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_block spell=banish name=block age=60 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_block spell=banish name=block age=80 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_block spell=banish name=block age=100 pos=2.50/100.00/1.50 dist=2.24
+AOEAI spell=banish school=divine verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=4.0 mana=21.6 shield=0.0 moved=0.0 items=0 effects=negative/0 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_heal value=176 target=ServerPlayer before=12.00 after=20.00 max=20.00
+AOEAI cast spell=wish can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=wish t=2 n=0
+AOEAI diag_proj spell=wish t=4 n=0
+AOEAI diag_proj spell=wish t=6 n=0
+AOEAI diag_proj spell=wish t=8 n=0
+AOEAI diag_proj spell=wish t=10 n=0
+AOEAI diag_proj spell=wish t=12 n=0
+AOEAI diag_proj spell=wish t=14 n=0
+AOEAI diag_proj spell=wish t=16 n=0
+AOEAI diag_proj spell=wish t=18 n=0
+AOEAI diag_proj spell=wish t=20 n=0
+AOEAI diag_proj spell=wish t=22 n=0
+AOEAI diag_proj spell=wish t=24 n=0
+AOEAI spell=wish school=divine verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=8.0 mana=10.8 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI school_end divine
+AOEAI school_start hunting spells=20
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_projenter spell=arrow_storm type=entity.mmorpg.spell_arrow count=5
+AOEAI diag_projshot spell=arrow_storm uuid=54217963-b709-4a90-9544-886ee222076d pitch=30.0 yaw=-59.7 speed=3.00 start=0.50/101.52/0.50 d=2.51/-1.51/0.67
+AOEAI diag_projshot spell=arrow_storm uuid=ff406e01-3442-4a26-9679-5aa5e86c4405 pitch=30.0 yaw=-59.7 speed=3.00 start=0.50/101.52/0.50 d=2.63/-1.48/0.01
+AOEAI diag_projshot spell=arrow_storm uuid=f1e5dc0a-7711-4999-8227-a09f5d320a31 pitch=30.0 yaw=-59.7 speed=3.00 start=0.50/101.52/0.50 d=2.24/-1.50/1.33
+AOEAI diag_projshot spell=arrow_storm uuid=c2eb6e62-0e80-49e5-9ca5-f395d4abc843 pitch=30.0 yaw=-59.7 speed=3.00 start=0.50/101.52/0.50 d=1.84/-1.48/1.86
+AOEAI diag_projshot spell=arrow_storm uuid=d4f587ae-f0ff-4c7f-9f38-10ab8ca3a6f3 pitch=30.0 yaw=-59.7 speed=3.00 start=0.50/101.52/0.50 d=1.29/-1.50/2.30
+AOEAI imbued_shot spell=arrow_storm
+AOEAI diag_cast spell=arrow_storm player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [6.7б hp=1024] [6.7б hp=1024] [2.8б hp=1024] [3.5б hp=1024] [4.5б hp=1024]
+AOEAI cast spell=arrow_storm can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projtick spell=arrow_storm uuid=54217963-b709-4a90-9544-886ee222076d t=1 pos=3.01/100.01/1.17 d=2.48/-1.54/0.66
+AOEAI diag_projtick spell=arrow_storm uuid=ff406e01-3442-4a26-9679-5aa5e86c4405 t=1 pos=3.13/100.04/0.51 d=2.60/-1.51/0.01
+AOEAI diag_projonhit type=ENTITY spell=arrow_storm uuid=f1e5dc0a-7711-4999-8227-a09f5d320a31 t=1 pos=2.60/100.12/1.74 d=2.24/-1.50/1.33
+AOEAI diag_projimpact uuid=f1e5dc0a-7711-4999-8227-a09f5d320a31 target=Husk already=false local_hit=false spell=arrow_storm uuid=f1e5dc0a-7711-4999-8227-a09f5d320a31 t=1 pos=2.60/100.12/1.74 d=2.24/-1.50/1.33
+AOEAI diag_damage target=Husk amount=0.0120 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9880
+AOEAI diag_projtick spell=arrow_storm uuid=f1e5dc0a-7711-4999-8227-a09f5d320a31 t=1 pos=2.60/100.12/1.74 d=2.22/-1.53/1.31
+AOEAI diag_projtick spell=arrow_storm uuid=c2eb6e62-0e80-49e5-9ca5-f395d4abc843 t=1 pos=2.34/100.04/2.36 d=1.82/-1.52/1.84
+AOEAI diag_projtick spell=arrow_storm uuid=d4f587ae-f0ff-4c7f-9f38-10ab8ca3a6f3 t=1 pos=1.79/100.02/2.80 d=1.27/-1.54/2.28
+AOEAI diag_projonhit type=BLOCK spell=arrow_storm uuid=54217963-b709-4a90-9544-886ee222076d t=2 pos=3.02/100.00/1.18 d=2.48/-1.54/0.66
+AOEAI diag_projimpact uuid=54217963-b709-4a90-9544-886ee222076d target=Husk already=false local_hit=false spell=arrow_storm uuid=54217963-b709-4a90-9544-886ee222076d t=2 pos=3.02/100.00/1.18 d=0.00/0.00/0.00
+AOEAI diag_damage target=Husk amount=0.0120 before=1023.9880
+AOEAI diag_damage_after accepted=true after=1023.9760
+AOEAI diag_projtick spell=arrow_storm uuid=54217963-b709-4a90-9544-886ee222076d t=2 pos=3.02/100.00/1.18 d=0.00/-0.05/0.00
+AOEAI diag_projonhit type=BLOCK spell=arrow_storm uuid=ff406e01-3442-4a26-9679-5aa5e86c4405 t=2 pos=3.20/100.00/0.52 d=2.60/-1.51/0.01
+AOEAI diag_projtick spell=arrow_storm uuid=ff406e01-3442-4a26-9679-5aa5e86c4405 t=2 pos=3.20/100.00/0.52 d=0.00/-0.05/0.00
+AOEAI diag_projonhit type=BLOCK spell=arrow_storm uuid=c2eb6e62-0e80-49e5-9ca5-f395d4abc843 t=2 pos=2.39/100.00/2.40 d=1.82/-1.52/1.84
+AOEAI diag_projimpact uuid=c2eb6e62-0e80-49e5-9ca5-f395d4abc843 target=Husk already=false local_hit=false spell=arrow_storm uuid=c2eb6e62-0e80-49e5-9ca5-f395d4abc843 t=2 pos=2.39/100.00/2.40 d=0.00/0.00/0.00
+AOEAI diag_damage target=Husk amount=0.0120 before=1023.9760
+AOEAI diag_damage_after accepted=true after=1023.9639
+AOEAI diag_projtick spell=arrow_storm uuid=c2eb6e62-0e80-49e5-9ca5-f395d4abc843 t=2 pos=2.39/100.00/2.40 d=0.00/-0.05/0.00
+AOEAI diag_projonhit type=BLOCK spell=arrow_storm uuid=d4f587ae-f0ff-4c7f-9f38-10ab8ca3a6f3 t=2 pos=1.80/100.00/2.83 d=1.27/-1.54/2.28
+AOEAI diag_projimpact uuid=d4f587ae-f0ff-4c7f-9f38-10ab8ca3a6f3 target=Husk already=false local_hit=false spell=arrow_storm uuid=d4f587ae-f0ff-4c7f-9f38-10ab8ca3a6f3 t=2 pos=1.80/100.00/2.83 d=0.00/0.00/0.00
+AOEAI diag_damage target=Husk amount=0.0120 before=1023.9639
+AOEAI diag_damage_after accepted=true after=1023.9519
+AOEAI diag_projtick spell=arrow_storm uuid=d4f587ae-f0ff-4c7f-9f38-10ab8ca3a6f3 t=2 pos=1.80/100.00/2.83 d=0.00/-0.05/0.00
+AOEAI diag_proj spell=arrow_storm t=2 n=4 [SimpleArrowEntity pos=2.52/0.00/0.68 d=0.00/-0.05/0.00 t=2] [SimpleArrowEntity pos=2.70/0.00/0.02 d=0.00/-0.05/0.00 t=2] [SimpleArrowEntity pos=1.89/0.00/1.90 d=0.00/-0.05/0.00 t=2] [SimpleArrowEntity pos=1.30/0.00/2.33 d=0.00/-0.05/0.00 t=2]
+AOEAI diag_proj spell=arrow_storm t=4 n=0
+AOEAI diag_proj spell=arrow_storm t=6 n=0
+AOEAI diag_proj spell=arrow_storm t=8 n=0
+AOEAI diag_proj spell=arrow_storm t=10 n=0
+AOEAI diag_proj spell=arrow_storm t=12 n=0
+AOEAI diag_proj spell=arrow_storm t=14 n=0
+AOEAI diag_proj spell=arrow_storm t=16 n=0
+AOEAI diag_proj spell=arrow_storm t=18 n=0
+AOEAI diag_proj spell=arrow_storm t=20 n=0
+AOEAI diag_proj spell=arrow_storm t=22 n=0
+AOEAI diag_proj spell=arrow_storm t=24 n=0
+AOEAI spell=arrow_storm school=hunting verdict=PASS dmg=11.3 hits=4 dmg_events=4 heal=4.0 mana=21.6 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=make_arrows can_cast=true cast_ticks=80 server_cast=true
+AOEAI diag_proj spell=make_arrows t=2 n=0
+AOEAI diag_proj spell=make_arrows t=4 n=0
+AOEAI diag_proj spell=make_arrows t=6 n=0
+AOEAI diag_proj spell=make_arrows t=8 n=0
+AOEAI diag_proj spell=make_arrows t=10 n=0
+AOEAI diag_proj spell=make_arrows t=12 n=0
+AOEAI diag_proj spell=make_arrows t=14 n=0
+AOEAI diag_proj spell=make_arrows t=16 n=0
+AOEAI diag_proj spell=make_arrows t=18 n=0
+AOEAI diag_proj spell=make_arrows t=20 n=0
+AOEAI diag_proj spell=make_arrows t=22 n=0
+AOEAI diag_proj spell=make_arrows t=24 n=0
+AOEAI spell=make_arrows school=hunting verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=0.0 shield=0.0 moved=0.0 items=64 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=jump_field can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projtick spell=jump_field uuid=f6b680c5-363b-45d4-9794-f6a35ba2f252 t=1 pos=2.92/100.00/1.91 d=0.00/0.00/0.00
+AOEAI diag_proj spell=jump_field t=2 n=0
+AOEAI diag_block spell=jump_field name=block age=1 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_proj spell=jump_field t=4 n=0
+AOEAI diag_proj spell=jump_field t=6 n=0
+AOEAI diag_proj spell=jump_field t=8 n=0
+AOEAI diag_proj spell=jump_field t=10 n=0
+AOEAI diag_proj spell=jump_field t=12 n=0
+AOEAI diag_proj spell=jump_field t=14 n=0
+AOEAI diag_proj spell=jump_field t=16 n=0
+AOEAI diag_proj spell=jump_field t=18 n=0
+AOEAI diag_proj spell=jump_field t=20 n=0
+AOEAI diag_block spell=jump_field name=block age=20 pos=2.50/100.00/1.50 dist=21.79
+AOEAI diag_proj spell=jump_field t=22 n=0
+AOEAI diag_proj spell=jump_field t=24 n=0
+AOEAI diag_block spell=jump_field name=block age=40 pos=2.50/100.00/1.50 dist=11.89
+AOEAI diag_block spell=jump_field name=block age=60 pos=2.50/100.00/1.50 dist=19.88
+AOEAI diag_block spell=jump_field name=block age=80 pos=2.50/100.00/1.50 dist=17.17
+AOEAI diag_block spell=jump_field name=block age=100 pos=2.50/100.00/1.50 dist=15.67
+AOEAI spell=jump_field school=hunting verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=4.0 mana=21.6 shield=0.0 moved=22.7 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=dash can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projtick spell=dash uuid=3855d09d-8293-484a-b339-5401899d51ed t=1 pos=2.92/100.00/1.91 d=0.00/0.00/0.00
+AOEAI diag_proj spell=dash t=2 n=0
+AOEAI diag_block spell=dash name=block age=1 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_proj spell=dash t=4 n=0
+AOEAI diag_proj spell=dash t=6 n=0
+AOEAI diag_proj spell=dash t=8 n=0
+AOEAI diag_proj spell=dash t=10 n=0
+AOEAI diag_proj spell=dash t=12 n=0
+AOEAI diag_proj spell=dash t=14 n=0
+AOEAI diag_proj spell=dash t=16 n=0
+AOEAI diag_proj spell=dash t=18 n=0
+AOEAI diag_proj spell=dash t=20 n=0
+AOEAI diag_proj spell=dash t=22 n=0
+AOEAI diag_proj spell=dash t=24 n=0
+AOEAI spell=dash school=hunting verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=4.0 mana=21.6 shield=0.0 moved=2.2 items=0 effects=slow_falling particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_heal value=176 target=ServerPlayer before=12.00 after=20.00 max=20.00
+AOEAI cast spell=hunter_potion can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=hunter_potion t=2 n=0
+AOEAI diag_proj spell=hunter_potion t=4 n=0
+AOEAI diag_proj spell=hunter_potion t=6 n=0
+AOEAI diag_proj spell=hunter_potion t=8 n=0
+AOEAI diag_proj spell=hunter_potion t=10 n=0
+AOEAI diag_proj spell=hunter_potion t=12 n=0
+AOEAI diag_proj spell=hunter_potion t=14 n=0
+AOEAI diag_proj spell=hunter_potion t=16 n=0
+AOEAI diag_proj spell=hunter_potion t=18 n=0
+AOEAI diag_proj spell=hunter_potion t=20 n=0
+AOEAI diag_proj spell=hunter_potion t=22 n=0
+AOEAI diag_proj spell=hunter_potion t=24 n=0
+AOEAI spell=hunter_potion school=hunting verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=8.0 mana=10.8 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_projenter spell=poison_arrow type=entity.mmorpg.spell_arrow count=1
+AOEAI diag_projshot spell=poison_arrow uuid=e6d0fd62-b366-4c99-a827-7baaef245118 pitch=30.0 yaw=-59.7 speed=3.00 start=0.50/101.52/0.50 d=2.26/-1.49/1.34
+AOEAI imbued_shot spell=poison_arrow
+AOEAI diag_cast spell=poison_arrow player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [4.5б hp=1024] [6.7б hp=1024] [6.7б hp=1024] [2.8б hp=1024] [3.5б hp=1024]
+AOEAI cast spell=poison_arrow can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projonhit type=ENTITY spell=poison_arrow uuid=e6d0fd62-b366-4c99-a827-7baaef245118 t=1 pos=2.60/100.14/1.75 d=2.26/-1.49/1.34
+AOEAI diag_projimpact uuid=e6d0fd62-b366-4c99-a827-7baaef245118 target=Husk already=false local_hit=false spell=poison_arrow uuid=e6d0fd62-b366-4c99-a827-7baaef245118 t=1 pos=2.60/100.14/1.75 d=2.26/-1.49/1.34
+AOEAI diag_projtick spell=poison_arrow uuid=e6d0fd62-b366-4c99-a827-7baaef245118 t=1 pos=2.60/100.14/1.75 d=2.24/-1.53/1.33
+AOEAI diag_damage target=Husk amount=0.0195 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9805
+AOEAI diag_proj spell=poison_arrow t=2 n=0
+AOEAI diag_proj spell=poison_arrow t=4 n=0
+AOEAI diag_proj spell=poison_arrow t=6 n=0
+AOEAI diag_proj spell=poison_arrow t=8 n=0
+AOEAI diag_damage target=Husk amount=0.0664 before=1023.9805
+AOEAI diag_damage_after accepted=true after=1023.9141
+AOEAI diag_proj spell=poison_arrow t=10 n=0
+AOEAI diag_proj spell=poison_arrow t=12 n=0
+AOEAI diag_proj spell=poison_arrow t=14 n=0
+AOEAI diag_proj spell=poison_arrow t=16 n=0
+AOEAI diag_proj spell=poison_arrow t=18 n=0
+AOEAI diag_proj spell=poison_arrow t=20 n=0
+AOEAI diag_proj spell=poison_arrow t=22 n=0
+AOEAI diag_proj spell=poison_arrow t=24 n=0
+AOEAI diag_damage target=Husk amount=0.0664 before=1023.9141
+AOEAI diag_damage_after accepted=true after=1023.8478
+AOEAI diag_damage target=Husk amount=0.0664 before=1023.8478
+AOEAI diag_damage_after accepted=true after=1023.7814
+AOEAI diag_damage target=Husk amount=0.0664 before=1023.7814
+AOEAI diag_damage_after accepted=true after=1023.7151
+AOEAI diag_damage target=Husk amount=0.0664 before=1023.7151
+AOEAI diag_damage_after accepted=true after=1023.6487
+AOEAI diag_damage target=Husk amount=0.0664 before=1023.6487
+AOEAI diag_damage_after accepted=true after=1023.5824
+AOEAI diag_damage target=Husk amount=0.0664 before=1023.5824
+AOEAI diag_damage_after accepted=true after=1023.5161
+AOEAI spell=poison_arrow school=hunting verdict=PASS dmg=117.0 hits=8 dmg_events=8 heal=4.0 mana=21.6 shield=0.0 moved=0.0 items=0 effects=negative/3|slowness particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_projenter spell=mark_for_death type=entity.mmorpg.spell_projectile count=1
+AOEAI diag_projshot spell=mark_for_death uuid=8de0164d-6fe4-4278-8e1e-f10a48b6b502 pitch=30.0 yaw=-59.7 speed=2.00 start=0.50/101.52/0.50 d=1.49/-1.02/0.90
+AOEAI cast spell=mark_for_death can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projtick spell=mark_for_death uuid=8de0164d-6fe4-4278-8e1e-f10a48b6b502 t=1 pos=1.99/100.50/1.40 d=1.47/-1.01/0.89
+AOEAI diag_projonhit type=ENTITY spell=mark_for_death uuid=8de0164d-6fe4-4278-8e1e-f10a48b6b502 t=2 pos=2.60/100.09/1.76 d=1.47/-1.01/0.89
+AOEAI diag_projimpact uuid=8de0164d-6fe4-4278-8e1e-f10a48b6b502 target=Husk already=false local_hit=false spell=mark_for_death uuid=8de0164d-6fe4-4278-8e1e-f10a48b6b502 t=2 pos=2.60/100.09/1.76 d=1.47/-1.01/0.89
+AOEAI diag_projtick spell=mark_for_death uuid=8de0164d-6fe4-4278-8e1e-f10a48b6b502 t=2 pos=2.60/100.09/1.76 d=1.46/-1.00/0.88
+AOEAI diag_proj spell=mark_for_death t=2 n=1 [SimpleProjectileEntity pos=2.10/0.09/1.26 d=1.46/-1.00/0.88 t=2]
+AOEAI diag_proj spell=mark_for_death t=4 n=0
+AOEAI diag_proj spell=mark_for_death t=6 n=0
+AOEAI diag_proj spell=mark_for_death t=8 n=0
+AOEAI diag_proj spell=mark_for_death t=10 n=0
+AOEAI diag_proj spell=mark_for_death t=12 n=0
+AOEAI diag_proj spell=mark_for_death t=14 n=0
+AOEAI diag_proj spell=mark_for_death t=16 n=0
+AOEAI diag_proj spell=mark_for_death t=18 n=0
+AOEAI diag_proj spell=mark_for_death t=20 n=0
+AOEAI diag_proj spell=mark_for_death t=22 n=0
+AOEAI diag_proj spell=mark_for_death t=24 n=0
+AOEAI spell=mark_for_death school=hunting verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=4.0 mana=21.6 shield=0.0 moved=0.0 items=0 effects=beneficial/31|knockback_resist|negative/18|glowing particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=smoke_bomb can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=smoke_bomb t=2 n=0
+AOEAI diag_proj spell=smoke_bomb t=4 n=0
+AOEAI diag_proj spell=smoke_bomb t=6 n=0
+AOEAI diag_proj spell=smoke_bomb t=8 n=0
+AOEAI diag_proj spell=smoke_bomb t=10 n=0
+AOEAI diag_proj spell=smoke_bomb t=12 n=0
+AOEAI diag_proj spell=smoke_bomb t=14 n=0
+AOEAI diag_proj spell=smoke_bomb t=16 n=0
+AOEAI diag_proj spell=smoke_bomb t=18 n=0
+AOEAI diag_proj spell=smoke_bomb t=20 n=0
+AOEAI diag_proj spell=smoke_bomb t=22 n=0
+AOEAI diag_proj spell=smoke_bomb t=24 n=0
+AOEAI spell=smoke_bomb school=hunting verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=0.0 shield=0.0 moved=0.0 items=0 effects=negative/10 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=the_hunt can_cast=true cast_ticks=20 server_cast=true
+AOEAI diag_proj spell=the_hunt t=2 n=0
+AOEAI diag_proj spell=the_hunt t=4 n=0
+AOEAI diag_proj spell=the_hunt t=6 n=0
+AOEAI diag_proj spell=the_hunt t=8 n=0
+AOEAI diag_proj spell=the_hunt t=10 n=0
+AOEAI diag_proj spell=the_hunt t=12 n=0
+AOEAI diag_proj spell=the_hunt t=14 n=0
+AOEAI diag_proj spell=the_hunt t=16 n=0
+AOEAI diag_proj spell=the_hunt t=18 n=0
+AOEAI diag_proj spell=the_hunt t=20 n=0
+AOEAI diag_proj spell=the_hunt t=22 n=0
+AOEAI diag_proj spell=the_hunt t=24 n=0
+AOEAI spell=the_hunt school=hunting verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=10.8 shield=0.0 moved=0.0 items=0 effects=night_vision|speed|glowing particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_projenter spell=charged_bolt type=entity.mmorpg.spell_arrow count=1
+AOEAI diag_projshot spell=charged_bolt uuid=8388db3a-543e-4180-a593-24a1cf8ccfe2 pitch=30.0 yaw=-59.7 speed=1.00 start=0.50/101.52/0.50 d=0.75/-0.50/0.44
+AOEAI imbued_shot spell=charged_bolt
+AOEAI diag_cast spell=charged_bolt player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [6.7б hp=1024] [2.8б hp=1024] [4.5б hp=1024] [3.5б hp=1024] [6.7б hp=1024]
+AOEAI cast spell=charged_bolt can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projtick spell=charged_bolt uuid=8388db3a-543e-4180-a593-24a1cf8ccfe2 t=1 pos=1.25/101.02/0.94 d=0.74/-0.50/0.43
+AOEAI diag_projtick spell=charged_bolt uuid=8388db3a-543e-4180-a593-24a1cf8ccfe2 t=2 pos=1.98/100.52/1.37 d=0.73/-0.49/0.43
+AOEAI diag_proj spell=charged_bolt t=2 n=1 [SimpleArrowEntity pos=1.48/0.52/0.87 d=0.73/-0.49/0.43 t=2]
+AOEAI diag_projonhit type=ENTITY spell=charged_bolt uuid=8388db3a-543e-4180-a593-24a1cf8ccfe2 t=3 pos=2.60/100.11/1.73 d=0.73/-0.49/0.43
+AOEAI diag_projimpact uuid=8388db3a-543e-4180-a593-24a1cf8ccfe2 target=Husk already=false local_hit=false spell=charged_bolt uuid=8388db3a-543e-4180-a593-24a1cf8ccfe2 t=3 pos=2.60/100.11/1.73 d=0.73/-0.49/0.43
+AOEAI diag_damage target=Husk amount=0.0192 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9808
+AOEAI diag_projtick spell=charged_bolt uuid=8388db3a-543e-4180-a593-24a1cf8ccfe2 t=3 pos=2.60/100.11/1.73 d=0.72/-0.49/0.42
+AOEAI diag_projonhit type=BLOCK spell=charged_bolt uuid=8388db3a-543e-4180-a593-24a1cf8ccfe2 t=4 pos=2.76/100.00/1.83 d=0.72/-0.49/0.42
+AOEAI diag_projimpact uuid=8388db3a-543e-4180-a593-24a1cf8ccfe2 target=Husk already=true local_hit=true spell=charged_bolt uuid=8388db3a-543e-4180-a593-24a1cf8ccfe2 t=4 pos=2.76/100.00/1.83 d=0.00/0.00/0.00
+AOEAI diag_projtick spell=charged_bolt uuid=8388db3a-543e-4180-a593-24a1cf8ccfe2 t=4 pos=2.76/100.00/1.83 d=0.00/0.00/0.00
+AOEAI diag_proj spell=charged_bolt t=4 n=1 [SimpleArrowEntity pos=2.26/0.00/1.33 d=0.00/0.00/0.00 t=4]
+AOEAI diag_projtick spell=charged_bolt uuid=8388db3a-543e-4180-a593-24a1cf8ccfe2 t=5 pos=2.76/100.00/1.83 d=0.00/0.00/0.00
+AOEAI diag_projtick spell=charged_bolt uuid=8388db3a-543e-4180-a593-24a1cf8ccfe2 t=6 pos=2.76/100.00/1.83 d=0.00/0.00/0.00
+AOEAI diag_proj spell=charged_bolt t=6 n=1 [SimpleArrowEntity pos=2.26/0.00/1.33 d=0.00/0.00/0.00 t=6]
+AOEAI diag_projtick spell=charged_bolt uuid=8388db3a-543e-4180-a593-24a1cf8ccfe2 t=7 pos=2.76/100.00/1.83 d=0.00/0.00/0.00
+AOEAI diag_projtick spell=charged_bolt uuid=8388db3a-543e-4180-a593-24a1cf8ccfe2 t=8 pos=2.76/100.00/1.83 d=0.00/0.00/0.00
+AOEAI diag_proj spell=charged_bolt t=8 n=1 [SimpleArrowEntity pos=2.26/0.00/1.33 d=0.00/0.00/0.00 t=8]
+AOEAI diag_proj spell=charged_bolt t=10 n=1 [SimpleArrowEntity pos=2.26/0.00/1.33 d=0.00/0.00/0.00 t=10]
+AOEAI diag_proj spell=charged_bolt t=12 n=1 [SimpleArrowEntity pos=2.26/0.00/1.33 d=0.00/0.00/0.00 t=12]
+AOEAI diag_proj spell=charged_bolt t=14 n=1 [SimpleArrowEntity pos=2.26/0.00/1.33 d=0.00/0.00/0.00 t=14]
+AOEAI diag_proj spell=charged_bolt t=16 n=1 [SimpleArrowEntity pos=2.26/0.00/1.33 d=0.00/0.00/0.00 t=16]
+AOEAI diag_proj spell=charged_bolt t=18 n=1 [SimpleArrowEntity pos=2.26/0.00/1.33 d=0.00/0.00/0.00 t=18]
+AOEAI diag_proj spell=charged_bolt t=20 n=1 [SimpleArrowEntity pos=2.26/0.00/1.33 d=0.00/0.00/0.00 t=20]
+AOEAI diag_proj spell=charged_bolt t=22 n=1 [SimpleArrowEntity pos=2.26/0.00/1.33 d=0.00/0.00/0.00 t=22]
+AOEAI diag_proj spell=charged_bolt t=24 n=1 [SimpleArrowEntity pos=2.26/0.00/1.33 d=0.00/0.00/0.00 t=24]
+AOEAI spell=charged_bolt school=hunting verdict=PASS dmg=4.7 hits=1 dmg_events=1 heal=4.0 mana=21.6 shield=0.0 moved=0.0 items=0 effects=slowness particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_damage target=Husk amount=0.0153 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9847
+AOEAI diag_damage target=Husk amount=0.0153 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9847
+AOEAI diag_cast spell=shred player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [6.7б hp=1024] [6.7б hp=1024] [3.5б hp=1024] [4.5б hp=1024] [2.8б hp=1024]
+AOEAI cast spell=shred can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=shred t=2 n=0
+AOEAI diag_proj spell=shred t=4 n=0
+AOEAI diag_proj spell=shred t=6 n=0
+AOEAI diag_proj spell=shred t=8 n=0
+AOEAI diag_proj spell=shred t=10 n=0
+AOEAI diag_proj spell=shred t=12 n=0
+AOEAI diag_proj spell=shred t=14 n=0
+AOEAI diag_proj spell=shred t=16 n=0
+AOEAI diag_proj spell=shred t=18 n=0
+AOEAI diag_proj spell=shred t=20 n=0
+AOEAI diag_proj spell=shred t=22 n=0
+AOEAI diag_proj spell=shred t=24 n=0
+AOEAI spell=shred school=hunting verdict=PASS dmg=7.5 hits=2 dmg_events=2 heal=0.0 mana=0.0 shield=0.0 moved=0.0 items=0 effects=negative/19 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_projenter spell=recoil_shot type=entity.mmorpg.spell_arrow count=1
+AOEAI diag_projshot spell=recoil_shot uuid=70df0898-012a-49d6-9e0d-8c7e2db3c949 pitch=30.0 yaw=-59.7 speed=3.00 start=0.50/101.52/0.50 d=2.23/-1.51/1.30
+AOEAI imbued_shot spell=recoil_shot
+AOEAI diag_cast spell=recoil_shot player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [6.7б hp=1024] [4.5б hp=1024] [6.7б hp=1024] [3.5б hp=1024] [2.8б hp=1024]
+AOEAI cast spell=recoil_shot can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projonhit type=ENTITY spell=recoil_shot uuid=70df0898-012a-49d6-9e0d-8c7e2db3c949 t=1 pos=2.60/100.10/1.73 d=2.23/-1.51/1.30
+AOEAI diag_projimpact uuid=70df0898-012a-49d6-9e0d-8c7e2db3c949 target=Husk already=false local_hit=false spell=recoil_shot uuid=70df0898-012a-49d6-9e0d-8c7e2db3c949 t=1 pos=2.60/100.10/1.73 d=2.23/-1.51/1.30
+AOEAI diag_damage target=Husk amount=0.0646 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9354
+AOEAI diag_projtick spell=recoil_shot uuid=70df0898-012a-49d6-9e0d-8c7e2db3c949 t=1 pos=2.60/100.10/1.73 d=2.21/-1.54/1.29
+AOEAI diag_proj spell=recoil_shot t=2 n=0
+AOEAI diag_proj spell=recoil_shot t=4 n=0
+AOEAI diag_proj spell=recoil_shot t=6 n=0
+AOEAI diag_proj spell=recoil_shot t=8 n=0
+AOEAI diag_proj spell=recoil_shot t=10 n=0
+AOEAI diag_proj spell=recoil_shot t=12 n=0
+AOEAI diag_proj spell=recoil_shot t=14 n=0
+AOEAI diag_proj spell=recoil_shot t=16 n=0
+AOEAI diag_proj spell=recoil_shot t=18 n=0
+AOEAI diag_proj spell=recoil_shot t=20 n=0
+AOEAI diag_proj spell=recoil_shot t=22 n=0
+AOEAI diag_proj spell=recoil_shot t=24 n=0
+AOEAI spell=recoil_shot school=hunting verdict=PASS dmg=16.0 hits=1 dmg_events=1 heal=4.0 mana=21.6 shield=0.0 moved=4.2 items=0 effects=negative/4 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=backflip can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=backflip t=2 n=0
+AOEAI diag_proj spell=backflip t=4 n=0
+AOEAI diag_proj spell=backflip t=6 n=0
+AOEAI diag_proj spell=backflip t=8 n=0
+AOEAI diag_proj spell=backflip t=10 n=0
+AOEAI diag_proj spell=backflip t=12 n=0
+AOEAI diag_proj spell=backflip t=14 n=0
+AOEAI diag_proj spell=backflip t=16 n=0
+AOEAI diag_proj spell=backflip t=18 n=0
+AOEAI diag_proj spell=backflip t=20 n=0
+AOEAI diag_proj spell=backflip t=22 n=0
+AOEAI diag_proj spell=backflip t=24 n=0
+AOEAI spell=backflip school=hunting verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=0.0 shield=0.0 moved=8.4 items=0 effects=beneficial/30 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=levitation can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=levitation t=2 n=0
+AOEAI diag_proj spell=levitation t=4 n=0
+AOEAI diag_proj spell=levitation t=6 n=0
+AOEAI diag_proj spell=levitation t=8 n=0
+AOEAI diag_proj spell=levitation t=10 n=0
+AOEAI diag_proj spell=levitation t=12 n=0
+AOEAI diag_proj spell=levitation t=14 n=0
+AOEAI diag_proj spell=levitation t=16 n=0
+AOEAI diag_proj spell=levitation t=18 n=0
+AOEAI diag_proj spell=levitation t=20 n=0
+AOEAI diag_proj spell=levitation t=22 n=0
+AOEAI diag_proj spell=levitation t=24 n=0
+AOEAI spell=levitation school=hunting verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=10.8 shield=0.0 moved=0.7 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_cast spell=execute player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [6.7б hp=1024] [6.7б hp=1024] [3.5б hp=1024] [4.5б hp=1024] [2.8б hp=1024]
+AOEAI cast spell=execute can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=execute t=2 n=0
+AOEAI diag_proj spell=execute t=4 n=0
+AOEAI diag_proj spell=execute t=6 n=0
+AOEAI diag_proj spell=execute t=8 n=0
+AOEAI diag_proj spell=execute t=10 n=0
+AOEAI diag_proj spell=execute t=12 n=0
+AOEAI diag_proj spell=execute t=14 n=0
+AOEAI diag_proj spell=execute t=16 n=0
+AOEAI diag_proj spell=execute t=18 n=0
+AOEAI diag_proj spell=execute t=20 n=0
+AOEAI diag_proj spell=execute t=22 n=0
+AOEAI diag_proj spell=execute t=24 n=0
+AOEAI retry spell=execute с кольцом манекенов
+AOEAI diag_damage target=Husk amount=0.0181 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9819
+AOEAI diag_damage target=Husk amount=0.0600 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9400
+AOEAI diag_damage target=Husk amount=0.0600 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9400
+AOEAI diag_damage target=Husk amount=0.0600 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9400
+AOEAI diag_damage target=Husk amount=0.0600 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9400
+AOEAI diag_damage target=Husk amount=0.0600 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9400
+AOEAI diag_damage target=Husk amount=0.0600 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9400
+AOEAI diag_damage target=Husk amount=0.0600 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9400
+AOEAI diag_damage target=Husk amount=0.0600 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9400
+AOEAI diag_cast spell=execute player=0.5/100.0/0.5 yaw=0 pitch=30 cast_ticks=0 can_cast=true dummies=9 [1.0б hp=1024] [1.2б hp=1024] [1.2б hp=1024] [1.2б hp=1024] [1.2б hp=1024] [1.2б hp=1024] [1.2б hp=1024] [1.2б hp=1024] [1.2б hp=1024]
+AOEAI cast spell=execute can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=execute t=2 n=0
+AOEAI diag_proj spell=execute t=4 n=0
+AOEAI diag_proj spell=execute t=6 n=0
+AOEAI diag_proj spell=execute t=8 n=0
+AOEAI diag_proj spell=execute t=10 n=0
+AOEAI diag_proj spell=execute t=12 n=0
+AOEAI diag_proj spell=execute t=14 n=0
+AOEAI diag_proj spell=execute t=16 n=0
+AOEAI diag_proj spell=execute t=18 n=0
+AOEAI diag_proj spell=execute t=20 n=0
+AOEAI diag_proj spell=execute t=22 n=0
+AOEAI diag_proj spell=execute t=24 n=0
+AOEAI spell=execute school=hunting verdict=PASS dmg=134.4 hits=9 dmg_events=9 heal=0.0 mana=10.8 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_projenter spell=fire_trap type=entity.mmorpg.spell_projectile count=1
+AOEAI diag_projshot spell=fire_trap uuid=d126f9d7-5e92-47a0-b760-e8e5fb37f996 pitch=30.0 yaw=-59.7 speed=0.50 start=0.50/101.52/0.50 d=0.37/-0.25/0.22
+AOEAI diag_cast spell=fire_trap player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [4.5б hp=1024] [2.8б hp=1024] [6.7б hp=1024] [3.5б hp=1024] [6.7б hp=1024]
+AOEAI cast spell=fire_trap can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projtick spell=fire_trap uuid=d126f9d7-5e92-47a0-b760-e8e5fb37f996 t=1 pos=0.87/101.27/0.72 d=0.37/-0.30/0.22
+AOEAI diag_projtick spell=fire_trap uuid=d126f9d7-5e92-47a0-b760-e8e5fb37f996 t=2 pos=1.24/100.97/0.95 d=0.36/-0.34/0.22
+AOEAI diag_proj spell=fire_trap t=2 n=1 [SimpleProjectileEntity pos=0.74/0.97/0.45 d=0.36/-0.34/0.22 t=2]
+AOEAI diag_projtick spell=fire_trap uuid=d126f9d7-5e92-47a0-b760-e8e5fb37f996 t=3 pos=1.60/100.63/1.16 d=0.36/-0.39/0.22
+AOEAI diag_projtick spell=fire_trap uuid=d126f9d7-5e92-47a0-b760-e8e5fb37f996 t=4 pos=1.96/100.24/1.38 d=0.36/-0.44/0.21
+AOEAI diag_proj spell=fire_trap t=4 n=1 [SimpleProjectileEntity pos=1.46/0.24/0.88 d=0.36/-0.44/0.21 t=4]
+AOEAI diag_projonhit type=BLOCK spell=fire_trap uuid=d126f9d7-5e92-47a0-b760-e8e5fb37f996 t=5 pos=2.15/100.00/1.50 d=0.36/-0.44/0.21
+AOEAI diag_projimpact uuid=d126f9d7-5e92-47a0-b760-e8e5fb37f996 target=Husk already=false local_hit=false spell=fire_trap uuid=d126f9d7-5e92-47a0-b760-e8e5fb37f996 t=5 pos=2.15/100.00/1.50 d=0.00/0.00/0.00
+AOEAI diag_projtick spell=fire_trap uuid=d126f9d7-5e92-47a0-b760-e8e5fb37f996 t=5 pos=2.15/100.00/1.50 d=0.00/-0.05/0.00
+AOEAI diag_proj spell=fire_trap t=6 n=0
+AOEAI diag_block spell=fire_trap name=trap age=1 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_damage target=Husk amount=0.0090 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9910
+AOEAI diag_proj spell=fire_trap t=8 n=0
+AOEAI diag_proj spell=fire_trap t=10 n=0
+AOEAI diag_proj spell=fire_trap t=12 n=0
+AOEAI diag_proj spell=fire_trap t=14 n=0
+AOEAI diag_proj spell=fire_trap t=16 n=0
+AOEAI diag_proj spell=fire_trap t=18 n=0
+AOEAI diag_proj spell=fire_trap t=20 n=0
+AOEAI diag_proj spell=fire_trap t=22 n=0
+AOEAI diag_proj spell=fire_trap t=24 n=0
+AOEAI spell=fire_trap school=hunting verdict=PASS dmg=6.8 hits=1 dmg_events=1 heal=0.0 mana=0.0 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_projenter spell=frost_trap type=entity.mmorpg.spell_projectile count=1
+AOEAI diag_projshot spell=frost_trap uuid=1e4d8f85-abd5-4788-ba81-0b9f06aa7db3 pitch=30.0 yaw=-59.7 speed=0.50 start=0.50/101.52/0.50 d=0.38/-0.25/0.22
+AOEAI diag_cast spell=frost_trap player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [4.5б hp=1024] [6.7б hp=1024] [2.8б hp=1024] [3.5б hp=1024] [6.7б hp=1024]
+AOEAI cast spell=frost_trap can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projtick spell=frost_trap uuid=1e4d8f85-abd5-4788-ba81-0b9f06aa7db3 t=1 pos=0.88/101.27/0.72 d=0.37/-0.30/0.21
+AOEAI diag_projtick spell=frost_trap uuid=1e4d8f85-abd5-4788-ba81-0b9f06aa7db3 t=2 pos=1.25/100.98/0.93 d=0.37/-0.34/0.21
+AOEAI diag_proj spell=frost_trap t=2 n=1 [SimpleProjectileEntity pos=0.75/0.98/0.43 d=0.37/-0.34/0.21 t=2]
+AOEAI diag_projtick spell=frost_trap uuid=1e4d8f85-abd5-4788-ba81-0b9f06aa7db3 t=3 pos=1.62/100.63/1.14 d=0.36/-0.39/0.21
+AOEAI diag_projtick spell=frost_trap uuid=1e4d8f85-abd5-4788-ba81-0b9f06aa7db3 t=4 pos=1.98/100.24/1.36 d=0.36/-0.44/0.21
+AOEAI diag_proj spell=frost_trap t=4 n=1 [SimpleProjectileEntity pos=1.48/0.24/0.86 d=0.36/-0.44/0.21 t=4]
+AOEAI diag_projonhit type=BLOCK spell=frost_trap uuid=1e4d8f85-abd5-4788-ba81-0b9f06aa7db3 t=5 pos=2.18/100.00/1.47 d=0.36/-0.44/0.21
+AOEAI diag_projimpact uuid=1e4d8f85-abd5-4788-ba81-0b9f06aa7db3 target=Husk already=false local_hit=false spell=frost_trap uuid=1e4d8f85-abd5-4788-ba81-0b9f06aa7db3 t=5 pos=2.18/100.00/1.47 d=0.00/0.00/0.00
+AOEAI diag_projtick spell=frost_trap uuid=1e4d8f85-abd5-4788-ba81-0b9f06aa7db3 t=5 pos=2.18/100.00/1.47 d=0.00/-0.05/0.00
+AOEAI diag_proj spell=frost_trap t=6 n=0
+AOEAI diag_block spell=frost_trap name=trap age=1 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_damage target=Husk amount=0.0090 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9910
+AOEAI diag_proj spell=frost_trap t=8 n=0
+AOEAI diag_proj spell=frost_trap t=10 n=0
+AOEAI diag_proj spell=frost_trap t=12 n=0
+AOEAI diag_proj spell=frost_trap t=14 n=0
+AOEAI diag_proj spell=frost_trap t=16 n=0
+AOEAI diag_proj spell=frost_trap t=18 n=0
+AOEAI diag_proj spell=frost_trap t=20 n=0
+AOEAI diag_proj spell=frost_trap t=22 n=0
+AOEAI diag_proj spell=frost_trap t=24 n=0
+AOEAI spell=frost_trap school=hunting verdict=PASS dmg=6.8 hits=1 dmg_events=1 heal=4.0 mana=21.6 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_projenter spell=poison_trap type=entity.mmorpg.spell_projectile count=1
+AOEAI diag_projshot spell=poison_trap uuid=59c9ec47-b142-42b1-9d80-101adfbfed0a pitch=30.0 yaw=-59.7 speed=0.50 start=0.50/101.52/0.50 d=0.38/-0.25/0.22
+AOEAI diag_cast spell=poison_trap player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [4.5б hp=1024] [2.8б hp=1024] [6.7б hp=1024] [6.7б hp=1024] [3.5б hp=1024]
+AOEAI cast spell=poison_trap can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projtick spell=poison_trap uuid=59c9ec47-b142-42b1-9d80-101adfbfed0a t=1 pos=0.88/101.27/0.72 d=0.37/-0.30/0.21
+AOEAI diag_projtick spell=poison_trap uuid=59c9ec47-b142-42b1-9d80-101adfbfed0a t=2 pos=1.25/100.97/0.93 d=0.37/-0.34/0.21
+AOEAI diag_proj spell=poison_trap t=2 n=1 [SimpleProjectileEntity pos=0.75/0.97/0.43 d=0.37/-0.34/0.21 t=2]
+AOEAI diag_projtick spell=poison_trap uuid=59c9ec47-b142-42b1-9d80-101adfbfed0a t=3 pos=1.62/100.63/1.14 d=0.37/-0.39/0.21
+AOEAI diag_projtick spell=poison_trap uuid=59c9ec47-b142-42b1-9d80-101adfbfed0a t=4 pos=1.99/100.24/1.35 d=0.36/-0.44/0.21
+AOEAI diag_proj spell=poison_trap t=4 n=1 [SimpleProjectileEntity pos=1.49/0.24/0.85 d=0.36/-0.44/0.21 t=4]
+AOEAI diag_projonhit type=BLOCK spell=poison_trap uuid=59c9ec47-b142-42b1-9d80-101adfbfed0a t=5 pos=2.18/100.00/1.46 d=0.36/-0.44/0.21
+AOEAI diag_projimpact uuid=59c9ec47-b142-42b1-9d80-101adfbfed0a target=Husk already=false local_hit=false spell=poison_trap uuid=59c9ec47-b142-42b1-9d80-101adfbfed0a t=5 pos=2.18/100.00/1.46 d=0.00/0.00/0.00
+AOEAI diag_projtick spell=poison_trap uuid=59c9ec47-b142-42b1-9d80-101adfbfed0a t=5 pos=2.18/100.00/1.46 d=0.00/-0.05/0.00
+AOEAI diag_proj spell=poison_trap t=6 n=0
+AOEAI diag_block spell=poison_trap name=trap age=1 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_damage target=Husk amount=0.0296 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9704
+AOEAI diag_proj spell=poison_trap t=8 n=0
+AOEAI diag_proj spell=poison_trap t=10 n=0
+AOEAI diag_proj spell=poison_trap t=12 n=0
+AOEAI diag_proj spell=poison_trap t=14 n=0
+AOEAI diag_proj spell=poison_trap t=16 n=0
+AOEAI diag_proj spell=poison_trap t=18 n=0
+AOEAI diag_proj spell=poison_trap t=20 n=0
+AOEAI diag_proj spell=poison_trap t=22 n=0
+AOEAI diag_proj spell=poison_trap t=24 n=0
+AOEAI spell=poison_trap school=hunting verdict=PASS dmg=7.5 hits=1 dmg_events=1 heal=6.0 mana=32.4 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=night_vision can_cast=true cast_ticks=40 server_cast=true
+AOEAI diag_proj spell=night_vision t=2 n=0
+AOEAI diag_proj spell=night_vision t=4 n=0
+AOEAI diag_proj spell=night_vision t=6 n=0
+AOEAI diag_proj spell=night_vision t=8 n=0
+AOEAI diag_proj spell=night_vision t=10 n=0
+AOEAI diag_proj spell=night_vision t=12 n=0
+AOEAI diag_proj spell=night_vision t=14 n=0
+AOEAI diag_proj spell=night_vision t=16 n=0
+AOEAI diag_proj spell=night_vision t=18 n=0
+AOEAI diag_proj spell=night_vision t=20 n=0
+AOEAI diag_proj spell=night_vision t=22 n=0
+AOEAI diag_proj spell=night_vision t=24 n=0
+AOEAI spell=night_vision school=hunting verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=10.8 shield=0.0 moved=0.0 items=0 effects=night_vision particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_projenter spell=explosive_arrow type=entity.mmorpg.spell_arrow count=1
+AOEAI diag_projshot spell=explosive_arrow uuid=fc63d561-9f76-4046-ba43-e2624760ca51 pitch=30.0 yaw=-59.7 speed=3.00 start=0.50/101.52/0.50 d=2.24/-1.48/1.26
+AOEAI imbued_shot spell=explosive_arrow
+AOEAI diag_cast spell=explosive_arrow player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [4.5б hp=1024] [6.7б hp=1024] [2.8б hp=1024] [3.5б hp=1024] [6.7б hp=1024]
+AOEAI cast spell=explosive_arrow can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projonhit type=ENTITY spell=explosive_arrow uuid=fc63d561-9f76-4046-ba43-e2624760ca51 t=1 pos=2.60/100.14/1.68 d=2.24/-1.48/1.26
+AOEAI diag_projimpact uuid=fc63d561-9f76-4046-ba43-e2624760ca51 target=Husk already=false local_hit=false spell=explosive_arrow uuid=fc63d561-9f76-4046-ba43-e2624760ca51 t=1 pos=2.60/100.14/1.68 d=2.24/-1.48/1.26
+AOEAI diag_projtick spell=explosive_arrow uuid=fc63d561-9f76-4046-ba43-e2624760ca51 t=1 pos=2.60/100.14/1.68 d=2.22/-1.51/1.25
+AOEAI diag_damage target=Husk amount=0.0184 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9816
+AOEAI diag_proj spell=explosive_arrow t=2 n=0
+AOEAI diag_proj spell=explosive_arrow t=4 n=0
+AOEAI diag_proj spell=explosive_arrow t=6 n=0
+AOEAI diag_proj spell=explosive_arrow t=8 n=0
+AOEAI diag_proj spell=explosive_arrow t=10 n=0
+AOEAI diag_proj spell=explosive_arrow t=12 n=0
+AOEAI diag_proj spell=explosive_arrow t=14 n=0
+AOEAI diag_proj spell=explosive_arrow t=16 n=0
+AOEAI diag_proj spell=explosive_arrow t=18 n=0
+AOEAI diag_proj spell=explosive_arrow t=20 n=0
+AOEAI diag_proj spell=explosive_arrow t=22 n=0
+AOEAI diag_proj spell=explosive_arrow t=24 n=0
+AOEAI spell=explosive_arrow school=hunting verdict=PASS dmg=4.7 hits=1 dmg_events=1 heal=4.0 mana=21.6 shield=0.0 moved=0.0 items=0 effects=slowness particles=true sound=true can_cast=true server_cast=true
+AOEAI school_end hunting
+AOEAI school_start nature spells=14
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_projenter spell=poison_ball type=entity.mmorpg.spell_projectile count=1
+AOEAI diag_projshot spell=poison_ball uuid=fee87537-a1d9-4285-bc1e-a880c3e00041 pitch=30.0 yaw=-59.7 speed=2.50 start=0.50/101.52/0.50 d=1.87/-1.25/1.08
+AOEAI diag_cast spell=poison_ball player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [4.5б hp=1024] [6.7б hp=1024] [6.7б hp=1024] [3.5б hp=1024] [2.8б hp=1024]
+AOEAI cast spell=poison_ball can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projtick spell=poison_ball uuid=fee87537-a1d9-4285-bc1e-a880c3e00041 t=1 pos=2.37/100.27/1.58 d=1.85/-1.24/1.07
+AOEAI diag_projonhit type=ENTITY spell=poison_ball uuid=fee87537-a1d9-4285-bc1e-a880c3e00041 t=2 pos=2.60/100.11/1.71 d=1.85/-1.24/1.07
+AOEAI diag_projimpact uuid=fee87537-a1d9-4285-bc1e-a880c3e00041 target=Husk already=false local_hit=false spell=poison_ball uuid=fee87537-a1d9-4285-bc1e-a880c3e00041 t=2 pos=2.60/100.11/1.71 d=1.85/-1.24/1.07
+AOEAI diag_damage target=Husk amount=0.0366 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9634
+AOEAI diag_projtick spell=poison_ball uuid=fee87537-a1d9-4285-bc1e-a880c3e00041 t=2 pos=2.60/100.11/1.71 d=1.83/-1.23/1.06
+AOEAI diag_proj spell=poison_ball t=2 n=1 [SimpleProjectileEntity pos=2.10/0.11/1.21 d=1.83/-1.23/1.06 t=2]
+AOEAI diag_proj spell=poison_ball t=4 n=0
+AOEAI diag_proj spell=poison_ball t=6 n=0
+AOEAI diag_proj spell=poison_ball t=8 n=0
+AOEAI diag_proj spell=poison_ball t=10 n=0
+AOEAI diag_proj spell=poison_ball t=12 n=0
+AOEAI diag_proj spell=poison_ball t=14 n=0
+AOEAI diag_proj spell=poison_ball t=16 n=0
+AOEAI diag_proj spell=poison_ball t=18 n=0
+AOEAI diag_proj spell=poison_ball t=20 n=0
+AOEAI diag_proj spell=poison_ball t=22 n=0
+AOEAI diag_proj spell=poison_ball t=24 n=0
+AOEAI spell=poison_ball school=nature verdict=PASS dmg=9.4 hits=1 dmg_events=1 heal=4.0 mana=21.6 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=poisoned_weapons can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=poisoned_weapons t=2 n=0
+AOEAI diag_proj spell=poisoned_weapons t=4 n=0
+AOEAI diag_proj spell=poisoned_weapons t=6 n=0
+AOEAI diag_proj spell=poisoned_weapons t=8 n=0
+AOEAI diag_proj spell=poisoned_weapons t=10 n=0
+AOEAI diag_proj spell=poisoned_weapons t=12 n=0
+AOEAI diag_proj spell=poisoned_weapons t=14 n=0
+AOEAI diag_proj spell=poisoned_weapons t=16 n=0
+AOEAI diag_proj spell=poisoned_weapons t=18 n=0
+AOEAI diag_proj spell=poisoned_weapons t=20 n=0
+AOEAI diag_proj spell=poisoned_weapons t=22 n=0
+AOEAI diag_proj spell=poisoned_weapons t=24 n=0
+AOEAI spell=poisoned_weapons school=nature verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=0.0 shield=0.0 moved=0.0 items=0 effects=beneficial/9 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=nature_balm can_cast=true cast_ticks=30 server_cast=true
+AOEAI diag_proj spell=nature_balm t=2 n=0
+AOEAI diag_heal value=8 target=ServerPlayer before=12.00 after=13.48 max=20.00
+AOEAI diag_proj spell=nature_balm t=4 n=0
+AOEAI diag_proj spell=nature_balm t=6 n=0
+AOEAI diag_proj spell=nature_balm t=8 n=0
+AOEAI diag_proj spell=nature_balm t=10 n=0
+AOEAI diag_proj spell=nature_balm t=12 n=0
+AOEAI diag_proj spell=nature_balm t=14 n=0
+AOEAI diag_proj spell=nature_balm t=16 n=0
+AOEAI diag_proj spell=nature_balm t=18 n=0
+AOEAI diag_proj spell=nature_balm t=20 n=0
+AOEAI diag_proj spell=nature_balm t=22 n=0
+AOEAI diag_heal value=8 target=ServerPlayer before=15.48 after=16.96 max=20.00
+AOEAI diag_proj spell=nature_balm t=24 n=0
+AOEAI spell=nature_balm school=nature verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=5.0 mana=10.8 shield=0.0 moved=0.0 items=0 effects=beneficial/5 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=thorn_armor can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=thorn_armor t=2 n=0
+AOEAI diag_proj spell=thorn_armor t=4 n=0
+AOEAI diag_proj spell=thorn_armor t=6 n=0
+AOEAI diag_proj spell=thorn_armor t=8 n=0
+AOEAI diag_proj spell=thorn_armor t=10 n=0
+AOEAI diag_proj spell=thorn_armor t=12 n=0
+AOEAI diag_proj spell=thorn_armor t=14 n=0
+AOEAI diag_proj spell=thorn_armor t=16 n=0
+AOEAI diag_proj spell=thorn_armor t=18 n=0
+AOEAI diag_proj spell=thorn_armor t=20 n=0
+AOEAI diag_proj spell=thorn_armor t=22 n=0
+AOEAI diag_proj spell=thorn_armor t=24 n=0
+AOEAI spell=thorn_armor school=nature verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=10.8 shield=0.0 moved=0.0 items=0 effects=beneficial/6 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_projenter spell=entangling_seed type=entity.mmorpg.spell_projectile count=1
+AOEAI diag_projshot spell=entangling_seed uuid=0b664af1-87bb-41f1-b353-54bd66cffc37 pitch=30.0 yaw=-59.7 speed=1.00 start=0.50/101.52/0.50 d=0.76/-0.50/0.45
+AOEAI cast spell=entangling_seed can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projtick spell=entangling_seed uuid=0b664af1-87bb-41f1-b353-54bd66cffc37 t=1 pos=1.26/101.02/0.95 d=0.75/-0.55/0.44
+AOEAI diag_projtick spell=entangling_seed uuid=0b664af1-87bb-41f1-b353-54bd66cffc37 t=2 pos=2.01/100.47/1.39 d=0.74/-0.59/0.44
+AOEAI diag_proj spell=entangling_seed t=2 n=1 [SimpleProjectileEntity pos=1.51/0.47/0.89 d=0.74/-0.59/0.44 t=2]
+AOEAI diag_projonhit type=ENTITY spell=entangling_seed uuid=0b664af1-87bb-41f1-b353-54bd66cffc37 t=3 pos=2.60/100.00/1.73 d=0.74/-0.59/0.44
+AOEAI diag_projimpact uuid=0b664af1-87bb-41f1-b353-54bd66cffc37 target=Husk already=false local_hit=false spell=entangling_seed uuid=0b664af1-87bb-41f1-b353-54bd66cffc37 t=3 pos=2.60/100.00/1.73 d=0.74/-0.59/0.44
+AOEAI diag_projtick spell=entangling_seed uuid=0b664af1-87bb-41f1-b353-54bd66cffc37 t=3 pos=2.60/100.00/1.73 d=0.73/-0.63/0.43
+AOEAI diag_proj spell=entangling_seed t=4 n=0
+AOEAI diag_proj spell=entangling_seed t=6 n=0
+AOEAI diag_proj spell=entangling_seed t=8 n=0
+AOEAI diag_proj spell=entangling_seed t=10 n=0
+AOEAI diag_proj spell=entangling_seed t=12 n=0
+AOEAI diag_proj spell=entangling_seed t=14 n=0
+AOEAI diag_proj spell=entangling_seed t=16 n=0
+AOEAI diag_proj spell=entangling_seed t=18 n=0
+AOEAI diag_proj spell=entangling_seed t=20 n=0
+AOEAI diag_proj spell=entangling_seed t=22 n=0
+AOEAI diag_proj spell=entangling_seed t=24 n=0
+AOEAI spell=entangling_seed school=nature verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=4.0 mana=21.6 shield=0.0 moved=0.0 items=0 effects=negative/1 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=rejuv_totem can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projtick spell=rejuv_totem uuid=955ac4ca-37a0-4b29-a489-36c2fc9c4022 t=1 pos=2.92/100.00/1.91 d=0.00/0.00/0.00
+AOEAI diag_proj spell=rejuv_totem t=2 n=0
+AOEAI diag_block spell=rejuv_totem name=block age=1 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_proj spell=rejuv_totem t=4 n=0
+AOEAI diag_proj spell=rejuv_totem t=6 n=0
+AOEAI diag_proj spell=rejuv_totem t=8 n=0
+AOEAI diag_proj spell=rejuv_totem t=10 n=0
+AOEAI diag_proj spell=rejuv_totem t=12 n=0
+AOEAI diag_proj spell=rejuv_totem t=14 n=0
+AOEAI diag_proj spell=rejuv_totem t=16 n=0
+AOEAI diag_proj spell=rejuv_totem t=18 n=0
+AOEAI diag_proj spell=rejuv_totem t=20 n=0
+AOEAI diag_block spell=rejuv_totem name=block age=20 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_heal value=17 target=ServerPlayer before=14.00 after=17.15 max=20.00
+AOEAI diag_proj spell=rejuv_totem t=22 n=0
+AOEAI diag_proj spell=rejuv_totem t=24 n=0
+AOEAI diag_block spell=rejuv_totem name=block age=40 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_heal value=17 target=ServerPlayer before=17.15 after=20.00 max=20.00
+AOEAI diag_block spell=rejuv_totem name=block age=60 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_heal value=17 target=ServerPlayer before=20.00 after=20.00 max=20.00
+AOEAI diag_block spell=rejuv_totem name=block age=80 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_heal value=17 target=ServerPlayer before=20.00 after=20.00 max=20.00
+AOEAI diag_block spell=rejuv_totem name=block age=100 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_heal value=17 target=ServerPlayer before=20.00 after=20.00 max=20.00
+AOEAI diag_block spell=rejuv_totem name=block age=120 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_heal value=17 target=ServerPlayer before=20.00 after=20.00 max=20.00
+AOEAI spell=rejuv_totem school=nature verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=8.0 mana=32.4 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=astral_totem can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projtick spell=astral_totem uuid=19342e6e-f75b-4b9e-b928-8589e7dbdd60 t=1 pos=2.92/100.00/1.91 d=0.00/0.00/0.00
+AOEAI diag_proj spell=astral_totem t=2 n=0
+AOEAI diag_block spell=astral_totem name=block age=1 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_proj spell=astral_totem t=4 n=0
+AOEAI diag_proj spell=astral_totem t=6 n=0
+AOEAI diag_proj spell=astral_totem t=8 n=0
+AOEAI diag_proj spell=astral_totem t=10 n=0
+AOEAI diag_proj spell=astral_totem t=12 n=0
+AOEAI diag_proj spell=astral_totem t=14 n=0
+AOEAI diag_proj spell=astral_totem t=16 n=0
+AOEAI diag_proj spell=astral_totem t=18 n=0
+AOEAI diag_proj spell=astral_totem t=20 n=0
+AOEAI diag_block spell=astral_totem name=block age=20 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_proj spell=astral_totem t=22 n=0
+AOEAI diag_proj spell=astral_totem t=24 n=0
+AOEAI diag_block spell=astral_totem name=block age=40 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_block spell=astral_totem name=block age=60 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_block spell=astral_totem name=block age=80 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_block spell=astral_totem name=block age=100 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_block spell=astral_totem name=block age=120 pos=2.50/100.00/1.50 dist=2.24
+AOEAI spell=astral_totem school=nature verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=4.0 mana=177.6 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=guard_totem can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projtick spell=guard_totem uuid=003b8c48-e08f-40da-93dc-4d55fc2b62d9 t=1 pos=2.92/100.00/1.91 d=0.00/0.00/0.00
+AOEAI diag_proj spell=guard_totem t=2 n=0
+AOEAI diag_block spell=guard_totem name=block age=1 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_proj spell=guard_totem t=4 n=0
+AOEAI diag_proj spell=guard_totem t=6 n=0
+AOEAI diag_proj spell=guard_totem t=8 n=0
+AOEAI diag_proj spell=guard_totem t=10 n=0
+AOEAI diag_proj spell=guard_totem t=12 n=0
+AOEAI diag_proj spell=guard_totem t=14 n=0
+AOEAI diag_proj spell=guard_totem t=16 n=0
+AOEAI diag_proj spell=guard_totem t=18 n=0
+AOEAI diag_proj spell=guard_totem t=20 n=0
+AOEAI diag_block spell=guard_totem name=block age=20 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_giveshield targets=1 value=26 seconds=10 caster=ServerPlayer
+AOEAI diag_giveshield_after target=ServerPlayer total=26.0
+AOEAI diag_proj spell=guard_totem t=22 n=0
+AOEAI diag_proj spell=guard_totem t=24 n=0
+AOEAI diag_block spell=guard_totem name=block age=40 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_giveshield targets=1 value=26 seconds=10 caster=ServerPlayer
+AOEAI diag_giveshield_after target=ServerPlayer total=52.0
+AOEAI diag_block spell=guard_totem name=block age=60 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_giveshield targets=1 value=26 seconds=10 caster=ServerPlayer
+AOEAI diag_giveshield_after target=ServerPlayer total=78.0
+AOEAI diag_block spell=guard_totem name=block age=80 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_giveshield targets=1 value=26 seconds=10 caster=ServerPlayer
+AOEAI diag_giveshield_after target=ServerPlayer total=104.0
+AOEAI diag_block spell=guard_totem name=block age=100 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_giveshield targets=1 value=26 seconds=10 caster=ServerPlayer
+AOEAI diag_giveshield_after target=ServerPlayer total=130.0
+AOEAI diag_block spell=guard_totem name=block age=120 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_giveshield targets=1 value=26 seconds=10 caster=ServerPlayer
+AOEAI diag_giveshield_after target=ServerPlayer total=156.0
+AOEAI spell=guard_totem school=nature verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=4.0 mana=21.6 shield=156.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_damage target=Husk amount=0.0757 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9244
+AOEAI diag_damage target=Husk amount=0.0757 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9244
+AOEAI diag_cast spell=poison_cloud player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [6.7б hp=1024] [3.5б hp=1024] [6.7б hp=1024] [2.8б hp=1024] [4.5б hp=1024]
+AOEAI cast spell=poison_cloud can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=poison_cloud t=2 n=0
+AOEAI diag_proj spell=poison_cloud t=4 n=0
+AOEAI diag_proj spell=poison_cloud t=6 n=0
+AOEAI diag_proj spell=poison_cloud t=8 n=0
+AOEAI diag_damage target=Husk amount=0.0612 before=1023.9244
+AOEAI diag_damage_after accepted=true after=1023.8632
+AOEAI diag_damage target=Husk amount=0.0612 before=1023.9244
+AOEAI diag_damage_after accepted=true after=1023.8632
+AOEAI diag_proj spell=poison_cloud t=10 n=0
+AOEAI diag_proj spell=poison_cloud t=12 n=0
+AOEAI diag_proj spell=poison_cloud t=14 n=0
+AOEAI diag_proj spell=poison_cloud t=16 n=0
+AOEAI diag_proj spell=poison_cloud t=18 n=0
+AOEAI diag_proj spell=poison_cloud t=20 n=0
+AOEAI diag_proj spell=poison_cloud t=22 n=0
+AOEAI diag_proj spell=poison_cloud t=24 n=0
+AOEAI diag_damage target=Husk amount=0.0612 before=1023.8632
+AOEAI diag_damage_after accepted=true after=1023.8019
+AOEAI diag_damage target=Husk amount=0.0612 before=1023.8632
+AOEAI diag_damage_after accepted=true after=1023.8019
+AOEAI spell=poison_cloud school=nature verdict=PASS dmg=103.8 hits=6 dmg_events=6 heal=0.0 mana=0.0 shield=0.0 moved=0.0 items=0 effects=negative/3 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_cast spell=curse_of_agony player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=20 can_cast=true dummies=5 [4.5б hp=1024] [3.5б hp=1024] [2.8б hp=1024] [6.7б hp=1024] [6.7б hp=1024]
+AOEAI cast spell=curse_of_agony can_cast=true cast_ticks=20 server_cast=true
+AOEAI diag_projtick spell=curse_of_agony uuid=51eb2118-a3ce-43d7-822f-a4fcff8df009 t=1 pos=2.92/100.00/1.91 d=0.00/0.00/0.00
+AOEAI diag_proj spell=curse_of_agony t=2 n=0
+AOEAI diag_block spell=curse_of_agony name=block age=1 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_damage target=Husk amount=0.0153 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9847
+AOEAI diag_proj spell=curse_of_agony t=4 n=0
+AOEAI diag_proj spell=curse_of_agony t=6 n=0
+AOEAI diag_proj spell=curse_of_agony t=8 n=0
+AOEAI diag_proj spell=curse_of_agony t=10 n=0
+AOEAI diag_proj spell=curse_of_agony t=12 n=0
+AOEAI diag_proj spell=curse_of_agony t=14 n=0
+AOEAI diag_proj spell=curse_of_agony t=16 n=0
+AOEAI diag_proj spell=curse_of_agony t=18 n=0
+AOEAI diag_proj spell=curse_of_agony t=20 n=0
+AOEAI diag_proj spell=curse_of_agony t=22 n=0
+AOEAI diag_proj spell=curse_of_agony t=24 n=0
+AOEAI spell=curse_of_agony school=nature verdict=PASS dmg=4.0 hits=1 dmg_events=1 heal=6.0 mana=32.4 shield=0.0 moved=0.0 items=0 effects=negative/13 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_cast spell=curse_of_weak player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=20 can_cast=true dummies=5 [4.5б hp=1024] [2.8б hp=1024] [6.7б hp=1024] [6.7б hp=1024] [3.5б hp=1024]
+AOEAI cast spell=curse_of_weak can_cast=true cast_ticks=20 server_cast=true
+AOEAI diag_projtick spell=curse_of_weak uuid=b81a94fb-e6df-4966-b202-070c693e7353 t=1 pos=2.92/100.00/1.91 d=0.00/0.00/0.00
+AOEAI diag_proj spell=curse_of_weak t=2 n=0
+AOEAI diag_block spell=curse_of_weak name=block age=1 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_damage target=Husk amount=0.0153 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9847
+AOEAI diag_proj spell=curse_of_weak t=4 n=0
+AOEAI diag_proj spell=curse_of_weak t=6 n=0
+AOEAI diag_proj spell=curse_of_weak t=8 n=0
+AOEAI diag_proj spell=curse_of_weak t=10 n=0
+AOEAI diag_proj spell=curse_of_weak t=12 n=0
+AOEAI diag_proj spell=curse_of_weak t=14 n=0
+AOEAI diag_proj spell=curse_of_weak t=16 n=0
+AOEAI diag_proj spell=curse_of_weak t=18 n=0
+AOEAI diag_proj spell=curse_of_weak t=20 n=0
+AOEAI diag_proj spell=curse_of_weak t=22 n=0
+AOEAI diag_proj spell=curse_of_weak t=24 n=0
+AOEAI spell=curse_of_weak school=nature verdict=PASS dmg=4.0 hits=1 dmg_events=1 heal=4.0 mana=21.6 shield=0.0 moved=0.0 items=0 effects=negative/14 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_cast spell=curse_of_despair player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=20 can_cast=true dummies=5 [4.5б hp=1024] [6.7б hp=1024] [2.8б hp=1024] [3.5б hp=1024] [6.7б hp=1024]
+AOEAI cast spell=curse_of_despair can_cast=true cast_ticks=20 server_cast=true
+AOEAI diag_projtick spell=curse_of_despair uuid=a666d53d-fd95-421b-8c20-e4919853242d t=1 pos=2.92/100.00/1.91 d=0.00/0.00/0.00
+AOEAI diag_proj spell=curse_of_despair t=2 n=0
+AOEAI diag_block spell=curse_of_despair name=block age=1 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_damage target=Husk amount=0.0153 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9847
+AOEAI diag_proj spell=curse_of_despair t=4 n=0
+AOEAI diag_proj spell=curse_of_despair t=6 n=0
+AOEAI diag_proj spell=curse_of_despair t=8 n=0
+AOEAI diag_proj spell=curse_of_despair t=10 n=0
+AOEAI diag_proj spell=curse_of_despair t=12 n=0
+AOEAI diag_proj spell=curse_of_despair t=14 n=0
+AOEAI diag_proj spell=curse_of_despair t=16 n=0
+AOEAI diag_proj spell=curse_of_despair t=18 n=0
+AOEAI diag_proj spell=curse_of_despair t=20 n=0
+AOEAI diag_proj spell=curse_of_despair t=22 n=0
+AOEAI diag_proj spell=curse_of_despair t=24 n=0
+AOEAI spell=curse_of_despair school=nature verdict=PASS dmg=4.0 hits=1 dmg_events=1 heal=4.0 mana=21.6 shield=0.0 moved=0.0 items=0 effects=negative/15 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=conjure_ender_chest can_cast=true cast_ticks=40 server_cast=true
+AOEAI diag_proj spell=conjure_ender_chest t=2 n=0
+AOEAI diag_proj spell=conjure_ender_chest t=4 n=0
+AOEAI diag_proj spell=conjure_ender_chest t=6 n=0
+AOEAI diag_proj spell=conjure_ender_chest t=8 n=0
+AOEAI diag_proj spell=conjure_ender_chest t=10 n=0
+AOEAI diag_proj spell=conjure_ender_chest t=12 n=0
+AOEAI diag_proj spell=conjure_ender_chest t=14 n=0
+AOEAI diag_proj spell=conjure_ender_chest t=16 n=0
+AOEAI diag_proj spell=conjure_ender_chest t=18 n=0
+AOEAI diag_proj spell=conjure_ender_chest t=20 n=0
+AOEAI diag_proj spell=conjure_ender_chest t=22 n=0
+AOEAI diag_proj spell=conjure_ender_chest t=24 n=0
+AOEAI spell=conjure_ender_chest school=nature verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=0.0 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=refresh can_cast=true cast_ticks=20 server_cast=true
+AOEAI diag_proj spell=refresh t=2 n=0
+AOEAI diag_proj spell=refresh t=4 n=0
+AOEAI diag_proj spell=refresh t=6 n=0
+AOEAI diag_proj spell=refresh t=8 n=0
+AOEAI diag_proj spell=refresh t=10 n=0
+AOEAI diag_proj spell=refresh t=12 n=0
+AOEAI diag_proj spell=refresh t=14 n=0
+AOEAI diag_proj spell=refresh t=16 n=0
+AOEAI diag_proj spell=refresh t=18 n=0
+AOEAI diag_proj spell=refresh t=20 n=0
+AOEAI diag_proj spell=refresh t=22 n=0
+AOEAI diag_proj spell=refresh t=24 n=0
+AOEAI spell=refresh school=nature verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=10.8 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI school_end nature
+AOEAI school_start fire spells=8
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_projenter spell=fireball type=entity.mmorpg.spell_projectile count=1
+AOEAI diag_projshot spell=fireball uuid=d9959ca1-e468-4878-93d3-103548909e4b pitch=30.0 yaw=-59.7 speed=2.50 start=0.50/101.52/0.50 d=1.88/-1.28/1.09
+AOEAI diag_cast spell=fireball player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [2.8б hp=1024] [3.5б hp=1024] [6.7б hp=1024] [4.5б hp=1024] [6.7б hp=1024]
+AOEAI cast spell=fireball can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projtick spell=fireball uuid=d9959ca1-e468-4878-93d3-103548909e4b t=1 pos=2.38/100.24/1.59 d=1.86/-1.27/1.08
+AOEAI diag_projonhit type=ENTITY spell=fireball uuid=d9959ca1-e468-4878-93d3-103548909e4b t=2 pos=2.60/100.09/1.72 d=1.86/-1.27/1.08
+AOEAI diag_projimpact uuid=d9959ca1-e468-4878-93d3-103548909e4b target=Husk already=false local_hit=false spell=fireball uuid=d9959ca1-e468-4878-93d3-103548909e4b t=2 pos=2.60/100.09/1.72 d=1.86/-1.27/1.08
+AOEAI diag_damage target=Husk amount=0.0360 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9640
+AOEAI diag_projtick spell=fireball uuid=d9959ca1-e468-4878-93d3-103548909e4b t=2 pos=2.60/100.09/1.72 d=1.85/-1.26/1.07
+AOEAI diag_proj spell=fireball t=2 n=1 [SimpleProjectileEntity pos=2.10/0.09/1.22 d=1.85/-1.26/1.07 t=2]
+AOEAI diag_proj spell=fireball t=4 n=0
+AOEAI diag_proj spell=fireball t=6 n=0
+AOEAI diag_proj spell=fireball t=8 n=0
+AOEAI diag_proj spell=fireball t=10 n=0
+AOEAI diag_proj spell=fireball t=12 n=0
+AOEAI diag_proj spell=fireball t=14 n=0
+AOEAI diag_proj spell=fireball t=16 n=0
+AOEAI diag_proj spell=fireball t=18 n=0
+AOEAI diag_proj spell=fireball t=20 n=0
+AOEAI diag_proj spell=fireball t=22 n=0
+AOEAI diag_proj spell=fireball t=24 n=0
+AOEAI spell=fireball school=fire verdict=PASS dmg=9.4 hits=1 dmg_events=1 heal=4.0 mana=21.6 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_damage target=Husk amount=0.0216 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9784
+AOEAI diag_cast spell=flame_strike player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [6.7б hp=1024] [2.8б hp=1024] [4.5б hp=1024] [6.7б hp=1024] [3.5б hp=1024]
+AOEAI cast spell=flame_strike can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=flame_strike t=2 n=0
+AOEAI diag_proj spell=flame_strike t=4 n=0
+AOEAI diag_proj spell=flame_strike t=6 n=0
+AOEAI diag_proj spell=flame_strike t=8 n=0
+AOEAI diag_proj spell=flame_strike t=10 n=0
+AOEAI diag_proj spell=flame_strike t=12 n=0
+AOEAI diag_proj spell=flame_strike t=14 n=0
+AOEAI diag_proj spell=flame_strike t=16 n=0
+AOEAI diag_proj spell=flame_strike t=18 n=0
+AOEAI diag_proj spell=flame_strike t=20 n=0
+AOEAI diag_proj spell=flame_strike t=22 n=0
+AOEAI diag_proj spell=flame_strike t=24 n=0
+AOEAI spell=flame_strike school=fire verdict=PASS dmg=5.7 hits=1 dmg_events=1 heal=0.0 mana=10.8 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=fire_weapon can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=fire_weapon t=2 n=0
+AOEAI diag_proj spell=fire_weapon t=4 n=0
+AOEAI diag_proj spell=fire_weapon t=6 n=0
+AOEAI diag_proj spell=fire_weapon t=8 n=0
+AOEAI diag_proj spell=fire_weapon t=10 n=0
+AOEAI diag_proj spell=fire_weapon t=12 n=0
+AOEAI diag_proj spell=fire_weapon t=14 n=0
+AOEAI diag_proj spell=fire_weapon t=16 n=0
+AOEAI diag_proj spell=fire_weapon t=18 n=0
+AOEAI diag_proj spell=fire_weapon t=20 n=0
+AOEAI diag_proj spell=fire_weapon t=22 n=0
+AOEAI diag_proj spell=fire_weapon t=24 n=0
+AOEAI spell=fire_weapon school=fire verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=0.0 shield=0.0 moved=0.0 items=0 effects=beneficial/7 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_cast spell=meteor player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=30 can_cast=true dummies=5 [3.5б hp=1024] [4.5б hp=1024] [6.7б hp=1024] [2.8б hp=1024] [6.7б hp=1024]
+AOEAI cast spell=meteor can_cast=true cast_ticks=30 server_cast=true
+AOEAI diag_projtick spell=meteor uuid=74a67084-1958-4b91-b77b-0e103edd673f t=1 pos=2.92/120.00/1.91 d=0.00/0.00/0.00
+AOEAI diag_proj spell=meteor t=2 n=0
+AOEAI diag_block spell=meteor name=block age=1 pos=2.50/120.00/1.50 dist=20.12
+AOEAI diag_proj spell=meteor t=4 n=0
+AOEAI diag_proj spell=meteor t=6 n=0
+AOEAI diag_proj spell=meteor t=8 n=0
+AOEAI diag_proj spell=meteor t=10 n=0
+AOEAI diag_proj spell=meteor t=12 n=0
+AOEAI diag_proj spell=meteor t=14 n=0
+AOEAI diag_proj spell=meteor t=16 n=0
+AOEAI diag_proj spell=meteor t=18 n=0
+AOEAI diag_proj spell=meteor t=20 n=0
+AOEAI diag_block spell=meteor name=block age=20 pos=2.50/101.61/1.50 dist=2.75
+AOEAI diag_damage target=Husk amount=0.0720 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9280
+AOEAI diag_proj spell=meteor t=22 n=0
+AOEAI diag_proj spell=meteor t=24 n=0
+AOEAI spell=meteor school=fire verdict=PASS dmg=18.9 hits=1 dmg_events=1 heal=4.0 mana=21.6 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_damage target=Husk amount=0.0720 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9280
+AOEAI diag_damage target=Husk amount=0.0217 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9783
+AOEAI diag_cast spell=fire_nova player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [4.5б hp=1024] [2.8б hp=1024] [3.5б hp=1024] [6.7б hp=1024] [6.7б hp=1024]
+AOEAI cast spell=fire_nova can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=fire_nova t=2 n=0
+AOEAI diag_proj spell=fire_nova t=4 n=0
+AOEAI diag_proj spell=fire_nova t=6 n=0
+AOEAI diag_proj spell=fire_nova t=8 n=0
+AOEAI diag_proj spell=fire_nova t=10 n=0
+AOEAI diag_proj spell=fire_nova t=12 n=0
+AOEAI diag_proj spell=fire_nova t=14 n=0
+AOEAI diag_proj spell=fire_nova t=16 n=0
+AOEAI diag_proj spell=fire_nova t=18 n=0
+AOEAI diag_proj spell=fire_nova t=20 n=0
+AOEAI diag_proj spell=fire_nova t=22 n=0
+AOEAI diag_proj spell=fire_nova t=24 n=0
+AOEAI spell=fire_nova school=fire verdict=PASS dmg=35.9 hits=2 dmg_events=2 heal=0.0 mana=10.8 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=vamp_blood can_cast=true cast_ticks=30 server_cast=true
+AOEAI diag_proj spell=vamp_blood t=2 n=0
+AOEAI diag_proj spell=vamp_blood t=4 n=0
+AOEAI diag_proj spell=vamp_blood t=6 n=0
+AOEAI diag_proj spell=vamp_blood t=8 n=0
+AOEAI diag_proj spell=vamp_blood t=10 n=0
+AOEAI diag_proj spell=vamp_blood t=12 n=0
+AOEAI diag_proj spell=vamp_blood t=14 n=0
+AOEAI diag_proj spell=vamp_blood t=16 n=0
+AOEAI diag_proj spell=vamp_blood t=18 n=0
+AOEAI diag_proj spell=vamp_blood t=20 n=0
+AOEAI diag_proj spell=vamp_blood t=22 n=0
+AOEAI diag_proj spell=vamp_blood t=24 n=0
+AOEAI spell=vamp_blood school=fire verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=0.0 shield=0.0 moved=0.0 items=0 effects=beneficial/3 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=draconic_blood can_cast=true cast_ticks=30 server_cast=true
+AOEAI diag_proj spell=draconic_blood t=2 n=0
+AOEAI diag_proj spell=draconic_blood t=4 n=0
+AOEAI diag_proj spell=draconic_blood t=6 n=0
+AOEAI diag_proj spell=draconic_blood t=8 n=0
+AOEAI diag_proj spell=draconic_blood t=10 n=0
+AOEAI diag_proj spell=draconic_blood t=12 n=0
+AOEAI diag_proj spell=draconic_blood t=14 n=0
+AOEAI diag_proj spell=draconic_blood t=16 n=0
+AOEAI diag_proj spell=draconic_blood t=18 n=0
+AOEAI diag_proj spell=draconic_blood t=20 n=0
+AOEAI diag_proj spell=draconic_blood t=22 n=0
+AOEAI diag_proj spell=draconic_blood t=24 n=0
+AOEAI spell=draconic_blood school=fire verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=0.0 shield=0.0 moved=0.0 items=0 effects=beneficial/4 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=overload can_cast=true cast_ticks=30 server_cast=true
+AOEAI diag_proj spell=overload t=2 n=0
+AOEAI diag_proj spell=overload t=4 n=0
+AOEAI diag_proj spell=overload t=6 n=0
+AOEAI diag_proj spell=overload t=8 n=0
+AOEAI diag_proj spell=overload t=10 n=0
+AOEAI diag_proj spell=overload t=12 n=0
+AOEAI diag_proj spell=overload t=14 n=0
+AOEAI diag_proj spell=overload t=16 n=0
+AOEAI diag_proj spell=overload t=18 n=0
+AOEAI diag_proj spell=overload t=20 n=0
+AOEAI diag_proj spell=overload t=22 n=0
+AOEAI diag_proj spell=overload t=24 n=0
+AOEAI spell=overload school=fire verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=0.0 shield=0.0 moved=0.0 items=0 effects=beneficial/17 particles=true sound=true can_cast=true server_cast=true
+AOEAI school_end fire
+AOEAI school_start water spells=14
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_projenter spell=frostball type=entity.mmorpg.spell_projectile count=1
+AOEAI diag_projshot spell=frostball uuid=28f0a455-7b6f-4403-96b1-7f87340d0b41 pitch=30.0 yaw=-59.7 speed=2.50 start=0.50/101.52/0.50 d=1.87/-1.24/1.07
+AOEAI diag_cast spell=frostball player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [3.5б hp=1024] [6.7б hp=1024] [2.8б hp=1024] [6.7б hp=1024] [4.5б hp=1024]
+AOEAI cast spell=frostball can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projtick spell=frostball uuid=28f0a455-7b6f-4403-96b1-7f87340d0b41 t=1 pos=2.37/100.28/1.57 d=1.85/-1.23/1.06
+AOEAI diag_projonhit type=ENTITY spell=frostball uuid=28f0a455-7b6f-4403-96b1-7f87340d0b41 t=2 pos=2.60/100.13/1.71 d=1.85/-1.23/1.06
+AOEAI diag_projimpact uuid=28f0a455-7b6f-4403-96b1-7f87340d0b41 target=Husk already=false local_hit=false spell=frostball uuid=28f0a455-7b6f-4403-96b1-7f87340d0b41 t=2 pos=2.60/100.13/1.71 d=1.85/-1.23/1.06
+AOEAI diag_damage target=Husk amount=0.0360 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9640
+AOEAI diag_projtick spell=frostball uuid=28f0a455-7b6f-4403-96b1-7f87340d0b41 t=2 pos=2.60/100.13/1.71 d=1.83/-1.22/1.05
+AOEAI diag_proj spell=frostball t=2 n=1 [SimpleProjectileEntity pos=2.10/0.13/1.21 d=1.83/-1.22/1.05 t=2]
+AOEAI diag_proj spell=frostball t=4 n=0
+AOEAI diag_proj spell=frostball t=6 n=0
+AOEAI diag_proj spell=frostball t=8 n=0
+AOEAI diag_proj spell=frostball t=10 n=0
+AOEAI diag_proj spell=frostball t=12 n=0
+AOEAI diag_proj spell=frostball t=14 n=0
+AOEAI diag_proj spell=frostball t=16 n=0
+AOEAI diag_proj spell=frostball t=18 n=0
+AOEAI diag_proj spell=frostball t=20 n=0
+AOEAI diag_proj spell=frostball t=22 n=0
+AOEAI diag_proj spell=frostball t=24 n=0
+AOEAI spell=frostball school=water verdict=PASS dmg=9.4 hits=1 dmg_events=1 heal=6.0 mana=32.4 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_damage target=Husk amount=0.0216 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9784
+AOEAI diag_cast spell=tidal_strike player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [3.5б hp=1024] [6.7б hp=1024] [2.8б hp=1024] [6.7б hp=1024] [4.5б hp=1024]
+AOEAI cast spell=tidal_strike can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=tidal_strike t=2 n=0
+AOEAI diag_proj spell=tidal_strike t=4 n=0
+AOEAI diag_proj spell=tidal_strike t=6 n=0
+AOEAI diag_proj spell=tidal_strike t=8 n=0
+AOEAI diag_proj spell=tidal_strike t=10 n=0
+AOEAI diag_proj spell=tidal_strike t=12 n=0
+AOEAI diag_proj spell=tidal_strike t=14 n=0
+AOEAI diag_proj spell=tidal_strike t=16 n=0
+AOEAI diag_proj spell=tidal_strike t=18 n=0
+AOEAI diag_proj spell=tidal_strike t=20 n=0
+AOEAI diag_proj spell=tidal_strike t=22 n=0
+AOEAI diag_proj spell=tidal_strike t=24 n=0
+AOEAI spell=tidal_strike school=water verdict=PASS dmg=5.7 hits=1 dmg_events=1 heal=0.0 mana=0.0 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_damage target=Husk amount=0.0720 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9280
+AOEAI diag_damage target=Husk amount=0.0720 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9280
+AOEAI diag_cast spell=frost_nova player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [3.5б hp=1024] [6.7б hp=1024] [2.8б hp=1024] [6.7б hp=1024] [4.5б hp=1024]
+AOEAI cast spell=frost_nova can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=frost_nova t=2 n=0
+AOEAI diag_proj spell=frost_nova t=4 n=0
+AOEAI diag_proj spell=frost_nova t=6 n=0
+AOEAI diag_proj spell=frost_nova t=8 n=0
+AOEAI diag_proj spell=frost_nova t=10 n=0
+AOEAI diag_proj spell=frost_nova t=12 n=0
+AOEAI diag_proj spell=frost_nova t=14 n=0
+AOEAI diag_proj spell=frost_nova t=16 n=0
+AOEAI diag_proj spell=frost_nova t=18 n=0
+AOEAI diag_proj spell=frost_nova t=20 n=0
+AOEAI diag_proj spell=frost_nova t=22 n=0
+AOEAI diag_proj spell=frost_nova t=24 n=0
+AOEAI spell=frost_nova school=water verdict=PASS dmg=37.7 hits=2 dmg_events=2 heal=0.0 mana=0.0 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=frost_armor can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=frost_armor t=2 n=0
+AOEAI diag_proj spell=frost_armor t=4 n=0
+AOEAI diag_proj spell=frost_armor t=6 n=0
+AOEAI diag_proj spell=frost_armor t=8 n=0
+AOEAI diag_proj spell=frost_armor t=10 n=0
+AOEAI diag_proj spell=frost_armor t=12 n=0
+AOEAI diag_proj spell=frost_armor t=14 n=0
+AOEAI diag_proj spell=frost_armor t=16 n=0
+AOEAI diag_proj spell=frost_armor t=18 n=0
+AOEAI diag_proj spell=frost_armor t=20 n=0
+AOEAI diag_proj spell=frost_armor t=22 n=0
+AOEAI diag_proj spell=frost_armor t=24 n=0
+AOEAI spell=frost_armor school=water verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=10.8 shield=0.0 moved=0.0 items=0 effects=beneficial/14 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=water_breath can_cast=true cast_ticks=40 server_cast=true
+AOEAI diag_proj spell=water_breath t=2 n=0
+AOEAI diag_proj spell=water_breath t=4 n=0
+AOEAI diag_proj spell=water_breath t=6 n=0
+AOEAI diag_proj spell=water_breath t=8 n=0
+AOEAI diag_proj spell=water_breath t=10 n=0
+AOEAI diag_proj spell=water_breath t=12 n=0
+AOEAI diag_proj spell=water_breath t=14 n=0
+AOEAI diag_proj spell=water_breath t=16 n=0
+AOEAI diag_proj spell=water_breath t=18 n=0
+AOEAI diag_proj spell=water_breath t=20 n=0
+AOEAI diag_proj spell=water_breath t=22 n=0
+AOEAI diag_proj spell=water_breath t=24 n=0
+AOEAI spell=water_breath school=water verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=10.8 shield=0.0 moved=0.0 items=0 effects=water_breathing particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_cast spell=chilling_field player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=30 can_cast=true dummies=5 [2.8б hp=1024] [3.5б hp=1024] [4.5б hp=1024] [6.7б hp=1024] [6.7б hp=1024]
+AOEAI cast spell=chilling_field can_cast=true cast_ticks=30 server_cast=true
+AOEAI diag_projtick spell=chilling_field uuid=5154a873-24c5-49f0-9c10-07369468edf8 t=1 pos=2.92/100.00/1.91 d=0.00/0.00/0.00
+AOEAI diag_proj spell=chilling_field t=2 n=0
+AOEAI diag_block spell=chilling_field name=block age=1 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_proj spell=chilling_field t=4 n=0
+AOEAI diag_proj spell=chilling_field t=6 n=0
+AOEAI diag_proj spell=chilling_field t=8 n=0
+AOEAI diag_proj spell=chilling_field t=10 n=0
+AOEAI diag_proj spell=chilling_field t=12 n=0
+AOEAI diag_proj spell=chilling_field t=14 n=0
+AOEAI diag_proj spell=chilling_field t=16 n=0
+AOEAI diag_proj spell=chilling_field t=18 n=0
+AOEAI diag_proj spell=chilling_field t=20 n=0
+AOEAI diag_block spell=chilling_field name=block age=20 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_damage target=Husk amount=0.0144 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9856
+AOEAI diag_proj spell=chilling_field t=22 n=0
+AOEAI diag_proj spell=chilling_field t=24 n=0
+AOEAI diag_block spell=chilling_field name=block age=40 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_damage target=Husk amount=0.0144 before=1023.9856
+AOEAI diag_damage_after accepted=true after=1023.9712
+AOEAI diag_block spell=chilling_field name=block age=60 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_damage target=Husk amount=0.0144 before=1023.9712
+AOEAI diag_damage_after accepted=true after=1023.9568
+AOEAI diag_block spell=chilling_field name=block age=80 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_damage target=Husk amount=0.0144 before=1023.9568
+AOEAI diag_damage_after accepted=true after=1023.9424
+AOEAI diag_block spell=chilling_field name=block age=100 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_damage target=Husk amount=0.0144 before=1023.9424
+AOEAI diag_damage_after accepted=true after=1023.9280
+AOEAI diag_block spell=chilling_field name=block age=120 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_damage target=Husk amount=0.0144 before=1023.9280
+AOEAI diag_damage_after accepted=true after=1023.9136
+AOEAI spell=chilling_field school=water verdict=PASS dmg=22.6 hits=6 dmg_events=6 heal=4.0 mana=21.6 shield=0.0 moved=0.0 items=0 effects=negative/2 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=ice_weapon can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=ice_weapon t=2 n=0
+AOEAI diag_proj spell=ice_weapon t=4 n=0
+AOEAI diag_proj spell=ice_weapon t=6 n=0
+AOEAI diag_proj spell=ice_weapon t=8 n=0
+AOEAI diag_proj spell=ice_weapon t=10 n=0
+AOEAI diag_proj spell=ice_weapon t=12 n=0
+AOEAI diag_proj spell=ice_weapon t=14 n=0
+AOEAI diag_proj spell=ice_weapon t=16 n=0
+AOEAI diag_proj spell=ice_weapon t=18 n=0
+AOEAI diag_proj spell=ice_weapon t=20 n=0
+AOEAI diag_proj spell=ice_weapon t=22 n=0
+AOEAI diag_proj spell=ice_weapon t=24 n=0
+AOEAI spell=ice_weapon school=water verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=0.0 shield=0.0 moved=0.0 items=0 effects=beneficial/10 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_cast spell=ice_comet player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [3.5б hp=1024] [6.7б hp=1024] [6.7б hp=1024] [2.8б hp=1024] [4.5б hp=1024]
+AOEAI cast spell=ice_comet can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projtick spell=ice_comet uuid=60bc775c-d185-42fd-b142-fcbcd131381c t=1 pos=2.92/105.00/1.91 d=0.00/0.00/0.00
+AOEAI diag_proj spell=ice_comet t=2 n=0
+AOEAI diag_block spell=ice_comet name=block age=1 pos=2.50/105.00/1.50 dist=5.48
+AOEAI diag_proj spell=ice_comet t=4 n=0
+AOEAI diag_proj spell=ice_comet t=6 n=0
+AOEAI diag_proj spell=ice_comet t=8 n=0
+AOEAI diag_proj spell=ice_comet t=10 n=0
+AOEAI diag_proj spell=ice_comet t=12 n=0
+AOEAI diag_proj spell=ice_comet t=14 n=0
+AOEAI diag_proj spell=ice_comet t=16 n=0
+AOEAI diag_proj spell=ice_comet t=18 n=0
+AOEAI diag_damage target=Husk amount=0.0540 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9460
+AOEAI diag_proj spell=ice_comet t=20 n=0
+AOEAI diag_proj spell=ice_comet t=22 n=0
+AOEAI diag_proj spell=ice_comet t=24 n=0
+AOEAI spell=ice_comet school=water verdict=PASS dmg=14.2 hits=1 dmg_events=1 heal=6.0 mana=32.4 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI prepare_effect spell=chill_eruption effect=mmorpg:negative/2
+AOEAI diag_damage target=Husk amount=0.0720 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9280
+AOEAI diag_damage target=Husk amount=0.0217 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9783
+AOEAI diag_damage target=Husk amount=0.0720 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9280
+AOEAI diag_cast spell=chill_eruption player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [3.5б hp=1024] [2.8б hp=1024] [4.5б hp=1024] [6.7б hp=1024] [6.7б hp=1024]
+AOEAI cast spell=chill_eruption can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=chill_eruption t=2 n=0
+AOEAI diag_proj spell=chill_eruption t=4 n=0
+AOEAI diag_proj spell=chill_eruption t=6 n=0
+AOEAI diag_proj spell=chill_eruption t=8 n=0
+AOEAI diag_proj spell=chill_eruption t=10 n=0
+AOEAI diag_proj spell=chill_eruption t=12 n=0
+AOEAI diag_proj spell=chill_eruption t=14 n=0
+AOEAI diag_proj spell=chill_eruption t=16 n=0
+AOEAI diag_proj spell=chill_eruption t=18 n=0
+AOEAI diag_proj spell=chill_eruption t=20 n=0
+AOEAI diag_proj spell=chill_eruption t=22 n=0
+AOEAI diag_proj spell=chill_eruption t=24 n=0
+AOEAI spell=chill_eruption school=water verdict=PASS dmg=54.8 hits=3 dmg_events=3 heal=0.0 mana=0.0 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=nourishment can_cast=true cast_ticks=60 server_cast=true
+AOEAI diag_proj spell=nourishment t=2 n=0
+AOEAI diag_proj spell=nourishment t=4 n=0
+AOEAI diag_proj spell=nourishment t=6 n=0
+AOEAI diag_proj spell=nourishment t=8 n=0
+AOEAI diag_proj spell=nourishment t=10 n=0
+AOEAI diag_proj spell=nourishment t=12 n=0
+AOEAI diag_proj spell=nourishment t=14 n=0
+AOEAI diag_proj spell=nourishment t=16 n=0
+AOEAI diag_proj spell=nourishment t=18 n=0
+AOEAI diag_proj spell=nourishment t=20 n=0
+AOEAI diag_proj spell=nourishment t=22 n=0
+AOEAI diag_proj spell=nourishment t=24 n=0
+AOEAI spell=nourishment school=water verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=4.0 mana=21.6 shield=0.0 moved=0.0 items=0 effects=beneficial/2 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=mage_circle can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projtick spell=mage_circle uuid=6d3b380f-4c55-425b-9e33-61ac05e41aa5 t=1 pos=2.92/100.00/1.91 d=0.00/0.00/0.00
+AOEAI diag_proj spell=mage_circle t=2 n=0
+AOEAI diag_block spell=mage_circle name=block age=1 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_proj spell=mage_circle t=4 n=0
+AOEAI diag_proj spell=mage_circle t=6 n=0
+AOEAI diag_proj spell=mage_circle t=8 n=0
+AOEAI diag_proj spell=mage_circle t=10 n=0
+AOEAI diag_proj spell=mage_circle t=12 n=0
+AOEAI diag_proj spell=mage_circle t=14 n=0
+AOEAI zone_step spell=mage_circle pos=2.5/100.0/1.5
+AOEAI diag_proj spell=mage_circle t=16 n=0
+AOEAI diag_proj spell=mage_circle t=18 n=0
+AOEAI diag_proj spell=mage_circle t=20 n=0
+AOEAI diag_block spell=mage_circle name=block age=20 pos=2.50/100.00/1.50 dist=0.42
+AOEAI diag_proj spell=mage_circle t=22 n=0
+AOEAI diag_proj spell=mage_circle t=24 n=0
+AOEAI diag_block spell=mage_circle name=block age=40 pos=2.50/100.00/1.50 dist=0.46
+AOEAI diag_block spell=mage_circle name=block age=60 pos=2.50/100.00/1.50 dist=0.46
+AOEAI diag_block spell=mage_circle name=block age=80 pos=2.50/100.00/1.50 dist=0.46
+AOEAI diag_block spell=mage_circle name=block age=100 pos=2.50/100.00/1.50 dist=0.46
+AOEAI diag_block spell=mage_circle name=block age=120 pos=2.50/100.00/1.50 dist=0.46
+AOEAI spell=mage_circle school=water verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=4.0 mana=21.6 shield=0.0 moved=2.2 items=0 effects=beneficial/33 particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI cast spell=teleport can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_projtick spell=teleport uuid=4d34b393-19e5-4946-b776-79e456c0769a t=1 pos=2.92/100.00/1.91 d=0.00/0.00/0.00
+AOEAI diag_proj spell=teleport t=2 n=0
+AOEAI diag_block spell=teleport name=block age=1 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_proj spell=teleport t=4 n=0
+AOEAI diag_proj spell=teleport t=6 n=0
+AOEAI diag_proj spell=teleport t=8 n=0
+AOEAI diag_proj spell=teleport t=10 n=0
+AOEAI diag_proj spell=teleport t=12 n=0
+AOEAI diag_proj spell=teleport t=14 n=0
+AOEAI diag_proj spell=teleport t=16 n=0
+AOEAI diag_proj spell=teleport t=18 n=0
+AOEAI diag_proj spell=teleport t=20 n=0
+AOEAI diag_proj spell=teleport t=22 n=0
+AOEAI diag_proj spell=teleport t=24 n=0
+AOEAI spell=teleport school=water verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=4.0 mana=21.6 shield=0.0 moved=2.2 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_heal value=88 target=ServerPlayer before=14.00 after=20.00 max=20.00
+AOEAI cast spell=heart_of_ice can_cast=true cast_ticks=0 server_cast=true
+AOEAI diag_proj spell=heart_of_ice t=2 n=0
+AOEAI diag_proj spell=heart_of_ice t=4 n=0
+AOEAI diag_proj spell=heart_of_ice t=6 n=0
+AOEAI diag_proj spell=heart_of_ice t=8 n=0
+AOEAI diag_proj spell=heart_of_ice t=10 n=0
+AOEAI diag_proj spell=heart_of_ice t=12 n=0
+AOEAI diag_proj spell=heart_of_ice t=14 n=0
+AOEAI diag_proj spell=heart_of_ice t=16 n=0
+AOEAI diag_proj spell=heart_of_ice t=18 n=0
+AOEAI diag_proj spell=heart_of_ice t=20 n=0
+AOEAI diag_proj spell=heart_of_ice t=22 n=0
+AOEAI diag_proj spell=heart_of_ice t=24 n=0
+AOEAI spell=heart_of_ice school=water verdict=PASS dmg=0.0 hits=0 dmg_events=0 heal=8.0 mana=10.8 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+AOEAI diag_cast spell=black_hole player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=30 can_cast=true dummies=5 [4.5б hp=1024] [6.7б hp=1024] [6.7б hp=1024] [3.5б hp=1024] [2.8б hp=1024]
+AOEAI cast spell=black_hole can_cast=true cast_ticks=30 server_cast=true
+AOEAI diag_projtick spell=black_hole uuid=1a9aaadc-3973-4b1a-97ac-9413d598d091 t=1 pos=2.92/100.00/1.91 d=0.00/0.00/0.00
+AOEAI diag_proj spell=black_hole t=2 n=0
+AOEAI diag_block spell=black_hole name=block age=1 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_proj spell=black_hole t=4 n=0
+AOEAI diag_proj spell=black_hole t=6 n=0
+AOEAI diag_proj spell=black_hole t=8 n=0
+AOEAI diag_proj spell=black_hole t=10 n=0
+AOEAI diag_proj spell=black_hole t=12 n=0
+AOEAI diag_proj spell=black_hole t=14 n=0
+AOEAI diag_proj spell=black_hole t=16 n=0
+AOEAI diag_proj spell=black_hole t=18 n=0
+AOEAI diag_proj spell=black_hole t=20 n=0
+AOEAI diag_block spell=black_hole name=block age=20 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_proj spell=black_hole t=22 n=0
+AOEAI diag_proj spell=black_hole t=24 n=0
+AOEAI diag_block spell=black_hole name=block age=40 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_block spell=black_hole name=block age=60 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_block spell=black_hole name=block age=80 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_block spell=black_hole name=block age=100 pos=2.50/100.00/1.50 dist=2.24
+AOEAI diag_damage target=Husk amount=0.0153 before=1024.0000
+AOEAI diag_damage_after accepted=true after=1023.9847
+AOEAI spell=black_hole school=water verdict=PASS dmg=4.0 hits=1 dmg_events=1 heal=6.0 mana=32.4 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true
+AOEAI school_end water
+AOEAI done spells=72 passed=72 failed=0
