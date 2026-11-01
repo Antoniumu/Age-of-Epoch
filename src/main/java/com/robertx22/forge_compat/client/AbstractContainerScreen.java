@@ -23,8 +23,13 @@ public abstract class AbstractContainerScreen<T extends AbstractContainerMenu>
 
     public final List<Button> buttons = new ArrayList<>();
     public final List<GuiEventListener> children = new ArrayList<>();
-    public int imageWidth = 176;
-    public int imageHeight = 166;
+    // ВАЖНО: imageWidth/imageHeight НЕ объявляются здесь — они наследуются от
+    // ванильного AbstractContainerScreen. Раньше шим дублировал поля и затенял
+    // ванильные: ProfCraftScreen писал imageHeight=207 в затенённое поле, а
+    // ванильная проверка «клик вне окна» (doClick(-999) -> выброс предмета из
+    // инвентаря) читала своё, оставшееся 166. Весь хотбар (GUI-y 183..199)
+    // попадал в «полосу вне окна»: перенос предмета из нижнего ряда в сетку
+    // выбрасывал предмет на землю.
     public int x = 0;
     public int y = 0;
     public int backgroundWidth = 176;
