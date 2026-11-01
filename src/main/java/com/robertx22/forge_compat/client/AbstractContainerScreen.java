@@ -23,8 +23,6 @@ public abstract class AbstractContainerScreen<T extends AbstractContainerMenu>
 
     public final List<Button> buttons = new ArrayList<>();
     public final List<GuiEventListener> children = new ArrayList<>();
-    public int imageWidth = 176;
-    public int imageHeight = 166;
     public int x = 0;
     public int y = 0;
     public int backgroundWidth = 176;
@@ -33,7 +31,11 @@ public abstract class AbstractContainerScreen<T extends AbstractContainerMenu>
     private boolean inExtractRenderState = false;
 
     public AbstractContainerScreen(T menu, Inventory inv, Component title) {
-        super(menu, inv, title);
+        this(menu, inv, title, 176, 166);
+    }
+
+    public AbstractContainerScreen(T menu, Inventory inv, Component title, int width, int height) {
+        super(menu, inv, title, width, height);
     }
 
     @Override

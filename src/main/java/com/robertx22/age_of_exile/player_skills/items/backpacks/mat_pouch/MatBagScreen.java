@@ -13,10 +13,8 @@ public class MatBagScreen extends AbstractContainerScreen<MatBagContainer> {
     private Identifier texture = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/backpack/pouch.png");
 
     public MatBagScreen(MatBagContainer handler, Inventory inventory, Component text) {
-        super(handler, inventory, Component.literal(""));
+        super(handler, inventory, Component.literal(""), 176, 222);
 
-        imageWidth = 176;
-        imageHeight = 222;
     }
 
     @Override

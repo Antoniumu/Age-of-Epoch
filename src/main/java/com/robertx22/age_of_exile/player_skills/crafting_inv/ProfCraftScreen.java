@@ -23,10 +23,8 @@ public class ProfCraftScreen extends AbstractContainerScreen<ProfCraftContainer>
     private Identifier texture = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/crafting/background.png");
 
     public ProfCraftScreen(ProfCraftContainer handler, Inventory inventory, Component text) {
-        super(handler, inventory, Component.literal(""));
+        super(handler, inventory, Component.literal(""), 176, 207);
 
-        imageWidth = 176;
-        imageHeight = 207;
     }
 
     @Override

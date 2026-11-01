@@ -256,23 +256,28 @@ public class AgeOfEpochJeiPlugin implements IModPlugin {
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-        // The profession screen is 176x207; its result slot is at (133, 75).
+        // The profession screen is 176x207. The click area used to sit exactly
+        // over the result slot (133,75) — JEI swallowed every plain click there
+        // and opened its recipe page instead of taking the crafted item
+        // (only shift-click worked). The left info panel ("Шанс успеха") has no
+        // slots or buttons, so the recipe shortcut lives there now.
         safely(() -> registration.addRecipeClickArea(
             ProfCraftScreen.class,
-            132,
-            74,
-            20,
-            20,
+            8,
+            8,
+            95,
+            55,
             ProfessionCraftingCategory.TYPE
         ));
 
-        // The runeword station GUI is 276x195; its craft button is at (176, 50),
-        // sized 22x20 relative to the GUI's top-left corner.
+        // The runeword station GUI is 276x195. The area used to cover its craft
+        // button (176,50,22x20), stealing the click meant to craft the runeword.
+        // The strip between the rune slots and the craft button has no widgets.
         safely(() -> registration.addRecipeClickArea(
             RuneWordStationGui.class,
-            176,
+            104,
             50,
-            22,
+            68,
             20,
             RunewordCategory.TYPE
         ));

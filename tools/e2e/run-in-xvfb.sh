@@ -121,6 +121,12 @@ case "$(basename "$scenario")" in
         # compile-time API used by the normal optional integration.
         gradle_args+=(-PjeiRuntime)
         ;;
+    professions.txt)
+        # The profession audit runs with the real JEI on purpose: a plain click
+        # on the craft result must TAKE the item. JEI recipe click areas used
+        # to swallow that click and open the recipe page instead (shift worked).
+        gradle_args+=(-PjeiRuntime)
+        ;;
 esac
 ./gradlew runClient "${gradle_args[@]}" --stacktrace --no-problems-report >> run/e2e/gradle.log 2>&1 &
 gradle_pid=$!

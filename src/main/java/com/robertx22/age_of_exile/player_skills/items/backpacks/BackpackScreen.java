@@ -16,10 +16,8 @@ public class BackpackScreen extends AbstractContainerScreen<BackpackContainer> {
     private Identifier texture = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/backpack/background.png");
 
     public BackpackScreen(BackpackContainer handler, Inventory inventory, Component text) {
-        super(handler, inventory, Component.literal(""));
+        super(handler, inventory, Component.literal(""), 176, 233);
 
-        imageWidth = 176;
-        imageHeight = 233;
 
         this.texture = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/backpack/" + handler.info.tier + ".png");
     }
