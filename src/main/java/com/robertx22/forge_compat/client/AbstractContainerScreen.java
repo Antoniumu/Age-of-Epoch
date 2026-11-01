@@ -23,13 +23,20 @@ public abstract class AbstractContainerScreen<T extends AbstractContainerMenu>
 
     public final List<Button> buttons = new ArrayList<>();
     public final List<GuiEventListener> children = new ArrayList<>();
-    // ВАЖНО: imageWidth/imageHeight НЕ объявляются здесь — они наследуются от
-    // ванильного AbstractContainerScreen. Раньше шим дублировал поля и затенял
-    // ванильные: ProfCraftScreen писал imageHeight=207 в затенённое поле, а
-    // ванильная проверка «клик вне окна» (doClick(-999) -> выброс предмета из
-    // инвентаря) читала своё, оставшееся 166. Весь хотбар (GUI-y 183..199)
-    // попадал в «полосу вне окна»: перенос предмета из нижнего ряда в сетку
-    // выбрасывал предмет на землю.
+    /**
+     * В MC 26.3 ванильные imageWidth/imageHeight — final (176x166), поэтому шим
+     * держит собственные изменяемые поля с теми же именами (затенение вынужденное).
+     * Из-за этого ванильная проверка «клик вне окна» (doClick(-999) -> выброс
+     * предмета из инвентаря) считает окно высотой 166: весь хотбар (GUI-y 183..199)
+     * и правая часть широких экранов (станция рун 276x195) попадают в «ложную
+     * полосу вне окна», и клик по ним выбрасывал предмет. Обработку этой полосы
+     * шим берёт на себя в {@link #handleFalseOutsideClick}.
+     */
+    public int imageWidth = 176;
+    public int imageHeight = 166;
+    /** Размеры окна, которые ваниль считает настоящими (final-поля 26.3). */
+    private static final int VANILLA_WINDOW_W = 176;
+    private static final int VANILLA_WINDOW_H = 166;
     public int x = 0;
     public int y = 0;
     public int backgroundWidth = 176;
@@ -146,6 +153,9 @@ public abstract class AbstractContainerScreen<T extends AbstractContainerMenu>
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        if (handleFalseOutsideClick(event)) {
+            return true;
+        }
         if (this.mouseClicked(event.x(), event.y(), event.button())) {
             return true;
         }
@@ -157,6 +167,92 @@ public abstract class AbstractContainerScreen<T extends AbstractContainerMenu>
             }
         }
         return super.mouseClicked(event, doubleClick);
+    }
+
+    /**
+     * Клики в «ложной полосе вне окна»: внутри настоящего окна, но за границами
+     * ванильного 176x166 (нижние ряды инвентаря/хотбар, правая часть широких
+     * экранов). Ваниль такие клики не доводит до слотов и вместо этого делает
+     * doClick(-999) — выброс предмета с курсора. Здесь слот находится вручную,
+     * и обычный PICKUP выполняется без ванильного «вне окна»-пути.
+     */
+    private boolean handleFalseOutsideClick(MouseButtonEvent event) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int gx = (int) (mouseX - this.leftPos);
+        int gy = (int) (mouseY - this.topPos);
+        if (gx < 0 || gy < 0 || gx >= this.imageWidth || gy >= this.imageHeight) {
+            return false; // настоящее «вне окна»: выброс предмета курсором — штатное поведение
+        }
+        if (gx < VANILLA_WINDOW_W && gy < VANILLA_WINDOW_H) {
+            return false; // ваниль и так видит этот клик
+        }
+        net.minecraft.world.entity.player.Player player = Minecraft.getInstance().player;
+        if (player == null) {
+            return true;
+        }
+        Slot slot = null;
+        for (Slot s : this.menu.slots) {
+            if (gx >= s.x && gx < s.x + 16 && gy >= s.y && gy < s.y + 16) {
+                slot = s;
+                break;
+            }
+        }
+        if (slot == null) {
+            // Кнопки в этой зоне (например, кнопка крафта станции рун) обработает
+            // штатная цепочка; а вот одиночный клик мимо слота с предметом на
+            // курсоре не должен выбрасывать предмет.
+            for (Button b : this.buttons) {
+                if (b != null && b.clicked(mouseX, mouseY)) {
+                    return false;
+                }
+            }
+            return !this.menu.getCarried().isEmpty();
+        }
+        ItemStack carried = this.menu.getCarried();
+        int button = event.button();
+        if (carried.isEmpty()) {
+            if (slot.hasItem() && slot.mayPickup(player)) {
+                ItemStack inSlot = slot.getItem();
+                this.menu.setCarried(inSlot);
+                slot.set(ItemStack.EMPTY);
+                slot.onTake(player, inSlot);
+                slot.setChanged();
+            }
+            return true;
+        }
+        if (!slot.hasItem()) {
+            if (slot.mayPlace(carried)) {
+                if (button == 1 && carried.getCount() > 1) {
+                    slot.set(carried.split(1));
+                } else {
+                    slot.set(carried);
+                    this.menu.setCarried(ItemStack.EMPTY);
+                }
+                slot.setChanged();
+            }
+            return true;
+        }
+        ItemStack inSlot = slot.getItem();
+        boolean same = inSlot.getItem() == carried.getItem()
+            && inSlot.getComponents().equals(carried.getComponents());
+        int max = Math.min(slot.getMaxStackSize(inSlot), inSlot.getMaxStackSize());
+        if (same && inSlot.getCount() < max) {
+            int move = Math.min(carried.getCount(), max - inSlot.getCount());
+            inSlot.grow(move);
+            carried.shrink(move);
+            if (carried.isEmpty()) {
+                this.menu.setCarried(ItemStack.EMPTY);
+            }
+            slot.setChanged();
+            return true;
+        }
+        if (slot.mayPickup(player) && slot.mayPlace(carried)) {
+            slot.set(carried);
+            this.menu.setCarried(inSlot);
+            slot.setChanged();
+        }
+        return true;
     }
 
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
