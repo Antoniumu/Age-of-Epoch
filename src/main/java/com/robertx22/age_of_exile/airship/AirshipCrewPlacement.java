@@ -69,7 +69,7 @@ public final class AirshipCrewPlacement {
         return CrewMigrationSafety.allChunksLoaded(minX,minZ,maxX,maxZ,
             (x,z)->level.hasChunkAt(new BlockPos(x*16,0,z*16)));
     }
-    private static boolean crewScanLoaded(ServerLevel level,AirshipData d){
+    static boolean crewScanLoaded(ServerLevel level,AirshipData d){
         return allLoaded(level,d.x-60,d.z-36,d.x+60,d.z+55);
     }
     private static final String LYSANDER_LAYOUT="aoe_lysander_access_v1";
