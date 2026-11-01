@@ -64,6 +64,14 @@ public final class AirshipCrewPlacement {
         }
         return added;
     }
+    private static boolean allLoaded(ServerLevel level,int minX,int minZ,int maxX,int maxZ){
+        // hasChunkAt is a loaded-state query; never generate or force-load missing chunks.
+        return CrewMigrationSafety.allChunksLoaded(minX,minZ,maxX,maxZ,
+            (x,z)->level.hasChunkAt(new BlockPos(x*16,0,z*16)));
+    }
+    private static boolean crewScanLoaded(ServerLevel level,AirshipData d){
+        return allLoaded(level,d.x-60,d.z-36,d.x+60,d.z+55);
+    }
     private static final String LYSANDER_LAYOUT="aoe_lysander_access_v1";
     private static final int[][] CARDINAL={{1,0},{-1,0},{0,1},{0,-1}};
     private static boolean standing(ServerLevel level,Entity actor,BlockPos pos) {
@@ -120,13 +128,13 @@ public final class AirshipCrewPlacement {
         var d=AirshipService.data(player);
         if(!d.summoned||!"winged_sailor".equals(d.layout)||!net.minecraft.world.level.Level.OVERWORLD.equals(player.level().dimension()))return false;
         var level=(ServerLevel)player.level();var hub=AirshipHub.state(level.getServer());
-        if(!hub.exists||!"IDLE".equals(hub.phase)||player.distanceToSqr(d.x,d.y,d.z)>100*100)return false;
+        if(!hub.exists||!"IDLE".equals(hub.phase)||player.distanceToSqr(d.x,d.y,d.z)>100*100||!crewScanLoaded(level,d))return false;
         var crew=level.getEntitiesOfClass(LivingEntity.class,new AABB(d.x-60,d.y-52,d.z-36,d.x+61,d.y+51,d.z+56),e->!AirshipService.npcId(e).isEmpty());
         var captains=crew.stream().filter(e->AirshipService.npcId(e).equals("captain")).toList();
         var anchors=crew.stream().filter(e->AirshipService.npcId(e).equals("mara")).toList();
         if(captains.size()!=1||anchors.size()!=1)return false;
         var actor=captains.getFirst();String tag="aoe_captain_access_v1";
-        if(actor.entityTags().contains(tag))return false;
+        if(actor.entityTags().contains(tag)||AirshipConversationLease.active(level,actor))return false;
         // Respect non-original/custom placements and keep existing accessible positions.
         if(actor.getY()<d.y+9||lysanderConnected(level,actor,anchors.getFirst(),crew)){actor.addTag(tag);return false;}
         if(level.players().stream().anyMatch(p->p.isAlive()&&!p.isSpectator()&&p.distanceToSqr(actor)<64))return false;
@@ -138,12 +146,12 @@ public final class AirshipCrewPlacement {
     public static boolean repairLysander(ServerPlayer player){
         var d=AirshipService.data(player);if(!d.summoned||!"winged_sailor".equals(d.layout)||!net.minecraft.world.level.Level.OVERWORLD.equals(player.level().dimension()))return false;
         var level=(ServerLevel)player.level();var hub=AirshipHub.state(level.getServer());
-        if(!hub.exists||!"IDLE".equals(hub.phase)||player.distanceToSqr(d.x,d.y,d.z)>100*100)return false;
+        if(!hub.exists||!"IDLE".equals(hub.phase)||player.distanceToSqr(d.x,d.y,d.z)>100*100||!crewScanLoaded(level,d))return false;
         var box=new AABB(d.x-60,d.y-52,d.z-36,d.x+61,d.y+51,d.z+56);
         var crew=level.getEntitiesOfClass(LivingEntity.class,box,e->!AirshipService.npcId(e).isEmpty());
         var lys=crew.stream().filter(e->AirshipService.npcId(e).equals("lysander")).toList();
         var mara=crew.stream().filter(e->AirshipService.npcId(e).equals("mara")).toList();
-        if(lys.size()!=1||mara.size()!=1||lys.getFirst().entityTags().contains(LYSANDER_LAYOUT))return false;
+        if(lys.size()!=1||mara.size()!=1||lys.getFirst().entityTags().contains(LYSANDER_LAYOUT)||AirshipConversationLease.active(level,lys.getFirst()))return false;
         boolean success=placeConnected(level,lys.getFirst(),mara.getFirst(),crew,LYSANDER_LAYOUT);
         if(success)System.out.println("AIRSHIPTEST LYSANDER relocated uuid="+lys.getFirst().getUUID()+" position="+lys.getFirst().blockPosition());
         return success;
@@ -154,7 +162,7 @@ public final class AirshipCrewPlacement {
         var d=AirshipService.data(player);
         if(!d.summoned||!"winged_sailor".equals(d.layout)||!net.minecraft.world.level.Level.OVERWORLD.equals(player.level().dimension()))return 0;
         var level=(ServerLevel)player.level();var hub=AirshipHub.state(level.getServer());
-        if(!hub.exists||!"IDLE".equals(hub.phase)||player.distanceToSqr(d.x,d.y,d.z)>100*100)return 0;
+        if(!hub.exists||!"IDLE".equals(hub.phase)||player.distanceToSqr(d.x,d.y,d.z)>100*100||!crewScanLoaded(level,d))return 0;
         var crew=level.getEntitiesOfClass(LivingEntity.class,new AABB(d.x-60,d.y-52,d.z-36,d.x+61,d.y+51,d.z+56),e->!AirshipService.npcId(e).isEmpty());
         int moved=0;
         for(String id:List.of("oren","selin","veya","tik")){
@@ -164,7 +172,7 @@ public final class AirshipCrewPlacement {
             var anchors=crew.stream().filter(e->AirshipService.npcId(e).equals(anchorId)).toList();
             if(found.size()!=1||anchors.size()!=1)continue;
             var actor=found.getFirst();var anchor=anchors.getFirst();
-            if(actor.entityTags().contains(tag))continue;
+            if(actor.entityTags().contains(tag)||AirshipConversationLease.active(level,actor))continue;
             if(lysanderConnected(level,actor,anchor,crew)){actor.addTag(tag);continue;}
             if(placeConnected(level,actor,anchor,crew,tag)){
                 moved++;System.out.println("AIRSHIPTEST CREW ACCESS relocated npc="+id+" uuid="+actor.getUUID()+" pos="+actor.blockPosition());
@@ -193,6 +201,9 @@ public final class AirshipCrewPlacement {
             p.sendSystemMessage(Component.literal("Подойди к своему дирижаблю, чтобы обновить экипаж."));return 0;
         }
         ServerLevel level=(ServerLevel)p.level();
+        if(!allLoaded(level,d.x-100,d.z-100,d.x+100,d.z+100)){
+            p.sendSystemMessage(Component.literal("Обновление отложено: не все чанки корабля загружены. Подойди ближе и попробуй снова."));return 0;
+        }
         var crew=level.getEntitiesOfClass(LivingEntity.class,new AABB(d.x-100,d.y-100,d.z-100,d.x+100,d.y+100,d.z+100),e->!AirshipService.npcId(e).isEmpty());
         for(var actor:crew) AirshipService.configureSkin(level,actor);
         int added=complete(level,crew);
