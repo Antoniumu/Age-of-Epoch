@@ -260,6 +260,7 @@ public final class ProfessionAuditProbe {
         final List<String> problems = new ArrayList<>();
         final List<String> notes = new ArrayList<>();
         boolean guiOpened;
+        boolean matrixPlaced;
         int placed;
         boolean resultReady;
         boolean taken;
@@ -431,6 +432,9 @@ public final class ProfessionAuditProbe {
                     }
                     if (!current.resultReady && current.placed > 0) {
                         current.problem("ингредиенты разложены, но результат не появился");
+                    }
+                    if (!current.matrixPlaced) {
+                        current.problem("матрица из хотбара не попала в сетку");
                     }
                     if (current.placed == 0) {
                         current.problem("ни один предмет не был положен в сетку");
@@ -640,6 +644,7 @@ public final class ProfessionAuditProbe {
 
             // Инструмент — в руку: setItemSlot кладёт его в выбранный слот хотбара
             // (у нового игрока это слот 0).
+            player.getInventory().setSelectedSlot(0);
             player.setItemSlot(net.minecraft.world.entity.EquipmentSlot.MAINHAND, toolFor(skill));
             // Матрица душ — в слот хотбара 1 (НЕ выбранный: там инструмент):
             // сценарий переносит её в сетку именно из нижней полоски хотбара —
@@ -674,8 +679,12 @@ public final class ProfessionAuditProbe {
             int start = menu.getContainerStart();
             int filled = 0;
             for (int i = 0; i < 6; i++) {
-                if (!menu.slots.get(start + i).getItem().isEmpty()) {
+                ItemStack gridStack = menu.slots.get(start + i).getItem();
+                if (!gridStack.isEmpty()) {
                     filled++;
+                    if (gridStack.is(buildIngredient(soulMatrix(), LIVE_TIER).getItem())) {
+                        current.matrixPlaced = true;
+                    }
                 }
             }
             if (filled != lastFilled) {

@@ -25,8 +25,8 @@ public abstract class ModificationGui<T extends BaseTileContainer, Tile extends 
 
     private final Class<Tile> token;
 
-    public ModificationGui(Identifier background, T cont, Inventory inv, MutableComponent text, Class<Tile> token) {
-        super(cont, inv, text);
+    public ModificationGui(Identifier background, T cont, Inventory inv, MutableComponent text, Class<Tile> token, int width, int height) {
+        super(cont, inv, text, width, height);
         this.background = background;
         this.mc = Minecraft.getInstance();
         this.token = token;

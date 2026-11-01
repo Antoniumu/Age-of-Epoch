@@ -30,9 +30,7 @@ public class RuneWordStationGui extends ModificationGui<RuneWordStationContainer
     private static final Identifier texture = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/runewordcraft.png");
 
     public RuneWordStationGui(RuneWordStationContainer cont, Inventory invPlayer, Component comp) {
-        super(texture, cont, invPlayer, Component.literal(""), RuneWordStationTile.class);
-        imageWidth = 276;
-        imageHeight = 195;
+        super(texture, cont, invPlayer, Component.literal(""), RuneWordStationTile.class, 276, 195);
         this.backgroundCanvasSize = 512;
     }
 
