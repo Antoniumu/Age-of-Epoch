@@ -141,7 +141,7 @@ jobs:
               assert steps.get(name)=='success',(name,steps)
           print('Verified actual source execution:',run['head_sha'])
           PYCODE
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v8
         with:
           name: airship-proof
           run-id: ${{ env.RUN_ID }}
