@@ -20,8 +20,10 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
@@ -437,7 +439,7 @@ public enum TowerAbility {
     /** Boss UUID -> gameTime at which to land the leap (ground pound). */
     private static final Map<UUID, Long> LEAP_LAND_TIME = new ConcurrentHashMap<>();
     /** Boss UUID -> whether phase enrage has already triggered. */
-    private static final Set<UUID> PHASE_TRIGGERED = ConcurrentHashMap.newKeySet();
+    private static final Set<UUID> PHASE_TRIGGERED = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     private final int cooldown;
 
