@@ -16,6 +16,12 @@ import java.util.Map;
  *
  * <p>Ranks: 1 = common, 2 = veteran, 3 = elite, 4 = legendary.  The final rank
  * of a tower is {@code clamp(1 + heightBonus + theme.baseRank - 2, 1, 4)}.</p>
+ *
+ * <p>Every rank-3+ boss carries at least one anti-cheese tool (PILLAR_BREAK,
+ * GRAPPLE_PULL, CEILING_BARRAGE, LEAP, ROOF_SMASH, LINE_CHARGE) so players
+ * cannot outsmart the fight by digging holes, pillaring up or boxing the boss
+ * in. Rank-4 legendaries always include a movement-closer (LEAP or LINE_CHARGE
+ * or BLINK) and PHASE_ENRAGE so the encounter ends with a proper fight.</p>
  */
 public final class TowerRoster {
 
@@ -27,13 +33,14 @@ public final class TowerRoster {
             TowerBossDef.of("bandit_chief", "Атаман разбойников", "minecraft:pillager", 1, 1.3D, 1.1D,
                 TowerAbility.KNOCKBACK_SLAM).withWeapon("minecraft:iron_axe"),
             TowerBossDef.of("grave_knight", "Могильный рыцарь", "minecraft:skeleton", 2, 1.7D, 1.25D,
-                TowerAbility.SHIELD, TowerAbility.KNOCKBACK_SLAM).withWeapon("minecraft:iron_sword"),
+                TowerAbility.SHIELD, TowerAbility.LINE_CHARGE).withWeapon("minecraft:iron_sword"),
             TowerBossDef.of("warlord", "Военный вождь", "minecraft:vindicator", 3, 2.2D, 1.5D,
-                TowerAbility.RAGE, TowerAbility.SUMMON_MINIONS).withWeapon("minecraft:diamond_axe"),
+                TowerAbility.RAGE, TowerAbility.SUMMON_MINIONS, TowerAbility.GRAPPLE_PULL).withWeapon("minecraft:diamond_axe"),
             TowerBossDef.of("headsman", "Палач равнин", "minecraft:vindicator", 3, 2.4D, 1.7D,
-                TowerAbility.CURSE_OF_WEAKNESS, TowerAbility.KNOCKBACK_SLAM).withWeapon("minecraft:iron_axe"),
+                TowerAbility.CURSE_OF_WEAKNESS, TowerAbility.LINE_CHARGE, TowerAbility.PILLAR_BREAK).withWeapon("minecraft:iron_axe"),
             TowerBossDef.of("conqueror", "Завоеватель", "minecraft:ravager", 4, 3.4D, 1.9D,
-                TowerAbility.KNOCKBACK_SLAM, TowerAbility.RAGE, TowerAbility.SUMMON_MINIONS));
+                TowerAbility.LEAP, TowerAbility.ROOF_SMASH, TowerAbility.THUNDER_STOMP,
+                TowerAbility.RAGE, TowerAbility.SUMMON_MINIONS, TowerAbility.PHASE_ENRAGE));
 
         // ------------------------------------------------------------ forest
         add("forest",
@@ -42,11 +49,12 @@ public final class TowerRoster {
             TowerBossDef.of("strangler", "Душитель-древень", "minecraft:zombie", 2, 1.8D, 1.2D,
                 TowerAbility.POISON_CLOUD, TowerAbility.KNOCKBACK_SLAM),
             TowerBossDef.of("herbalist", "Ведьма-травница", "minecraft:witch", 3, 2.0D, 1.4D,
-                TowerAbility.POISON_CLOUD, TowerAbility.HEAL_SELF),
+                TowerAbility.POISON_CLOUD, TowerAbility.HEAL_SELF, TowerAbility.CEILING_BARRAGE),
             TowerBossDef.of("grove_keeper", "Хранитель рощи", "minecraft:evoker", 3, 2.1D, 1.5D,
-                TowerAbility.SUMMON_MINIONS, TowerAbility.CURSE_OF_WEAKNESS),
+                TowerAbility.SUMMON_MINIONS, TowerAbility.CURSE_OF_WEAKNESS, TowerAbility.GRAPPLE_PULL),
             TowerBossDef.of("ancient_beast", "Древний зверь", "minecraft:ravager", 4, 3.2D, 1.8D,
-                TowerAbility.RAGE, TowerAbility.SUMMON_MINIONS, TowerAbility.KNOCKBACK_SLAM));
+                TowerAbility.LEAP, TowerAbility.ROOF_SMASH, TowerAbility.RAGE,
+                TowerAbility.SUMMON_MINIONS, TowerAbility.PHASE_ENRAGE));
 
         // --------------------------------------------------------------- ice
         add("ice",
@@ -55,11 +63,13 @@ public final class TowerRoster {
             TowerBossDef.of("frost_knight", "Ледяной рыцарь", "minecraft:skeleton", 2, 1.8D, 1.3D,
                 TowerAbility.FROST_NOVA, TowerAbility.SHIELD).withWeapon("minecraft:iron_sword"),
             TowerBossDef.of("winter_priestess", "Морозная жрица", "minecraft:stray", 3, 2.1D, 1.5D,
-                TowerAbility.FROST_NOVA, TowerAbility.SUMMON_MINIONS, TowerAbility.HEAL_SELF),
+                TowerAbility.FROST_NOVA, TowerAbility.SUMMON_MINIONS, TowerAbility.HEAL_SELF,
+                TowerAbility.CEILING_BARRAGE),
             TowerBossDef.of("glacier_warden", "Страж ледника", "minecraft:skeleton", 3, 2.4D, 1.6D,
-                TowerAbility.SHIELD, TowerAbility.THUNDER_STOMP),
+                TowerAbility.SHIELD, TowerAbility.THUNDER_STOMP, TowerAbility.LINE_CHARGE),
             TowerBossDef.of("snow_titan", "Снежный титан", "minecraft:ravager", 4, 3.6D, 1.9D,
-                TowerAbility.KNOCKBACK_SLAM, TowerAbility.FROST_NOVA, TowerAbility.RAGE));
+                TowerAbility.LEAP, TowerAbility.FROST_NOVA, TowerAbility.ROOF_SMASH,
+                TowerAbility.RAGE, TowerAbility.PHASE_ENRAGE));
 
         // ------------------------------------------------------------ desert
         add("desert",
@@ -68,11 +78,12 @@ public final class TowerRoster {
             TowerBossDef.of("sand_priest", "Песчаный жрец", "minecraft:skeleton", 2, 1.7D, 1.2D,
                 TowerAbility.SUMMON_MINIONS, TowerAbility.POISON_CLOUD),
             TowerBossDef.of("mummy_pharaoh", "Мумия-фараон", "minecraft:husk", 3, 2.5D, 1.5D,
-                TowerAbility.CURSE_OF_WEAKNESS, TowerAbility.HEAL_SELF, TowerAbility.KNOCKBACK_SLAM),
+                TowerAbility.CURSE_OF_WEAKNESS, TowerAbility.HEAL_SELF, TowerAbility.PILLAR_BREAK),
             TowerBossDef.of("scorpion_matriarch", "Скорпион-матриарх", "minecraft:cave_spider", 3, 2.0D, 1.7D,
-                TowerAbility.POISON_CLOUD, TowerAbility.KNOCKBACK_SLAM),
+                TowerAbility.POISON_CLOUD, TowerAbility.BLINK, TowerAbility.GRAPPLE_PULL),
             TowerBossDef.of("dune_lord", "Владыка дюн", "minecraft:ravager", 4, 3.3D, 1.9D,
-                TowerAbility.KNOCKBACK_SLAM, TowerAbility.RAGE, TowerAbility.SUMMON_MINIONS));
+                TowerAbility.LEAP, TowerAbility.ROOF_SMASH, TowerAbility.RAGE,
+                TowerAbility.SUMMON_MINIONS, TowerAbility.PHASE_ENRAGE));
 
         // ------------------------------------------------------------ jungle
         add("jungle",
@@ -81,11 +92,12 @@ public final class TowerRoster {
             TowerBossDef.of("serpent_priest", "Змеиный жрец", "minecraft:witch", 2, 1.7D, 1.3D,
                 TowerAbility.POISON_CLOUD, TowerAbility.HEAL_SELF),
             TowerBossDef.of("temple_guardian", "Охранник храма", "minecraft:vindicator", 3, 2.3D, 1.6D,
-                TowerAbility.KNOCKBACK_SLAM, TowerAbility.SUMMON_MINIONS).withWeapon("minecraft:iron_axe"),
+                TowerAbility.KNOCKBACK_SLAM, TowerAbility.LINE_CHARGE, TowerAbility.GRAPPLE_PULL).withWeapon("minecraft:iron_axe"),
             TowerBossDef.of("shadow_matriarch", "Матриарх теней", "minecraft:spider", 3, 2.0D, 1.6D,
-                TowerAbility.POISON_CLOUD, TowerAbility.BLINK),
+                TowerAbility.POISON_CLOUD, TowerAbility.BLINK, TowerAbility.PILLAR_BREAK),
             TowerBossDef.of("ancient_yaksha", "Древний якш", "minecraft:ravager", 4, 3.3D, 1.9D,
-                TowerAbility.KNOCKBACK_SLAM, TowerAbility.RAGE, TowerAbility.SUMMON_MINIONS));
+                TowerAbility.LEAP, TowerAbility.ROOF_SMASH, TowerAbility.THUNDER_STOMP,
+                TowerAbility.RAGE, TowerAbility.SUMMON_MINIONS, TowerAbility.PHASE_ENRAGE));
 
         // ------------------------------------------------------------- swamp
         add("swamp",
@@ -94,11 +106,12 @@ public final class TowerRoster {
             TowerBossDef.of("bog_witch", "Ведьма-болотница", "minecraft:witch", 2, 1.7D, 1.3D,
                 TowerAbility.POISON_CLOUD, TowerAbility.HEAL_SELF),
             TowerBossDef.of("slime_ancestor", "Слизень-прародитель", "minecraft:slime", 3, 2.4D, 1.4D,
-                TowerAbility.KNOCKBACK_SLAM, TowerAbility.SUMMON_MINIONS),
+                TowerAbility.KNOCKBACK_SLAM, TowerAbility.SUMMON_MINIONS, TowerAbility.LEAP),
             TowerBossDef.of("mire_warden", "Хозяин трясины", "minecraft:drowned", 3, 2.2D, 1.6D,
-                TowerAbility.LEECH, TowerAbility.CURSE_OF_WEAKNESS),
+                TowerAbility.LEECH, TowerAbility.CURSE_OF_WEAKNESS, TowerAbility.GRAPPLE_PULL),
             TowerBossDef.of("peat_giant", "Тинный гигант", "minecraft:ravager", 4, 3.4D, 1.8D,
-                TowerAbility.KNOCKBACK_SLAM, TowerAbility.POISON_CLOUD, TowerAbility.RAGE));
+                TowerAbility.LEAP, TowerAbility.POISON_CLOUD, TowerAbility.ROOF_SMASH,
+                TowerAbility.RAGE, TowerAbility.PHASE_ENRAGE));
 
         // ---------------------------------------------------------- badlands
         add("badlands",
@@ -107,11 +120,12 @@ public final class TowerRoster {
             TowerBossDef.of("canyon_spirit", "Каньонный дух", "minecraft:husk", 2, 1.7D, 1.3D,
                 TowerAbility.CURSE_OF_WEAKNESS, TowerAbility.LEECH),
             TowerBossDef.of("fortress_master", "Начальник заставы", "minecraft:vindicator", 3, 2.3D, 1.6D,
-                TowerAbility.KNOCKBACK_SLAM, TowerAbility.RAGE).withWeapon("minecraft:diamond_axe"),
+                TowerAbility.KNOCKBACK_SLAM, TowerAbility.RAGE, TowerAbility.LINE_CHARGE).withWeapon("minecraft:diamond_axe"),
             TowerBossDef.of("bone_cowboy", "Костяной ковбой", "minecraft:skeleton", 3, 2.1D, 1.5D,
-                TowerAbility.SUMMON_MINIONS, TowerAbility.CURSE_OF_WEAKNESS),
+                TowerAbility.SUMMON_MINIONS, TowerAbility.CURSE_OF_WEAKNESS, TowerAbility.BLINK),
             TowerBossDef.of("clay_titan", "Глиняный титан", "minecraft:ravager", 4, 3.5D, 1.8D,
-                TowerAbility.KNOCKBACK_SLAM, TowerAbility.SHIELD, TowerAbility.RAGE));
+                TowerAbility.LEAP, TowerAbility.ROOF_SMASH, TowerAbility.SHIELD,
+                TowerAbility.RAGE, TowerAbility.PHASE_ENRAGE));
 
         // ----------------------------------------------------------- savanna
         add("savanna",
@@ -120,11 +134,12 @@ public final class TowerRoster {
             TowerBossDef.of("pride_chief", "Вождь прайда", "minecraft:vindicator", 2, 1.8D, 1.4D,
                 TowerAbility.RAGE).withWeapon("minecraft:iron_axe"),
             TowerBossDef.of("savanna_storm", "Гроза саванны", "minecraft:ravager", 3, 2.6D, 1.7D,
-                TowerAbility.KNOCKBACK_SLAM, TowerAbility.RAGE),
+                TowerAbility.KNOCKBACK_SLAM, TowerAbility.RAGE, TowerAbility.LEAP),
             TowerBossDef.of("bone_hunter", "Костяной охотник", "minecraft:skeleton", 3, 2.0D, 1.5D,
-                TowerAbility.SUMMON_MINIONS, TowerAbility.POISON_CLOUD),
+                TowerAbility.SUMMON_MINIONS, TowerAbility.POISON_CLOUD, TowerAbility.PILLAR_BREAK),
             TowerBossDef.of("beast_king", "Царь зверей", "minecraft:ravager", 4, 3.4D, 1.9D,
-                TowerAbility.KNOCKBACK_SLAM, TowerAbility.RAGE, TowerAbility.HEAL_SELF));
+                TowerAbility.LEAP, TowerAbility.ROOF_SMASH, TowerAbility.RAGE,
+                TowerAbility.HEAL_SELF, TowerAbility.SUMMON_MINIONS, TowerAbility.PHASE_ENRAGE));
 
         // ---------------------------------------------------------- mountain
         add("mountain",
@@ -133,11 +148,12 @@ public final class TowerRoster {
             TowerBossDef.of("ridge_archer", "Горный стрелок", "minecraft:skeleton", 2, 1.7D, 1.3D,
                 TowerAbility.SUMMON_MINIONS),
             TowerBossDef.of("pass_warden", "Страж перевала", "minecraft:vindicator", 3, 2.4D, 1.6D,
-                TowerAbility.SHIELD, TowerAbility.KNOCKBACK_SLAM).withWeapon("minecraft:iron_axe"),
+                TowerAbility.SHIELD, TowerAbility.LINE_CHARGE, TowerAbility.PILLAR_BREAK).withWeapon("minecraft:iron_axe"),
             TowerBossDef.of("cliff_spirit", "Скальный дух", "minecraft:skeleton", 3, 2.1D, 1.6D,
-                TowerAbility.CURSE_OF_WEAKNESS, TowerAbility.BLINK),
+                TowerAbility.CURSE_OF_WEAKNESS, TowerAbility.BLINK, TowerAbility.GRAPPLE_PULL),
             TowerBossDef.of("mountain_colossus", "Горный колосс", "minecraft:ravager", 4, 3.7D, 1.9D,
-                TowerAbility.KNOCKBACK_SLAM, TowerAbility.SHIELD, TowerAbility.RAGE));
+                TowerAbility.LEAP, TowerAbility.ROOF_SMASH, TowerAbility.SHIELD,
+                TowerAbility.THUNDER_STOMP, TowerAbility.RAGE, TowerAbility.PHASE_ENRAGE));
 
         // -------------------------------------------------------------- coast
         add("coast",
@@ -146,11 +162,14 @@ public final class TowerRoster {
             TowerBossDef.of("reef_guardian", "Страж рифа", "minecraft:guardian", 2, 1.8D, 1.3D,
                 TowerAbility.FROST_NOVA, TowerAbility.SHIELD),
             TowerBossDef.of("pirate_captain", "Пират-капитан", "minecraft:drowned", 3, 2.3D, 1.6D,
-                TowerAbility.LEECH, TowerAbility.RAGE, TowerAbility.SUMMON_MINIONS).withWeapon("minecraft:iron_sword"),
+                TowerAbility.LEECH, TowerAbility.RAGE, TowerAbility.GRAPPLE_PULL,
+                TowerAbility.SUMMON_MINIONS).withWeapon("minecraft:iron_sword"),
             TowerBossDef.of("abyss_priest", "Глубинный жрец", "minecraft:drowned", 3, 2.2D, 1.5D,
-                TowerAbility.SHIELD, TowerAbility.HEAL_SELF),
+                TowerAbility.SHIELD, TowerAbility.HEAL_SELF, TowerAbility.CEILING_BARRAGE),
             TowerBossDef.of("ancient_leviathan", "Древний левиафан", "minecraft:elder_guardian", 4, 3.6D, 1.8D,
-                TowerAbility.FROST_NOVA, TowerAbility.LEECH, TowerAbility.SHIELD, TowerAbility.SUMMON_ELITE));
+                TowerAbility.FROST_NOVA, TowerAbility.LEECH, TowerAbility.GRAPPLE_PULL,
+                TowerAbility.ROOF_SMASH, TowerAbility.SHIELD, TowerAbility.SUMMON_ELITE,
+                TowerAbility.PHASE_ENRAGE));
 
         // ----------------------------------------------------------- mushroom
         add("mushroom",
@@ -159,25 +178,27 @@ public final class TowerRoster {
             TowerBossDef.of("myconid_seer", "Грибной ведун", "minecraft:witch", 2, 1.7D, 1.3D,
                 TowerAbility.POISON_CLOUD, TowerAbility.HEAL_SELF),
             TowerBossDef.of("rot_matriarch", "Матриарх гнили", "minecraft:cave_spider", 3, 2.2D, 1.6D,
-                TowerAbility.POISON_CLOUD, TowerAbility.SUMMON_MINIONS),
+                TowerAbility.POISON_CLOUD, TowerAbility.SUMMON_MINIONS, TowerAbility.BLINK),
             TowerBossDef.of("walking_mycelium", "Ходячий мицелий", "minecraft:zombie", 3, 2.5D, 1.5D,
-                TowerAbility.LEECH, TowerAbility.POISON_CLOUD),
+                TowerAbility.LEECH, TowerAbility.POISON_CLOUD, TowerAbility.PILLAR_BREAK),
             TowerBossDef.of("spore_colossus", "Споролиск", "minecraft:ravager", 4, 3.4D, 1.8D,
-                TowerAbility.KNOCKBACK_SLAM, TowerAbility.POISON_CLOUD, TowerAbility.SUMMON_MINIONS));
+                TowerAbility.LEAP, TowerAbility.POISON_CLOUD, TowerAbility.ROOF_SMASH,
+                TowerAbility.SUMMON_MINIONS, TowerAbility.PHASE_ENRAGE));
 
         // -------------------------------------------------------- dark forest
         add("dark_forest",
             TowerBossDef.of("gloom_herald", "Сумрачный вестник", "minecraft:vex", 1, 1.2D, 1.2D,
                 TowerAbility.BLINK),
             TowerBossDef.of("order_executioner", "Палач ордена", "minecraft:vindicator", 2, 1.9D, 1.5D,
-                TowerAbility.CURSE_OF_WEAKNESS, TowerAbility.KNOCKBACK_SLAM).withWeapon("minecraft:iron_axe"),
+                TowerAbility.CURSE_OF_WEAKNESS, TowerAbility.LINE_CHARGE).withWeapon("minecraft:iron_axe"),
             TowerBossDef.of("shadow_caster", "Заклинатель теней", "minecraft:evoker", 3, 2.3D, 1.6D,
-                TowerAbility.SUMMON_MINIONS, TowerAbility.CURSE_OF_WEAKNESS),
+                TowerAbility.SUMMON_MINIONS, TowerAbility.CURSE_OF_WEAKNESS, TowerAbility.CEILING_BARRAGE),
             TowerBossDef.of("renegade_witch", "Ведьма-отступница", "minecraft:witch", 3, 2.2D, 1.6D,
-                TowerAbility.POISON_CLOUD, TowerAbility.HEAL_SELF, TowerAbility.BLINK),
+                TowerAbility.POISON_CLOUD, TowerAbility.HEAL_SELF, TowerAbility.BLINK, TowerAbility.GRAPPLE_PULL),
             TowerBossDef.of("sanctum_lord", "Владыка святилища", "minecraft:evoker", 4, 3.4D, 1.9D,
                 TowerAbility.SUMMON_MINIONS, TowerAbility.SUMMON_ELITE, TowerAbility.WITHER_CURSE,
-                TowerAbility.SHIELD, TowerAbility.BLINK));
+                TowerAbility.CEILING_BARRAGE, TowerAbility.SHIELD, TowerAbility.BLINK,
+                TowerAbility.PHASE_ENRAGE));
 
         // ------------------------------------------------------- nether wastes
         add("nether_wastes",
@@ -186,11 +207,12 @@ public final class TowerRoster {
             TowerBossDef.of("piglin_overseer", "Пиглин-надзиратель", "minecraft:piglin_brute", 2, 1.9D, 1.5D,
                 TowerAbility.KNOCKBACK_SLAM).withWeapon("minecraft:golden_axe"),
             TowerBossDef.of("flame_mage", "Огненный маг", "minecraft:blaze", 3, 2.2D, 1.6D,
-                TowerAbility.FIRE_NOVA, TowerAbility.METEOR),
+                TowerAbility.FIRE_NOVA, TowerAbility.METEOR, TowerAbility.CEILING_BARRAGE),
             TowerBossDef.of("bone_baron", "Костяной барон", "minecraft:wither_skeleton", 3, 2.5D, 1.7D,
-                TowerAbility.WITHER_CURSE, TowerAbility.SUMMON_MINIONS).withWeapon("minecraft:netherite_axe"),
+                TowerAbility.WITHER_CURSE, TowerAbility.SUMMON_MINIONS, TowerAbility.LINE_CHARGE).withWeapon("minecraft:netherite_axe"),
             TowerBossDef.of("blackstone_lord", "Владыка чернокамня", "minecraft:piglin_brute", 4, 3.6D, 2.0D,
-                TowerAbility.KNOCKBACK_SLAM, TowerAbility.METEOR, TowerAbility.SUMMON_MINIONS, TowerAbility.RAGE)
+                TowerAbility.LEAP, TowerAbility.ROOF_SMASH, TowerAbility.METEOR,
+                TowerAbility.SUMMON_MINIONS, TowerAbility.RAGE, TowerAbility.PHASE_ENRAGE)
                 .withWeapon("minecraft:netherite_axe"));
 
         // --------------------------------------------------- soul sand valley
@@ -200,11 +222,14 @@ public final class TowerRoster {
             TowerBossDef.of("wailer", "Плакальщик", "minecraft:ghast", 2, 1.7D, 1.3D,
                 TowerAbility.FIRE_NOVA),
             TowerBossDef.of("bone_priest", "Костяной жрец", "minecraft:wither_skeleton", 3, 2.4D, 1.6D,
-                TowerAbility.WITHER_CURSE, TowerAbility.HEAL_SELF, TowerAbility.SUMMON_MINIONS),
+                TowerAbility.WITHER_CURSE, TowerAbility.HEAL_SELF, TowerAbility.SUMMON_MINIONS,
+                TowerAbility.CEILING_BARRAGE),
             TowerBossDef.of("soul_collector", "Собиратель душ", "minecraft:ghast", 3, 2.2D, 1.6D,
-                TowerAbility.METEOR, TowerAbility.LEECH),
+                TowerAbility.METEOR, TowerAbility.LEECH, TowerAbility.CEILING_BARRAGE),
             TowerBossDef.of("ancient_witherer", "Древний иссушитель", "minecraft:wither_skeleton", 4, 3.7D, 2.0D,
-                TowerAbility.WITHER_CURSE, TowerAbility.FIRE_NOVA, TowerAbility.SUMMON_MINIONS, TowerAbility.SHIELD)
+                TowerAbility.WITHER_CURSE, TowerAbility.FIRE_NOVA, TowerAbility.LINE_CHARGE,
+                TowerAbility.GRAPPLE_PULL, TowerAbility.SUMMON_MINIONS, TowerAbility.SHIELD,
+                TowerAbility.PHASE_ENRAGE)
                 .withWeapon("minecraft:netherite_sword"));
 
         // ------------------------------------------------------ crimson forest
@@ -214,11 +239,12 @@ public final class TowerRoster {
             TowerBossDef.of("piglin_butcher", "Пиглин-мясник", "minecraft:piglin", 2, 1.8D, 1.4D,
                 TowerAbility.RAGE).withWeapon("minecraft:golden_axe"),
             TowerBossDef.of("rabid_zoglin", "Бешеный зоглин", "minecraft:zoglin", 3, 2.5D, 1.7D,
-                TowerAbility.RAGE, TowerAbility.KNOCKBACK_SLAM),
+                TowerAbility.RAGE, TowerAbility.KNOCKBACK_SLAM, TowerAbility.LEAP),
             TowerBossDef.of("crimson_priest", "Жрец багрового огня", "minecraft:piglin", 3, 2.2D, 1.6D,
-                TowerAbility.FIRE_NOVA, TowerAbility.SUMMON_MINIONS),
+                TowerAbility.FIRE_NOVA, TowerAbility.SUMMON_MINIONS, TowerAbility.CEILING_BARRAGE),
             TowerBossDef.of("crimson_lord", "Владыка чертога", "minecraft:piglin_brute", 4, 3.6D, 2.0D,
-                TowerAbility.KNOCKBACK_SLAM, TowerAbility.METEOR, TowerAbility.SUMMON_MINIONS, TowerAbility.RAGE)
+                TowerAbility.LEAP, TowerAbility.ROOF_SMASH, TowerAbility.METEOR,
+                TowerAbility.SUMMON_MINIONS, TowerAbility.RAGE, TowerAbility.PHASE_ENRAGE)
                 .withWeapon("minecraft:netherite_axe"));
 
         // ------------------------------------------------------- basalt deltas
@@ -228,12 +254,13 @@ public final class TowerRoster {
             TowerBossDef.of("flame_vortex", "Пламенный вихрь", "minecraft:blaze", 2, 1.8D, 1.4D,
                 TowerAbility.FIRE_NOVA, TowerAbility.METEOR),
             TowerBossDef.of("basalt_sentinel", "Базальтовый страж", "minecraft:piglin_brute", 3, 2.5D, 1.6D,
-                TowerAbility.SHIELD, TowerAbility.KNOCKBACK_SLAM).withWeapon("minecraft:netherite_axe"),
+                TowerAbility.SHIELD, TowerAbility.KNOCKBACK_SLAM, TowerAbility.PILLAR_BREAK).withWeapon("minecraft:netherite_axe"),
             TowerBossDef.of("incinerator", "Испепелитель", "minecraft:blaze", 3, 2.3D, 1.7D,
-                TowerAbility.METEOR, TowerAbility.SUMMON_MINIONS),
+                TowerAbility.METEOR, TowerAbility.FIRE_NOVA, TowerAbility.CEILING_BARRAGE),
             TowerBossDef.of("delta_titan", "Гигант дельт", "minecraft:piglin_brute", 4, 3.8D, 2.0D,
-                TowerAbility.KNOCKBACK_SLAM, TowerAbility.METEOR, TowerAbility.RAGE,
-                TowerAbility.SHIELD, TowerAbility.SUMMON_ELITE)
+                TowerAbility.LEAP, TowerAbility.ROOF_SMASH, TowerAbility.METEOR,
+                TowerAbility.RAGE, TowerAbility.SHIELD, TowerAbility.SUMMON_ELITE,
+                TowerAbility.PHASE_ENRAGE)
                 .withWeapon("minecraft:netherite_axe"));
     }
 

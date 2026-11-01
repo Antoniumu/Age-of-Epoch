@@ -62,6 +62,13 @@ public final class TowerBoss {
     public static final String TAG = "aoe_tower_boss";
     public static final String CHAMPION_TAG = "aoe_tower_champion";
     public static final String MOB_TAG = "aoe_tower_mob";
+    /** Generic "this is a boss encounter arena" tag, shared with delve wardens. */
+    public static final String BOSS_TAG = "aoe_boss";
+    /** Set on delve wardens so their deaths don't collapse a tower. */
+    public static final String DELVE_BOSS_TAG = "aoe_delve_boss";
+    /** Delve's own room id prefix — shared here so TowerBoss.readHome can
+     *  resolve the arena center the warden is bound to. */
+    public static final String DELVE_HOME_PREFIX = "aoe_delve_room:";
     private static final String HOME_PREFIX = "aoe_tower_home:";
     public static final String THEME_TAG_PREFIX = "aoe_tower_theme:";
     public static final String DEFINITION_TAG_PREFIX = "aoe_tower_def:";
@@ -78,6 +85,28 @@ public final class TowerBoss {
     private static final Map<TowerKey, Arena> ARENAS = new ConcurrentHashMap<>();
 
     private TowerBoss() {
+    }
+
+    /**
+     * Register a fixed-size arena centered on {@code home} covering (2*radius+1)
+     * blocks horizontally and {@code height} blocks up. Used by Delves and any
+     * other structure whose boss room is a simple rectangular space (instead of
+     * the tower BFS shape). Called whenever the boss spawns.
+     */
+    public static void registerFixedArena(ServerLevel level, BlockPos home, int radius, int height) {
+        TowerKey key = new TowerKey(level.dimension(), home.immutable());
+        Arena arena = new Arena(home.getX() - radius, home.getX() + radius,
+            home.getY(), home.getY() + height,
+            home.getZ() - radius, home.getZ() + radius,
+            level.getGameTime() + 200L);
+        ARENAS.put(key, arena);
+    }
+
+    /** Tag a boss entity as a delve warden so its contain/anti-abuse runs.
+     *  The caller must already have set the DELVE_HOME_PREFIX home tag. */
+    public static void markDelveBoss(LivingEntity entity, BlockPos home) {
+        entity.addTag(BOSS_TAG);
+        entity.addTag(DELVE_BOSS_TAG);
     }
 
     public static void tickLevel(ServerLevel level) {
@@ -183,10 +212,11 @@ public final class TowerBoss {
         if (entity.level().isClientSide() || !entity.isAlive()) {
             return;
         }
-        if (entity instanceof Mob mob && (entity.entityTags().contains(TAG) || entity.entityTags().contains(MOB_TAG))) {
+        boolean isBoss = entity.entityTags().contains(TAG) || entity.entityTags().contains(BOSS_TAG);
+        if (entity instanceof Mob mob && (isBoss || entity.entityTags().contains(MOB_TAG))) {
             protectFromSun(mob);
         }
-        if (!entity.entityTags().contains(TAG) || !(entity.level() instanceof ServerLevel level)) {
+        if (!isBoss || !(entity.level() instanceof ServerLevel level)) {
             return;
         }
         BlockPos home = readHome(entity);
@@ -218,7 +248,13 @@ public final class TowerBoss {
                 arm(mob);
             }
             Player target = nearestFighter(level, entity, arena);
-            if (target != null && (!(mob.getTarget() instanceof Player living) || !living.isAlive() || !canBeHunted(living) || !arena.contains(living.blockPosition()))) {
+            // Re-target whenever the current target is dead/invalid, OR the
+            // current target has escaped the arena+buffer (roof / pillar /
+            // wall camper). The boss must chase the camper, not stare at a wall.
+            boolean currentValid = mob.getTarget() instanceof Player living
+                && living.isAlive() && canBeHunted(living)
+                && isInArenaBuffer(arena, living.blockPosition());
+            if (target != null && !currentValid) {
                 mob.setTarget(target);
                 mob.setAggressive(true);
             }
@@ -248,32 +284,121 @@ public final class TowerBoss {
             return false;
         }
         if (!solid(level, pos) && !TowerCollapse.isTowerMaterial(state)) {
-            return false;
+            // even non-tower blocks are protected if they are a pillar a player
+            // is standing on inside a live arena (pillar cheese)
         }
         AABB box = new AABB(pos).inflate(SAME_TOWER, 120.0D, SAME_TOWER);
-        for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, box, e -> e.isAlive() && e.entityTags().contains(TAG))) {
+        for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, box, e -> e.isAlive()
+            && (e.entityTags().contains(TAG) || e.entityTags().contains(BOSS_TAG)))) {
             BlockPos home = readHome(entity);
             if (home == null) {
                 home = entity.blockPosition();
             }
             Arena arena = arenaOf(level, home);
-            if (!arena.contains(pos) || pos.getY() > entity.blockPosition().getY()) {
+            if (!arena.contains(pos) && !isInArenaBuffer(arena, pos)) {
                 continue;
             }
-            boolean floor = !solid(level, pos.above());
-            boolean underFeet = Math.abs(pos.getX() - entity.blockPosition().getX()) <= 2
-                && Math.abs(pos.getZ() - entity.blockPosition().getZ()) <= 2
+            // Protect floor under the boss (existing rule)
+            boolean floorUnderBoss = pos.getY() <= entity.blockPosition().getY() + 1
+                && !solid(level, pos.above())
+                && Math.abs(pos.getX() - entity.blockPosition().getX()) <= 3
+                && Math.abs(pos.getZ() - entity.blockPosition().getZ()) <= 3
                 && pos.getY() >= entity.blockPosition().getY() - 3;
-            if (floor || underFeet) {
+            // Protect ceiling/roof up to 8 blocks above the boss — no hole-in-roof.
+            boolean roofAboveBoss = pos.getY() > entity.blockPosition().getY()
+                && pos.getY() <= arena.maxY + 4
+                && Math.abs(pos.getX() - entity.blockPosition().getX()) <= 6
+                && Math.abs(pos.getZ() - entity.blockPosition().getZ()) <= 6;
+            // Protect walls/stairs within 6 blocks of the boss in the arena.
+            boolean wallNearBoss = Math.abs(pos.getX() - entity.blockPosition().getX()) <= 5
+                && Math.abs(pos.getZ() - entity.blockPosition().getZ()) <= 5
+                && Math.abs(pos.getY() - entity.blockPosition().getY()) <= 4;
+            // Protect any block a player is using as a pillar (stand block) in the arena
+            boolean pillarUnderPlayer = arena.contains(pos)
+                && pos.getY() >= arena.minY
+                && pos.getY() <= arena.maxY + 4
+                && isPillarBlockForAnyAlivePlayer(level, arena, pos);
+            if (floorUnderBoss || roofAboveBoss || wallNearBoss || pillarUnderPlayer) {
+                sendCantBuild(level, player);
                 return true;
             }
         }
         return false;
     }
 
+    /**
+     * Prevents placing blocks inside an active arena — stops players from
+     * stacking pillars, building walls, or boxing-in the boss while the boss
+     * is alive. Only tower-signature blocks and boss-reachable arena volume
+     * are protected; outside the arena and far from the boss placement is
+     * allowed normally.
+     */
+    public static boolean denyPlace(ServerLevel level, BlockPos pos, Player player) {
+        if (player.isCreative() || player.isSpectator()) {
+            return false;
+        }
+        AABB box = new AABB(pos).inflate(SAME_TOWER, 120.0D, SAME_TOWER);
+        for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, box, e -> e.isAlive()
+            && (e.entityTags().contains(TAG) || e.entityTags().contains(BOSS_TAG)))) {
+            BlockPos home = readHome(entity);
+            if (home == null) {
+                home = entity.blockPosition();
+            }
+            Arena arena = arenaOf(level, home);
+            boolean insideOrAbove = pos.getX() >= arena.minX - 1 && pos.getX() <= arena.maxX + 1
+                && pos.getZ() >= arena.minZ - 1 && pos.getZ() <= arena.maxZ + 1
+                && pos.getY() >= arena.minY - 1 && pos.getY() <= arena.maxY + 6;
+            if (!insideOrAbove) {
+                continue;
+            }
+            // Don't allow block placement inside the arena at all while boss is alive.
+            sendCantBuild(level, player);
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean isInArenaBuffer(Arena arena, BlockPos pos) {
+        return pos.getX() >= arena.minX - 1 && pos.getX() <= arena.maxX + 1
+            && pos.getZ() >= arena.minZ - 1 && pos.getZ() <= arena.maxZ + 1
+            && pos.getY() >= arena.minY - 1 && pos.getY() <= arena.maxY + 6;
+    }
+
+    private static boolean isPillarBlockForAnyAlivePlayer(ServerLevel level, Arena arena, BlockPos pos) {
+        for (ServerPlayer p : level.getPlayers(p -> p != null && p.isAlive() && !p.isCreative() && !p.isSpectator())) {
+            BlockPos plr = p.blockPosition();
+            if (!arena.contains(plr) && !isInArenaBuffer(arena, plr)) {
+                continue;
+            }
+            // if pos is directly below a player and above the arena floor, treat as pillar
+            if (plr.getX() == pos.getX() && plr.getZ() == pos.getZ()
+                && pos.getY() < plr.getY() && pos.getY() >= arena.minY
+                && pos.getY() <= plr.getY() - 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static final Map<UUID, Long> LAST_NAG = new ConcurrentHashMap<>();
+    private static void sendCantBuild(ServerLevel level, Player player) {
+        long now = level.getGameTime();
+        Long last = LAST_NAG.get(player.getUUID());
+        if (last != null && now - last < 60L) {
+            return;
+        }
+        LAST_NAG.put(player.getUUID(), now);
+        if (LAST_NAG.size() > 256) {
+            LAST_NAG.entrySet().removeIf(e -> now - e.getValue() > 20L * 60L * 2L);
+        }
+        player.displayClientMessage(
+            net.minecraft.network.chat.Component.literal("Нельзя ломать/ставить блоки здесь — босс поблизости.")
+                .withStyle(net.minecraft.ChatFormatting.RED), true);
+    }
+
     public static void onDeath(LivingDeathEvent event) {
         LivingEntity entity = event.getEntityLiving();
-        if (entity == null || !entity.entityTags().contains(TAG)) {
+        if (entity == null || !(entity.entityTags().contains(TAG) || entity.entityTags().contains(BOSS_TAG))) {
             return;
         }
         if (!(entity.level() instanceof ServerLevel level)) {
@@ -283,19 +408,37 @@ public final class TowerBoss {
         if (home == null) {
             home = entity.blockPosition();
         }
+        boolean isTower = entity.entityTags().contains(TAG);
+        boolean isChampion = entity.entityTags().contains(CHAMPION_TAG);
+        boolean isDelve = entity.entityTags().contains(DELVE_BOSS_TAG);
         if (event.getSource() != null && event.getSource().getEntity() instanceof LivingEntity killer) {
-            QuestBookService.onTowerBossKilled(entity, killer);
+            if (isTower && !isChampion) {
+                QuestBookService.onTowerBossKilled(entity, killer);
+            }
         }
         TowerAbility.forget(entity.getUUID());
-        if (entity.entityTags().contains(CHAMPION_TAG)) {
+        if (isChampion) {
             entity.removeTag(TAG);
+            entity.removeTag(BOSS_TAG);
             tell(level, home, "Прислужник стража пал.", ChatFormatting.YELLOW);
+            return;
+        }
+        if (isDelve) {
+            // Delve wardens don't collapse a tower — the DelveMarker handles rewards.
+            entity.removeTag(BOSS_TAG);
+            entity.removeTag(DELVE_BOSS_TAG);
+            return;
+        }
+        if (!isTower) {
+            // other generic boss (future-proofing) — just clean up
+            entity.removeTag(BOSS_TAG);
             return;
         }
         if (!COLLAPSED.add(entity.getUUID())) {
             return;
         }
         entity.removeTag(TAG);
+        entity.removeTag(BOSS_TAG);
         COLLAPSED_AT.put(new TowerKey(level.dimension(), home.immutable()), level.getGameTime());
         TowerCollapse.start(level, home);
         tell(level, home, "Страж пал. Башня рушится.", ChatFormatting.RED);
@@ -361,6 +504,7 @@ public final class TowerBoss {
         }
         entity.setPos(stand.getX() + 0.5D, stand.getY(), stand.getZ() + 0.5D);
         entity.addTag(TAG);
+        entity.addTag(BOSS_TAG);
         entity.addTag(HOME_PREFIX + home.getX() + "," + home.getY() + "," + home.getZ());
         entity.addTag(THEME_TAG_PREFIX + theme.id());
         entity.addTag(DEFINITION_TAG_PREFIX + def.id());
@@ -494,41 +638,70 @@ public final class TowerBoss {
         return null;
     }
 
+    private static final String DELVE_RANK_PREFIX = "aoe_delve_rank:";
     private static int rankOf(LivingEntity entity) {
-        for (String tag : entity.entityTags()) {
-            if (tag.startsWith(RANK_PREFIX)) {
-                try {
-                    return Integer.parseInt(tag.substring(RANK_PREFIX.length()));
-                } catch (NumberFormatException ignored) {
-                    return 1;
+        for (String prefix : new String[]{RANK_PREFIX, DELVE_RANK_PREFIX}) {
+            for (String tag : entity.entityTags()) {
+                if (tag.startsWith(prefix)) {
+                    try {
+                        return Integer.parseInt(tag.substring(prefix.length()));
+                    } catch (NumberFormatException ignored) {
+                        return 1;
+                    }
                 }
             }
         }
         return 1;
     }
 
+    /** Default anti-cheese ability kit used by delve wardens and any boss
+     *  that did not come from the tower roster (so they still punish roof and
+     *  pillar abuse). Note: SUMMON_MINIONS/SUMMON_ELITE are intentionally
+     *  absent — delves already script their own wave spawning. */
+    private static final List<TowerAbility> DEFAULT_BOSS_ABILITIES = List.of(
+        TowerAbility.KNOCKBACK_SLAM,
+        TowerAbility.THUNDER_STOMP,
+        TowerAbility.ROOF_SMASH,
+        TowerAbility.LEAP,
+        TowerAbility.CEILING_BARRAGE,
+        TowerAbility.PILLAR_BREAK,
+        TowerAbility.GRAPPLE_PULL,
+        TowerAbility.LINE_CHARGE,
+        TowerAbility.RAGE,
+        TowerAbility.SHIELD,
+        TowerAbility.HEAL_SELF,
+        TowerAbility.PHASE_ENRAGE
+    );
+
     /** Persist the selected roster entry so reloaded bosses keep only their own abilities. */
     public static List<TowerAbility> abilitiesOf(LivingEntity entity) {
         TowerTheme theme = themeOf(entity);
-        if (theme == null) {
-            return List.of();
-        }
-        for (TowerBossDef def : TowerRoster.all(theme.id())) {
-            if (entity.entityTags().contains(DEFINITION_TAG_PREFIX + def.id())) {
-                return def.abilities();
-            }
-        }
-        // Migrate named bosses already present in saves from before the def tag.
-        Component name = entity.getCustomName();
-        if (name != null) {
+        if (theme != null) {
             for (TowerBossDef def : TowerRoster.all(theme.id())) {
-                if (name.getString().equals(def.name()) || name.getString().equals(def.name() + " (прислужник)")) {
-                    entity.addTag(DEFINITION_TAG_PREFIX + def.id());
+                if (entity.entityTags().contains(DEFINITION_TAG_PREFIX + def.id())) {
                     return def.abilities();
                 }
             }
+            Component name = entity.getCustomName();
+            if (name != null) {
+                for (TowerBossDef def : TowerRoster.all(theme.id())) {
+                    if (name.getString().equals(def.name()) || name.getString().equals(def.name() + " (прислужник)")) {
+                        entity.addTag(DEFINITION_TAG_PREFIX + def.id());
+                        return def.abilities();
+                    }
+                }
+            }
+        }
+        // Delve wardens and other non-roster bosses: fall back to the anti-cheese kit.
+        if (entity.entityTags().contains(DELVE_BOSS_TAG) || entity.entityTags().contains(BOSS_TAG)) {
+            return DEFAULT_BOSS_ABILITIES;
         }
         return List.of();
+    }
+
+    /** Expose the anti-cheese default kit for reuse (e.g. delve boss tuning). */
+    public static List<TowerAbility> defaultBossAbilities() {
+        return DEFAULT_BOSS_ABILITIES;
     }
 
     /** BLINK requires existing ground and a destination clear of walls. */
@@ -707,17 +880,19 @@ public final class TowerBoss {
     }
 
     static BlockPos readHome(LivingEntity entity) {
-        for (String tag : entity.entityTags()) {
-            if (!tag.startsWith(HOME_PREFIX)) {
-                continue;
-            }
-            String[] parts = tag.substring(HOME_PREFIX.length()).split(",");
-            if (parts.length != 3) {
-                continue;
-            }
-            try {
-                return new BlockPos(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
-            } catch (NumberFormatException ignored) {
+        for (String prefix : new String[]{HOME_PREFIX, DELVE_HOME_PREFIX}) {
+            for (String tag : entity.entityTags()) {
+                if (!tag.startsWith(prefix)) {
+                    continue;
+                }
+                String[] parts = tag.substring(prefix.length()).split(",");
+                if (parts.length != 3) {
+                    continue;
+                }
+                try {
+                    return new BlockPos(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
+                } catch (NumberFormatException ignored) {
+                }
             }
         }
         return null;
@@ -768,6 +943,9 @@ public final class TowerBoss {
     }
 
     private static boolean bossInRange(ServerLevel level, BlockPos pos) {
+        // Only count TOWER bosses for the marker de-duplication sweep; delve
+        // wardens live in their own structures and must never suppress a
+        // nearby tower from spawning its guardian.
         AABB box = new AABB(
             pos.getX() - SAME_TOWER, level.getMinY(), pos.getZ() - SAME_TOWER,
             pos.getX() + SAME_TOWER + 1, level.getMaxY(), pos.getZ() + SAME_TOWER + 1);
@@ -850,15 +1028,16 @@ public final class TowerBoss {
     private static void arm(Mob mob) {
         protectFromSun(mob);
         try {
-            if (mob.getMainHandItem().isEmpty() && mob.entityTags().contains(TAG)) {
+            boolean bossy = mob.entityTags().contains(TAG) || mob.entityTags().contains(BOSS_TAG);
+            if (mob.getMainHandItem().isEmpty() && bossy) {
                 mob.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_AXE));
                 mob.setDropChance(EquipmentSlot.MAINHAND, 0.0F);
             }
             var follow = mob.getAttribute(Attributes.FOLLOW_RANGE);
-            if (follow != null && follow.getBaseValue() < 32.0D) {
-                follow.setBaseValue(32.0D);
+            if (follow != null && follow.getBaseValue() < 48.0D) {
+                follow.setBaseValue(48.0D);
             }
-            double damageFloor = mob.entityTags().contains(TAG) ? 8.0D : 6.0D;
+            double damageFloor = bossy ? 8.0D : 6.0D;
             var damage = mob.getAttribute(Attributes.ATTACK_DAMAGE);
             if (damage != null && damage.getBaseValue() < damageFloor) {
                 damage.setBaseValue(damageFloor);
@@ -869,9 +1048,18 @@ public final class TowerBoss {
 
     private static Player nearestFighter(ServerLevel level, LivingEntity from, Arena arena) {
         Player best = null;
-        double bestDist = 32.0D * 32.0D;
+        double bestDist = 48.0D * 48.0D;
         for (ServerPlayer player : level.players()) {
-            if (!canBeHunted(player) || !arena.contains(player.blockPosition())) {
+            if (!canBeHunted(player)) {
+                continue;
+            }
+            // Roof campers / pillar archers / people behind walls are ALL valid
+            // targets (anti-abuse abilities reach them).
+            BlockPos pl = player.blockPosition();
+            boolean inReach = pl.getX() >= arena.minX - 6 && pl.getX() <= arena.maxX + 6
+                && pl.getZ() >= arena.minZ - 6 && pl.getZ() <= arena.maxZ + 6
+                && pl.getY() >= arena.minY - 2 && pl.getY() <= arena.maxY + 12;
+            if (!inReach) {
                 continue;
             }
             double dist = player.distanceToSqr(from);

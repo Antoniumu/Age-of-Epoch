@@ -32,6 +32,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
@@ -41,6 +42,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 
 /**
  * Fabric integration layer: runs the merged mod initialization, fires the
@@ -210,7 +212,20 @@ public class FabricBootstrap {
             PlayerInteractEvent.RightClickBlock event =
                 new PlayerInteractEvent.RightClickBlock(player, hand, world, hitResult.getBlockPos());
             MinecraftForge.EVENT_BUS.post(event);
-            return event.isCanceled() ? InteractionResult.FAIL : InteractionResult.PASS;
+            if (event.isCanceled()) {
+                return InteractionResult.FAIL;
+            }
+            // Block placement in active boss arenas (stop pillar/wall cheesing).
+            if (world instanceof net.minecraft.server.level.ServerLevel level && player != null) {
+                var stack = player.getItemInHand(hand);
+                if (!stack.isEmpty() && stack.getItem() instanceof BlockItem) {
+                    BlockPos placePos = hitResult.getBlockPos().relative(hitResult.getDirection());
+                    if (com.robertx22.world_of_exile.world_gen.TowerBoss.denyPlace(level, placePos, player)) {
+                        return InteractionResult.FAIL;
+                    }
+                }
+            }
+            return InteractionResult.PASS;
         });
         UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             PlayerInteractEvent.EntityInteract event =
