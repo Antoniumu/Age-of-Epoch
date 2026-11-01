@@ -5,8 +5,7 @@ import com.robertx22.age_of_exile.mmorpg.registers.common.SlashBlocks;
 import com.robertx22.age_of_exile.uncommon.datasaving.Load;
 import com.robertx22.age_of_exile.uncommon.interfaces.data_items.IRarity;
 import com.robertx22.forge_compat.event.entity.living.LivingDeathEvent;
-import com.robertx22.world_of_exile.tower.TowerAbility;
-import com.robertx22.world_of_exile.tower.TowerThemes;
+import com.robertx22.world_of_exile.world_gen.TowerBoss;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -208,9 +207,27 @@ public class DelveMarkerBlockEntity extends BlockEntity {
         }
         if (stand == null) return null;
         mob.setPos(stand.getX()+0.5,stand.getY(),stand.getZ()+0.5);
-        mob.addTag(HOME+worldPosition.getX()+","+worldPosition.getY()+","+worldPosition.getZ());
+        BlockPos homePos = boss ? point("center") : worldPosition;
+        mob.addTag(HOME+homePos.getX()+","+homePos.getY()+","+homePos.getZ());
         if (boss) {
             mob.addTag(BOSS);
+            // Tag as a generic boss so the unified contain/anti-abuse logic applies.
+            // The arena is centered on the room's center (9x7x9) which covers the
+            // whole combat room and a buffer of ceiling/floor for roof-smash.
+            TowerBoss.markDelveBoss(mob, homePos);
+            // Rank for ability scaling: 1..4 based on delve floor (1..4).
+            mob.addTag("aoe_tower_rank:" + Math.max(1, Math.min(4, depth())));
+            // Tag the delve's theme so TowerBoss.themeOf() can be used by future
+            // theme-tuned abilities / particles. Map delve theme ids onto the
+            // closest tower theme.
+            String towerTheme = switch (data.getStringOr("theme","crypt")) {
+                case "frost" -> "ice";
+                case "sands" -> "desert";
+                case "roots" -> "forest";
+                default -> "plains";
+            };
+            mob.addTag("aoe_tower_theme:" + towerTheme);
+            TowerBoss.registerFixedArena(world, homePos, 5, 7);
             mob.setCustomName(Component.translatable("mmorpg.delve."+data.getStringOr("theme","crypt")+".boss."+depth()));
             mob.setCustomNameVisible(true);
         }
@@ -243,29 +260,24 @@ public class DelveMarkerBlockEntity extends BlockEntity {
     private void fight(ServerLevel world, ServerPlayer target) {
         for (UUID id : active) {
             if (!(world.getEntity(id) instanceof Mob mob) || !mob.isAlive()) continue;
-            if (mob.getItemBySlot(EquipmentSlot.HEAD).isDamageableItem()) mob.getItemBySlot(EquipmentSlot.HEAD).setDamageValue(0);
-            if (!(mob.getTarget() instanceof Player current) || !current.isAlive()
-                || current.isCreative() || current.isSpectator() || !room().intersects(current.getBoundingBox())) {
-                mob.setTarget(target);
-                mob.setAggressive(true);
+            if (mob.getItemBySlot(EquipmentSlot.HEAD).isDamageableItem()) {
+                mob.getItemBySlot(EquipmentSlot.HEAD).setDamageValue(0);
             }
-            if (!mob.entityTags().contains(BOSS)) continue;
-            // Tell the party before the pulse; the effect still needs line of sight.
-            if (world.getGameTime()%160==0) {
-                tell(world,"warning");
-                pulseDue=world.getGameTime()+20;
-            }
-            if (pulseDue>=0 && world.getGameTime()>=pulseDue) {
-                pulseDue=-1;
-                if (mob.hasLineOfSight(target) && mob.distanceToSqr(target)<64) {
-                    TowerAbility ability = switch (data.getStringOr("theme","crypt")) {
-                        case "frost" -> TowerAbility.FROST_NOVA;
-                        case "sands" -> TowerAbility.KNOCKBACK_SLAM;
-                        case "roots" -> TowerAbility.POISON_CLOUD;
-                        default -> TowerAbility.CURSE_OF_WEAKNESS;
-                    };
-                    ability.run(world,mob,target,TowerThemes.PLAINS,depth());
+            boolean bossTagged = mob.entityTags().contains(BOSS) || mob.entityTags().contains(TowerBoss.BOSS_TAG);
+            if (!bossTagged) {
+                if (!(mob.getTarget() instanceof Player current) || !current.isAlive()
+                    || current.isCreative() || current.isSpectator()) {
+                    mob.setTarget(target);
+                    mob.setAggressive(true);
                 }
+                continue;
+            }
+            // Boss-tagged delve wardens: targeting and abilities already run in
+            // TowerBoss.contain / TowerAbility.tick, with full anti-cheese
+            // (roof-smash, pillar-break, leap, grapple, enrage). We only emit
+            // the "warden is winding up" tell so the party can react.
+            if (world.getGameTime() % 160 == 0) {
+                tell(world, "warning");
             }
         }
     }
