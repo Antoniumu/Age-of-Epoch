@@ -1,7 +1,7 @@
 name: Airship in-game proof
 on:
   push:
-    branches: [arena/7bde44a9-age-of-epoch]
+    branches: [arena/478bb2c7-age-of-epoch]
     paths:
       - 'src/**'
       - 'tools/e2e/scenarios/airship.txt'
@@ -72,12 +72,12 @@ jobs:
             grep -q "AIRSHIPTEST PASS $stage" run/logs/latest.log
           done
       - name: Publish actual screenshots on the same working branch
-        if: always() && !cancelled() && github.ref == 'refs/heads/arena/7bde44a9-age-of-epoch'
+        if: always() && !cancelled() && github.ref == 'refs/heads/arena/478bb2c7-age-of-epoch'
         env:
           RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           # Update the base before generating the proof commit; rebasing two replacements of ci-proof conflicts.
-          git pull --rebase --autostash origin arena/7bde44a9-age-of-epoch
+          git pull --rebase --autostash origin arena/478bb2c7-age-of-epoch
           mkdir -p docs/airship/proof-images
           if compgen -G 'run/e2e/airship/*.png' >/dev/null; then
             find docs/airship/proof-images -maxdepth 1 -name '*.png' -delete
@@ -119,7 +119,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: arena/7bde44a9-age-of-epoch
+          ref: arena/478bb2c7-age-of-epoch
           fetch-depth: 0
       - name: Verify source run actually passed compile, integrity and real client
         run: |
@@ -133,7 +133,7 @@ jobs:
           python3 - <<'PYCODE'
           import json
           run=json.load(open('/tmp/source-run.json'))
-          assert run['head_branch']=='arena/7bde44a9-age-of-epoch'
+          assert run['head_branch']=='arena/478bb2c7-age-of-epoch'
           jobs=json.load(open('/tmp/source-jobs.json'))['jobs']
           client=next(j for j in jobs if j['name']=='client')
           steps={s['name']:s['conclusion'] for s in client['steps']}
@@ -157,7 +157,7 @@ jobs:
           for voice in personal_captain_request personal_captain_thanks personal_captain_confidence personal_oren_request personal_oren_confidence personal_mara_analysis personal_captain_confession; do
             grep -q "AIRSHIPVOICE ACTIVE $voice" recovered/run/logs/latest.log
           done
-          git pull --rebase --autostash origin arena/7bde44a9-age-of-epoch
+          git pull --rebase --autostash origin arena/478bb2c7-age-of-epoch
           mkdir -p docs/airship/proof-images
           find docs/airship/proof-images -maxdepth 1 -name '*.png' -delete
           cp recovered/run/e2e/airship/*.png docs/airship/proof-images/
@@ -221,10 +221,10 @@ jobs:
           done
           test "$(grep -c 'AIRSHIPROUTE RESULT npc=captain ' run/logs/latest.log)" -ge 10
       - name: Publish diagnostic log without claiming reachability
-        if: always() && !cancelled() && github.ref == 'refs/heads/arena/7bde44a9-age-of-epoch'
+        if: always() && !cancelled() && github.ref == 'refs/heads/arena/478bb2c7-age-of-epoch'
         run: |
           set -euo pipefail
-          git pull --rebase --autostash origin arena/7bde44a9-age-of-epoch
+          git pull --rebase --autostash origin arena/478bb2c7-age-of-epoch
           {
             echo "Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             echo "Source: ${{ github.sha }}"
@@ -278,10 +278,10 @@ jobs:
           python -m unittest discover -s tools/e2e -p test_crew_walk_sync.py
           python tools/e2e/check_crew_walk_sync.py run/logs/latest.log
       - name: Publish experiment log
-        if: always() && !cancelled() && github.ref == 'refs/heads/arena/7bde44a9-age-of-epoch'
+        if: always() && !cancelled() && github.ref == 'refs/heads/arena/478bb2c7-age-of-epoch'
         run: |
           set -euo pipefail
-          git pull --rebase --autostash origin arena/7bde44a9-age-of-epoch
+          git pull --rebase --autostash origin arena/478bb2c7-age-of-epoch
           {
             echo "Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             echo "Source: ${{ github.sha }}"

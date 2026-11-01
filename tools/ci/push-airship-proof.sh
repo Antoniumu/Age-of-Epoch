@@ -2,7 +2,7 @@
 # CI proof jobs publish distinct files but may finish concurrently. Never force-push:
 # replay the proof commit on the latest branch; a real conflict fails visibly.
 set -euo pipefail
-branch='arena/7bde44a9-age-of-epoch'
+branch='arena/478bb2c7-age-of-epoch'
 for attempt in 1 2 3 4; do
     if git push origin "HEAD:$branch"; then
         exit 0

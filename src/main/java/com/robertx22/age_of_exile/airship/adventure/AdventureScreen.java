@@ -144,6 +144,7 @@ public class AdventureScreen extends BaseScreen implements INamedScreen {
                 if(CrewMoments.available(d,npc))y=lines(pose,CrewMoments.moment(npc).prompt(),y,0xE7C6DF,bottom);
                 else {String memory=CrewMoments.remembered(d,npc);if(!memory.isEmpty())y=lines(pose,memory,y,0xE7C6DF,bottom);}
             }
+            if(speaking==null && storyLine.isEmpty() && !CrewWorkshop.reflection(d,npc).isEmpty())y=lines(pose,CrewWorkshop.reflection(d,npc),y,0xE7C6DF,bottom);
             if(speaking==null && (npc.equals("oren") || npc.equals("tik")) && !CrewWorkshop.objective(d).isEmpty())y=lines(pose,CrewWorkshop.objective(d),y,0xE7C6DF,bottom);
             if(speaking==null&&Recon.started(d)){y=lines(pose,Recon.objective(d),y,0xE4C897,bottom);y=lines(pose,Recon.context(d),y,0xB8CED2,bottom);}
             else if(speaking==null&&Council.started(d))y=lines(pose,Council.objective(d),y,0xE4C897,bottom);
