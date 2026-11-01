@@ -264,8 +264,6 @@ public enum TowerAbility {
             double vx = dir.x / dist * 1.1D;
             double vz = dir.z / dist * 1.1D;
             boss.setDeltaMovement(vx, 0.75D + Math.min(0.5D, dist / 16.0D), vz);
-            boss.hurtMarked = true;
-            boss.hasImpulse = true;
             burst(level, boss, ParticleTypes.CLOUD, 15);
             // queue ground-pound effect on the way down (done via LEAP_LANDING in tick).
             LEAP_LAND_TIME.put(boss.getUUID(), level.getGameTime() + Math.max(8L, (long) (dist * 0.8D)));
@@ -287,8 +285,7 @@ public enum TowerAbility {
             Vec3 to = boss.position().subtract(target.position()).normalize().scale(1.6D);
             // yank upward a little first so the target clears the pillar edge
             target.setDeltaMovement(to.x, Math.max(to.y, 0.6D), to.z);
-            target.hurtMarked = true;
-            target.hasImpulse = true;
+// velocity set via setDeltaMovement; server syncs on next tick.
             // damage scales with how far the camper was
             double dy = target.getY() - boss.getY();
             if (dy > 2.0D) {
@@ -420,9 +417,9 @@ public enum TowerAbility {
             // reset all cooldowns for this boss so the next volley fires immediately
             Map<TowerAbility, Long> l = NEXT.get(boss.getUUID());
             if (l != null) { l.clear(); }
-            boss.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20 * 5, 0));
+            boss.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 20 * 5, 0));
             boss.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20 * 10, 2));
-            boss.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 20 * 10, 1));
+            boss.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 20 * 10, 1));
             try {
                 var attr = boss.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
                 if (attr != null) attr.setBaseValue(Math.min(0.95D, attr.getBaseValue() + 0.3D));
@@ -550,7 +547,7 @@ public enum TowerAbility {
         level.sendParticles(ParticleTypes.CLOUD, boss.getX(), boss.getY() + 0.5D, boss.getZ(), 30, 1.2D, 0.2D, 1.2D, 0.02D);
         level.playSound(null, pos, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.HOSTILE, 1.2F, 0.7F);
         boss.setDeltaMovement(Vec3.ZERO);
-        boss.hurtMarked = true;
+// velocity set via setDeltaMovement; server syncs on next tick.
     }
 
     /** Break a ring of weak blocks around center at its Y-level (ceiling or floor). */

@@ -391,9 +391,9 @@ public final class TowerBoss {
         if (LAST_NAG.size() > 256) {
             LAST_NAG.entrySet().removeIf(e -> now - e.getValue() > 20L * 60L * 2L);
         }
-        player.displayClientMessage(
+        player.sendSystemMessage(
             net.minecraft.network.chat.Component.literal("Нельзя ломать/ставить блоки здесь — босс поблизости.")
-                .withStyle(net.minecraft.ChatFormatting.RED), true);
+                .withStyle(net.minecraft.ChatFormatting.RED));
     }
 
     public static void onDeath(LivingDeathEvent event) {
