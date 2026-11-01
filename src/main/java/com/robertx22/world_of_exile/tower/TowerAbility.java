@@ -177,7 +177,7 @@ public enum TowerAbility {
                 return;
             }
             boss.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 20 * 10, 1 + rank / 2));
-            boss.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20 * 10, 1));
+            boss.addEffect(new MobEffectInstance(MobEffects.SPEED, 20 * 10, 1));
             burst(level, boss, ParticleTypes.ANGRY_VILLAGER, 10);
         }
     },
@@ -418,7 +418,7 @@ public enum TowerAbility {
             Map<TowerAbility, Long> l = NEXT.get(boss.getUUID());
             if (l != null) { l.clear(); }
             boss.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 20 * 5, 0));
-            boss.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20 * 10, 2));
+            boss.addEffect(new MobEffectInstance(MobEffects.SPEED, 20 * 10, 2));
             boss.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 20 * 10, 1));
             try {
                 var attr = boss.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
