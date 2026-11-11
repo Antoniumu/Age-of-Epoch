@@ -13,7 +13,7 @@ public class CraftingSuccessChance extends Stat implements DoNotTransferToCrafte
 
     @Override
     public String locDescForLangFile() {
-        return "r";
+        return "Chance that a craft succeeds. Below 100% the craft can fail and consume the ingredients.";
     }
 
     public static String GUID = "craft_suc_chance";

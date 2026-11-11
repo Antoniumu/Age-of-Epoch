@@ -414,7 +414,10 @@ public class CharacterScreen extends BaseScreen implements INamedScreen {
 
     }
 
-    private static final Identifier BUTTON_TEX = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/button.png");
+    // StatButton.renderButton draws the stat icon itself; the ImageButton
+    // background is never sampled. Reuse an existing button sprite instead of
+    // pointing at the deleted textures/gui/button.png.
+    private static final Identifier BUTTON_TEX = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/plus_button.png");
     static int STAT_BUTTON_SIZE_X = 18;
     static int STAT_BUTTON_SIZE_Y = 18;
 

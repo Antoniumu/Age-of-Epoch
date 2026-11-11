@@ -603,7 +603,10 @@ class Runner:
         with open(os.path.join(self.outdir, "index.txt"), "w", encoding="utf-8") as handle:
             for name in self.shots:
                 handle.write(name + "\n")
-        return 0 if self.shots else 1
+        # A scenario that produced screenshots but also recorded failures must
+        # still fail the job. Previously `self.failures` was ignored entirely,
+        # so a red E2E run was reported as green to CI.
+        return 0 if self.shots and not self.failures else 1
 
 
 def main():

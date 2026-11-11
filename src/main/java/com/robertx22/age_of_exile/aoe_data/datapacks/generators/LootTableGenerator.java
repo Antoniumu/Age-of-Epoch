@@ -34,7 +34,10 @@ public class LootTableGenerator {
     }
 
     private Path resolve(Path path, String id) {
-        return path.resolve("data/" + SlashRef.MODID + "/loot_tables/" + id + ".json");
+        // Registries.LOOT_TABLE reads data/<ns>/loot_table/ (singular).
+        // The old plural folder is not loaded, so generated tables there
+        // would never resolve at runtime.
+        return path.resolve("data/" + SlashRef.MODID + "/loot_table/" + id + ".json");
     }
 
     public void run() {

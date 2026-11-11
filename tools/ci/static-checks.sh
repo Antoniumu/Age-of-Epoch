@@ -35,7 +35,12 @@ python3 tools/balance/balance_model.py || status=1
 line "5/6. Симуляция сезона (6 игроков, 8 недель)"
 python3 tools/balance/season_sim.py || status=1
 
-line "6/6. Мост GitHub → Discord: сборка embed-ов и фильтры"
+line "6/7. Языковые файлы не разошлись с генератором"
+# Полный аудит ресурсов в CI выполняется матрицей (.github/workflows/audit.yml);
+# здесь только быстрая защита от рассинхрона en_us/manual с Java-генератором.
+python3 tools/audit/sync_lang.py --check || status=1
+
+line "7/7. Мост GitHub → Discord: сборка embed-ов и фильтры"
 python3 -m unittest discover -s tools/ci -p 'test_*.py' || status=1
 
 line "Итог"

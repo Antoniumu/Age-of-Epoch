@@ -6,9 +6,13 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+concurrency:
+  group: crew-model-preview-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   render:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
