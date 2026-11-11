@@ -19,21 +19,24 @@ cd "$(dirname "$0")/../.." || exit 1
 status=0
 line() { printf '\n=== %s ===\n' "$1"; }
 
-line "1/5. Синтаксис всех Java-файлов (tree-sitter)"
+line "1/6. Синтаксис всех Java-файлов (tree-sitter)"
 python3 tools/check_java_syntax.py --all || status=1
 
-line "2/5. Инварианты: код против LAUNCH-READINESS.md"
+line "2/6. Инварианты: код против LAUNCH-READINESS.md"
 python3 tools/verify/check_invariants.py || status=1
 
-line "3/5. Контент: дерево талантов, перки, иконки, вики"
+line "3/6. Контент: дерево талантов, перки, иконки, вики"
 python3 tools/verify/check_content.py || status=1
 python3 tools/wiki_gen/verify_wiki.py || status=1
 
-line "4/5. Модель баланса"
+line "4/6. Модель баланса"
 python3 tools/balance/balance_model.py || status=1
 
-line "5/5. Симуляция сезона (6 игроков, 8 недель)"
+line "5/6. Симуляция сезона (6 игроков, 8 недель)"
 python3 tools/balance/season_sim.py || status=1
+
+line "6/6. Мост GitHub → Discord: сборка embed-ов и фильтры"
+python3 -m unittest discover -s tools/ci -p 'test_*.py' || status=1
 
 line "Итог"
 if [ "$status" -eq 0 ]; then

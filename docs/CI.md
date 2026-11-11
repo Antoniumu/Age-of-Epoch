@@ -17,6 +17,9 @@
 | `tools/ci/pr-report.sh` | Обновляет «липкий» комментарий с итогами прогона в PR |
 | `tools/ci/requirements.txt` | Закреплённые версии `tree-sitter` для проверки синтаксиса |
 | `.github/dependabot.yml` | Раз в месяц PR-ы на новые версии GitHub Actions |
+| `.github/workflows/discord-notify.yml` | Уведомления в Discord: коммиты, PR, issues, релизы, итоги CI/аудитов и суточная сводка; см. [`DISCORD.md`](DISCORD.md) |
+| `tools/ci/discord_notify.py` | Собирает и отправляет сообщение на вебхук Discord (стандартная библиотека Python) |
+| `tools/ci/test_discord_notify.py` | Тесты форматирования и фильтров уведомлений — входят в `static-checks.sh` |
 
 ## Что проверяет CI
 
@@ -27,6 +30,9 @@
 | `build` | ~10–20 мин | Настоящую компиляцию на JDK 25 (`./gradlew build`), затем `tools/ci/check-jar.sh`: `fabric.mod.json`, подставленная версия, mixin-конфиги, наличие `assets/`, `data/`, классов |
 | `client-boot` | ~10–20 мин | Падения инициализации порта: миксины, регистрация экранов и меню, worldgen, загрузка датапака. Ждёт в `run/logs/latest.log` маркер главного меню; падение = красный job |
 | `ci-ok` | 5 сек | Сводит всё в одну галочку — её удобно сделать обязательной в branch protection. В PR дополнительно обновляет **один** комментарий с итогами (размер jar, за сколько секунд клиент дошёл до меню), см. `tools/ci/pr-report.sh` |
+
+Уведомления о прогонах (включая итоги аудитов) можно получать в Discord-канале:
+достаточно одного секрета `DISCORD_WEBHOOK_URL` — см. [`DISCORD.md`](DISCORD.md).
 
 `client-boot` в pull request-ах помечен как **не блокирующий** (`continue-on-error`):
 порт ещё не доведён, и первый запуск в игре может быть красным. На `main`,
