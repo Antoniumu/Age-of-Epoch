@@ -58,22 +58,22 @@ public class SpellCalcs {
         .build();
 
     public static ValueCalculation ARROW_STORM = ValueCalcBuilder.of("arrow_storm")
-        .attackScaling(0.3F, 0.6F)
+        .attackScaling(0.375F, 0.75F)
         .build();
     public static ValueCalculation EXPLOSIVE_ARROW = ValueCalcBuilder.of("explosive_arrow")
-        .attackScaling(0.5F, 1.5F)
+        .attackScaling(0.625F, 1.875F)
         .build();
     public static ValueCalculation POISON_ARROW = ValueCalcBuilder.of("poison_arrow")
-        .attackScaling(0.5F, 1F)
+        .attackScaling(0.625F, 1.25F)
         .build();
     public static ValueCalculation RANGER_TRAP = ValueCalcBuilder.of("ranger_trap")
-        .attackScaling(0.5F, 1F)
+        .attackScaling(0.625F, 1.25F)
         .build();
     public static ValueCalculation AWAKEN_MANA = ValueCalcBuilder.of("awaken_mana")
         .baseValue(20, 100)
         .build();
     public static ValueCalculation HUNTER_POTION_HEAL = ValueCalcBuilder.of("hunter_pot_heal")
-        .baseValue(20, 100)
+        .baseValue(25, 125)
         .build();
     public static ValueCalculation WISH = ValueCalcBuilder.of("wish")
         .baseValue(20, 80)
@@ -128,7 +128,7 @@ public class SpellCalcs {
         .statScaling(Health.getInstance(), 0.05F, 0.1F)
         .build();
     public static ValueCalculation CHARGED_BOLT = ValueCalcBuilder.of("charged_bolt")
-        .attackScaling(0.5F, 1F)
+        .attackScaling(0.625F, 1.25F)
         .build();
     public static ValueCalculation EXECUTE = ValueCalcBuilder.of("execute")
         .attackScaling(1F, 2F)
@@ -164,7 +164,7 @@ public class SpellCalcs {
         .spellScaling(0.2F, 0.5F)
         .build();
     public static ValueCalculation SMOKE_BOMB = ValueCalcBuilder.of("lose_aggro")
-        .baseValue(20, 40)
+        .baseValue(25, 50)
         .build();
 
 }
