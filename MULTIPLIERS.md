@@ -72,7 +72,7 @@ HP/ресурсы игрока, дроп, Благосклонность, сло
 | Спавн | `GameMaster.spawnRateMultiplier` | `ручной × [floor + (1−floor)·favor/(favor+F)] × авто` | 0.65…1 | формула **развёрнута**, floor 0.65, F = 500 |
 | Башни: HP | `TowerBoss.scale` | `20·def.health·0.65·(1+0.12(rank−1))` | ×0.85…×3.2 | нормировка базы |
 | Башни: урон | `TowerBoss.scale` | `2·def.damage·(1+0.08(rank−1))` | ×1.1…×1.9 | убрана зависимость от ванильного урона |
-| Делвы | `DelveMarkerBlockEntity` | HP ×(1+0.15·depth), урон ×(1+0.1·depth), страж ×2.5 HP | ×1.15…×1.6 | — |
+| Делвы | `DelveMarkerBlockEntity` | HP ×(1+0.15·depth), урон ×(1+0.1·depth), страж ×1.5 HP и +1 уровень | ×1.15…×1.6 | — |
 | Данж: сложность | `DifficultyAdders` | HP/урон ×1 / 1.5 / 2, лут ×1 / 1.25 / 1.5 | ×1…×2 | — |
 | Данж: отряд | `TeamSizeMobStrength` | +200/+100 (соло), +500/+300 (команда), HP regen +200% | +200…+500% | — |
 | Мир | `DimensionConfig.Overworld` | моб = уровень ближайшего игрока | 1…50 | **было по расстоянию** |
