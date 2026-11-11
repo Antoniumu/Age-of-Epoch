@@ -231,11 +231,14 @@ public final class AirshipProbe {
                 if(!ad.facts.containsAll(java.util.List.of("workshop:asked","workshop:talk_key","workshop:private","workshop:finished")) || ad.facts.contains("workshop:consent") || ad.facts.contains("workshop:oren_informed"))throw new IllegalStateException("Private branch omitted or leaked a fact");
                 var rpg=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p);var restored=new com.robertx22.age_of_exile.capability.player.RPGPlayerData(p);restored.loadFromNBT(rpg.saveToNBT());
                 if(!restored.airship.adventure.facts.contains("workshop:private") || !com.robertx22.age_of_exile.airship.adventure.CrewWorkshop.act(restored.airship.adventure,"oren",97).isEmpty() || !com.robertx22.age_of_exile.airship.adventure.CrewWorkshop.act(restored.airship.adventure,"tik",95).isEmpty())throw new IllegalStateException("Private branch did not survive NBT or replayed");
+                String privateOren=com.robertx22.age_of_exile.airship.adventure.CrewWorkshop.reflection(restored.airship.adventure,"oren");
+                if(privateOren.isEmpty()||privateOren.contains("защёлк"))throw new IllegalStateException("Private reflection disclosed Tik's confidence");
             } else if(action.equals("workshop-proof")) {
                 var ad=d.adventure;
                 if(!ad.facts.containsAll(java.util.List.of("workshop:asked","workshop:talk_key","workshop:consent","workshop:oren_informed","workshop:finished")))throw new IllegalStateException("Workshop UI omitted a consent step");
                 var rpg=com.robertx22.age_of_exile.uncommon.datasaving.Load.playerRPGData(p);var restored=new com.robertx22.age_of_exile.capability.player.RPGPlayerData(p);restored.loadFromNBT(rpg.saveToNBT());
                 if(!restored.airship.adventure.facts.containsAll(ad.facts))throw new IllegalStateException("Workshop facts lost on NBT roundtrip");
+                if(!com.robertx22.age_of_exile.airship.adventure.CrewWorkshop.reflection(restored.airship.adventure,"oren").contains("защёлк"))throw new IllegalStateException("Consented reflection missing after NBT");
                 if(!com.robertx22.age_of_exile.airship.adventure.CrewWorkshop.act(ad,"tik",98).isEmpty())throw new IllegalStateException("Workshop reward replayed");
                 if(com.robertx22.age_of_exile.airship.adventure.CrewWorkshop.eligible(new com.robertx22.age_of_exile.airship.adventure.AdventureData()))throw new IllegalStateException("Workshop leaked between character states");
             } else if(action.equals("adventure-plant")) {
