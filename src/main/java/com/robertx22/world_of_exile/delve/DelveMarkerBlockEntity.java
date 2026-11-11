@@ -48,6 +48,9 @@ import java.util.UUID;
 public class DelveMarkerBlockEntity extends BlockEntity {
     private static final String HOME = "aoe_delve_room:";
     private static final String BOSS = "aoe_delve_warden";
+    // Стражи подземелий намеренно проще башенных боссов: меньше HP и всего +1 уровень.
+    private static final double BOSS_HEALTH_MULT = 1.5;
+    private static final int BOSS_LEVEL_BONUS = 1;
     private CompoundTag data = new CompoundTag();
     private final List<UUID> active = new ArrayList<>();
     private final Map<UUID, Integer> missing = new HashMap<>();
@@ -92,7 +95,17 @@ public class DelveMarkerBlockEntity extends BlockEntity {
         }
         if (++warmup < 5) return; // allow entities to deserialize after chunk loading
         List<ServerPlayer> nearby = players(world);
-        if (nearby.isEmpty() || world.getDifficulty() == Difficulty.PEACEFUL) return;
+        boolean canFight = !nearby.isEmpty() && world.getDifficulty() != Difficulty.PEACEFUL;
+        int wave = data.getIntOr("wave", 0);
+        int waves = guardian() ? (kind().equals("final") ? 3 : 2) : (depth() >= 3 ? 2 : 1);
+        if (!canFight) {
+            // Зал, где бой уже полностью отыгран (все волны призваны, все защитники
+            // мертвы), дозакрывается и без игроков рядом — иначе сундук и спуск
+            // ждали бы, пока кто-нибудь вернётся в комнату после смерти стража.
+            if (!data.getBooleanOr("started", false)) return;
+            reconcile(world);
+            if (!active.isEmpty() || wave < waves) return;
+        }
         if (kind().equals("rest")) {
             data.putBoolean("cleared", true);
             unlockReward(world);
@@ -117,8 +130,6 @@ public class DelveMarkerBlockEntity extends BlockEntity {
             fight(world, nearby.get(0));
             return;
         }
-        int wave = data.getIntOr("wave", 0);
-        int waves = guardian() ? (kind().equals("final") ? 3 : 2) : (depth() >= 3 ? 2 : 1);
         if (wave >= waves) {
             data.putBoolean("cleared", true);
             unlockReward(world);
@@ -241,13 +252,13 @@ public class DelveMarkerBlockEntity extends BlockEntity {
         // поэтому реальный HP делвовских мобов не менялся вовсе (а после следующего
         // пересчёта прыгал). Сначала правим базу, потом пересчитываем.
         var health=mob.getAttribute(Attributes.MAX_HEALTH);
-        if (health != null) health.setBaseValue(health.getBaseValue() * (1.0 + depth()*0.15) * (boss ? 2.5 : 1.0));
+        if (health != null) health.setBaseValue(health.getBaseValue() * (1.0 + depth()*0.15) * (boss ? BOSS_HEALTH_MULT : 1.0));
         var attack=mob.getAttribute(Attributes.ATTACK_DAMAGE);
         if (attack != null) attack.setBaseValue(attack.getBaseValue() * (1.0 + depth()*0.1));
 
         var unit = Load.Unit(mob);
         if (unit != null) {
-            unit.setLevel(data.getIntOr("base_level",1) + (depth()-1)*4 + (boss ? 2 : 0));
+            unit.setLevel(data.getIntOr("base_level",1) + (depth()-1)*4 + (boss ? BOSS_LEVEL_BONUS : 0));
             if (boss) unit.setRarity(IRarity.BOSS_ID);
             unit.forceRecalculateStats();
         }
@@ -283,15 +294,22 @@ public class DelveMarkerBlockEntity extends BlockEntity {
     }
 
     private void unlockReward(ServerLevel world) {
+        // Одноразовая выдача: флаг переживает перезаходы, повторно сундук не наполняется.
+        if (data.getBooleanOr("reward_given", false)) return;
         BlockPos pos=point("reward");
-        // A one-shot replacement, so relogging or reopening a room cannot refill it.
-        if (!world.getBlockState(pos).is(SlashBlocks.DELVE_SEAL.get())) return;
-        world.setBlock(pos,Blocks.CHEST.defaultBlockState(),3);
-        if (world.getBlockEntity(pos) instanceof ChestBlockEntity chest) {
-            String table = guardian() ? "delve_"+depth() : kind().equals("rest") ? "delve_rest" : "delve_supplies";
-            chest.setLootTable(ResourceKey.create(Registries.LOOT_TABLE,Identifier.parse("mmorpg:chests/"+table)),world.getRandom().nextLong());
-            chest.setChanged();
+        // Сундук ставим всегда, не дожидаясь целой печати: раньше, если печати на
+        // месте не оказывалось (повреждённый шаблон, вмешательство сторонних модов),
+        // награда молча не появлялась и после смерти стража сундук не работал.
+        if (!world.getBlockState(pos).is(Blocks.CHEST)) {
+            world.setBlock(pos,Blocks.CHEST.defaultBlockState(),3);
+            if (world.getBlockEntity(pos) instanceof ChestBlockEntity chest) {
+                String table = guardian() ? "delve_"+depth() : kind().equals("rest") ? "delve_rest" : "delve_supplies";
+                chest.setLootTable(ResourceKey.create(Registries.LOOT_TABLE,Identifier.parse("mmorpg:chests/"+table)),world.getRandom().nextLong());
+                chest.setChanged();
+            }
         }
+        data.putBoolean("reward_given", true);
+        setChanged();
     }
 
     public void interact(Player player) {
@@ -329,11 +347,31 @@ public class DelveMarkerBlockEntity extends BlockEntity {
             if (xyz.length!=3) continue;
             try {
                 BlockPos pos=new BlockPos(Integer.parseInt(xyz[0]),Integer.parseInt(xyz[1]),Integer.parseInt(xyz[2]));
-                if (world.getBlockEntity(pos) instanceof DelveMarkerBlockEntity marker) {
+                DelveMarkerBlockEntity marker=findOwner(world,pos,entity.getUUID());
+                if (marker != null) {
                     marker.active.remove(entity.getUUID()); marker.missing.remove(entity.getUUID()); marker.setChanged();
                 }
             } catch (NumberFormatException ignored) { }
         }
+    }
+
+    // Рядовые мобы помечены позицией самого маркера, а страж — ЦЕНТРОМ комнаты
+    // (туда привязана его арена). Ищем маркер не только точно в точке, но и
+    // рядом с ней, иначе смерть стража не снимала его UUID со счётчика: зал
+    // дожидался 30-секундного таймаута пропажи, прежде чем открыть сундук.
+    private static DelveMarkerBlockEntity findOwner(ServerLevel world, BlockPos home, UUID dead) {
+        if (world.getBlockEntity(home) instanceof DelveMarkerBlockEntity marker) return marker;
+        for (int dx=-4; dx<=4; dx++) {
+            for (int dz=-4; dz<=4; dz++) {
+                if (!world.getChunkSource().hasChunk((home.getX()+dx)>>4,(home.getZ()+dz)>>4)) continue;
+                for (int dy=-2; dy<=2; dy++) {
+                    if (dx==0 && dy==0 && dz==0) continue;
+                    if (world.getBlockEntity(home.offset(dx,dy,dz)) instanceof DelveMarkerBlockEntity marker
+                        && (marker.point("center").equals(home) || marker.active.contains(dead))) return marker;
+                }
+            }
+        }
+        return null;
     }
 
     @Override
