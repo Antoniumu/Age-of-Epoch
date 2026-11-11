@@ -21,7 +21,7 @@
 "itemGroup.mmorpg.runes_group": "Age of Exile Runes",
 "itemGroup.mmorpg.runeword_group": "Age of Exile Runewords",
 "itemGroup.mmorpg_uniques": "Unique Gear",
-"itemGroup.mmorpg_currency": "Crafting Items",
+"itemGroup.mmorpg_currency": "Age of Exile: Currency",
 "itemGroup.mmorpg_lootboxes": "LootBoxes",
 "itemGroup.mmorpg_alchemy": "Alchemy",
 
@@ -138,7 +138,7 @@
 "item.mmorpg.loot_table_chest": "Level Up Reward Bag",
 
 "mmorpg.one_of_a_kind.passive_spell": "Passive Spell",
-"mmorpg.one_of_a_kind.start": "Start",
+"mmorpg.one_of_a_kind.start": "Starting Path",
 
 "curios.identifier.salvage_bag": "Salvage Bag",
 

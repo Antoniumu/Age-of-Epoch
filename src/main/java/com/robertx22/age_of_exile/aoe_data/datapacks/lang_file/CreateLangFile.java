@@ -125,6 +125,11 @@ public class CreateLangFile {
             .getSerializable());
         list.addAll(ExileDB.Perks()
             .getSerializable());
+        // Spell schools render their name on the talent tree tabs. This registry
+        // was never added to the generator, so every regeneration silently
+        // dropped mmorpg.spell_school.* and the game showed raw lang keys.
+        list.addAll(ExileDB.SpellSchools()
+            .getSerializable());
         list.addAll(ExileDB.Spells()
             .getSerializable());
         list.addAll(ExileDB.UniqueGears()

@@ -10,7 +10,10 @@
 #   5) симуляция сезона для компании 4-6 человек отрабатывает и печатает цифры;
 #   6) импорты: не забыт ли `import` там, где используется `Класс.КОНСТАНТА`
 #      (javac на этом падает — а ловится за секунды, без ожидания сборки);
-#   7) если в системе есть JDK+Gradle — ещё и компиляция мода.
+#   7) полный аудит ресурсов: JSON, локализация, уникаты, таланты, текстуры,
+#      звуки, рецепты, лут-таблицы и worldgen (tools/audit/, те же suite-ы,
+#      что в CI разбегаются по матрице .github/workflows/audit.yml);
+#   8) если в системе есть JDK+Gradle — ещё и компиляция мода.
 #
 # Запуск:  ./tools/verify.sh
 # Выход:   0 — всё зелёное; 1 — что-то не сошлось (смотри вывод выше).
@@ -21,27 +24,32 @@ cd "$(dirname "$0")/.." || exit 1
 status=0
 line() { printf '\n=== %s ===\n' "$1"; }
 
-line "1/7. Инварианты: код против отчёта"
+line "1/8. Инварианты: код против отчёта"
 python3 tools/verify/check_invariants.py || status=1
 
-line "2/7. Контент: дерево талантов, перки, иконки"
+line "2/8. Контент: дерево талантов, перки, иконки"
 python3 tools/verify/check_content.py || status=1
 # вики: страница на каждый предмет/блок, >=1000 видимых символов, целые ссылки
 python3 tools/wiki_gen/verify_wiki.py || status=1
 
-line "3/7. Заклинания: эффект, партиклы, иконка, место в школе"
+line "3/8. Заклинания: эффект, партиклы, иконка, место в школе"
 python3 tools/verify/check_spells.py || status=1
 
-line "4/7. Модель баланса"
+line "4/8. Модель баланса"
 python3 tools/balance/balance_model.py || status=1
 
-line "5/7. Симуляция сезона (6 игроков, 8 недель)"
+line "5/8. Симуляция сезона (6 игроков, 8 недель)"
 python3 tools/balance/season_sim.py || status=1
 
-line "6/7. Импорты (быстрая проверка вместо ожидания javac)"
+line "6/8. Импорты (быстрая проверка вместо ожидания javac)"
 python3 tools/verify/check_imports.py --all || status=1
 
-line "7/7. Компиляция мода"
+line "7/8. Полный аудит ресурсов (все suite-ы)"
+# Тот же набор тестов, что в CI разбегается по матрице:
+#   python3 tools/audit/run_audit.py --suite <имя>
+python3 tools/audit/run_audit.py --all || status=1
+
+line "8/8. Компиляция мода"
 missing=""
 [ -x ./gradlew ] || missing="./gradlew не исполняемый (chmod +x gradlew)"
 command -v java >/dev/null 2>&1 || missing="${missing:+$missing; }java не в PATH"

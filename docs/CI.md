@@ -9,8 +9,12 @@
 | Файл | Что делает |
 |---|---|
 | `.github/workflows/ci.yml` | Основной прогон: PR, push в `main`, ручной запуск, раз в неделю по расписанию |
+| `.github/workflows/audit.yml` | **Делегирование аудита**: один job матрицы на каждый `tools/audit/test_*.py`, отчёты артефактами, финальная агрегация. Вызывается из `ci.yml` |
 | `.github/workflows/release.yml` | Собирает и публикует GitHub Release по тегу `v*` |
 | `.github/actions/setup-build-env/action.yml` | JDK 25 (Temurin) + Gradle + кэш; общий шаг для обоих workflow |
+| `tools/audit/run_audit.py` | Запуск одного suite-а или всех сразу; пишет JSON, JUnit XML и лог |
+| `tools/audit/summarize_reports.py` | Сводит отчёты матрицы и проверяет, что **все** suite-ы отчитались |
+| `tools/audit/sync_lang.py` | Чинит/проверяет языковые файлы (`--check` в CI) |
 | `tools/ci/static-checks.sh` | Проверки без JDK — те же, что в CI, запускаются локально |
 | `tools/ci/check-jar.sh` | Проверяет, что jar пригоден для установки в `mods/` |
 | `tools/ci/smoke-client.sh` | Запускает `runClient` под xvfb и ждёт главное меню |
@@ -22,7 +26,8 @@
 
 | Job | Время | Что ловит |
 |---|---|---|
-| `static` | ~1 мин | Синтаксис **всех 1591** Java-файлов (tree-sitter), 74 инварианта из `LAUNCH-READINESS.md`, целостность контента и вики, сходимость модели баланса и симуляции сезона |
+| `static` | ~1 мин | Синтаксис **всех 1591** Java-файлов (tree-sitter), 74 инварианта из `LAUNCH-READINESS.md`, целостность контента и вики, сходимость модели баланса и симуляции сезона, синхронность языковых файлов |
+| `audit` | ~2 мин | Матрица аудита ресурсов: JSON, локализация, уникатные предметы, таланты, текстуры/модели/партиклы, звуки, рецепты, лут-таблицы, worldgen. Каждый suite — отдельный job со своим отчётом |
 | `wrapper` | ~10 сек | Подмену `gradle/wrapper/gradle-wrapper.jar` (сверка с официальной контрольной суммой) |
 | `build` | ~10–20 мин | Настоящую компиляцию на JDK 25 (`./gradlew build`), затем `tools/ci/check-jar.sh`: `fabric.mod.json`, подставленная версия, mixin-конфиги, наличие `assets/`, `data/`, классов |
 | `client-boot` | ~10–20 мин | Падения инициализации порта: миксины, регистрация экранов и меню, worldgen, загрузка датапака. Ждёт в `run/logs/latest.log` маркер главного меню; падение = красный job |
@@ -32,6 +37,54 @@
 порт ещё не доведён, и первый запуск в игре может быть красным. На `main`,
 по расписанию и при ручном запуске он блокирующий. Когда порт стабилизируется —
 уберите `continue-on-error` из `client-boot` и из ветки `client-boot` в `ci-ok`.
+
+## Как устроено делегирование аудита
+
+`tools/audit/` — набор тестов на чистом `unittest` из стандартной библиотеки:
+ни JDK, ни Gradle, ни `pip install` не нужны. Каждый модуль `test_*.py` считается
+отдельным **suite-ом**. Список suite-ов не захардкожен: job `discover` в
+`audit.yml` получает его командой `python3 tools/audit/run_audit.py --list-json`
+и передаёт в `strategy.matrix`. Добавленный `test_foo.py` автоматически получает
+свой job без правки workflow.
+
+```
+ci.yml / job audit
+  └── audit.yml (workflow_call)
+        ├── discover            → JSON-массив suite-ов
+        ├── audit / <suite>     → N параллельных job-ов, fail-fast: false
+        │     sync_lang.py --check
+        │     run_audit.py --suite <suite> --report-dir audit-reports
+        │     upload-artifact: <suite>.json + .xml + .txt
+        └── aggregate           → download-artifact (merge-multiple)
+                                  summarize_reports.py --expect-suites …
+                                  проверка needs.audit.result
+```
+
+`fail-fast: false` принципиален: цель аудита — увидеть **все** баги за один прогон,
+а не остановиться на первом. Агрегатор не доверяет одному лишь результату
+матрицы — он сверяет число отчётов со списком из `discover` и проверяет
+`ok: true` в каждом JSON. Job матрицы, упавший до загрузки артефакта, поэтому
+не «растворяется» в зелёном прогоне.
+
+Локально то же самое одной командой:
+
+```bash
+python3 tools/audit/run_audit.py --list               # какие suite-ы есть
+python3 tools/audit/run_audit.py --suite assets        # один suite, как в CI
+python3 tools/audit/run_audit.py --all --report-dir audit-reports
+python3 tools/audit/summarize_reports.py audit-reports
+python3 tools/audit/sync_lang.py                     # починить локали
+python3 tools/audit/sync_lang.py --check              # только проверка (CI)
+```
+
+Полный `./tools/verify.sh` тоже включает `--all`; `static-checks.sh` в CI
+вызывает только быстрый `sync_lang.py --check`, чтобы не гонять аудит дважды.
+
+Отдельно запустить аудит без всего CI:
+
+```bash
+gh workflow run audit.yml
+```
 
 ## Как этим пользоваться
 

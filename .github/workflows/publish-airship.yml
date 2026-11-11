@@ -7,9 +7,13 @@ on:
 permissions:
   actions: read
   contents: write
+concurrency:
+  group: publish-airship-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
   publish:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
       - name: Download the exact game-tested artifact and publish
