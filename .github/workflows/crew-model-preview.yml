@@ -20,7 +20,7 @@ jobs:
         working-directory: tools/airship/crew-preview
       - run: npm run build && npm test
         working-directory: tools/airship/crew-preview
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: crew-model-proof
           path: docs/airship/crew-preview/*proof.png
