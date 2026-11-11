@@ -13,7 +13,7 @@ import java.util.function.Predicate;
  * Brigadier не даёт менять требование и обработчик уже построенного узла:
  * поле {@code requirement} — final, а у {@code command} нет сеттера.
  * Добавляем сеттеры, чтобы ванильный {@code /tp} можно было перенастроить
- * после его регистрации (см. TpCommandBridge).
+ * после его регистрации, включая удаление vanilla redirect (см. TpCommandBridge).
  */
 @Mixin(CommandNode.class)
 public interface CommandNodeMixin extends CommandNodeAccessor {
@@ -29,4 +29,10 @@ public interface CommandNodeMixin extends CommandNodeAccessor {
     @Accessor("command")
     @SuppressWarnings("rawtypes")
     void tpa$setCommand(Command command);
+
+    @Override
+    @Mutable
+    @Accessor("redirect")
+    @SuppressWarnings("rawtypes")
+    void tpa$setRedirect(CommandNode redirect);
 }

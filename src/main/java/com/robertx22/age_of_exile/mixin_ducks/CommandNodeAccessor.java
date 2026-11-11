@@ -21,4 +21,8 @@ public interface CommandNodeAccessor {
     /** Меняет обработчик узла (в Brigadier поле {@code command}). */
     @SuppressWarnings("rawtypes")
     void tpa$setCommand(Command command);
+
+    /** Убирает redirect узла (в Brigadier поле {@code redirect}). */
+    @SuppressWarnings("rawtypes")
+    void tpa$setRedirect(com.mojang.brigadier.tree.CommandNode redirect);
 }

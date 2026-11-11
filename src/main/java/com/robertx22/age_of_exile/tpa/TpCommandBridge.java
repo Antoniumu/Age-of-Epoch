@@ -2,8 +2,9 @@ package com.robertx22.age_of_exile.tpa;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.CommandNode;
 import com.robertx22.age_of_exile.mixin_ducks.CommandNodeAccessor;
 import net.minecraft.ChatFormatting;
@@ -15,26 +16,22 @@ import net.minecraft.server.level.ServerPlayer;
 import java.util.function.Predicate;
 
 /**
- * Заставляет ванильный {@code /tp} работать как {@code /tpa} у игроков без прав оператора.
- *
- * <p>Ванильный {@code /tp} требует уровень прав 2, поэтому обычный игрок его просто не видит.
- * Здесь узел {@code tp} в Brigadier открывается всем, а его обработчики оборачиваются:
- * у игрока без прав запрос уходит в {@code /tpa} вместе с аргументами, поэтому действуют
- * <b>все</b> лимиты аддона — заряды и их восстановление, таймаут запроса, автопринятие для
- * доверенных, проверка мировой границы и запрет телепорта мёртвым. Операторы (уровень 2+),
- * консоль и командные блоки получают ванильное поведение без изменений.</p>
+ * Makes vanilla {@code /tp} use the TPA rules for players without operator-level
+ * command access. Operators and command sources keep vanilla teleport behavior.
  */
 public final class TpCommandBridge {
 
-    /** Диспетчер сервера: через него аргументы {@code /tp} передаются в {@code /tpa}. */
+    /** Dispatcher used to forward arguments to the registered TPA/vanilla commands. */
     private static CommandDispatcher<CommandSourceStack> dispatcher;
 
     private TpCommandBridge() {
     }
 
     /**
-     * Вызывается один раз после регистрации команд сервера.
-     * Повторный вызов с тем же диспетчером ничего не делает.
+     * Vanilla {@code /tp} is an alias node redirecting to {@code /teleport}. Merely
+     * changing the alias command does not work: Brigadier follows that redirect before
+     * it ever visits the alias's children. Detach the alias and install a greedy argument
+     * handler so normal players can use the same parsing and charge checks as {@code /tpa}.
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static void install(CommandDispatcher<CommandSourceStack> commandDispatcher) {
@@ -42,67 +39,74 @@ public final class TpCommandBridge {
             return;
         }
 
-        CommandNode<CommandSourceStack> tp = commandDispatcher.getRoot()
-            .getChild("tp");
+        CommandNode<CommandSourceStack> tp = commandDispatcher.getRoot().getChild("tp");
         if (!(tp instanceof CommandNodeAccessor accessor)) {
-            // Ванильного /tp нет (другая версия или другой мод) либо миксин не применился —
-            // тихо оставляем команду как есть, сервер продолжает работать.
+            // No vanilla alias or the mixin did not apply: leave the server usable.
             return;
         }
 
         dispatcher = commandDispatcher;
 
-        // Brigadier хранит требование и обработчик в приватных полях, поэтому сеттеры
-        // из миксина принимают сырые типы — приводим их здесь явно.
-        Predicate<CommandSourceStack> requirement = TpCommandBridge::canUse;
-        accessor.tpa$setRequirement((Predicate) requirement);
+        // Remove vanilla's redirect to /teleport. Its destination still has the normal
+        // operator permission check, so leaving the redirect in place bypasses our handler.
+        accessor.tpa$setRedirect(null);
+        accessor.tpa$setRequirement((Predicate<CommandSourceStack>) TpCommandBridge::canUse);
+        accessor.tpa$setCommand((Command<CommandSourceStack>) TpCommandBridge::help);
 
-        Command<CommandSourceStack> help = TpCommandBridge::help;
-        accessor.tpa$setCommand((Command) help);
-
-        wrapChildren(tp);
+        // Preserve the vanilla /tp name but parse its full tail in one place. Dispatching
+        // the text to /tpa gives coordinates, selectors, messages, and charge consumption
+        // the exact same implementation as the dedicated TPA command.
+        tp.addChild(Commands.argument("arguments", StringArgumentType.greedyString())
+            .executes(TpCommandBridge::run)
+            .build());
     }
 
-    /** "/tp" без аргументов у обычного игрока показывает справку TPA, у операторов — ванильную ошибку. */
+    private static boolean canUse(CommandSourceStack source) {
+        return source != null
+            && (hasVanillaPermission(source) || playerWithoutVanillaPermission(source) != null);
+    }
+
     private static int help(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        ServerPlayer player = tpaPlayer(context.getSource());
+        ServerPlayer player = playerWithoutVanillaPermission(context.getSource());
+        if (player != null) {
+            return TpaManager.showHelp(player) ? 1 : 0;
+        }
+        // For operators, /tp without arguments keeps vanilla's normal syntax error.
+        return executeVanilla(context.getSource(), "");
+    }
+
+    private static int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        String arguments = StringArgumentType.getString(context, "arguments").trim();
+        ServerPlayer player = playerWithoutVanillaPermission(context.getSource());
         if (player == null) {
-            throw CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownCommand()
-                .create();
+            return executeVanilla(context.getSource(), arguments);
         }
-        return TpaManager.showHelp(player) ? 1 : 0;
+        return runAsTpa(context, player, arguments);
     }
 
-    /** Оборачивает все исполняемые узлы поддерева /tp, не трогая структуру аргументов. */
-    private static void wrapChildren(CommandNode<CommandSourceStack> node) {
-        for (CommandNode<CommandSourceStack> child : node.getChildren()) {
-            wrapChildren(child);
-
-            Command<CommandSourceStack> vanilla = child.getCommand();
-            if (vanilla == null || vanilla instanceof TpaFallback) {
-                continue;
-            }
-            ((CommandNodeAccessor) child).tpa$setCommand(new TpaFallback(vanilla));
-        }
+    private static int executeVanilla(CommandSourceStack source, String arguments) throws CommandSyntaxException {
+        String command = arguments.isEmpty() ? "teleport" : "teleport " + arguments;
+        return dispatcher.execute(command, source);
     }
 
-    /**
-     * Отдаёт ванильные аргументы в /tpa: "/tp Steve" -> "/tpa Steve",
-     * "/tp 100 64 -250" -> "/tpa 100 64 -250". Так разбор координат, селекторов
-     * и сообщения об ошибках полностью совпадают с самим /tpa.
-     */
-    private static int runAsTpa(CommandContext<CommandSourceStack> context, ServerPlayer player)
-            throws CommandSyntaxException {
+    /** Forwards unprivileged player arguments through the actual TPA command. */
+    private static int runAsTpa(CommandContext<CommandSourceStack> context, ServerPlayer player,
+                                String arguments) throws CommandSyntaxException {
         if (dispatcher == null) {
             return 0;
         }
 
-        String arguments = argumentsOf(context.getInput());
-
         try {
-            // "/tp @s 100 64 -250" или "/tp Steve 100 64 -250" — телепортация игрока
-            // (или себя, @s) на метку, т. е. координаты, за один заряд TPA.
-            // Без этой формы селектор цели сломал бы разбор аргументов в самом /tpa.
+            // Treat an explicit self selector as if it were omitted: `/tp @s` is `/tpa`,
+            // and `/tp @s <x> <y> <z>` is `/tpa <x> <y> <z>` (including the same charge).
+            if (arguments.equals("@s")) {
+                arguments = "";
+            } else if (arguments.startsWith("@s ") || arguments.startsWith("@s\t")) {
+                arguments = arguments.substring(2).trim();
+            }
+
+            // Support the vanilla-shaped target-to-coordinate form as well. The
+            // teleported player executes TPA, and therefore pays their own charge.
             int targeted = teleportTargetToCoordinates(context, player, arguments);
             if (targeted != -1) {
                 return targeted;
@@ -111,70 +115,50 @@ public final class TpCommandBridge {
             String command = arguments.isEmpty() ? "tpa" : "tpa " + arguments;
             return dispatcher.execute(command, context.getSource());
         } catch (CommandSyntaxException e) {
-            // Формы ванильного /tp, которых у /tpa нет: /tp <кого> <куда>, /tp <куда> <поворот> и т.п.
+            // Unsupported vanilla forms must not fall through to unrestricted /teleport.
             TpaManager.send(player, "Без прав оператора /tp работает как /tpa:", ChatFormatting.RED);
-            TpaManager.send(player, "/tp <игрок> — запрос телепортации (игрок должен быть в сети); "
-                + "/tp <x> <y> <z> — телепорт по заряду.", ChatFormatting.GRAY);
+            TpaManager.send(player, "/tp <игрок> — запрос телепортации; /tp <x> <y> <z> — телепорт по заряду.",
+                ChatFormatting.GRAY);
             return 0;
         }
     }
 
-    /** Всё после имени команды: "tp Steve" -> "Steve". */
-    private static String argumentsOf(String input) {
-        if (input == null) {
-            return "";
-        }
-        int space = input.indexOf(' ');
-        return space < 0 ? "" : input.substring(space + 1)
-            .trim();
-    }
-
     /**
-     * "/tp <цель> <x> <y> <z>" — телепортировать игрока на метку (координаты) за
-     * один заряд TPA. Возвращает -1, если аргументы не похожи на эту форму, чтобы
-     * вызывающий продолжил обычную обработку через /tpa ("/tp 100 64 -250" на
-     * себя или "/tp Steve" как запрос).
-     *
-     * <p>Заряд тратит телепортируемый игрок — точно так же, как и при
-     * {@code /tpa <x> <y> <z>}. Операторы не попадают сюда вообще: их /tp
-     * остаётся ванильным.</p>
+     * Handles {@code /tp <player> <x> <y> <z>}. Returns -1 when this is not that
+     * syntax so that {@code /tp} can simply forward the arguments to {@code /tpa}.
      */
     private static int teleportTargetToCoordinates(CommandContext<CommandSourceStack> context,
-            ServerPlayer player, String arguments) throws CommandSyntaxException {
-        String[] parts = arguments.trim().split("\\s+");
-        if (parts.length != 4) {
+                                                    ServerPlayer sender, String arguments)
+            throws CommandSyntaxException {
+        String[] parts = arguments.isBlank() ? new String[0] : arguments.split("\\s+");
+        if (parts.length != 4 || looksLikeCoordinate(parts[0])) {
             return -1;
         }
-        String targetToken = parts[0];
-        if (looksLikeCoordinate(targetToken)) {
-            return -1; // "/tp 100 64 -250" — цели нет, телепортируем себя через /tpa
-        }
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 1; i < parts.length; i++) {
             if (!looksLikeCoordinate(parts[i])) {
                 return -1;
             }
         }
 
-        ServerPlayer target = resolveTarget(context, player, targetToken);
+        ServerPlayer target = resolveTarget(context, sender, parts[0]);
         if (target == null) {
-            return 0; // сообщение об ошибке уже отправлено игроку
+            return 0;
         }
 
-        String coords = parts[1] + " " + parts[2] + " " + parts[3];
-        // Выполняем /tpa <x> <y> <z> уже от имени цели: заряд списывается с цели,
-        // сообщения идут цели, относительные координаты считаются от цели.
-        CommandSourceStack targetSource = context.getSource().withEntity(target);
-        int result = dispatcher.execute("tpa " + coords, targetSource);
+        String coordinates = parts[1] + " " + parts[2] + " " + parts[3];
+        // Relative coordinates are resolved from the teleported player, and its TPA data
+        // performs all charge, death, and world-border checks before spending a charge.
+        int result = dispatcher.execute("tpa " + coordinates,
+            context.getSource().withEntity(target));
 
-        if (result > 0 && target != player) {
-            TpaManager.send(player, "Игроку " + target.getGameProfile().name() + " телепортировано на "
-                    + coords + ". Осталось зарядов: " + TpaManager.chargesLeft(target)
-                    + "/" + TpaData.MAX_CHARGES + ".", ChatFormatting.GOLD);
+        if (result > 0 && target != sender) {
+            TpaManager.send(sender, "Игроку " + target.getGameProfile().name() + " телепортировано на "
+                + coordinates + ". Осталось зарядов: " + TpaManager.chargesLeft(target)
+                + "/" + TpaData.MAX_CHARGES + ".", ChatFormatting.GOLD);
         }
         return result;
     }
 
-    /** Похоже ли на координату: число, "~" или "^" с относительным смещением. */
     private static boolean looksLikeCoordinate(String token) {
         if (token.isEmpty()) {
             return false;
@@ -186,19 +170,18 @@ public final class TpCommandBridge {
         try {
             Double.parseDouble(token);
             return true;
-        } catch (NumberFormatException unused) {
+        } catch (NumberFormatException ignored) {
             return false;
         }
     }
 
-    /** @s/@p — отправитель команды; иначе ищем онлайн-игрока по нику. */
     private static ServerPlayer resolveTarget(CommandContext<CommandSourceStack> context,
-            ServerPlayer player, String token) {
+                                               ServerPlayer sender, String token) {
         if ("@s".equals(token) || "@p".equals(token)) {
-            return player;
+            return sender;
         }
         if (token.startsWith("@")) {
-            TpaManager.send(player, "Укажите одного игрока: @s, @p или ник игрока.", ChatFormatting.RED);
+            TpaManager.send(sender, "Укажите одного игрока: @s, @p или ник игрока.", ChatFormatting.RED);
             return null;
         }
         MinecraftServer server = context.getSource().getServer();
@@ -207,51 +190,23 @@ public final class TpCommandBridge {
                 return candidate;
             }
         }
-        TpaManager.send(player, "Игрока \"" + token + "\" нет на сервере.", ChatFormatting.RED);
+        TpaManager.send(sender, "Игрока \"" + token + "\" нет на сервере.", ChatFormatting.RED);
         return null;
     }
 
-    private static boolean canUse(CommandSourceStack source) {
-        return source != null && (hasVanillaPermission(source) || tpaPlayer(source) != null);
-    }
-
-    /** Ровно те права, которых ванильный /tp и требует. */
     private static boolean hasVanillaPermission(CommandSourceStack source) {
-        return Commands.hasPermission(Commands.LEVEL_GAMEMASTERS)
-            .test(source);
+        return Commands.hasPermission(Commands.LEVEL_GAMEMASTERS).test(source);
     }
 
-    /**
-     * Игрок без прав оператора — его /tp должен вести в /tpa.
-     * Для операторов, консоли и командных блоков возвращает null: они остаются на ванили.
-     */
-    private static ServerPlayer tpaPlayer(CommandSourceStack source) {
+    /** Returns only players who must use TPA; operators and non-player sources get null. */
+    private static ServerPlayer playerWithoutVanillaPermission(CommandSourceStack source) {
         if (source == null || hasVanillaPermission(source)) {
             return null;
         }
         try {
             return source.getPlayerOrException();
-        } catch (CommandSyntaxException e) {
+        } catch (CommandSyntaxException ignored) {
             return null;
-        }
-    }
-
-    /** Ванильный обработчик узла, который для обычного игрока заменяется на /tpa. */
-    private static final class TpaFallback implements Command<CommandSourceStack> {
-
-        private final Command<CommandSourceStack> vanilla;
-
-        private TpaFallback(Command<CommandSourceStack> vanilla) {
-            this.vanilla = vanilla;
-        }
-
-        @Override
-        public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            ServerPlayer player = tpaPlayer(context.getSource());
-            if (player == null) {
-                return vanilla.run(context);
-            }
-            return runAsTpa(context, player);
         }
     }
 }
