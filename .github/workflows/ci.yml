@@ -4,10 +4,12 @@ name: CI
 #   static      — синтаксис 1591 файла (tree-sitter) + инварианты из LAUNCH-READINESS.md,
 #                 контент/вики и модель баланса. Без JDK, ~1 минута.
 #   wrapper     — контрольная сумма gradle-wrapper.jar (защита от подмены).
+#   audit       — аудит ресурсов, разбитый на матрицу (один job на test_*.py),
+#                 см. .github/workflows/audit.yml и tools/audit/.
 #   build       — настоящая сборка на JDK 25 (Temurin) + проверка содержимого jar.
 #                 Публикует jar как артефакт, его можно скачать и поставить в mods/.
 #   client-boot — запуск dev-клиента под xvfb до главного меню (smoke-тест порта).
-#   ci-ok       — единая галочка для branch protection.
+#   ci-ok       — единая галочка для branch protection (включает audit).
 #
 # Пропустить прогон для пустого коммита: добавь в сообщение коммита [skip ci].
 
@@ -56,7 +58,19 @@ jobs:
         run: bash tools/ci/static-checks.sh
 
   # ---------------------------------------------------------------------------
-  # 2. Gradle wrapper: файл в репозитории должен совпадать с официальным.
+  # 2. Аудит ресурсов: переиспользуемый workflow с матрицей и агрегацией
+  #    отчётов. Не требует JDK; результат целиком входит в ci-ok.
+  # ---------------------------------------------------------------------------
+  audit:
+    name: Resource audit (sharded)
+    # GitHub forbids `timeout-minutes` on a job that calls a reusable workflow:
+    # only name/uses/with/secrets/needs/if/permissions/concurrency/strategy are
+    # accepted there. Timeouts live on discover/audit/aggregate inside
+    # .github/workflows/audit.yml instead.
+    uses: ./.github/workflows/audit.yml
+
+  # ---------------------------------------------------------------------------
+  # 3. Gradle wrapper: файл в репозитории должен совпадать с официальным.
   #    (первый прогон может быть красным после ручной пересборки wrapper-а —
   #    тогда достаточно выполнить ./gradlew wrapper --gradle-version 9.7.1)
   # ---------------------------------------------------------------------------
@@ -205,14 +219,16 @@ jobs:
   ci-ok:
     name: ci-ok
     if: always()
-    needs: [static, wrapper, build, client-boot]
+    needs: [static, audit, wrapper, build, client-boot]
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
 
       - name: Свести результаты
         run: |
           echo "static=${{ needs.static.result }}"
+          echo "audit=${{ needs.audit.result }}"
           echo "wrapper=${{ needs.wrapper.result }}"
           echo "build=${{ needs.build.result }}"
           echo "client-boot=${{ needs.client-boot.result }}"
@@ -222,6 +238,7 @@ jobs:
           failed=0
           for r in \
             "static=${{ needs.static.result }}" \
+            "audit=${{ needs.audit.result }}" \
             "wrapper=${{ needs.wrapper.result }}" \
             "build=${{ needs.build.result }}"; do
             case "$r" in
@@ -243,13 +260,18 @@ jobs:
           exit "$failed"
 
       - name: Комментарий с итогами в PR
-        if: always() && github.event_name == 'pull_request'
+        # У PR из форка GITHUB_TOKEN только на чтение: писать комментарий
+        # невозможно, и без этой проверки шаг краснил бы весь ci-ok.
+        if: >-
+          always() && github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.fork == false
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           STATIC: ${{ needs.static.result }}
+          AUDIT: ${{ needs.audit.result }}
           WRAPPER: ${{ needs.wrapper.result }}
           BUILD: ${{ needs.build.result }}
           BOOT: ${{ needs.client-boot.result }}
@@ -275,6 +297,7 @@ jobs:
             echo "| Проверка | Результат |"
             echo "|---|---|"
             echo "| Статические проверки (синтаксис, инварианты, баланс) | $(icon "$STATIC") \`$STATIC\` |"
+            echo "| Аудит ресурсов (матрица suite-ов) | $(icon "$AUDIT") \`$AUDIT\` |"
             echo "| Gradle wrapper | $(icon "$WRAPPER") \`$WRAPPER\` |"
             if [ "$BUILD" = "success" ] && [ -n "$JAR" ]; then
               echo "| Сборка на JDK 25 | $(icon "$BUILD") \`$JAR\`, $JAR_SIZE |"

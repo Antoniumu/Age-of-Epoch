@@ -36,6 +36,26 @@ class CrewWorkshopTest {
             assertTrue(CrewWorkshop.objective(restored).contains("ещё впереди"));
         }
     }
+    @Test void laterReflectionsRespectPrivacyAndNeverChangeState(){
+        for(boolean consent:new boolean[]{false,true}){
+            var d=ready(0);var stranger=new AdventureData();
+            assertEquals("",CrewWorkshop.reflection(d,"oren"));
+            CrewWorkshop.act(d,"oren",92);CrewWorkshop.act(d,"tik",93);
+            CrewWorkshop.act(d,"tik",consent?96:95);
+            if(consent){CrewWorkshop.act(d,"oren",97);CrewWorkshop.act(d,"tik",98);}
+            var facts=java.util.Set.copyOf(d.facts);var trust=java.util.Map.copyOf(d.trust);
+            String oren=CrewWorkshop.reflection(d,"oren"),tik=CrewWorkshop.reflection(d,"tik");
+            assertFalse(oren.isBlank());assertFalse(tik.isBlank());
+            if(!consent)assertFalse(oren.contains("защёлк"));
+            else assertTrue(oren.contains("защёлк"));
+            assertEquals("",CrewWorkshop.reflection(d,"mara"));
+            assertEquals("",CrewWorkshop.reflection(stranger,"oren"));
+            assertEquals(facts,d.facts);assertEquals(trust,d.trust);
+            var restored=new com.google.gson.Gson().fromJson(new com.google.gson.Gson().toJson(d),AdventureData.class);
+            assertEquals(oren,CrewWorkshop.reflection(restored,"oren"));
+            assertEquals(tik,CrewWorkshop.reflection(restored,"tik"));
+        }
+    }
     @Test void clipsArePlayedOnlyForExpectedSpeakerAndExactConfirmedLine(){
         for(int action:new int[]{92,93,94,95,97,98}){
             var d=new AdventureData();d.lastInvestigationLine=CrewWorkshop.voiceText(action);

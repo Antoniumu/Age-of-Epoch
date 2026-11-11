@@ -6,12 +6,16 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+concurrency:
+  group: crew-model-preview-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   render:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       - run: npm ci
@@ -20,7 +24,7 @@ jobs:
         working-directory: tools/airship/crew-preview
       - run: npm run build && npm test
         working-directory: tools/airship/crew-preview
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: crew-model-proof
           path: docs/airship/crew-preview/*proof.png

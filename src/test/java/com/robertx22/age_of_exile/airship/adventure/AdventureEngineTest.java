@@ -28,6 +28,23 @@ class AdventureEngineTest {
         assertEquals(seed,d.adventure.trust.get("captain"));assertEquals(100,d.captainTrust);assertEquals(11,d.stage);assertEquals(2,d.storyDecision);assertEquals(7,d.favorAccepted);
         assertTrue(d.adventure.facts.contains("legacy.introduction_complete"));assertTrue(d.relationshipValue("captain")<=25);
     }
+    @Test void alreadyMigratedPlayersKeepAllProgressAndLocationsWhenRevisited(){
+        var gson=new com.google.gson.Gson();
+        for(int player=0;player<2;player++){
+            var d=new AirshipData();
+            d.summoned=true;d.layout="winged_sailor";d.x=100+player;d.y=120;d.z=-80;d.groundY=64;
+            d.hubRevision=7;d.hubJumpReadyAt=4321;d.liftReadyAtMillis=1234;d.stage=11;
+            d.storyDecision=player+1;d.favorAccepted=31;d.favorCompleted=5;d.baselineKills=12;
+            d.captainTrust=73;d.maraTrust=34;d.bramTrust=26;
+            d.adventure.version=1;d.adventure.callDecision=player==0?"record":"silence";
+            d.adventure.accepted.add("captain.quiet_water");d.adventure.completed.add("tik.spare_key");
+            d.adventure.facts.add("crew_moment:oren:"+player);d.adventure.facts.add("workshop:finished");
+            d.adventure.events.add("old-event-"+player);d.adventure.progress.put("captain.quiet_water",2);
+            d.adventure.trust.put("oren",24);d.adventure.closeness.put("oren",31);d.adventure.respect.put("oren",16);
+            var before=gson.toJsonTree(d);AdventureEngine.migrate(d);AdventureEngine.migrate(d);
+            assertEquals(before,gson.toJsonTree(d),"Existing versioned player data changed");
+        }
+    }
     @Test void noDecisionBeforeEventAndNoReplayingChoice(){
         var d=new AdventureData();assertFalse(AdventureEngine.chooseCall(d,"answer"));assertTrue(AdventureEngine.witnessCall(d));assertFalse(AdventureEngine.witnessCall(d));
         assertFalse(AdventureEngine.chooseCall(d,"unknown"));assertTrue(AdventureEngine.chooseCall(d,"record"));assertFalse(AdventureEngine.chooseCall(d,"answer"));assertEquals("record",d.callDecision);

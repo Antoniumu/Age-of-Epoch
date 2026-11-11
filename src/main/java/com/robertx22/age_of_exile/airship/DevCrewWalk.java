@@ -75,6 +75,31 @@ final class DevCrewWalk {
         if(Math.abs(CrewMotion.wrap(actor.getYHeadRot()-desired))>12)
             throw new IllegalStateException("Crew did not face listener");
         System.out.println("AIRSHIPWALK LISTENER npc=veya head="+actor.getYHeadRot()+" desired="+desired);
+        // Dev-only fixture: temporarily clear Veya's migration marker, isolate other
+        // repairs, and exercise the real server repair path during an active dialogue.
+        var data=AirshipService.data(player);
+        if(!AirshipCrewPlacement.crewScanLoaded(level,data))throw new IllegalStateException("Migration test requires loaded crew search area");
+        var crew=level.getEntitiesOfClass(LivingEntity.class,new AABB(data.x-60,data.y-52,data.z-36,data.x+61,data.y+51,data.z+56),e->!AirshipService.npcId(e).isEmpty());
+        var changed=new java.util.HashMap<LivingEntity,Boolean>();
+        for(var member:crew){
+            String id=AirshipService.npcId(member);
+            if(!java.util.List.of("oren","selin","veya","tik").contains(id))continue;
+            String tag="aoe_crew_access_v1_"+id;changed.put(member,member.entityTags().contains(tag));
+            if(member==actor)member.removeTag(tag);else member.addTag(tag);
+        }
+        if(!changed.containsKey(actor))throw new IllegalStateException("Veya not found in loaded crew scan");
+        var before=actor.position();
+        try{
+            AirshipCrewPlacement.repairOtherCrew(player);
+            if(actor.entityTags().contains("aoe_crew_access_v1_veya")||!actor.position().equals(before))
+                throw new IllegalStateException("Automatic repair changed a conversing NPC");
+            System.out.println("AIRSHIPWALK REPAIR_DEFERRED npc=veya conversation=true loaded=true");
+        } finally {
+            for(var entry:changed.entrySet()){
+                String tag="aoe_crew_access_v1_"+AirshipService.npcId(entry.getKey());
+                if(entry.getValue())entry.getKey().addTag(tag);else entry.getKey().removeTag(tag);
+            }
+        }
         if(checkedSteps>=0&&steps!=checkedSteps)throw new IllegalStateException("Crew moved during conversation screen transition");
         checkedSteps=steps;
     }

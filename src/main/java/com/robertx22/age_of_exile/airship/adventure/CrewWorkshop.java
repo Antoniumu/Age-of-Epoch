@@ -53,6 +53,20 @@ public final class CrewWorkshop {
         if(!d.facts.contains(OREN))return "Орен и Тик • передай Орену только то, на что Тик согласился.";
         return "Орен и Тик • расскажи Тику об ответе Орена.";
     }
+    /** Later personal dialogue, never a claim that the meeting has already happened. */
+    public static String reflection(AdventureData d,String npc){
+        if(!eligible(d)||!d.facts.contains(DONE))return "";
+        if(npc.equals("tik")){
+            if(d.facts.contains(PRIVATE))return "Тик: Спасибо, что оставил разговор мне. Я подойду к Орену, когда соберусь.";
+            if(d.facts.contains(CONSENT)&&d.facts.contains(OREN))return "Тик: Хорошо, что Орен готов меня выслушать. Остальное я расскажу ему сам.";
+        }
+        if(npc.equals("oren")){
+            // The private branch must not reveal Tik's confidence to Oren.
+            if(d.facts.contains(PRIVATE))return "Орен: Надеюсь, у Тика всё хорошо. Если ему понадобится помощь, я рядом.";
+            if(d.facts.contains(CONSENT)&&d.facts.contains(OREN))return "Орен: Я оставлю Тику время. С защёлкой разберёмся, когда он сам захочет.";
+        }
+        return "";
+    }
     public static String voiceKey(int action){return switch(action){case 92->"oren_workshop_start";case 93->"tik_workshop_key";case 94->"tik_workshop_figure";case 97->"oren_workshop_reply";case 95->"tik_workshop_private";case 98->"tik_workshop_finish";default->"";};}
     public static String voiceText(int action){return switch(action){case 92->OREN_START;case 93->TIK_KEY;case 94->TIK_FIGURE;case 97->OREN_REPLY;case 95->TIK_PRIVATE;case 98->TIK_FINISH;default->"";};}
 }

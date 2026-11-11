@@ -57,6 +57,9 @@
 gh run download --name Age-of-Epoch-jar -D mods
 ```
 
+Уведомления о коммитах, PR, релизах и итогах CI/аудитов можно получать в Discord —
+настройка в один секрет, см. [`docs/DISCORD.md`](docs/DISCORD.md).
+
 Локально требования: **JDK 25**, доступ в интернет к `maven.fabricmc.net` и Mojang-репозиториям.
 
 ```bash
@@ -223,6 +226,7 @@ tools/port_to_fabric.py                        — воспроизводимы�
 tools/ru_work/                                 — исходники перевода (генерация ru_ru.json)
 tools/tower_gen/                               — генератор тематических башен (NBT + JSON), см. TOWERS.md
 tools/talent_gen/                              — генератор и проверки древа «Божественный», см. docs/DIVINE.md
+CHANGELOG.md                                   — история версий: что вошло в релиз, с ссылками на PR
 LAUNCH-READINESS.md                            — отчёт о готовности к запуску: вердикт, доказательства, честный список непроверенного
 DAILIES.md                                     — все ежедневки и недельные цели: формулы, числа, проверка на сервере
 TOWERS.md                                      — описание тем, сложности и боссов башен

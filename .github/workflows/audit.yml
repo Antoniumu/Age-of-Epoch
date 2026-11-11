@@ -1,0 +1,122 @@
+name: Resource audit
+
+# Делегирование аудита ресурсов: каждый модуль test_*.py выполняется в своём
+# job-е матрицы, отчёты (JSON + JUnit XML + лог) складываются артефактами,
+# а финальный job проверяет, что ВСЕ шарды отчитались и зелёные.
+#
+# Вызывается из ci.yml (job «audit»), либо вручную: gh workflow run audit.yml
+
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        description: Python version used by the stdlib-only audit runner
+        required: false
+        type: string
+        default: '3.12'
+  workflow_dispatch:
+    inputs:
+      python-version:
+        description: Python version used by the stdlib-only audit runner
+        required: false
+        type: string
+        default: '3.12'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: audit-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # 1. Матрицу строим из реального набора модулей, а не из захардкоженного
+  #    списка: новый test_*.py автоматически получает свой job.
+  discover:
+    name: Discover audit suites
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      suites: ${{ steps.list.outputs.suites }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ inputs.python-version || '3.12' }}
+      - name: Собрать список suite-ов
+        id: list
+        run: |
+          set -euo pipefail
+          suites="$(python3 tools/audit/run_audit.py --list-json)"
+          python3 -c 'import json,sys; a=json.loads(sys.argv[1]); assert a and all(isinstance(x,str) for x in a), a; print("discovered %d audit suites" % len(a))' "$suites"
+          echo "suites=$suites" >> "$GITHUB_OUTPUT"
+
+  # 2. Один job на модуль. fail-fast: false — нужен полный список багов, а не
+  #    только первый упавший шард.
+  audit:
+    name: audit / ${{ matrix.suite }}
+    needs: [discover]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: ${{ fromJSON(needs.discover.outputs.suites) }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ inputs.python-version || '3.12' }}
+
+      - name: Языковые файлы синхронизированы
+        run: python3 tools/audit/sync_lang.py --check
+
+      - name: 'Аудит: ${{ matrix.suite }}'
+        run: |
+          python3 tools/audit/run_audit.py \
+            --suite "${{ matrix.suite }}" \
+            --report-dir audit-reports
+
+      - name: Сохранить отчёт
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: audit-report-${{ matrix.suite }}
+          path: audit-reports/
+          if-no-files-found: error
+          retention-days: 14
+
+  # 3. Агрегация. Проверяем не только результат матрицы, но и наличие/зелёный
+  #    статус каждого отчёта: упавший до загрузки артефакта worker не должен
+  #    «раствориться» в успешном прогоне.
+  aggregate:
+    name: Aggregate audit results
+    needs: [discover, audit]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ inputs.python-version || '3.12' }}
+
+      - name: Скачать отчёты всех suite-ов
+        uses: actions/download-artifact@v7
+        with:
+          pattern: audit-report-*
+          merge-multiple: true
+          path: audit-reports
+
+      - name: Свести результаты
+        env:
+          SUITES: ${{ needs.discover.outputs.suites }}
+          MATRIX_RESULT: ${{ needs.audit.result }}
+        run: |
+          set -euo pipefail
+          python3 tools/audit/summarize_reports.py audit-reports \
+            --expect-suites "$SUITES"
+          if [ "$MATRIX_RESULT" != "success" ]; then
+            echo "::error::audit matrix finished with: $MATRIX_RESULT"
+            exit 1
+          fi

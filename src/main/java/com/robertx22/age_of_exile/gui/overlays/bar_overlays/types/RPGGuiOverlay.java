@@ -22,7 +22,6 @@ import net.minecraft.ChatFormatting;
 public class RPGGuiOverlay extends AbstractGui {
 
     static Identifier BASETEX = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/overlay/base.png");
-    static Identifier MANA_RESERVE = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/overlay/mana_reserve.png");
 
     public RPGGuiOverlay() {
         super();

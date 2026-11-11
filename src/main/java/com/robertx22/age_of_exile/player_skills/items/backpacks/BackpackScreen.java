@@ -13,7 +13,10 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.network.chat.Component;
 
 public class BackpackScreen extends AbstractContainerScreen<BackpackContainer> {
-    private Identifier texture = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/backpack/background.png");
+    // The constructor replaces this with the tier-specific background. Keep a
+    // real texture as the default so a partially-built screen never points at
+    // a missing file.
+    private Identifier texture = Identifier.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/backpack/0.png");
 
     public BackpackScreen(BackpackContainer handler, Inventory inventory, Component text) {
         super(handler, inventory, Component.literal(""), 176, 233);
