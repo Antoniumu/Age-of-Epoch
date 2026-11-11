@@ -103,10 +103,15 @@ spawner, command blocks, anvils. Это сохраняет сокровищни�
     ROOF_SMASH + SHIELD + SUMMON_ELITE + PHASE_ENRAGE.
   - `ancient_witherer` — WITHER_CURSE + FIRE_NOVA + LINE_CHARGE + GRAPPLE_PULL +
     SUMMON_MINIONS + SHIELD + PHASE_ENRAGE.
-- **Боссы делвов** (delve wardens) получают стандартный anti-cheese набор:
-  KNOCKBACK_SLAM, THUNDER_STOMP, ROOF_SMASH, LEAP, CEILING_BARRAGE,
-  PILLAR_BREAK, GRAPPLE_PULL, LINE_CHARGE, RAGE, SHIELD, HEAL_SELF,
-  PHASE_ENRAGE (без SUMMON_MINIONS/ELITE — волны управляются делвом).
+- **Боссы делвов** (delve wardens) специально проще башенных — укороченный
+  набор: KNOCKBACK_SLAM, THUNDER_STOMP (простые удары по площади) и
+  минимальный anti-cheese ROOF_SMASH, PILLAR_BREAK, GRAPPLE_PULL. Без
+  HEAL_SELF, SHIELD, RAGE, PHASE_ENRAGE, LEAP, LINE_CHARGE и CEILING_BARRAGE —
+  бой не превращается в долгое сражение с самолечением и фазами (и без
+  SUMMON_MINIONS/ELITE — волны управляются делвом). Контейнмент арены,
+  ретаргетинг и запрет ломки/установки блоков при живом страже действуют
+  как прежде; после его смерти ограничения снимаются и наградной сундук
+  открывается.
 
 ### 6. LEAP-landing (GROUND_POUND)
 

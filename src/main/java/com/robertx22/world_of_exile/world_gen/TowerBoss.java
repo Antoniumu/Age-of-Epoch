@@ -654,10 +654,10 @@ public final class TowerBoss {
         return 1;
     }
 
-    /** Default anti-cheese ability kit used by delve wardens and any boss
-     *  that did not come from the tower roster (so they still punish roof and
-     *  pillar abuse). Note: SUMMON_MINIONS/SUMMON_ELITE are intentionally
-     *  absent — delves already script their own wave spawning. */
+    /** Default anti-cheese ability kit used by any boss that did not come from
+     *  the tower roster (so they still punish roof and pillar abuse).
+     *  Note: SUMMON_MINIONS/SUMMON_ELITE are intentionally absent — other
+     *  encounters script their own wave spawning. */
     private static final List<TowerAbility> DEFAULT_BOSS_ABILITIES = List.of(
         TowerAbility.KNOCKBACK_SLAM,
         TowerAbility.THUNDER_STOMP,
@@ -671,6 +671,19 @@ public final class TowerBoss {
         TowerAbility.SHIELD,
         TowerAbility.HEAL_SELF,
         TowerAbility.PHASE_ENRAGE
+    );
+
+    /** Delve wardens are intentionally much simpler than tower guardians: a
+     *  short, readable kit that still punishes roof/pillar/wall cheesing, but
+     *  without self-heals, shields, damage buffs, enrage phases, leaps or
+     *  long-range barrages. Two straightforward melee strikes plus the minimal
+     *  anti-cheese trio. */
+    private static final List<TowerAbility> DELVE_WARDEN_ABILITIES = List.of(
+        TowerAbility.KNOCKBACK_SLAM,
+        TowerAbility.THUNDER_STOMP,
+        TowerAbility.ROOF_SMASH,
+        TowerAbility.PILLAR_BREAK,
+        TowerAbility.GRAPPLE_PULL
     );
 
     /** Persist the selected roster entry so reloaded bosses keep only their own abilities. */
@@ -692,8 +705,13 @@ public final class TowerBoss {
                 }
             }
         }
-        // Delve wardens and other non-roster bosses: fall back to the anti-cheese kit.
-        if (entity.entityTags().contains(DELVE_BOSS_TAG) || entity.entityTags().contains(BOSS_TAG)) {
+        // Delve wardens get the deliberately simplified kit — they are meant
+        // to be easier than tower guardians.
+        if (entity.entityTags().contains(DELVE_BOSS_TAG)) {
+            return DELVE_WARDEN_ABILITIES;
+        }
+        // Other non-roster bosses: fall back to the full anti-cheese kit.
+        if (entity.entityTags().contains(BOSS_TAG)) {
             return DEFAULT_BOSS_ABILITIES;
         }
         return List.of();
