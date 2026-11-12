@@ -106,7 +106,8 @@ public class TideGlowParticle extends SingleQuadParticle {
      */
     public static void registerFactory() {
         try {
-            net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry.getInstance()
+            // FAPI 26.x: реестр провайдеров; FabricSpriteSet наследует SpriteSet, поэтому Factory::new подхватит
+            net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry.getInstance()
                 .register(SlashParticles.TIDE_GLOW.get(), TideGlowParticle.Factory::new);
         } catch (Exception e) {
             e.printStackTrace();

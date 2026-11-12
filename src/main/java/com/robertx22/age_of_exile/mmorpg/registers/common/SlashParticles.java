@@ -2,6 +2,7 @@ package com.robertx22.age_of_exile.mmorpg.registers.common;
 
 import com.robertx22.age_of_exile.mmorpg.registers.deferred_wrapper.Def;
 import com.robertx22.age_of_exile.mmorpg.registers.deferred_wrapper.RegObj;
+import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 
 public class SlashParticles {
@@ -14,7 +15,7 @@ public class SlashParticles {
     public static RegObj<SimpleParticleType> TIDE_GLOW;
 
     public static void init() {
-        TIDE_GLOW = Def.particle("tide_glow", () -> new SimpleParticleType(false));
+        TIDE_GLOW = Def.particle("tide_glow", () -> FabricParticleTypes.simple(false));
     }
 
 }

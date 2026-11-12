@@ -92,7 +92,7 @@ public class TideDancerSpells implements ExileRegistryInit {
                 .onCast(PartBuilder.playSound(SoundEvents.PLAYER_SPLASH, 1.0D, 1.3D))
 
                 .onCast(PartBuilder.pushCaster(DashUtils.Way.FORWARDS, DashUtils.Strength.LARGE_DISTANCE))
-                .onCast(PartBuilder.giveSelfEffect(MobEffects.MOVEMENT_SPEED, 20D * 3, 1D))
+                .onCast(PartBuilder.giveSelfEffect(MobEffects.SPEED, 20D * 3, 1D))
 
                 .onCast(PartBuilder.damageInFront(TideDancerCalcs.SLIPSTREAM, Elements.Water, 5.5D, 2.0D)
                     .addPerEntityHit(PartBuilder.aoeParticles(ParticleTypes.SPLASH, 18D, 0.6D)))

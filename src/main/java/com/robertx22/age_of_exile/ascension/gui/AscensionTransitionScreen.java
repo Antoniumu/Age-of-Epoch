@@ -1,6 +1,7 @@
 package com.robertx22.age_of_exile.ascension.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.robertx22.forge_compat.client.AbstractGui;
 import com.robertx22.forge_compat.client.Screen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
