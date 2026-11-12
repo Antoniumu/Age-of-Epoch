@@ -2337,5 +2337,21 @@
   "mmorpg.spell_school.hunting": "Hunting",
   "mmorpg.spell_school.nature": "Nature",
   "mmorpg.spell_school.fire": "Fire",
-  "mmorpg.spell_school.water": "Water"
+  "mmorpg.spell_school.water": "Water",
+  "effect.mmorpg.beneficial.80": "Unbound Joy",
+  "effect.mmorpg.beneficial.81": "Jubilant Veil",
+  "effect.mmorpg.negative.80": "Submersion",
+  "mmorpg.spell.jubilant_veil": "Jubilant Veil",
+  "mmorpg.spell.maelstrom_waltz": "Apotheosis: Waltz of the Abyss",
+  "mmorpg.spell.slipstream_surge": "Slipstream Surge",
+  "mmorpg.spell.tidewhip_lash": "Whip of the Crest",
+  "mmorpg.spell.unbound_joy": "Unbound Joy",
+  "mmorpg.spell.undertow_grasp": "Maelstrom Grasp",
+  "mmorpg.word.ascension": "Ascension",
+  "spell.desc.jubilant_veil": "A sphere of buoyant water: shield, armor and dodge for 8 seconds. Nearby foes begin to Submerge.",
+  "spell.desc.maelstrom_waltz": "Summons a maelstrom at your gaze for 6 seconds: pulls foes into its eye, shreds them, then bursts in an explosion of water.",
+  "spell.desc.slipstream_surge": "Surge along the current through enemies, striking all in your wake. Stores two charges.",
+  "spell.desc.tidewhip_lash": "Lashes a living tide-whip in a wide arc before you: water damage and brief Submersion.",
+  "spell.desc.unbound_joy": "A surge of euphoria for 14 seconds: attack and movement speed with dual lifesteal.",
+  "spell.desc.undertow_grasp": "The undertow drags every nearby foe onto your blade and drowns them."
 }
