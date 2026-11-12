@@ -9,5 +9,6 @@ public class ExileEffects implements ExileRegistryInit {
         new NegativeEffects().registerAll();
         new BeneficialEffects().registerAll();
         new NeutralEffects().registerAll();
+        new com.robertx22.age_of_exile.ascension.effects.TideEffects().registerAll();
     }
 }

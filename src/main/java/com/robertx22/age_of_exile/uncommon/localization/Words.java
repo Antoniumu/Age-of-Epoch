@@ -64,6 +64,7 @@ public enum Words implements IAutoLocName {
     Inscribing("Inscribing"),
     Cooking("Cooking"),
     Skills("Skills"),
+    Ascension("Ascension"),
     Mining("Mining"),
     Farming("Farming"),
     Salvaging("Salvaging"),
