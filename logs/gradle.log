@@ -1,0 +1,400 @@
+[15:32:29] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.spells.components.AttachedSpell.onCast(AttachedSpell.java:16)
+[15:32:29] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.spells.components.Spell.cast(Spell.java:217)
+[15:32:29] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe$Runner.doCast(SpellAuditProbe.java:1450)
+[15:32:29] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe$Runner.step(SpellAuditProbe.java:617)
+[15:32:29] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.tick(SpellAuditProbe.java:259)
+[15:32:29] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.mmorpg.FabricBootstrap.lambda$registerFabricHooks$9(FabricBootstrap.java:185)
+[15:32:29] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.lambda$static$3(ServerTickEvents.java:55)
+[15:32:29] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.server.MinecraftServer.handler$zjn000$fabric-lifecycle-events-v1$onEndTick(MinecraftServer.java:3416)
+[15:32:29] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:1004)
+[15:32:29] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.client.server.IntegratedServer.tickServer(IntegratedServer.java:139)
+[15:32:29] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.server.MinecraftServer.processPacketsAndTick(MinecraftServer.java:1013)
+[15:32:29] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.client.server.IntegratedServer.processPacketsAndTick(IntegratedServer.java:107)
+[15:32:29] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:752)
+[15:32:29] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.server.MinecraftServer.lambda$spin$0(MinecraftServer.java:310)
+[15:32:29] [Server thread/INFO] (Minecraft) [STDERR]: 	at java.base/java.lang.Thread.run(Thread.java:1474)
+[15:32:29] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI cast spell=jubilant_veil can_cast=true cast_ticks=0 server_cast=true
+[15:32:29] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=jubilant_veil t=2 n=0
+[15:32:29] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:29] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:29] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=jubilant_veil t=4 n=0
+[15:32:30] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=jubilant_veil t=6 n=0
+[15:32:30] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=jubilant_veil t=8 n=0
+[15:32:30] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=jubilant_veil t=10 n=0
+[15:32:30] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=jubilant_veil t=12 n=0
+[15:32:30] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:30] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:30] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=jubilant_veil t=14 n=0
+[15:32:30] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=jubilant_veil t=16 n=0
+[15:32:30] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=jubilant_veil t=18 n=0
+[15:32:30] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=jubilant_veil t=20 n=0
+[15:32:30] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=jubilant_veil t=22 n=0
+[15:32:30] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:30] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:30] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=jubilant_veil t=24 n=0
+[15:32:31] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI spell=jubilant_veil school=no_school verdict=FAIL dmg=0.0 hits=0 dmg_events=0 heal=0.0 mana=10.8 shield=319.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true problems=эффекты не наложены
+[15:32:31] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI_MARK spell_end jubilant_veil 1794497551361
+[15:32:31] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:31] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:31] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI_MARK spell_start maelstrom_waltz 1794497551458
+[15:32:31] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+[15:32:31] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:31] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:32] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_cast spell=maelstrom_waltz player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=25 can_cast=true dummies=5 [4.5б hp=1024] [3.5б hp=1024] [6.7б hp=1024] [2.8б hp=1024] [6.7б hp=1024]
+[15:32:32] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI cast spell=maelstrom_waltz can_cast=true cast_ticks=25 server_cast=true
+[15:32:32] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_projtick spell=maelstrom_waltz uuid=18e21dc9-ab6c-47b8-b10f-554abebe2e29 t=1 pos=2.92/107.00/1.91 d=0.00/0.00/0.00
+[15:32:32] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=maelstrom_waltz t=2 n=0
+[15:32:32] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_block spell=maelstrom_waltz name=maelstrom age=1 pos=2.50/100.00/1.50 dist=2.24
+[15:32:32] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=maelstrom_waltz t=4 n=0
+[15:32:32] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=maelstrom_waltz t=6 n=0
+[15:32:32] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:32] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:32] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=maelstrom_waltz t=8 n=0
+[15:32:32] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=maelstrom_waltz t=10 n=0
+[15:32:32] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=maelstrom_waltz t=12 n=0
+[15:32:32] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=maelstrom_waltz t=14 n=0
+[15:32:32] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=maelstrom_waltz t=16 n=0
+[15:32:32] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:32] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:32] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=maelstrom_waltz t=18 n=0
+[15:32:33] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=maelstrom_waltz t=20 n=0
+[15:32:33] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_block spell=maelstrom_waltz name=maelstrom age=20 pos=2.50/100.00/1.50 dist=2.24
+[15:32:33] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.1124 before=1024.0000
+[15:32:33] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.8876
+[15:32:33] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.1124 before=1024.0000
+[15:32:33] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.8876
+[15:32:33] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.1124 before=1024.0000
+[15:32:33] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.8876
+[15:32:33] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=maelstrom_waltz t=22 n=0
+[15:32:33] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=maelstrom_waltz t=24 n=0
+[15:32:33] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:33] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:33] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:33] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:34] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_block spell=maelstrom_waltz name=maelstrom age=40 pos=2.50/100.00/1.50 dist=2.24
+[15:32:34] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.1124 before=1023.8876
+[15:32:34] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.7751
+[15:32:34] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.1124 before=1023.8876
+[15:32:34] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.7751
+[15:32:34] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.1124 before=1023.8876
+[15:32:34] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.7751
+[15:32:34] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:34] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:34] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:34] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:35] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_block spell=maelstrom_waltz name=maelstrom age=60 pos=2.50/100.00/1.50 dist=2.24
+[15:32:35] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.1124 before=1023.7751
+[15:32:35] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.6627
+[15:32:35] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.1124 before=1023.7751
+[15:32:35] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.6627
+[15:32:35] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.1124 before=1023.7751
+[15:32:35] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.6627
+[15:32:35] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:35] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:35] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:35] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:36] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_block spell=maelstrom_waltz name=maelstrom age=80 pos=2.50/100.00/1.50 dist=2.24
+[15:32:36] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.1124 before=1023.6627
+[15:32:36] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.5503
+[15:32:36] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.1124 before=1023.6627
+[15:32:36] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.5503
+[15:32:36] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.1124 before=1023.6627
+[15:32:36] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.5503
+[15:32:36] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:36] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:36] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:36] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:37] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_block spell=maelstrom_waltz name=maelstrom age=100 pos=2.50/100.00/1.50 dist=2.24
+[15:32:37] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.1124 before=1023.5503
+[15:32:37] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.4379
+[15:32:37] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.1124 before=1023.5503
+[15:32:37] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.4379
+[15:32:37] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.1124 before=1023.5503
+[15:32:37] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.4379
+[15:32:37] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:37] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:37] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:37] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:38] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_block spell=maelstrom_waltz name=maelstrom age=120 pos=2.50/100.00/1.50 dist=2.24
+[15:32:38] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.1124 before=1023.4379
+[15:32:38] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.3254
+[15:32:38] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.1124 before=1023.4379
+[15:32:38] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.3254
+[15:32:38] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.1124 before=1023.4379
+[15:32:38] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.3254
+[15:32:38] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.3638 before=1023.3254
+[15:32:38] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1022.9617
+[15:32:38] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.3638 before=1023.3254
+[15:32:38] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1022.9617
+[15:32:38] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.3638 before=1023.3254
+[15:32:38] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1022.9617
+[15:32:38] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.3638 before=1024.0000
+[15:32:38] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.6362
+[15:32:38] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.3638 before=1024.0000
+[15:32:38] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.6362
+[15:32:38] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:38] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:38] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI spell=maelstrom_waltz school=no_school verdict=PASS dmg=560.8 hits=23 dmg_events=23 heal=4.0 mana=21.6 shield=0.0 moved=0.0 items=0 effects=beneficial/32 particles=true sound=true can_cast=true server_cast=true
+[15:32:38] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI_MARK spell_end maelstrom_waltz 1794497558558
+[15:32:38] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI_MARK spell_start slipstream_surge 1794497558658
+[15:32:38] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+[15:32:38] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:38] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:39] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.0926 before=1024.0000
+[15:32:39] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.9074
+[15:32:39] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.0926 before=1024.0000
+[15:32:39] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.9074
+[15:32:39] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_cast spell=slipstream_surge player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [6.7б hp=1024] [3.5б hp=1024] [6.7б hp=1024] [2.8б hp=1024] [4.5б hp=1024]
+[15:32:39] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI cast spell=slipstream_surge can_cast=true cast_ticks=0 server_cast=true
+[15:32:39] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=slipstream_surge t=2 n=0
+[15:32:39] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:39] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:39] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=slipstream_surge t=4 n=0
+[15:32:39] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=slipstream_surge t=6 n=0
+[15:32:39] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=slipstream_surge t=8 n=0
+[15:32:39] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=slipstream_surge t=10 n=0
+[15:32:39] [Server thread/INFO] (Minecraft) Player Player178 standing on air - force-sending blocks below
+[15:32:39] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=slipstream_surge t=12 n=0
+[15:32:39] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:39] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:39] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=slipstream_surge t=14 n=0
+[15:32:40] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=slipstream_surge t=16 n=0
+[15:32:40] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=slipstream_surge t=18 n=0
+[15:32:40] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=slipstream_surge t=20 n=0
+[15:32:40] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=slipstream_surge t=22 n=0
+[15:32:40] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:40] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:40] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=slipstream_surge t=24 n=0
+[15:32:40] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI spell=slipstream_surge school=no_school verdict=PASS dmg=27.0 hits=2 dmg_events=2 heal=0.0 mana=10.8 shield=0.0 moved=11.7 items=0 effects=speed particles=true sound=true can_cast=true server_cast=true
+[15:32:40] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI_MARK spell_end slipstream_surge 1794497560808
+[15:32:40] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:40] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:40] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI_MARK spell_start tidewhip_lash 1794497560908
+[15:32:40] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+[15:32:41] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:41] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:41] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.2117 before=1024.0000
+[15:32:41] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.7883
+[15:32:41] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.2117 before=1024.0000
+[15:32:41] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.7883
+[15:32:41] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.2117 before=1024.0000
+[15:32:41] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.7883
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: java.lang.IllegalArgumentException: negative/80 effect not there?
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.google.common.base.Preconditions.checkArgument(Preconditions.java:141)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.mmorpg.registers.common.SlashPotions.getExileEffect(SlashPotions.java:36)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.exile_effects.ExileEffect.getStatusEffect(ExileEffect.java:58)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.uncommon.effectdatas.ExilePotionEvent.activate(ExilePotionEvent.java:65)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.uncommon.effectdatas.EffectEvent.Activate(EffectEvent.java:80)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.spells.components.actions.ExileEffectAction.lambda$tryActivate$0(ExileEffectAction.java:50)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.spells.components.actions.ExileEffectAction.tryActivate(ExileEffectAction.java:39)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.spells.components.ComponentPart.tryActivate(ComponentPart.java:130)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.spells.components.AttachedSpell.lambda$onCast$0(AttachedSpell.java:16)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.spells.components.AttachedSpell.onCast(AttachedSpell.java:16)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.spells.components.Spell.cast(Spell.java:217)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe$Runner.doCast(SpellAuditProbe.java:1450)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe$Runner.step(SpellAuditProbe.java:617)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.tick(SpellAuditProbe.java:259)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.mmorpg.FabricBootstrap.lambda$registerFabricHooks$9(FabricBootstrap.java:185)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.lambda$static$3(ServerTickEvents.java:55)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.server.MinecraftServer.handler$zjn000$fabric-lifecycle-events-v1$onEndTick(MinecraftServer.java:3416)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:1004)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.client.server.IntegratedServer.tickServer(IntegratedServer.java:139)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.server.MinecraftServer.processPacketsAndTick(MinecraftServer.java:1013)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.client.server.IntegratedServer.processPacketsAndTick(IntegratedServer.java:107)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:752)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.server.MinecraftServer.lambda$spin$0(MinecraftServer.java:310)
+[15:32:41] [Server thread/INFO] (Minecraft) [STDERR]: 	at java.base/java.lang.Thread.run(Thread.java:1474)
+[15:32:41] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_cast spell=tidewhip_lash player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [3.5б hp=1024] [2.8б hp=1024] [6.7б hp=1024] [6.7б hp=1024] [4.5б hp=1024]
+[15:32:41] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI cast spell=tidewhip_lash can_cast=true cast_ticks=0 server_cast=true
+[15:32:41] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=tidewhip_lash t=2 n=0
+[15:32:41] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=tidewhip_lash t=4 n=0
+[15:32:41] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=tidewhip_lash t=6 n=0
+[15:32:41] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=tidewhip_lash t=8 n=0
+[15:32:41] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:41] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:41] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=tidewhip_lash t=10 n=0
+[15:32:42] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=tidewhip_lash t=12 n=0
+[15:32:42] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=tidewhip_lash t=14 n=0
+[15:32:42] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=tidewhip_lash t=16 n=0
+[15:32:42] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=tidewhip_lash t=18 n=0
+[15:32:42] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:42] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:42] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=tidewhip_lash t=20 n=0
+[15:32:42] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=tidewhip_lash t=22 n=0
+[15:32:42] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=tidewhip_lash t=24 n=0
+[15:32:42] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:42] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:43] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI spell=tidewhip_lash school=no_school verdict=FAIL dmg=92.7 hits=3 dmg_events=3 heal=0.0 mana=10.8 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true problems=эффекты не наложены
+[15:32:43] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI_MARK spell_end tidewhip_lash 1794497563058
+[15:32:43] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI_MARK spell_start unbound_joy 1794497563158
+[15:32:43] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+[15:32:43] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:43] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: java.lang.IllegalArgumentException: beneficial/80 effect not there?
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.google.common.base.Preconditions.checkArgument(Preconditions.java:141)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.mmorpg.registers.common.SlashPotions.getExileEffect(SlashPotions.java:36)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.exile_effects.ExileEffect.getStatusEffect(ExileEffect.java:58)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.uncommon.effectdatas.ExilePotionEvent.activate(ExilePotionEvent.java:65)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.uncommon.effectdatas.EffectEvent.Activate(EffectEvent.java:80)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.spells.components.actions.ExileEffectAction.lambda$tryActivate$0(ExileEffectAction.java:50)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.spells.components.actions.ExileEffectAction.tryActivate(ExileEffectAction.java:39)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.spells.components.ComponentPart.tryActivate(ComponentPart.java:130)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.spells.components.AttachedSpell.lambda$onCast$0(AttachedSpell.java:16)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.spells.components.AttachedSpell.onCast(AttachedSpell.java:16)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.spells.components.Spell.cast(Spell.java:217)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe$Runner.doCast(SpellAuditProbe.java:1450)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe$Runner.step(SpellAuditProbe.java:617)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.tick(SpellAuditProbe.java:259)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.mmorpg.FabricBootstrap.lambda$registerFabricHooks$9(FabricBootstrap.java:185)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.lambda$static$3(ServerTickEvents.java:55)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.server.MinecraftServer.handler$zjn000$fabric-lifecycle-events-v1$onEndTick(MinecraftServer.java:3416)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:1004)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.client.server.IntegratedServer.tickServer(IntegratedServer.java:139)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.server.MinecraftServer.processPacketsAndTick(MinecraftServer.java:1013)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.client.server.IntegratedServer.processPacketsAndTick(IntegratedServer.java:107)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:752)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.server.MinecraftServer.lambda$spin$0(MinecraftServer.java:310)
+[15:32:43] [Server thread/INFO] (Minecraft) [STDERR]: 	at java.base/java.lang.Thread.run(Thread.java:1474)
+[15:32:43] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_heal value=228 target=ServerPlayer before=12.00 after=20.00 max=20.00
+[15:32:43] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI cast spell=unbound_joy can_cast=true cast_ticks=0 server_cast=true
+[15:32:43] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=unbound_joy t=2 n=0
+[15:32:43] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:43] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:43] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=unbound_joy t=4 n=0
+[15:32:44] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=unbound_joy t=6 n=0
+[15:32:44] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=unbound_joy t=8 n=0
+[15:32:44] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=unbound_joy t=10 n=0
+[15:32:44] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=unbound_joy t=12 n=0
+[15:32:44] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:44] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:44] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=unbound_joy t=14 n=0
+[15:32:44] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=unbound_joy t=16 n=0
+[15:32:44] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=unbound_joy t=18 n=0
+[15:32:44] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=unbound_joy t=20 n=0
+[15:32:44] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=unbound_joy t=22 n=0
+[15:32:44] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:44] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:44] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=unbound_joy t=24 n=0
+[15:32:45] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI spell=unbound_joy school=no_school verdict=FAIL dmg=0.0 hits=0 dmg_events=0 heal=8.0 mana=0.0 shield=0.0 moved=0.0 items=0 effects=- particles=false sound=true can_cast=true server_cast=true problems=нет партиклов|эффекты не наложены
+[15:32:45] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI_MARK spell_end unbound_joy 1794497565309
+[15:32:45] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:45] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:45] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI_MARK spell_start undertow_grasp 1794497565413
+[15:32:45] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI dummies n=5 ready=5 player=0.5/100.0/0.5
+[15:32:45] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:45] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:45] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.1984 before=1024.0000
+[15:32:45] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.8016
+[15:32:45] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.1984 before=1024.0000
+[15:32:45] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.8016
+[15:32:45] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage target=Husk amount=0.1984 before=1024.0000
+[15:32:45] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_damage_after accepted=true after=1023.8016
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: java.lang.IllegalArgumentException: negative/80 effect not there?
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.google.common.base.Preconditions.checkArgument(Preconditions.java:141)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.mmorpg.registers.common.SlashPotions.getExileEffect(SlashPotions.java:36)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.exile_effects.ExileEffect.getStatusEffect(ExileEffect.java:58)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.uncommon.effectdatas.ExilePotionEvent.activate(ExilePotionEvent.java:65)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.uncommon.effectdatas.EffectEvent.Activate(EffectEvent.java:80)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.spells.components.actions.ExileEffectAction.lambda$tryActivate$0(ExileEffectAction.java:50)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.spells.components.actions.ExileEffectAction.tryActivate(ExileEffectAction.java:39)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.spells.components.ComponentPart.tryActivate(ComponentPart.java:130)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.spells.components.AttachedSpell.lambda$onCast$0(AttachedSpell.java:16)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.spells.components.AttachedSpell.onCast(AttachedSpell.java:16)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.database.data.spells.components.Spell.cast(Spell.java:217)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe$Runner.doCast(SpellAuditProbe.java:1450)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe$Runner.step(SpellAuditProbe.java:617)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.tick(SpellAuditProbe.java:259)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//com.robertx22.age_of_exile.mmorpg.FabricBootstrap.lambda$registerFabricHooks$9(FabricBootstrap.java:185)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.lambda$static$3(ServerTickEvents.java:55)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.server.MinecraftServer.handler$zjn000$fabric-lifecycle-events-v1$onEndTick(MinecraftServer.java:3416)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:1004)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.client.server.IntegratedServer.tickServer(IntegratedServer.java:139)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.server.MinecraftServer.processPacketsAndTick(MinecraftServer.java:1013)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.client.server.IntegratedServer.processPacketsAndTick(IntegratedServer.java:107)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:752)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at knot//net.minecraft.server.MinecraftServer.lambda$spin$0(MinecraftServer.java:310)
+[15:32:45] [Server thread/INFO] (Minecraft) [STDERR]: 	at java.base/java.lang.Thread.run(Thread.java:1474)
+[15:32:45] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_cast spell=undertow_grasp player=0.5/100.0/0.5 yaw=-59 pitch=30 cast_ticks=0 can_cast=true dummies=5 [0.0б hp=1024] [6.7б hp=1024] [0.0б hp=1024] [0.0б hp=1024] [6.7б hp=1024]
+[15:32:45] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI cast spell=undertow_grasp can_cast=true cast_ticks=0 server_cast=true
+[15:32:46] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=undertow_grasp t=2 n=0
+[15:32:46] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=undertow_grasp t=4 n=0
+[15:32:46] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=undertow_grasp t=6 n=0
+[15:32:46] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=undertow_grasp t=8 n=0
+[15:32:46] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:46] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:46] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=undertow_grasp t=10 n=0
+[15:32:46] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=undertow_grasp t=12 n=0
+[15:32:46] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=undertow_grasp t=14 n=0
+[15:32:46] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=undertow_grasp t=16 n=0
+[15:32:46] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=undertow_grasp t=18 n=0
+[15:32:46] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:46] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:46] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=undertow_grasp t=20 n=0
+[15:32:47] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=undertow_grasp t=22 n=0
+[15:32:47] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI diag_proj spell=undertow_grasp t=24 n=0
+[15:32:47] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:47] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:47] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI spell=undertow_grasp school=no_school verdict=FAIL dmg=86.9 hits=3 dmg_events=3 heal=0.0 mana=10.8 shield=0.0 moved=0.0 items=0 effects=- particles=true sound=true can_cast=true server_cast=true problems=эффекты не наложены
+[15:32:47] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI_MARK spell_end undertow_grasp 1794497567562
+[15:32:47] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI_MARK school_end no_school 1794497567661
+[15:32:47] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI school_end no_school
+[15:32:47] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI done spells=78 passed=74 failed=4
+[15:32:47] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI_MARK audit_end spells_78_failed_4 1794497567670
+[15:32:47] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:47] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:48] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:48] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:48] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:48] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:49] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:49] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:49] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:49] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:50] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:50] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:50] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:50] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:51] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:51] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:51] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:51] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:52] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:52] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:52] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:52] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:53] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:53] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:53] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:53] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:54] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:54] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:55] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:55] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:55] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:55] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:56] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:56] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:56] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:56] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:57] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:57] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:57] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:57] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:58] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:58] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:58] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:58] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:59] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:59] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:59] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:32:59] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:33:00] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:33:00] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:33:00] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] sendToServer: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
+[15:33:00] [Server thread/INFO] (Minecraft) [STDOUT]: [AOE-PACKET] ServerPlayNetworking received payload: id=mmorpg:main/113 class=PartyHudRequestPacket bytes=0
