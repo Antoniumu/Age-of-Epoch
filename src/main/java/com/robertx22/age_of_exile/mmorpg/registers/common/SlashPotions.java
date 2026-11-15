@@ -54,11 +54,12 @@ public class SlashPotions {
             registerExileEffect(EffectType.beneficial, i);
         }
 
-        // TideEffects uses slots outside the legacy ranges. Register them before
+        // Ascension reserves 80..83 for both types (PR #134). Register before
         // the vanilla registry freezes, not just in the JSON-backed ExileDB.
-        registerExileEffect(EffectType.negative, 80);
-        registerExileEffect(EffectType.beneficial, 80);
-        registerExileEffect(EffectType.beneficial, 81);
+        for (int i = 80; i < 84; i++) {
+            registerExileEffect(EffectType.beneficial, i);
+            registerExileEffect(EffectType.negative, i);
+        }
 
         Def.potion(FOOD_HP.getPath(), () -> HealthRegenFoodEffect.INSTANCE);
         Def.potion(FOOD_MANA.getPath(), () -> ManaRegenFoodEffect.INSTANCE);

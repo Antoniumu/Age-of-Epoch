@@ -5,6 +5,9 @@ name: Release
 on:
   push:
     tags: ['v*']
+    # Branch-scoped launch for this requested beta when Actions dispatch is unavailable.
+    branches: ['arena/ad2df10f-age-of-epoch']
+    paths: ['.github/workflows/release.yml']
   workflow_dispatch:
     inputs:
       tag:
@@ -20,6 +23,7 @@ concurrency:
 
 permissions:
   contents: write
+  checks: read
 
 env:
   GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx4G'
@@ -32,19 +36,27 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ inputs.source_ref || inputs.tag || github.ref }}
+          ref: ${{ inputs.source_ref || inputs.tag || github.sha }}
           fetch-depth: 0
 
       - name: Тег и исходники совпадают с mod_version
+        id: target
         env:
-          TAG: ${{ inputs.tag || github.ref_name }}
+          TAG: ${{ inputs.tag || (github.ref_type == 'tag' && github.ref_name) || '' }}
         run: |
           set -euo pipefail
+          mod_version="$(sed -nE 's/^mod_version=(.*)$/\1/p' gradle.properties | tr -d '[:space:]')"
+          if [ -z "$TAG" ]; then
+            TAG="v$mod_version"
+            if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-beta\.[0-9]+$ ]]; then
+              echo '::error::Автоматический запуск из ветки разрешён только для beta'
+              exit 1
+            fi
+          fi
           if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
             echo '::error::Ожидался тег версии vX.Y.Z или vX.Y.Z-beta.N'
             exit 1
           fi
-          mod_version="$(sed -nE 's/^mod_version=(.*)$/\1/p' gradle.properties | tr -d '[:space:]')"
           if [ "${TAG#v}" != "$mod_version" ]; then
             echo "::error::Тег $TAG не совпадает с mod_version=$mod_version"
             exit 1
@@ -55,6 +67,7 @@ jobs:
               exit 1
             fi
           fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
       - uses: ./.github/actions/setup-build-env
 
@@ -67,7 +80,7 @@ jobs:
       - name: Контрольные суммы и проверка версии внутри JAR
         id: metadata
         env:
-          TAG: ${{ inputs.tag || github.ref_name }}
+          TAG: ${{ steps.target.outputs.tag }}
         run: |
           set -euo pipefail
           jar="Age-of-Epoch-${TAG#v}.jar"
@@ -76,10 +89,42 @@ jobs:
           python3 tools/ci/release_metadata.py "build/libs/$jar" \
             --checksums build/libs/SHA256SUMS.txt
 
+      - name: Дождаться CI и игрового аудита перед автоматической публикацией
+        if: github.event_name == 'push' && github.ref_type == 'branch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ github.sha }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          set -euo pipefail
+          for attempt in {1..60}; do
+            state="$(gh api "repos/$GITHUB_REPOSITORY/commits/$SOURCE_SHA/check-runs?per_page=100" --jq '
+              [.check_runs[] | select(.name == "ci-ok" or .name == "Live spell audit + per-class video")]
+              | group_by(.name) | map(max_by(.id))
+              | if any(.[]; .status == "completed" and .conclusion != "success") then "failure"
+                elif length == 2 and all(.[]; .conclusion == "success") then "success"
+                else "pending" end')"
+            echo "Release checks ($attempt/60): $state"
+            if [ "$state" = success ]; then
+              ahead="$(gh api "repos/$GITHUB_REPOSITORY/compare/$DEFAULT_BRANCH...$SOURCE_SHA" --jq .ahead_by)"
+              if [ "$ahead" = 0 ]; then
+                exit 0
+              fi
+              echo 'Проверки пройдены; ожидаю включения этого коммита в основную ветку.'
+            fi
+            if [ "$state" = failure ]; then
+              echo '::error::CI или игровой аудит не прошёл; публикация отменена'
+              exit 1
+            fi
+            sleep 15
+          done
+          echo '::error::Нет успешных CI и игрового аудита этого коммита за 15 минут'
+          exit 1
+
       - name: Опубликовать релиз без перезаписи существующих файлов
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ inputs.tag || github.ref_name }}
+          TAG: ${{ steps.target.outputs.tag }}
           JAR: ${{ steps.metadata.outputs.jar }}
         run: |
           set -euo pipefail
