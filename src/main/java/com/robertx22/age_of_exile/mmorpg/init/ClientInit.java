@@ -71,5 +71,6 @@ public class ClientInit implements net.fabricmc.api.ClientModInitializer {
         ClientSetup.setup();
         KeybindsRegister.register();
         Client.register();
+        com.robertx22.age_of_exile.ascension.fx.TideGlowParticle.registerFactory();
     }
 }

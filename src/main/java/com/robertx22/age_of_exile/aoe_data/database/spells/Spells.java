@@ -26,5 +26,8 @@ public class Spells implements ExileRegistryInit {
         new HolySpells().registerAll();
         new RangerSpells().registerAll();
 
+        // Вознесённые классы (50+): ультимативные навыки вне школьной системы
+        new com.robertx22.age_of_exile.ascension.spells.TideDancerSpells().registerAll();
+
     }
 }

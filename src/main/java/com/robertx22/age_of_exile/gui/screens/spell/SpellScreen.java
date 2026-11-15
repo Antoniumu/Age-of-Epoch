@@ -88,6 +88,14 @@ public class SpellScreen extends BaseScreen implements INamedScreen, ILeftRight 
             addButton(new LeftRightButton(this, guiLeft + 100 - LeftRightButton.xSize - 5, guiTop + 25 - LeftRightButton.ySize / 2, true));
             addButton(new LeftRightButton(this, guiLeft + 150 + 5, guiTop + 25 - LeftRightButton.ySize / 2, false));
 
+            // ✦ Классы — переход к Вознесённым классам через анимированный водяной разрыв
+            addButton(new Button(guiLeft + sizeX - 74, guiTop + 6, 68, 14,
+                net.minecraft.network.chat.Component.literal("✦ "
+                    .concat(com.robertx22.age_of_exile.uncommon.localization.Words.Ascension.translate())),
+                b -> Minecraft.getInstance().gui
+                    .setScreen(new com.robertx22.age_of_exile.ascension.gui.AscensionTransitionScreen(
+                        new com.robertx22.age_of_exile.ascension.gui.AscendedClassesScreen(), guiLeft + sizeX - 40, guiTop + 13))));
+
             currentSchool().spells.entrySet()
                 .forEach(e -> {
 
