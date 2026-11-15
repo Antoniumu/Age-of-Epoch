@@ -155,6 +155,13 @@ gh workflow run release.yml --ref main \
 совпадать с тегом. Для загрузки этого же готового тестового JAR на CurseForge
 есть отдельный ручной workflow — см. [`CURSEFORGE.md`](CURSEFORGE.md).
 
+Для запроса 5.2.6-beta.1 также разрешён ограниченный запуск от push файла
+`release.yml` **только** в ветке `arena/ad2df10f-age-of-epoch`: интеграция Arena
+не имеет Actions write для `workflow_dispatch`. Этот путь принимает лишь beta,
+прикрепляет сборку к точному SHA события и перед публикацией ждёт успешных
+`ci-ok`, полного игрового аудита и включения этого коммита в основную ветку.
+Если проверка падает или условия не выполнены за 15 минут, файл не публикуется.
+
 ## Branch protection (рекомендуется)
 
 Settings → Branches → правило для `main` → *Require status checks to pass* →

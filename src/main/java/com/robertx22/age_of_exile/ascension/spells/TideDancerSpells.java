@@ -150,6 +150,7 @@ public class TideDancerSpells implements ExileRegistryInit {
                 .onCast(TideFx.cast(TideShapeAction.Shape.PRISM_GEYSER, 150, 1.2D, 2.0D))
                 .onCast(TideFx.cast(TideShapeAction.Shape.HELIX_DOUBLE, 110, 0.9D, 2.4D))
                 .onCast(TideFx.castBurst(TideShapeAction.Shape.SPHERE_SHELL, 70, 1.2D, 1.0D, 0.7D))
+                .onCast(PartBuilder.aoeParticles(ParticleTypes.SPLASH, 50D, 1.8D))
                 .build(),
             AscensionClasses.MAX_RANK);
 

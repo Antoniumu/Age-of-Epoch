@@ -14,10 +14,10 @@ class TestAscension(AuditCase, unittest.TestCase):
     def test_every_effect_context_has_a_registered_vanilla_slot(self):
         potions = (BASE / "mmorpg/registers/common/SlashPotions.java").read_text()
         registered = set()
-        for limit, kind in re.findall(
-                r"for \(int i = 0; i < (\d+); i\+\+\)\s*\{\s*"
-                r"registerExileEffect\(EffectType\.(\w+), i\);", potions):
-            registered.update((kind, n) for n in range(int(limit)))
+        for start, limit, body in re.findall(
+                r"for \(int i = (\d+); i < (\d+); i\+\+\)\s*\{([^{}]*)\}", potions):
+            for kind in re.findall(r"registerExileEffect\(EffectType\.(\w+), i\)", body):
+                registered.update((kind, n) for n in range(int(start), int(limit)))
         registered.update((kind, int(number)) for kind, number in re.findall(
             r"registerExileEffect\(EffectType\.(\w+), (\d+)\)", potions))
         self.assertGreater(len(registered), 50, "Could not read legacy potion slot registration")
