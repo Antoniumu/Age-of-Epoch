@@ -60,6 +60,17 @@ public class SlashPotions {
             exileEffectsMap.put(key, Def.potion(key, () -> eff));
         }
 
+        // Вознесённые классы (50+): эффекты Танцора Прилива живут на номерах 80+,
+        // без этого слота getStatusEffect() бросает и эффект не накладывается.
+        for (int i = 80; i < 84; i++) {
+            for (EffectType type : new EffectType[]{EffectType.beneficial, EffectType.negative}) {
+                String key = ExileStatusEffect.getIdPath(type, i);
+                ExileStatusEffect eff = new ExileStatusEffect(type, i);
+
+                exileEffectsMap.put(key, Def.potion(key, () -> eff));
+            }
+        }
+
         Def.potion(FOOD_HP.getPath(), () -> HealthRegenFoodEffect.INSTANCE);
         Def.potion(FOOD_MANA.getPath(), () -> ManaRegenFoodEffect.INSTANCE);
 
