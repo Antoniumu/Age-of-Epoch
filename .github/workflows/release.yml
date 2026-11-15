@@ -1,22 +1,21 @@
 name: Release
 
-# Собирает мод и создаёт GitHub Release, когда в репозиторий пушат тег вида v5.0.0.
-#   git tag v5.0.0 && git push origin v5.0.0
-#
-# Тег обязан совпадать с mod_version в gradle.properties — иначе job упадёт,
-# чтобы релиз не разошёлся с версией внутри jar.
-
+# Tags must match mod_version. A manual run may create a new tag at source_ref;
+# an existing tag must already point at that exact source commit.
 on:
   push:
     tags: ['v*']
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Тег, который релизим (например v5.0.0)'
+        description: 'Тег релиза (например v5.2.6-beta.1)'
         required: true
+      source_ref:
+        description: 'Коммит/ветка для НОВОГО тега; пусто — собрать существующий тег'
+        required: false
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release-${{ inputs.tag || github.ref_name }}
   cancel-in-progress: false
 
 permissions:
@@ -33,22 +32,31 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ inputs.tag || github.ref }}
+          ref: ${{ inputs.source_ref || inputs.tag || github.ref }}
           fetch-depth: 0
 
-      - uses: ./.github/actions/setup-build-env
-
-      - name: Тег совпадает с mod_version
+      - name: Тег и исходники совпадают с mod_version
         env:
           TAG: ${{ inputs.tag || github.ref_name }}
         run: |
-          tag_version="${TAG#v}"
-          mod_version="$(sed -nE 's/^mod_version=(.*)$/\1/p' gradle.properties | tr -d '[:space:]')"
-          echo "тег: $tag_version, mod_version: $mod_version"
-          if [ "$tag_version" != "$mod_version" ]; then
-            echo "::error::Тег $TAG не совпадает с mod_version=$mod_version в gradle.properties"
+          set -euo pipefail
+          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo '::error::Ожидался тег версии vX.Y.Z или vX.Y.Z-beta.N'
             exit 1
           fi
+          mod_version="$(sed -nE 's/^mod_version=(.*)$/\1/p' gradle.properties | tr -d '[:space:]')"
+          if [ "${TAG#v}" != "$mod_version" ]; then
+            echo "::error::Тег $TAG не совпадает с mod_version=$mod_version"
+            exit 1
+          fi
+          if git show-ref --verify --quiet "refs/tags/$TAG"; then
+            if [ "$(git rev-parse "refs/tags/$TAG^{commit}")" != "$(git rev-parse HEAD)" ]; then
+              echo '::error::Существующий тег указывает на другой коммит; перезапись запрещена'
+              exit 1
+            fi
+          fi
+
+      - uses: ./.github/actions/setup-build-env
 
       - name: ./gradlew build
         run: ./gradlew build --stacktrace --no-problems-report
@@ -56,30 +64,47 @@ jobs:
       - name: Проверить содержимое jar
         run: bash tools/ci/check-jar.sh build/libs
 
-      - name: Опубликовать релиз
+      - name: Контрольные суммы и проверка версии внутри JAR
+        id: metadata
+        env:
+          TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          set -euo pipefail
+          jar="Age-of-Epoch-${TAG#v}.jar"
+          sources="Age-of-Epoch-${TAG#v}-sources.jar"
+          (cd build/libs && sha256sum "$jar" "$sources" > SHA256SUMS.txt)
+          python3 tools/ci/release_metadata.py "build/libs/$jar" \
+            --checksums build/libs/SHA256SUMS.txt
+
+      - name: Опубликовать релиз без перезаписи существующих файлов
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ inputs.tag || github.ref_name }}
+          JAR: ${{ steps.metadata.outputs.jar }}
         run: |
-          # Файлы: основной jar и jar с исходниками (sources удобно класть в IDE).
-          # dev-jar для запуска из IDE игроку не нужен и только путает при
-          # скачивании, поэтому в релиз он не попадает.
-          shopt -s nullglob
-          files=()
-          for jar in build/libs/*.jar; do
-            case "$jar" in
-              *-dev.jar) continue ;;
-            esac
-            files+=("$jar")
-          done
-          if [ ${#files[@]} -eq 0 ]; then
-            echo '::error::В build/libs нет ни одного jar для релиза'
-            exit 1
+          set -euo pipefail
+          notes=(--generate-notes)
+          if [ -f "docs/releases/${TAG#v}.md" ]; then
+            notes=(--notes-file "docs/releases/${TAG#v}.md")
           fi
-          printf 'В релиз пойдёт:\n'
-          printf '  %s\n' "${files[@]}"
-
-          gh release create "$TAG" "${files[@]}" \
+          flags=()
+          if [[ "$TAG" == *-* ]]; then
+            flags=(--prerelease --latest=false)
+          fi
+          gh release create "$TAG" \
+            "build/libs/$JAR" \
+            "build/libs/${JAR%.jar}-sources.jar" \
+            build/libs/SHA256SUMS.txt \
+            --target "$(git rev-parse HEAD)" \
             --title "Age of Epoch $TAG" \
-            --generate-notes \
-            --verify-tag
+            "${notes[@]}" "${flags[@]}"
+          {
+            echo "### Age of Epoch $TAG"
+            echo
+            echo "[Готовый релиз](https://github.com/$GITHUB_REPOSITORY/releases/tag/$TAG)"
+            echo
+            if [[ "$TAG" == *-* ]]; then
+              echo 'Тестовая предварительная версия, не latest stable.'
+            fi
+            echo 'JAR, исходники и SHA256SUMS.txt приложены к релизу.'
+          } >> "$GITHUB_STEP_SUMMARY"

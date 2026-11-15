@@ -74,6 +74,7 @@ public class RPGPlayerData implements ICommonPlayerCap {
     private static final String ACTIVE_GUIDE = "active_guide";
     private static final String QUEST_BOOK = "quest_book";
     private static final String TPA_DATA = "tpa";
+    private static final String ASCENSION = "ascension";
 
     Player player;
 
@@ -88,6 +89,7 @@ public class RPGPlayerData implements ICommonPlayerCap {
     public QuestBookData questBook = new QuestBookData();
     public com.robertx22.age_of_exile.airship.AirshipData airship = new com.robertx22.age_of_exile.airship.AirshipData();
     public TpaData tpa = new TpaData();
+    public com.robertx22.age_of_exile.ascension.AscensionData ascension = new com.robertx22.age_of_exile.ascension.AscensionData();
 
     /**
      * id выбранного гайда (см. guides/GuideData). Пустая строка = гайд не выбран.
@@ -129,6 +131,7 @@ public class RPGPlayerData implements ICommonPlayerCap {
         LoadSave.Save(scalingDifficulty, nbt, DIFF);
         LoadSave.Save(questBook, nbt, QUEST_BOOK);
         LoadSave.Save(airship, nbt, "airship_campaign");
+        LoadSave.Save(ascension, nbt, ASCENSION);
         nbt.put(TPA_DATA, tpa.saveToNBT());
         nbt.putString(ACTIVE_GUIDE, active_guide == null ? "" : active_guide);
 
@@ -150,6 +153,7 @@ public class RPGPlayerData implements ICommonPlayerCap {
         this.airship = loadOrBlank(com.robertx22.age_of_exile.airship.AirshipData.class,
             new com.robertx22.age_of_exile.airship.AirshipData(), nbt, "airship_campaign",
             new com.robertx22.age_of_exile.airship.AirshipData());
+        this.ascension = loadOrBlank(com.robertx22.age_of_exile.ascension.AscensionData.class, new com.robertx22.age_of_exile.ascension.AscensionData(), nbt, ASCENSION, new com.robertx22.age_of_exile.ascension.AscensionData());
         this.tpa = new TpaData();
         this.tpa.loadFromNBT(nbt.getCompoundOrEmpty(TPA_DATA));
         this.active_guide = nbt.getStringOr(ACTIVE_GUIDE, "");

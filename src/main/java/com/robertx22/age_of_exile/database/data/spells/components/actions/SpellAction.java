@@ -53,6 +53,10 @@ public abstract class SpellAction extends BaseFieldNeeder implements IGUID {
     public static AggroAction AGGRO = of(new AggroAction());
     public static SummonAtTargetFeet SUMMON_AT_FEET = of(new SummonAtTargetFeet());
     public static TeleportTargetToSourceAction TP_TARGET_TO_SELF = of(new TeleportTargetToSourceAction());
+    /**
+     * 3D-фигуры Вознесённых классов (параметрические скульптуры из частиц tide_glow).
+     */
+    public static com.robertx22.age_of_exile.ascension.fx.TideShapeAction TIDE_SHAPE = of(new com.robertx22.age_of_exile.ascension.fx.TideShapeAction());
 
     private static <T extends SpellAction> T of(T s) {
         MAP.put(s.GUID(), s);

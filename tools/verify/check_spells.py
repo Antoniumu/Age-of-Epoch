@@ -34,6 +34,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SPELLS_JAVA = os.path.join(ROOT, "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells")
+ASCENSION_JAVA = os.path.join(ROOT, "src/main/java/com/robertx22/age_of_exile/ascension")
 SCHOOLS_JAVA = os.path.join(
     ROOT, "src/main/java/com/robertx22/age_of_exile/aoe_data/database/spell_schools/SpellSchoolsAdder.java")
 TEXTURES = os.path.join(ROOT, "src/main/resources/assets/mmorpg/textures/gui/spells")
@@ -57,6 +58,7 @@ MARKERS = {
         r"\bParticle\b", r"ParticleTypes\.", r"particleOnTick", r"aoeParticles",
         r"groundParticles", r"groundEdgeParticles", r"swordSweepParticles",
         r"nova\(", r"\.particle\(", r"ParticlesInRadius", r"PARTICLES_IN_RADIUS",
+        r"TideFx\.", r"TIDE_SHAPE",
     ],
     "sound": [r"playSound", r"PLAY_SOUND", r"SlashSounds\."],
     "damage": [
@@ -95,10 +97,11 @@ def read(path):
 
 def java_files():
     files = []
-    for root, _, names in os.walk(SPELLS_JAVA):
-        for name in sorted(names):
-            if name.endswith(".java"):
-                files.append(os.path.join(root, name))
+    for source in (SPELLS_JAVA, ASCENSION_JAVA):
+        for root, _, names in os.walk(source):
+            for name in sorted(names):
+                if name.endswith(".java"):
+                    files.append(os.path.join(root, name))
     return files
 
 
@@ -303,9 +306,9 @@ def resolve_id(id_expr, path, consts_by_file, const_index):
     name = id_expr.strip()
     # Class.CONST
     if "." in name:
-        cls, field = name.split(".")[-2], name.split(".")[-1]
+        qualifiers, field = name.split(".")[:-1], name.split(".")[-1]
         for other_path, (other_cls, table) in consts_by_file.items():
-            if other_cls == cls and field in table:
+            if other_cls in qualifiers and field in table:
                 return table[field], "const"
         return None, "unresolved"
     cls, table = consts_by_file.get(path, ("", {}))
@@ -505,8 +508,23 @@ def client_visual_ids():
     return ids
 
 
+def collect_ascension_skills():
+    """Only skills actually listed in a class's progression ORDER are learnable."""
+    path = os.path.join(ASCENSION_JAVA, "AscensionClasses.java")
+    text = strip_comments(read(path))
+    by_file, index = constants(java_files())
+    skills = set()
+    for match in re.finditer(r"List<String>\s+ORDER\s*=\s*Arrays\.asList\(([^)]*)\)", text):
+        for ref in split_args(match.group(1)):
+            spell_id, _ = resolve_id(ref, path, by_file, index)
+            if spell_id:
+                skills.add(spell_id)
+    return skills
+
+
 def audit():
     spells, unresolved = collect_spells()
+    ascension = collect_ascension_skills()
     client_visuals = client_visual_ids()
     schools = collect_schools()
     registry = registry_ids()
@@ -529,6 +547,7 @@ def audit():
             "id": spell_id,
             "file": entry["file"],
             "schools": sorted(in_school.get(spell_id, [])),
+            "ascension": spell_id in ascension,
             "channels": {k: channels[k] for k in channels if channels[k]},
             "problems": [],
             "warnings": [],
@@ -548,7 +567,7 @@ def audit():
             row["problems"].append("нет описания (manualDesc)")
         if not icon_exists(spell_id):
             row["problems"].append("нет иконки " + spell_id + ".png")
-        if not service and spell_id not in in_school:
+        if not service and spell_id not in in_school and spell_id not in ascension:
             row["problems"].append("не входит ни в одну школу — игрок не может выучить")
         if len(row["schools"]) > 1:
             row["warnings"].append("в нескольких школах: " + ", ".join(row["schools"]))
@@ -578,6 +597,9 @@ def audit():
                 errors.append("%s: y=%d вне lvl_reqs (0..6) у %s" % (school, node["y"], node["id"]))
             if node["x"] > 10:
                 errors.append("%s: x=%d вне сетки (0..10) у %s" % (school, node["x"], node["id"]))
+
+    for spell_id in sorted(ascension - set(spells)):
+        errors.append("Вознесение: неизвестное заклинание " + spell_id)
 
     for file_name, expr in unresolved:
         warnings.append("%s: не удалось разобрать id билдера %s" % (file_name, expr))
@@ -639,10 +661,15 @@ def to_markdown(result):
                 mark("effect"), mark("movement"), mark("particles"), mark("sound")))
         lines.append("")
 
-    lines.append("## Вне школ")
+    lines.append("## Вознесённые классы")
+    lines.append("")
+    lines.append(", ".join("`%s`" % r["id"] for r in rows if r.get("ascension")) or "нет")
+    lines.append("")
+    lines.append("## Вне школ и классов")
     lines.append("")
     # Служебные умения (test_command и т.п.) намеренно не в дереве школ.
-    outside = [r["id"] for r in rows if not r["schools"] and r["id"] not in SERVICE_SPELLS]
+    outside = [r["id"] for r in rows if not r["schools"] and not r.get("ascension")
+               and r["id"] not in SERVICE_SPELLS]
     lines.append(", ".join("`%s`" % x for x in outside) if outside else "нет")
     lines.append("")
     return "\n".join(lines)

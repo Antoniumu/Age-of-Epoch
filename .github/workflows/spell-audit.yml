@@ -25,6 +25,8 @@ on:
   pull_request:
     paths:
       - 'src/main/java/com/robertx22/age_of_exile/aoe_data/database/spells/**'
+      - 'src/main/java/com/robertx22/age_of_exile/ascension/**'
+      - 'src/main/java/com/robertx22/age_of_exile/mmorpg/registers/common/SlashPotions.java'
       - 'src/main/java/com/robertx22/age_of_exile/database/data/spells/**'
       - 'src/main/java/com/robertx22/age_of_exile/aoe_data/database/spell_schools/**'
       - 'src/main/java/com/robertx22/age_of_exile/uncommon/testing/**'

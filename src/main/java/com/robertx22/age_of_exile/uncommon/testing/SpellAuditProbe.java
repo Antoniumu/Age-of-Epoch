@@ -774,7 +774,8 @@ public final class SpellAuditProbe {
                             // наложенных эффектов.
                             result.utility = true;
                         } else if (matches(type, SpellAction.PARTICLES_IN_RADIUS)
-                            || matches(type, SpellAction.SWORD_SWEEP_PARTICLES)) {
+                            || matches(type, SpellAction.SWORD_SWEEP_PARTICLES)
+                            || matches(type, SpellAction.TIDE_SHAPE)) {
                             result.particles = true;
                         } else if (matches(type, SpellAction.PLAY_SOUND)
                             || matches(type, SpellAction.PLAY_SOUND_PER_TARGET)) {
