@@ -48,32 +48,29 @@ public class SlashPotions {
         });
 
         for (int i = 0; i < 20; i++) {
-            String key = ExileStatusEffect.getIdPath(EffectType.negative, i);
-            ExileStatusEffect eff = new ExileStatusEffect(EffectType.negative, i);
-
-            exileEffectsMap.put(key, Def.potion(key, () -> eff));
+            registerExileEffect(EffectType.negative, i);
         }
         for (int i = 0; i < 40; i++) {
-            String key = ExileStatusEffect.getIdPath(EffectType.beneficial, i);
-            ExileStatusEffect eff = new ExileStatusEffect(EffectType.beneficial, i);
-
-            exileEffectsMap.put(key, Def.potion(key, () -> eff));
+            registerExileEffect(EffectType.beneficial, i);
         }
 
-        // Вознесённые классы (50+): эффекты Танцора Прилива живут на номерах 80+,
-        // без этого слота getStatusEffect() бросает и эффект не накладывается.
+        // Ascension reserves 80..83 for both types (PR #134). Register before
+        // the vanilla registry freezes, not just in the JSON-backed ExileDB.
         for (int i = 80; i < 84; i++) {
-            for (EffectType type : new EffectType[]{EffectType.beneficial, EffectType.negative}) {
-                String key = ExileStatusEffect.getIdPath(type, i);
-                ExileStatusEffect eff = new ExileStatusEffect(type, i);
-
-                exileEffectsMap.put(key, Def.potion(key, () -> eff));
-            }
+            registerExileEffect(EffectType.beneficial, i);
+            registerExileEffect(EffectType.negative, i);
         }
 
         Def.potion(FOOD_HP.getPath(), () -> HealthRegenFoodEffect.INSTANCE);
         Def.potion(FOOD_MANA.getPath(), () -> ManaRegenFoodEffect.INSTANCE);
 
+    }
+
+    private static void registerExileEffect(EffectType type, int numericId) {
+        String key = ExileStatusEffect.getIdPath(type, numericId);
+        Preconditions.checkArgument(!exileEffectsMap.containsKey(key), "Duplicate effect: " + key);
+        ExileStatusEffect effect = new ExileStatusEffect(type, numericId);
+        exileEffectsMap.put(key, Def.potion(key, () -> effect));
     }
 
 }

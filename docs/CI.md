@@ -10,7 +10,8 @@
 |---|---|
 | `.github/workflows/ci.yml` | Основной прогон: PR, push в `main`, ручной запуск, раз в неделю по расписанию |
 | `.github/workflows/audit.yml` | **Делегирование аудита**: один job матрицы на каждый `tools/audit/test_*.py`, отчёты артефактами, финальная агрегация. Вызывается из `ci.yml` |
-| `.github/workflows/release.yml` | Собирает и публикует GitHub Release по тегу `v*` |
+| `.github/workflows/release.yml` | Собирает GitHub Release по тегу `v*` или вручную; prerelease для тестовых версий, SHA-256 файлов |
+| `.github/workflows/publish-curseforge.yml` | Вручную загружает проверенный готовый тестовый JAR на CurseForge; см. [`CURSEFORGE.md`](CURSEFORGE.md) |
 | `.github/actions/setup-build-env/action.yml` | JDK 25 (Temurin) + Gradle + кэш; общий шаг для обоих workflow |
 | `tools/audit/run_audit.py` | Запуск одного suite-а или всех сразу; пишет JSON, JUnit XML и лог |
 | `tools/audit/summarize_reports.py` | Сводит отчёты матрицы и проверяет, что **все** suite-ы отчитались |
@@ -129,15 +130,37 @@ git push origin v5.0.0
 ```
 
 Workflow `Release` соберёт jar, сверит тег с `mod_version` (несовпадение = ошибка),
-прогонит проверку содержимого и создаст GitHub Release с автоматическими release notes
-(`gh release create --generate-notes`) и приложенными jar-ами — обычным и `-sources`.
+прогонит проверку содержимого и версии внутри JAR. К GitHub Release прикладываются
+игровой JAR, `-sources.jar` и `SHA256SUMS.txt`. Заметки берутся из
+`docs/releases/<версия>.md`, если файл существует, иначе генерируются GitHub.
 Секретов для этого не нужно: используется встроенный `GITHUB_TOKEN`.
 
-Ручной релиз без тега (например, пересобрать существующий):
+Версии с суффиксом (`-beta.1` и т. п.) публикуются как **prerelease** и не
+становятся latest stable. Существующие теги и файлы релиза не перезаписываются.
+
+Ручная сборка уже существующего тега, для которого ещё нет GitHub Release:
 
 ```bash
 gh workflow run release.yml -f tag=v5.0.0
 ```
+
+Создать новый тег и тестовый релиз на конкретном проверенном коммите:
+
+```bash
+gh workflow run release.yml --ref main \
+  -f tag=v5.2.6-beta.1 -f source_ref=FULL_COMMIT_SHA
+```
+
+`source_ref` нужен только для нового тега; версия в выбранных исходниках обязана
+совпадать с тегом. Для загрузки этого же готового тестового JAR на CurseForge
+есть отдельный ручной workflow — см. [`CURSEFORGE.md`](CURSEFORGE.md).
+
+Для запроса 5.2.6-beta.1 также разрешён ограниченный запуск от push файла
+`release.yml` **только** в ветке `arena/ad2df10f-age-of-epoch`: интеграция Arena
+не имеет Actions write для `workflow_dispatch`. Этот путь принимает лишь beta,
+прикрепляет сборку к точному SHA события и перед публикацией ждёт успешных
+`ci-ok`, полного игрового аудита и включения этого коммита в основную ветку.
+Если проверка падает или условия не выполнены за 15 минут, файл не публикуется.
 
 ## Branch protection (рекомендуется)
 
@@ -206,6 +229,8 @@ Loom/Minecraft — повторная сборка быстрее первой �
 * **Игру по-настоящему.** Smoke-тест доказывает только то, что мод грузится и
   доходит до меню: мир, бой, GUI и рендер требуют ручной проверки.
   Известные ограничения порта — в [`BUILD-REPORT.md`](BUILD-REPORT.md) §4.
-* **Modrinth/CurseForge.** Публикации нет намеренно: нужны project id и токен,
-  а формат загрузки у них меняется чаще, чем хочется. Когда понадобится —
-  это отдельный gated-шаг в `release.yml` (`if: secrets.MODRINTH_TOKEN != ''`).
+* **Modrinth.** Публикация не настроена.
+* **CurseForge.** Готовый тестовый JAR можно отправить отдельным ручным workflow
+  `publish-curseforge.yml`; нужны существующий Project ID и секрет
+  `CURSEFORGE_API_TOKEN`. Загрузка и модерация — разные этапы. Подробности и
+  ограничения — в [`CURSEFORGE.md`](CURSEFORGE.md).

@@ -1,26 +1,29 @@
 name: Release
 
-# Собирает мод и создаёт GitHub Release, когда в репозиторий пушат тег вида v5.0.0.
-#   git tag v5.0.0 && git push origin v5.0.0
-#
-# Тег обязан совпадать с mod_version в gradle.properties — иначе job упадёт,
-# чтобы релиз не разошёлся с версией внутри jar.
-
+# Tags must match mod_version. A manual run may create a new tag at source_ref;
+# an existing tag must already point at that exact source commit.
 on:
   push:
     tags: ['v*']
+    # Branch-scoped launch for this requested beta when Actions dispatch is unavailable.
+    branches: ['arena/ad2df10f-age-of-epoch']
+    paths: ['.github/workflows/release.yml']
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Тег, который релизим (например v5.0.0)'
+        description: 'Тег релиза (например v5.2.6-beta.1)'
         required: true
+      source_ref:
+        description: 'Коммит/ветка для НОВОГО тега; пусто — собрать существующий тег'
+        required: false
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release-${{ inputs.tag || github.ref_name }}
   cancel-in-progress: false
 
 permissions:
   contents: write
+  checks: read
 
 env:
   GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx4G'
@@ -33,22 +36,40 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ inputs.tag || github.ref }}
+          ref: ${{ inputs.source_ref || inputs.tag || github.sha }}
           fetch-depth: 0
 
-      - uses: ./.github/actions/setup-build-env
-
-      - name: Тег совпадает с mod_version
+      - name: Тег и исходники совпадают с mod_version
+        id: target
         env:
-          TAG: ${{ inputs.tag || github.ref_name }}
+          TAG: ${{ inputs.tag || (github.ref_type == 'tag' && github.ref_name) || '' }}
         run: |
-          tag_version="${TAG#v}"
+          set -euo pipefail
           mod_version="$(sed -nE 's/^mod_version=(.*)$/\1/p' gradle.properties | tr -d '[:space:]')"
-          echo "тег: $tag_version, mod_version: $mod_version"
-          if [ "$tag_version" != "$mod_version" ]; then
-            echo "::error::Тег $TAG не совпадает с mod_version=$mod_version в gradle.properties"
+          if [ -z "$TAG" ]; then
+            TAG="v$mod_version"
+            if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-beta\.[0-9]+$ ]]; then
+              echo '::error::Автоматический запуск из ветки разрешён только для beta'
+              exit 1
+            fi
+          fi
+          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo '::error::Ожидался тег версии vX.Y.Z или vX.Y.Z-beta.N'
             exit 1
           fi
+          if [ "${TAG#v}" != "$mod_version" ]; then
+            echo "::error::Тег $TAG не совпадает с mod_version=$mod_version"
+            exit 1
+          fi
+          if git show-ref --verify --quiet "refs/tags/$TAG"; then
+            if [ "$(git rev-parse "refs/tags/$TAG^{commit}")" != "$(git rev-parse HEAD)" ]; then
+              echo '::error::Существующий тег указывает на другой коммит; перезапись запрещена'
+              exit 1
+            fi
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - uses: ./.github/actions/setup-build-env
 
       - name: ./gradlew build
         run: ./gradlew build --stacktrace --no-problems-report
@@ -56,30 +77,79 @@ jobs:
       - name: Проверить содержимое jar
         run: bash tools/ci/check-jar.sh build/libs
 
-      - name: Опубликовать релиз
+      - name: Контрольные суммы и проверка версии внутри JAR
+        id: metadata
+        env:
+          TAG: ${{ steps.target.outputs.tag }}
+        run: |
+          set -euo pipefail
+          jar="Age-of-Epoch-${TAG#v}.jar"
+          sources="Age-of-Epoch-${TAG#v}-sources.jar"
+          (cd build/libs && sha256sum "$jar" "$sources" > SHA256SUMS.txt)
+          python3 tools/ci/release_metadata.py "build/libs/$jar" \
+            --checksums build/libs/SHA256SUMS.txt
+
+      - name: Дождаться CI и игрового аудита перед автоматической публикацией
+        if: github.event_name == 'push' && github.ref_type == 'branch'
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ inputs.tag || github.ref_name }}
+          SOURCE_SHA: ${{ github.sha }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
-          # Файлы: основной jar и jar с исходниками (sources удобно класть в IDE).
-          # dev-jar для запуска из IDE игроку не нужен и только путает при
-          # скачивании, поэтому в релиз он не попадает.
-          shopt -s nullglob
-          files=()
-          for jar in build/libs/*.jar; do
-            case "$jar" in
-              *-dev.jar) continue ;;
-            esac
-            files+=("$jar")
+          set -euo pipefail
+          for attempt in {1..60}; do
+            state="$(gh api "repos/$GITHUB_REPOSITORY/commits/$SOURCE_SHA/check-runs?per_page=100" --jq '
+              [.check_runs[] | select(.name == "ci-ok" or .name == "Live spell audit + per-class video")]
+              | group_by(.name) | map(max_by(.id))
+              | if any(.[]; .status == "completed" and .conclusion != "success") then "failure"
+                elif length == 2 and all(.[]; .conclusion == "success") then "success"
+                else "pending" end')"
+            echo "Release checks ($attempt/60): $state"
+            if [ "$state" = success ]; then
+              ahead="$(gh api "repos/$GITHUB_REPOSITORY/compare/$DEFAULT_BRANCH...$SOURCE_SHA" --jq .ahead_by)"
+              if [ "$ahead" = 0 ]; then
+                exit 0
+              fi
+              echo 'Проверки пройдены; ожидаю включения этого коммита в основную ветку.'
+            fi
+            if [ "$state" = failure ]; then
+              echo '::error::CI или игровой аудит не прошёл; публикация отменена'
+              exit 1
+            fi
+            sleep 15
           done
-          if [ ${#files[@]} -eq 0 ]; then
-            echo '::error::В build/libs нет ни одного jar для релиза'
-            exit 1
-          fi
-          printf 'В релиз пойдёт:\n'
-          printf '  %s\n' "${files[@]}"
+          echo '::error::Нет успешных CI и игрового аудита этого коммита за 15 минут'
+          exit 1
 
-          gh release create "$TAG" "${files[@]}" \
+      - name: Опубликовать релиз без перезаписи существующих файлов
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.target.outputs.tag }}
+          JAR: ${{ steps.metadata.outputs.jar }}
+        run: |
+          set -euo pipefail
+          notes=(--generate-notes)
+          if [ -f "docs/releases/${TAG#v}.md" ]; then
+            notes=(--notes-file "docs/releases/${TAG#v}.md")
+          fi
+          flags=()
+          if [[ "$TAG" == *-* ]]; then
+            flags=(--prerelease --latest=false)
+          fi
+          gh release create "$TAG" \
+            "build/libs/$JAR" \
+            "build/libs/${JAR%.jar}-sources.jar" \
+            build/libs/SHA256SUMS.txt \
+            --target "$(git rev-parse HEAD)" \
             --title "Age of Epoch $TAG" \
-            --generate-notes \
-            --verify-tag
+            "${notes[@]}" "${flags[@]}"
+          {
+            echo "### Age of Epoch $TAG"
+            echo
+            echo "[Готовый релиз](https://github.com/$GITHUB_REPOSITORY/releases/tag/$TAG)"
+            echo
+            if [[ "$TAG" == *-* ]]; then
+              echo 'Тестовая предварительная версия, не latest stable.'
+            fi
+            echo 'JAR, исходники и SHA256SUMS.txt приложены к релизу.'
+          } >> "$GITHUB_STEP_SUMMARY"
