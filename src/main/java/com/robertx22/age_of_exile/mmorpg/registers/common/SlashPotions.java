@@ -48,21 +48,28 @@ public class SlashPotions {
         });
 
         for (int i = 0; i < 20; i++) {
-            String key = ExileStatusEffect.getIdPath(EffectType.negative, i);
-            ExileStatusEffect eff = new ExileStatusEffect(EffectType.negative, i);
-
-            exileEffectsMap.put(key, Def.potion(key, () -> eff));
+            registerExileEffect(EffectType.negative, i);
         }
         for (int i = 0; i < 40; i++) {
-            String key = ExileStatusEffect.getIdPath(EffectType.beneficial, i);
-            ExileStatusEffect eff = new ExileStatusEffect(EffectType.beneficial, i);
-
-            exileEffectsMap.put(key, Def.potion(key, () -> eff));
+            registerExileEffect(EffectType.beneficial, i);
         }
+
+        // TideEffects uses slots outside the legacy ranges. Register them before
+        // the vanilla registry freezes, not just in the JSON-backed ExileDB.
+        registerExileEffect(EffectType.negative, 80);
+        registerExileEffect(EffectType.beneficial, 80);
+        registerExileEffect(EffectType.beneficial, 81);
 
         Def.potion(FOOD_HP.getPath(), () -> HealthRegenFoodEffect.INSTANCE);
         Def.potion(FOOD_MANA.getPath(), () -> ManaRegenFoodEffect.INSTANCE);
 
+    }
+
+    private static void registerExileEffect(EffectType type, int numericId) {
+        String key = ExileStatusEffect.getIdPath(type, numericId);
+        Preconditions.checkArgument(!exileEffectsMap.containsKey(key), "Duplicate effect: " + key);
+        ExileStatusEffect effect = new ExileStatusEffect(type, numericId);
+        exileEffectsMap.put(key, Def.potion(key, () -> effect));
     }
 
 }
