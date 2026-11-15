@@ -1,0 +1,200 @@
+[15:19:35] DISPLAY=:99, сценарий professions.txt
+[15:19:35] жду окно: дисплей :99, X-сокеты: :99
+[15:19:54] дисплей клиента из /proc/4180/environ: :100 (был :99)
+[15:19:54] XAUTHORITY клиента: /tmp/xvfb-run.UYFOhI/Xauthority
+[15:20:00] окно 2097204 на :100: Minecraft* 26.3 | WINDOW=2097204 X=0 Y=152 WIDTH=1280 HEIGHT=720 SCREEN=0 | Map State: IsViewable
+[15:20:04] в логе найдено: [15:20:03] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/items.png-atlas
+[15:20:12] снимок 00-main-menu (окно 2097204, 709 КБ)
+[15:20:13] курсор 640,296
+[15:20:13] клик 640,296 (экран 640,448, кнопка 1)
+[15:20:18] снимок 01-world-list (окно 2097204, 456 КБ)
+[15:20:18] курсор 480,688
+[15:20:18] клик 480,688 (экран 480,840, кнопка 1)
+[15:20:23] снимок 02-create-world (окно 2097204, 471 КБ)
+[15:20:23] курсор 480,688
+[15:20:23] клик 480,688 (экран 480,840, кнопка 1)
+[15:21:09] снимок 03-in-world (окно 2097204, 423 КБ)
+[15:21:09] shell[mkdir -p run/e2e] -> 0
+    
+[15:21:10] shell[VIDEO_OUT=run/e2e/profession-video.mp4 bash tools/e2e/spell-video.sh start] -> 0
+    окно клиента: 1280x720+0+152 на :100
+    запись пошла: run/e2e/profession-video.mp4 (48 байт)
+[15:21:12] записан файл-триггер run/aoe-profession-audit.flag: ${AOE_AUDIT_TARGET:-all}
+[15:21:12] флаг аудита профессий поставлен, жду given
+[15:21:14] в логе найдено: [15:21:12] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR given prof=alchemy tool=mmorpg:craft_tools/alchemy gear=no ings=3
+[15:21:14] клик 640,360 (экран 640,512, кнопка 3)
+[15:21:16] снимок alchemy-01-grid-empty (окно 2097204, 143 КБ)
+[15:21:16] клик 532,534 (экран 532,686, кнопка 1)
+[15:21:17] клик 706,190 (экран 706,342, кнопка 1)
+[15:21:17] снимок alchemy-02-slot-1 (окно 2097204, 132 КБ)
+[15:21:17] клик 568,418 (экран 568,570, кнопка 1)
+[15:21:18] клик 742,190 (экран 742,342, кнопка 1)
+[15:21:18] снимок alchemy-03-slot-2 (окно 2097204, 132 КБ)
+[15:21:18] клик 604,418 (экран 604,570, кнопка 1)
+[15:21:19] клик 778,190 (экран 778,342, кнопка 1)
+[15:21:19] снимок alchemy-04-slot-3 (окно 2097204, 127 КБ)
+[15:21:19] курсор 640,650
+[15:21:20] снимок alchemy-05-result-ready (окно 2097204, 144 КБ)
+[15:21:20] клик 746,318 (экран 746,470, кнопка 1)
+[15:21:20] снимок alchemy-06-result-taken (окно 2097204, 142 КБ)
+[15:21:21] клик 640,418 (экран 640,570, кнопка 1)
+[15:21:21] снимок alchemy-07-stored (окно 2097204, 139 КБ)
+[15:21:21] в логе найдено: [15:21:21] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR crafted prof=alchemy ok=true item=mmorpg:craft_result/alchemy/4 stats=3 exp_gain=true
+[15:21:21] курсор 640,418
+[15:21:22] снимок alchemy-08-tooltip (окно 2097204, 131 КБ)
+[15:21:22] клавиша Escape
+[15:21:23] снимок alchemy-09-closed (окно 2097204, 65 КБ)
+[15:21:23] записан файл-триггер run/aoe-profession-next.flag: go
+[15:21:24] в логе найдено: [15:21:23] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR given prof=inscribing tool=mmorpg:craft_tools/inscribing gear=no ings=3
+[15:21:24] клик 640,360 (экран 640,512, кнопка 3)
+[15:21:26] снимок inscribing-01-grid-empty (окно 2097204, 136 КБ)
+[15:21:26] клик 532,534 (экран 532,686, кнопка 1)
+[15:21:26] клик 706,190 (экран 706,342, кнопка 1)
+[15:21:27] снимок inscribing-02-slot-1 (окно 2097204, 125 КБ)
+[15:21:27] клик 568,418 (экран 568,570, кнопка 1)
+[15:21:27] клик 742,190 (экран 742,342, кнопка 1)
+[15:21:28] снимок inscribing-03-slot-2 (окно 2097204, 125 КБ)
+[15:21:28] клик 604,418 (экран 604,570, кнопка 1)
+[15:21:28] клик 778,190 (экран 778,342, кнопка 1)
+[15:21:29] снимок inscribing-04-slot-3 (окно 2097204, 122 КБ)
+[15:21:29] курсор 640,650
+[15:21:29] снимок inscribing-05-result-ready (окно 2097204, 137 КБ)
+[15:21:30] клик 746,318 (экран 746,470, кнопка 1)
+[15:21:30] снимок inscribing-06-result-taken (окно 2097204, 135 КБ)
+[15:21:30] клик 640,418 (экран 640,570, кнопка 1)
+[15:21:31] снимок inscribing-07-stored (окно 2097204, 133 КБ)
+[15:21:33] в логе найдено: [15:21:31] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR crafted prof=inscribing ok=true item=mmorpg:craft_result/inscribing/2 stats=2 exp_gain=true
+[15:21:33] курсор 640,418
+[15:21:34] снимок inscribing-08-tooltip (окно 2097204, 132 КБ)
+[15:21:34] клавиша Escape
+[15:21:35] снимок inscribing-09-closed (окно 2097204, 65 КБ)
+[15:21:35] записан файл-триггер run/aoe-profession-next.flag: go
+[15:21:35] в логе найдено: [15:21:35] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR given prof=cooking tool=mmorpg:craft_tools/cooking gear=no ings=3
+[15:21:36] клик 640,360 (экран 640,512, кнопка 3)
+[15:21:37] снимок cooking-01-grid-empty (окно 2097204, 133 КБ)
+[15:21:38] клик 532,534 (экран 532,686, кнопка 1)
+[15:21:38] клик 706,190 (экран 706,342, кнопка 1)
+[15:21:38] снимок cooking-02-slot-1 (окно 2097204, 123 КБ)
+[15:21:39] клик 568,418 (экран 568,570, кнопка 1)
+[15:21:39] клик 742,190 (экран 742,342, кнопка 1)
+[15:21:39] снимок cooking-03-slot-2 (окно 2097204, 122 КБ)
+[15:21:40] клик 604,418 (экран 604,570, кнопка 1)
+[15:21:40] клик 778,190 (экран 778,342, кнопка 1)
+[15:21:40] снимок cooking-04-slot-3 (окно 2097204, 120 КБ)
+[15:21:41] курсор 640,650
+[15:21:41] снимок cooking-05-result-ready (окно 2097204, 134 КБ)
+[15:21:41] клик 746,318 (экран 746,470, кнопка 1)
+[15:21:42] снимок cooking-06-result-taken (окно 2097204, 131 КБ)
+[15:21:42] клик 640,418 (экран 640,570, кнопка 1)
+[15:21:42] снимок cooking-07-stored (окно 2097204, 129 КБ)
+[15:21:42] в логе найдено: [15:21:42] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR crafted prof=cooking ok=true item=mmorpg:craft_result/cooking/1 stats=3 exp_gain=true
+[15:21:42] курсор 640,418
+[15:21:44] снимок cooking-08-tooltip (окно 2097204, 129 КБ)
+[15:21:44] клавиша Escape
+[15:21:44] снимок cooking-09-closed (окно 2097204, 62 КБ)
+[15:21:44] записан файл-триггер run/aoe-profession-next.flag: go
+[15:21:45] в логе найдено: [15:21:45] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR given prof=armor_craft tool=mmorpg:craft_tools/armor_craft gear=yes ings=3
+[15:21:45] клик 640,360 (экран 640,512, кнопка 3)
+[15:21:47] снимок armor_craft-01-grid-empty (окно 2097204, 119 КБ)
+[15:21:47] клик 496,418 (экран 496,570, кнопка 1)
+[15:21:48] клик 706,190 (экран 706,342, кнопка 1)
+[15:21:48] снимок armor_craft-02-slot-1 (окно 2097204, 110 КБ)
+[15:21:48] клик 532,534 (экран 532,686, кнопка 1)
+[15:21:49] клик 742,190 (экран 742,342, кнопка 1)
+[15:21:49] снимок armor_craft-03-slot-2 (окно 2097204, 103 КБ)
+[15:21:49] клик 568,418 (экран 568,570, кнопка 1)
+[15:21:50] клик 778,190 (экран 778,342, кнопка 1)
+[15:21:50] снимок armor_craft-04-slot-3 (окно 2097204, 104 КБ)
+[15:21:50] клик 604,418 (экран 604,570, кнопка 1)
+[15:21:51] клик 706,226 (экран 706,378, кнопка 1)
+[15:21:51] снимок armor_craft-05-slot-4 (окно 2097204, 131 КБ)
+[15:21:51] курсор 640,650
+[15:21:52] снимок armor_craft-06-result-ready (окно 2097204, 138 КБ)
+[15:21:52] клик 746,318 (экран 746,470, кнопка 1)
+[15:21:52] снимок armor_craft-07-result-taken (окно 2097204, 135 КБ)
+[15:21:53] клик 640,418 (экран 640,570, кнопка 1)
+[15:21:53] снимок armor_craft-08-stored (окно 2097204, 131 КБ)
+[15:21:53] в логе найдено: [15:21:53] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR crafted prof=armor_craft ok=true item=minecraft:iron_chestplate stats=3 exp_gain=true
+[15:21:53] курсор 640,418
+[15:21:54] снимок armor_craft-09-tooltip (окно 2097204, 130 КБ)
+[15:21:55] клавиша Escape
+[15:21:55] снимок armor_craft-10-closed (окно 2097204, 65 КБ)
+[15:21:55] записан файл-триггер run/aoe-profession-next.flag: go
+[15:21:56] в логе найдено: [15:21:55] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR given prof=wep_craft tool=mmorpg:craft_tools/wep_craft gear=yes ings=3
+[15:21:56] клик 640,360 (экран 640,512, кнопка 3)
+[15:21:58] снимок wep_craft-01-grid-empty (окно 2097204, 137 КБ)
+[15:21:58] клик 496,418 (экран 496,570, кнопка 1)
+[15:21:58] клик 706,190 (экран 706,342, кнопка 1)
+[15:21:59] снимок wep_craft-02-slot-1 (окно 2097204, 127 КБ)
+[15:21:59] клик 532,534 (экран 532,686, кнопка 1)
+[15:21:59] клик 742,190 (экран 742,342, кнопка 1)
+[15:22:00] снимок wep_craft-03-slot-2 (окно 2097204, 121 КБ)
+[15:22:00] клик 568,418 (экран 568,570, кнопка 1)
+[15:22:00] клик 778,190 (экран 778,342, кнопка 1)
+[15:22:01] снимок wep_craft-04-slot-3 (окно 2097204, 120 КБ)
+[15:22:01] клик 604,418 (экран 604,570, кнопка 1)
+[15:22:02] клик 706,226 (экран 706,378, кнопка 1)
+[15:22:02] снимок wep_craft-05-slot-4 (окно 2097204, 130 КБ)
+[15:22:02] курсор 640,650
+[15:22:02] снимок wep_craft-06-result-ready (окно 2097204, 137 КБ)
+[15:22:03] клик 746,318 (экран 746,470, кнопка 1)
+[15:22:03] снимок wep_craft-07-result-taken (окно 2097204, 135 КБ)
+[15:22:03] клик 640,418 (экран 640,570, кнопка 1)
+[15:22:04] снимок wep_craft-08-stored (окно 2097204, 126 КБ)
+[15:22:06] в логе найдено: [15:22:04] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR crafted prof=wep_craft ok=true item=minecraft:iron_sword stats=3 exp_gain=true
+[15:22:06] курсор 640,418
+[15:22:07] снимок wep_craft-09-tooltip (окно 2097204, 130 КБ)
+[15:22:07] клавиша Escape
+[15:22:08] снимок wep_craft-10-closed (окно 2097204, 65 КБ)
+[15:22:08] записан файл-триггер run/aoe-profession-next.flag: go
+[15:22:08] в логе найдено: [15:22:08] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR given prof=jewel_craft tool=mmorpg:craft_tools/jewel_craft gear=yes ings=3
+[15:22:09] клик 640,360 (экран 640,512, кнопка 3)
+[15:22:10] снимок jewel_craft-01-grid-empty (окно 2097204, 138 КБ)
+[15:22:11] клик 496,418 (экран 496,570, кнопка 1)
+[15:22:11] клик 706,190 (экран 706,342, кнопка 1)
+[15:22:11] снимок jewel_craft-02-slot-1 (окно 2097204, 128 КБ)
+[15:22:12] клик 532,534 (экран 532,686, кнопка 1)
+[15:22:12] клик 742,190 (экран 742,342, кнопка 1)
+[15:22:13] снимок jewel_craft-03-slot-2 (окно 2097204, 123 КБ)
+[15:22:13] клик 568,418 (экран 568,570, кнопка 1)
+[15:22:13] клик 778,190 (экран 778,342, кнопка 1)
+[15:22:14] снимок jewel_craft-04-slot-3 (окно 2097204, 121 КБ)
+[15:22:14] клик 604,418 (экран 604,570, кнопка 1)
+[15:22:14] клик 706,226 (экран 706,378, кнопка 1)
+[15:22:15] снимок jewel_craft-05-slot-4 (окно 2097204, 131 КБ)
+[15:22:15] курсор 640,650
+[15:22:15] снимок jewel_craft-06-result-ready (окно 2097204, 138 КБ)
+[15:22:15] клик 746,318 (экран 746,470, кнопка 1)
+[15:22:16] снимок jewel_craft-07-result-taken (окно 2097204, 136 КБ)
+[15:22:16] клик 640,418 (экран 640,570, кнопка 1)
+[15:22:17] снимок jewel_craft-08-stored (окно 2097204, 128 КБ)
+[15:22:19] в логе найдено: [15:22:17] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR crafted prof=jewel_craft ok=true item=mmorpg:jewelry/ring/iron stats=3 exp_gain=true
+[15:22:19] курсор 640,418
+[15:22:20] снимок jewel_craft-09-tooltip (окно 2097204, 132 КБ)
+[15:22:20] клавиша Escape
+[15:22:21] снимок jewel_craft-10-closed (окно 2097204, 67 КБ)
+[15:22:21] записан файл-триггер run/aoe-profession-next.flag: go
+[15:22:21] в логе найдено: [15:22:21] [Server thread/INFO] (AgeOfEpoch-ProfessionAudit) AOEPR done profs=6 passed=6 failed=0
+[15:22:24] снимок 90-audit-done (окно 2097204, 66 КБ)
+[15:22:25] удержание h 600 мс (фокус: 2097204)
+[15:22:28] снимок 91-character (окно 2097204, 92 КБ)
+[15:22:28] удержание h 600 мс (фокус: 2097204)
+[15:22:31] shell[VIDEO_OUT=run/e2e/profession-video.mp4 bash tools/e2e/spell-video.sh stop] -> 0
+    видео готово: run/e2e/profession-video.mp4 (5.9M)
+    длительность: 80.7 c
+[15:22:31] jstack[professions]: pid 4180, 438 строк -> jstack-professions.txt
+[15:22:31] render thread:
+    "Render thread" #3 [4181] prio=5 os_prio=0 cpu=31400.44ms elapsed=159.26s tid=0x00007b108c030f10 nid=4181 runnable  [0x00007b10945fd000]
+    java.lang.Thread.State: RUNNABLE
+    at net.minecraft.client.multiplayer.ClientLevel.doAnimateTick(ClientLevel.java:599)
+    at net.minecraft.client.multiplayer.ClientLevel.animateTick(ClientLevel.java:577)
+    at net.minecraft.client.Minecraft.tick(Minecraft.java:1963)
+    at net.minecraft.client.Minecraft.runTick(Minecraft.java:1255)
+    at net.minecraft.client.Minecraft.run(Minecraft.java:967)
+    at net.minecraft.client.main.Main.main(Main.java:292)
+    at java.lang.invoke.LambdaForm$DMH/0x0000000059230000.invokeStaticInit(java.base@25.0.5/LambdaForm$DMH)
+    at java.lang.invoke.LambdaForm$MH/0x0000000059045400.invokeExact_MT(java.base@25.0.5/LambdaForm$MH)
+    at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:517)
+    at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:72)
+[15:22:31] конец сценария professions
+[15:22:31] итог: снимков 63, ошибок 0
