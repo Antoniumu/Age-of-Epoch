@@ -32,6 +32,7 @@
     write run/x.flag all        создать файл-триггер с содержимым (аудит умений)
     shell bash script.sh start  выполнить команду оболочки (запись видео и т.п.)
     wait_file run/spell-audit.md 600000  ждать появления файла, мс
+    wiki_crawl                  открыть и снять каждую страницу каталога, создать wiki-pages.tsv
     log текст                   записать в журнал
 
 Запуск:
@@ -384,6 +385,95 @@ class Runner:
             return True
         self.fail("снимок %s не получился: %s" % (name, out.strip()[:200]))
         return False
+
+    def crawl_wiki(self):
+        """Open every generated page through the real client screen and capture it."""
+        root = os.path.join(REPO, "src", "main", "resources", "assets", "mmorpg", "wiki_pages")
+        files = sorted(
+            (os.path.join(directory, name) for directory, _, names in os.walk(root)
+             for name in names if name.endswith(".md")),
+            key=lambda path: os.path.relpath(path, root).replace(os.sep, "/"),
+        )
+        if not files:
+            self.fail("wiki_crawl: каталог markdown-страниц пуст")
+            return
+
+        request_file = os.path.join(REPO, "run", "aoe-wiki-page.txt")
+        request_tmp = request_file + ".tmp"
+        manifest_path = os.path.join(self.outdir, "wiki-pages.tsv")
+        os.makedirs(os.path.dirname(request_file), exist_ok=True)
+        os.makedirs(self.outdir, exist_ok=True)
+        os.makedirs(os.path.dirname(manifest_path), exist_ok=True)
+        seen_names = set()
+        captured = 0
+
+        try:
+            with open(manifest_path, "w", encoding="utf-8", buffering=1) as manifest:
+                manifest.write("page_id\tscreenshot\tstatus\n")
+                for index, page_file in enumerate(files, 1):
+                    page_id = os.path.relpath(page_file, root)[:-3].replace(os.sep, "/")
+                    safe_id = re.sub(r"[^A-Za-z0-9_-]+", "_", page_id.replace("/", "__"))
+                    shot_name = "wiki-" + safe_id
+                    if shot_name in seen_names:
+                        self.fail("wiki_crawl: неоднозначное имя снимка для " + page_id)
+                        manifest.write("%s\t%s.png\tFAIL\n" % (page_id, shot_name))
+                        continue
+                    seen_names.add(shot_name)
+
+                    try:
+                        log_position = os.path.getsize(LOG) if os.path.exists(LOG) else 0
+                    except OSError:
+                        log_position = 0
+                    with open(request_tmp, "w", encoding="utf-8") as request:
+                        # Счётчик позволяет повторно запрашивать ту же страницу.
+                        request.write("%s\t%d\n" % (page_id, index))
+                    os.replace(request_tmp, request_file)
+
+                    marker = "AOEWIKI page=" + page_id
+                    pattern = re.compile(re.escape(marker) + r"(?:\s|$)")
+                    deadline = time.time() + 1.5
+                    opened = False
+                    while time.time() < deadline:
+                        if os.path.exists(LOG):
+                            try:
+                                with open(LOG, "r", encoding="utf-8", errors="replace") as log:
+                                    log.seek(log_position)
+                                    text = log.read()
+                                for line in text.splitlines():
+                                    if pattern.search(line):
+                                        opened = True
+                                        break
+                            except OSError:
+                                pass
+                        if opened:
+                            break
+                        time.sleep(0.1)
+
+                    ok = False
+                    if opened:
+                        # Wait for at least one client render after init() logged the new page.
+                        time.sleep(0.25)
+                        ok = self.shot(shot_name)
+                    else:
+                        self.fail("wiki_crawl: клиент не открыл страницу " + page_id)
+
+                    status = "OK" if ok else "FAIL"
+                    manifest.write("%s\t%s.png\t%s\n" % (page_id, shot_name, status))
+                    if ok:
+                        captured += 1
+                    if index % 25 == 0 or index == len(files):
+                        self.note("wiki_crawl: %d/%d страниц снято" % (captured, len(files)))
+
+            self.note("wiki_crawl: %d/%d страниц, манифест %s" %
+                      (captured, len(files), os.path.basename(manifest_path)))
+        finally:
+            for path in (request_file, request_tmp):
+                try:
+                    os.remove(path)
+                except FileNotFoundError:
+                    pass
+                except OSError as error:
+                    self.note("wiki_crawl: не удалось удалить %s: %s" % (path, error))
 
     # ------------------------------------------------------------------ действия
 

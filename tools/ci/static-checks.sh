@@ -19,20 +19,21 @@ cd "$(dirname "$0")/../.." || exit 1
 status=0
 line() { printf '\n=== %s ===\n' "$1"; }
 
-line "1/6. Синтаксис всех Java-файлов (tree-sitter)"
+line "1/7. Синтаксис всех Java-файлов (tree-sitter)"
 python3 tools/check_java_syntax.py --all || status=1
 
-line "2/6. Инварианты: код против LAUNCH-READINESS.md"
+line "2/7. Инварианты: код против LAUNCH-READINESS.md"
 python3 tools/verify/check_invariants.py || status=1
 
-line "3/6. Контент: дерево талантов, перки, иконки, вики"
+line "3/7. Контент: дерево талантов, перки, иконки, вики"
 python3 tools/verify/check_content.py || status=1
+python3 tools/wiki_gen/generate_wiki.py --check || status=1
 python3 tools/wiki_gen/verify_wiki.py || status=1
 
-line "4/6. Модель баланса"
+line "4/7. Модель баланса"
 python3 tools/balance/balance_model.py || status=1
 
-line "5/6. Симуляция сезона (6 игроков, 8 недель)"
+line "5/7. Симуляция сезона (6 игроков, 8 недель)"
 python3 tools/balance/season_sim.py || status=1
 
 line "6/7. Языковые файлы не разошлись с генератором"

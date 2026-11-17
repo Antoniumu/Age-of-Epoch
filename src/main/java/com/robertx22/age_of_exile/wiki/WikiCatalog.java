@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -120,6 +119,13 @@ public final class WikiCatalog {
         return 3;
     }
 
+    /** Development-only marker used by the in-game screenshot crawler to verify navigation. */
+    public static void logPageOpened(String pageId) {
+        if (net.fabricmc.loader.api.FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            LOGGER.info("AOEWIKI page={}", pageId);
+        }
+    }
+
     private static String readAll(Resource resource) throws Exception {
         InputStream in = resource.open();
         try {
@@ -155,24 +161,9 @@ public final class WikiCatalog {
         return sorted;
     }
 
-    /** Поиск: совпадения в названии раньше, дальше — в тегах и тексте. Пустой запрос = весь каталог. */
+    /** Поиск по названию, тегам, идентификаторам и тексту статьи. */
     public static synchronized List<WikiMarkdown.Page> search(String query) {
         ensureLoaded();
-        if (query == null || query.trim().length() == 0) {
-            return sorted;
-        }
-        String q = query.trim().toLowerCase(Locale.ROOT);
-        List<WikiMarkdown.Page> titleHits = new ArrayList<WikiMarkdown.Page>();
-        List<WikiMarkdown.Page> textHits = new ArrayList<WikiMarkdown.Page>();
-        for (WikiMarkdown.Page page : sorted) {
-            if (page.title.toLowerCase(Locale.ROOT).contains(q) || page.id.contains(q)
-                || (page.itemId != null && page.itemId.contains(q))) {
-                titleHits.add(page);
-            } else if (page.searchText.contains(q)) {
-                textHits.add(page);
-            }
-        }
-        titleHits.addAll(textHits);
-        return titleHits;
+        return WikiSearch.search(sorted, query);
     }
 }

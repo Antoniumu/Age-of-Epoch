@@ -1,12 +1,10 @@
 name: Screenshots
 
-# Поднимает настоящий dev-клиент мода в Xvfb, прогоняет сценарий (клики,
-# клавиши) и публикует скриншоты в ветку `ci-screenshots`, чтобы результат
-# было видно прямо в GitHub: ветка → README.md с галереей, плюс комментарий в PR.
+# Поднимает настоящий dev-клиент мода в Xvfb, проверяет экран вики и снимает
+# каждую страницу каталога. PNG и манифест загружаются только как артефакт
+# GitHub Actions: никакой публикации скриншотов в ветки или коммиты.
 #
-# Это самый дешёвый способ ответить на вопрос «мод вообще запускается и рисует?»
-# без человека за компьютером. Сценарий — обычный текстовый файл в
-# tools/e2e/scenarios/, поэтому шаги правятся без пересборки.
+# Сценарии — обычные текстовые файлы в tools/e2e/scenarios/.
 
 on:
   workflow_dispatch:
@@ -23,17 +21,10 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: write        # публикация ветки ci-screenshots
-  pull-requests: write   # комментарий с картинками
+  contents: read
 
 env:
   GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx4G'
-  # Ветка публикации — своя для каждой исходной ветки. Раньше все прогоны
-  # (main, PR разных сессий) писали в общий `ci-screenshots` с force-push, и
-  # более поздний прогон затирал снимки соседнего: результат своего прогона
-  # можно было увидеть только через артефакт, а он лежит в blob-хранилище и
-  # снаружи не читается. Имя санитайзим: слеши в именах веток запрещены.
-  BRANCH_RAW: ci-screenshots-${{ github.head_ref || github.ref_name }}
 
 jobs:
   screenshots:
@@ -43,17 +34,11 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      # `arena/xxx-age-of-epoch` -> `arena-xxx-age-of-epoch`: слеши в именах
-      # веток git не допускает, а имя ветки публикации должно быть уникальным
-      # для источника, иначе параллельные сессии затирают снимки друг друга.
-      - name: Имя ветки публикации
-        run: echo "BRANCH=$(echo "$BRANCH_RAW" | tr '/' '-')" >> "$GITHUB_ENV"
-
-      # Каталог снимков должен быть чистым: иначе в ветку уедут PNG прошлых
-      # прогонов с уже неактуальными шагами.
+      # Не позволяем артефактам предыдущего сценария попасть в этот прогон.
       - name: Очистить прошлые снимки
         run: |
           rm -rf run/e2e/shots && mkdir -p run/e2e/shots && ls run/e2e/shots
+          rm -f run/aoe-wiki-page.txt run/aoe-wiki-page.txt.tmp
           # Флаг для зонда /aoe devtest: как только игрок окажется в мире,
           # CombatProbe сам прогонит замеры DPS/лечения и удалит флаг.
           # Результаты — строки AOETEST в run/logs/latest.log и run/aoe-devtest.txt.
@@ -82,12 +67,13 @@ jobs:
         id: run
         env:
           CLIENT_TIMEOUT: '1500'
+          SCENARIO_INPUT: ${{ inputs.scenario }}
         run: |
           # Какой сценарий прогонять, задаётся без правки workflow:
           #   * tools/e2e/active.txt — обычный случай (правится пушем);
           #   * параметр при ручном запуске;
           #   * перечисление через запятую — каждый сценарий отдельным прогоном.
-          list="${{ inputs.scenario }}"
+          list="$SCENARIO_INPUT"
           [ -n "$list" ] || list="$(tr -d '\n' < tools/e2e/active.txt 2>/dev/null)"
           [ -n "$list" ] || list="boot"
           echo "сценарии: $list"
@@ -103,30 +89,15 @@ jobs:
             echo "=== прогон сценария $name ==="
             bash tools/e2e/run-in-xvfb.sh "$scenario" "run/e2e/shots/$name"
             [ $? -eq 0 ] || status=1
-            # Снимки и журналы — плоско и с префиксом сценария: так их находит
-            # publish-results.sh и не путаются одноимённые шаги.
-            if [ -d "run/e2e/shots/$name" ]; then
-              # index.txt пересобираем плоско: в каталоге сценария он свой,
-              # а шагу «Комментарий с картинками в PR» нужен общий список.
-              for f in run/e2e/shots/"$name"/*.png; do
-                [ -e "$f" ] || continue
-                cp "$f" "run/e2e/shots/${name}-$(basename "$f")"
-                echo "${name}-$(basename "$f" .png)" >> run/e2e/shots/index.txt
-              done
-              [ -f "run/e2e/shots/$name/steps.log" ] && cp "run/e2e/shots/$name/steps.log" "run/e2e/shots/steps-$name.log"
-              for f in run/e2e/shots/"$name"/jstack-*.txt; do
-                [ -e "$f" ] && cp "$f" "run/e2e/shots/${name}-$(basename "$f")"
-              done
-              rm -rf "run/e2e/shots/$name"
-            fi
+            # Скриншоты, манифест и журнал остаются в отдельном каталоге
+            # сценария; артефакт сохраняет это дерево без Git-публикации PNG.
           done
           set -e
 
           # Боевые замеры и проверка «бесдушных основ»: строки AOETEST из лога
           # клиента. latest.log относится только к последнему сценарию, поэтому
           # дополнительно читаем aoe-devtest.txt — зонд дописывает туда же.
-          # Провал проверки не валит job (порт ещё нестабилен), но виден и в
-          # summary, и в PR.
+          # Боевые замеры диагностические: результат попадает в summary и артефакт.
           {
             grep -h "AOETEST" run/logs/latest.log 2>/dev/null || true
             cat run/aoe-devtest.txt 2>/dev/null || true
@@ -144,13 +115,13 @@ jobs:
             fi
           fi
 
-          shots=$(find run/e2e/shots -maxdepth 1 -name '*.png' | wc -l)
+          shots=$(find run/e2e/shots -type f -name '*.png' | wc -l)
           echo "status=$status" >> "$GITHUB_OUTPUT"
           echo "shots=$shots" >> "$GITHUB_OUTPUT"
           {
             echo "### Снимки: $shots, статус: $status"
             echo '```'
-            find run/e2e/shots -maxdepth 1 -name '*.png' -printf '%f %k КБ\n' 2>/dev/null | sort
+            find run/e2e/shots -type f -name '*.png' -printf '%P %k КБ\n' 2>/dev/null | sort
             echo '```'
             if [ -s run/e2e/aoetest.log ]; then
               echo '#### AOETEST'
@@ -161,56 +132,6 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
           exit 0
 
-      - name: Опубликовать результат в ветку публикации
-        if: always() && github.event.pull_request.head.repo.fork != true
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPO: ${{ github.repository }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: |
-          bash tools/e2e/publish-results.sh run/e2e/shots \
-            "Сценарий \`${{ inputs.scenario || 'boot' }}\`, клиент под Xvfb, ветка \`${{ github.head_ref || github.ref_name }}\`" \
-            || echo "::error::Публикация в ветку ${BRANCH} не удалась"
-
-      - name: Комментарий с картинками в PR
-        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork != true
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPO: ${{ github.repository }}
-          PR: ${{ github.event.pull_request.number }}
-        run: |
-          shots="$(cat run/e2e/shots/index.txt 2>/dev/null || true)"
-          if [ -z "$shots" ]; then
-            echo "::warning::Снимков нет — комментарий не публикую"
-            exit 0
-          fi
-          md="$(mktemp)"
-          {
-            echo "## Скриншоты dev-клиента"
-            echo
-            echo "Прогон: [${GITHUB_RUN_ID}](${GITHUB_SERVER_URL}/${REPO}/actions/runs/${GITHUB_RUN_ID}) · журнал шагов: [steps.log](https://github.com/${REPO}/blob/${BRANCH}/steps.log)"
-            echo
-            for name in $shots; do
-              echo "**${name}**"
-              echo
-              echo "[![${name}](https://raw.githubusercontent.com/${REPO}/${BRANCH}/shots/${name}.png)](https://raw.githubusercontent.com/${REPO}/${BRANCH}/shots/${name}.png)"
-              echo
-            done
-            echo "Если картинки не отображаются — открой [ветку \`${BRANCH}\`](https://github.com/${REPO}/tree/${BRANCH}) — там галерея в README.md."
-            echo
-            echo "> Пошаговый журнал (какой клик/клавиша, что нашлось в логе): [steps.log](https://github.com/${REPO}/blob/${BRANCH}/steps.log)"
-          } > "$md"
-
-          existing="$(gh api "repos/${REPO}/issues/${PR}/comments" --paginate --jq '.[] | select(.body | contains("<!-- aoe-screens -->")) | .id' | head -1)"
-          { echo '<!-- aoe-screens -->'; cat "$md"; } > "$md.body"
-          if [ -n "$existing" ]; then
-            gh api -X PATCH "repos/${REPO}/issues/comments/${existing}" -F "body=@${md}.body" > /dev/null
-            echo "Комментарий обновлён"
-          else
-            gh api -X POST "repos/${REPO}/issues/${PR}/comments" -F "body=@${md}.body" > /dev/null
-            echo "Комментарий создан"
-          fi
-
       - name: Артефакт со снимками и логами
         if: always()
         uses: actions/upload-artifact@v7
@@ -218,20 +139,39 @@ jobs:
           name: client-screenshots
           path: |
             run/e2e/shots/**
+            run/e2e/aoetest.log
             run/logs/latest.log
             run/e2e/gradle.log
             run/crash-reports/**
           if-no-files-found: warn
           retention-days: 14
+          # PNG уже сжаты; не тратим минуты CI на повторное сжатие 371 кадров.
+          compression-level: 0
 
-      # Регрессия фикса «броня поднимает макс. HP сразу» — единственное, что
-      # валит этот job намеренно: проверки зонда детерминированы (тик-тайминги
-      # сервера, без UI), а снимки и публикация к этому моменту уже сделаны.
+      - name: Проверить скриншот каждой страницы вики
+        if: always()
+        env:
+          SCENARIO_INPUT: ${{ inputs.scenario }}
+        run: |
+          list="$SCENARIO_INPUT"
+          [ -n "$list" ] || list="$(tr -d '\n' < tools/e2e/active.txt 2>/dev/null)"
+          wiki_selected=0
+          for name in $(echo "$list" | tr ',' ' '); do
+            [ "$name" = wiki ] && wiki_selected=1
+          done
+          if [ "$wiki_selected" -eq 1 ]; then
+            [ -d run/e2e/shots/wiki ] || { echo "::error::Сценарий wiki не создал каталог скриншотов"; exit 1; }
+            python3 tools/e2e/verify_wiki_screenshots.py run/e2e/shots/wiki
+          else
+            echo "Сценарий wiki не входил в этот прогон; проверка покрытия скриншотами пропущена."
+          fi
+
+      # Регрессия экипировки также валит job; боевые замеры остаются диагностическими.
       - name: Фикс макс. HP от экипировки (gear-зонд)
         if: always()
         run: |
           if [ -f run/e2e/aoetest-gear-failed ]; then
-            echo "::error::Зонд экипировки провалился: макс. HP не обновляется от брони — см. AOETEST в job summary и в ветке ${BRANCH}"
+            echo "::error::Зонд экипировки провалился: макс. HP не обновляется от брони — см. AOETEST в job summary и артефакте client-screenshots"
             exit 1
           fi
           echo "Проверки экипировки/макс. HP прошли."

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
 # Поднимает Xvfb, запускает dev-клиент и прогоняет сценарий со скриншотами.
-# Скриншоты нужны даже при падении клиента, поэтому сценарий не прерывает
-# работу: что успели снять — то и уедет в артефакты и в ветку ci-screenshots.
+# Снимки остаются в локальном outdir; GitHub Actions загружает их только
+# артефактом и никогда не добавляет PNG в Git.
 #
 # Запуск:  bash tools/e2e/run-in-xvfb.sh [сценарий] [каталог-снимков]
 # Переменные: XVFB_W, XVFB_H, CLIENT_TIMEOUT (сек), DISPLAY_NUM
@@ -18,6 +18,7 @@ height="${XVFB_H:-720}"
 client_timeout="${CLIENT_TIMEOUT:-1500}"
 
 mkdir -p "$outdir" run/e2e run/logs
+rm -f run/aoe-wiki-page.txt run/aoe-wiki-page.txt.tmp
 : > run/e2e/gradle.log
 
 # Minecraft 26.3 рисует через SDL3 + renderpearl. Под Xvfb его OpenGL-бэкенд

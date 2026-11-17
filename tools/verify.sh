@@ -29,7 +29,8 @@ python3 tools/verify/check_invariants.py || status=1
 
 line "2/8. Контент: дерево талантов, перки, иконки"
 python3 tools/verify/check_content.py || status=1
-# вики: страница на каждый предмет/блок, >=1000 видимых символов, целые ссылки
+# вики: генератор не отстаёт от исходных данных, страницы и ссылки целы
+python3 tools/wiki_gen/generate_wiki.py --check || status=1
 python3 tools/wiki_gen/verify_wiki.py || status=1
 
 line "3/8. Заклинания: эффект, партиклы, иконка, место в школе"
