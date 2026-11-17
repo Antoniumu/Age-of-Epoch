@@ -8,6 +8,7 @@ import com.robertx22.age_of_exile.mmorpg.SlashRef;
 import com.robertx22.age_of_exile.mmorpg.event_registers.Client;
 import com.robertx22.age_of_exile.mmorpg.registers.client.ClientSetup;
 import com.robertx22.age_of_exile.mmorpg.registers.client.KeybindsRegister;
+import com.robertx22.age_of_exile.wiki.WikiScreenshotCrawler;
 import com.robertx22.forge_compat.client.AbstractGui;
 import com.robertx22.forge_compat.client.event.RenderGameOverlayEvent;
 import com.robertx22.forge_compat.common.MinecraftForge;
@@ -33,6 +34,7 @@ public class ClientInit implements net.fabricmc.api.ClientModInitializer {
             MinecraftForge.EVENT_BUS.post(new TickEvent.ClientTickEvent(TickEvent.Phase.START)));
         ClientTickEvents.END_CLIENT_TICK.register(client ->
             MinecraftForge.EVENT_BUS.post(new TickEvent.ClientTickEvent(TickEvent.Phase.END)));
+        ClientTickEvents.END_CLIENT_TICK.register(WikiScreenshotCrawler::tick);
 
         HudElementRegistry.attachElementAfter(
             VanillaHudElements.BOSS_BAR,

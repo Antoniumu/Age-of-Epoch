@@ -53,4 +53,8 @@ shot 07-wiki-link-hover
 click 1060 480
 wait 1500
 shot 08-wiki-linked-page
+
+# CI открывает все markdown-страницы через экран вики и снимает каждую.
+# PNG остаются только в артефакте GitHub Actions, не добавляются в Git.
+wiki_crawl
 log конец сценария wiki

@@ -73,6 +73,7 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
     private String hoveredLink = null;
 
     private static final String[] FILTER_LABELS = {"Все", "Гайды", "Разделы", "Предметы"};
+    private static final int MAX_SEARCH_CODE_POINTS = 96;
 
     public ModWikiScreen() {
         super(360, 300);
@@ -169,6 +170,7 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
         this.page = WikiCatalog.page(this.pageId);
         this.pageId = this.page.id;
         lastPageId = this.pageId;
+        WikiCatalog.logPageOpened(this.pageId);
         this.previewStack = stackFor(this.page);
         layoutArticle();
         if (resetScroll) {
@@ -237,7 +239,7 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
     private static final class Line {
         final List<Frag> frags = new ArrayList<Frag>();
         int y;                // смещение от начала статьи (без скролла)
-        int height = 10;
+        int height = 11;
         String anchor;        // если строка — начало заголовка
     }
 
@@ -291,20 +293,22 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
                 continue;
             }
             String prefix;
-            int gapAfter = 4;
+            int gapAfter = 5;
+            int lineHeight = block.kind == Kind.HEADING
+                ? (block.level <= 1 ? 14 : 13) : 11;
             switch (block.kind) {
                 case HEADING:
                     prefix = block.level <= 1 ? "§6§l" : (block.level == 2 ? "§e§l" : "§f§l");
                     y += block.level <= 1 ? 2 : 6;
-                    gapAfter = 3;
+                    gapAfter = 4;
                     break;
                 case LIST_ITEM:
                     prefix = block.level > 0 ? "    §8– §r" : "§6• §r";
-                    gapAfter = 1;
+                    gapAfter = 2;
                     break;
                 case NUMBERED_ITEM:
                     prefix = "§6" + numbered + ". §r";
-                    gapAfter = 1;
+                    gapAfter = 2;
                     break;
                 case QUOTE:
                     prefix = "§8┃ §7";
@@ -341,6 +345,7 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
             // жадная упаковка по ширине статьи
             Line line = new Line();
             line.y = y;
+            line.height = lineHeight;
             line.anchor = block.kind == Kind.HEADING ? block.anchor : null;
             int cursor = 0;
             for (Frag frag : words) {
@@ -349,6 +354,7 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
                     y += line.height;
                     line = new Line();
                     line.y = y;
+                    line.height = lineHeight;
                     line.anchor = null;
                     cursor = (block.kind == Kind.LIST_ITEM || block.kind == Kind.NUMBERED_ITEM) ? 10 : 0;
                 }
@@ -432,12 +438,17 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
             drawInfobox(matrix, mouseX, mouseY, partialTicks);
         }
 
-        AbstractGui.drawShadow(mc.font, matrix,
-            "§8КОЛЕСО — ПРОКРУТКА • ССЫЛКИ КЛИКАБЕЛЬНЫ • МОДЕЛЬ МОЖНО КРУТИТЬ МЫШЬЮ",
+        String footer = hasInfobox
+            ? "Колесо: прокрутка • ссылки: переход • модель: перетаскивание"
+            : "Колесо: прокрутка • ссылки: переход";
+        String counter = sizeX >= 520 ? "Страниц: " + WikiCatalog.all().size() : "";
+        int footerWidth = sizeX - 18 - (counter.isEmpty() ? 0 : mc.font.width(counter) + 10);
+        AbstractGui.drawShadow(mc.font, matrix, "§8" + trimToWidth(footer, footerWidth),
             guiLeft + 9, guiTop + sizeY - 10, 0xFFFFFF);
-        String counter = "§8страниц: " + WikiCatalog.all().size() + " • " + pageId;
-        AbstractGui.drawShadow(mc.font, matrix, counter,
-            guiLeft + sizeX - 9 - mc.font.width(counter.replace("§8", "")), guiTop + sizeY - 10, 0xFFFFFF);
+        if (!counter.isEmpty()) {
+            AbstractGui.drawShadow(mc.font, matrix, "§8" + counter,
+                guiLeft + sizeX - 9 - mc.font.width(counter), guiTop + sizeY - 10, 0xFFFFFF);
+        }
 
         super.render(matrix, mouseX, mouseY, partialTicks);
 
@@ -472,7 +483,18 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
         rect(matrix, searchX, searchY, searchX + searchW, searchY + 14, searchFocused ? 0xFFD8A83C : 0xFF3A465C);
         String shown = query.length() == 0 ? (searchFocused ? "" : "§8Поиск по вики…") : query;
         String withCaret = shown + (searchFocused && (System.currentTimeMillis() / 500) % 2 == 0 ? "§e|" : "");
-        AbstractGui.drawShadow(mc.font, matrix, withCaret, searchX + 4, searchY + 3, 0xFFFFFF);
+        int textRoom = Math.max(0, searchW - (query.isEmpty() ? 8 : 25));
+        AbstractGui.drawShadow(mc.font, matrix, trimToWidth(withCaret, textRoom),
+            searchX + 4, searchY + 3, 0xFFFFFF);
+        if (!query.isEmpty()) {
+            int clearX = searchX + searchW - 17;
+            boolean clearHovered = inside(mouseX, mouseY, clearX, searchY, 15, 14);
+            if (clearHovered) {
+                fill(matrix, clearX, searchY + 1, clearX + 14, searchY + 13, 0xFF2A3444);
+            }
+            AbstractGui.drawShadow(mc.font, matrix, clearHovered ? "§e×" : "§7×",
+                clearX + 4, searchY + 3, 0xFFFFFF);
+        }
 
         // фильтры под заголовком сайдбара
         int chipX = sidebarX;
@@ -497,6 +519,13 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
 
     private void drawSidebar(PoseStack matrix, int mouseX, int mouseY) {
         fill(matrix, sidebarX - 2, sidebarY - 1, sidebarX + sidebarW, sidebarY + sidebarH, 0x80101824);
+        if (indexList.isEmpty()) {
+            String message = !query.isEmpty() ? "Ничего не найдено"
+                : (filterGroup == 0 ? "Каталог пуст" : "В этом разделе нет страниц");
+            AbstractGui.drawShadow(mc.font, matrix, "§8" + trimToWidth(message, sidebarW - 12),
+                sidebarX + 6, sidebarY + 4, 0xFFFFFF);
+            return;
+        }
         int y = sidebarY - sidebarScroll;
         for (Page p : indexList) {
             if (y >= sidebarY && y + 13 <= sidebarY + sidebarH) {
@@ -742,7 +771,15 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (isActivateButton(button)) {
             pressSeenForRelease = true;
-            // поиск: фокус
+            // Поиск: фокус и отдельная кнопка очистки запроса.
+            if (!query.isEmpty() && inside(mouseX, mouseY, searchX + searchW - 17, searchY, 15, 14)) {
+                query = "";
+                searchFocused = true;
+                sidebarScroll = 0;
+                refreshIndex();
+                clampScrolls();
+                return true;
+            }
             if (inside(mouseX, mouseY, searchX, searchY, searchW, 14)) {
                 searchFocused = true;
                 return true;
@@ -861,30 +898,35 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
 
     private boolean onKeyCode(int keyCode) {
         if (searchFocused) {
-            if (keyCode == 259) { // Backspace
+            if (keyCode == 259) { // Backspace — удаляем целый Unicode code point.
                 if (query.length() > 0) {
-                    query = query.substring(0, query.length() - 1);
+                    int last = query.offsetByCodePoints(query.length(), -1);
+                    query = query.substring(0, last);
                     sidebarScroll = 0;
                     refreshIndex();
                     clampScrolls();
                 }
                 return true;
             }
-            if (keyCode == 257 || keyCode == 335) { // Enter
+            if (keyCode == 257 || keyCode == 335) { // Enter — открыть лучший результат.
                 if (!indexList.isEmpty()) {
                     searchFocused = false;
                     navigate(indexList.get(0).id, true);
                 }
                 return true;
             }
-            if (keyCode == 256) { // Esc: сначала снять фокус
-                searchFocused = false;
+            if (keyCode == 256) { // Esc очищает запрос; повторное нажатие снимает фокус.
+                if (!query.isEmpty()) {
+                    query = "";
+                    sidebarScroll = 0;
+                    refreshIndex();
+                    clampScrolls();
+                } else {
+                    searchFocused = false;
+                }
                 return true;
             }
-            if (keyCode == 85 && query.length() == 0) {
-                return false;
-            }
-            // не даём буквам утекать в BaseScreen (H/K закрыли бы экран во время печати)
+            // Не даём буквам утекать в BaseScreen (H/K закрыли бы экран во время печати).
             return true;
         }
         if (keyCode == 264) { // Down
@@ -910,12 +952,13 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
         return false;
     }
 
-    private boolean onChar(char c) {
+    private boolean onChar(int codePoint) {
         if (!searchFocused) {
             return false;
         }
-        if (c >= 32 && c != 127 && query.length() < 48) {
-            query += c;
+        if (Character.isValidCodePoint(codePoint) && !Character.isISOControl(codePoint)
+            && query.codePointCount(0, query.length()) < MAX_SEARCH_CODE_POINTS) {
+            query += new String(Character.toChars(codePoint));
             sidebarScroll = 0;
             refreshIndex();
             clampScrolls();
@@ -950,7 +993,7 @@ public class ModWikiScreen extends BaseScreen implements INamedScreen {
 
     public boolean charTyped(net.minecraft.client.input.CharacterEvent event) {
         int cp = event.codepoint();
-        if (cp > 0 && cp < 0x10000 && onChar((char) cp)) {
+        if (cp > 0 && Character.isValidCodePoint(cp) && onChar(cp)) {
             return true;
         }
         return super.charTyped(event);
