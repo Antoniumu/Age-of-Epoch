@@ -72,6 +72,8 @@ for dir in "$src"/shots/*/; do
         cp "$f" "shots/${name}-$(basename "$f")"
     done
     [ -f "$dir/steps.log" ] && cp "$dir/steps.log" "logs/steps-${name}.log"
+    # gradle.log — причина «клиент не запустился»: публикуем рядом с журналом шагов.
+    [ -f "$dir/gradle.log" ] && cp "$dir/gradle.log" "logs/gradle-${name}.log"
 done
 shot_count="$(ls shots/*.png 2>/dev/null | wc -l | tr -d ' ')"
 echo "  снимков: $shot_count"

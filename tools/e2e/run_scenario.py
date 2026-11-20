@@ -98,6 +98,7 @@ class Runner:
         self.failures = 0
         self.window = None
         self.log_mark_pos = 0
+        self._snapshot_gradle_log()
 
     # ------------------------------------------------------------------ утилиты
 
@@ -163,6 +164,17 @@ class Runner:
             if "Render thread" in line:
                 self.note("render thread:\n    " + "\n    ".join(l.strip() for l in lines[index:index + 12]))
                 break
+
+    def _snapshot_gradle_log(self):
+        """Копия gradle.log в каталог снимков: публикация забирает только его,
+        а именно там причина, когда JVM клиента не запустилась."""
+        src = os.path.join(REPO, "run", "e2e", "gradle.log")
+        if os.path.exists(src):
+            try:
+                import shutil
+                shutil.copy(src, os.path.join(self.outdir, "gradle.log"))
+            except OSError:
+                pass
 
     def candidate_displays(self):
         displays = []
@@ -285,13 +297,25 @@ class Runner:
     def wait_window(self, pattern, timeout_ms):
         deadline = time.time() + timeout_ms / 1000.0
         last_note = 0.0
+        # Клиент может умереть/не запуститься тихо — тогда ждать окно бессмысленно.
+        # Отслеживаем появление JVM: за весь timeout ни разу не увидели → аварийный
+        # выход с подсказкой (иначе три сценария подряд жгли по часу на пустоту).
+        saw_jvm_deadline = time.time() + max(120000, timeout_ms) / 1000.0
         while time.time() < deadline:
             if self.find_window():
                 return True
+            if self.client_pid():
+                saw_jvm_deadline = time.time() + timeout_ms / 1000.0
+            elif time.time() > saw_jvm_deadline:
+                self.fail("окно '%s' не появилось: JVM клиента так и не запустилась "
+                          "(gradlew runClient упал? смотри run/e2e/gradle.log)" % pattern)
+                self.list_windows()
+                return False
             if time.time() - last_note > 30:
                 last_note = time.time()
-                self.note("жду окно: дисплей %s, X-сокеты: %s"
-                          % (self.display, ", ".join(self.candidate_displays())))
+                self.note("жду окно: дисплей %s, X-сокеты: %s, JVM: %s"
+                          % (self.display, ", ".join(self.candidate_displays()),
+                             self.client_pid() or "нет"))
             time.sleep(2)
         self.fail("окно '%s' не появилось за %d мс" % (pattern, timeout_ms))
         self.list_windows()
@@ -768,6 +792,7 @@ def main():
     try:
         return runner.execute(scenario)
     finally:
+        runner._snapshot_gradle_log()
         runner.journal.close()
 
 
