@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Зонд полного цикла прокачки: от 1-го уровня до Вознесённого класса.
+ * Зонд полного цикла прокачки: от 1-го уровня до Вознесённого класса (кап — 50-й).
  *
  * <p>Что показывает прогон (и что видно на видео CI):</p>
  * <ol>
@@ -62,12 +62,18 @@ public final class ProgressionProbe {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("AgeOfEpoch-Progression");
 
-    /** Уровень по умолчанию: 56 = 7 очков Вознесения (хватает на 3+3+1 по цепочке). */
-    private static final int DEFAULT_TARGET = 56;
+    /** Уровень по умолчанию: 50 — максимум игры (GameBalanceConfig.MAX_LEVEL). */
+    private static final int DEFAULT_TARGET = 50;
     /** Один уровень за столько тиков: level-up сообщения успевают попасть в кадр. */
     private static final int TICKS_PER_LEVEL = 5;
     /** Пауза между этапами, чтобы этап читался на видео. */
     private static final int STAGE_PAUSE_TICKS = 30;
+    /**
+     * Столько тиков ждём очередной level-up, прежде чем признать ступор
+     * (например, кап уровня ниже цели прогона). Прогон обязан ЗАВЕРШАТЬСЯ:
+     * CI ждёт строку done, иначе сценарий висит до таймаута.
+     */
+    private static final int LEVEL_STALL_TICKS = 600;
 
     private static Runner active;
 
@@ -198,6 +204,8 @@ public final class ProgressionProbe {
 
         boolean spellLearned = false;
         int ascendAllocsDone = 0;
+        /** Тик последнего level-up'а в фазе LEVEL — для детектора ступора. */
+        int lastLevelGainTick = 0;
 
         final List<String> passed = new ArrayList<>();
         final List<String> failed = new ArrayList<>();
@@ -220,16 +228,15 @@ public final class ProgressionProbe {
                     }
                 }
             }
-            // Вознесение открывается на 50-м: ниже него прогон не имеет смысла.
-            this.targetLevel = Math.max(target, AscensionClasses.UNLOCK_LEVEL + 1);
+            // Вознесение открывается на 50-м (он же кап уровня в игре).
+            this.targetLevel = Math.max(target, AscensionClasses.UNLOCK_LEVEL);
             this.allocateDemo = alloc;
 
             // Вехи прокачки: 10 → вложить статы, 25 → изучить заклинание,
-            // 50 → выбрать путь, цель → вложить очки Вознесения.
+            // цель (50) → выбрать путь; дальше — цепочка Вознесения и хотбар.
             milestones.add(new Milestone(10, Phase.ALLOC_STATS));
             milestones.add(new Milestone(25, Phase.ALLOC_SPELL));
-            milestones.add(new Milestone(AscensionClasses.UNLOCK_LEVEL, Phase.ASCEND_PICK));
-            milestones.add(new Milestone(this.targetLevel, Phase.ASCEND_ALLOC));
+            milestones.add(new Milestone(this.targetLevel, Phase.ASCEND_PICK));
         }
 
         void ok(String what) {
@@ -282,6 +289,11 @@ public final class ProgressionProbe {
                         // Не ошибка прогона, но на видео важно: начинаем не с нуля.
                         log("warning: стартовый уровень " + lvl + " (ожидался 1)");
                     }
+                    // Прогон демонстрационный, а не про выживание: ночные мобы
+                    // не должны убивать AFK-персонажа посреди видео (и GUI-
+                    // сценария после него). Только для мира прогона.
+                    player.setInvulnerable(true);
+                    player.getAbilities().mayfly = true;
                     stageEnd("intro");
                     goPause(Phase.LEVEL);
                     return false;
@@ -299,6 +311,11 @@ public final class ProgressionProbe {
                     if (phaseTicks == 1) {
                         stageStart("level_" + goal.level,
                             "Прокачка " + lvl + " → " + goal.level, "");
+                        lastLevelGainTick = 0;
+                    }
+                    // Вечный день: ночь не должна мешать ни видео, ни прогону.
+                    if (phaseTicks % 200 == 1) {
+                        player.level().setDayTime(1000);
                     }
                     ProgressionState.setLevel(lvl, goal.level);
                     ProgressionState.stage("Прокачка " + lvl + " → " + goal.level,
@@ -314,7 +331,18 @@ public final class ProgressionProbe {
                         int after = data.getLevel();
                         if (after > before) {
                             log(String.format(Locale.ROOT, "level_up %d -> %d", before, after));
+                            lastLevelGainTick = phaseTicks;
                         }
+                    }
+                    // Защита от ступора: кап уровня или иной стоп не должен
+                    // вешать CI до таймаута — фиксируем провал и завершаемся.
+                    if (phaseTicks - lastLevelGainTick > LEVEL_STALL_TICKS) {
+                        bad(String.format(Locale.ROOT,
+                            "level_stall: уровень %d не растёт до цели %d (кап?)",
+                            lvl, goal.level));
+                        stageEnd("level_" + goal.level);
+                        phase = goal.then;
+                        phaseTicks = 0;
                     }
                     return false;
                 }
@@ -422,7 +450,9 @@ public final class ProgressionProbe {
                         bad("ascend_pick: уровень ниже " + AscensionClasses.UNLOCK_LEVEL);
                     }
                     stageEnd("ascend_pick");
-                    advanceMilestone();
+                    // Цепочка Вознесения идёт сразу после выбора пути —
+                    // вехи уровней закончились (цель = уровень выбора).
+                    goPause(Phase.ASCEND_ALLOC);
                     return false;
                 }
 

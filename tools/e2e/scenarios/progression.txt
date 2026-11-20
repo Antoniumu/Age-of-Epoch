@@ -4,10 +4,10 @@
 # Как это работает:
 #   * мир создаётся тем же проверенным путём, что в combat.txt;
 #   * прогон делает серверный зонд ProgressionProbe: его запускает флаг-файл
-#     run/aoe-progression.flag с параметром «level=56 alloc=some»;
+#     run/aoe-progression.flag с параметром «level=50 alloc=some»;
 #   * зонд качает уровень настоящим GiveExp — в кадре идут «+N опыта» и
 #     сообщения о новом уровне, а HUD-оверлей подписывает текущий этап;
-#   * на вехах (10/25/50/56) зонд останавливается на паузу и вкладывает очки
+#   * на вехах (10/25/50) зонд останавливается на паузу и вкладывает очки
 #     (статы, заклинание школы, путь Вознесения, цепочка умений, хотбар);
 #   * сценарий ждёт маркеры AOEPROG_MARK и в паузах делает снимки, а на
 #     вехах открывает экран персонажа (H) — видно рост уровня и очков;
@@ -50,8 +50,8 @@ shell mkdir -p run/e2e
 shell VIDEO_OUT=run/e2e/progression-video.mp4 bash tools/e2e/spell-video.sh start
 wait 2000
 
-# Флаг: цель 56 (7 очков Вознесения), демо-вложения включены.
-write run/aoe-progression.flag level=56 alloc=some
+# Флаг: цель 50 (максимум игры, GameBalanceConfig.MAX_LEVEL), демо-вложения вкл.
+write run/aoe-progression.flag level=50 alloc=some
 log флаг прогрессии поставлен, жду вехи AOEPROG_MARK
 
 # Веха 10 уровня: прокачка 1→10 занимает ~1 минуту с паузами.
@@ -79,13 +79,13 @@ wait_log 600000 AOEPROG_MARK stage_start ascend_pick
 wait 1500
 shot 30-level-50-hud
 
-# Цель 56: вложение очков Вознесения по цепочке.
+# Цель 50: вложение очков Вознесения по цепочке.
 wait_log 600000 AOEPROG_MARK stage_start ascend_alloc
 wait 2000
-shot 40-level-56-hud
+shot 40-level-50-final-hud
 hold h 600
 wait 2500
-shot 41-level-56-character
+shot 41-level-50-final-character
 hold h 600
 wait 1500
 

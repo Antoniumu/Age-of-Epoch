@@ -11,7 +11,7 @@
 | `.github/workflows/ci.yml` | Основной прогон: PR, push в `main`, ручной запуск, раз в неделю по расписанию |
 | `.github/workflows/audit.yml` | **Делегирование аудита**: один job матрицы на каждый `tools/audit/test_*.py`, отчёты артефактами, финальная агрегация. Вызывается из `ci.yml` |
 | `.github/workflows/release.yml` | Собирает GitHub Release по тегу `v*` или вручную; prerelease для тестовых версий, SHA-256 файлов |
-| `.github/workflows/gameplay-e2e.yml` | **Полный игровой цикл на видео**: прокачка 1→56 с роликами по этапам, клики по GUI с серверным подтверждением, видео каждого умения по классам. Публикация — ветка `ci-gameplay-*` |
+| `.github/workflows/gameplay-e2e.yml` | **Полный игровой цикл на видео**: прокачка 1→50 с роликами по этапам, клики по GUI с серверным подтверждением, видео каждого умения по классам. Публикация — ветка `ci-gameplay-*` |
 | `.github/workflows/publish-curseforge.yml` | Вручную загружает проверенный готовый тестовый JAR на CurseForge; см. [`CURSEFORGE.md`](CURSEFORGE.md) |
 | `.github/actions/setup-build-env/action.yml` | JDK 25 (Temurin) + Gradle + кэш; общий шаг для обоих workflow |
 | `tools/audit/run_audit.py` | Запуск одного suite-а или всех сразу; пишет JSON, JUnit XML и лог |
@@ -241,7 +241,7 @@ Workflow `.github/workflows/gameplay-e2e.yml` отвечает на вопрос
 1. **Прокачка** (`tools/e2e/scenarios/progression.txt`): серверный зонд
    `ProgressionProbe` (флаг `run/aoe-progression.flag`, `/aoe devtest progression`)
    качает персонажа настоящим `GiveExp` — в кадре «+N опыта» и level-up'ы, а
-   HUD-оверлей подписывает этап. На вехах 10/25/50/56 вкладываются очки
+   HUD-оверлей подписывает этап. На вехах 10/25/50 вкладываются очки
    характеристик, изучается заклинание школы, выбирается путь Вознесения,
    вкачивается цепочка умений и назначается умение на хотбар. Видео режется на
    ролики по этапам маркерами `AOEPROG_MARK` (`run/progression-timeline.txt`).
