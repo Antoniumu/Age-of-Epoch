@@ -84,6 +84,16 @@ jobs:
             libxi6 libxcursor1 libxrandr2 libxinerama1 libxxf86vm1 \
             libopenal1 libpulse0 libegl1 libegl-mesa0
 
+      # ---- 0a. Синтаксис Java (AST, секунды) ----------------------------------
+      # Ловит грубые ошибки синтаксиса до часового e2e: compileJava в CI
+      # должен был бы, но история показывает, что под dev-клиентом правки
+      # зондов легко расходятся с локальной правкой. AST — страховка.
+      - name: Синтаксис Java (tree-sitter)
+        run: |
+          python3 tools/check_java_syntax.py $(git ls-files 'src/main/java/*.java' | head -c 100000) 2>&1 | tail -3 || true
+          # check_java_syntax без зависимостей может пропустить часть файлов —
+          # не делаем шаг красным, это только предупреждение в логе.
+
       # ---- 0. Структурный аудит (секунды, без игры) ---------------------------
       - name: Структурный аудит заклинаний
         id: structural
@@ -104,6 +114,9 @@ jobs:
         continue-on-error: true
         env:
           CLIENT_TIMEOUT: '1500'
+          # Свой X-сервер: мёртвый :99 (умерший Xvfb ломает X-сокет клиента)
+          # был причиной пустого прогона. spell-video.sh поднимет :91 сам.
+          DISPLAY_NUM: '91'
         run: |
           # Мир начинаем с нуля: прокачка должна идти с 1-го уровня.
           rm -rf run/saves 2>/dev/null || true
@@ -143,6 +156,7 @@ jobs:
         continue-on-error: true
         env:
           CLIENT_TIMEOUT: '1800'
+          DISPLAY_NUM: '92'
         run: |
           # Мир начинаем с нуля: GUI-сценарий сам прокачивает персонажа до 50-го уровня
           # (alloc=none), а потом тратит очки кликами. Мир после сценария
@@ -170,6 +184,7 @@ jobs:
         env:
           CLIENT_TIMEOUT: '3600'
           AOE_AUDIT_TARGET: all
+          DISPLAY_NUM: '93'
         run: |
           # Мир начинаем с нуля: аудит умений должен идти на эталонном
           # персонаже (зонд сам выставляет 40-й уровень), без влияния
