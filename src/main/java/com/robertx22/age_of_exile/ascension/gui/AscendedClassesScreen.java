@@ -43,7 +43,7 @@ import java.util.List;
  *
  * Открывается из Навыков кнопкой «✦ Классы» через {@link AscensionTransitionScreen}.
  */
-public class AscendedClassesScreen extends BaseScreen implements INamedScreen {
+public class AscendedClassesScreen extends BaseScreen implements INamedScreen, com.robertx22.age_of_exile.gui.bases.IGuiDebugDump {
 
     private static final Identifier LOCK_TEX = SlashRef.guiId("ascension/lock");
 
@@ -167,6 +167,18 @@ public class AscendedClassesScreen extends BaseScreen implements INamedScreen {
     private void showStatus(String msg) {
         this.statusMessage = msg == null ? "" : msg;
         this.statusMessageTime = System.currentTimeMillis();
+    }
+
+    /**
+     * CI-дамп: узлы цепочки как кликабельные цели (id = node:<spellId>).
+     * Сценарий gui.txt кликает по этим прямоугольникам настоящей мышью.
+     */
+    @Override
+    public void collectDebugTargets(java.util.List<com.robertx22.age_of_exile.gui.bases.IGuiDebugDump.DebugTarget> out) {
+        for (Node n : nodes) {
+            out.add(new com.robertx22.age_of_exile.gui.bases.IGuiDebugDump.DebugTarget(
+                "node:" + n.spellId, n.x, n.y, NODE, NODE));
+        }
     }
 
     @Override

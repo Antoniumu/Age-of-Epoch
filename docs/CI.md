@@ -11,6 +11,7 @@
 | `.github/workflows/ci.yml` | Основной прогон: PR, push в `main`, ручной запуск, раз в неделю по расписанию |
 | `.github/workflows/audit.yml` | **Делегирование аудита**: один job матрицы на каждый `tools/audit/test_*.py`, отчёты артефактами, финальная агрегация. Вызывается из `ci.yml` |
 | `.github/workflows/release.yml` | Собирает GitHub Release по тегу `v*` или вручную; prerelease для тестовых версий, SHA-256 файлов |
+| `.github/workflows/gameplay-e2e.yml` | **Полный игровой цикл на видео**: прокачка 1→56 с роликами по этапам, клики по GUI с серверным подтверждением, видео каждого умения по классам. Публикация — ветка `ci-gameplay-*` |
 | `.github/workflows/publish-curseforge.yml` | Вручную загружает проверенный готовый тестовый JAR на CurseForge; см. [`CURSEFORGE.md`](CURSEFORGE.md) |
 | `.github/actions/setup-build-env/action.yml` | JDK 25 (Temurin) + Gradle + кэш; общий шаг для обоих workflow |
 | `tools/audit/run_audit.py` | Запуск одного suite-а или всех сразу; пишет JSON, JUnit XML и лог |
@@ -226,11 +227,40 @@ Loom/Minecraft — повторная сборка быстрее первой �
 * **Сервер.** Тестируется только клиент. Выделенный сервер (`runServer`) можно
   добавить тем же способом: job с `./gradlew runServer` и ожиданием `Done (…)`
   в `run/logs/latest.log`.
-* **Игру по-настоящему.** Smoke-тест доказывает только то, что мод грузится и
-  доходит до меню: мир, бой, GUI и рендер требуют ручной проверки.
-  Известные ограничения порта — в [`BUILD-REPORT.md`](BUILD-REPORT.md) §4.
 * **Modrinth.** Публикация не настроена.
 * **CurseForge.** Готовый тестовый JAR можно отправить отдельным ручным workflow
   `publish-curseforge.yml`; нужны существующий Project ID и секрет
   `CURSEFORGE_API_TOKEN`. Загрузка и модерация — разные этапы. Подробности и
   ограничения — в [`CURSEFORGE.md`](CURSEFORGE.md).
+
+## Полный игровой цикл (gameplay-e2e)
+
+Workflow `.github/workflows/gameplay-e2e.yml` отвечает на вопрос «игра реально
+играется?» тремя прогонами dev-клиента под Xvfb, каждый с видео:
+
+1. **Прокачка** (`tools/e2e/scenarios/progression.txt`): серверный зонд
+   `ProgressionProbe` (флаг `run/aoe-progression.flag`, `/aoe devtest progression`)
+   качает персонажа настоящим `GiveExp` — в кадре «+N опыта» и level-up'ы, а
+   HUD-оверлей подписывает этап. На вехах 10/25/50/56 вкладываются очки
+   характеристик, изучается заклинание школы, выбирается путь Вознесения,
+   вкачивается цепочка умений и назначается умение на хотбар. Видео режется на
+   ролики по этапам маркерами `AOEPROG_MARK` (`run/progression-timeline.txt`).
+   `alloc=none` во флаге отключает трату очков — их тратит GUI-сценарий.
+2. **Клики в GUI** (`tools/e2e/scenarios/gui.txt`): клиент под флагом
+   `run/aoe-gui-dump.flag` пишет `run/gui-widgets.txt` — реальные координаты,
+   подписи и классы всех кнопок открытого экрана (`GuiWidgetDumper`). Сценарий
+   кликает настоящей мышью по центру виджета (`click_widget <regex>[#N]`),
+   а сервер подтверждает обработку пакета строкой `AOEGUI packet=... ok=...`
+   (маркеры в `AllocateStatPacket`, `AllocateSpellPacket`, `PerkChangePacket`,
+   `AscensionPickPacket`, `AscensionAllocPacket`). Кликабельные области, которые
+   не являются кнопками (узлы цепочки Вознесения), экран отдаёт сам через
+   интерфейс `IGuiDebugDump` — как `DebugTarget` с id `node:<spellId>`.
+3. **Каждое умение** (`tools/e2e/scenarios/spells.txt`): `SpellAuditProbe`
+   применяет все умения настоящим путём каста, видео режется на ролики по
+   классам (см. также отдельный workflow `spell-audit.yml`).
+
+Итоги — в ветке `ci-gameplay-<ветка>` (ролики играются прямо в GitHub),
+комментарием в PR и артефактом `gameplay-e2e`. Job красный, пока не зелёные
+все три части: `AOEPROG done ... failed=0`, подтверждены четыре ключевых клика
+(`stat_alloc`, `spell_alloc`, `ascension_pick`, `ascension_alloc` с `ok=true`)
+и `AOEAI done ... failed=0` плюс структурный аудит.

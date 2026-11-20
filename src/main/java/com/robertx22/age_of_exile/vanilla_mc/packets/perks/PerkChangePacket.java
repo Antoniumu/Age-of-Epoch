@@ -103,6 +103,11 @@ public class PerkChangePacket extends MyPacket<PerkChangePacket> {
             + playerData.talents.getFreePoints(Load.Unit(ctx.getPlayer()), sc.getSchool_type())
             + " allocatedAfter=" + playerData.talents.getSchool(sc).getAllocatedPoints(sc));
 
+        com.robertx22.age_of_exile.uncommon.testing.GuiPacketLog.log(
+            "packet=perk_change school=" + school + " point=" + x + "," + y + " action=" + action
+                + " ok=" + (canAllocBefore || action == ACTION.REMOVE)
+                + " free_after=" + playerData.talents.getFreePoints(Load.Unit(ctx.getPlayer()), sc.getSchool_type()));
+
         Load.Unit(ctx.getPlayer())
             .setEquipsChanged(true);
         Load.Unit(ctx.getPlayer())

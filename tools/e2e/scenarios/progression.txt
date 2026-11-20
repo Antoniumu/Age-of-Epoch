@@ -1,0 +1,99 @@
+# Сценарий: ПОЛНЫЙ ЦИКЛ ПРОКАЧКИ — от 1-го уровня до Вознесённого класса,
+# с записью видео и скриншотами вех.
+#
+# Как это работает:
+#   * мир создаётся тем же проверенным путём, что в combat.txt;
+#   * прогон делает серверный зонд ProgressionProbe: его запускает флаг-файл
+#     run/aoe-progression.flag с параметром «level=56 alloc=some»;
+#   * зонд качает уровень настоящим GiveExp — в кадре идут «+N опыта» и
+#     сообщения о новом уровне, а HUD-оверлей подписывает текущий этап;
+#   * на вехах (10/25/50/56) зонд останавливается на паузу и вкладывает очки
+#     (статы, заклинание школы, путь Вознесения, цепочка умений, хотбар);
+#   * сценарий ждёт маркеры AOEPROG_MARK и в паузах делает снимки, а на
+#     вехах открывает экран персонажа (H) — видно рост уровня и очков;
+#   * весь прогон пишется на видео (ffmpeg/x11grab), затем CI режет его на
+#     ролики по этапам по таймлайну progression-timeline.txt.
+#
+# Координаты кликов меню — под окно 1280x720 (run/options.txt, guiScale 2).
+
+wait_window Minecraft 420000
+wait_log 300000 Created: .*atlas/items
+wait 8000
+shot 00-main-menu
+
+# Главное меню → Одиночная игра → список миров
+move 640 296
+click 640 296
+wait 4000
+shot 01-world-list
+
+# Сначала пробуем существующий мир (профиль раннера живёт между сценариями),
+# иначе — «Create New World» → создать.
+move 640 124
+click 640 124
+wait 800
+move 483 637
+click 483 637
+wait 45000
+shot 02-in-world
+
+move 797 637
+click 797 637
+wait 3000
+move 480 688
+click 480 688
+wait 45000
+shot 02b-in-world-created
+
+# --- запись видео + запуск прогона прокачки ------------------------------
+shell mkdir -p run/e2e
+shell VIDEO_OUT=run/e2e/progression-video.mp4 bash tools/e2e/spell-video.sh start
+wait 2000
+
+# Флаг: цель 56 (7 очков Вознесения), демо-вложения включены.
+write run/aoe-progression.flag level=56 alloc=some
+log флаг прогрессии поставлен, жду вехи AOEPROG_MARK
+
+# Веха 10 уровня: прокачка 1→10 занимает ~1 минуту с паузами.
+wait_log 300000 AOEPROG_MARK stage_start alloc_stats
+wait 1500
+shot 10-level-10-hud
+hold h 600
+wait 2500
+shot 11-level-10-character
+hold h 600
+wait 1500
+
+# Веха 25: демо-изучение заклинания школы.
+wait_log 300000 AOEPROG_MARK stage_start alloc_spell
+wait 1500
+shot 20-level-25-hud
+hold h 600
+wait 2500
+shot 21-level-25-character
+hold h 600
+wait 1500
+
+# Веха 50: выбор пути Вознесения.
+wait_log 600000 AOEPROG_MARK stage_start ascend_pick
+wait 1500
+shot 30-level-50-hud
+
+# Цель 56: вложение очков Вознесения по цепочке.
+wait_log 600000 AOEPROG_MARK stage_start ascend_alloc
+wait 2000
+shot 40-level-56-hud
+hold h 600
+wait 2500
+shot 41-level-56-character
+hold h 600
+wait 1500
+
+# Итог прогона.
+wait_log 300000 AOEPROG done
+wait 2000
+shot 50-done
+
+shell bash tools/e2e/spell-video.sh stop
+jstack progression
+log конец сценария progression

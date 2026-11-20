@@ -26,6 +26,13 @@ pidfile="run/e2e/ffmpeg.pid"
 log="run/e2e/ffmpeg.log"
 startfile="run/e2e/video-start.txt"
 endfile="run/e2e/video-end.txt"
+# Параллельные записи (прокачка, GUI, умения в одном прогоне): метки времени
+# называем по файлу видео, иначе следующий сценарий затирает метки прошлого.
+if [ -n "${VIDEO_OUT:-}" ]; then
+    base="$(basename "$out" .mp4)"
+    startfile="run/e2e/${base}-start.txt"
+    endfile="run/e2e/${base}-end.txt"
+fi
 
 now_ms() {
     date +%s%3N

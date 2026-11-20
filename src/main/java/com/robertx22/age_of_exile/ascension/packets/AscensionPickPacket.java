@@ -51,6 +51,8 @@ public class AscensionPickPacket extends MyPacket<AscensionPickPacket> {
             return;
         }
         AscensionLogic.pickClass(ctx.getPlayer(), cls.id);
+        com.robertx22.age_of_exile.uncommon.testing.GuiPacketLog.log(
+            "packet=ascension_pick class=" + cls.id + " ok=true");
         ctx.getPlayer()
             .sendSystemMessage(Component.literal("§bПрилив принял вас: путь «" + cls.locName + "» открыт."));
     }
