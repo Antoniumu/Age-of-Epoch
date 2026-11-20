@@ -31,7 +31,12 @@ public final class DevTestCommand {
                 .then(literal("dps").executes(ctx -> run(ctx.getSource().getPlayerOrException(), "dps")))
                 .then(literal("heal").executes(ctx -> run(ctx.getSource().getPlayerOrException(), "heal")))
                 .then(literal("gear").executes(ctx -> run(ctx.getSource().getPlayerOrException(), "gear")))
-                .then(literal("all").executes(ctx -> run(ctx.getSource().getPlayerOrException(), "all"))))
+                .then(literal("all").executes(ctx -> run(ctx.getSource().getPlayerOrException(), "all")))
+                .then(literal("progression")
+                    .executes(ctx -> progression(ctx.getSource().getPlayerOrException(), ""))
+                    .then(Commands.argument("args", com.mojang.brigadier.arguments.StringArgumentType.greedyString())
+                        .executes(ctx -> progression(ctx.getSource().getPlayerOrException(),
+                            com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "args"))))))
             .then(literal("spellaudit")
                 .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .executes(ctx -> audit(ctx.getSource().getPlayerOrException(), "all"))
@@ -70,6 +75,13 @@ public final class DevTestCommand {
         CombatProbe.request(what);
         player.sendSystemMessage(Component.literal(
             "§a[Проба] " + what + ": запущено, результат — строки AOETEST в логе"));
+        return 1;
+    }
+
+    private static int progression(ServerPlayer player, String args) {
+        com.robertx22.age_of_exile.uncommon.testing.ProgressionProbe.request(args);
+        player.sendSystemMessage(Component.literal(
+            "§a[Прокачка] запущено, результат — строки AOEPROG в логе и progression-report.md"));
         return 1;
     }
 }

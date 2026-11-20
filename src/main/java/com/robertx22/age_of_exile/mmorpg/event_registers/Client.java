@@ -13,6 +13,8 @@ import com.robertx22.age_of_exile.gui.overlays.spell_cast_bar.SpellCastBarOverla
 import com.robertx22.age_of_exile.gui.overlays.spell_hotbar.SpellHotbarOverlay;
 import com.robertx22.age_of_exile.gui.overlays.spell_audit.SpellAuditOverlay;
 import com.robertx22.age_of_exile.gui.overlays.profession_audit.ProfessionAuditOverlay;
+import com.robertx22.age_of_exile.gui.overlays.progression.ProgressionOverlay;
+import com.robertx22.age_of_exile.uncommon.testing.client.GuiWidgetDumper;
 import com.robertx22.forge_compat.client.event.RenderGameOverlayEvent;
 import com.robertx22.forge_compat.event.TickEvent;
 import com.robertx22.library_of_exile.main.ForgeEvents;
@@ -25,6 +27,7 @@ public class Client {
         SpellHotbarOverlay spellHotbarOverlay = new SpellHotbarOverlay();
         SpellAuditOverlay spellAuditOverlay = new SpellAuditOverlay();
         ProfessionAuditOverlay professionAuditOverlay = new ProfessionAuditOverlay();
+        ProgressionOverlay progressionOverlay = new ProgressionOverlay();
         DeathStatsOverlay death = new DeathStatsOverlay();
         SpellCastBarOverlay castbar = new SpellCastBarOverlay();
         RPGGuiOverlay rpggui = new RPGGuiOverlay();
@@ -37,6 +40,9 @@ public class Client {
             if (event.phase == TickEvent.Phase.END) {
                 OnClientTick.onEndTick(Minecraft.getInstance());
                 OnKeyPress.onEndTick(Minecraft.getInstance());
+                // Дампер виджетов GUI для e2e-сценария gui.txt (работает только
+                // с флаг-файлом run/aoe-gui-dump.flag, в обычной игре пустышка).
+                GuiWidgetDumper.onEndTick(Minecraft.getInstance());
             }
         });
 
@@ -54,6 +60,7 @@ public class Client {
             partyHud.onHudRender(event.getMatrixStack(), event.getPartialTicks());
             spellAuditOverlay.onHudRender(event.getMatrixStack(), event.getPartialTicks());
             professionAuditOverlay.onHudRender(event.getMatrixStack(), event.getPartialTicks());
+            progressionOverlay.onHudRender(event.getMatrixStack(), event.getPartialTicks());
             DamageParticleRenderer.renderHudParticles(event.getMatrixStack());
             MobPlateStyleHud.render(event.getMatrixStack());
 

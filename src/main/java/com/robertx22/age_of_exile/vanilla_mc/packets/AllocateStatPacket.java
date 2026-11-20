@@ -64,8 +64,16 @@ public class AllocateStatPacket extends MyPacket<AllocateStatPacket> {
                 cap.statPoints.map.put(stat, 1 + cap.statPoints.map.getOrDefault(stat, 0));
 
                 cap.syncToClient(ctx.getPlayer());
-
+                com.robertx22.age_of_exile.uncommon.testing.GuiPacketLog.log(
+                    "packet=stat_alloc stat=" + stat + " ok=true free_after="
+                        + cap.statPoints.getFreePoints(ctx.getPlayer()));
+            } else {
+                com.robertx22.age_of_exile.uncommon.testing.GuiPacketLog.log(
+                    "packet=stat_alloc stat=" + stat + " ok=false reason=not_core_stat");
             }
+        } else {
+            com.robertx22.age_of_exile.uncommon.testing.GuiPacketLog.log(
+                "packet=stat_alloc stat=" + stat + " ok=false reason=no_free_points");
         }
     }
 

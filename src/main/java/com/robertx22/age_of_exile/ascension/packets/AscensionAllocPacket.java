@@ -42,12 +42,16 @@ public class AscensionAllocPacket extends MyPacket<AscensionAllocPacket> {
     public void onReceived(ExilePacketContext ctx) {
         if (!ExileDB.Spells()
             .isRegistered(spellId)) {
+            com.robertx22.age_of_exile.uncommon.testing.GuiPacketLog.log(
+                "packet=ascension_alloc spell=" + spellId + " ok=false reason=unknown_spell");
             return;
         }
 
         String err = AscensionLogic.canAllocate(ctx.getPlayer(), spellId);
 
         if (!err.isEmpty()) {
+            com.robertx22.age_of_exile.uncommon.testing.GuiPacketLog.log(
+                "packet=ascension_alloc spell=" + spellId + " ok=false reason=" + err);
             ctx.getPlayer()
                 .sendSystemMessage(Component.literal(switch (err) {
                     case "low_level" -> "§cУ вас ещё нет 50-го уровня.";
@@ -61,6 +65,9 @@ public class AscensionAllocPacket extends MyPacket<AscensionAllocPacket> {
         }
 
         if (AscensionLogic.allocate(ctx.getPlayer(), spellId)) {
+            com.robertx22.age_of_exile.uncommon.testing.GuiPacketLog.log(
+                "packet=ascension_alloc spell=" + spellId + " ok=true rank="
+                    + com.robertx22.age_of_exile.ascension.AscensionLogic.data(ctx.getPlayer()).rankOf(spellId));
             ctx.getPlayer()
                 .sendSystemMessage(Component.literal("§bПрилив усилил «" + ExileDB.Spells()
                     .get(spellId)

@@ -1,0 +1,151 @@
+# Сценарий: КЛИКИ В GUI — доказательство, что кнопки интерфейса работают.
+#
+# Чем это отличается от «открыть экран и снять»:
+#   * клиент под флагом run/aoe-gui-dump.flag пишет run/gui-widgets.txt —
+#     реальные координаты и подписи всех кнопок открытого экрана;
+#   * сценарий кликает настоящей мышью (xdotool) по ЦЕНТРУ найденного виджета,
+#     а не по зашитым пикселям;
+#   * сервер, обработав пакет от кнопки, пишет строку AOEGUI packet=... ok=...;
+#     сценарий ждёт эту строку (wait_log_new) — так доказывается весь путь:
+#     мышь → виджет → C2S-пакет → серверная логика.
+#
+# Прогон: сначала быстрая прокачка до 50 — кап игры (alloc=none — очки НЕ тратятся, их
+# тратим мы кликами), затем видео + клики: характеристики → навыки →
+# Вознесение (выбор пути, узел, ПКМ на хотбар) → таланты → профессии.
+#
+# Координаты кликов меню — под окно 1280x720 (run/options.txt, guiScale 2).
+
+wait_window Minecraft 420000
+wait_log 300000 Created: .*atlas/items
+wait 8000
+shot 00-main-menu
+
+# Чистый мир: wipe здесь (в меню), а не только в workflow — умирающий клиент
+# прошлого сценария мог дописать сейв после внешней очистки (гонка при выключении).
+shell rm -rf run/saves
+wait 500
+
+# Главное меню → Одиночная игра → список миров
+move 640 296
+click 640 296
+wait 4000
+shot 01-world-list
+
+# Существующий мир, иначе — создать новый (тот же путь, что в combat.txt).
+move 640 124
+click 640 124
+wait 800
+move 483 637
+click 483 637
+wait 45000
+shot 02-in-world
+move 797 637
+click 797 637
+wait 3000
+move 480 688
+click 480 688
+wait 45000
+shot 02b-in-world-created
+
+# --- подготовка: дампер виджетов + быстрая прокачка до 50 ------------------
+touch run/aoe-gui-dump.flag
+write run/aoe-progression.flag level=50 alloc=none
+log жду прокачку до 50 (alloc=none: очки останутся для кликов)
+wait_log 600000 AOEPROG done
+wait 2000
+shot 05-progressed-to-50
+
+# --- видео кликов ---------------------------------------------------------
+shell mkdir -p run/e2e
+shell VIDEO_OUT=run/e2e/gui-video.mp4 bash tools/e2e/spell-video.sh start
+wait 1500
+
+# --- 1. Хаб персонажа (H): характеристики ---------------------------------
+hold h 600
+wait_screen 45000 CharacterScreen
+wait 1200
+shot 10-character-screen
+widgets
+
+log_mark
+click_widget AllocateStatButton#0
+wait_log_new 20000 AOEGUI packet=stat_alloc
+wait 800
+shot 11-stat-allocated
+
+# --- 2. Навыки (первая вкладка хаба) --------------------------------------
+click_widget MainHubButton#0
+wait_screen 45000 SpellScreen
+wait 1200
+shot 20-spell-screen
+widgets
+
+log_mark
+click_widget LearnSpellButton#0
+wait_log_new 20000 AOEGUI packet=spell_alloc
+wait 800
+shot 21-spell-learned
+
+# --- 3. Вознесение: выбор пути, узел, хотбар ------------------------------
+click_widget Ascension|Вознес
+wait_screen 45000 AscendedClassesScreen
+wait 1500
+shot 30-ascension-classes
+widgets
+
+log_mark
+click_widget Выбрать путь
+wait_log_new 20000 AOEGUI packet=ascension_pick ok=true
+wait 1500
+shot 31-path-picked
+widgets
+
+# Узел цепочки — не кнопка, а отладочная цель «node:<spellId>».
+wait_widget 30000 node:tidewhip_lash
+log_mark
+click_widget node:tidewhip_lash
+wait_log_new 20000 AOEGUI packet=ascension_alloc spell=tidewhip_lash ok=true
+wait 800
+shot 32-node-allocated
+
+# ПКМ по тому же узлу — назначить на панель заклинаний.
+log_mark
+rclick_widget node:tidewhip_lash
+wait 1500
+shot 33-node-hotbar
+
+# --- 4. Таланты (вторая вкладка хаба) -------------------------------------
+hold h 600
+wait 1500
+hold h 600
+wait_screen 45000 CharacterScreen
+click_widget MainHubButton#1
+wait_screen 45000 TalentsScreen
+wait 1500
+shot 40-talents-screen
+widgets
+
+log_mark
+click_widget PerkButton#0
+wait_log_new 20000 AOEGUI packet=perk_change
+wait 800
+shot 41-perk-clicked
+
+# --- 5. Профессии (третья вкладка): показать экран ------------------------
+hold h 600
+wait 1500
+hold h 600
+wait_screen 45000 CharacterScreen
+click_widget MainHubButton#2
+wait 3000
+shot 50-professions
+widgets
+
+# --- закрыть GUI, вернуться в мир ------------------------------------------
+key Escape
+wait 1000
+shot 60-back-in-world
+
+shell bash tools/e2e/spell-video.sh stop
+jstack gui
+log конец сценария gui

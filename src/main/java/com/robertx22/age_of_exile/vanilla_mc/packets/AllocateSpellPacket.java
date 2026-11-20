@@ -65,6 +65,11 @@ public class AllocateSpellPacket extends MyPacket<AllocateSpellPacket> {
         if (spells.canLearn(school, spell)) {
             spells.getSpellsData()
                 .learnSpell(spell, school);
+            com.robertx22.age_of_exile.uncommon.testing.GuiPacketLog.log(
+                "packet=spell_alloc spell=" + this.spellid + " school=" + this.schoolid + " ok=true");
+        } else {
+            com.robertx22.age_of_exile.uncommon.testing.GuiPacketLog.log(
+                "packet=spell_alloc spell=" + this.spellid + " school=" + this.schoolid + " ok=false reason=canLearn");
         }
 
         spells.syncToClient(ctx.getPlayer());
