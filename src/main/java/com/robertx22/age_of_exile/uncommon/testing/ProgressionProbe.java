@@ -291,9 +291,10 @@ public final class ProgressionProbe {
                     }
                     // Прогон демонстрационный, а не про выживание: ночные мобы
                     // не должны убивать AFK-персонажа посреди видео (и GUI-
-                    // сценария после него). Только для мира прогона.
-                    player.setInvulnerable(true);
-                    player.getAbilities().mayfly = true;
+                    // сценария после него). Creative-режим — проверенный путь
+                    // (его уже использует AirshipProbe): неуязвимость + день.
+                    player.setGameMode(net.minecraft.world.level.GameType.CREATIVE);
+                    player.onUpdateAbilities();
                     stageEnd("intro");
                     goPause(Phase.LEVEL);
                     return false;
