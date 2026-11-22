@@ -1,0 +1,47 @@
+[20:30:30] DISPLAY=:99, сценарий spells.txt
+[20:30:30] жду окно: дисплей :99, X-сокеты: :99, JVM: нет
+[20:30:50] дисплей клиента из /proc/4209/environ: :100 (был :99)
+[20:30:50] XAUTHORITY клиента: /tmp/xvfb-run.dV7xog/Xauthority
+[20:30:59] окно 2097204 на :100: Minecraft* 26.3 | WINDOW=2097204 X=0 Y=152 WIDTH=1280 HEIGHT=720 SCREEN=0 | Map State: IsViewable
+[20:31:03] в логе найдено: [20:31:01] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/items.png-atlas
+[20:31:11] снимок 00-main-menu (окно 2097204, 710 КБ)
+[20:31:11] курсор 640,296
+[20:31:12] клик 640,296 (экран 640,448, кнопка 1)
+[20:31:17] снимок 01-world-list (окно 2097204, 456 КБ)
+[20:31:17] курсор 480,688
+[20:31:17] клик 480,688 (экран 480,840, кнопка 1)
+[20:31:22] снимок 02-create-world (окно 2097204, 470 КБ)
+[20:31:22] курсор 480,688
+[20:31:22] клик 480,688 (экран 480,840, кнопка 1)
+[20:32:08] снимок 03-in-world (окно 2097204, 234 КБ)
+[20:32:08] shell[mkdir -p run/e2e] -> 0
+    
+[20:32:09] shell[bash tools/e2e/spell-video.sh start] -> 0
+    окно клиента: 1280x720+0+152 на :100
+    запись пошла: run/e2e/spell-video.mp4 (48 байт)
+[20:32:11] записан файл-триггер run/aoe-spell-audit.flag: ${AOE_AUDIT_TARGET:-all}
+[20:32:11] флаг аудита поставлен, жду AOEAI done
+[20:38:16] в логе найдено: [20:38:15] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI done spells=78 passed=78 failed=0
+[20:38:20] снимок 04-audit-done (окно 2097204, 231 КБ)
+[20:38:20] удержание h 600 мс (фокус: 2097204)
+[20:38:23] снимок 05-character (окно 2097204, 213 КБ)
+[20:38:24] удержание h 600 мс (фокус: 2097204)
+[20:38:26] shell[bash tools/e2e/spell-video.sh stop] -> 0
+    видео готово: run/e2e/spell-video.mp4 (41M)
+    длительность: 376.8 c
+[20:38:27] jstack[spells]: pid 4209, 451 строк -> jstack-spells.txt
+[20:38:27] render thread:
+    "Render thread" #3 [4210] prio=5 os_prio=0 cpu=51935.61ms elapsed=457.70s tid=0x00007af328030aa0 nid=4210 runnable  [0x00007af330dfd000]
+    java.lang.Thread.State: RUNNABLE
+    at com.mojang.blaze3d.vertex.BufferBuilder.addVertex(BufferBuilder.java:322)
+    at com.mojang.blaze3d.vertex.VertexConsumer.putBakedQuad(VertexConsumer.java:89)
+    at net.minecraft.client.renderer.feature.ItemFeatureRenderer.prepareMainSubmit(ItemFeatureRenderer.java:71)
+    at net.minecraft.client.renderer.feature.ItemFeatureRenderer.prepareSubmit(ItemFeatureRenderer.java:47)
+    at net.minecraft.client.renderer.feature.ItemFeatureRenderer.buildGroup(ItemFeatureRenderer.java:39)
+    at net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer.prepareGroup(RenderTypeFeatureRenderer.java:36)
+    at net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PreparedGroup.prepare(FeatureRenderDispatcher.java:350)
+    at net.minecraft.client.renderer.feature.FeatureRenderDispatcher.prepareFrameWithContext(FeatureRenderDispatcher.java:92)
+    at net.minecraft.client.renderer.feature.FeatureRenderDispatcher.prepareFrame(FeatureRenderDispatcher.java:61)
+    at net.minecraft.client.renderer.GameRenderer.renderItemInHand(GameRenderer.java:400)
+[20:38:27] конец сценария spells
+[20:38:27] итог: снимков 6, ошибок 0
