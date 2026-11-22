@@ -1,0 +1,25 @@
+[20:41:22] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Screen.mouseClicked: screen=CharacterScreen x=279.0 y=205.0 btn=1 doubleClick=false buttons=30
+[20:41:22] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Handled by button[2]=AllocateStatButton at (270,196 18x18)
+[20:41:23] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Screen.mouseClicked: screen=CharacterScreen x=499.5 y=107.0 btn=1 doubleClick=false buttons=30
+[20:41:23] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Handled by button[10]=MainHubButton at (447,95 105x24)
+[20:41:26] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Screen.mouseClicked: screen=SpellScreen x=216.0 y=249.0 btn=1 doubleClick=false buttons=26
+[20:41:26] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Handled by screen.mouseClicked(double,double,int)
+[20:41:27] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Screen.mouseClicked: screen=SpellScreen x=405.0 y=76.0 btn=1 doubleClick=false buttons=26
+[20:41:27] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Handled by button[2]=Button at (371,69 68x14)
+[20:41:30] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Screen.mouseClicked: screen=AscendedClassesScreen x=323.0 y=241.0 btn=1 doubleClick=false buttons=2
+[20:41:30] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] AscendedClassesScreen.mouseClicked x=323.0 y=241.0 btn=1 cls=null unlocked=true nodes=0
+[20:41:30] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Handled by button[1]=Button at (258,233 130x16)
+[20:41:32] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Screen.mouseClicked: screen=AscendedClassesScreen x=230.0 y=202.0 btn=1 doubleClick=false buttons=2
+[20:41:32] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] AscendedClassesScreen.mouseClicked x=230.0 y=202.0 btn=1 cls=tide_dancer unlocked=true nodes=6
+[20:41:32] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] node hit: tidewhip_lash btn=1
+[20:41:32] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Handled by screen.mouseClicked(double,double,int)
+[20:41:34] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Screen.mouseClicked: screen=AscendedClassesScreen x=230.0 y=202.0 btn=3 doubleClick=false buttons=2
+[20:41:34] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] AscendedClassesScreen.mouseClicked x=230.0 y=202.0 btn=3 cls=tide_dancer unlocked=true nodes=6
+[20:41:34] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] node hit: tidewhip_lash btn=3
+[20:41:34] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Handled by screen.mouseClicked(double,double,int)
+[20:41:38] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Screen.mouseClicked: screen=CharacterScreen x=499.5 y=131.0 btn=1 doubleClick=false buttons=30
+[20:41:38] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Handled by button[11]=MainHubButton at (447,119 105x24)
+[20:41:40] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] SkillTreeScreen.mouseClicked: raw=(15.0,302.0) zoom=0.6 zoomed=(24,503) scroll=(0,0) screenSize=(640,360) perkButtons=711
+[20:41:40] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Screen.mouseClicked: screen=TalentsScreen x=15.0 y=302.0 btn=1 doubleClick=false buttons=711
+[20:41:40] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] PerkButton HIT: point=29_48 perk=elemental_resist type=STAT isEntry=false oneOfAKind= lvlReq=1 btn=1 playerLvl=50 freePoints=101 allocatedInSchool=[] connections=[27_47, 31_47] canAllocate=false failReason=Сначала выберите начальный путь этого древа
+[20:41:40] [Render thread/INFO] (Minecraft) [STDOUT]: [AOE-CLICK] Handled by button[109]=PerkButton at (3,498 24x24)

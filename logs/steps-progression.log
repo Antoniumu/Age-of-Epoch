@@ -1,0 +1,66 @@
+[20:30:01] DISPLAY=:91, сценарий progression.txt
+[20:30:01] жду окно: дисплей :91, X-сокеты: :91, JVM: нет
+[20:30:19] дисплей клиента из /proc/4243/environ: :99 (был :91)
+[20:30:19] XAUTHORITY клиента: /tmp/xvfb-run.o4GvYd/Xauthority
+[20:30:28] окно 2097204 на :99: Minecraft* 26.3 | WINDOW=2097204 X=0 Y=152 WIDTH=1280 HEIGHT=720 SCREEN=0 | Map State: IsViewable
+[20:30:32] в логе найдено: [20:30:30] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/items.png-atlas
+[20:30:40] снимок 00-main-menu (окно 2097204, 706 КБ)
+[20:30:40] курсор 640,296
+[20:30:40] клик 640,296 (экран 640,448, кнопка 1)
+[20:30:46] снимок 01-world-list (окно 2097204, 456 КБ)
+[20:30:46] курсор 640,124
+[20:30:46] клик 640,124 (экран 640,276, кнопка 1)
+[20:30:47] курсор 483,637
+[20:30:47] клик 483,637 (экран 483,789, кнопка 1)
+[20:31:33] снимок 02-in-world (окно 2097204, 454 КБ)
+[20:31:33] курсор 797,637
+[20:31:34] клик 797,637 (экран 797,789, кнопка 1)
+[20:31:37] курсор 480,688
+[20:31:37] клик 480,688 (экран 480,840, кнопка 1)
+[20:32:22] снимок 02b-in-world-created (окно 2097204, 486 КБ)
+[20:32:23] shell[mkdir -p run/e2e] -> 0
+    
+[20:32:23] shell[VIDEO_OUT=run/e2e/progression-video.mp4 bash tools/e2e/spell-video.sh start] -> 0
+    окно клиента: 1280x720+0+152 на :99
+    запись пошла: run/e2e/progression-video.mp4 (48 байт)
+[20:32:25] записан файл-триггер run/aoe-progression.flag: level=50 alloc=some
+[20:32:25] флаг прогрессии поставлен, жду вехи AOEPROG_MARK
+[20:32:35] в логе найдено: [20:32:35] [Server thread/INFO] (AgeOfEpoch-Progression) AOEPROG_MARK stage_start alloc_stats 1795379555023
+[20:32:37] снимок 10-level-10-hud (окно 2097204, 461 КБ)
+[20:32:38] удержание h 600 мс (фокус: 2097204)
+[20:32:41] снимок 11-level-10-character (окно 2097204, 378 КБ)
+[20:32:41] удержание h 600 мс (фокус: 2097204)
+[20:33:15] в логе найдено: [20:33:15] [Server thread/INFO] (AgeOfEpoch-Progression) AOEPROG_MARK stage_start alloc_spell 1795379595128
+[20:33:17] снимок 20-level-25-hud (окно 2097204, 393 КБ)
+[20:33:17] удержание h 600 мс (фокус: 2097204)
+[20:33:20] снимок 21-level-25-character (окно 2097204, 394 КБ)
+[20:33:21] удержание h 600 мс (фокус: 2097204)
+[20:35:33] в логе найдено: [20:35:33] [Server thread/INFO] (AgeOfEpoch-Progression) AOEPROG_MARK stage_start ascend_pick 1795379733473
+[20:35:35] снимок 30-level-50-hud (окно 2097204, 389 КБ)
+[20:35:35] в логе найдено: [20:35:35] [Server thread/INFO] (AgeOfEpoch-Progression) AOEPROG_MARK stage_start ascend_alloc 1795379735023
+[20:35:37] снимок 40-level-50-final-hud (окно 2097204, 388 КБ)
+[20:35:38] удержание h 600 мс (фокус: 2097204)
+[20:35:40] снимок 41-level-50-final-character (окно 2097204, 388 КБ)
+[20:35:41] удержание h 600 мс (фокус: 2097204)
+[20:35:43] в логе найдено: [20:35:38] [Server thread/INFO] (AgeOfEpoch-Progression) AOEPROG done passed=11 failed=0 level=50/50
+[20:35:45] снимок 50-done (окно 2097204, 404 КБ)
+[20:35:46] shell[bash tools/e2e/spell-video.sh stop] -> 1
+    видео пустое, смотри run/e2e/ffmpeg.log:
+    [x11grab @ 0x563bb854d000] Stream #0: not enough frames to estimate rate; consider increasing probesize
+[20:35:46] ОШИБКА: команда оболочки вернула 1: bash tools/e2e/spell-video.sh stop
+[20:35:46] jstack[progression]: pid 4243, 383 строк -> jstack-progression.txt
+[20:35:46] render thread:
+    "Render thread" #3 [4244] prio=5 os_prio=0 cpu=32346.87ms elapsed=327.08s tid=0x00007ab51c030a70 nid=4244 runnable  [0x00007ab5255fe000]
+    java.lang.Thread.State: RUNNABLE
+    at java.lang.invoke.LambdaForm$MH/0x0000000021638400.invoke(java.base@25.0.5/LambdaForm$MH)
+    at java.lang.invoke.LambdaForm$MH/0x00000000212a5c00.invokeExact_MT(java.base@25.0.5/LambdaForm$MH)
+    at jdk.internal.foreign.abi.DowncallStub/0x00000000212a3000.invoke(java.base@25.0.5/Unknown Source)
+    at java.lang.invoke.LambdaForm$DMH/0x00000000212a3400.invokeStatic(java.base@25.0.5/LambdaForm$DMH)
+    at java.lang.invoke.LambdaForm$MH/0x0000000021638000.invoke(java.base@25.0.5/LambdaForm$MH)
+    at java.lang.invoke.LambdaForm$MH/0x00000000212a5400.invokeExact_MT(java.base@25.0.5/LambdaForm$MH)
+    at org.lwjgl.system.JNIBindingsImpl/0x00000000202d8000.callPJPV(Unknown Source)
+    at org.lwjgl.system.JNI.callPJPV(JNI.java:2541)
+    at org.lwjgl.vulkan.VK10.nvkDestroyBufferView(VK10.java:2027)
+    at org.lwjgl.vulkan.VK10.vkDestroyBufferView(VK10.java:2032)
+[20:35:46] конец сценария progression
+[20:35:46] итог: снимков 12, ошибок 1

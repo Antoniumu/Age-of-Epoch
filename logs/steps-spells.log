@@ -1,0 +1,47 @@
+[20:42:57] DISPLAY=:93, сценарий spells.txt
+[20:42:58] жду окно: дисплей :93, X-сокеты: :100, :91, :92, :93, :99, JVM: нет
+[20:43:04] дисплей клиента из /proc/8042/environ: :101 (был :93)
+[20:43:04] XAUTHORITY клиента: /tmp/xvfb-run.mBbiau/Xauthority
+[20:43:11] окно 2097204 на :101: Minecraft* 26.3 | WINDOW=2097204 X=0 Y=152 WIDTH=1280 HEIGHT=720 SCREEN=0 | Map State: IsViewable
+[20:43:15] в логе найдено: [20:43:13] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/items.png-atlas
+[20:43:23] снимок 00-main-menu (окно 2097204, 711 КБ)
+[20:43:23] курсор 640,296
+[20:43:24] клик 640,296 (экран 640,448, кнопка 1)
+[20:43:29] снимок 01-world-list (окно 2097204, 454 КБ)
+[20:43:29] курсор 480,688
+[20:43:29] клик 480,688 (экран 480,840, кнопка 1)
+[20:43:34] снимок 02-create-world (окно 2097204, 470 КБ)
+[20:43:34] курсор 480,688
+[20:43:34] клик 480,688 (экран 480,840, кнопка 1)
+[20:44:19] снимок 03-in-world (окно 2097204, 176 КБ)
+[20:44:19] shell[mkdir -p run/e2e] -> 0
+    
+[20:44:20] shell[bash tools/e2e/spell-video.sh start] -> 0
+    окно клиента: 1280x720+0+152 на :101
+    запись пошла: run/e2e/spell-video.mp4 (48 байт)
+[20:44:22] записан файл-триггер run/aoe-spell-audit.flag: ${AOE_AUDIT_TARGET:-all}
+[20:44:22] флаг аудита поставлен, жду AOEAI done
+[20:50:26] в логе найдено: [20:50:26] [Server thread/INFO] (AgeOfEpoch-SpellAudit) AOEAI done spells=78 passed=78 failed=0
+[20:50:31] снимок 04-audit-done (окно 2097204, 319 КБ)
+[20:50:31] удержание h 600 мс (фокус: 2097204)
+[20:50:34] снимок 05-character (окно 2097204, 311 КБ)
+[20:50:35] удержание h 600 мс (фокус: 2097204)
+[20:50:37] shell[bash tools/e2e/spell-video.sh stop] -> 0
+    видео готово: run/e2e/spell-video.mp4 (45M)
+    длительность: 376.8 c
+[20:50:37] jstack[spells]: pid 8042, 426 строк -> jstack-spells.txt
+[20:50:37] render thread:
+    "Render thread" #3 [8043] prio=5 os_prio=0 cpu=46773.26ms elapsed=454.43s tid=0x000078db94030a70 nid=8043 runnable  [0x000078db993fc000]
+    java.lang.Thread.State: RUNNABLE
+    at java.lang.invoke.LambdaForm$MH/0x000000003a118000.invokeExact_MT(java.base@25.0.5/LambdaForm$MH)
+    at jdk.internal.reflect.MethodHandleObjectFieldAccessorImpl.set(java.base@25.0.5/MethodHandleObjectFieldAccessorImpl.java:109)
+    at java.lang.reflect.Field.set(java.base@25.0.5/Field.java:832)
+    at info.loenwind.autosave.engine.StorableEngine.read_impl(StorableEngine.java:136)
+    at info.loenwind.autosave.engine.StorableEngine.read(StorableEngine.java:109)
+    at info.loenwind.autosave.Reader.read(Reader.java:19)
+    at info.loenwind.autosave.Reader.read(Reader.java:46)
+    at com.robertx22.library_of_exile.utils.LoadSave.Load(LoadSave.java:56)
+    at com.robertx22.age_of_exile.uncommon.datasaving.Gear.Load(Gear.java:29)
+    at com.robertx22.age_of_exile.saveclasses.unit.GearData.<init>(GearData.java:21)
+[20:50:37] конец сценария spells
+[20:50:37] итог: снимков 6, ошибок 0

@@ -1,0 +1,4 @@
+[20:41:22] [Server thread/INFO] (AgeOfEpoch-GuiPackets) AOEGUI packet=stat_alloc stat=vitality ok=true free_after=99
+[20:41:26] [Server thread/INFO] (AgeOfEpoch-GuiPackets) AOEGUI packet=spell_alloc spell=poison_ball school=nature ok=true
+[20:41:30] [Server thread/INFO] (AgeOfEpoch-GuiPackets) AOEGUI packet=ascension_pick class=tide_dancer ok=true
+[20:41:32] [Server thread/INFO] (AgeOfEpoch-GuiPackets) AOEGUI packet=ascension_alloc spell=tidewhip_lash ok=true rank=1
