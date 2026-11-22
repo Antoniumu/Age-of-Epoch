@@ -1,0 +1,382 @@
+name: "Gameplay E2E: полный цикл (прокачка + GUI + умения)"
+
+# Один пайплайн отвечает на вопрос «игра реально играется?» тремя живыми
+# прогонами dev-клиента под Xvfb, каждый со своим видео:
+#
+#   1) ПРОКАЧКА (scenarios/progression.txt): серверный зонд ProgressionProbe
+#      качает персонажа настоящим GiveExp от 1-го до 50-го уровня (кап игры) — в кадре
+#      идут «+N опыта» и level-up'ы, HUD-оверлей подписывает этап. На вехах
+#      10/25/50 зонд вкладывает очки характеристик, изучает заклинание
+#      школы, выбирает путь Вознесения, вкачивает цепочку умений и назначает
+#      умение на хотбар. Видео режется на ролики по этапам (маркеры AOEPROG_MARK).
+#
+#   2) GUI (scenarios/gui.txt): клиент сам дампит координаты всех виджетов
+#      открытого экрана (GuiWidgetDumper), сценарий кликает настоящей мышью по
+#      центру кнопок: характеристики, изучение заклинания, выбор пути
+#      Вознесения, узел цепочки, ПКМ на хотбар, талант. Сервер подтверждает
+#      каждый клик строкой AOEGUI packet=... ok=true — так доказывается, что
+#      кнопки работают (мышь → виджет → C2S-пакет → серверная логика).
+#
+#   3) УМЕНИЯ (scenarios/spells.txt): SpellAuditProbe применяет КАЖДОЕ умение
+#      настоящим путём каста по манекенам, в кадре — подпись и живые цифры.
+#      Видео режется на ролики по классам (маркеры AOEAI_MARK).
+#
+# Итоги публикуются в ветку ci-gameplay (ролики играются прямо в GitHub),
+# комментарием в PR и артефактами. Job красный, пока не зелёные все три части.
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'src/main/java/com/robertx22/age_of_exile/ascension/**'
+      - 'src/main/java/com/robertx22/age_of_exile/gui/**'
+      - 'src/main/java/com/robertx22/age_of_exile/uncommon/testing/**'
+      - 'src/main/java/com/robertx22/age_of_exile/vanilla_mc/packets/**'
+      - 'src/main/java/com/robertx22/age_of_exile/capability/**'
+      - 'tools/e2e/**'
+      - '.github/workflows/gameplay-e2e.yml'
+  push:
+    branches: [main]
+
+concurrency:
+  group: gameplay-e2e-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write        # публикация ветки ci-gameplay
+  pull-requests: write   # комментарий с итогами и видео
+
+env:
+  GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx4G'
+  BRANCH_RAW: ci-gameplay-${{ github.head_ref || github.ref_name }}
+
+jobs:
+  cycle:
+    name: Полный цикл (прокачка + GUI + умения), видео
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v7
+
+      # Каталог прогона чистый: иначе в ветку уедут видео/снимки прошлых прогонов.
+      - name: Очистка каталога прогона
+        run: |
+          rm -rf run/e2e run/spell-audit* run/progression-* run/saves/New* 2>/dev/null || true
+          rm -f run/aoe-progression.flag run/aoe-gui-dump.flag run/aoe-spell-audit.flag run/aoe-devtest.flag
+          mkdir -p run/e2e/shots
+
+      - uses: ./.github/actions/setup-build-env
+        with:
+          cache-read-only: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork }}
+
+      - name: Имя ветки публикации
+        run: echo "BRANCH=$(echo "$BRANCH_RAW" | tr '/' '-')" >> "$GITHUB_ENV"
+
+      # mesa-vulkan-drivers обязателен: MC 26.3 под Xvfb не создаёт OpenGL-
+      # контекст и уходит в Vulkan (lavapipe). ffmpeg — запись видео.
+      - name: Пакеты для headless-клиента, скриншотов и записи видео
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends \
+            xvfb x11-utils xdotool imagemagick x11-apps openbox wmctrl \
+            libgl1 libglu1-mesa libgl1-mesa-dri mesa-utils \
+            mesa-vulkan-drivers vulkan-tools ffmpeg \
+            libxi6 libxcursor1 libxrandr2 libxinerama1 libxxf86vm1 \
+            libopenal1 libpulse0 libegl1 libegl-mesa0
+
+      # ---- 0a. Синтаксис Java (AST, секунды) ----------------------------------
+      # Ловит грубые ошибки синтаксиса до часового e2e: compileJava в CI
+      # должен был бы, но история показывает, что под dev-клиентом правки
+      # зондов легко расходятся с локальной правкой. AST — страховка.
+      - name: Синтаксис Java (tree-sitter)
+        run: |
+          python3 tools/check_java_syntax.py $(git ls-files 'src/main/java/*.java' | head -c 100000) 2>&1 | tail -3 || true
+          # check_java_syntax без зависимостей может пропустить часть файлов —
+          # не делаем шаг красным, это только предупреждение в логе.
+
+      # ---- 0. Структурный аудит (секунды, без игры) ---------------------------
+      - name: Структурный аудит заклинаний
+        id: structural
+        run: |
+          set +e
+          python3 tools/verify/check_spells.py \
+            --markdown run/e2e/spell-audit-structural.md \
+            --json run/e2e/spell-audit-structural.json > run/e2e/structural.log 2>&1
+          status=$?
+          set -e
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          tail -n 20 run/e2e/structural.log
+          exit 0
+
+      # ---- 1. Прокачка: 1 → 50 (кап игры), видео по этапам -----------------------------
+      - name: Прокачка (видео по этапам)
+        id: progression
+        continue-on-error: true
+        env:
+          CLIENT_TIMEOUT: '1500'
+          # Свой X-сервер: мёртвый :99 (умерший Xvfb ломает X-сокет клиента)
+          # был причиной пустого прогона. spell-video.sh поднимет :91 сам.
+          DISPLAY_NUM: '91'
+        run: |
+          # Мир начинаем с нуля: прокачка должна идти с 1-го уровня.
+          rm -rf run/saves 2>/dev/null || true
+          set +e
+          bash tools/e2e/run-in-xvfb.sh tools/e2e/scenarios/progression.txt run/e2e/shots/progression
+          status=$?
+          set -e
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          grep -h "AOEPROG" run/logs/latest.log 2>/dev/null | awk '!seen[$0]++' > run/e2e/aoeprog.log || true
+          {
+            echo "### Прокачка: статус $status"
+            echo '```'
+            grep -h "AOEPROG done" run/e2e/aoeprog.log | tail -1 || echo "AOEPROG done не найден"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+
+      - name: Нарезать видео прокачки по этапам
+        if: always()
+        run: |
+          set +e
+          python3 tools/e2e/split_videos.py \
+            --video run/e2e/progression-video.mp4 \
+            --timeline run/progression-timeline.txt \
+            --start run/e2e/progression-video-start.txt \
+            --out run/e2e/videos-progression \
+            --report run/progression-report.json \
+            --marker AOEPROG_MARK \
+            --group-start stage_start --group-end stage_end \
+            --heading "Видео: прокачка по этапам" --noun "этапов"
+          set -e
+          ls -la run/e2e/videos-progression 2>/dev/null || true
+
+      # ---- 2. GUI: настоящие клики с подтверждением сервера ------------------
+      - name: GUI (клики по виджетам + видео)
+        id: gui
+        continue-on-error: true
+        env:
+          CLIENT_TIMEOUT: '1800'
+          DISPLAY_NUM: '92'
+        run: |
+          # Мир начинаем с нуля: GUI-сценарий сам прокачивает персонажа до 50-го уровня
+          # (alloc=none), а потом тратит очки кликами. Мир после сценария
+          # progression уже имеет 50-й уровень и выбранный путь — кнопка
+          # «Выбрать путь» там не появилась бы.
+          rm -rf run/saves 2>/dev/null || true
+          set +e
+          bash tools/e2e/run-in-xvfb.sh tools/e2e/scenarios/gui.txt run/e2e/shots/gui
+          status=$?
+          set -e
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          grep -h "AOEGUI packet=" run/logs/latest.log 2>/dev/null | awk '!seen[$0]++' > run/e2e/aoegui.log || true
+          # Клиентская диагностика кликов: в конце job latest.log уже от другого
+          # сценария, поэтому снимаем её здесь, пока лог принадлежит GUI-прогону.
+          grep -h "AOE-CLICK" run/logs/latest.log 2>/dev/null > run/e2e/aoeclick.log || true
+          {
+            echo "### GUI: статус $status"
+            echo '```'
+            cat run/e2e/aoegui.log 2>/dev/null || echo "строк AOEGUI нет"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+
+      # ---- 3. Умения: каждое на видео, нарезка по классам ---------------------
+      - name: Умения (каждое на видео)
+        id: spells
+        continue-on-error: true
+        env:
+          CLIENT_TIMEOUT: '3600'
+          AOE_AUDIT_TARGET: all
+          DISPLAY_NUM: '93'
+        run: |
+          # Мир начинаем с нуля: аудит умений должен идти на эталонном
+          # персонаже (зонд сам выставляет 40-й уровень), без влияния
+          # прокачанного в прошлых сценариях героя.
+          rm -rf run/saves 2>/dev/null || true
+          set +e
+          bash tools/e2e/run-in-xvfb.sh tools/e2e/scenarios/spells.txt run/e2e/shots/spells
+          status=$?
+          set -e
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          grep -h "AOEAI " run/logs/latest.log run/spell-audit.log 2>/dev/null | awk '!seen[$0]++' > run/e2e/aoeai.log || true
+          {
+            echo "### Умения: статус $status"
+            echo '```'
+            grep -h "AOEAI done" run/e2e/aoeai.log | tail -1 || echo "AOEAI done не найден"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+
+      - name: Нарезать видео умений по классам
+        if: always()
+        run: |
+          set +e
+          python3 tools/e2e/split_videos.py \
+            --video run/e2e/spell-video.mp4 \
+            --timeline run/spell-audit-timeline.txt \
+            --start run/e2e/video-start.txt \
+            --out run/e2e/videos \
+            --report run/spell-audit.json
+          set -e
+          ls -la run/e2e/videos 2>/dev/null || true
+
+      # ---- 4. Публикация и комментарий ----------------------------------------
+      - name: Опубликовать видео и снимки в ветку ${{ env.BRANCH }}
+        if: always() && github.event.pull_request.head.repo.fork != true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          bash tools/e2e/publish-gameplay.sh run/e2e \
+            || echo "::error::Публикация в ветку ${BRANCH} не удалась"
+
+      - name: Комментарий в PR с итогами и видео
+        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork != true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          md="$(mktemp)"
+          raw="https://raw.githubusercontent.com/${REPO}/${BRANCH}"
+          {
+            echo "## Полный цикл: прокачка + GUI + умения"
+            echo
+            echo "Прогон: [${GITHUB_RUN_ID}](${GITHUB_SERVER_URL}/${REPO}/actions/runs/${GITHUB_RUN_ID}) · ветка: [\`${BRANCH}\`](https://github.com/${REPO}/tree/${BRANCH})"
+            echo
+            prog="$(grep -h "AOEPROG done" run/e2e/aoeprog.log 2>/dev/null | tail -1)"
+            echo "### 1. Прокачка"
+            echo
+            echo "**Итог:** \`${prog:-прогон не дошёл до конца}\`"
+            echo
+            if ls run/e2e/videos-progression/*.mp4 >/dev/null 2>&1; then
+              for f in run/e2e/videos-progression/*.mp4; do
+                base="$(basename "$f" .mp4)"
+                echo "* [▶ $base](${raw}/videos/progression/${base}.mp4)"
+              done
+              echo
+            fi
+            echo "### 2. Клики в GUI"
+            echo
+            if [ -s run/e2e/aoegui.log ]; then
+              echo '```'
+              cat run/e2e/aoegui.log
+              echo '```'
+              echo
+              echo "[▶ Видео кликов](${raw}/videos/gui/gui-video.mp4)"
+              echo
+            else
+              echo "> Строк AOEGUI нет — клики не дошли до сервера (см. ветку: logs/steps-gui.log)."
+              echo
+            fi
+            echo "### 3. Все умения"
+            echo
+            spells="$(grep -h "AOEAI done" run/e2e/aoeai.log 2>/dev/null | tail -1)"
+            echo "**Итог:** \`${spells:-аудит не дошёл до конца}\`"
+            echo
+            if ls run/e2e/videos/*.mp4 >/dev/null 2>&1; then
+              for f in run/e2e/videos/*.mp4; do
+                base="$(basename "$f" .mp4)"
+                echo "* [▶ $base](${raw}/videos/spells/${base}.mp4)"
+              done
+              echo
+            fi
+            echo "> Полная галерея снимков и роликов — в [ветке \`${BRANCH}\`](https://github.com/${REPO}/tree/${BRANCH})."
+          } > "$md"
+
+          existing="$(gh api "repos/${REPO}/issues/${PR}/comments" --paginate \
+            --jq '.[] | select(.body | contains("<!-- aoe-gameplay-e2e -->")) | .id' | head -1)"
+          { echo '<!-- aoe-gameplay-e2e -->'; cat "$md"; } > "$md.body"
+          if [ -n "$existing" ]; then
+            gh api -X PATCH "repos/${REPO}/issues/comments/${existing}" -F "body=@${md}.body" > /dev/null
+            echo "комментарий обновлён"
+          else
+            gh api -X POST "repos/${REPO}/issues/${PR}/comments" -F "body=@${md}.body" > /dev/null
+            echo "комментарий создан"
+          fi
+
+      - name: Артефакты (видео целиком, отчёты, снимки, логи)
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: gameplay-e2e
+          path: |
+            run/e2e/progression-video.mp4
+            run/e2e/gui-video.mp4
+            run/e2e/spell-video.mp4
+            run/e2e/videos-progression/**
+            run/e2e/videos/**
+            run/e2e/shots/**
+            run/e2e/aoeprog.log
+            run/e2e/aoegui.log
+            run/e2e/aoeai.log
+            run/progression-report.md
+            run/progression-report.json
+            run/progression-timeline.txt
+            run/spell-audit.md
+            run/spell-audit.json
+            run/e2e/spell-audit-structural.md
+            run/e2e/spell-audit-structural.json
+            run/e2e/structural.log
+            run/gui-widgets.txt
+            run/logs/latest.log
+            run/e2e/gradle.log
+          if-no-files-found: warn
+          retention-days: 30
+
+      # ---- 5. Вердикт: красный job, пока не зелёные все три части -------------
+      - name: Вердикт
+        if: always()
+        run: |
+          failed=0
+
+          if [ -s run/e2e/aoeprog.log ]; then
+            summary="$(grep -h "AOEPROG done" run/e2e/aoeprog.log | tail -1 || true)"
+            if [ -z "$summary" ]; then
+              echo "::error::Прокачка не завершилась (нет AOEPROG done)"
+              failed=1
+            elif ! grep -q "failed=0" <<< "$summary"; then
+              echo "::error::Прокачка с провалами: $summary"
+              failed=1
+            else
+              echo "Прокачка: $summary"
+            fi
+          else
+            echo "::error::Прокачка не отработала: строк AOEPROG нет"
+            failed=1
+          fi
+
+          # Клики: каждый ключевой пакет должен дойти до сервера с ok=true.
+          for want in "packet=stat_alloc" "packet=spell_alloc" "packet=ascension_pick" "packet=ascension_alloc"; do
+            if grep -h "$want" run/e2e/aoegui.log 2>/dev/null | grep -q "ok=true"; then
+              echo "GUI: $want — ok"
+            else
+              echo "::error::GUI: $want не подтверждён сервером (ok=true не найдено)"
+              failed=1
+            fi
+          done
+
+          if [ -s run/e2e/aoeai.log ]; then
+            failed_spells="$(grep -h "AOEAI spell=" run/e2e/aoeai.log | grep -c "verdict=FAIL" || true)"
+            total_spells="$(grep -h "AOEAI spell=" run/e2e/aoeai.log | grep -c "verdict=" || true)"
+            if [ "${total_spells:-0}" -eq 0 ]; then
+              echo "::error::Аудит умений не отработал: строк AOEAI spell= нет"
+              failed=1
+            elif [ "${failed_spells:-0}" -gt 0 ]; then
+              echo "::error::Провалили проверку $failed_spells из $total_spells умений"
+              failed=1
+            else
+              echo "Умения: $total_spells проверено, провалов нет"
+            fi
+          else
+            echo "::error::Аудит умений не отработал: строк AOEAI нет"
+            failed=1
+          fi
+
+          if [ "${{ steps.structural.outputs.status }}" != "0" ]; then
+            echo "::error::Структурный аудит нашёл проблемы — смотри spell-audit-structural.md"
+            failed=1
+          fi
+
+          exit $failed

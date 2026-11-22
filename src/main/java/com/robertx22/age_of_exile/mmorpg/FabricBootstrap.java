@@ -185,6 +185,8 @@ public class FabricBootstrap {
             com.robertx22.age_of_exile.uncommon.testing.SpellAuditProbe.tick(server);
             // Аудит профессий (/aoe profaudit или флаг-файл из CI-сценария).
             com.robertx22.age_of_exile.uncommon.testing.ProfessionAuditProbe.tick(server);
+            // Полный цикл прокачки (/aoe devtest progression или флаг-файл из CI-сценария).
+            com.robertx22.age_of_exile.uncommon.testing.ProgressionProbe.tick(server);
             for (ServerPlayer p : server.getPlayerList().getPlayers()) {
                 MinecraftForge.EVENT_BUS.post(new TickEvent.PlayerTickEvent(TickEvent.Phase.END, p));
                 com.robertx22.age_of_exile.airship.AirshipService.tick(p);

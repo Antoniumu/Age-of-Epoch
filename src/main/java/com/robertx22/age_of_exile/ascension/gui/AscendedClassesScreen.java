@@ -43,7 +43,7 @@ import java.util.List;
  *
  * Открывается из Навыков кнопкой «✦ Классы» через {@link AscensionTransitionScreen}.
  */
-public class AscendedClassesScreen extends BaseScreen implements INamedScreen {
+public class AscendedClassesScreen extends BaseScreen implements INamedScreen, com.robertx22.age_of_exile.gui.bases.IGuiDebugDump {
 
     private static final Identifier LOCK_TEX = SlashRef.guiId("ascension/lock");
 
@@ -169,13 +169,34 @@ public class AscendedClassesScreen extends BaseScreen implements INamedScreen {
         this.statusMessageTime = System.currentTimeMillis();
     }
 
+    /**
+     * CI-дамп: узлы цепочки как кликабельные цели (id = node:<spellId>).
+     * Сценарий gui.txt кликает по этим прямоугольникам настоящей мышью.
+     */
+    @Override
+    public void collectDebugTargets(java.util.List<com.robertx22.age_of_exile.gui.bases.IGuiDebugDump.DebugTarget> out) {
+        for (Node n : nodes) {
+            out.add(new com.robertx22.age_of_exile.gui.bases.IGuiDebugDump.DebugTarget(
+                "node:" + n.spellId, n.x, n.y, NODE, NODE));
+        }
+    }
+
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         AscensionClasses cls = currentClass();
+        // Диагностика для CI: публикуется как logs/aoeclick.log — видно,
+        // дошёл ли клик до экрана и в какие координаты GUI он пришёл.
+        System.out.println("[AOE-CLICK] AscendedClassesScreen.mouseClicked x=" + mouseX
+            + " y=" + mouseY + " btn=" + button
+            + " cls=" + (cls == null ? "null" : cls.id)
+            + " unlocked=" + isUnlocked() + " nodes=" + nodes.size());
         if (cls != null && isUnlocked()) {
             for (Node n : nodes) {
                 if (n.isInside((int) mouseX, (int) mouseY)) {
-                    if (button == 0) {
+                    System.out.println("[AOE-CLICK] node hit: " + n.spellId + " btn=" + button);
+                    // Внимание: MC 26.3 (SDL3) нумерует кнопки мыши с 1:
+                    // ЛКМ=1, ПКМ=3 (forge_compat Button срабатывает на button==1).
+                    if (button == 1) {
                         AscensionData data = AscensionLogic.data(mc.player);
                         boolean revealed = AscensionLogic.isNodeRevealed(data, cls, n.index);
                         if (!revealed || AscensionLogic.freePoints(mc.player) < 1) {
@@ -184,7 +205,8 @@ public class AscendedClassesScreen extends BaseScreen implements INamedScreen {
                         }
                         Packets.sendToServer(new AscensionAllocPacket(n.spellId));
                         showStatus("§bОчко вложено. Поток послушен.");
-                    } else if (button == 1) {
+                    } else if (button == 3) {
+                        // ПКМ: назначить умение на панель заклинаний.
                         AscensionData data = AscensionLogic.data(mc.player);
                         if (data.rankOf(n.spellId) > 0 && Load.spells(mc.player) != null) {
                             int slot = AscensionLogic.firstFreeHotbarSlot(mc.player, n.spellId);

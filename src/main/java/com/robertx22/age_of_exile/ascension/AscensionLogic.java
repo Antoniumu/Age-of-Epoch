@@ -43,6 +43,32 @@ public class AscensionLogic {
     }
 
     /**
+     * Пересчёт статов ({@code Unit}) чистит {@code extra_lvls} и собирает её
+     * заново из экипировки и статов — ранги Вознесения нужно влить обратно,
+     * иначе вознесённые умения молча теряют уровни после любого пересчёта
+     * (смена брони, level-up и т.п.) и не назначаются на хотбар.
+     * Вклад Вознесения в extra_lvls всегда равен ранку узла.
+     */
+    public static void applyRanksToSpells(Player p) {
+        AscensionData data = data(p);
+        AscensionClasses cls = data.getChosenClass();
+        if (cls == null) {
+            return;
+        }
+        EntitySpellCap.ISpellsCap spells = Load.spells(p);
+        if (spells == null) {
+            return;
+        }
+        for (String id : cls.skillIds) {
+            int rank = data.rankOf(id);
+            if (rank > 0) {
+                spells.getSpellsData()
+                    .addToLevelsFromStat(id, rank);
+            }
+        }
+    }
+
+    /**
      * Ранги, вложенные в узлы строго ПЕРЕД указанным индексом.
      */
     public static int ranksBeforeNode(AscensionData data, AscensionClasses cls, int index) {

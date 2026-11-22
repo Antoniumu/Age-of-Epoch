@@ -46,12 +46,12 @@ def read_text(path):
         return ""
 
 
-def parse_timeline(path):
+def parse_timeline(path, marker="AOEAI_MARK"):
     """[{'kind':..,'name':..,'ms':int}] в порядке записи."""
     events = []
     for line in read_text(path).splitlines():
         parts = line.strip().split()
-        if len(parts) < 4 or parts[0] != "AOEAI_MARK":
+        if len(parts) < 4 or parts[0] != marker:
             continue
         try:
             ms = int(parts[-1])
@@ -61,14 +61,14 @@ def parse_timeline(path):
     return events
 
 
-def school_windows(events):
-    """{school: (start_ms, end_ms)} по маркерам school_start/school_end."""
+def school_windows(events, start_kind="school_start", end_kind="school_end"):
+    """{school: (start_ms, end_ms)} по маркерам начала/конца группы."""
     windows = {}
     open_school = None
     for event in events:
-        if event["kind"] == "school_start":
+        if event["kind"] == start_kind:
             open_school = (event["name"], event["ms"])
-        elif event["kind"] == "school_end" and open_school:
+        elif event["kind"] == end_kind and open_school:
             name, start = open_school
             windows[name] = (start, event["ms"])
             open_school = None
@@ -119,6 +119,15 @@ def main():
     parser.add_argument("--start", default="run/e2e/video-start.txt")
     parser.add_argument("--out", default="run/e2e/videos")
     parser.add_argument("--report", default="run/spell-audit.json")
+    # Каким маркером размечен таймлайн и как называются границы групп:
+    # аудит умений — AOEAI_MARK school_start/school_end, прокачка —
+    # AOEPROG_MARK stage_start/stage_end.
+    parser.add_argument("--marker", default="AOEAI_MARK")
+    parser.add_argument("--group-start", default="school_start")
+    parser.add_argument("--group-end", default="school_end")
+    # Заголовок README: "умений"/"этапов" и базовый путь отчёта.
+    parser.add_argument("--heading", default="Видео: применение всех умений по классам")
+    parser.add_argument("--noun", default="умений")
     args = parser.parse_args()
 
     if not os.path.exists(args.video) or os.path.getsize(args.video) < 10_000:
@@ -133,18 +142,18 @@ def main():
         print("нет метки начала записи (%s), режу весь файл" % args.start, file=sys.stderr)
         video_start_ms = None
 
-    events = parse_timeline(args.timeline)
+    events = parse_timeline(args.timeline, marker=args.marker)
     if not events or video_start_ms is None:
         # Без маркеров делаем один общий ролик: он всё равно полезен.
         out_path = os.path.join(args.out, "audit-all.mp4")
         shutil.copyfile(args.video, out_path)
         poster(args.video, 1.0, os.path.join(args.out, "audit-all.png"))
-        write_readme(args.out, {"audit-all": ("Весь прогон", "все классы подряд")},
-                     {}, load_report(args.report))
+        write_readme(args.out, {"audit-all": ("Весь прогон", "все группы подряд")},
+                     {}, load_report(args.report), args.heading, args.noun)
         print("маркеров нет — опубликован общий ролик")
         return 0
 
-    windows = school_windows(events)
+    windows = school_windows(events, start_kind=args.group_start, end_kind=args.group_end)
     report = load_report(args.report)
     by_school = {}
     for spell in report.get("spells", []):
@@ -164,21 +173,24 @@ def main():
 
     if not produced:
         return 1
-    write_readme(args.out, produced, by_school, report)
+    write_readme(args.out, produced, by_school, report, args.heading, args.noun)
     return 0
 
 
-def write_readme(outdir, produced, by_school, report):
-    lines = ["# Видео: применение всех умений по классам", ""]
+def write_readme(outdir, produced, by_school, report, heading="Видео: применение всех умений по классам", noun="умений"):
+    lines = ["# %s" % heading, ""]
     total = len(report.get("spells", []))
     failed = [s for s in report.get("spells", []) if s.get("verdict") != "PASS"]
-    lines.append("Проверено умений: **%d**, провалилось: **%d**." % (total, len(failed)))
+    if total:
+        lines.append("Проверено %s: **%d**, провалилось: **%d**." % (noun, total, len(failed)))
+    else:
+        lines.append("Ролики нарезаны по маркерам таймлайна прогона.")
     lines.append("")
     lines.append("Каждый ролик — один класс. Подпись в кадре показывает название "
                  "умения, его описание из тултипа и живые цифры: урон, попадания, "
                  "лечение, эффекты и итог проверки.")
     lines.append("")
-    lines.append("| класс | ролик | умений |")
+    lines.append("| группа | ролик | %s |" % noun)
     lines.append("|---|---|---|")
     for school, (title, _about) in produced.items():
         lines.append("| %s | [%s.mp4](%s.mp4) | %d |" % (

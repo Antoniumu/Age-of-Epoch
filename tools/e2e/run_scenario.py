@@ -32,7 +32,17 @@
     write run/x.flag all        создать файл-триггер с содержимым (аудит умений)
     shell bash script.sh start  выполнить команду оболочки (запись видео и т.п.)
     wait_file run/spell-audit.md 600000  ждать появления файла, мс
+    wait_screen 30000 AscendedClasses    ждать экран из дампа виджетов (regex по классу)
+    wait_widget 30000 AllocateStatButton ждать виджет (regex по class/label/id)
+    click_widget AllocateStatButton      настоящий клик по центру виджета из дампа
+    click_widget Выбрать.#0              клик по первому совпадению regex
+    rclick_widget node:tide_bolt         правый клик (например, назначить на хотбар)
+    widgets                              вывести текущие виджеты в журнал
     log текст                   записать в журнал
+
+Команды *_widget читают run/gui-widgets.txt, который пишет клиентский
+GuiWidgetDumper, пока лежит флаг run/aoe-gui-dump.flag. Так сценарий кликает
+кнопки по реальным координатам, а не по зашитым пикселям.
 
 Запуск:
     DISPLAY=:99 python3 tools/e2e/run_scenario.py tools/e2e/scenarios/boot.txt out/
@@ -88,6 +98,7 @@ class Runner:
         self.failures = 0
         self.window = None
         self.log_mark_pos = 0
+        self._snapshot_gradle_log()
 
     # ------------------------------------------------------------------ утилиты
 
@@ -153,6 +164,17 @@ class Runner:
             if "Render thread" in line:
                 self.note("render thread:\n    " + "\n    ".join(l.strip() for l in lines[index:index + 12]))
                 break
+
+    def _snapshot_gradle_log(self):
+        """Копия gradle.log в каталог снимков: публикация забирает только его,
+        а именно там причина, когда JVM клиента не запустилась."""
+        src = os.path.join(REPO, "run", "e2e", "gradle.log")
+        if os.path.exists(src):
+            try:
+                import shutil
+                shutil.copy(src, os.path.join(self.outdir, "gradle.log"))
+            except OSError:
+                pass
 
     def candidate_displays(self):
         displays = []
@@ -275,13 +297,25 @@ class Runner:
     def wait_window(self, pattern, timeout_ms):
         deadline = time.time() + timeout_ms / 1000.0
         last_note = 0.0
+        # Клиент может умереть/не запуститься тихо — тогда ждать окно бессмысленно.
+        # Отслеживаем появление JVM: за весь timeout ни разу не увидели → аварийный
+        # выход с подсказкой (иначе три сценария подряд жгли по часу на пустоту).
+        saw_jvm_deadline = time.time() + max(120000, timeout_ms) / 1000.0
         while time.time() < deadline:
             if self.find_window():
                 return True
+            if self.client_pid():
+                saw_jvm_deadline = time.time() + timeout_ms / 1000.0
+            elif time.time() > saw_jvm_deadline:
+                self.fail("окно '%s' не появилось: JVM клиента так и не запустилась "
+                          "(gradlew runClient упал? смотри run/e2e/gradle.log)" % pattern)
+                self.list_windows()
+                return False
             if time.time() - last_note > 30:
                 last_note = time.time()
-                self.note("жду окно: дисплей %s, X-сокеты: %s"
-                          % (self.display, ", ".join(self.candidate_displays())))
+                self.note("жду окно: дисплей %s, X-сокеты: %s, JVM: %s"
+                          % (self.display, ", ".join(self.candidate_displays()),
+                             self.client_pid() or "нет"))
             time.sleep(2)
         self.fail("окно '%s' не появилось за %d мс" % (pattern, timeout_ms))
         self.list_windows()
@@ -315,6 +349,116 @@ class Runner:
             time.sleep(2)
         self.fail("файл %s не появился за %d мс" % (rel_path, timeout_ms))
         return False
+
+    # ------------------------------------------------------------------ виджеты GUI
+
+    def widgets_path(self):
+        return os.path.join(REPO, "run", "gui-widgets.txt")
+
+    def read_widgets(self):
+        """Последнее состояние экрана из дампа клиента (run/gui-widgets.txt).
+
+        Файл пишет GuiWidgetDumper внутри клиента, пока лежит флаг
+        run/aoe-gui-dump.flag. Возвращает dict {screen, scale, widgets[]} или None.
+        """
+        import json
+        try:
+            with open(self.widgets_path(), "r", encoding="utf-8", errors="replace") as handle:
+                lines = [l for l in handle.read().splitlines() if l.strip()]
+            if not lines:
+                return None
+            return json.loads(lines[-1])
+        except (OSError, ValueError):
+            return None
+
+    def widget_matches(self, widget, rx):
+        """Виджет подходит, если regex совпал с классом, подписью или id."""
+        for key in ("class", "label", "id"):
+            value = widget.get(key) or ""
+            if value and rx.search(value):
+                return True
+        return False
+
+    def find_widgets(self, pattern):
+        """Все виджеты, подходящие под regex, в порядке дампа."""
+        rx = re.compile(pattern)
+        state = self.read_widgets()
+        if not state:
+            return None, []
+        return state, [w for w in state.get("widgets", []) if self.widget_matches(w, rx)]
+
+    def wait_screen(self, pattern, timeout_ms):
+        """Ждёт, пока откроется экран, чьё имя класса/заголовок матчит regex."""
+        deadline = time.time() + timeout_ms / 1000.0
+        rx = re.compile(pattern)
+        while time.time() < deadline:
+            state = self.read_widgets()
+            if state and rx.search(state.get("screen", "") or ""):
+                self.note("экран открыт: %s (виджетов %d)"
+                          % (state.get("screen"), len(state.get("widgets", []))))
+                return True
+            time.sleep(0.5)
+        self.fail("экран /%s/ не открылся за %d мс (дамп: %s)"
+                  % (pattern, timeout_ms, self.widgets_path()))
+        return False
+
+    def wait_widget(self, pattern, timeout_ms):
+        """Ждёт, пока на экране появится виджет, матчащий regex (class/label/id)."""
+        deadline = time.time() + timeout_ms / 1000.0
+        while time.time() < deadline:
+            state, found = self.find_widgets(pattern)
+            if found:
+                self.note("виджет /%s/ найден: %d шт. (экран %s)"
+                          % (pattern, len(found), (state or {}).get("screen")))
+                return True
+            time.sleep(0.5)
+        self.fail("виджет /%s/ не появился за %d мс" % (pattern, timeout_ms))
+        return False
+
+    def click_widget(self, pattern, button=1):
+        """Клик по центру виджета из дампа. pattern может нести #N — номер
+        совпадения (с 0), по умолчанию 0. Координаты дампа — в gui-пикселях,
+        домножаем на scale до оконных."""
+        if "#" in pattern:
+            pattern, _, idx = pattern.rpartition("#")
+            index = int(idx)
+        else:
+            index = 0
+        state, found = self.find_widgets(pattern)
+        if not state:
+            self.fail("клик по виджету /%s/: дампа нет (флаг run/aoe-gui-dump.flag стоит?)" % pattern)
+            return False
+        if not found:
+            names = ["%s[%s]" % (w.get("class"), (w.get("label") or w.get("id") or "")[:30])
+                     for w in state.get("widgets", [])]
+            self.fail("клик по виджету /%s/: не найден. На экране %s: %s"
+                      % (pattern, state.get("screen"), ", ".join(names)[:400]))
+            return False
+        if index >= len(found):
+            self.fail("клик по виджету /%s#%d/: совпадений только %d" % (pattern, index, len(found)))
+            return False
+        widget = found[index]
+        scale = float(state.get("scale") or 2.0)
+        wx = int((widget["x"] + widget["w"] / 2) * scale)
+        wy = int((widget["y"] + widget["h"] / 2) * scale)
+        self.note("клик по виджету %s (%s %s) gui=(%d,%d %dx%d) окно=(%d,%d)"
+                  % (widget.get("class"), widget.get("label") or widget.get("id") or "",
+                     "активен" if widget.get("active", True) else "НЕАКТИВЕН",
+                     widget["x"], widget["y"], widget["w"], widget["h"], wx, wy))
+        self.click(wx, wy, button)
+        return True
+
+    def dump_widgets_note(self):
+        """Пишет текущий список виджетов в журнал — диагностика сценария."""
+        state = self.read_widgets()
+        if not state:
+            self.note("дампа виджетов нет (флаг run/aoe-gui-dump.flag стоит?)")
+            return
+        names = ["%s(%d,%d %dx%d) '%s'" % (
+            w.get("class"), w.get("x", 0), w.get("y", 0), w.get("w", 0), w.get("h", 0),
+            (w.get("label") or w.get("id") or "")[:40]) for w in state.get("widgets", [])]
+        self.note("экран %s, scale %s, виджеты:\n    %s"
+                  % (state.get("screen"), state.get("scale"), "\n    ".join(names) or "(пусто)"))
 
     def log_mark(self):
         """Отметка в логе: wait_log_new ищет только в строках ПОСЛЕ неё.
@@ -588,6 +732,35 @@ class Runner:
                         self.fail("wait_file требует: <путь> [таймаут_мс]")
                     else:
                         self.wait_file(bits[0], int(bits[1]) if len(bits) > 1 else 600000)
+                elif command == "wait_screen":
+                    # wait_screen <таймаут_мс> <regex>: ждать экран из дампа виджетов.
+                    if len(args) < 2:
+                        self.fail("wait_screen требует: <таймаут_мс> <regex>")
+                    else:
+                        self.wait_screen(rest[len(args[0]):].strip(), int(args[0]))
+                elif command == "wait_widget":
+                    # wait_widget <таймаут_мс> <regex>: ждать виджет на экране.
+                    if len(args) < 2:
+                        self.fail("wait_widget требует: <таймаут_мс> <regex>")
+                    else:
+                        self.wait_widget(rest[len(args[0]):].strip(), int(args[0]))
+                elif command == "click_widget":
+                    # click_widget <regex>[#N]: настоящий клик мышью по центру
+                    # виджета из дампа клиента (run/gui-widgets.txt).
+                    if not rest.strip():
+                        self.fail("click_widget требует: <regex>[#N]")
+                    else:
+                        self.click_widget(rest.strip())
+                elif command == "rclick_widget":
+                    # rclick_widget <regex>[#N]: правый клик по виджету
+                    # (например, «ПКМ — назначить на панель заклинаний»).
+                    if not rest.strip():
+                        self.fail("rclick_widget требует: <regex>[#N]")
+                    else:
+                        self.click_widget(rest.strip(), button=3)
+                elif command == "widgets":
+                    # widgets: вывести текущий список виджетов в журнал.
+                    self.dump_widgets_note()
                 elif command == "log":
                     self.note(rest)
                 else:
@@ -619,6 +792,7 @@ def main():
     try:
         return runner.execute(scenario)
     finally:
+        runner._snapshot_gradle_log()
         runner.journal.close()
 
 

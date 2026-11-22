@@ -26,6 +26,13 @@ pidfile="run/e2e/ffmpeg.pid"
 log="run/e2e/ffmpeg.log"
 startfile="run/e2e/video-start.txt"
 endfile="run/e2e/video-end.txt"
+# Параллельные записи (прокачка, GUI, умения в одном прогоне): метки времени
+# называем по файлу видео, иначе следующий сценарий затирает метки прошлого.
+if [ -n "${VIDEO_OUT:-}" ]; then
+    base="$(basename "$out" .mp4)"
+    startfile="run/e2e/${base}-start.txt"
+    endfile="run/e2e/${base}-end.txt"
+fi
 
 now_ms() {
     date +%s%3N
@@ -64,6 +71,27 @@ case "$action" in
             echo "ffmpeg не установлен — видео не будет" >&2
             exit 1
         }
+        # Мёртвый/нулевой $DISPLAY ломает не только запись, но и X-сокет
+        # играющего клиента (Xvfb гаснет вместе с ним — окно пропадает). Поэтому
+        # каждый сценарий поднимает свой X-сервер на отдельном дисплее:
+        # DISPLAY задаётся в workflow (или снаружи), здесь только поднимаем.
+        if ! xdpyinfo -display "$DISPLAY" >/dev/null 2>&1; then
+            echo "$DISPLAY не отвечает — поднимаю свой X-сервер (Xvfb)…"
+            if ! command -v Xvfb >/dev/null 2>&1; then
+                echo "Xvfb не установлен — видео не будет" >&2
+                exit 1
+            fi
+            nohup Xvfb "$DISPLAY" -screen 0 1280x720x24 >/tmp/aoe-xvfb.log 2>&1 &
+            for _ in $(seq 1 40); do
+                xdpyinfo -display "$DISPLAY" >/dev/null 2>&1 && break
+                sleep 0.5
+            done
+            xdpyinfo -display "$DISPLAY" >/dev/null 2>&1 || {
+                echo "Xvfb не поднялся на $DISPLAY, смотри /tmp/aoe-xvfb.log" >&2
+                exit 1
+            }
+            echo "Xvfb поднят на $DISPLAY (pid $!)"
+        fi
         read -r w h x y <<< "$(window_geometry)"
         echo "окно клиента: ${w}x${h}+${x}+${y} на ${DISPLAY:-?}"
         now_ms > "$startfile"
