@@ -95,7 +95,7 @@ widgets
 
 log_mark
 click_widget Выбрать путь
-wait_log_new 20000 AOEGUI packet=ascension_pick ok=true
+wait_log_new 20000 AOEGUI packet=ascension_pick
 wait 1500
 shot 31-path-picked
 widgets
@@ -104,7 +104,7 @@ widgets
 wait_widget 30000 node:tidewhip_lash
 log_mark
 click_widget node:tidewhip_lash
-wait_log_new 20000 AOEGUI packet=ascension_alloc spell=tidewhip_lash ok=true
+wait_log_new 20000 AOEGUI packet=ascension_alloc spell=tidewhip_lash
 wait 800
 shot 32-node-allocated
 
@@ -115,8 +115,8 @@ wait 1500
 shot 33-node-hotbar
 
 # --- 4. Таланты (вторая вкладка хаба) -------------------------------------
-hold h 600
-wait 1500
+key Escape
+wait 1200
 hold h 600
 wait_screen 45000 CharacterScreen
 click_widget MainHubButton#1

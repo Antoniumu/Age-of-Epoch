@@ -79,6 +79,9 @@ shot_count="$(ls shots/*.png 2>/dev/null | wc -l | tr -d ' ')"
 echo "  снимков: $shot_count"
 
 # --- журналы ------------------------------------------------------------------
+# Отладка кликов клиента ([AOE-CLICK] печатают экраны): почему узел не сработал.
+grep -h "AOE-CLICK" "$root/run/logs/latest.log" 2>/dev/null | awk '!seen[$0]++' > logs/aoeclick.log || true
+
 for f in aoeprog.log aoegui.log aoeai.log; do
     [ -f "$src/$f" ] && cp "$src/$f" "logs/$f" && echo "  + logs/$f"
 done

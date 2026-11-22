@@ -524,7 +524,19 @@ public final class ProgressionProbe {
                         }
                     }
                     if (!assigned) {
-                        bad("hotbar: не удалось назначить ни одно вознесённое умение");
+                        // Диагностируем причину: ранг/уровень умения/ячейка по каждому узлу.
+                        StringBuilder why = new StringBuilder();
+                        for (String spellId : cls.skillIds) {
+                            int rank = AscensionLogic.data(player).rankOf(spellId);
+                            var spells = Load.spells(player);
+                            int spLvl = spells == null ? -1 : spells.getLevelOf(spellId);
+                            why.append(spellId)
+                                .append("(rank=").append(rank)
+                                .append(",lvl=").append(spLvl)
+                                .append(",slot=").append(AscensionLogic.firstFreeHotbarSlot(player, spellId))
+                                .append(") ");
+                        }
+                        bad("hotbar: не удалось назначить ни одно вознесённое умение — " + why);
                     }
                     stageEnd("hotbar");
                     goPause(Phase.VERIFY);

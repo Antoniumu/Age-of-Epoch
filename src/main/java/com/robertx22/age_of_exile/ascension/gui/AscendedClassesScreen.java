@@ -184,9 +184,16 @@ public class AscendedClassesScreen extends BaseScreen implements INamedScreen, c
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         AscensionClasses cls = currentClass();
+        // Диагностика для CI: публикуется как logs/aoeclick.log — видно,
+        // дошёл ли клик до экрана и в какие координаты GUI он пришёл.
+        System.out.println("[AOE-CLICK] AscendedClassesScreen.mouseClicked x=" + mouseX
+            + " y=" + mouseY + " btn=" + button
+            + " cls=" + (cls == null ? "null" : cls.id)
+            + " unlocked=" + isUnlocked() + " nodes=" + nodes.size());
         if (cls != null && isUnlocked()) {
             for (Node n : nodes) {
                 if (n.isInside((int) mouseX, (int) mouseY)) {
+                    System.out.println("[AOE-CLICK] node hit: " + n.spellId + " btn=" + button);
                     if (button == 0) {
                         AscensionData data = AscensionLogic.data(mc.player);
                         boolean revealed = AscensionLogic.isNodeRevealed(data, cls, n.index);
