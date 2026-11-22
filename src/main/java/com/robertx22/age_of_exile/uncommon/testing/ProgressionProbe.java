@@ -315,8 +315,12 @@ public final class ProgressionProbe {
                         lastLevelGainTick = 0;
                     }
                     // Вечный день: ночь не должна мешать ни видео, ни прогону.
+                    // Через ванильную команду: setDayTime в ServerLevel 26.3 нет,
+                    // а performPrefixedCommand уже использует AirshipProbe.
                     if (phaseTicks % 200 == 1) {
-                        player.level().setDayTime(1000);
+                        var server = player.level().getServer();
+                        server.getCommands().performPrefixedCommand(
+                            server.createCommandSourceStack(), "time set day");
                     }
                     ProgressionState.setLevel(lvl, goal.level);
                     ProgressionState.stage("Прокачка " + lvl + " → " + goal.level,
