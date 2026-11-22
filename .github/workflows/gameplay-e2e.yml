@@ -169,6 +169,9 @@ jobs:
           set -e
           echo "status=$status" >> "$GITHUB_OUTPUT"
           grep -h "AOEGUI packet=" run/logs/latest.log 2>/dev/null | awk '!seen[$0]++' > run/e2e/aoegui.log || true
+          # Клиентская диагностика кликов: в конце job latest.log уже от другого
+          # сценария, поэтому снимаем её здесь, пока лог принадлежит GUI-прогону.
+          grep -h "AOE-CLICK" run/logs/latest.log 2>/dev/null > run/e2e/aoeclick.log || true
           {
             echo "### GUI: статус $status"
             echo '```'

@@ -421,6 +421,11 @@ public class Unit {
                     }
                 });
 
+                // Ранги Вознесения тоже живут в extra_lvls — после очистки
+                // вливаем их обратно, иначе умения пути теряют уровни.
+                com.robertx22.age_of_exile.ascension.AscensionLogic
+                    .applyRanksToSpells((Player) entity);
+
                 this.getStats().stats.values()
                     .forEach(x -> {
 
