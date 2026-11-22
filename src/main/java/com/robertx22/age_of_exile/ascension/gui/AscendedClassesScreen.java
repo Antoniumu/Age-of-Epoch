@@ -194,7 +194,9 @@ public class AscendedClassesScreen extends BaseScreen implements INamedScreen, c
             for (Node n : nodes) {
                 if (n.isInside((int) mouseX, (int) mouseY)) {
                     System.out.println("[AOE-CLICK] node hit: " + n.spellId + " btn=" + button);
-                    if (button == 0) {
+                    // Внимание: MC 26.3 (SDL3) нумерует кнопки мыши с 1:
+                    // ЛКМ=1, ПКМ=3 (forge_compat Button срабатывает на button==1).
+                    if (button == 1) {
                         AscensionData data = AscensionLogic.data(mc.player);
                         boolean revealed = AscensionLogic.isNodeRevealed(data, cls, n.index);
                         if (!revealed || AscensionLogic.freePoints(mc.player) < 1) {
@@ -203,7 +205,8 @@ public class AscendedClassesScreen extends BaseScreen implements INamedScreen, c
                         }
                         Packets.sendToServer(new AscensionAllocPacket(n.spellId));
                         showStatus("§bОчко вложено. Поток послушен.");
-                    } else if (button == 1) {
+                    } else if (button == 3) {
+                        // ПКМ: назначить умение на панель заклинаний.
                         AscensionData data = AscensionLogic.data(mc.player);
                         if (data.rankOf(n.spellId) > 0 && Load.spells(mc.player) != null) {
                             int slot = AscensionLogic.firstFreeHotbarSlot(mc.player, n.spellId);
